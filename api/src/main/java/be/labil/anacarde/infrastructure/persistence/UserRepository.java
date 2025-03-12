@@ -1,0 +1,21 @@
+package be.labil.anacarde.infrastructure.persistence;
+
+import be.labil.anacarde.domain.model.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
+
+/**
+ * @brief Repository interface for User entities.
+ */
+public interface UserRepository extends JpaRepository<User, Integer> {
+    /**
+     * @brief Finds a user by their email address.
+     *
+     * This method searches for a User entity with the specified email address.
+     *
+     * @param email The email address of the user to search for.
+     * @return An Optional containing the User if found; otherwise, an empty Optional.
+     */
+    Optional<User> findByEmail(String email);
+}
