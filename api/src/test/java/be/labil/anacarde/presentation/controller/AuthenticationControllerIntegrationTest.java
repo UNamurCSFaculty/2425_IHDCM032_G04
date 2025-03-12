@@ -1,7 +1,11 @@
 package be.labil.anacarde.presentation.controller;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import be.labil.anacarde.domain.model.User;
 import be.labil.anacarde.infrastructure.persistence.UserRepository;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,24 +15,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDateTime;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 public class AuthenticationControllerIntegrationTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    @Autowired private MockMvc mockMvc;
 
-    @Autowired
-    private UserRepository userRepository;
+    @Autowired private UserRepository userRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    @Autowired private PasswordEncoder passwordEncoder;
 
     @BeforeEach
     public void setUpDatabase() {
@@ -49,9 +45,10 @@ public class AuthenticationControllerIntegrationTest {
     public void testAuthenticateUserIntegration_Success() throws Exception {
         String requestBody = "{\"username\": \"user@example.com\", \"password\": \"password\"}";
 
-        mockMvc.perform(post("/api/auth/signin")
-                        .contentType("application/json")
-                        .content(requestBody))
+        mockMvc.perform(
+                        post("/api/auth/signin")
+                                .contentType("application/json")
+                                .content(requestBody))
                 .andExpect(status().isOk())
                 .andExpect(cookie().exists("jwt"))
                 .andExpect(content().string("User authenticated successfully"));
@@ -59,11 +56,13 @@ public class AuthenticationControllerIntegrationTest {
 
     @Test
     public void testAuthenticateUserIntegration_Failure() throws Exception {
-        String requestBody = "{\"username\": \"user@example.com\", \"password\": \"wrongpassword\"}";
+        String requestBody =
+                "{\"username\": \"user@example.com\", \"password\": \"wrongpassword\"}";
 
-        mockMvc.perform(post("/api/auth/signin")
-                        .contentType("application/json")
-                        .content(requestBody))
+        mockMvc.perform(
+                        post("/api/auth/signin")
+                                .contentType("application/json")
+                                .content(requestBody))
                 .andExpect(status().isUnauthorized())
                 .andExpect(content().string("Failed to authenticate"));
     }

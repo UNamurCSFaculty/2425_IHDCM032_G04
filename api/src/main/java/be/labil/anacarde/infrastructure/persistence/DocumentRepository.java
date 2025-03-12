@@ -6,5 +6,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 /**
  * @brief Repository interface for Document entities.
  */
-public interface DocumentRepository extends JpaRepository<Document, Integer> {
-}
+public interface DocumentRepository extends JpaRepository<Document, Integer> {}

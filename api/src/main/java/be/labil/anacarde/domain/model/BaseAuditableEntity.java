@@ -1,14 +1,13 @@
 package be.labil.anacarde.domain.model;
 
 import jakarta.persistence.*;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import java.io.Serializable;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -29,8 +28,7 @@ public abstract class BaseAuditableEntity implements Serializable {
     /**
      * @brief Timestamp indicating when the entity was last modified.
      */
-    @LastModifiedDate
-    protected LocalDateTime lastModifiedDate;
+    @LastModifiedDate protected LocalDateTime lastModifiedDate;
 
     // @Version
     // private int version;

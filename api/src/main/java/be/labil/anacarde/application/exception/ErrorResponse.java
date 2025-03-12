@@ -13,8 +13,7 @@ import lombok.Setter;
 @Schema(description = "Error response structure")
 /**
  * @brief Represents an error response.
- *
- * This class encapsulates an error message used in API responses when an error occurs.
+ *     <p>This class encapsulates an error message used in API responses when an error occurs.
  */
 public class ErrorResponse {
     @Schema(description = "Error message", example = "Subject not found")

@@ -1,6 +1,11 @@
 package be.labil.anacarde.application.exception;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -13,20 +18,14 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 @Slf4j
 @RestControllerAdvice
 /**
  * @brief Global exception handler for the application.
- *
- * This class handles exceptions thrown throughout the application and translates them into meaningful
- * HTTP responses. It handles validation errors, resource not found exceptions, data integrity violations,
- * HTTP message not readable exceptions, optimistic locking errors, and generic exceptions.
+ *     <p>This class handles exceptions thrown throughout the application and translates them into
+ *     meaningful HTTP responses. It handles validation errors, resource not found exceptions, data
+ *     integrity violations, HTTP message not readable exceptions, optimistic locking errors, and
+ *     generic exceptions.
  */
 public class GlobalExceptionHandler {
 
@@ -34,7 +33,6 @@ public class GlobalExceptionHandler {
 
     /**
      * @brief Constructor for GlobalExceptionHandler.
-     *
      * @param messageSource The MessageSource used for retrieving localized messages.
      */
     public GlobalExceptionHandler(MessageSource messageSource) {
@@ -43,30 +41,34 @@ public class GlobalExceptionHandler {
 
     /**
      * @brief Handles validation errors from method argument validation.
-     *
-     * This method collects all validation errors from the exception and returns them in a ValidationErrorResponse.
-     *
+     *     <p>This method collects all validation errors from the exception and returns them in a
+     *     ValidationErrorResponse.
      * @param ex The MethodArgumentNotValidException containing validation errors.
-     * @return A ResponseEntity containing a ValidationErrorResponse with error details and HTTP status BAD_REQUEST.
+     * @return A ResponseEntity containing a ValidationErrorResponse with error details and HTTP
+     *     status BAD_REQUEST.
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ValidationErrorResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ValidationErrorResponse> handleValidationExceptions(
+            MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach(error -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
+        ex.getBindingResult()
+                .getAllErrors()
+                .forEach(
+                        error -> {
+                            String fieldName = ((FieldError) error).getField();
+                            String errorMessage = error.getDefaultMessage();
+                            errors.put(fieldName, errorMessage);
+                        });
         return new ResponseEntity<>(new ValidationErrorResponse(errors), HttpStatus.BAD_REQUEST);
     }
 
     /**
      * @brief Handles ResourceNotFoundException.
-     *
-     * This method returns an error response with HTTP status NOT_FOUND when a requested resource is not found.
-     *
+     *     <p>This method returns an error response with HTTP status NOT_FOUND when a requested
+     *     resource is not found.
      * @param ex The ResourceNotFoundException that was thrown.
-     * @return A ResponseEntity containing an ErrorResponse with the exception message and HTTP status NOT_FOUND.
+     * @return A ResponseEntity containing an ErrorResponse with the exception message and HTTP
+     *     status NOT_FOUND.
      */
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleResourceNotFound(ResourceNotFoundException ex) {
@@ -75,15 +77,15 @@ public class GlobalExceptionHandler {
 
     /**
      * @brief Handles data integrity violations, such as unique constraint errors.
-     *
-     * This method extracts an error code from the root cause of the exception, retrieves a localized message,
-     * and returns an error response with HTTP status CONFLICT.
-     *
+     *     <p>This method extracts an error code from the root cause of the exception, retrieves a
+     *     localized message, and returns an error response with HTTP status CONFLICT.
      * @param ex The DataIntegrityViolationException that was thrown.
-     * @return A ResponseEntity containing an ErrorResponse with a localized error message and HTTP status CONFLICT.
+     * @return A ResponseEntity containing an ErrorResponse with a localized error message and HTTP
+     *     status CONFLICT.
      */
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<ErrorResponse> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
+    public ResponseEntity<ErrorResponse> handleDataIntegrityViolation(
+            DataIntegrityViolationException ex) {
         String defaultMessage = "Data integrity error.";
         Throwable rootCause = ex.getRootCause();
         String rootMessage = (rootCause != null) ? rootCause.getMessage() : "";
@@ -92,16 +94,17 @@ public class GlobalExceptionHandler {
         String errorCode = extractErrorCode(rootMessage);
 
         // Get localized message from messageSource; the message is now externalized
-        String message = messageSource.getMessage(errorCode, null, defaultMessage, LocaleContextHolder.getLocale());
+        String message =
+                messageSource.getMessage(
+                        errorCode, null, defaultMessage, LocaleContextHolder.getLocale());
 
         return new ResponseEntity<>(new ErrorResponse(message), HttpStatus.CONFLICT);
     }
 
     /**
      * @brief Extracts an error code from the provided root message.
-     *
-     * This method uses a regular expression to extract the constraint name or error code from the root message.
-     *
+     *     <p>This method uses a regular expression to extract the constraint name or error code
+     *     from the root message.
      * @param rootMessage The root cause message from which to extract the error code.
      * @return The extracted error code, or "default.error" if not found.
      */
@@ -116,14 +119,15 @@ public class GlobalExceptionHandler {
 
     /**
      * @brief Handles exceptions when the HTTP message is not readable.
-     *
-     * This method checks if the root cause is a JSON parsing error and returns an appropriate error message.
-     *
+     *     <p>This method checks if the root cause is a JSON parsing error and returns an
+     *     appropriate error message.
      * @param ex The HttpMessageNotReadableException that was thrown.
-     * @return A ResponseEntity containing an ErrorResponse with the error message and HTTP status BAD_REQUEST.
+     * @return A ResponseEntity containing an ErrorResponse with the error message and HTTP status
+     *     BAD_REQUEST.
      */
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ErrorResponse> handleHttpMessageNotReadable(HttpMessageNotReadableException ex) {
+    public ResponseEntity<ErrorResponse> handleHttpMessageNotReadable(
+            HttpMessageNotReadableException ex) {
         String message;
         Optional<Throwable> root = Optional.ofNullable(ex.getCause());
         if (root.isPresent() && root.get() instanceof JsonParseException) {
@@ -136,31 +140,35 @@ public class GlobalExceptionHandler {
 
     /**
      * @brief Handles optimistic locking errors (versioning conflicts).
-     *
-     * This method returns an error response with HTTP status CONFLICT when a resource has been modified
-     * by another user.
-     *
+     *     <p>This method returns an error response with HTTP status CONFLICT when a resource has
+     *     been modified by another user.
      * @param ex The StaleObjectStateException that was thrown.
-     * @return A ResponseEntity containing an ErrorResponse with a conflict message and HTTP status CONFLICT.
+     * @return A ResponseEntity containing an ErrorResponse with a conflict message and HTTP status
+     *     CONFLICT.
      */
     @ExceptionHandler(org.hibernate.StaleObjectStateException.class)
-    public ResponseEntity<ErrorResponse> handleStaleObjectStateException(org.hibernate.StaleObjectStateException ex) {
+    public ResponseEntity<ErrorResponse> handleStaleObjectStateException(
+            org.hibernate.StaleObjectStateException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body(new ErrorResponse("The resource has been modified by another user. Please try again."));
+                .body(
+                        new ErrorResponse(
+                                "The resource has been modified by another user. Please try again."));
     }
 
     /**
      * @brief Handles all other generic exceptions.
-     *
-     * This method logs the unhandled exception and returns an error response with HTTP status INTERNAL_SERVER_ERROR.
-     *
+     *     <p>This method logs the unhandled exception and returns an error response with HTTP
+     *     status INTERNAL_SERVER_ERROR.
      * @param ex The generic Exception that was thrown.
-     * @return A ResponseEntity containing an ErrorResponse with a generic error message and HTTP status INTERNAL_SERVER_ERROR.
+     * @return A ResponseEntity containing an ErrorResponse with a generic error message and HTTP
+     *     status INTERNAL_SERVER_ERROR.
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGenericExceptions(Exception ex) {
         log.error("Unhandled internal error", ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ErrorResponse("An internal error has occurred. Please contact support if the problem persists."));
+                .body(
+                        new ErrorResponse(
+                                "An internal error has occurred. Please contact support if the problem persists."));
     }
 }

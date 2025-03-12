@@ -56,6 +56,7 @@
 		<h2gis.version>2.2.3</h2gis.version>
 		<hibernate-spatial.version>6.6.10.Final</hibernate-spatial.version>
 		<maven.surefire.plugin.version>3.5.2</maven.surefire.plugin.version>
+		<spotless.version>2.44.3</spotless.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<dependencies>
@@ -231,6 +232,33 @@
 					</execution>
 				</executions>
 				-->
+			</plugin>
+			<plugin>
+				<groupId>com.diffplug.spotless</groupId>
+				<artifactId>spotless-maven-plugin</artifactId>
+				<version>${spotless.version}</version>
+				<configuration>
+					<java>
+						<googleJavaFormat>
+							<style>AOSP</style>
+						</googleJavaFormat>
+						<importOrder />
+						<removeUnusedImports />
+						<excludes>
+							<exclude>**/*.expected</exclude>
+						</excludes>
+					</java>
+				</configuration>
+
+				<executions>
+					<execution>
+						<id>apply-spotless</id>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>apply</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

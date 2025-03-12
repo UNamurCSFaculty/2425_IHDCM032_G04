@@ -1,10 +1,9 @@
 package be.labil.anacarde.application.exception;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.lang.reflect.Method;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
 
 public class GlobalExceptionHandlerTest {
 
@@ -12,7 +11,8 @@ public class GlobalExceptionHandlerTest {
     public void testExtractErrorCode() throws Exception {
         GlobalExceptionHandler handler = new GlobalExceptionHandler(null);
 
-        Method method = GlobalExceptionHandler.class.getDeclaredMethod("extractErrorCode", String.class);
+        Method method =
+                GlobalExceptionHandler.class.getDeclaredMethod("extractErrorCode", String.class);
         method.setAccessible(true);
 
         // Case 1 : extract the error code from the error message

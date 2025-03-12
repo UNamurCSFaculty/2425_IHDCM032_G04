@@ -13,6 +13,7 @@ public class RoleDto {
      * @brief Unique identifier of the role.
      */
     private Integer id;
+
     /**
      * @brief Name of the role.
      */

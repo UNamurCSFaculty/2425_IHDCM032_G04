@@ -6,20 +6,19 @@ import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import java.util.Date;
+import java.util.Map;
+import java.util.function.Function;
+import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import javax.crypto.SecretKey;
-import java.util.Date;
-import java.util.Map;
-import java.util.function.Function;
-
 @Component
 /**
  * @brief JwtUtil class for JWT operations.
- *
- * This class provides methods to generate, parse, and validate JSON Web Tokens (JWT) for user authentication.
+ *     <p>This class provides methods to generate, parse, and validate JSON Web Tokens (JWT) for
+ *     user authentication.
  */
 public class JwtUtil {
 
@@ -112,12 +111,13 @@ public class JwtUtil {
         long validityInMillis = tokenValidityHours * 60 * 60 * 1000;
         Date expiryDate = new Date(now.getTime() + validityInMillis);
 
-        JwtBuilder builder = Jwts.builder()
-                .claims(customClaims)
-                .subject(subject)
-                .issuedAt(now)
-                .expiration(expiryDate)
-                .signWith(getSigningKey());
+        JwtBuilder builder =
+                Jwts.builder()
+                        .claims(customClaims)
+                        .subject(subject)
+                        .issuedAt(now)
+                        .expiration(expiryDate)
+                        .signWith(getSigningKey());
         return builder.compact();
     }
 
@@ -131,7 +131,7 @@ public class JwtUtil {
         try {
             final String username = extractUsername(token);
             return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
-        } catch(ExpiredJwtException e) {
+        } catch (ExpiredJwtException e) {
             return false;
         }
     }

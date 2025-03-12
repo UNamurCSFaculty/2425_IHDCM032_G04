@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,28 +15,24 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import java.io.IOException;
-
 @Component
 @AllArgsConstructor
 /**
  * @brief Authentication token filter for processing JWTs.
- *
- * This filter intercepts incoming HTTP requests to extract and validate JWT tokens from cookies.
- * Upon successful validation, it sets the authentication in the SecurityContext.
+ *     <p>This filter intercepts incoming HTTP requests to extract and validate JWT tokens from
+ *     cookies. Upon successful validation, it sets the authentication in the SecurityContext.
  */
 public class AuthTokenFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
     private final UserDetailsService userDetailsService;
 
-
     /**
-     * @brief Processes the HTTP request to authenticate a user based on the JWT token present in cookies.
-     *
-     * This method extracts the JWT from the request, validates it, and if valid, sets the authentication
-     * in the SecurityContext so that the user is considered authenticated for the current request.
-     *
+     * @brief Processes the HTTP request to authenticate a user based on the JWT token present in
+     *     cookies.
+     *     <p>This method extracts the JWT from the request, validates it, and if valid, sets the
+     *     authentication in the SecurityContext so that the user is considered authenticated for
+     *     the current request.
      * @param request The HttpServletRequest being processed.
      * @param response The HttpServletResponse associated with the request.
      * @param filterChain The FilterChain to pass the request and response to the next filter.
@@ -43,7 +40,9 @@ public class AuthTokenFilter extends OncePerRequestFilter {
      * @throws IOException if an I/O error occurs during processing.
      */
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(
+            HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
         try {
             String jwt = parseJwt(request);
             if (jwt != null) {
@@ -51,8 +50,10 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
                 if (jwtUtil.validateToken(jwt, userDetails)) {
                     UsernamePasswordAuthenticationToken authentication =
-                            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                            new UsernamePasswordAuthenticationToken(
+                                    userDetails, null, userDetails.getAuthorities());
+                    authentication.setDetails(
+                            new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }
@@ -64,10 +65,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
     /**
      * @brief Extracts the JWT token from the cookies of the HttpServletRequest.
-     *
-     * This method iterates through the cookies in the request and returns the value of the cookie named "jwt".
-     * If no such cookie is found, it returns null.
-     *
+     *     <p>This method iterates through the cookies in the request and returns the value of the
+     *     cookie named "jwt". If no such cookie is found, it returns null.
      * @param request The HttpServletRequest from which to extract the JWT token.
      * @return The JWT token as a String if present; otherwise, null.
      */

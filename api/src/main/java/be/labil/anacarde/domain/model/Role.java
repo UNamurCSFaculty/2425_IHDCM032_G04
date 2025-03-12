@@ -1,11 +1,10 @@
 package be.labil.anacarde.domain.model;
 
 import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.proxy.HibernateProxy;
-
 import java.util.Objects;
 import java.util.Set;
+import lombok.*;
+import org.hibernate.proxy.HibernateProxy;
 
 @Entity
 @Table(name = "role")
@@ -32,10 +31,9 @@ public class Role {
 
     /**
      * @brief Compares this Role object with the specified object for equality.
-     *
-     * The comparison is based on the unique identifier of the role. If both objects are of different effective classes,
-     * they are considered not equal. This method handles Hibernate proxy instances correctly.
-     *
+     *     <p>The comparison is based on the unique identifier of the role. If both objects are of
+     *     different effective classes, they are considered not equal. This method handles Hibernate
+     *     proxy instances correctly.
      * @param o The object to compare with this Role.
      * @return True if the specified object is equal to this Role, false otherwise.
      */
@@ -43,8 +41,14 @@ public class Role {
     public final boolean equals(Object o) {
         if (this == o) return true;
         if (o == null) return false;
-        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
-        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
+        Class<?> oEffectiveClass =
+                o instanceof HibernateProxy
+                        ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass()
+                        : o.getClass();
+        Class<?> thisEffectiveClass =
+                this instanceof HibernateProxy
+                        ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass()
+                        : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
         Role role = (Role) o;
         return getId() != null && Objects.equals(getId(), role.getId());
@@ -52,13 +56,16 @@ public class Role {
 
     /**
      * @brief Returns the hash code value for this Role.
-     *
-     * The hash code is based on the class type to accommodate Hibernate proxy instances.
-     *
+     *     <p>The hash code is based on the class type to accommodate Hibernate proxy instances.
      * @return The hash code as an integer.
      */
     @Override
     public final int hashCode() {
-        return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
+        return this instanceof HibernateProxy
+                ? ((HibernateProxy) this)
+                        .getHibernateLazyInitializer()
+                        .getPersistentClass()
+                        .hashCode()
+                : getClass().hashCode();
     }
 }

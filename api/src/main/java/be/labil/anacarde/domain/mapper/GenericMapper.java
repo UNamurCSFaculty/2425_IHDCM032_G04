@@ -1,18 +1,16 @@
 package be.labil.anacarde.domain.mapper;
 
+import java.util.Set;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
-import java.util.Set;
-
 /**
  * @brief Generic mapper interface for converting between DTOs and entities.
- *
- * This interface defines methods for mapping between a data transfer object (DTO) and its corresponding entity.
- * It supports conversions in both directions, as well as partial updates of existing entities with DTO data.
- * Additionally, it provides methods for converting sets of DTOs and entities.
- *
+ *     <p>This interface defines methods for mapping between a data transfer object (DTO) and its
+ *     corresponding entity. It supports conversions in both directions, as well as partial updates
+ *     of existing entities with DTO data. Additionally, it provides methods for converting sets of
+ *     DTOs and entities.
  * @tparam D The type of the Data Transfer Object.
  * @tparam E The type of the Entity.
  */

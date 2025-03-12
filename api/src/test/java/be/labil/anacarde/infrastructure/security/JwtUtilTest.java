@@ -1,11 +1,11 @@
 package be.labil.anacarde.infrastructure.security;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import be.labil.anacarde.domain.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class JwtUtilTest {
 
@@ -15,7 +15,8 @@ public class JwtUtilTest {
     public void setUp() {
         jwtUtil = new JwtUtil();
         // Inject configuration values using ReflectionTestUtils for testing purposes
-        ReflectionTestUtils.setField(jwtUtil, "secretKey", "V2Vha1NlY3VyZUtleVNlY3VyZUtleVNlY3VyZUtleVNlY3VyZQ==");
+        ReflectionTestUtils.setField(
+                jwtUtil, "secretKey", "V2Vha1NlY3VyZUtleVNlY3VyZUtleVNlY3VyZUtleVNlY3VyZQ==");
         ReflectionTestUtils.setField(jwtUtil, "tokenValidityHours", 1);
     }
 
@@ -32,7 +33,10 @@ public class JwtUtilTest {
 
         // Extract the username from the generated token
         String extractedUsername = jwtUtil.extractUsername(token);
-        assertEquals(user.getUsername(), extractedUsername, "Extracted username should match the original");
+        assertEquals(
+                user.getUsername(),
+                extractedUsername,
+                "Extracted username should match the original");
 
         // Validate the token and ensure it is valid for the given user details
         boolean isTokenValid = jwtUtil.validateToken(token, user);

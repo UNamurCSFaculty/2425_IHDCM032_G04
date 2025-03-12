@@ -1,5 +1,11 @@
 package be.labil.anacarde.presentation.controller;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
+
 import be.labil.anacarde.application.service.UserService;
 import be.labil.anacarde.domain.dto.UserDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,19 +20,11 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
-
 @ExtendWith(MockitoExtension.class)
 public class UserControllerUnitTest {
-    @Mock
-    private UserService userService;
+    @Mock private UserService userService;
 
-    @InjectMocks
-    private UserController userController;
+    @InjectMocks private UserController userController;
 
     @BeforeEach
     public void setUp() {

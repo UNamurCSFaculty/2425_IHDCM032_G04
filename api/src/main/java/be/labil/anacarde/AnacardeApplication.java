@@ -9,8 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 public class AnacardeApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(AnacardeApplication.class, args);
-	}
-
+    public static void main(String[] args) {
+        SpringApplication.run(AnacardeApplication.class, args);
+    }
 }

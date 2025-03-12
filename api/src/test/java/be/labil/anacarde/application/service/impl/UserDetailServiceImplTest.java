@@ -1,5 +1,10 @@
 package be.labil.anacarde.application.service.impl;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
 import be.labil.anacarde.application.exception.ResourceNotFoundException;
 import be.labil.anacarde.domain.dto.UserDto;
 import be.labil.anacarde.domain.mapper.UserMapper;
@@ -7,6 +12,9 @@ import be.labil.anacarde.domain.model.Role;
 import be.labil.anacarde.domain.model.User;
 import be.labil.anacarde.infrastructure.persistence.RoleRepository;
 import be.labil.anacarde.infrastructure.persistence.UserRepository;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,29 +25,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-
 @ExtendWith(MockitoExtension.class)
 public class UserDetailServiceImplTest {
 
-    @Mock
-    private UserRepository userRepository;
-    @Mock
-    private RoleRepository roleRepository;
-    @Mock
-    private UserMapper userMapper;
-    @Mock
-    private PasswordEncoder passwordEncoder;
+    @Mock private UserRepository userRepository;
+    @Mock private RoleRepository roleRepository;
+    @Mock private UserMapper userMapper;
+    @Mock private PasswordEncoder passwordEncoder;
 
-    @InjectMocks
-    private UserDetailServiceImpl userDetailServiceImpl;
+    @InjectMocks private UserDetailServiceImpl userDetailServiceImpl;
 
     private User user;
     private UserDto userDto;
@@ -79,7 +73,8 @@ public class UserDetailServiceImplTest {
     @Test
     void testLoadUserByUsernameNotFound() {
         when(userRepository.findByEmail("nonexistent@example.com")).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> userDetailServiceImpl.loadUserByUsername("nonexistent@example.com"))
+        assertThatThrownBy(
+                        () -> userDetailServiceImpl.loadUserByUsername("nonexistent@example.com"))
                 .isInstanceOf(UsernameNotFoundException.class)
                 .hasMessageContaining("User Not Found with email");
     }
@@ -134,22 +129,25 @@ public class UserDetailServiceImplTest {
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
 
         when(userMapper.partialUpdate(any(UserDto.class), any(User.class)))
-                .thenAnswer(invocation -> {
-                    UserDto dto = invocation.getArgument(0);
-                    User userToUpdate = invocation.getArgument(1);
-                    if (dto.getEmail() != null) {
-                        userToUpdate.setEmail(dto.getEmail());
-                    }
-                    return userToUpdate;
-                });
+                .thenAnswer(
+                        invocation -> {
+                            UserDto dto = invocation.getArgument(0);
+                            User userToUpdate = invocation.getArgument(1);
+                            if (dto.getEmail() != null) {
+                                userToUpdate.setEmail(dto.getEmail());
+                            }
+                            return userToUpdate;
+                        });
 
-        when(userMapper.toDto(any(User.class))).thenAnswer(invocation -> {
-            User updatedUser = invocation.getArgument(0);
-            UserDto dto = new UserDto();
-            dto.setEmail(updatedUser.getEmail());
-            dto.setPassword(updatedUser.getPassword());
-            return dto;
-        });
+        when(userMapper.toDto(any(User.class)))
+                .thenAnswer(
+                        invocation -> {
+                            User updatedUser = invocation.getArgument(0);
+                            UserDto dto = new UserDto();
+                            dto.setEmail(updatedUser.getEmail());
+                            dto.setPassword(updatedUser.getPassword());
+                            return dto;
+                        });
 
         when(passwordEncoder.encode("newPassword")).thenReturn("encodedNewPassword");
         when(userRepository.save(user)).thenReturn(user);

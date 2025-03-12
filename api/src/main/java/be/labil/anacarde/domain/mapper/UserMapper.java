@@ -8,7 +8,8 @@ import org.mapstruct.ReportingPolicy;
 /**
  * @brief Mapper interface for converting between User entity and UserDto.
  */
-@Mapper(componentModel = "spring", uses = {RoleMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface UserMapper extends GenericMapper<UserDto, User> {
-
-}
+@Mapper(
+        componentModel = "spring",
+        uses = {RoleMapper.class},
+        unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface UserMapper extends GenericMapper<UserDto, User> {}
