@@ -19,13 +19,6 @@ import java.time.LocalDateTime;
  */
 public abstract class BaseAuditableEntity implements Serializable {
 
-    @Id
-    /**
-     * @brief Unique identifier of the entity.
-     */
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
     /**
      * @brief Timestamp indicating when the entity was created.
      */

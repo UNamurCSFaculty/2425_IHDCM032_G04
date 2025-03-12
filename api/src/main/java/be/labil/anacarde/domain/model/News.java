@@ -19,7 +19,8 @@ import java.util.Objects;
  */
 public class News {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "news_seq")
+    @SequenceGenerator(name = "news_seq", sequenceName = "news_seq", allocationSize = 1)
     private Integer id;
 
     private String title;

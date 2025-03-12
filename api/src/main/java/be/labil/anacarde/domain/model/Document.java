@@ -19,7 +19,8 @@ import java.util.Objects;
  */
 public class Document {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "document_seq")
+    @SequenceGenerator(name = "document_seq", sequenceName = "document_seq", allocationSize = 1)
     private Integer id;
 
     private String documentType;
