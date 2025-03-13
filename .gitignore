@@ -28,6 +28,6 @@ out/
 *.swo
 
 # Doxygen generated documentation
-docs/html/
-docs/latex/
+api/docs/html/
+api/docs/latex/
 
