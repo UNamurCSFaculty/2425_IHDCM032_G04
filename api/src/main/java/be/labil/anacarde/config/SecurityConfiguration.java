@@ -20,10 +20,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @AllArgsConstructor
 @EnableMethodSecurity
 /**
- * This class configures the security settings for the application. It defines beans for
- * authentication providers, authentication managers, and the security filter chain. It also sets up
- * HTTP security policies such as disabling CORS and CSRF, setting session management to stateless,
- * and configuring request authorization.
+ * Cette classe définit les beans pour les fournisseurs d'authentification, les gestionnaires
+ * d'authentification, et la chaîne de filtres de sécurité. Elle configure également les politiques
+ * de sécurité HTTP en désactivant CORS et CSRF, en définissant la gestion de session en mode
+ * "stateless", et en configurant l'autorisation des requêtes.
  */
 public class SecurityConfiguration {
 
@@ -33,10 +33,10 @@ public class SecurityConfiguration {
     private final PasswordEncoder passwordEncoder;
 
     /**
-     * This method sets the UserDetailsService and PasswordEncoder for the authentication provider
-     * to be used for authenticating users.
+     * Configure le DaoAuthenticationProvider en définissant le UserDetailsService et le
+     * PasswordEncoder à utiliser pour l'authentification des utilisateurs.
      *
-     * @return A configured instance of DaoAuthenticationProvider.
+     * @return Une instance configurée de DaoAuthenticationProvider.
      */
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
@@ -47,12 +47,11 @@ public class SecurityConfiguration {
     }
 
     /**
-     * This method returns the AuthenticationManager which is used to process authentication
-     * requests.
+     * Retourne l'AuthenticationManager utilisé pour traiter les demandes d'authentification.
      *
-     * @param authConfig The AuthenticationConfiguration containing authentication details.
-     * @return The AuthenticationManager instance.
-     * @throws Exception if an error occurs while retrieving the AuthenticationManager.
+     * @param authConfig La configuration d'authentification contenant les détails nécessaires.
+     * @return L'instance d'AuthenticationManager.
+     * @throws Exception en cas d'erreur lors de la récupération de l'AuthenticationManager.
      */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig)
@@ -61,13 +60,16 @@ public class SecurityConfiguration {
     }
 
     /**
-     * This method disables CORS and CSRF, sets exception handling using the unauthorizedHandler,
-     * configures session management to be stateless, and defines URL authorization rules. It also
-     * adds the AuthTokenFilter before the UsernamePasswordAuthenticationFilter.
+     * Configure la chaîne de filtres de sécurité.
      *
-     * @param http The HttpSecurity instance to configure.
-     * @return The configured SecurityFilterChain.
-     * @throws Exception if an error occurs during configuration.
+     * <p>Cette méthode désactive CORS et CSRF, configure la gestion des exceptions via
+     * l'unauthorizedHandler, définit la gestion des sessions en mode "stateless" et précise les
+     * règles d'autorisation des URL. Elle ajoute également le AuthTokenFilter avant le
+     * UsernamePasswordAuthenticationFilter.
+     *
+     * @param http L'instance HttpSecurity à configurer.
+     * @return La SecurityFilterChain configurée.
+     * @throws Exception en cas d'erreur lors de la configuration.
      */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {

@@ -6,13 +6,13 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
 /**
- * This interface defines methods for mapping between a data transfer object (DTO) and its
- * corresponding entity. It supports conversions in both directions, as well as partial updates of
- * existing entities with DTO data. Additionally, it provides methods for converting sets of DTOs
- * and entities.
+ * Cette interface définit des méthodes pour la conversion entre un Data Transfer Object (DTO) et
+ * son entité correspondante. Elle prend en charge les conversions dans les deux sens, ainsi que les
+ * mises à jour partielles d'entités existantes à partir des données du DTO. De plus, elle fournit
+ * des méthodes pour convertir des ensembles (Set) de DTO et d'entités.
  *
- * @tparam D The type of the Data Transfer Object.
- * @tparam E The type of the Entity.
+ * @param <D> Le type du Data Transfer Object.
+ * @param <E> Le type de l'entité.
  */
 public interface GenericMapper<D, E> {
 

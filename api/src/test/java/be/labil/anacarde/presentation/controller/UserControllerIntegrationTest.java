@@ -23,7 +23,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
-/** Integration tests for UserController. */
+/** Tests d'intégration pour le contrôleur des utilisateurs. */
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
@@ -35,7 +35,11 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
 
     @Autowired private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    /** RequestPostProcessor to automatically add the JWT cookie to each request. */
+    /**
+     * RequestPostProcessor qui ajoute automatiquement le cookie JWT à chaque requête.
+     *
+     * @return le RequestPostProcessor configuré.
+     */
     private RequestPostProcessor jwt() {
         return request -> {
             request.setCookies(getJwtCookie());
@@ -43,6 +47,11 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
         };
     }
 
+    /**
+     * Teste la récupération d'un utilisateur existant.
+     *
+     * @throws Exception en cas d'erreur lors de l'exécution du test.
+     */
     @Test
     public void testGetUser() throws Exception {
         mockMvc.perform(
@@ -53,6 +62,11 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
                 .andExpect(jsonPath("$.email").value(getMainTestUser().getEmail()));
     }
 
+    /**
+     * Teste la création d'un nouvel utilisateur.
+     *
+     * @throws Exception en cas d'erreur lors de l'exécution du test.
+     */
     @Test
     public void testCreateUser() throws Exception {
         UserDto newUser = new UserDto();
@@ -64,7 +78,7 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
         ObjectNode node = objectMapper.valueToTree(newUser);
         node.put(
                 "password",
-                newUser.getPassword()); // Add manually because password is not serialized
+                newUser.getPassword()); // Ajout manuel car le mot de passe n'est pas sérialisé
         String jsonContent = node.toString();
 
         mockMvc.perform(
@@ -73,22 +87,26 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
                                 .content(jsonContent)
                                 .with(jwt()))
                 .andExpect(status().isCreated())
-                // Check that the Location header contains the new user's ID
+                // Vérifie que l'en-tête "Location" contient l'ID du nouvel utilisateur
                 .andExpect(header().string("Location", containsString("/api/users/")))
                 .andExpect(jsonPath("$.email").value("alice.smith@example.com"))
                 .andExpect(jsonPath("$.firstName").value("Alice"))
                 .andExpect(jsonPath("$.lastName").value("Smith"));
 
-        // Check that the password is hashed correctly
         User createdUser =
                 userRepository
                         .findByEmail("alice.smith@example.com")
-                        .orElseThrow(() -> new AssertionError("User not found"));
+                        .orElseThrow(() -> new AssertionError("Utilisateur non trouvé"));
         assertTrue(
                 bCryptPasswordEncoder.matches("secret", createdUser.getPassword()),
-                "The stored password should match the raw password 'secret'");
+                "Le mot de passe stocké doit correspondre au mot de passe brut 'secret'");
     }
 
+    /**
+     * Teste la récupération de la liste de tous les utilisateurs.
+     *
+     * @throws Exception en cas d'erreur lors de l'exécution du test.
+     */
     @Test
     public void testListUsers() throws Exception {
         mockMvc.perform(get("/api/users").accept(MediaType.APPLICATION_JSON).with(jwt()))
@@ -96,6 +114,11 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
                 .andExpect(jsonPath("$").isArray());
     }
 
+    /**
+     * Teste la mise à jour d'un utilisateur existant.
+     *
+     * @throws Exception en cas d'erreur lors de l'exécution du test.
+     */
     @Test
     public void testUpdateUser() throws Exception {
         UserDto updateUser = new UserDto();
@@ -108,7 +131,7 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
         ObjectNode node = objectMapper.valueToTree(updateUser);
         node.put(
                 "password",
-                updateUser.getPassword()); // Add manually because password is not serialized
+                updateUser.getPassword()); // Ajout manuel car le mot de passe n'est pas sérialisé
         String jsonContent = node.toString();
 
         mockMvc.perform(
@@ -119,18 +142,23 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstName").value("John Updated"));
 
-        // Verify that the password is hashed correctly after update
+        // Vérifie que le mot de passe est correctement haché après la mise à jour
         User updatedUser =
                 userRepository
                         .findByEmail("email@updated.com")
-                        .orElseThrow(() -> new AssertionError("User not found"));
-        // Verify that the role is not updated
-        assertTrue(updatedUser.getRoles().isEmpty(), "The roles should not be updated");
+                        .orElseThrow(() -> new AssertionError("Utilisateur non trouvé"));
+        // Vérifie que les rôles ne sont pas mis à jour
+        assertTrue(updatedUser.getRoles().isEmpty(), "Les rôles ne doivent pas être mis à jour");
         assertTrue(
                 bCryptPasswordEncoder.matches("newpassword", updatedUser.getPassword()),
-                "The stored password should match the updated password 'newpassword'");
+                "Le mot de passe stocké doit correspondre au nouveau mot de passe 'newpassword'");
     }
 
+    /**
+     * Teste la suppression d'un utilisateur.
+     *
+     * @throws Exception en cas d'erreur lors de l'exécution du test.
+     */
     @Test
     public void testDeleteUser() throws Exception {
         mockMvc.perform(delete("/api/users/" + getSecondTestUser().getId()).with(jwt()))
@@ -140,6 +168,11 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
                 .andExpect(status().isNotFound());
     }
 
+    /**
+     * Teste l'ajout d'un rôle à un utilisateur.
+     *
+     * @throws Exception en cas d'erreur lors de l'exécution du test.
+     */
     @Test
     public void testAddRoleToUserIntegration() throws Exception {
         Integer userId = getMainTestUser().getId();
@@ -155,6 +188,11 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
                                 .exists());
     }
 
+    /**
+     * Teste la mise à jour complète des rôles d'un utilisateur.
+     *
+     * @throws Exception en cas d'erreur lors de l'exécution du test.
+     */
     @Test
     public void testUpdateUserRolesIntegration() throws Exception {
         Integer userId = getMainTestUser().getId();
@@ -173,11 +211,21 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
                 .andExpect(jsonPath("$.roles[?(@.name=='ROLE_USER')]").exists());
     }
 
+    /**
+     * Teste la récupération d'un utilisateur inexistant.
+     *
+     * @throws Exception en cas d'erreur lors de l'exécution du test.
+     */
     @Test
     public void testGetUserNotFound() throws Exception {
         mockMvc.perform(get("/api/users/999999").with(jwt())).andExpect(status().isNotFound());
     }
 
+    /**
+     * Teste la création d'un utilisateur sans email.
+     *
+     * @throws Exception en cas d'erreur lors de l'exécution du test.
+     */
     @Test
     public void testCreateUserMissingEmail() throws Exception {
         UserDto newUser = new UserDto();
@@ -196,9 +244,15 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
                                 .with(jwt()))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errors.email", containsString("Email is required")));
+                .andExpect(
+                        jsonPath("$.errors.email", containsString("L'adresse email est requise")));
     }
 
+    /**
+     * Teste l'ajout d'un rôle à un utilisateur inexistant.
+     *
+     * @throws Exception en cas d'erreur lors de l'exécution du test.
+     */
     @Test
     public void testAddRoleToUserUserNotFound() throws Exception {
         int nonExistentUserId = 999999;
@@ -211,6 +265,11 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
                 .andExpect(status().isNotFound());
     }
 
+    /**
+     * Teste l'ajout d'un rôle inexistant à un utilisateur.
+     *
+     * @throws Exception en cas d'erreur lors de l'exécution du test.
+     */
     @Test
     public void testAddRoleToUserRoleNotFound() throws Exception {
         Integer userId = getMainTestUser().getId();
@@ -219,6 +278,11 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
                 .andExpect(status().isNotFound());
     }
 
+    /**
+     * Teste la mise à jour des rôles d'un utilisateur inexistant.
+     *
+     * @throws Exception en cas d'erreur lors de l'exécution du test.
+     */
     @Test
     public void testUpdateUserRolesUserNotFound() throws Exception {
         int nonExistentUserId = 999999;
@@ -233,6 +297,11 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
                 .andExpect(status().isNotFound());
     }
 
+    /**
+     * Teste la mise à jour des rôles d'un utilisateur lorsqu'un rôle spécifié est inexistant.
+     *
+     * @throws Exception en cas d'erreur lors de l'exécution du test.
+     */
     @Test
     public void testUpdateUserRolesRoleNotFound() throws Exception {
         Integer userId = getMainTestUser().getId();

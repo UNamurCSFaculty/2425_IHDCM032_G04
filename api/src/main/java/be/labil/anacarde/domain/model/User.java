@@ -21,7 +21,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-/** Entity representing a User in the system. */
+/** Entité représentant un utilisateur dans le système. */
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
@@ -54,10 +54,10 @@ public class User implements UserDetails {
     private Set<Role> roles;
 
     /**
-     * This method converts the roles assigned to the user into a collection of GrantedAuthority
-     * objects. If no roles are assigned, an empty list is returned.
+     * Convertit les rôles assignés à l'utilisateur en une collection d'objets GrantedAuthority. Si
+     * aucun rôle n'est assigné, une liste vide est retournée.
      *
-     * @return A Collection of GrantedAuthority representing the user's roles.
+     * @return Une Collection de GrantedAuthority représentant les rôles de l'utilisateur.
      */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -70,9 +70,9 @@ public class User implements UserDetails {
     }
 
     /**
-     * Returns the user roles.
+     * Retourne les rôles de l'utilisateur.
      *
-     * @return Empty set if the user has no roles; otherwise, the user's roles.
+     * @return Un ensemble vide si l'utilisateur n'a aucun rôle ; sinon, les rôles de l'utilisateur.
      */
     public Set<Role> getRoles() {
         if (roles == null) {
@@ -82,9 +82,9 @@ public class User implements UserDetails {
     }
 
     /**
-     * Retrieves the user's password.
+     * Récupère le mot de passe de l'utilisateur.
      *
-     * @return The user's password as a String.
+     * @return Le mot de passe de l'utilisateur sous forme de String.
      */
     @Override
     public String getPassword() {
@@ -92,9 +92,10 @@ public class User implements UserDetails {
     }
 
     /**
-     * Retrieves the user's username, which in this implementation is the email address.
+     * Récupère le nom d'utilisateur de l'utilisateur, qui dans cette implémentation correspond à
+     * l'adresse e-mail.
      *
-     * @return The user's email address as a String.
+     * @return L'adresse e-mail de l'utilisateur sous forme de String.
      */
     @Override
     public String getUsername() {
@@ -102,9 +103,9 @@ public class User implements UserDetails {
     }
 
     /**
-     * This implementation always returns true.
+     * Cette implémentation retourne toujours true.
      *
-     * @return True, indicating the account is not expired.
+     * @return true, indiquant que le compte n'est pas expiré.
      */
     @Override
     public boolean isAccountNonExpired() {
@@ -112,9 +113,9 @@ public class User implements UserDetails {
     }
 
     /**
-     * This implementation always returns true.
+     * Cette implémentation retourne toujours true.
      *
-     * @return True, indicating the account is not locked.
+     * @return true, indiquant que le compte n'est pas verrouillé.
      */
     @Override
     public boolean isAccountNonLocked() {
@@ -122,9 +123,9 @@ public class User implements UserDetails {
     }
 
     /**
-     * This implementation always returns true.
+     * Cette implémentation retourne toujours true.
      *
-     * @return True, indicating the credentials are not expired.
+     * @return true, indiquant que les identifiants ne sont pas expirés.
      */
     @Override
     public boolean isCredentialsNonExpired() {
@@ -132,9 +133,9 @@ public class User implements UserDetails {
     }
 
     /**
-     * This method returns the value of the 'active' field if it is not null, otherwise false.
+     * Retourne la valeur du champ 'active'.
      *
-     * @return True if the account is enabled; false otherwise.
+     * @return true si le compte est activé ; false sinon.
      */
     @Override
     public boolean isEnabled() {
@@ -142,11 +143,11 @@ public class User implements UserDetails {
     }
 
     /**
-     * The comparison is based on the unique identifier of the user. Special handling is included to
-     * properly compare proxy instances managed by Hibernate.
+     * La comparaison est basée sur l'identifiant unique de l'utilisateur. Une gestion particulière
+     * est prévue pour comparer correctement les instances proxy gérées par Hibernate.
      *
-     * @param o The object to compare with this user.
-     * @return True if the given object represents the same user; otherwise, false.
+     * @param o L'objet à comparer avec cet utilisateur.
+     * @return true si l'objet donné représente le même utilisateur ; sinon, false.
      */
     @Override
     public final boolean equals(Object o) {
@@ -166,10 +167,10 @@ public class User implements UserDetails {
     }
 
     /**
-     * The hash code is based on the class type, taking into account possible Hibernate proxy
-     * instances.
+     * Le hash code est basé sur le type de la classe, en tenant compte des instances proxy de
+     * Hibernate.
      *
-     * @return The hash code as an integer.
+     * @return Le hash code en tant qu'entier.
      */
     @Override
     public final int hashCode() {

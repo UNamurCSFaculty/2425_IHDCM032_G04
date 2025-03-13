@@ -24,6 +24,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
+/** Test unitaire du contrôleur d'authentification. */
 @ExtendWith(MockitoExtension.class)
 public class AuthenticationControllerUnitTest {
 
@@ -39,11 +40,13 @@ public class AuthenticationControllerUnitTest {
 
     @BeforeEach
     public void setUp() {
+        // Simuler le profil actif "test"
         Mockito.lenient().when(environment.getActiveProfiles()).thenReturn(new String[] {"test"});
         authenticationController =
                 new AuthenticationController(authenticationManager, jwtUtil, environment, 1);
     }
 
+    /** Teste le scénario d'authentification réussi. */
     @Test
     public void testAuthenticateUser_Success() {
         String username = "user@example.com";
@@ -73,13 +76,14 @@ public class AuthenticationControllerUnitTest {
         assertEquals(jwtToken, jwtCookie.getValue());
 
         assertEquals(200, responseEntity.getStatusCode().value());
-        assertEquals("User authenticated successfully", responseEntity.getBody());
+        assertEquals("Utilisateur authentifié avec succès", responseEntity.getBody());
     }
 
+    /** Teste le scénario d'échec d'authentification. */
     @Test
     public void testAuthenticateUser_Failure() {
         when(authenticationManager.authenticate(any()))
-                .thenThrow(new BadCredentialsException("Invalid credentials"));
+                .thenThrow(new BadCredentialsException("Identifiants invalides"));
 
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setUsername("user@example.com");
@@ -89,6 +93,6 @@ public class AuthenticationControllerUnitTest {
                 authenticationController.authenticateUser(loginRequest, httpServletResponse);
 
         assertEquals(401, responseEntity.getStatusCode().value());
-        assertEquals("Failed to authenticate", responseEntity.getBody());
+        assertEquals("Échec de l'authentification", responseEntity.getBody());
     }
 }

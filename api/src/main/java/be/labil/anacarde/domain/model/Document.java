@@ -15,7 +15,7 @@ import org.hibernate.proxy.HibernateProxy;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-/** Entity representing a Document in the system. */
+/** Entité représentant un document dans le système. */
 public class Document {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "document_seq")
@@ -39,14 +39,14 @@ public class Document {
     @ToString.Exclude
     private User user;
 
-    @Override
     /**
-     * The comparison is based on the unique identifier of the document. This method properly
-     * handles Hibernate proxy instances.
+     * La comparaison est basée sur l'identifiant unique du document. Cette méthode gère
+     * correctement les instances proxy de Hibernate.
      *
-     * @param o The object to compare with this Document.
-     * @return True if the specified object is equal to this Document; otherwise, false.
+     * @param o L'objet à comparer avec ce document.
+     * @return true si l'objet spécifié est égal à ce document ; sinon, false.
      */
+    @Override
     public final boolean equals(Object o) {
         if (this == o) return true;
         if (o == null) return false;
@@ -63,13 +63,13 @@ public class Document {
         return getId() != null && Objects.equals(getId(), document.getId());
     }
 
-    @Override
     /**
-     * The hash code is derived from the class type to properly account for Hibernate proxy
-     * instances.
+     * Le hash code est dérivé du type de la classe afin de gérer correctement les instances proxy
+     * de Hibernate.
      *
-     * @return The hash code as an integer.
+     * @return Le hash code en tant qu'entier.
      */
+    @Override
     public final int hashCode() {
         return this instanceof HibernateProxy
                 ? ((HibernateProxy) this)

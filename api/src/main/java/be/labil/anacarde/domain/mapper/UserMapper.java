@@ -5,7 +5,7 @@ import be.labil.anacarde.domain.model.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
-/** Mapper interface for converting between User entity and UserDto. */
+/** Interface Mapper pour la conversion entre l'entité User et le DTO UserDto. */
 @Mapper(
         componentModel = "spring",
         uses = {RoleMapper.class},

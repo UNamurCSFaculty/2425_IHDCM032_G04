@@ -8,20 +8,20 @@ import org.springframework.stereotype.Component;
 
 @Component
 /**
- * This class provides the current authenticated user's name to be used as the auditor in data
- * auditing. If no authenticated user is available or if the user is anonymous, a default value is
- * returned.
+ * Cette classe fournit le nom de l'utilisateur authentifié actuel, à utiliser comme auditeur pour
+ * l'audit des données. Si aucun utilisateur authentifié n'est disponible ou si l'utilisateur est
+ * anonyme, une valeur par défaut est renvoyée.
  */
 public class AuditorAwareImpl implements AuditorAware<String> {
 
     /**
-     * This method obtains the current authentication from the SecurityContextHolder and checks
-     * whether the user is authenticated and not anonymous. If the authentication is null, not
-     * authenticated, or represents an anonymous user, it returns a default auditor value.
-     * Otherwise, it returns the authenticated user's name.
+     * Obtient l'authentification courante depuis le SecurityContextHolder et vérifie si
+     * l'utilisateur est authentifié et non anonyme. Si l'authentification est nulle, non
+     * authentifiée ou représente un utilisateur anonyme, une valeur d'auditeur par défaut est
+     * renvoyée. Sinon, le nom de l'utilisateur authentifié est retourné.
      *
-     * @return An Optional containing the auditor's name if available; otherwise, an Optional
-     *     containing a default value.
+     * @return Un Optional contenant le nom de l'auditeur si disponible, sinon un Optional contenant
+     *     une valeur par défaut.
      */
     @Override
     public Optional<String> getCurrentAuditor() {
@@ -34,7 +34,6 @@ public class AuditorAwareImpl implements AuditorAware<String> {
             return Optional.of("anonyme");
         }
 
-        // Renvoyer le nom de l'utilisateur
         return Optional.ofNullable(authentication.getName());
     }
 }

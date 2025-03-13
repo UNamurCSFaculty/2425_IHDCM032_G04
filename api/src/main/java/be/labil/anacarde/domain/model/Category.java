@@ -15,7 +15,7 @@ import org.hibernate.proxy.HibernateProxy;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-/** Entity representing a Category in the system. */
+/** Entité représentant une catégorie dans le système. */
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "category_seq")
@@ -30,11 +30,11 @@ public class Category {
     private List<News> news;
 
     /**
-     * The comparison is based on the unique identifier of the category. It properly handles
-     * Hibernate proxy instances.
+     * La comparaison est basée sur l'identifiant unique de la catégorie. Elle gère correctement les
+     * instances proxy de Hibernate.
      *
-     * @param o The object to compare with this Category.
-     * @return True if the specified object is equal to this Category; otherwise, false.
+     * @param o L'objet à comparer avec cette catégorie.
+     * @return true si l'objet spécifié est égal à cette catégorie ; sinon, false.
      */
     @Override
     public final boolean equals(Object o) {
@@ -54,10 +54,10 @@ public class Category {
     }
 
     /**
-     * The hash code is derived from the class type to properly account for Hibernate proxy
-     * instances.
+     * Le hash code est dérivé du type de classe pour prendre correctement en compte les instances
+     * proxy de Hibernate.
      *
-     * @return The hash code as an integer.
+     * @return Le hash code en tant qu'entier.
      */
     @Override
     public final int hashCode() {

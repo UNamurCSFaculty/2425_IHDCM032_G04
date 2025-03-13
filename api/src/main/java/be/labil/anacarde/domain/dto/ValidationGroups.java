@@ -1,15 +1,15 @@
 package be.labil.anacarde.domain.dto;
 
 /**
- * This interface declares different validation groups used to differentiate validation rules for
- * user operations. It includes the Create group for user creation and the Update group for user
- * updates.
+ * Cette interface déclare différents groupes de validation utilisés pour différencier les règles de
+ * validation lors des opérations sur les utilisateurs. Elle inclut le groupe Create pour la
+ * création d'un utilisateur et le groupe Update pour la mise à jour d'un utilisateur.
  */
 public interface ValidationGroups {
 
-    /** Validation group used for creating a new user. */
+    /** Groupe de validation utilisé pour la création d'un nouvel utilisateur. */
     interface Create {}
 
-    /** Validation group used for updating an existing user. */
+    /** Groupe de validation utilisé pour la mise à jour d'un utilisateur existant. */
     interface Update {}
 }

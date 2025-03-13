@@ -3,5 +3,5 @@ package be.labil.anacarde.infrastructure.persistence;
 import be.labil.anacarde.domain.model.Document;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-/** Repository interface for Document entities. */
+/** Interface Repository pour les entités Document. */
 public interface DocumentRepository extends JpaRepository<Document, Integer> {}

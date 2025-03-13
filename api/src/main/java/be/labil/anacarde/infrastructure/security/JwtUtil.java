@@ -16,8 +16,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 /**
- * This class provides methods to generate, parse, and validate JSON Web Tokens (JWT) for user
- * authentication.
+ * Cette classe fournit des méthodes pour générer, analyser et valider des JSON Web Tokens (JWT)
+ * destinés à l'authentification des utilisateurs.
  */
 public class JwtUtil {
 
@@ -25,13 +25,13 @@ public class JwtUtil {
     private String secretKey;
 
     @Value("${jwt.token.validity.hours}")
-    /** Token validity duration in hours. */
+    /** Durée de validité du token en heures. */
     private long tokenValidityHours;
 
     /**
-     * Converts the secret key from Base64 encoding to a SecretKey object.
+     * Convertit la clé secrète encodée en Base64 en un objet SecretKey.
      *
-     * @return The SecretKey generated from the decoded secret key.
+     * @return La SecretKey générée à partir de la clé secrète décodée.
      */
     private SecretKey getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
@@ -39,10 +39,10 @@ public class JwtUtil {
     }
 
     /**
-     * Extracts all claims from the provided JWT token.
+     * Extrait l'ensemble des claims présents dans le token JWT fourni.
      *
-     * @param token The JWT token from which to extract claims.
-     * @return The Claims object containing all claims present in the token.
+     * @param token Le token JWT dont il faut extraire les claims.
+     * @return L'objet Claims contenant toutes les informations du token.
      */
     public Claims extractAllClaims(String token) {
         return Jwts.parser()
@@ -53,11 +53,12 @@ public class JwtUtil {
     }
 
     /**
-     * Extracts a specific claim from the JWT token using the provided resolver function.
+     * Extrait une claim spécifique du token JWT à l'aide de la fonction résolveur fournie.
      *
-     * @param token The JWT token from which to extract the claim.
-     * @param claimsResolver A function that specifies which claim to extract from the Claims.
-     * @return The value of the extracted claim.
+     * @param token Le token JWT dont il faut extraire la claim.
+     * @param claimsResolver Une fonction précisant la claim à extraire depuis l'objet Claims.
+     * @param <T> Le type de la claim à extraire.
+     * @return La valeur de la claim extraite.
      */
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         Claims claims = extractAllClaims(token);
@@ -65,51 +66,52 @@ public class JwtUtil {
     }
 
     /**
-     * Retrieves the username (subject) from the JWT token.
+     * Récupère le nom d'utilisateur (subject) depuis le token JWT.
      *
-     * @param token The JWT token from which to retrieve the username.
-     * @return The username extracted from the token.
+     * @param token Le token JWT dont il faut extraire le nom d'utilisateur.
+     * @return Le nom d'utilisateur extrait du token.
      */
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
     /**
-     * Retrieves the expiration date from the JWT token.
+     * Récupère la date d'expiration du token JWT.
      *
-     * @param token The JWT token from which to retrieve the expiration date.
-     * @return The expiration Date of the token.
+     * @param token Le token JWT dont il faut extraire la date d'expiration.
+     * @return La date d'expiration du token.
      */
     public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
 
     /**
-     * Checks whether the JWT token has expired.
+     * Vérifie si le token JWT a expiré.
      *
-     * @param token The JWT token to check for expiration.
-     * @return True if the token has expired, false otherwise.
+     * @param token Le token JWT à vérifier.
+     * @return true si le token a expiré, false sinon.
      */
     private Boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
     /**
-     * Generates a JWT token for the given user details.
+     * Génère un token JWT pour l'utilisateur spécifié.
      *
-     * @param userDetails The UserDetails object containing user information.
-     * @return A signed JWT token as a String.
+     * @param userDetails L'objet UserDetails contenant les informations de l'utilisateur.
+     * @return Un token JWT signé sous forme de String.
      */
     public String generateToken(UserDetails userDetails) {
         return createToken(Map.of(), userDetails.getUsername());
     }
 
     /**
-     * Creates a JWT token with custom claims and a subject.
+     * Crée un token JWT en incluant des claims personnalisées et un subject.
      *
-     * @param customClaims A map of custom claims to include in the token.
-     * @param subject The subject (typically the username) for which the token is generated.
-     * @return A signed JWT token as a String.
+     * @param customClaims Une map des claims personnalisées à inclure dans le token.
+     * @param subject Le subject (généralement le nom d'utilisateur) pour lequel le token est
+     *     généré.
+     * @return Un token JWT signé sous forme de String.
      */
     private String createToken(Map<String, Object> customClaims, String subject) {
         Date now = new Date();
@@ -127,11 +129,12 @@ public class JwtUtil {
     }
 
     /**
-     * Validates the provided JWT token against the given user details.
+     * Valide le token JWT fourni en le comparant aux informations de l'utilisateur.
      *
-     * @param token The JWT token to validate.
-     * @param userDetails The UserDetails object to validate against.
-     * @return True if the token is valid and matches the user details, false otherwise.
+     * @param token Le token JWT à valider.
+     * @param userDetails L'objet UserDetails avec lequel valider le token.
+     * @return true si le token est valide et correspond aux informations de l'utilisateur, false
+     *     sinon.
      */
     public Boolean validateToken(String token, UserDetails userDetails) {
         try {

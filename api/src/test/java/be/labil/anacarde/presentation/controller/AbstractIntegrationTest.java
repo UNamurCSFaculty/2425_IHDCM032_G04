@@ -14,6 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+/**
+ * Classe de base pour les tests d'intégration qui nécessitent des utilisateurs et des rôles de test
+ * en base de données.
+ */
 public abstract class AbstractIntegrationTest {
 
     @Autowired protected JwtUtil jwtUtil;
@@ -43,36 +47,62 @@ public abstract class AbstractIntegrationTest {
         roleRepository.deleteAll();
     }
 
-    /** Returns the main test user, the one that is used for the requests (JWT cookie). */
+    /**
+     * Renvoie l'utilisateur de test principal, utilisé pour les requêtes (cookie JWT).
+     *
+     * @return L'utilisateur de test principal.
+     * @throws IllegalStateException si l'utilisateur de test n'est pas initialisé.
+     */
     public User getMainTestUser() {
         if (mainTestUser == null) {
-            throw new IllegalStateException("Test user not initialized");
+            throw new IllegalStateException("Utilisateur de test non initialisé");
         }
         return mainTestUser;
     }
 
+    /**
+     * Renvoie le second utilisateur de test.
+     *
+     * @return Le second utilisateur de test.
+     * @throws IllegalStateException si le second utilisateur de test n'est pas initialisé.
+     */
     public User getSecondTestUser() {
         if (secondTestUser == null) {
-            throw new IllegalStateException("Second test user not initialized");
+            throw new IllegalStateException("Second utilisateur de test non initialisé");
         }
         return secondTestUser;
     }
 
+    /**
+     * Renvoie le rôle d'utilisateur de test.
+     *
+     * @return Le rôle d'utilisateur de test.
+     * @throws IllegalStateException si le rôle d'utilisateur de test n'est pas initialisé.
+     */
     public Role getUserTestRole() {
         if (userTestRole == null) {
-            throw new IllegalStateException("User role not initialized");
+            throw new IllegalStateException("Rôle d'utilisateur non initialisé");
         }
         return userTestRole;
     }
 
+    /**
+     * Renvoie le rôle d'administrateur de test.
+     *
+     * @return Le rôle d'administrateur de test.
+     * @throws IllegalStateException si le rôle d'administrateur de test n'est pas initialisé.
+     */
     public Role getAdminTestRole() {
         if (adminTestRole == null) {
-            throw new IllegalStateException("Admin role not initialized");
+            throw new IllegalStateException("Rôle d'administrateur non initialisé");
         }
         return adminTestRole;
     }
 
-    /** Initializes the user database with a single test user. */
+    /**
+     * Initialise la base de données des utilisateurs avec deux utilisateurs de test et les rôles
+     * associés.
+     */
     public void initUserDatabase() {
         userRepository.deleteAll();
 
@@ -103,7 +133,9 @@ public abstract class AbstractIntegrationTest {
         secondTestUser = userRepository.save(user2);
     }
 
-    /** Generates a HttpOnly JWT cookie using the test user's details. */
+    /**
+     * Génère un cookie JWT HTTP-only en utilisant les détails de l'utilisateur de test principal.
+     */
     protected void initJwtCookie() {
         UserDetails userDetails =
                 userDetailsService.loadUserByUsername(getMainTestUser().getEmail());

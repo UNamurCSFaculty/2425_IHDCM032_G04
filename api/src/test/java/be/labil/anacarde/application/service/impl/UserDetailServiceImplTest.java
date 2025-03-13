@@ -26,6 +26,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @ExtendWith(MockitoExtension.class)
+/**
+ * Teste la classe UserDetailServiceImpl.
+ *
+ * <p>Cette classe effectue des tests unitaires sur les méthodes de UserDetailServiceImpl, telles
+ * que la récupération d'un utilisateur par email, la création, la mise à jour, la suppression, et
+ * l'ajout ou la mise à jour des rôles d'un utilisateur.
+ */
 public class UserDetailServiceImplTest {
 
     @Mock private UserRepository userRepository;
@@ -56,12 +63,12 @@ public class UserDetailServiceImplTest {
         role.setId(100);
         role.setName("ROLE_USER");
 
-        // Assume the mapper converts between User and UserDto directly
+        // On suppose que le mapper convertit directement entre User et UserDto.
         Mockito.lenient().when(userMapper.toEntity(any(UserDto.class))).thenReturn(user);
         Mockito.lenient().when(userMapper.toDto(any(User.class))).thenReturn(userDto);
     }
 
-    // Test loadUserByUsername with valid email
+    /** Test de la méthode loadUserByUsername avec un email valide. */
     @Test
     void testLoadUserByUsernameSuccess() {
         when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
@@ -69,17 +76,20 @@ public class UserDetailServiceImplTest {
         verify(userRepository, times(1)).findByEmail("test@example.com");
     }
 
-    // Test loadUserByUsername with non-existing email
+    /** Test de la méthode loadUserByUsername avec un email inexistant. */
     @Test
     void testLoadUserByUsernameNotFound() {
         when(userRepository.findByEmail("nonexistent@example.com")).thenReturn(Optional.empty());
         assertThatThrownBy(
                         () -> userDetailServiceImpl.loadUserByUsername("nonexistent@example.com"))
                 .isInstanceOf(UsernameNotFoundException.class)
-                .hasMessageContaining("User Not Found with email");
+                .hasMessageContaining("Utilisateur non trouvé avec l'email");
     }
 
-    // Test createUser: valid user creation with password encoding
+    /**
+     * Test de la création d'un utilisateur : vérifie que le mot de passe est encodé correctement et
+     * que l'utilisateur est sauvegardé.
+     */
     @Test
     void testCreateUser() {
         String encodedPassword = "encodedPassword";
@@ -93,7 +103,7 @@ public class UserDetailServiceImplTest {
         assertThat(result).isEqualTo(userDto);
     }
 
-    // Test getUserById: user exists
+    /** Test de la récupération d'un utilisateur existant par son identifiant. */
     @Test
     void testGetUserByIdSuccess() {
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
@@ -101,16 +111,19 @@ public class UserDetailServiceImplTest {
         assertThat(result).isEqualTo(userDto);
     }
 
-    // Test getUserById: user does not exist
+    /**
+     * Test de la récupération d'un utilisateur par son identifiant quand l'utilisateur n'existe
+     * pas.
+     */
     @Test
     void testGetUserByIdNotFound() {
         when(userRepository.findById(1)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> userDetailServiceImpl.getUserById(1))
                 .isInstanceOf(ResourceNotFoundException.class)
-                .hasMessage("User not found");
+                .hasMessage("Utilisateur non trouvé");
     }
 
-    // Test listUsers: returns list of users
+    /** Test de la méthode listUsers qui doit retourner la liste de tous les utilisateurs. */
     @Test
     void testListUsers() {
         when(userRepository.findAll()).thenReturn(Collections.singletonList(user));
@@ -118,10 +131,14 @@ public class UserDetailServiceImplTest {
         assertThat(users).hasSize(1).contains(userDto);
     }
 
-    // Test updateUser: successful update
+    /**
+     * Test de la mise à jour d'un utilisateur existant.
+     *
+     * <p>On suppose que le DTO mis à jour comporte un nouveau mot de passe et des modifications sur
+     * d'autres champs.
+     */
     @Test
     void testUpdateUser() {
-        // Assume updated DTO has a new password and some field changes
         UserDto updateDto = new UserDto();
         updateDto.setPassword("newPassword");
         updateDto.setEmail("updated@example.com");
@@ -157,7 +174,7 @@ public class UserDetailServiceImplTest {
         verify(passwordEncoder, times(1)).encode("newPassword");
     }
 
-    // Test deleteUser: successful deletion
+    /** Test de la suppression réussie d'un utilisateur existant. */
     @Test
     void testDeleteUserSuccess() {
         when(userRepository.existsById(1)).thenReturn(true);
@@ -165,24 +182,24 @@ public class UserDetailServiceImplTest {
         verify(userRepository, times(1)).deleteById(1);
     }
 
-    // Test deleteUser: deletion of non-existing user
+    /** Test de la suppression d'un utilisateur inexistant. */
     @Test
     void testDeleteUserNotFound() {
         when(userRepository.existsById(1)).thenReturn(false);
         assertThatThrownBy(() -> userDetailServiceImpl.deleteUser(1))
                 .isInstanceOf(ResourceNotFoundException.class)
-                .hasMessage("User not found");
+                .hasMessage("Utilisateur non trouvé");
     }
 
-    // Test addRoleToUser: successful role addition
+    /** Test de l'ajout d'un rôle à un utilisateur avec succès. */
     @Test
     void testAddRoleToUserSuccess() {
-        // Set up a mutable set of roles for the user
+        // Prépare un ensemble de rôles mutable pour l'utilisateur
         user.setRoles(new java.util.HashSet<>());
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
         when(roleRepository.findByName("ROLE_USER")).thenReturn(Optional.of(role));
         when(userRepository.save(user)).thenReturn(user);
-        // Assume mapper returns the same DTO for simplicity
+        // On suppose que le mapper retourne le même DTO pour simplifier
         when(userMapper.toDto(user)).thenReturn(userDto);
 
         UserDto result = userDetailServiceImpl.addRoleToUser(1, "ROLE_USER");
@@ -192,26 +209,26 @@ public class UserDetailServiceImplTest {
         assertThat(result).isEqualTo(userDto);
     }
 
-    // Test addRoleToUser: non-existing user
+    /** Test de l'ajout d'un rôle à un utilisateur inexistant. */
     @Test
     void testAddRoleToUserUserNotFound() {
         when(userRepository.findById(1)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> userDetailServiceImpl.addRoleToUser(1, "ROLE_USER"))
                 .isInstanceOf(ResourceNotFoundException.class)
-                .hasMessage("User not found");
+                .hasMessage("Utilisateur non trouvé");
     }
 
-    // Test addRoleToUser: non-existing role
+    /** Test de l'ajout d'un rôle inexistant à un utilisateur. */
     @Test
     void testAddRoleToUserRoleNotFound() {
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
         when(roleRepository.findByName("ROLE_USER")).thenReturn(Optional.empty());
         assertThatThrownBy(() -> userDetailServiceImpl.addRoleToUser(1, "ROLE_USER"))
                 .isInstanceOf(ResourceNotFoundException.class)
-                .hasMessage("Role not found");
+                .hasMessage("Rôle non trouvé");
     }
 
-    // Test for successful update of user roles
+    /** Test de la mise à jour réussie des rôles d'un utilisateur. */
     @Test
     void testUpdateUserRolesSuccess() {
         user.setRoles(new java.util.HashSet<>());
@@ -230,7 +247,7 @@ public class UserDetailServiceImplTest {
         assertThat(result).isEqualTo(userDto);
     }
 
-    // Test when a role is not found during update
+    /** Test de la mise à jour des rôles d'un utilisateur lorsque l'un des rôles est introuvable. */
     @Test
     void testUpdateUserRolesRoleNotFound() {
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
@@ -240,15 +257,15 @@ public class UserDetailServiceImplTest {
 
         assertThatThrownBy(() -> userDetailServiceImpl.updateUserRoles(1, roleNames))
                 .isInstanceOf(ResourceNotFoundException.class)
-                .hasMessageContaining("Role not found");
+                .hasMessageContaining("Rôle non trouvé");
     }
 
-    // Test addRoleToUser: non-existing user
+    /** Test de la mise à jour des rôles d'un utilisateur lorsque l'utilisateur est introuvable. */
     @Test
     void testUpdateRolesRoleToUserUserNotFound() {
         when(userRepository.findById(1)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> userDetailServiceImpl.updateUserRoles(1, List.of()))
                 .isInstanceOf(ResourceNotFoundException.class)
-                .hasMessage("User not found");
+                .hasMessage("Utilisateur non trouvé");
     }
 }

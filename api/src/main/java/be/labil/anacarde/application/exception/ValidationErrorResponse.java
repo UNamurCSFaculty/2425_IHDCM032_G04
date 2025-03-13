@@ -11,14 +11,14 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(description = "Validation error response structure")
+@Schema(description = "Structure de réponse pour les erreurs de validation")
 /**
- * This class encapsulates a map of validation errors, where each key is a field name and the value
- * is the error message associated with that field.
+ * Cette classe encapsule une carte contenant les erreurs de validation. Chaque clé représente le
+ * nom d'un champ et la valeur correspondante est le message d'erreur associé.
  */
 public class ValidationErrorResponse {
     @Schema(
-            description = "Map of validation errors (field -> message)",
-            example = "{\"name\": \"The name must not be empty\"}")
+            description = "Map des erreurs de validation (champ -> message)",
+            example = "{\"name\": \"Le nom ne doit pas être vide\"}")
     private Map<String, String> errors;
 }

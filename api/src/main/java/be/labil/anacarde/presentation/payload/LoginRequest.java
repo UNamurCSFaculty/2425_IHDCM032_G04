@@ -5,12 +5,13 @@ import lombok.Setter;
 
 @Getter
 @Setter
-
-/* This class encapsulates the username and password required for user authentication. */
+/**
+ * Cette classe encapsule le nom d'utilisateur et le mot de passe requis pour l'authentification.
+ */
 public class LoginRequest {
-    /** The username of the user. */
+    /** Nom d'utilisateur de l'utilisateur. */
     private String username;
 
-    /** The password of the user. */
+    /** Mot de passe de l'utilisateur. */
     private String password;
 }

@@ -1,12 +1,12 @@
 package be.labil.anacarde.application.exception;
 
-/** Exception thrown when a requested resource is not found. */
+/** Exception levée lorsqu'une ressource demandée est introuvable. */
 public class ResourceNotFoundException extends RuntimeException {
 
     /**
-     * Constructs a new ResourceNotFoundException with the specified detail message.
+     * Construit une nouvelle ResourceNotFoundException avec le message d'erreur spécifié.
      *
-     * @param message The detail message explaining the reason for the exception.
+     * @param message Le message détaillé expliquant la raison de l'exception.
      */
     public ResourceNotFoundException(String message) {
         super(message);

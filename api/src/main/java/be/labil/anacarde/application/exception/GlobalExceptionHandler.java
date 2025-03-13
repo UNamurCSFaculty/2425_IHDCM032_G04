@@ -21,31 +21,31 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 @RestControllerAdvice
 /**
- * This class handles exceptions thrown throughout the application and translates them into
- * meaningful HTTP responses. It handles validation errors, resource not found exceptions, data
- * integrity violations, HTTP message not readable exceptions, optimistic locking errors, and
- * generic exceptions.
+ * Cette classe gère les exceptions levées dans l'application et les traduit en réponses HTTP
+ * significatives. Elle prend en charge les erreurs de validation, les exceptions de ressource non
+ * trouvée, les violations d'intégrité des données, les erreurs de lecture des messages HTTP, les
+ * conflits d'accès concurrent, ainsi que les exceptions génériques.
  */
 public class GlobalExceptionHandler {
 
     private final MessageSource messageSource;
 
     /**
-     * Constructor for GlobalExceptionHandler.
+     * Constructeur de GlobalExceptionHandler.
      *
-     * @param messageSource The MessageSource used for retrieving localized messages.
+     * @param messageSource La source de messages utilisée pour récupérer les messages localisés.
      */
     public GlobalExceptionHandler(MessageSource messageSource) {
         this.messageSource = messageSource;
     }
 
     /**
-     * This method collects all validation errors from the exception and returns them in a
-     * ValidationErrorResponse.
+     * Récupère toutes les erreurs de validation contenues dans l'exception et les retourne sous
+     * forme d'un objet ValidationErrorResponse.
      *
-     * @param ex The MethodArgumentNotValidException containing validation errors.
-     * @return A ResponseEntity containing a ValidationErrorResponse with error details and HTTP
-     *     status BAD_REQUEST.
+     * @param ex L'exception MethodArgumentNotValidException contenant les erreurs de validation.
+     * @return Une ResponseEntity contenant un objet ValidationErrorResponse détaillant les erreurs
+     *     et le statut HTTP BAD_REQUEST.
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ValidationErrorResponse> handleValidationExceptions(
@@ -63,12 +63,12 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * This method returns an error response with HTTP status NOT_FOUND when a requested resource is
-     * not found.
+     * Retourne une réponse d'erreur avec le statut HTTP NOT_FOUND lorsqu'une ressource demandée est
+     * introuvable.
      *
-     * @param ex The ResourceNotFoundException that was thrown.
-     * @return A ResponseEntity containing an ErrorResponse with the exception message and HTTP
-     *     status NOT_FOUND.
+     * @param ex L'exception ResourceNotFoundException levée.
+     * @return Une ResponseEntity contenant un objet ErrorResponse avec le message de l'exception et
+     *     le statut HTTP NOT_FOUND.
      */
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleResourceNotFound(ResourceNotFoundException ex) {
@@ -76,24 +76,23 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * This method extracts an error code from the root cause of the exception, retrieves a
-     * localized message, and returns an error response with HTTP status CONFLICT.
+     * Extrait un code d'erreur à partir de la cause racine de l'exception, récupère un message
+     * localisé et retourne une réponse d'erreur avec le statut HTTP CONFLICT.
      *
-     * @param ex The DataIntegrityViolationException that was thrown.
-     * @return A ResponseEntity containing an ErrorResponse with a localized error message and HTTP
-     *     status CONFLICT.
+     * @param ex L'exception DataIntegrityViolationException levée.
+     * @return Une ResponseEntity contenant un objet ErrorResponse avec un message d'erreur localisé
+     *     et le statut HTTP CONFLICT.
      */
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ErrorResponse> handleDataIntegrityViolation(
             DataIntegrityViolationException ex) {
-        String defaultMessage = "Data integrity error.";
+        String defaultMessage = "Erreur d'intégrité des données.";
         Throwable rootCause = ex.getRootCause();
         String rootMessage = (rootCause != null) ? rootCause.getMessage() : "";
 
-        // Extract error code (e.g., constraint name) from the root message
         String errorCode = extractErrorCode(rootMessage);
 
-        // Get localized message from messageSource; the message is now externalized
+        // Réalise une recherche du message localisé en fonction du code d'erreur extrait
         String message =
                 messageSource.getMessage(
                         errorCode, null, defaultMessage, LocaleContextHolder.getLocale());
@@ -102,14 +101,14 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * This method uses a regular expression to extract the constraint name or error code from the
-     * root message.
+     * Utilise une expression régulière pour extraire le nom de la contrainte ou le code d'erreur du
+     * message de la cause racine.
      *
-     * @param rootMessage The root cause message from which to extract the error code.
-     * @return The extracted error code, or "default.error" if not found.
+     * @param rootMessage Le message de la cause racine à analyser.
+     * @return Le code d'erreur extrait, ou "default.error" si aucun code n'est trouvé.
      */
     private String extractErrorCode(String rootMessage) {
-        Pattern pattern = Pattern.compile("constraint \\[(.*?)\\]");
+        Pattern pattern = Pattern.compile("\\[(.*?)\\]\\s*$");
         Matcher matcher = pattern.matcher(rootMessage.toLowerCase());
         if (matcher.find()) {
             return matcher.group(1);
@@ -118,12 +117,12 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * This method checks if the root cause is a JSON parsing error and returns an appropriate error
-     * message.
+     * Vérifie si la cause racine est une erreur d'analyse JSON et retourne un message d'erreur
+     * approprié.
      *
-     * @param ex The HttpMessageNotReadableException that was thrown.
-     * @return A ResponseEntity containing an ErrorResponse with the error message and HTTP status
-     *     BAD_REQUEST.
+     * @param ex L'exception HttpMessageNotReadableException levée.
+     * @return Une ResponseEntity contenant un objet ErrorResponse avec le message d'erreur et le
+     *     statut HTTP BAD_REQUEST.
      */
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse> handleHttpMessageNotReadable(
@@ -131,20 +130,20 @@ public class GlobalExceptionHandler {
         String message;
         Optional<Throwable> root = Optional.ofNullable(ex.getCause());
         if (root.isPresent() && root.get() instanceof JsonParseException) {
-            message = "JSON syntax error: " + root.get().getMessage();
+            message = "Erreur de syntaxe JSON : " + root.get().getMessage();
         } else {
-            message = "Unreadable HTTP message.";
+            message = "Message HTTP illisible.";
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(message));
     }
 
     /**
-     * This method returns an error response with HTTP status CONFLICT when a resource has been
-     * modified by another user.
+     * Retourne une réponse d'erreur avec le statut HTTP CONFLICT lorsqu'une ressource a été
+     * modifiée par un autre utilisateur.
      *
-     * @param ex The StaleObjectStateException that was thrown.
-     * @return A ResponseEntity containing an ErrorResponse with a conflict message and HTTP status
-     *     CONFLICT.
+     * @param ex L'exception StaleObjectStateException levée.
+     * @return Une ResponseEntity contenant un objet ErrorResponse avec un message de conflit et le
+     *     statut HTTP CONFLICT.
      */
     @ExceptionHandler(org.hibernate.StaleObjectStateException.class)
     public ResponseEntity<ErrorResponse> handleStaleObjectStateException(
@@ -152,16 +151,16 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(
                         new ErrorResponse(
-                                "The resource has been modified by another user. Please try again."));
+                                "La ressource a été modifiée par un autre utilisateur. Veuillez réessayer."));
     }
 
     /**
-     * This method logs the unhandled exception and returns an error response with HTTP status
+     * Journalise l'exception non gérée et retourne une réponse d'erreur avec le statut HTTP
      * INTERNAL_SERVER_ERROR.
      *
-     * @param ex The generic Exception that was thrown.
-     * @return A ResponseEntity containing an ErrorResponse with a generic error message and HTTP
-     *     status INTERNAL_SERVER_ERROR.
+     * @param ex L'exception générique levée.
+     * @return Une ResponseEntity contenant un objet ErrorResponse avec un message d'erreur
+     *     générique et le statut HTTP INTERNAL_SERVER_ERROR.
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGenericExceptions(Exception ex) {
@@ -169,6 +168,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(
                         new ErrorResponse(
-                                "An internal error has occurred. Please contact support if the problem persists."));
+                                "Une erreur interne s'est produite. Veuillez contacter le support si le problème persiste."));
     }
 }

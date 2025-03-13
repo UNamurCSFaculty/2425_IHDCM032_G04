@@ -18,10 +18,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Component
 @AllArgsConstructor
 /**
- * Authentication token filter for processing JWTs.
- *
- * <p>This filter intercepts incoming HTTP requests to extract and validate JWT tokens from cookies.
- * Upon successful validation, it sets the authentication in the SecurityContext.
+ * Ce filtre intercepte les requêtes HTTP entrantes afin d'extraire et de valider les tokens JWT
+ * présents dans les cookies. En cas de validation réussie, il définit l'authentification dans le
+ * SecurityContext pour considérer l'utilisateur comme authentifié durant la requête en cours.
  */
 public class AuthTokenFilter extends OncePerRequestFilter {
 
@@ -29,17 +28,15 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     private final UserDetailsService userDetailsService;
 
     /**
-     * Processes the HTTP request to authenticate a user based on the JWT token present in cookies.
+     * Cette méthode extrait le token JWT depuis la requête, le valide, et, s'il est valide, définit
+     * l'authentification dans le SecurityContext afin que l'utilisateur soit reconnu comme
+     * authentifié pour la requête actuelle.
      *
-     * <p>This method extracts the JWT from the request, validates it, and if valid, sets the
-     * authentication in the SecurityContext so that the user is considered authenticated for the
-     * current request.
-     *
-     * @param request The HttpServletRequest being processed.
-     * @param response The HttpServletResponse associated with the request.
-     * @param filterChain The FilterChain to pass the request and response to the next filter.
-     * @throws ServletException if a servlet error occurs during processing.
-     * @throws IOException if an I/O error occurs during processing.
+     * @param request La HttpServletRequest en cours de traitement.
+     * @param response La HttpServletResponse associée à la requête.
+     * @param filterChain La chaîne de filtres à laquelle transmettre la requête et la réponse.
+     * @throws ServletException en cas d'erreur liée au servlet pendant le traitement.
+     * @throws IOException en cas d'erreur d'entrée/sortie pendant le traitement.
      */
     @Override
     protected void doFilterInternal(
@@ -60,17 +57,17 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 }
             }
         } catch (Exception e) {
-            logger.error("Cannot set user authentication: {}", e);
+            logger.error("Impossible de définir l'authentification de l'utilisateur : {}", e);
         }
         filterChain.doFilter(request, response);
     }
 
     /**
-     * This method iterates through the cookies in the request and returns the value of the cookie
-     * named "jwt". If no such cookie is found, it returns null.
+     * Parcourt les cookies de la requête et retourne la valeur du cookie nommé "jwt". Si aucun
+     * cookie de ce nom n'est trouvé, retourne null.
      *
-     * @param request The HttpServletRequest from which to extract the JWT token.
-     * @return The JWT token as a String if present; otherwise, null.
+     * @param request La HttpServletRequest depuis laquelle extraire le token JWT.
+     * @return Le token JWT sous forme de String s'il est présent ; sinon, null.
      */
     private String parseJwt(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();

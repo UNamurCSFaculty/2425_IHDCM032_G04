@@ -7,17 +7,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 /**
- * This class provides the necessary security-related bean definitions for the application. It
- * includes the definition of a PasswordEncoder bean that is used for encoding passwords using the
- * BCrypt algorithm.
+ * Cette classe fournit les définitions de beans liés à la sécurité nécessaires à l'application.
+ * Elle inclut notamment la définition d'un bean PasswordEncoder qui permet de chiffrer les mots de
+ * passe en utilisant l'algorithme BCrypt.
  */
 public class SecurityBeansConfig {
 
     /**
-     * This method instantiates and returns a BCryptPasswordEncoder which is used for encoding user
-     * passwords.
+     * Instancie et retourne un BCryptPasswordEncoder utilisé pour encoder les mots de passe des
+     * utilisateurs.
      *
-     * @return A PasswordEncoder instance based on the BCrypt algorithm.
+     * @return Une instance de PasswordEncoder basée sur l'algorithme BCrypt.
      */
     @Bean
     public PasswordEncoder passwordEncoder() {

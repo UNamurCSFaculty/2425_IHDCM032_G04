@@ -23,6 +23,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+/** Tests unitaires pour le contrôleur des utilisateurs. */
 @ExtendWith(MockitoExtension.class)
 public class UserControllerUnitTest {
     @Mock private UserService userService;
@@ -36,6 +37,7 @@ public class UserControllerUnitTest {
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
     }
 
+    /** Teste la récupération d'un utilisateur existant. */
     @Test
     public void testGetUser() {
         UserDto userDto = new UserDto();
@@ -51,6 +53,7 @@ public class UserControllerUnitTest {
         assertEquals("John", response.getBody().getFirstName());
     }
 
+    /** Teste la création d'un nouvel utilisateur. */
     @Test
     public void testCreateUser() {
         UserDto inputDto = new UserDto();
@@ -72,6 +75,7 @@ public class UserControllerUnitTest {
         assertEquals("Alice", response.getBody().getFirstName());
     }
 
+    /** Teste la mise à jour d'un utilisateur existant. */
     @Test
     public void testUpdateUser() {
         UserDto updateDto = new UserDto();
@@ -93,6 +97,7 @@ public class UserControllerUnitTest {
         assertEquals("John Updated", response.getBody().getFirstName());
     }
 
+    /** Teste la suppression d'un utilisateur. */
     @Test
     public void testDeleteUser() {
         doNothing().when(userService).deleteUser(1);
@@ -101,6 +106,7 @@ public class UserControllerUnitTest {
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
 
+    /** Teste la mise à jour des rôles d'un utilisateur avec succès. */
     @Test
     public void testUpdateUserRolesSuccess() {
         List<String> roleNames = List.of("ROLE_USER");
@@ -115,24 +121,22 @@ public class UserControllerUnitTest {
 
         ResponseEntity<UserDto> response = userController.updateUserRoles(1, roleNames);
 
-        // Verify response status and content
+        // Vérifie le code de réponse et le contenu
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(updatedDto.getId(), response.getBody().getId());
         assertEquals("john.doe@example.com", response.getBody().getEmail());
     }
 
-    // Test for update user roles when user is not found via the controller
+    /** Teste la mise à jour des rôles d'un utilisateur lorsque l'utilisateur n'est pas trouvé. */
     @Test
     public void testUpdateUserRolesUserNotFound() {
         List<String> roleNames = List.of("ROLE_USER");
 
         when(userService.updateUserRoles(eq(999), any(List.class)))
-                .thenThrow(new ResourceNotFoundException("User not found"));
+                .thenThrow(new ResourceNotFoundException("Utilisateur non trouvé"));
 
         assertThrows(
                 ResourceNotFoundException.class,
-                () -> {
-                    userController.updateUserRoles(999, roleNames);
-                });
+                () -> userController.updateUserRoles(999, roleNames));
     }
 }

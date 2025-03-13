@@ -16,7 +16,7 @@ import org.hibernate.proxy.HibernateProxy;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-/** Entity representing a Role in the system. */
+/** Entité représentant un rôle dans le système. */
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "role_seq")
@@ -31,12 +31,12 @@ public class Role {
     private Set<User> users;
 
     /**
-     * The comparison is based on the unique identifier of the role. If both objects are of
-     * different effective classes, they are considered not equal. This method handles Hibernate
-     * proxy instances correctly.
+     * La comparaison se base sur l'identifiant unique du rôle. Si les objets sont de classes
+     * effectives différentes, ils sont considérés comme non égaux. Cette méthode gère correctement
+     * les instances proxy de Hibernate.
      *
-     * @param o The object to compare with this Role.
-     * @return True if the specified object is equal to this Role, false otherwise.
+     * @param o L'objet à comparer avec ce rôle.
+     * @return true si l'objet spécifié est égal à ce rôle ; sinon, false.
      */
     @Override
     public final boolean equals(Object o) {
@@ -56,9 +56,10 @@ public class Role {
     }
 
     /**
-     * The hash code is based on the class type to accommodate Hibernate proxy instances.
+     * Le hash code est basé sur le type de classe pour prendre en compte correctement les instances
+     * proxy de Hibernate.
      *
-     * @return The hash code as an integer.
+     * @return Le hash code en tant qu'entier.
      */
     @Override
     public final int hashCode() {

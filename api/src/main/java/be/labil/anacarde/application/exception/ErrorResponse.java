@@ -11,8 +11,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(description = "Error response structure")
-/** This class encapsulates an error message used in API responses when an error occurs. */
+/**
+ * Cette classe représente la structure d'une réponse d'erreur dans l'API. Elle encapsule un message
+ * décrivant l'erreur survenue.
+ */
 public class ErrorResponse {
-    @Schema(description = "Error message", example = "Subject not found")
+    @Schema(description = "Message d'erreur", example = "Sujet non trouvé")
     private String error;
 }

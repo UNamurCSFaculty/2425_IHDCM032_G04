@@ -31,7 +31,7 @@ public class UserDto {
             description = "Prénom de l'utilisateur",
             example = "John",
             requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotBlank(message = "First name is required")
+    @NotBlank(message = "Le prénom est requis")
     private String firstName;
 
     /** User's last name. */
@@ -39,7 +39,7 @@ public class UserDto {
             description = "Nom de famille de l'utilisateur",
             example = "Doe",
             requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotBlank(message = "Last name is required")
+    @NotBlank(message = "Le nom de famille est requis")
     private String lastName;
 
     /** User's email address. */
@@ -47,7 +47,7 @@ public class UserDto {
             description = "Adresse email de l'utilisateur",
             example = "john.doe@example.com",
             requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotBlank(message = "Email is required")
+    @NotBlank(message = "L'adresse email est requise")
     @Email(message = "Invalid email format")
     private String email;
 
@@ -61,7 +61,7 @@ public class UserDto {
             accessMode = Schema.AccessMode.WRITE_ONLY,
             example = "p@ssw0rd")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @NotBlank(groups = ValidationGroups.Create.class, message = "Password is required")
+    @NotBlank(groups = ValidationGroups.Create.class, message = "Le mot de passe est requis")
     private String password;
 
     /**

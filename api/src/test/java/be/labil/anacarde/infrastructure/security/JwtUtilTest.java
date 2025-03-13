@@ -7,6 +7,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
+/**
+ * Teste les fonctionnalités de génération, d'extraction et de validation des tokens JWT par la
+ * classe JwtUtil.
+ */
 public class JwtUtilTest {
 
     private JwtUtil jwtUtil;
@@ -14,38 +18,52 @@ public class JwtUtilTest {
     @BeforeEach
     public void setUp() {
         jwtUtil = new JwtUtil();
-        // Inject configuration values using ReflectionTestUtils for testing purposes
+        // Injecte les valeurs de configuration pour les besoins des tests via ReflectionTestUtils
         ReflectionTestUtils.setField(
                 jwtUtil, "secretKey", "V2Vha1NlY3VyZUtleVNlY3VyZUtleVNlY3VyZUtleVNlY3VyZQ==");
         ReflectionTestUtils.setField(jwtUtil, "tokenValidityHours", 1);
     }
 
+    /**
+     * Teste la génération et la validation d'un token JWT pour un utilisateur.
+     *
+     * <p>Ce test crée un utilisateur fictif sans autorités, génère un token JWT pour cet
+     * utilisateur, puis vérifie que le nom d'utilisateur extrait du token correspond à celui de
+     * l'utilisateur et que le token est valide.
+     */
     @Test
     public void testGenerateAndValidateToken() {
-        // Create a dummy user with no authorities
+        // Crée un utilisateur fictif sans autorités
         User user = new User();
         user.setEmail("myUser");
         user.setPassword("password");
 
-        // Generate a token for the user
         String token = jwtUtil.generateToken(user);
-        assertNotNull(token, "Token should not be null");
+        assertNotNull(token, "Le token ne doit pas être nul");
 
-        // Extract the username from the generated token
         String extractedUsername = jwtUtil.extractUsername(token);
         assertEquals(
                 user.getUsername(),
                 extractedUsername,
-                "Extracted username should match the original");
+                "Le nom d'utilisateur extrait doit correspondre à celui de l'utilisateur");
 
-        // Validate the token and ensure it is valid for the given user details
         boolean isTokenValid = jwtUtil.validateToken(token, user);
-        assertTrue(isTokenValid, "Token should be valid");
+        assertTrue(isTokenValid, "Le token doit être valide");
     }
 
+    /**
+     * Teste l'expiration d'un token JWT.
+     *
+     * <p>Pour ce test, la durée de validité du token est définie à 0 heure (expiration immédiate).
+     * Le test attend ensuite brièvement pour s'assurer que le token est expiré, puis vérifie que la
+     * validation du token échoue.
+     *
+     * @throws InterruptedException en cas d'interruption pendant l'attente
+     */
     @Test
     public void testTokenExpiration() throws InterruptedException {
-        // For testing expiration, we set token validity to 0 hours (immediate expiration)
+        // Pour tester l'expiration, on définit la validité du token à 0 heure (expiration
+        // immédiate)
         ReflectionTestUtils.setField(jwtUtil, "tokenValidityHours", 0L);
         User user = new User();
         user.setEmail("myUser");
@@ -53,10 +71,10 @@ public class JwtUtilTest {
 
         String token = jwtUtil.generateToken(user);
 
-        // Wait a short period to ensure the token expires
+        // Attend un court instant pour s'assurer que le token expire
         Thread.sleep(2);
 
         boolean isTokenValid = jwtUtil.validateToken(token, user);
-        assertFalse(isTokenValid, "Token should be expired");
+        assertFalse(isTokenValid, "Le token doit être expiré");
     }
 }

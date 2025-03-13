@@ -4,13 +4,14 @@ import be.labil.anacarde.domain.model.User;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-/** Repository interface for User entities. */
+/** Interface Repository pour les entités User. */
 public interface UserRepository extends JpaRepository<User, Integer> {
     /**
-     * This method searches for a User entity with the specified email address.
+     * Recherche une entité User dont l'adresse e-mail correspond à celle spécifiée.
      *
-     * @param email The email address of the user to search for.
-     * @return An Optional containing the User if found; otherwise, an empty Optional.
+     * @param email L'adresse e-mail de l'utilisateur à rechercher.
+     * @return Un Optional contenant le User trouvé, ou Optional.empty() si aucun utilisateur n'est
+     *     trouvé.
      */
     Optional<User> findByEmail(String email);
 }

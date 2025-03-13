@@ -23,10 +23,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @AllArgsConstructor
 /**
- * This service provides methods for user authentication and user management, including creating,
- * retrieving, updating, and deleting users. It leverages a UserRepository for persistence, a
- * UserMapper for converting between entities and DTOs, and a PasswordEncoder for securing
- * passwords.
+ * Ce service fournit des méthodes pour l'authentification et la gestion des utilisateurs, incluant
+ * la création, la récupération, la mise à jour et la suppression des utilisateurs. Il utilise un
+ * UserRepository pour la persistance, un UserMapper pour la conversion entre entités et DTO, et un
+ * PasswordEncoder pour sécuriser les mots de passe.
  */
 public class UserDetailServiceImpl implements UserDetailsService, UserService {
 
@@ -36,27 +36,28 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
     private final PasswordEncoder bCryptPasswordEncoder;
 
     /**
-     * This method searches for a user by their email. If the user is not found, a
-     * UsernameNotFoundException is thrown.
+     * Recherche un utilisateur par son email. Si l'utilisateur n'est pas trouvé, une
+     * UsernameNotFoundException est levée.
      *
-     * @param email The email address of the user.
-     * @return A UserDetails object containing the user's authentication information.
-     * @throws UsernameNotFoundException if no user is found with the provided email.
+     * @param email L'adresse email de l'utilisateur.
+     * @return Un objet UserDetails contenant les informations d'authentification de l'utilisateur.
+     * @throws UsernameNotFoundException si aucun utilisateur n'est trouvé avec l'email fourni.
      */
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepository
                 .findByEmail(email)
                 .orElseThrow(
-                        () -> new UsernameNotFoundException("User Not Found with email: " + email));
+                        () ->
+                                new UsernameNotFoundException(
+                                        "Utilisateur non trouvé avec l'email : " + email));
     }
 
     /**
-     * This method encodes the user's password (if provided), converts the UserDto to a User entity,
-     * saves the entity in the repository, and returns the saved user as a UserDto.
+     * %* Crée un nouvel utilisateur à partir des informations fournies dans le DTO.
      *
-     * @param userDto The data transfer object containing user information.
-     * @return A UserDto representing the newly created user.
+     * @param userDto Le DTO contenant les informations de l'utilisateur.
+     * @return Un UserDto représentant l'utilisateur créé.
      */
     @Override
     public UserDto createUser(UserDto userDto) {
@@ -69,10 +70,11 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
     }
 
     /**
-     * This method finds a user by ID. If no user is found, a ResourceNotFoundException is thrown.
+     * Recherche un utilisateur par son identifiant. Si aucun utilisateur n'est trouvé, une
+     * ResourceNotFoundException est levée.
      *
-     * @param id The unique identifier of the user.
-     * @return A UserDto representing the user with the specified ID.
+     * @param id L'identifiant unique de l'utilisateur.
+     * @return Un UserDto représentant l'utilisateur avec l'ID spécifié.
      */
     @Override
     @Transactional(readOnly = true)
@@ -80,15 +82,14 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
         User user =
                 userRepository
                         .findById(id)
-                        .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+                        .orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé"));
         return userMapper.toDto(user);
     }
 
     /**
-     * This method retrieves all users from the repository and converts them into a list of UserDto
-     * objects.
+     * Récupère tous les utilisateurs du repository et les convertit en une List de UserDto.
      *
-     * @return A list of UserDto objects representing all users.
+     * @return Une List de UserDto représentant tous les utilisateurs.
      */
     @Override
     @Transactional(readOnly = true)
@@ -99,23 +100,21 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
     }
 
     /**
-     * This method finds the existing user by ID, applies partial updates from the provided UserDto,
-     * encodes the password if provided, saves the updated user, and returns the updated user as a
-     * UserDto.
+     * Met à jour un utilisateur avec les informations fournies dans le DTO.
      *
-     * @param id The unique identifier of the user to update.
-     * @param userDto The data transfer object containing updated user information.
-     * @return A UserDto representing the updated user.
+     * @param id L'identifiant unique de l'utilisateur à mettre à jour.
+     * @param userDto Le DTO contenant les informations mises à jour de l'utilisateur.
+     * @return Un UserDto représentant l'utilisateur mis à jour.
      */
     @Override
     public UserDto updateUser(Integer id, UserDto userDto) {
         User existingUser =
                 userRepository
                         .findById(id)
-                        .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        // Update only the fields that are not null in the DTO
+                        .orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé"));
+        // Mets uniquement à jour les champs non nuls du DTO
         User updatedUser = userMapper.partialUpdate(userDto, existingUser);
-        // If password is provided in the DTO, encode and update it
+
         if (userDto.getPassword() != null && !userDto.getPassword().isBlank()) {
             updatedUser.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
         }
@@ -125,38 +124,36 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
     }
 
     /**
-     * This method checks if a user with the specified ID exists. If not, it throws a
-     * ResourceNotFoundException. Otherwise, it deletes the user from the repository.
+     * Supprime un utilisateur du repository.
      *
-     * @param id The unique identifier of the user to delete.
+     * @param id L'identifiant unique de l'utilisateur à supprimer.
      */
     @Override
     public void deleteUser(Integer id) {
         if (!userRepository.existsById(id)) {
-            throw new ResourceNotFoundException("User not found");
+            throw new ResourceNotFoundException("Utilisateur non trouvé");
         }
         userRepository.deleteById(id);
     }
 
     /**
-     * This method retrieves the user by the given identifier and the role by its name. If both
-     * exist, it adds the role to the user's set of roles and saves the updated user.
+     * Ajoute un rôle à un utilisateur.
      *
-     * @param userId The unique identifier of the user.
-     * @param roleName The name of the role to add.
-     * @return A UserDto representing the updated user with the new role.
-     * @throws ResourceNotFoundException if either the user or the role is not found.
+     * @param userId L'identifiant unique de l'utilisateur.
+     * @param roleName Le nom du rôle à ajouter.
+     * @return Un UserDto représentant l'utilisateur mis à jour avec le nouveau rôle.
+     * @throws ResourceNotFoundException si l'utilisateur ou le rôle n'est pas trouvé.
      */
     @Override
     public UserDto addRoleToUser(Integer userId, String roleName) {
         User user =
                 userRepository
                         .findById(userId)
-                        .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+                        .orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé"));
         Role role =
                 roleRepository
                         .findByName(roleName)
-                        .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
+                        .orElseThrow(() -> new ResourceNotFoundException("Rôle non trouvé"));
         user.getRoles().add(role);
 
         User savedUser = userRepository.save(user);
@@ -164,19 +161,19 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
     }
 
     /**
-     * Updates the entire set of roles for a user.
+     * Met à jour l'ensemble des rôles d'un utilisateur.
      *
-     * @param userId The ID of the user.
-     * @param roleNames The list of role names to assign to the user.
-     * @return The updated UserDto.
-     * @throws ResourceNotFoundException if the user or any of the roles is not found.
+     * @param userId L'ID de l'utilisateur.
+     * @param roleNames La List des noms de rôle à attribuer à l'utilisateur.
+     * @return Un UserDto représentant l'utilisateur mis à jour.
+     * @throws ResourceNotFoundException si l'utilisateur ou l'un des rôles n'est pas trouvé.
      */
     @Override
     public UserDto updateUserRoles(Integer userId, List<String> roleNames) {
         User user =
                 userRepository
                         .findById(userId)
-                        .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+                        .orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé"));
 
         Set<Role> newRoles =
                 roleNames.stream()
@@ -187,7 +184,7 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
                                                 .orElseThrow(
                                                         () ->
                                                                 new ResourceNotFoundException(
-                                                                        "Role not found: "
+                                                                        "Rôle non trouvé: "
                                                                                 + roleName)))
                         .collect(Collectors.toSet());
 

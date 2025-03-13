@@ -13,7 +13,7 @@ import org.hibernate.proxy.HibernateProxy;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-/** Entity representing a News item in the system. */
+/** Entité représentant un article de presse dans le système. */
 public class News {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "news_seq")
@@ -36,14 +36,14 @@ public class News {
     @ToString.Exclude
     private Category category;
 
-    @Override
     /**
-     * The comparison is based on the unique identifier of the news item. It correctly handles
-     * Hibernate proxy instances.
+     * La comparaison se base sur l'identifiant unique de l'article. Cette méthode gère correctement
+     * les instances proxy de Hibernate.
      *
-     * @param o The object to compare with this News instance.
-     * @return True if the specified object is equal to this News; otherwise, false.
+     * @param o L'objet à comparer avec cet article.
+     * @return true si l'objet spécifié est égal à cet article ; sinon, false.
      */
+    @Override
     public final boolean equals(Object o) {
         if (this == o) return true;
         if (o == null) return false;
@@ -60,13 +60,13 @@ public class News {
         return getId() != null && Objects.equals(getId(), news.getId());
     }
 
-    @Override
     /**
-     * The hash code is derived from the class type to properly account for Hibernate proxy
-     * instances.
+     * Le hash code est dérivé du type de la classe afin de prendre correctement en compte les
+     * instances proxy de Hibernate.
      *
-     * @return The hash code as an integer.
+     * @return Le hash code en tant qu'entier.
      */
+    @Override
     public final int hashCode() {
         return this instanceof HibernateProxy
                 ? ((HibernateProxy) this)

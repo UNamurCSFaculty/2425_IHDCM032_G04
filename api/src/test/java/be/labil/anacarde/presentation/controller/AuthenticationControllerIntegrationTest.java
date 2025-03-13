@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
+/** Test d'intégration pour le contrôleur d'authentification. */
 public class AuthenticationControllerIntegrationTest {
 
     @Autowired private MockMvc mockMvc;
@@ -26,6 +27,7 @@ public class AuthenticationControllerIntegrationTest {
 
     @Autowired private PasswordEncoder passwordEncoder;
 
+    /** Prépare la base de données de test en créant un utilisateur. */
     @BeforeEach
     public void setUpDatabase() {
         userRepository.deleteAll();
@@ -41,6 +43,11 @@ public class AuthenticationControllerIntegrationTest {
         userRepository.save(user);
     }
 
+    /**
+     * Teste l'authentification réussie d'un utilisateur.
+     *
+     * @throws Exception en cas d'erreur lors de l'exécution du test.
+     */
     @Test
     public void testAuthenticateUserIntegration_Success() throws Exception {
         String requestBody = "{\"username\": \"user@example.com\", \"password\": \"password\"}";
@@ -51,9 +58,14 @@ public class AuthenticationControllerIntegrationTest {
                                 .content(requestBody))
                 .andExpect(status().isOk())
                 .andExpect(cookie().exists("jwt"))
-                .andExpect(content().string("User authenticated successfully"));
+                .andExpect(content().string("Utilisateur authentifié avec succès"));
     }
 
+    /**
+     * Teste l'échec de l'authentification d'un utilisateur.
+     *
+     * @throws Exception en cas d'erreur lors de l'exécution du test.
+     */
     @Test
     public void testAuthenticateUserIntegration_Failure() throws Exception {
         String requestBody =
@@ -64,6 +76,6 @@ public class AuthenticationControllerIntegrationTest {
                                 .contentType("application/json")
                                 .content(requestBody))
                 .andExpect(status().isUnauthorized())
-                .andExpect(content().string("Failed to authenticate"));
+                .andExpect(content().string("Échec de l'authentification"));
     }
 }

@@ -10,18 +10,19 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 @Configuration
 /**
- * This class provides bean definitions for message resolution and locale management. It configures
- * a MessageSource for internationalization by loading resource bundles (e.g., messages.properties)
- * and a LocaleResolver to determine the default locale for the application.
+ * Cette classe fournit les définitions de beans pour la résolution des messages et la gestion de la
+ * langue. Elle configure un MessageSource pour l'internationalisation en chargeant les fichiers de
+ * ressources (par exemple, messages.properties, messages_fr.properties, etc.) et un LocaleResolver
+ * pour définir la langue par défaut de l'application.
  */
 public class MessageSourceConfig {
 
     /**
-     * This method instantiates a ResourceBundleMessageSource, sets its basename to "messages"
-     * (which corresponds to messages.properties, messages_fr.properties, etc.), and sets the
-     * default encoding to UTF-8.
+     * Instancie un ResourceBundleMessageSource, définit son basename à "messages" (correspondant
+     * aux fichiers messages.properties, messages_fr.properties, etc.) et fixe l'encodage par défaut
+     * à UTF-8.
      *
-     * @return A configured MessageSource instance.
+     * @return Une instance de MessageSource correctement configurée.
      */
     @Bean
     public MessageSource messageSource() {
@@ -32,10 +33,10 @@ public class MessageSourceConfig {
     }
 
     /**
-     * This method instantiates a SessionLocaleResolver and sets its default locale to French. The
-     * LocaleResolver determines the locale for the application based on the current user session.
+     * Instancie un SessionLocaleResolver et définit sa langue par défaut sur le français. Le
+     * LocaleResolver détermine la langue de l'application en fonction de la session utilisateur.
      *
-     * @return A configured LocaleResolver instance.
+     * @return Une instance de LocaleResolver correctement configurée.
      */
     @Bean
     public LocaleResolver localeResolver() {

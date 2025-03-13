@@ -20,8 +20,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-/** This controller provides endpoints to retrieve, create, update, and delete users. */
-@Tag(name = "Users", description = "API for managing users")
+/**
+ * Ce contrôleur fournit des points d'accès pour récupérer, créer, mettre à jour et supprimer des
+ * utilisateurs.
+ */
+@Tag(name = "Users", description = "API de gestion des utilisateurs")
 @RestController
 @RequestMapping(value = "/api/users", produces = "application/json")
 @RequiredArgsConstructor
@@ -30,44 +33,52 @@ public class UserController {
     private final UserService userService;
 
     /**
-     * Retrieve detailed information of a user by its ID.
+     * Récupère les informations détaillées d'un utilisateur à partir de son identifiant.
      *
-     * @param id The ID of the user.
-     * @return ResponseEntity containing the user details.
+     * @param id L'identifiant de l'utilisateur.
+     * @return Une ResponseEntity contenant les détails de l'utilisateur.
      */
     @Operation(
-            summary = "Get user details",
-            description = "Returns the detailed information of a user by its ID.")
+            summary = "Récupérer les détails d'un utilisateur",
+            description =
+                    "Renvoie les informations détaillées d'un utilisateur à partir de son ID.")
     @ApiResponses({
         @ApiResponse(
                 responseCode = "200",
-                description = "User found",
+                description = "Utilisateur trouvé",
                 content = @Content(schema = @Schema(implementation = UserDto.class))),
-        @ApiResponse(responseCode = "404", description = "User not found", content = @Content)
+        @ApiResponse(
+                responseCode = "404",
+                description = "Utilisateur non trouvé",
+                content = @Content)
     })
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getUser(
-            @Parameter(description = "User ID", example = "1", required = true) @PathVariable("id")
+            @Parameter(description = "Identifiant de l'utilisateur", example = "1", required = true)
+                    @PathVariable("id")
                     Integer id) {
         UserDto user = userService.getUserById(id);
         return ResponseEntity.ok(user);
     }
 
     /**
-     * Uses the Create validation group to require the password field.
+     * Crée un nouvel utilisateur en utilisant le groupe de validation "Create", qui rend le champ
+     * mot de passe obligatoire.
      *
-     * @param userDto The user data to create.
-     * @return ResponseEntity containing the created user details.
+     * @param userDto Les données de l'utilisateur à créer.
+     * @return Une ResponseEntity contenant les détails de l'utilisateur créé.
      */
-    @Operation(summary = "Create a user", description = "Creates a new user.")
+    @Operation(
+            summary = "Créer un utilisateur",
+            description = "Crée un nouvel utilisateur dans le système.")
     @ApiResponses({
         @ApiResponse(
                 responseCode = "201",
-                description = "User created successfully",
+                description = "Utilisateur créé avec succès",
                 content = @Content(schema = @Schema(implementation = UserDto.class))),
         @ApiResponse(
                 responseCode = "400",
-                description = "Validation error or invalid JSON",
+                description = "Erreur de validation ou JSON invalide",
                 content = @Content)
     })
     @PostMapping(consumes = "application/json")
@@ -84,12 +95,14 @@ public class UserController {
     }
 
     /**
-     * List all users.
+     * Récupère la liste de tous les utilisateurs.
      *
-     * @return ResponseEntity containing a list of all users.
+     * @return Une ResponseEntity contenant la liste de tous les utilisateurs.
      */
-    @Operation(summary = "List all users", description = "Returns a list of all users.")
-    @ApiResponse(responseCode = "200", description = "List retrieved successfully")
+    @Operation(
+            summary = "Lister tous les utilisateurs",
+            description = "Renvoie la liste de tous les utilisateurs présents dans le système.")
+    @ApiResponse(responseCode = "200", description = "Liste récupérée avec succès")
     @GetMapping
     public ResponseEntity<List<UserDto>> listUsers() {
         List<UserDto> users = userService.listUsers();
@@ -97,29 +110,35 @@ public class UserController {
     }
 
     /**
-     * Uses the Update validation group so that the password becomes optional.
+     * Met à jour un utilisateur existant en utilisant le groupe de validation "Update", qui rend le
+     * champ mot de passe optionnel.
      *
-     * @param id The ID of the user to update.
-     * @param userDto The updated user data.
-     * @return ResponseEntity containing the updated user details.
+     * @param id L'identifiant de l'utilisateur à mettre à jour.
+     * @param userDto Les nouvelles données de l'utilisateur.
+     * @return Une ResponseEntity contenant les détails de l'utilisateur mis à jour.
      */
     @Operation(
-            summary = "Update a user",
-            description = "Updates an existing user using the ID provided in the URL.")
+            summary = "Mettre à jour un utilisateur",
+            description =
+                    "Met à jour un utilisateur existant en utilisant l'ID spécifié dans l'URL.")
     @ApiResponses({
         @ApiResponse(
                 responseCode = "200",
-                description = "User updated successfully",
+                description = "Utilisateur mis à jour avec succès",
                 content = @Content(schema = @Schema(implementation = UserDto.class))),
         @ApiResponse(
                 responseCode = "400",
-                description = "Validation error or invalid JSON",
+                description = "Erreur de validation ou JSON invalide",
                 content = @Content),
-        @ApiResponse(responseCode = "404", description = "User not found", content = @Content)
+        @ApiResponse(
+                responseCode = "404",
+                description = "Utilisateur non trouvé",
+                content = @Content)
     })
     @PutMapping(value = "/{id}", consumes = "application/json")
     public ResponseEntity<UserDto> updateUser(
-            @Parameter(description = "User ID", example = "1", required = true) @PathVariable("id")
+            @Parameter(description = "Identifiant de l'utilisateur", example = "1", required = true)
+                    @PathVariable("id")
                     Integer id,
             @Validated({Default.class, ValidationGroups.Update.class}) @RequestBody
                     UserDto userDto) {
@@ -128,49 +147,56 @@ public class UserController {
     }
 
     /**
-     * Delete a user by its ID.
+     * Supprime un utilisateur à partir de son identifiant.
      *
-     * @param id The ID of the user to delete.
+     * @param id L'identifiant de l'utilisateur à supprimer.
      */
-    @Operation(summary = "Delete a user", description = "Deletes a user by its ID.")
+    @Operation(
+            summary = "Supprimer un utilisateur",
+            description = "Supprime un utilisateur en fonction de son identifiant.")
     @ApiResponses({
-        @ApiResponse(responseCode = "204", description = "User deleted successfully"),
-        @ApiResponse(responseCode = "404", description = "User not found", content = @Content)
+        @ApiResponse(responseCode = "204", description = "Utilisateur supprimé avec succès"),
+        @ApiResponse(
+                responseCode = "404",
+                description = "Utilisateur non trouvé",
+                content = @Content)
     })
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> deleteUser(
-            @Parameter(description = "User ID", example = "1", required = true) @PathVariable("id")
+            @Parameter(description = "Identifiant de l'utilisateur", example = "1", required = true)
+                    @PathVariable("id")
                     Integer id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
 
     /**
-     * Endpoint to add a role to a user.
+     * Ajoute un rôle à un utilisateur.
      *
-     * @param id The ID of the user.
-     * @param roleName The name of the role to add.
-     * @return ResponseEntity containing the updated UserDto.
+     * @param id L'identifiant de l'utilisateur.
+     * @param roleName Le nom du rôle à ajouter.
+     * @return Une ResponseEntity contenant l'utilisateur mis à jour.
      */
     @Operation(
-            summary = "Add a role to a user",
-            description = "Adds a single role to the specified user using the role name.")
+            summary = "Ajouter un rôle à un utilisateur",
+            description = "Ajoute un rôle spécifique à l'utilisateur en utilisant le nom du rôle.")
     @ApiResponses({
         @ApiResponse(
                 responseCode = "200",
-                description = "User role added successfully",
+                description = "Rôle ajouté avec succès",
                 content = @Content(schema = @Schema(implementation = UserDto.class))),
         @ApiResponse(
                 responseCode = "404",
-                description = "User or Role not found",
+                description = "Utilisateur ou rôle non trouvé",
                 content = @Content)
     })
     @PostMapping(value = "/{id}/roles/{roleName}")
     public ResponseEntity<UserDto> addRoleToUser(
-            @Parameter(description = "User ID", example = "1", required = true) @PathVariable("id")
+            @Parameter(description = "Identifiant de l'utilisateur", example = "1", required = true)
+                    @PathVariable("id")
                     Integer id,
-            @Parameter(description = "Role name", example = "ROLE_USER", required = true)
+            @Parameter(description = "Nom du rôle", example = "ROLE_USER", required = true)
                     @PathVariable("roleName")
                     String roleName) {
         UserDto updated = userService.addRoleToUser(id, roleName);
@@ -178,28 +204,30 @@ public class UserController {
     }
 
     /**
-     * Endpoint to update the entire set of roles for a user.
+     * Met à jour l'ensemble des rôles d'un utilisateur.
      *
-     * @param id The ID of the user.
-     * @param roleNames The list of role names to assign to the user.
-     * @return ResponseEntity containing the updated UserDto.
+     * @param id L'identifiant de l'utilisateur.
+     * @param roleNames La liste des noms de rôle à attribuer à l'utilisateur.
+     * @return Une ResponseEntity contenant l'utilisateur mis à jour.
      */
     @Operation(
-            summary = "Update user roles",
-            description = "Replaces the entire set of roles for the specified user.")
+            summary = "Mettre à jour les rôles d'un utilisateur",
+            description =
+                    "Remplace l'ensemble des rôles de l'utilisateur spécifié par la liste fournie.")
     @ApiResponses({
         @ApiResponse(
                 responseCode = "200",
-                description = "User roles updated successfully",
+                description = "Rôles mis à jour avec succès",
                 content = @Content(schema = @Schema(implementation = UserDto.class))),
         @ApiResponse(
                 responseCode = "404",
-                description = "User or Role not found",
+                description = "Utilisateur ou rôle non trouvé",
                 content = @Content)
     })
     @PutMapping(value = "/{id}/roles", consumes = "application/json")
     public ResponseEntity<UserDto> updateUserRoles(
-            @Parameter(description = "User ID", example = "1", required = true) @PathVariable("id")
+            @Parameter(description = "Identifiant de l'utilisateur", example = "1", required = true)
+                    @PathVariable("id")
                     Integer id,
             @RequestBody List<String> roleNames) {
         UserDto updated = userService.updateUserRoles(id, roleNames);

@@ -7,47 +7,47 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@Schema(description = "Data Transfer Object for Document entities.")
+@Schema(description = "Objet de transfert de données pour les entités Document.")
 public class DocumentDto {
 
-    /** Unique identifier of the document. */
+    /** Identifiant unique du document. */
     @Schema(
-            description = "Unique identifier of the document",
+            description = "Identifiant unique du document",
             example = "1",
             accessMode = Schema.AccessMode.READ_ONLY)
     private Integer id;
 
-    /** Type of the document. */
+    /** Type de document (par exemple, PDF, DOCX, etc.). */
     @Schema(
-            description = "Type of the document",
+            description = "Type de document",
             example = "PDF",
             requiredMode = Schema.RequiredMode.REQUIRED)
     private String documentType;
 
-    /** Format of the document. */
+    /** Format du document (par exemple, A4, Lettre, etc.). */
     @Schema(
-            description = "Format of the document",
+            description = "Format du document",
             example = "A4",
             requiredMode = Schema.RequiredMode.REQUIRED)
     private String format;
 
-    /** Storage path where the document is located. */
+    /** Chemin de stockage où le document est situé. */
     @Schema(
-            description = "Storage path where the document is located",
+            description = "Chemin de stockage du document",
             example = "/documents/2025/03/document.pdf",
             requiredMode = Schema.RequiredMode.REQUIRED)
     private String storagePath;
 
-    /** Date and time when the document was uploaded. */
+    /** Date et heure de l'envoi du document. */
     @Schema(
-            description = "Date and time when the document was uploaded",
+            description = "Date et heure de l'envoi du document",
             example = "2025-03-13T10:15:30",
             accessMode = Schema.AccessMode.READ_ONLY)
     private LocalDateTime uploadDate;
 
-    /** Identifier of the user associated with the document. */
+    /** Identifiant de l'utilisateur associé au document. */
     @Schema(
-            description = "Identifier of the user associated with the document",
+            description = "Identifiant de l'utilisateur associé au document",
             example = "1",
             requiredMode = Schema.RequiredMode.REQUIRED)
     private Integer userId;

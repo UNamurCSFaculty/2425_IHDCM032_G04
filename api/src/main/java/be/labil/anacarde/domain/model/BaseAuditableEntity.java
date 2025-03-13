@@ -15,21 +15,24 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Setter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-/** Abstract base class for auditable entities. */
+/**
+ * Classe de base abstraite pour les entités auditées. Fournit la gestion automatique des dates de
+ * création et de dernière modification de l'entité.
+ */
 public abstract class BaseAuditableEntity implements Serializable {
 
-    /** Timestamp indicating when the entity was created. */
+    /** Date et heure de création de l'entité. */
     @CreatedDate
     @Column(nullable = false, updatable = false)
     protected LocalDateTime createdDate;
 
-    /** Timestamp indicating when the entity was last modified. */
+    /** Date et heure de la dernière modification de l'entité. */
     @LastModifiedDate protected LocalDateTime lastModifiedDate;
-
-    // @Version
-    // private int version;
-    // @LastModifiedBy
-    // protected String lastModifiedBy;
-    // @CreatedBy
-    // protected String createdBy;
 }
+
+// @Version
+// private int version;
+// @LastModifiedBy
+// protected String lastModifiedBy;
+// @CreatedBy
+// protected String createdBy;

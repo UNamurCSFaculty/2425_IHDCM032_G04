@@ -9,22 +9,23 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
 /**
- * This component is responsible for sending a 401 Unauthorized error response when an
- * authentication failure occurs.
+ * Ce composant est responsable de l'envoi d'une réponse d'erreur 401 Unauthorized lorsqu'une
+ * défaillance d'authentification survient.
  */
 @Component
 public class AuthEntryPointJwt implements AuthenticationEntryPoint {
 
     /**
-     * This method is invoked when an authentication exception is thrown, indicating that the user
-     * is not authorized to access the requested resource. It sends a 401 Unauthorized error along
-     * with an error message.
+     * Cette méthode est invoquée lorsqu'une exception d'authentification est levée, indiquant que
+     * l'utilisateur n'est pas autorisé à accéder à la ressource demandée. Elle envoie une erreur
+     * 401 Unauthorized accompagnée d'un message d'erreur.
      *
-     * @param request The HttpServletRequest in which the authentication attempt was made.
-     * @param response The HttpServletResponse used to send the error response.
-     * @param authException The exception that triggered this authentication failure.
-     * @throws IOException If an input or output error occurs while handling the response.
-     * @throws ServletException If a servlet-specific error occurs during processing.
+     * @param request La HttpServletRequest dans laquelle la tentative d'authentification a été
+     *     effectuée.
+     * @param response La HttpServletResponse utilisée pour envoyer la réponse d'erreur.
+     * @param authException L'exception qui a déclenché cette défaillance d'authentification.
+     * @throws IOException En cas d'erreur d'entrée ou de sortie lors du traitement de la réponse.
+     * @throws ServletException En cas d'erreur spécifique au servlet pendant le traitement.
      */
     @Override
     public void commence(
@@ -33,6 +34,6 @@ public class AuthEntryPointJwt implements AuthenticationEntryPoint {
             AuthenticationException authException)
             throws IOException, ServletException {
         // 401 Unauthorized
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Error: Unauthorized");
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Erreur : Non autorisé");
     }
 }

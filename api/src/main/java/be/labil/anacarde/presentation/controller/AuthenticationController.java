@@ -26,12 +26,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * This controller provides an endpoint for user authentication. Upon successful authentication, a
- * JWT is generated and returned as an HTTP-only cookie.
+ * Ce contrôleur fournit un point d'accès pour l'authentification des utilisateurs.
  *
- * <p><b>Endpoints:</b> - POST /api/auth/signin: Authenticates the user with provided credentials.
+ * <p>À la réussite de l'authentification, un token JWT est généré et renvoyé sous forme de cookie
+ * HTTP-only.
+ *
+ * <p><b>Points d'accès :</b> POST /api/auth/signin : Authentifie l'utilisateur à l'aide des
+ * identifiants fournis.
  */
-@Tag(name = "Authentication", description = "API for user authentication")
+@Tag(name = "Authentication", description = "API pour l'authentification des utilisateurs")
 @RestController
 @RequestMapping("/api/auth")
 public class AuthenticationController {
@@ -42,12 +45,13 @@ public class AuthenticationController {
     private final int tokenValidityHours;
 
     /**
-     * Constructor for AuthenticationController.
+     * Constructeur du contrôleur d'authentification.
      *
-     * @param authenticationManager The authentication manager to validate user credentials.
-     * @param jwtUtil Utility for generating JWT tokens.
-     * @param environment Spring Environment to determine active profiles.
-     * @param tokenValidityHours The token validity duration in hours.
+     * @param authenticationManager Le gestionnaire d'authentification pour valider les identifiants
+     *     de l'utilisateur.
+     * @param jwtUtil Utilitaire pour générer des tokens JWT.
+     * @param environment L'environnement Spring permettant de déterminer les profils actifs.
+     * @param tokenValidityHours La durée de validité du token en heures.
      */
     public AuthenticationController(
             AuthenticationManager authenticationManager,
@@ -61,24 +65,26 @@ public class AuthenticationController {
     }
 
     /**
-     * Authenticates a user and returns a JWT as an HTTP-only cookie.
+     * Authentifie un utilisateur et renvoie un token JWT sous forme de cookie HTTP-only.
      *
-     * @param loginRequest The login request payload containing username and password.
-     * @param response HttpServletResponse to add the JWT cookie.
-     * @return ResponseEntity with a success message if authentication is successful, or error
-     *     message otherwise.
+     * @param loginRequest Le payload contenant les identifiants (nom d'utilisateur et mot de
+     *     passe).
+     * @param response La réponse HTTP à laquelle le cookie JWT sera ajouté.
+     * @return Une ResponseEntity avec un message de succès si l'authentification est réussie, ou un
+     *     message d'erreur sinon.
      */
     @Operation(
-            summary = "Authenticate user",
-            description = "Authenticates a user and returns a JWT token as an HTTP-only cookie")
+            summary = "Authentifier l'utilisateur",
+            description =
+                    "Authentifie un utilisateur et renvoie un token JWT sous forme de cookie HTTP-only")
     @ApiResponses({
         @ApiResponse(
                 responseCode = "200",
-                description = "User authenticated successfully",
+                description = "Utilisateur authentifié avec succès",
                 content = @Content(schema = @Schema(implementation = String.class))),
         @ApiResponse(
                 responseCode = "401",
-                description = "Failed to authenticate",
+                description = "Échec de l'authentification",
                 content = @Content(schema = @Schema(implementation = String.class)))
     })
     @PostMapping("/signin")
@@ -86,37 +92,42 @@ public class AuthenticationController {
             @Valid
                     @RequestBody
                     @Parameter(
-                            description = "Login credentials",
+                            description = "Identifiants de connexion",
                             required = true,
                             schema = @Schema(implementation = LoginRequest.class))
                     LoginRequest loginRequest,
             HttpServletResponse response) {
         try {
+
             Authentication authentication =
                     authenticationManager.authenticate(
                             new UsernamePasswordAuthenticationToken(
                                     loginRequest.getUsername(), loginRequest.getPassword()));
+
             String jwt =
                     jwtUtil.generateToken(
                             (org.springframework.security.core.userdetails.UserDetails)
                                     authentication.getPrincipal());
 
+            // Créer un cookie HTTP-only pour améliorer la sécurité
             Cookie jwtCookie = new Cookie("jwt", jwt);
-            jwtCookie.setHttpOnly(true); // Not accessible via JavaScript
+            jwtCookie.setHttpOnly(true); // Le cookie n'est pas accessible via JavaScript
 
             boolean isProd =
                     Arrays.stream(environment.getActiveProfiles())
                             .anyMatch(profile -> profile.equalsIgnoreCase("prod"));
             jwtCookie.setSecure(isProd);
 
-            jwtCookie.setPath("/"); // Accessible across all application paths
+            // Rendre le cookie accessible sur l'ensemble de l'application et définir sa durée de
+            // vie
+            jwtCookie.setPath("/");
             jwtCookie.setMaxAge(tokenValidityHours * 60 * 60);
 
             response.addCookie(jwtCookie);
 
-            return ResponseEntity.ok("User authenticated successfully");
+            return ResponseEntity.ok("Utilisateur authentifié avec succès");
         } catch (AuthenticationException e) {
-            return ResponseEntity.status(401).body("Failed to authenticate");
+            return ResponseEntity.status(401).body("Échec de l'authentification");
         }
     }
 }

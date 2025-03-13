@@ -4,14 +4,14 @@ import be.labil.anacarde.domain.model.Role;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-/** Repository interface for Role entities. */
+/** Interface Repository pour les entités Role. */
 public interface RoleRepository extends JpaRepository<Role, Integer> {
 
     /**
-     * This method searches for a Role entity with the specified name.
+     * Recherche une entité Role dont le nom correspond à celui spécifié.
      *
-     * @param name The name of the role to search for.
-     * @return The Role if found; otherwise, null.
+     * @param name Le nom du rôle à rechercher.
+     * @return Un Optional contenant le Role trouvé, ou Optional.empty() si aucun rôle n'est trouvé.
      */
     Optional<Role> findByName(String name);
 }
