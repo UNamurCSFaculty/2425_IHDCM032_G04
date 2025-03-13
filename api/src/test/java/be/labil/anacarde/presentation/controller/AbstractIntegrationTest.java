@@ -1,11 +1,14 @@
 package be.labil.anacarde.presentation.controller;
 
+import be.labil.anacarde.domain.model.Role;
 import be.labil.anacarde.domain.model.User;
+import be.labil.anacarde.infrastructure.persistence.RoleRepository;
 import be.labil.anacarde.infrastructure.persistence.UserRepository;
 import be.labil.anacarde.infrastructure.security.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import java.time.LocalDateTime;
 import lombok.Getter;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,10 +20,14 @@ public abstract class AbstractIntegrationTest {
 
     @Autowired protected UserRepository userRepository;
 
+    @Autowired protected RoleRepository roleRepository;
+
     @Autowired protected UserDetailsService userDetailsService;
 
     private User mainTestUser;
     private User secondTestUser;
+    private Role userTestRole;
+    private Role adminTestRole;
 
     @Getter private Cookie jwtCookie;
 
@@ -28,6 +35,12 @@ public abstract class AbstractIntegrationTest {
     public void setUp() {
         initUserDatabase();
         initJwtCookie();
+    }
+
+    @AfterEach
+    public void tearDown() {
+        userRepository.deleteAll();
+        roleRepository.deleteAll();
     }
 
     /** Returns the main test user, the one that is used for the requests (JWT cookie). */
@@ -38,12 +51,25 @@ public abstract class AbstractIntegrationTest {
         return mainTestUser;
     }
 
-    /** Returns the second test user. */
     public User getSecondTestUser() {
         if (secondTestUser == null) {
             throw new IllegalStateException("Second test user not initialized");
         }
         return secondTestUser;
+    }
+
+    public Role getUserTestRole() {
+        if (userTestRole == null) {
+            throw new IllegalStateException("User role not initialized");
+        }
+        return userTestRole;
+    }
+
+    public Role getAdminTestRole() {
+        if (adminTestRole == null) {
+            throw new IllegalStateException("Admin role not initialized");
+        }
+        return adminTestRole;
     }
 
     /** Initializes the user database with a single test user. */
@@ -68,6 +94,11 @@ public abstract class AbstractIntegrationTest {
                         .registrationDate(LocalDateTime.now())
                         .active(true)
                         .build();
+
+        Role userRole = Role.builder().name("ROLE_USER").build();
+        Role adminRole = Role.builder().name("ROLE_ADMIN").build();
+        userTestRole = roleRepository.save(userRole);
+        adminTestRole = roleRepository.save(adminRole);
         mainTestUser = userRepository.save(user1);
         secondTestUser = userRepository.save(user2);
     }

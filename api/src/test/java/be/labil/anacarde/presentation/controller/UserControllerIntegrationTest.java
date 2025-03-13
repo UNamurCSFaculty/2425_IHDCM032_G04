@@ -3,12 +3,16 @@ package be.labil.anacarde.presentation.controller;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import be.labil.anacarde.domain.dto.RoleDto;
 import be.labil.anacarde.domain.dto.UserDto;
 import be.labil.anacarde.domain.model.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.util.List;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -99,6 +103,7 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
         updateUser.setLastName("Doe Updated");
         updateUser.setEmail("email@updated.com");
         updateUser.setPassword("newpassword");
+        updateUser.setRoles(Set.of(new RoleDto(null, getUserTestRole().getName())));
 
         ObjectNode node = objectMapper.valueToTree(updateUser);
         node.put(
@@ -119,6 +124,8 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
                 userRepository
                         .findByEmail("email@updated.com")
                         .orElseThrow(() -> new AssertionError("User not found"));
+        // Verify that the role is not updated
+        assertTrue(updatedUser.getRoles().isEmpty(), "The roles should not be updated");
         assertTrue(
                 bCryptPasswordEncoder.matches("newpassword", updatedUser.getPassword()),
                 "The stored password should match the updated password 'newpassword'");
@@ -130,6 +137,113 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
                 .andExpect(status().isNoContent());
 
         mockMvc.perform(get("/api/users/" + getSecondTestUser().getId()).with(jwt()))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void testAddRoleToUserIntegration() throws Exception {
+        Integer userId = getMainTestUser().getId();
+
+        mockMvc.perform(
+                        post("/api/users/" + userId + "/roles/" + getUserTestRole().getName())
+                                .accept(MediaType.APPLICATION_JSON)
+                                .with(jwt()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.roles").isArray())
+                .andExpect(
+                        jsonPath("$.roles[?(@.name=='" + getUserTestRole().getName() + "')]")
+                                .exists());
+    }
+
+    @Test
+    public void testUpdateUserRolesIntegration() throws Exception {
+        Integer userId = getMainTestUser().getId();
+        List<String> roleNames = List.of(getUserTestRole().getName(), getAdminTestRole().getName());
+        String jsonContent = objectMapper.writeValueAsString(roleNames);
+
+        mockMvc.perform(
+                        put("/api/users/" + userId + "/roles")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(jsonContent)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .with(jwt()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.roles").isArray())
+                .andExpect(jsonPath("$.roles[?(@.name=='ROLE_ADMIN')]").exists())
+                .andExpect(jsonPath("$.roles[?(@.name=='ROLE_USER')]").exists());
+    }
+
+    @Test
+    public void testGetUserNotFound() throws Exception {
+        mockMvc.perform(get("/api/users/999999").with(jwt())).andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void testCreateUserMissingEmail() throws Exception {
+        UserDto newUser = new UserDto();
+        newUser.setFirstName("Bob");
+        newUser.setLastName("Smith");
+        newUser.setPassword("secret");
+
+        ObjectNode node = objectMapper.valueToTree(newUser);
+        node.put("password", newUser.getPassword());
+        String jsonContent = node.toString();
+
+        mockMvc.perform(
+                        post("/api/users")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(jsonContent)
+                                .with(jwt()))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errors.email", containsString("Email is required")));
+    }
+
+    @Test
+    public void testAddRoleToUserUserNotFound() throws Exception {
+        int nonExistentUserId = 999999;
+        mockMvc.perform(
+                        post("/api/users/"
+                                        + nonExistentUserId
+                                        + "/roles/"
+                                        + getUserTestRole().getName())
+                                .with(jwt()))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void testAddRoleToUserRoleNotFound() throws Exception {
+        Integer userId = getMainTestUser().getId();
+        String nonExistentRoleName = "ROLE_NON_EXISTENT";
+        mockMvc.perform(post("/api/users/" + userId + "/roles/" + nonExistentRoleName).with(jwt()))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void testUpdateUserRolesUserNotFound() throws Exception {
+        int nonExistentUserId = 999999;
+        List<String> roleNames = List.of(getUserTestRole().getName());
+        String jsonContent = objectMapper.writeValueAsString(roleNames);
+
+        mockMvc.perform(
+                        put("/api/users/" + nonExistentUserId + "/roles")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(jsonContent)
+                                .with(jwt()))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void testUpdateUserRolesRoleNotFound() throws Exception {
+        Integer userId = getMainTestUser().getId();
+        List<String> roleNames = List.of("ROLE_NON_EXISTENT");
+        String jsonContent = objectMapper.writeValueAsString(roleNames);
+
+        mockMvc.perform(
+                        put("/api/users/" + userId + "/roles")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(jsonContent)
+                                .with(jwt()))
                 .andExpect(status().isNotFound());
     }
 }

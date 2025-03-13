@@ -8,19 +8,18 @@ import org.springframework.stereotype.Component;
 
 @Component
 /**
- * @brief Implementation of the AuditorAware interface for tracking the current auditor.
- *     <p>This class provides the current authenticated user's name to be used as the auditor in
- *     data auditing. If no authenticated user is available or if the user is anonymous, a default
- *     value is returned.
+ * This class provides the current authenticated user's name to be used as the auditor in data
+ * auditing. If no authenticated user is available or if the user is anonymous, a default value is
+ * returned.
  */
 public class AuditorAwareImpl implements AuditorAware<String> {
 
     /**
-     * @brief Retrieves the current auditor's name.
-     *     <p>This method obtains the current authentication from the SecurityContextHolder and
-     *     checks whether the user is authenticated and not anonymous. If the authentication is
-     *     null, not authenticated, or represents an anonymous user, it returns a default auditor
-     *     value. Otherwise, it returns the authenticated user's name.
+     * This method obtains the current authentication from the SecurityContextHolder and checks
+     * whether the user is authenticated and not anonymous. If the authentication is null, not
+     * authenticated, or represents an anonymous user, it returns a default auditor value.
+     * Otherwise, it returns the authenticated user's name.
+     *
      * @return An Optional containing the auditor's name if available; otherwise, an Optional
      *     containing a default value.
      */

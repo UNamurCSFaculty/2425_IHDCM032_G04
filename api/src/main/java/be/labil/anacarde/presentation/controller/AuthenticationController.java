@@ -26,11 +26,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * @brief Authentication Controller for handling user sign-in.
- *     <p>This controller provides an endpoint for user authentication. Upon successful
- *     authentication, a JWT is generated and returned as an HTTP-only cookie.
- *     <p><b>Endpoints:</b> - POST /api/auth/signin: Authenticates the user with provided
- *     credentials.
+ * This controller provides an endpoint for user authentication. Upon successful authentication, a
+ * JWT is generated and returned as an HTTP-only cookie.
+ *
+ * <p><b>Endpoints:</b> - POST /api/auth/signin: Authenticates the user with provided credentials.
  */
 @Tag(name = "Authentication", description = "API for user authentication")
 @RestController
@@ -43,7 +42,8 @@ public class AuthenticationController {
     private final int tokenValidityHours;
 
     /**
-     * @brief Constructor for AuthenticationController.
+     * Constructor for AuthenticationController.
+     *
      * @param authenticationManager The authentication manager to validate user credentials.
      * @param jwtUtil Utility for generating JWT tokens.
      * @param environment Spring Environment to determine active profiles.
@@ -61,7 +61,8 @@ public class AuthenticationController {
     }
 
     /**
-     * @brief Authenticates a user and returns a JWT as an HTTP-only cookie.
+     * Authenticates a user and returns a JWT as an HTTP-only cookie.
+     *
      * @param loginRequest The login request payload containing username and password.
      * @param response HttpServletResponse to add the JWT cookie.
      * @return ResponseEntity with a success message if authentication is successful, or error

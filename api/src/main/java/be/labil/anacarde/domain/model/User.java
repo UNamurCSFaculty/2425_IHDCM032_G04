@@ -21,23 +21,30 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-/**
- * @brief Entity representing a User in the system.
- */
+/** Entity representing a User in the system. */
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
     @SequenceGenerator(name = "user_seq", sequenceName = "user_seq", allocationSize = 1)
     private Integer id;
 
+    @Column(nullable = false)
     private String lastName;
+
+    @Column(nullable = false)
     private String firstName;
+
+    @Column(nullable = false)
     private String email;
+
+    @Column(nullable = false)
     private String password;
 
     private LocalDateTime registrationDate;
     private LocalDateTime validationDate;
-    private Boolean active;
+
+    @Column(nullable = false)
+    private boolean active;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -47,9 +54,9 @@ public class User implements UserDetails {
     private Set<Role> roles;
 
     /**
-     * @brief Retrieves the authorities granted to the user.
-     *     <p>This method converts the roles assigned to the user into a collection of
-     *     GrantedAuthority objects. If no roles are assigned, an empty list is returned.
+     * This method converts the roles assigned to the user into a collection of GrantedAuthority
+     * objects. If no roles are assigned, an empty list is returned.
+     *
      * @return A Collection of GrantedAuthority representing the user's roles.
      */
     @Override
@@ -63,7 +70,20 @@ public class User implements UserDetails {
     }
 
     /**
-     * @brief Retrieves the user's password.
+     * Returns the user roles.
+     *
+     * @return Empty set if the user has no roles; otherwise, the user's roles.
+     */
+    public Set<Role> getRoles() {
+        if (roles == null) {
+            return Set.of();
+        }
+        return roles;
+    }
+
+    /**
+     * Retrieves the user's password.
+     *
      * @return The user's password as a String.
      */
     @Override
@@ -72,7 +92,8 @@ public class User implements UserDetails {
     }
 
     /**
-     * @brief Retrieves the user's username, which in this implementation is the email address.
+     * Retrieves the user's username, which in this implementation is the email address.
+     *
      * @return The user's email address as a String.
      */
     @Override
@@ -81,8 +102,8 @@ public class User implements UserDetails {
     }
 
     /**
-     * @brief Checks if the user's account is not expired.
-     *     <p>This implementation always returns true.
+     * This implementation always returns true.
+     *
      * @return True, indicating the account is not expired.
      */
     @Override
@@ -91,8 +112,8 @@ public class User implements UserDetails {
     }
 
     /**
-     * @brief Checks if the user's account is not locked.
-     *     <p>This implementation always returns true.
+     * This implementation always returns true.
+     *
      * @return True, indicating the account is not locked.
      */
     @Override
@@ -101,8 +122,8 @@ public class User implements UserDetails {
     }
 
     /**
-     * @brief Checks if the user's credentials are not expired.
-     *     <p>This implementation always returns true.
+     * This implementation always returns true.
+     *
      * @return True, indicating the credentials are not expired.
      */
     @Override
@@ -111,20 +132,19 @@ public class User implements UserDetails {
     }
 
     /**
-     * @brief Checks if the user's account is enabled.
-     *     <p>This method returns the value of the 'active' field if it is not null, otherwise
-     *     false.
+     * This method returns the value of the 'active' field if it is not null, otherwise false.
+     *
      * @return True if the account is enabled; false otherwise.
      */
     @Override
     public boolean isEnabled() {
-        return active != null ? active : false;
+        return active;
     }
 
     /**
-     * @brief Compares this user to the specified object for equality.
-     *     <p>The comparison is based on the unique identifier of the user. Special handling is
-     *     included to properly compare proxy instances managed by Hibernate.
+     * The comparison is based on the unique identifier of the user. Special handling is included to
+     * properly compare proxy instances managed by Hibernate.
+     *
      * @param o The object to compare with this user.
      * @return True if the given object represents the same user; otherwise, false.
      */
@@ -146,9 +166,9 @@ public class User implements UserDetails {
     }
 
     /**
-     * @brief Returns the hash code for this user.
-     *     <p>The hash code is based on the class type, taking into account possible Hibernate proxy
-     *     instances.
+     * The hash code is based on the class type, taking into account possible Hibernate proxy
+     * instances.
+     *
      * @return The hash code as an integer.
      */
     @Override

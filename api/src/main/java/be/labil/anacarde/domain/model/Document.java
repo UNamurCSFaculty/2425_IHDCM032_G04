@@ -15,19 +15,24 @@ import org.hibernate.proxy.HibernateProxy;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-/**
- * @brief Entity representing a Document in the system.
- */
+/** Entity representing a Document in the system. */
 public class Document {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "document_seq")
     @SequenceGenerator(name = "document_seq", sequenceName = "document_seq", allocationSize = 1)
     private Integer id;
 
+    @Column(nullable = false)
     private String documentType;
+
+    @Column(nullable = false)
     private String format;
+
+    @Column(nullable = false)
     private String storagePath;
-    private LocalDateTime uploadDate;
+
+    @Column(nullable = false)
+    private LocalDateTime uploadDate = LocalDateTime.now();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -36,9 +41,9 @@ public class Document {
 
     @Override
     /**
-     * @brief Compares this Document object with the specified object for equality.
-     *     <p>The comparison is based on the unique identifier of the document. This method properly
-     *     handles Hibernate proxy instances.
+     * The comparison is based on the unique identifier of the document. This method properly
+     * handles Hibernate proxy instances.
+     *
      * @param o The object to compare with this Document.
      * @return True if the specified object is equal to this Document; otherwise, false.
      */
@@ -60,9 +65,9 @@ public class Document {
 
     @Override
     /**
-     * @brief Returns the hash code value for this Document.
-     *     <p>The hash code is derived from the class type to properly account for Hibernate proxy
-     *     instances.
+     * The hash code is derived from the class type to properly account for Hibernate proxy
+     * instances.
+     *
      * @return The hash code as an integer.
      */
     public final int hashCode() {

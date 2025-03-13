@@ -21,18 +21,18 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 @RestControllerAdvice
 /**
- * @brief Global exception handler for the application.
- *     <p>This class handles exceptions thrown throughout the application and translates them into
- *     meaningful HTTP responses. It handles validation errors, resource not found exceptions, data
- *     integrity violations, HTTP message not readable exceptions, optimistic locking errors, and
- *     generic exceptions.
+ * This class handles exceptions thrown throughout the application and translates them into
+ * meaningful HTTP responses. It handles validation errors, resource not found exceptions, data
+ * integrity violations, HTTP message not readable exceptions, optimistic locking errors, and
+ * generic exceptions.
  */
 public class GlobalExceptionHandler {
 
     private final MessageSource messageSource;
 
     /**
-     * @brief Constructor for GlobalExceptionHandler.
+     * Constructor for GlobalExceptionHandler.
+     *
      * @param messageSource The MessageSource used for retrieving localized messages.
      */
     public GlobalExceptionHandler(MessageSource messageSource) {
@@ -40,9 +40,9 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * @brief Handles validation errors from method argument validation.
-     *     <p>This method collects all validation errors from the exception and returns them in a
-     *     ValidationErrorResponse.
+     * This method collects all validation errors from the exception and returns them in a
+     * ValidationErrorResponse.
+     *
      * @param ex The MethodArgumentNotValidException containing validation errors.
      * @return A ResponseEntity containing a ValidationErrorResponse with error details and HTTP
      *     status BAD_REQUEST.
@@ -63,9 +63,9 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * @brief Handles ResourceNotFoundException.
-     *     <p>This method returns an error response with HTTP status NOT_FOUND when a requested
-     *     resource is not found.
+     * This method returns an error response with HTTP status NOT_FOUND when a requested resource is
+     * not found.
+     *
      * @param ex The ResourceNotFoundException that was thrown.
      * @return A ResponseEntity containing an ErrorResponse with the exception message and HTTP
      *     status NOT_FOUND.
@@ -76,9 +76,9 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * @brief Handles data integrity violations, such as unique constraint errors.
-     *     <p>This method extracts an error code from the root cause of the exception, retrieves a
-     *     localized message, and returns an error response with HTTP status CONFLICT.
+     * This method extracts an error code from the root cause of the exception, retrieves a
+     * localized message, and returns an error response with HTTP status CONFLICT.
+     *
      * @param ex The DataIntegrityViolationException that was thrown.
      * @return A ResponseEntity containing an ErrorResponse with a localized error message and HTTP
      *     status CONFLICT.
@@ -102,9 +102,9 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * @brief Extracts an error code from the provided root message.
-     *     <p>This method uses a regular expression to extract the constraint name or error code
-     *     from the root message.
+     * This method uses a regular expression to extract the constraint name or error code from the
+     * root message.
+     *
      * @param rootMessage The root cause message from which to extract the error code.
      * @return The extracted error code, or "default.error" if not found.
      */
@@ -118,9 +118,9 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * @brief Handles exceptions when the HTTP message is not readable.
-     *     <p>This method checks if the root cause is a JSON parsing error and returns an
-     *     appropriate error message.
+     * This method checks if the root cause is a JSON parsing error and returns an appropriate error
+     * message.
+     *
      * @param ex The HttpMessageNotReadableException that was thrown.
      * @return A ResponseEntity containing an ErrorResponse with the error message and HTTP status
      *     BAD_REQUEST.
@@ -139,9 +139,9 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * @brief Handles optimistic locking errors (versioning conflicts).
-     *     <p>This method returns an error response with HTTP status CONFLICT when a resource has
-     *     been modified by another user.
+     * This method returns an error response with HTTP status CONFLICT when a resource has been
+     * modified by another user.
+     *
      * @param ex The StaleObjectStateException that was thrown.
      * @return A ResponseEntity containing an ErrorResponse with a conflict message and HTTP status
      *     CONFLICT.
@@ -156,9 +156,9 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * @brief Handles all other generic exceptions.
-     *     <p>This method logs the unhandled exception and returns an error response with HTTP
-     *     status INTERNAL_SERVER_ERROR.
+     * This method logs the unhandled exception and returns an error response with HTTP status
+     * INTERNAL_SERVER_ERROR.
+     *
      * @param ex The generic Exception that was thrown.
      * @return A ResponseEntity containing an ErrorResponse with a generic error message and HTTP
      *     status INTERNAL_SERVER_ERROR.

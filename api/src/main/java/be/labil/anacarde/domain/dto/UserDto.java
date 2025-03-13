@@ -4,11 +4,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import java.util.Set;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * @brief Represents a user for input and output.
+ * Represents a user for input and output.
+ *
  * @note The password field is write-only, meaning it is accepted during creation/update but will
  *     not be returned in responses.
  */
@@ -17,18 +19,14 @@ import lombok.NoArgsConstructor;
 @Schema(description = "Data Transfer Object pour l'utilisateur")
 public class UserDto {
 
-    /**
-     * @brief Unique identifier for the user.
-     */
+    /** Unique identifier for the user. */
     @Schema(
             description = "Identifiant de l'utilisateur",
             example = "1",
             accessMode = Schema.AccessMode.READ_ONLY)
     private Integer id;
 
-    /**
-     * @brief User's first name.
-     */
+    /** User's first name. */
     @Schema(
             description = "Prénom de l'utilisateur",
             example = "John",
@@ -36,9 +34,7 @@ public class UserDto {
     @NotBlank(message = "First name is required")
     private String firstName;
 
-    /**
-     * @brief User's last name.
-     */
+    /** User's last name. */
     @Schema(
             description = "Nom de famille de l'utilisateur",
             example = "Doe",
@@ -46,9 +42,7 @@ public class UserDto {
     @NotBlank(message = "Last name is required")
     private String lastName;
 
-    /**
-     * @brief User's email address.
-     */
+    /** User's email address. */
     @Schema(
             description = "Adresse email de l'utilisateur",
             example = "john.doe@example.com",
@@ -58,8 +52,9 @@ public class UserDto {
     private String email;
 
     /**
-     * @brief User's password.
-     *     <p>This field is only used during creation and is write-only.
+     * User's password.
+     *
+     * <p>This field is only used during creation and is write-only.
      */
     @Schema(
             description = "Mot de passe de l'utilisateur",
@@ -68,4 +63,13 @@ public class UserDto {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotBlank(groups = ValidationGroups.Create.class, message = "Password is required")
     private String password;
+
+    /**
+     * List of roles associated with the user.
+     *
+     * <p>This field is read-only.
+     */
+    @Schema(description = "List of roles for the user", accessMode = Schema.AccessMode.READ_ONLY)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private Set<RoleDto> roles;
 }

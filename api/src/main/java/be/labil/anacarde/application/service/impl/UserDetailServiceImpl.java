@@ -9,6 +9,7 @@ import be.labil.anacarde.domain.model.User;
 import be.labil.anacarde.infrastructure.persistence.RoleRepository;
 import be.labil.anacarde.infrastructure.persistence.UserRepository;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,11 +23,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @AllArgsConstructor
 /**
- * @brief Implementation of UserDetailsService and UserService for managing user operations.
- *     <p>This service provides methods for user authentication and user management, including
- *     creating, retrieving, updating, and deleting users. It leverages a UserRepository for
- *     persistence, a UserMapper for converting between entities and DTOs, and a PasswordEncoder for
- *     securing passwords.
+ * This service provides methods for user authentication and user management, including creating,
+ * retrieving, updating, and deleting users. It leverages a UserRepository for persistence, a
+ * UserMapper for converting between entities and DTOs, and a PasswordEncoder for securing
+ * passwords.
  */
 public class UserDetailServiceImpl implements UserDetailsService, UserService {
 
@@ -36,9 +36,9 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
     private final PasswordEncoder bCryptPasswordEncoder;
 
     /**
-     * @brief Loads the user details by email for authentication purposes.
-     *     <p>This method searches for a user by their email. If the user is not found, a
-     *     UsernameNotFoundException is thrown.
+     * This method searches for a user by their email. If the user is not found, a
+     * UsernameNotFoundException is thrown.
+     *
      * @param email The email address of the user.
      * @return A UserDetails object containing the user's authentication information.
      * @throws UsernameNotFoundException if no user is found with the provided email.
@@ -52,9 +52,9 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
     }
 
     /**
-     * @brief Creates a new user in the system.
-     *     <p>This method encodes the user's password (if provided), converts the UserDto to a User
-     *     entity, saves the entity in the repository, and returns the saved user as a UserDto.
+     * This method encodes the user's password (if provided), converts the UserDto to a User entity,
+     * saves the entity in the repository, and returns the saved user as a UserDto.
+     *
      * @param userDto The data transfer object containing user information.
      * @return A UserDto representing the newly created user.
      */
@@ -69,9 +69,8 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
     }
 
     /**
-     * @brief Retrieves a user by their unique identifier.
-     *     <p>This method finds a user by ID. If no user is found, a ResourceNotFoundException is
-     *     thrown.
+     * This method finds a user by ID. If no user is found, a ResourceNotFoundException is thrown.
+     *
      * @param id The unique identifier of the user.
      * @return A UserDto representing the user with the specified ID.
      */
@@ -86,9 +85,9 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
     }
 
     /**
-     * @brief Lists all users in the system.
-     *     <p>This method retrieves all users from the repository and converts them into a list of
-     *     UserDto objects.
+     * This method retrieves all users from the repository and converts them into a list of UserDto
+     * objects.
+     *
      * @return A list of UserDto objects representing all users.
      */
     @Override
@@ -100,10 +99,10 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
     }
 
     /**
-     * @brief Updates an existing user.
-     *     <p>This method finds the existing user by ID, applies partial updates from the provided
-     *     UserDto, encodes the password if provided, saves the updated user, and returns the
-     *     updated user as a UserDto.
+     * This method finds the existing user by ID, applies partial updates from the provided UserDto,
+     * encodes the password if provided, saves the updated user, and returns the updated user as a
+     * UserDto.
+     *
      * @param id The unique identifier of the user to update.
      * @param userDto The data transfer object containing updated user information.
      * @return A UserDto representing the updated user.
@@ -126,9 +125,9 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
     }
 
     /**
-     * @brief Deletes a user from the system.
-     *     <p>This method checks if a user with the specified ID exists. If not, it throws a
-     *     ResourceNotFoundException. Otherwise, it deletes the user from the repository.
+     * This method checks if a user with the specified ID exists. If not, it throws a
+     * ResourceNotFoundException. Otherwise, it deletes the user from the repository.
+     *
      * @param id The unique identifier of the user to delete.
      */
     @Override
@@ -140,9 +139,9 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
     }
 
     /**
-     * @brief Adds a role to an existing user.
-     *     <p>This method retrieves the user by the given identifier and the role by its name. If
-     *     both exist, it adds the role to the user's set of roles and saves the updated user.
+     * This method retrieves the user by the given identifier and the role by its name. If both
+     * exist, it adds the role to the user's set of roles and saves the updated user.
+     *
      * @param userId The unique identifier of the user.
      * @param roleName The name of the role to add.
      * @return A UserDto representing the updated user with the new role.
@@ -150,19 +149,50 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
      */
     @Override
     public UserDto addRoleToUser(Integer userId, String roleName) {
-        // Retrieve the user; throw an exception if not found
         User user =
                 userRepository
                         .findById(userId)
                         .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        // Retrieve the role by its name; throw an exception if not found
         Role role =
                 roleRepository
                         .findByName(roleName)
                         .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
-        // Add the role to the user's set of roles
         user.getRoles().add(role);
-        // Save and return the updated user as a DTO
+
+        User savedUser = userRepository.save(user);
+        return userMapper.toDto(savedUser);
+    }
+
+    /**
+     * Updates the entire set of roles for a user.
+     *
+     * @param userId The ID of the user.
+     * @param roleNames The list of role names to assign to the user.
+     * @return The updated UserDto.
+     * @throws ResourceNotFoundException if the user or any of the roles is not found.
+     */
+    @Override
+    public UserDto updateUserRoles(Integer userId, List<String> roleNames) {
+        User user =
+                userRepository
+                        .findById(userId)
+                        .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        Set<Role> newRoles =
+                roleNames.stream()
+                        .map(
+                                roleName ->
+                                        roleRepository
+                                                .findByName(roleName)
+                                                .orElseThrow(
+                                                        () ->
+                                                                new ResourceNotFoundException(
+                                                                        "Role not found: "
+                                                                                + roleName)))
+                        .collect(Collectors.toSet());
+
+        user.setRoles(newRoles);
+
         User savedUser = userRepository.save(user);
         return userMapper.toDto(savedUser);
     }

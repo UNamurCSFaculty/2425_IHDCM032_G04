@@ -6,9 +6,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
-/**
- * @brief Mapper interface for converting between Document entity and DocumentDto.
- */
+/** Mapper interface for converting between Document entity and DocumentDto. */
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface DocumentMapper extends GenericMapper<DocumentDto, Document> {
 

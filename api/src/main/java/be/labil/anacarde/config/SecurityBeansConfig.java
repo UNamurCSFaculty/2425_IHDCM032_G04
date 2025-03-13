@@ -7,17 +7,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 /**
- * @brief Configuration class for security beans.
- *     <p>This class provides the necessary security-related bean definitions for the application.
- *     It includes the definition of a PasswordEncoder bean that is used for encoding passwords
- *     using the BCrypt algorithm.
+ * This class provides the necessary security-related bean definitions for the application. It
+ * includes the definition of a PasswordEncoder bean that is used for encoding passwords using the
+ * BCrypt algorithm.
  */
 public class SecurityBeansConfig {
 
     /**
-     * @brief Creates a PasswordEncoder bean.
-     *     <p>This method instantiates and returns a BCryptPasswordEncoder which is used for
-     *     encoding user passwords.
+     * This method instantiates and returns a BCryptPasswordEncoder which is used for encoding user
+     * passwords.
+     *
      * @return A PasswordEncoder instance based on the BCrypt algorithm.
      */
     @Bean

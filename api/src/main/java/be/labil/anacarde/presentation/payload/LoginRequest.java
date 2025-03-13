@@ -6,18 +6,11 @@ import lombok.Setter;
 @Getter
 @Setter
 
-/**
- * @brief LoginRequest class used for login operations.
- *     <p>This class encapsulates the username and password required for user authentication.
- */
+/* This class encapsulates the username and password required for user authentication. */
 public class LoginRequest {
-    /**
-     * @brief The username of the user.
-     */
+    /** The username of the user. */
     private String username;
 
-    /**
-     * @brief The password of the user.
-     */
+    /** The password of the user. */
     private String password;
 }

@@ -1,13 +1,16 @@
 package be.labil.anacarde.presentation.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
+import be.labil.anacarde.application.exception.ResourceNotFoundException;
 import be.labil.anacarde.application.service.UserService;
 import be.labil.anacarde.domain.dto.UserDto;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -96,5 +99,40 @@ public class UserControllerUnitTest {
 
         ResponseEntity<Void> response = userController.deleteUser(1);
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+    }
+
+    @Test
+    public void testUpdateUserRolesSuccess() {
+        List<String> roleNames = List.of("ROLE_USER");
+
+        UserDto updatedDto = new UserDto();
+        updatedDto.setId(1);
+        updatedDto.setEmail("john.doe@example.com");
+        updatedDto.setFirstName("John");
+        updatedDto.setLastName("Doe");
+
+        when(userService.updateUserRoles(eq(1), any(List.class))).thenReturn(updatedDto);
+
+        ResponseEntity<UserDto> response = userController.updateUserRoles(1, roleNames);
+
+        // Verify response status and content
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(updatedDto.getId(), response.getBody().getId());
+        assertEquals("john.doe@example.com", response.getBody().getEmail());
+    }
+
+    // Test for update user roles when user is not found via the controller
+    @Test
+    public void testUpdateUserRolesUserNotFound() {
+        List<String> roleNames = List.of("ROLE_USER");
+
+        when(userService.updateUserRoles(eq(999), any(List.class)))
+                .thenThrow(new ResourceNotFoundException("User not found"));
+
+        assertThrows(
+                ResourceNotFoundException.class,
+                () -> {
+                    userController.updateUserRoles(999, roleNames);
+                });
     }
 }

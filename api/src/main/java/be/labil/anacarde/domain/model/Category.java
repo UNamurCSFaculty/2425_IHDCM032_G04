@@ -7,21 +7,22 @@ import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
 @Entity
-@Table(name = "category")
+@Table(
+        name = "category",
+        indexes = {@Index(name = "idx_category_name", columnList = "name")})
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-/**
- * @brief Entity representing a Category in the system.
- */
+/** Entity representing a Category in the system. */
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "category_seq")
     @SequenceGenerator(name = "category_seq", sequenceName = "category_seq", allocationSize = 1)
     private Integer id;
 
+    @Column(nullable = false, unique = true)
     private String name;
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
@@ -29,9 +30,9 @@ public class Category {
     private List<News> news;
 
     /**
-     * @brief Compares this Category object with the specified object for equality.
-     *     <p>The comparison is based on the unique identifier of the category. It properly handles
-     *     Hibernate proxy instances.
+     * The comparison is based on the unique identifier of the category. It properly handles
+     * Hibernate proxy instances.
+     *
      * @param o The object to compare with this Category.
      * @return True if the specified object is equal to this Category; otherwise, false.
      */
@@ -53,9 +54,9 @@ public class Category {
     }
 
     /**
-     * @brief Returns the hash code value for this Category.
-     *     <p>The hash code is derived from the class type to properly account for Hibernate proxy
-     *     instances.
+     * The hash code is derived from the class type to properly account for Hibernate proxy
+     * instances.
+     *
      * @return The hash code as an integer.
      */
     @Override

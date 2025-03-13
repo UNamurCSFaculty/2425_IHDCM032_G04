@@ -210,4 +210,45 @@ public class UserDetailServiceImplTest {
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessage("Role not found");
     }
+
+    // Test for successful update of user roles
+    @Test
+    void testUpdateUserRolesSuccess() {
+        user.setRoles(new java.util.HashSet<>());
+
+        when(userRepository.findById(1)).thenReturn(Optional.of(user));
+        when(roleRepository.findByName("ROLE_USER")).thenReturn(Optional.of(role));
+        when(userRepository.save(user)).thenReturn(user);
+        when(userMapper.toDto(user)).thenReturn(userDto);
+
+        List<String> roleNames = List.of("ROLE_USER");
+        UserDto result = userDetailServiceImpl.updateUserRoles(1, roleNames);
+
+        verify(userRepository, times(1)).findById(1);
+        verify(roleRepository, times(1)).findByName("ROLE_USER");
+        verify(userRepository, times(1)).save(user);
+        assertThat(result).isEqualTo(userDto);
+    }
+
+    // Test when a role is not found during update
+    @Test
+    void testUpdateUserRolesRoleNotFound() {
+        when(userRepository.findById(1)).thenReturn(Optional.of(user));
+        when(roleRepository.findByName("ROLE_ADMIN")).thenReturn(Optional.empty());
+
+        List<String> roleNames = List.of("ROLE_ADMIN");
+
+        assertThatThrownBy(() -> userDetailServiceImpl.updateUserRoles(1, roleNames))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessageContaining("Role not found");
+    }
+
+    // Test addRoleToUser: non-existing user
+    @Test
+    void testUpdateRolesRoleToUserUserNotFound() {
+        when(userRepository.findById(1)).thenReturn(Optional.empty());
+        assertThatThrownBy(() -> userDetailServiceImpl.updateUserRoles(1, List.of()))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("User not found");
+    }
 }

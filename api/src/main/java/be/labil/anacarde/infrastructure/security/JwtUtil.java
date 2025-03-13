@@ -16,9 +16,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 /**
- * @brief JwtUtil class for JWT operations.
- *     <p>This class provides methods to generate, parse, and validate JSON Web Tokens (JWT) for
- *     user authentication.
+ * This class provides methods to generate, parse, and validate JSON Web Tokens (JWT) for user
+ * authentication.
  */
 public class JwtUtil {
 
@@ -26,13 +25,12 @@ public class JwtUtil {
     private String secretKey;
 
     @Value("${jwt.token.validity.hours}")
-    /**
-     * @brief Token validity duration in hours.
-     */
+    /** Token validity duration in hours. */
     private long tokenValidityHours;
 
     /**
-     * @brief Converts the secret key from Base64 encoding to a SecretKey object.
+     * Converts the secret key from Base64 encoding to a SecretKey object.
+     *
      * @return The SecretKey generated from the decoded secret key.
      */
     private SecretKey getSigningKey() {
@@ -41,7 +39,8 @@ public class JwtUtil {
     }
 
     /**
-     * @brief Extracts all claims from the provided JWT token.
+     * Extracts all claims from the provided JWT token.
+     *
      * @param token The JWT token from which to extract claims.
      * @return The Claims object containing all claims present in the token.
      */
@@ -54,7 +53,8 @@ public class JwtUtil {
     }
 
     /**
-     * @brief Extracts a specific claim from the JWT token using the provided resolver function.
+     * Extracts a specific claim from the JWT token using the provided resolver function.
+     *
      * @param token The JWT token from which to extract the claim.
      * @param claimsResolver A function that specifies which claim to extract from the Claims.
      * @return The value of the extracted claim.
@@ -65,7 +65,8 @@ public class JwtUtil {
     }
 
     /**
-     * @brief Retrieves the username (subject) from the JWT token.
+     * Retrieves the username (subject) from the JWT token.
+     *
      * @param token The JWT token from which to retrieve the username.
      * @return The username extracted from the token.
      */
@@ -74,7 +75,8 @@ public class JwtUtil {
     }
 
     /**
-     * @brief Retrieves the expiration date from the JWT token.
+     * Retrieves the expiration date from the JWT token.
+     *
      * @param token The JWT token from which to retrieve the expiration date.
      * @return The expiration Date of the token.
      */
@@ -83,7 +85,8 @@ public class JwtUtil {
     }
 
     /**
-     * @brief Checks whether the JWT token has expired.
+     * Checks whether the JWT token has expired.
+     *
      * @param token The JWT token to check for expiration.
      * @return True if the token has expired, false otherwise.
      */
@@ -92,7 +95,8 @@ public class JwtUtil {
     }
 
     /**
-     * @brief Generates a JWT token for the given user details.
+     * Generates a JWT token for the given user details.
+     *
      * @param userDetails The UserDetails object containing user information.
      * @return A signed JWT token as a String.
      */
@@ -101,7 +105,8 @@ public class JwtUtil {
     }
 
     /**
-     * @brief Creates a JWT token with custom claims and a subject.
+     * Creates a JWT token with custom claims and a subject.
+     *
      * @param customClaims A map of custom claims to include in the token.
      * @param subject The subject (typically the username) for which the token is generated.
      * @return A signed JWT token as a String.
@@ -122,7 +127,8 @@ public class JwtUtil {
     }
 
     /**
-     * @brief Validates the provided JWT token against the given user details.
+     * Validates the provided JWT token against the given user details.
+     *
      * @param token The JWT token to validate.
      * @param userDetails The UserDetails object to validate against.
      * @return True if the token is valid and matches the user details, false otherwise.

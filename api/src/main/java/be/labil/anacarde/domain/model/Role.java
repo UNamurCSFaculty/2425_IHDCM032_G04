@@ -7,22 +7,23 @@ import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
 @Entity
-@Table(name = "role")
+@Table(
+        name = "role",
+        indexes = {@Index(name = "idx_role_name", columnList = "name")})
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-
-/**
- * @brief Entity representing a Role in the system.
- */
+@Builder
+/** Entity representing a Role in the system. */
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "role_seq")
     @SequenceGenerator(name = "role_seq", sequenceName = "role_seq", allocationSize = 1)
     private Integer id;
 
+    @Column(nullable = false, unique = true)
     private String name;
 
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
@@ -30,10 +31,10 @@ public class Role {
     private Set<User> users;
 
     /**
-     * @brief Compares this Role object with the specified object for equality.
-     *     <p>The comparison is based on the unique identifier of the role. If both objects are of
-     *     different effective classes, they are considered not equal. This method handles Hibernate
-     *     proxy instances correctly.
+     * The comparison is based on the unique identifier of the role. If both objects are of
+     * different effective classes, they are considered not equal. This method handles Hibernate
+     * proxy instances correctly.
+     *
      * @param o The object to compare with this Role.
      * @return True if the specified object is equal to this Role, false otherwise.
      */
@@ -55,8 +56,8 @@ public class Role {
     }
 
     /**
-     * @brief Returns the hash code value for this Role.
-     *     <p>The hash code is based on the class type to accommodate Hibernate proxy instances.
+     * The hash code is based on the class type to accommodate Hibernate proxy instances.
+     *
      * @return The hash code as an integer.
      */
     @Override

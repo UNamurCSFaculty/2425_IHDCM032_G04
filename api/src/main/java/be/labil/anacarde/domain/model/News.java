@@ -13,21 +13,22 @@ import org.hibernate.proxy.HibernateProxy;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-/**
- * @brief Entity representing a News item in the system.
- */
+/** Entity representing a News item in the system. */
 public class News {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "news_seq")
     @SequenceGenerator(name = "news_seq", sequenceName = "news_seq", allocationSize = 1)
     private Integer id;
 
+    @Column(nullable = false)
     private String title;
 
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    private LocalDateTime creationDate;
+    @Column(nullable = false)
+    private LocalDateTime creationDate = LocalDateTime.now();
+
     private LocalDateTime publicationDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -37,9 +38,9 @@ public class News {
 
     @Override
     /**
-     * @brief Compares this News object with the specified object for equality.
-     *     <p>The comparison is based on the unique identifier of the news item. It correctly
-     *     handles Hibernate proxy instances.
+     * The comparison is based on the unique identifier of the news item. It correctly handles
+     * Hibernate proxy instances.
+     *
      * @param o The object to compare with this News instance.
      * @return True if the specified object is equal to this News; otherwise, false.
      */
@@ -61,9 +62,9 @@ public class News {
 
     @Override
     /**
-     * @brief Returns the hash code value for this News item.
-     *     <p>The hash code is derived from the class type to properly account for Hibernate proxy
-     *     instances.
+     * The hash code is derived from the class type to properly account for Hibernate proxy
+     * instances.
+     *
      * @return The hash code as an integer.
      */
     public final int hashCode() {
