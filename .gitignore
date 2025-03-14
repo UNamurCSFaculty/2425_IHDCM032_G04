@@ -1,0 +1,33 @@
+# Maven build directory
+target/
+
+# Keep the Maven Wrapper jar
+!.mvn/wrapper/maven-wrapper.jar
+
+# Log and temporary files
+*.log
+logs/
+log/
+*.tmp
+
+# System files
+.DS_Store
+Thumbs.db
+
+### IntelliJ IDEA ###
+.idea/
+*.iml
+*.ipr
+out/
+
+### VS Code ###
+.vscode/
+
+# Temporary files / caches
+*.swp
+*.swo
+
+# Doxygen generated documentation
+api/docs/html/
+api/docs/latex/
+

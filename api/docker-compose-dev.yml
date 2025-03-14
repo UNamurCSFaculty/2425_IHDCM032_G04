@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgis/postgis:17-3.5-alpine
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: S5mhPe(+6CvWZbhj
+      POSTGRES_DB: anacarde
+      POSTGRES_USER: anacarde
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d restapi"]
+      interval: 30s
+      timeout: 60s
+      retries: 5
+      start_period: 80s
+
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: adminpassword
+    ports:
+      - "8081:80"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./servers.json:/pgadmin4/servers.json
+
+
+volumes:
+  db-data:
