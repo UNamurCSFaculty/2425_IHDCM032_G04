@@ -16,6 +16,6 @@ import lombok.Setter;
  * décrivant l'erreur survenue.
  */
 public class ErrorResponse {
-    @Schema(description = "Message d'erreur", example = "Sujet non trouvé")
+    @Schema(description = "Message d'erreur", example = "Ressource introuvable")
     private String error;
 }
