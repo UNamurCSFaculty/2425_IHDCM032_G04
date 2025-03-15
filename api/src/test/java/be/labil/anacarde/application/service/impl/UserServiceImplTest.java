@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import be.labil.anacarde.application.exception.ResourceNotFoundException;
+import be.labil.anacarde.application.service.UserServiceImpl;
 import be.labil.anacarde.domain.dto.UserDto;
 import be.labil.anacarde.domain.mapper.UserMapper;
 import be.labil.anacarde.domain.model.Role;
@@ -34,7 +35,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  * utilisateur par email, la création, la mise à jour, la suppression, et l'ajout ou la mise à jour des rôles d'un
  * utilisateur.
  */
-public class UserDetailServiceImplTest {
+public class UserServiceImplTest {
 
 	@Mock
 	private UserRepository userRepository;
@@ -46,7 +47,7 @@ public class UserDetailServiceImplTest {
 	private PasswordEncoder passwordEncoder;
 
 	@InjectMocks
-	private UserDetailServiceImpl userDetailServiceImpl;
+	private UserServiceImpl userServiceImpl;
 
 	private User user;
 	private UserDto userDto;
@@ -78,7 +79,7 @@ public class UserDetailServiceImplTest {
 	@Test
 	void testLoadUserByUsernameSuccess() {
 		when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
-		assertThat(userDetailServiceImpl.loadUserByUsername("test@example.com")).isEqualTo(user);
+		assertThat(userServiceImpl.loadUserByUsername("test@example.com")).isEqualTo(user);
 		verify(userRepository, times(1)).findByEmail("test@example.com");
 	}
 
@@ -86,7 +87,7 @@ public class UserDetailServiceImplTest {
 	@Test
 	void testLoadUserByUsernameNotFound() {
 		when(userRepository.findByEmail("nonexistent@example.com")).thenReturn(Optional.empty());
-		assertThatThrownBy(() -> userDetailServiceImpl.loadUserByUsername("nonexistent@example.com"))
+		assertThatThrownBy(() -> userServiceImpl.loadUserByUsername("nonexistent@example.com"))
 				.isInstanceOf(UsernameNotFoundException.class)
 				.hasMessageContaining("Utilisateur non trouvé avec l'email");
 	}
@@ -102,7 +103,7 @@ public class UserDetailServiceImplTest {
 		userDto.setPassword("rawPassword");
 		when(userRepository.save(user)).thenReturn(user);
 
-		UserDto result = userDetailServiceImpl.createUser(userDto);
+		UserDto result = userServiceImpl.createUser(userDto);
 		verify(passwordEncoder, times(1)).encode("rawPassword");
 		verify(userRepository, times(1)).save(user);
 		assertThat(result).isEqualTo(userDto);
@@ -112,7 +113,7 @@ public class UserDetailServiceImplTest {
 	@Test
 	void testGetUserByIdSuccess() {
 		when(userRepository.findById(1)).thenReturn(Optional.of(user));
-		UserDto result = userDetailServiceImpl.getUserById(1);
+		UserDto result = userServiceImpl.getUserById(1);
 		assertThat(result).isEqualTo(userDto);
 	}
 
@@ -122,7 +123,7 @@ public class UserDetailServiceImplTest {
 	@Test
 	void testGetUserByIdNotFound() {
 		when(userRepository.findById(1)).thenReturn(Optional.empty());
-		assertThatThrownBy(() -> userDetailServiceImpl.getUserById(1)).isInstanceOf(ResourceNotFoundException.class)
+		assertThatThrownBy(() -> userServiceImpl.getUserById(1)).isInstanceOf(ResourceNotFoundException.class)
 				.hasMessage("Utilisateur non trouvé");
 	}
 
@@ -130,7 +131,7 @@ public class UserDetailServiceImplTest {
 	@Test
 	void testListUsers() {
 		when(userRepository.findAll()).thenReturn(Collections.singletonList(user));
-		List<UserDto> users = userDetailServiceImpl.listUsers();
+		List<UserDto> users = userServiceImpl.listUsers();
 		assertThat(users).hasSize(1).contains(userDto);
 	}
 
@@ -168,7 +169,7 @@ public class UserDetailServiceImplTest {
 		when(passwordEncoder.encode("newPassword")).thenReturn("encodedNewPassword");
 		when(userRepository.save(user)).thenReturn(user);
 
-		UserDto result = userDetailServiceImpl.updateUser(1, updateDto);
+		UserDto result = userServiceImpl.updateUser(1, updateDto);
 		assertThat(result.getEmail()).isEqualTo("updated@example.com");
 		verify(passwordEncoder, times(1)).encode("newPassword");
 	}
@@ -177,7 +178,7 @@ public class UserDetailServiceImplTest {
 	@Test
 	void testDeleteUserSuccess() {
 		when(userRepository.existsById(1)).thenReturn(true);
-		userDetailServiceImpl.deleteUser(1);
+		userServiceImpl.deleteUser(1);
 		verify(userRepository, times(1)).deleteById(1);
 	}
 
@@ -185,7 +186,7 @@ public class UserDetailServiceImplTest {
 	@Test
 	void testDeleteUserNotFound() {
 		when(userRepository.existsById(1)).thenReturn(false);
-		assertThatThrownBy(() -> userDetailServiceImpl.deleteUser(1)).isInstanceOf(ResourceNotFoundException.class)
+		assertThatThrownBy(() -> userServiceImpl.deleteUser(1)).isInstanceOf(ResourceNotFoundException.class)
 				.hasMessage("Utilisateur non trouvé");
 	}
 
@@ -200,7 +201,7 @@ public class UserDetailServiceImplTest {
 		// On suppose que le mapper retourne le même DTO pour simplifier
 		when(userMapper.toDto(user)).thenReturn(userDto);
 
-		UserDto result = userDetailServiceImpl.addRoleToUser(1, "ROLE_USER");
+		UserDto result = userServiceImpl.addRoleToUser(1, "ROLE_USER");
 		verify(userRepository, times(1)).findById(1);
 		verify(roleRepository, times(1)).findByName("ROLE_USER");
 		verify(userRepository, times(1)).save(user);
@@ -211,7 +212,7 @@ public class UserDetailServiceImplTest {
 	@Test
 	void testAddRoleToUserUserNotFound() {
 		when(userRepository.findById(1)).thenReturn(Optional.empty());
-		assertThatThrownBy(() -> userDetailServiceImpl.addRoleToUser(1, "ROLE_USER"))
+		assertThatThrownBy(() -> userServiceImpl.addRoleToUser(1, "ROLE_USER"))
 				.isInstanceOf(ResourceNotFoundException.class).hasMessage("Utilisateur non trouvé");
 	}
 
@@ -220,7 +221,7 @@ public class UserDetailServiceImplTest {
 	void testAddRoleToUserRoleNotFound() {
 		when(userRepository.findById(1)).thenReturn(Optional.of(user));
 		when(roleRepository.findByName("ROLE_USER")).thenReturn(Optional.empty());
-		assertThatThrownBy(() -> userDetailServiceImpl.addRoleToUser(1, "ROLE_USER"))
+		assertThatThrownBy(() -> userServiceImpl.addRoleToUser(1, "ROLE_USER"))
 				.isInstanceOf(ResourceNotFoundException.class).hasMessage("Rôle non trouvé");
 	}
 
@@ -235,7 +236,7 @@ public class UserDetailServiceImplTest {
 		when(userMapper.toDto(user)).thenReturn(userDto);
 
 		List<String> roleNames = List.of("ROLE_USER");
-		UserDto result = userDetailServiceImpl.updateUserRoles(1, roleNames);
+		UserDto result = userServiceImpl.updateUserRoles(1, roleNames);
 
 		verify(userRepository, times(1)).findById(1);
 		verify(roleRepository, times(1)).findByName("ROLE_USER");
@@ -251,7 +252,7 @@ public class UserDetailServiceImplTest {
 
 		List<String> roleNames = List.of("ROLE_ADMIN");
 
-		assertThatThrownBy(() -> userDetailServiceImpl.updateUserRoles(1, roleNames))
+		assertThatThrownBy(() -> userServiceImpl.updateUserRoles(1, roleNames))
 				.isInstanceOf(ResourceNotFoundException.class).hasMessageContaining("Rôle non trouvé");
 	}
 
@@ -259,7 +260,7 @@ public class UserDetailServiceImplTest {
 	@Test
 	void testUpdateRolesRoleToUserUserNotFound() {
 		when(userRepository.findById(1)).thenReturn(Optional.empty());
-		assertThatThrownBy(() -> userDetailServiceImpl.updateUserRoles(1, List.of()))
+		assertThatThrownBy(() -> userServiceImpl.updateUserRoles(1, List.of()))
 				.isInstanceOf(ResourceNotFoundException.class).hasMessage("Utilisateur non trouvé");
 	}
 }
