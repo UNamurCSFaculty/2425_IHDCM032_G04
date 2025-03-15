@@ -35,14 +35,6 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder bCryptPasswordEncoder;
 
-    /**
-     * Recherche un utilisateur par son email. Si l'utilisateur n'est pas trouvé, une
-     * UsernameNotFoundException est levée.
-     *
-     * @param email L'adresse email de l'utilisateur.
-     * @return Un objet UserDetails contenant les informations d'authentification de l'utilisateur.
-     * @throws UsernameNotFoundException si aucun utilisateur n'est trouvé avec l'email fourni.
-     */
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepository
@@ -53,12 +45,6 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
                                         "Utilisateur non trouvé avec l'email : " + email));
     }
 
-    /**
-     * %* Crée un nouvel utilisateur à partir des informations fournies dans le DTO.
-     *
-     * @param userDto Le DTO contenant les informations de l'utilisateur.
-     * @return Un UserDto représentant l'utilisateur créé.
-     */
     @Override
     public UserDto createUser(UserDto userDto) {
         if (userDto.getPassword() != null && !userDto.getPassword().isBlank()) {
@@ -69,13 +55,6 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
         return userMapper.toDto(saved);
     }
 
-    /**
-     * Recherche un utilisateur par son identifiant. Si aucun utilisateur n'est trouvé, une
-     * ResourceNotFoundException est levée.
-     *
-     * @param id L'identifiant unique de l'utilisateur.
-     * @return Un UserDto représentant l'utilisateur avec l'ID spécifié.
-     */
     @Override
     @Transactional(readOnly = true)
     public UserDto getUserById(Integer id) {
@@ -86,11 +65,6 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
         return userMapper.toDto(user);
     }
 
-    /**
-     * Récupère tous les utilisateurs du repository et les convertit en une List de UserDto.
-     *
-     * @return Une List de UserDto représentant tous les utilisateurs.
-     */
     @Override
     @Transactional(readOnly = true)
     public List<UserDto> listUsers() {
@@ -99,13 +73,6 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Met à jour un utilisateur avec les informations fournies dans le DTO.
-     *
-     * @param id L'identifiant unique de l'utilisateur à mettre à jour.
-     * @param userDto Le DTO contenant les informations mises à jour de l'utilisateur.
-     * @return Un UserDto représentant l'utilisateur mis à jour.
-     */
     @Override
     public UserDto updateUser(Integer id, UserDto userDto) {
         User existingUser =
@@ -123,11 +90,6 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
         return userMapper.toDto(saved);
     }
 
-    /**
-     * Supprime un utilisateur du repository.
-     *
-     * @param id L'identifiant unique de l'utilisateur à supprimer.
-     */
     @Override
     public void deleteUser(Integer id) {
         if (!userRepository.existsById(id)) {
@@ -136,14 +98,6 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
         userRepository.deleteById(id);
     }
 
-    /**
-     * Ajoute un rôle à un utilisateur.
-     *
-     * @param userId L'identifiant unique de l'utilisateur.
-     * @param roleName Le nom du rôle à ajouter.
-     * @return Un UserDto représentant l'utilisateur mis à jour avec le nouveau rôle.
-     * @throws ResourceNotFoundException si l'utilisateur ou le rôle n'est pas trouvé.
-     */
     @Override
     public UserDto addRoleToUser(Integer userId, String roleName) {
         User user =
@@ -160,14 +114,6 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
         return userMapper.toDto(savedUser);
     }
 
-    /**
-     * Met à jour l'ensemble des rôles d'un utilisateur.
-     *
-     * @param userId L'ID de l'utilisateur.
-     * @param roleNames La List des noms de rôle à attribuer à l'utilisateur.
-     * @return Un UserDto représentant l'utilisateur mis à jour.
-     * @throws ResourceNotFoundException si l'utilisateur ou l'un des rôles n'est pas trouvé.
-     */
     @Override
     public UserDto updateUserRoles(Integer userId, List<String> roleNames) {
         User user =
