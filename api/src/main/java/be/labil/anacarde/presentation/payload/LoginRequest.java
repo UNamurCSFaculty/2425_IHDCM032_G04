@@ -1,5 +1,6 @@
 package be.labil.anacarde.presentation.payload;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,9 +10,10 @@ import lombok.Setter;
  * Cette classe encapsule le nom d'utilisateur et le mot de passe requis pour l'authentification.
  */
 public class LoginRequest {
-    /** Nom d'utilisateur de l'utilisateur. */
+
+    @NotNull(message = "Le nom d'utilisateur est obligatoire")
     private String username;
 
-    /** Mot de passe de l'utilisateur. */
+    @NotNull(message = "Le mot de passe est obligatoire")
     private String password;
 }

@@ -27,7 +27,7 @@ import org.springframework.test.web.servlet.request.RequestPostProcessor;
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-public class UserControllerIntegrationTest extends AbstractIntegrationTest {
+public class UserControllerApiControllerIntegrationTest extends AbstractIntegrationTest {
 
     @Autowired private MockMvc mockMvc;
 
@@ -314,5 +314,33 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
                                 .content(jsonContent)
                                 .with(jwt()))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void testProtectedEndpointsWithoutJwt() throws Exception {
+        Integer userId = getMainTestUser().getId();
+
+        mockMvc.perform(get("/api/users/" + userId).accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
+
+        mockMvc.perform(post("/api/users").contentType(MediaType.APPLICATION_JSON).content("{}"))
+                .andExpect(status().isUnauthorized());
+
+        mockMvc.perform(
+                        put("/api/users/" + userId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{}"))
+                .andExpect(status().isUnauthorized());
+
+        mockMvc.perform(delete("/api/users/" + userId)).andExpect(status().isUnauthorized());
+
+        mockMvc.perform(post("/api/users/" + userId + "/roles/ROLE_USER"))
+                .andExpect(status().isUnauthorized());
+
+        mockMvc.perform(
+                        put("/api/users/" + userId + "/roles")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("[]"))
+                .andExpect(status().isUnauthorized());
     }
 }

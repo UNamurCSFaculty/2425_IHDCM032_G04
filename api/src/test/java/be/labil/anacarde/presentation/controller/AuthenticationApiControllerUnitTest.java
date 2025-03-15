@@ -23,10 +23,11 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.test.util.ReflectionTestUtils;
 
 /** Test unitaire du contrôleur d'authentification. */
 @ExtendWith(MockitoExtension.class)
-public class AuthenticationControllerUnitTest {
+public class AuthenticationApiControllerUnitTest {
 
     @Mock private AuthenticationManager authenticationManager;
 
@@ -36,14 +37,15 @@ public class AuthenticationControllerUnitTest {
 
     @Mock private HttpServletResponse httpServletResponse;
 
-    private AuthenticationController authenticationController;
+    private AuthenticationApiController authenticationController;
 
     @BeforeEach
     public void setUp() {
         // Simuler le profil actif "test"
         Mockito.lenient().when(environment.getActiveProfiles()).thenReturn(new String[] {"test"});
         authenticationController =
-                new AuthenticationController(authenticationManager, jwtUtil, environment, 1);
+                new AuthenticationApiController(authenticationManager, jwtUtil, environment);
+        ReflectionTestUtils.setField(authenticationController, "tokenValidityHours", 5);
     }
 
     /** Teste le scénario d'authentification réussi. */

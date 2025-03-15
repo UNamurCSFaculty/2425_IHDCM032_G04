@@ -19,7 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 /** Test d'intégration pour le contrôleur d'authentification. */
-public class AuthenticationControllerIntegrationTest {
+public class AuthenticationApiControllerIntegrationTest {
 
     @Autowired private MockMvc mockMvc;
 
@@ -77,5 +77,53 @@ public class AuthenticationControllerIntegrationTest {
                                 .content(requestBody))
                 .andExpect(status().isUnauthorized())
                 .andExpect(content().string("Échec de l'authentification"));
+    }
+
+    /**
+     * Teste la gestion d'une requête d'authentification avec un corps de requête nul.
+     *
+     * @throws Exception en cas d'erreur lors de l'exécution du test.
+     */
+    @Test
+    public void testAuthenticateUserIntegration_NullRequestBody() throws Exception {
+        String requestBody = ""; // Le corps n'est jamais null, mais peut être vide.
+
+        mockMvc.perform(
+                        post("/api/auth/signin")
+                                .contentType("application/json")
+                                .content(requestBody))
+                .andExpect(status().isBadRequest());
+    }
+
+    /**
+     * Teste la gestion d'une requête d'authentification sans mot de passe.
+     *
+     * @throws Exception en cas d'erreur lors de l'exécution du test.
+     */
+    @Test
+    public void testAuthenticateUserIntegration_MissingPassword() throws Exception {
+        String requestBody = "{\"username\": \"user@example.com\"}";
+
+        mockMvc.perform(
+                        post("/api/auth/signin")
+                                .contentType("application/json")
+                                .content(requestBody))
+                .andExpect(status().isBadRequest());
+    }
+
+    /**
+     * Teste la gestion d'une requête d'authentification sans nom d'utilisateur.
+     *
+     * @throws Exception en cas d'erreur lors de l'exécution du test.
+     */
+    @Test
+    public void testAuthenticateUserIntegration_MissingUsername() throws Exception {
+        String requestBody = "{\"password\": \"password\"}";
+
+        mockMvc.perform(
+                        post("/api/auth/signin")
+                                .contentType("application/json")
+                                .content(requestBody))
+                .andExpect(status().isBadRequest());
     }
 }
