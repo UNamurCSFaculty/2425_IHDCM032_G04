@@ -1,7 +1,6 @@
-package be.labil.anacarde.application.service.impl;
+package be.labil.anacarde.application.service;
 
 import be.labil.anacarde.application.exception.ResourceNotFoundException;
-import be.labil.anacarde.application.service.UserService;
 import be.labil.anacarde.domain.dto.UserDto;
 import be.labil.anacarde.domain.mapper.UserMapper;
 import be.labil.anacarde.domain.model.Role;
@@ -27,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
  * récupération, la mise à jour et la suppression des utilisateurs. Il utilise un UserRepository pour la persistance, un
  * UserMapper pour la conversion entre entités et DTO, et un PasswordEncoder pour sécuriser les mots de passe.
  */
-public class UserDetailServiceImpl implements UserDetailsService, UserService {
+public class UserServiceImpl implements UserDetailsService, UserService {
 
 	private final UserRepository userRepository;
 	private final RoleRepository roleRepository;
