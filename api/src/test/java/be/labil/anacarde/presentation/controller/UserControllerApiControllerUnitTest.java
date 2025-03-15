@@ -25,10 +25,10 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 /** Tests unitaires pour le contrôleur des utilisateurs. */
 @ExtendWith(MockitoExtension.class)
-public class UserControllerUnitTest {
+public class UserControllerApiControllerUnitTest {
     @Mock private UserService userService;
 
-    @InjectMocks private UserController userController;
+    @InjectMocks private UserControllerApiController userController;
 
     @BeforeEach
     public void setUp() {
