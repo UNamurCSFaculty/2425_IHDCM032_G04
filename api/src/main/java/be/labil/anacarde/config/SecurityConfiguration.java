@@ -6,13 +6,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -27,23 +24,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfiguration {
 
 	private final AuthEntryPointJwt unauthorizedHandler;
-	private final UserDetailsService userDetailsService;
 	private final AuthTokenFilter authTokenFilter;
-	private final PasswordEncoder passwordEncoder;
-
-	/**
-	 * Configure le DaoAuthenticationProvider en définissant le UserDetailsService et le PasswordEncoder à utiliser pour
-	 * l'authentification des utilisateurs.
-	 *
-	 * @return Une instance configurée de DaoAuthenticationProvider.
-	 */
-	@Bean
-	public DaoAuthenticationProvider authenticationProvider() {
-		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-		authProvider.setUserDetailsService(userDetailsService);
-		authProvider.setPasswordEncoder(passwordEncoder);
-		return authProvider;
-	}
 
 	/**
 	 * Retourne l'AuthenticationManager utilisé pour traiter les demandes d'authentification.
@@ -77,7 +58,7 @@ public class SecurityConfiguration {
 						.requestMatchers("/api/auth/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
 						.permitAll().anyRequest().authenticated());
 
-		http.authenticationProvider(authenticationProvider());
+		// Ajout du filtre JWT avant le filtre d'authentification standard
 		http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
 
 		return http.build();
