@@ -11,18 +11,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Schema(description = "Objet de transfert de données pour les rôles")
 public class RoleDto {
-    /** Identifiant unique du rôle. */
-    @Schema(
-            description = "Identifiant du rôle",
-            example = "1",
-            accessMode = Schema.AccessMode.READ_ONLY)
-    private Integer id;
+	/** Identifiant unique du rôle. */
+	@Schema(description = "Identifiant du rôle", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
+	private Integer id;
 
-    /** Nom du rôle. */
-    @Schema(
-            description = "Nom du rôle",
-            example = "ROLE_USER",
-            requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotBlank(message = "Le nom du rôle est requis")
-    private String name;
+	/** Nom du rôle. */
+	@Schema(description = "Nom du rôle", example = "ROLE_USER", requiredMode = Schema.RequiredMode.REQUIRED)
+	@NotBlank(message = "Le nom du rôle est requis")
+	private String name;
 }

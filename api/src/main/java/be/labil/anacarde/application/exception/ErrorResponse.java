@@ -12,10 +12,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @Schema(description = "Error response structure")
 /**
- * Cette classe représente la structure d'une réponse d'erreur dans l'API. Elle encapsule un message
- * décrivant l'erreur survenue.
+ * Cette classe représente la structure d'une réponse d'erreur dans l'API. Elle encapsule un message décrivant l'erreur
+ * survenue.
  */
 public class ErrorResponse {
-    @Schema(description = "Message d'erreur", example = "Ressource introuvable")
-    private String error;
+	@Schema(description = "Message d'erreur", example = "Ressource introuvable")
+	private String error;
 }

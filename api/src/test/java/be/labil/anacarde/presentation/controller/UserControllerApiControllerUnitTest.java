@@ -26,117 +26,117 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 /** Tests unitaires pour le contrôleur des utilisateurs. */
 @ExtendWith(MockitoExtension.class)
 public class UserControllerApiControllerUnitTest {
-    @Mock private UserService userService;
+	@Mock
+	private UserService userService;
 
-    @InjectMocks private UserControllerApiController userController;
+	@InjectMocks
+	private UserControllerApiController userController;
 
-    @BeforeEach
-    public void setUp() {
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setRequestURI("/api/users");
-        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
-    }
+	@BeforeEach
+	public void setUp() {
+		MockHttpServletRequest request = new MockHttpServletRequest();
+		request.setRequestURI("/api/users");
+		RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
+	}
 
-    /** Teste la récupération d'un utilisateur existant. */
-    @Test
-    public void testGetUser() {
-        UserDto userDto = new UserDto();
-        userDto.setId(1);
-        userDto.setFirstName("John");
-        userDto.setLastName("Doe");
-        userDto.setEmail("john.doe@example.com");
+	/** Teste la récupération d'un utilisateur existant. */
+	@Test
+	public void testGetUser() {
+		UserDto userDto = new UserDto();
+		userDto.setId(1);
+		userDto.setFirstName("John");
+		userDto.setLastName("Doe");
+		userDto.setEmail("john.doe@example.com");
 
-        when(userService.getUserById(1)).thenReturn(userDto);
+		when(userService.getUserById(1)).thenReturn(userDto);
 
-        ResponseEntity<UserDto> response = userController.getUser(1);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("John", response.getBody().getFirstName());
-    }
+		ResponseEntity<UserDto> response = userController.getUser(1);
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertEquals("John", response.getBody().getFirstName());
+	}
 
-    /** Teste la création d'un nouvel utilisateur. */
-    @Test
-    public void testCreateUser() {
-        UserDto inputDto = new UserDto();
-        inputDto.setFirstName("Alice");
-        inputDto.setLastName("Smith");
-        inputDto.setEmail("alice.smith@example.com");
-        inputDto.setPassword("secret");
+	/** Teste la création d'un nouvel utilisateur. */
+	@Test
+	public void testCreateUser() {
+		UserDto inputDto = new UserDto();
+		inputDto.setFirstName("Alice");
+		inputDto.setLastName("Smith");
+		inputDto.setEmail("alice.smith@example.com");
+		inputDto.setPassword("secret");
 
-        UserDto createdDto = new UserDto();
-        createdDto.setId(1);
-        createdDto.setFirstName("Alice");
-        createdDto.setLastName("Smith");
-        createdDto.setEmail("alice.smith@example.com");
+		UserDto createdDto = new UserDto();
+		createdDto.setId(1);
+		createdDto.setFirstName("Alice");
+		createdDto.setLastName("Smith");
+		createdDto.setEmail("alice.smith@example.com");
 
-        when(userService.createUser(any(UserDto.class))).thenReturn(createdDto);
+		when(userService.createUser(any(UserDto.class))).thenReturn(createdDto);
 
-        ResponseEntity<UserDto> response = userController.createUser(inputDto);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertEquals("Alice", response.getBody().getFirstName());
-    }
+		ResponseEntity<UserDto> response = userController.createUser(inputDto);
+		assertEquals(HttpStatus.CREATED, response.getStatusCode());
+		assertEquals("Alice", response.getBody().getFirstName());
+	}
 
-    /** Teste la mise à jour d'un utilisateur existant. */
-    @Test
-    public void testUpdateUser() {
-        UserDto updateDto = new UserDto();
-        updateDto.setFirstName("John Updated");
-        updateDto.setLastName("Doe Updated");
-        updateDto.setEmail("john.updated@example.com");
-        updateDto.setPassword("newpassword");
+	/** Teste la mise à jour d'un utilisateur existant. */
+	@Test
+	public void testUpdateUser() {
+		UserDto updateDto = new UserDto();
+		updateDto.setFirstName("John Updated");
+		updateDto.setLastName("Doe Updated");
+		updateDto.setEmail("john.updated@example.com");
+		updateDto.setPassword("newpassword");
 
-        UserDto updatedDto = new UserDto();
-        updatedDto.setId(1);
-        updatedDto.setFirstName("John Updated");
-        updatedDto.setLastName("Doe Updated");
-        updatedDto.setEmail("john.updated@example.com");
+		UserDto updatedDto = new UserDto();
+		updatedDto.setId(1);
+		updatedDto.setFirstName("John Updated");
+		updatedDto.setLastName("Doe Updated");
+		updatedDto.setEmail("john.updated@example.com");
 
-        when(userService.updateUser(eq(1), any(UserDto.class))).thenReturn(updatedDto);
+		when(userService.updateUser(eq(1), any(UserDto.class))).thenReturn(updatedDto);
 
-        ResponseEntity<UserDto> response = userController.updateUser(1, updateDto);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("John Updated", response.getBody().getFirstName());
-    }
+		ResponseEntity<UserDto> response = userController.updateUser(1, updateDto);
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertEquals("John Updated", response.getBody().getFirstName());
+	}
 
-    /** Teste la suppression d'un utilisateur. */
-    @Test
-    public void testDeleteUser() {
-        doNothing().when(userService).deleteUser(1);
+	/** Teste la suppression d'un utilisateur. */
+	@Test
+	public void testDeleteUser() {
+		doNothing().when(userService).deleteUser(1);
 
-        ResponseEntity<Void> response = userController.deleteUser(1);
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-    }
+		ResponseEntity<Void> response = userController.deleteUser(1);
+		assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+	}
 
-    /** Teste la mise à jour des rôles d'un utilisateur avec succès. */
-    @Test
-    public void testUpdateUserRolesSuccess() {
-        List<String> roleNames = List.of("ROLE_USER");
+	/** Teste la mise à jour des rôles d'un utilisateur avec succès. */
+	@Test
+	public void testUpdateUserRolesSuccess() {
+		List<String> roleNames = List.of("ROLE_USER");
 
-        UserDto updatedDto = new UserDto();
-        updatedDto.setId(1);
-        updatedDto.setEmail("john.doe@example.com");
-        updatedDto.setFirstName("John");
-        updatedDto.setLastName("Doe");
+		UserDto updatedDto = new UserDto();
+		updatedDto.setId(1);
+		updatedDto.setEmail("john.doe@example.com");
+		updatedDto.setFirstName("John");
+		updatedDto.setLastName("Doe");
 
-        when(userService.updateUserRoles(eq(1), any(List.class))).thenReturn(updatedDto);
+		when(userService.updateUserRoles(eq(1), any(List.class))).thenReturn(updatedDto);
 
-        ResponseEntity<UserDto> response = userController.updateUserRoles(1, roleNames);
+		ResponseEntity<UserDto> response = userController.updateUserRoles(1, roleNames);
 
-        // Vérifie le code de réponse et le contenu
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(updatedDto.getId(), response.getBody().getId());
-        assertEquals("john.doe@example.com", response.getBody().getEmail());
-    }
+		// Vérifie le code de réponse et le contenu
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertEquals(updatedDto.getId(), response.getBody().getId());
+		assertEquals("john.doe@example.com", response.getBody().getEmail());
+	}
 
-    /** Teste la mise à jour des rôles d'un utilisateur lorsque l'utilisateur n'est pas trouvé. */
-    @Test
-    public void testUpdateUserRolesUserNotFound() {
-        List<String> roleNames = List.of("ROLE_USER");
+	/** Teste la mise à jour des rôles d'un utilisateur lorsque l'utilisateur n'est pas trouvé. */
+	@Test
+	public void testUpdateUserRolesUserNotFound() {
+		List<String> roleNames = List.of("ROLE_USER");
 
-        when(userService.updateUserRoles(eq(999), any(List.class)))
-                .thenThrow(new ResourceNotFoundException("Utilisateur non trouvé"));
+		when(userService.updateUserRoles(eq(999), any(List.class)))
+				.thenThrow(new ResourceNotFoundException("Utilisateur non trouvé"));
 
-        assertThrows(
-                ResourceNotFoundException.class,
-                () -> userController.updateUserRoles(999, roleNames));
-    }
+		assertThrows(ResourceNotFoundException.class, () -> userController.updateUserRoles(999, roleNames));
+	}
 }
