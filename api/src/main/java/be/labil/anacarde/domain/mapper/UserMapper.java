@@ -6,8 +6,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
 /** Interface Mapper pour la conversion entre l'entité User et le DTO UserDto. */
-@Mapper(
-        componentModel = "spring",
-        uses = {RoleMapper.class},
-        unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface UserMapper extends GenericMapper<UserDto, User> {}
+@Mapper(componentModel = "spring", uses = {RoleMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface UserMapper extends GenericMapper<UserDto, User> {
+}

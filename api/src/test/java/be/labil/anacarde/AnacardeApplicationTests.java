@@ -9,11 +9,13 @@ import org.springframework.test.context.ActiveProfiles;
 /**
  * Tests de l'application Anacarde.
  *
- * <p>Ce test vérifie que le contexte de l'application se charge correctement.
+ * <p>
+ * Ce test vérifie que le contexte de l'application se charge correctement.
  */
 class AnacardeApplicationTests {
 
-    /** Teste le chargement du contexte de l'application. */
-    @Test
-    void contextLoads() {}
+	/** Teste le chargement du contexte de l'application. */
+	@Test
+	void contextLoads() {
+	}
 }

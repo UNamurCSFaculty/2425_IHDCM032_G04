@@ -239,9 +239,9 @@
 				<version>${spotless.version}</version>
 				<configuration>
 					<java>
-						<googleJavaFormat>
-							<style>AOSP</style>
-						</googleJavaFormat>
+						<eclipse>
+							<file>${basedir}/eclipse-java-formatter.xml</file>
+						</eclipse>
 						<importOrder />
 						<removeUnusedImports />
 						<excludes>
@@ -249,7 +249,6 @@
 						</excludes>
 					</java>
 				</configuration>
-
 				<executions>
 					<execution>
 						<id>apply-spotless</id>
@@ -260,6 +259,7 @@
 					</execution>
 				</executions>
 			</plugin>
+
 		</plugins>
 	</build>
 </project>
