@@ -1,6 +1,7 @@
 package be.labil.anacarde.application.exception;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -15,8 +16,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingPathVariableException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 @Slf4j
 @RestControllerAdvice
@@ -164,10 +168,59 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGenericExceptions(Exception ex) {
+
         log.error("Unhandled internal error", ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(
                         new ErrorResponse(
                                 "Une erreur interne s'est produite. Veuillez contacter le support si le problème persiste."));
+    }
+
+    /**
+     * Retourne une réponse d'erreur avec le statut HTTP NOT_FOUND lorsqu'aucun endpoint ne
+     * correspond à l'URL demandée.
+     *
+     * @param ex L'exception NoHandlerFoundException levée.
+     * @return Une ResponseEntity contenant un objet ErrorResponse avec un message d'erreur et le
+     *     statut HTTP NOT_FOUND.
+     */
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNoHandlerFoundException(NoHandlerFoundException ex) {
+        String message = "Aucun endpoint ne correspond à l'URL " + ex.getRequestURL();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(message));
+    }
+
+    /**
+     * Retourne une réponse d'erreur avec le statut HTTP BAD_REQUEST lorsqu'un paramètre de chemin
+     * est manquant.
+     *
+     * @param request La requête HTTP contenant les détails de la requête.
+     * @param ex L'exception MissingPathVariableException levée.
+     * @return Une ResponseEntity contenant un objet ErrorResponse avec un message d'erreur et le
+     *     statut HTTP BAD_REQUEST.
+     */
+    @ExceptionHandler(MissingPathVariableException.class)
+    public ResponseEntity<ErrorResponse> handleMissingPathVariableException(
+            HttpServletRequest request, MissingPathVariableException ex) {
+        String message = "Le paramètre de chemin manquant : " + ex.getVariableName();
+        ErrorResponse errorResponse = new ErrorResponse(message);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+    /**
+     * Retourne une réponse d'erreur avec le statut HTTP BAD_REQUEST lorsqu'un paramètre de requête
+     * est manquant.
+     *
+     * @param request La requête HTTP contenant les détails de la requête.
+     * @param ex L'exception MissingServletRequestParameterException levée.
+     * @return Une ResponseEntity contenant un objet ErrorResponse avec un message d'erreur et le
+     *     statut HTTP BAD_REQUEST.
+     */
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ErrorResponse> handleMissingServletRequestParameterException(
+            HttpServletRequest request, MissingServletRequestParameterException ex) {
+        String message = "Le paramètre de requête manquant : " + ex.getParameterName();
+        ErrorResponse errorResponse = new ErrorResponse(message);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 }
