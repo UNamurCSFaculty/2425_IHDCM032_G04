@@ -1,6 +1,5 @@
 package be.labil.anacarde.presentation.controller;
 
-import be.labil.anacarde.application.service.UserService;
 import be.labil.anacarde.domain.dto.UserDto;
 import be.labil.anacarde.domain.dto.ValidationGroups;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,28 +8,26 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.groups.Default;
-import java.net.URI;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
  * Ce contrôleur fournit des points d'accès pour récupérer, créer, mettre à jour et supprimer des
  * utilisateurs.
  */
+@Validated
 @Tag(name = "Users", description = "API de gestion des utilisateurs")
-@RestController
+@SecurityRequirement(name = "jwt")
 @RequestMapping(value = "/api/users", produces = "application/json")
-@RequiredArgsConstructor
-public class UserController {
-
-    private final UserService userService;
+public interface UserApi {
 
     /**
      * Récupère les informations détaillées d'un utilisateur à partir de son identifiant.
@@ -50,16 +47,23 @@ public class UserController {
         @ApiResponse(
                 responseCode = "404",
                 description = "Utilisateur non trouvé",
-                content = @Content)
+                content =
+                        @Content(
+                                schema =
+                                        @Schema(
+                                                example =
+                                                        "{\"error\": \"Utilisateur non trouvé\"}")))
     })
     @GetMapping("/{id}")
-    public ResponseEntity<UserDto> getUser(
-            @Parameter(description = "Identifiant de l'utilisateur", example = "1", required = true)
+    ResponseEntity<UserDto> getUser(
+            @NotNull(message = "L'ID de l'utilisateur est obligatoire")
+                    @Positive(message = "L'ID doit être un entier positif")
+                    @Parameter(
+                            description = "Identifiant de l'utilisateur",
+                            example = "1",
+                            required = true)
                     @PathVariable("id")
-                    Integer id) {
-        UserDto user = userService.getUserById(id);
-        return ResponseEntity.ok(user);
-    }
+                    Integer id);
 
     /**
      * Crée un nouvel utilisateur en utilisant le groupe de validation "Create", qui rend le champ
@@ -79,20 +83,13 @@ public class UserController {
         @ApiResponse(
                 responseCode = "400",
                 description = "Erreur de validation ou JSON invalide",
-                content = @Content)
+                content =
+                        @Content(schema = @Schema(example = "{\"error\": \"Données invalides\"}")))
     })
     @PostMapping(consumes = "application/json")
-    public ResponseEntity<UserDto> createUser(
+    ResponseEntity<UserDto> createUser(
             @Validated({Default.class, ValidationGroups.Create.class}) @RequestBody
-                    UserDto userDto) {
-        UserDto created = userService.createUser(userDto);
-        URI location =
-                ServletUriComponentsBuilder.fromCurrentRequest()
-                        .path("/{id}")
-                        .buildAndExpand(created.getId())
-                        .toUri();
-        return ResponseEntity.created(location).body(created);
-    }
+                    UserDto userDto);
 
     /**
      * Récupère la liste de tous les utilisateurs.
@@ -104,10 +101,7 @@ public class UserController {
             description = "Renvoie la liste de tous les utilisateurs présents dans le système.")
     @ApiResponse(responseCode = "200", description = "Liste récupérée avec succès")
     @GetMapping
-    public ResponseEntity<List<UserDto>> listUsers() {
-        List<UserDto> users = userService.listUsers();
-        return ResponseEntity.ok(users);
-    }
+    ResponseEntity<List<UserDto>> listUsers();
 
     /**
      * Met à jour un utilisateur existant en utilisant le groupe de validation "Update", qui rend le
@@ -129,22 +123,30 @@ public class UserController {
         @ApiResponse(
                 responseCode = "400",
                 description = "Erreur de validation ou JSON invalide",
-                content = @Content),
+                content =
+                        @Content(schema = @Schema(example = "{\"error\": \"Données invalides\"}"))),
         @ApiResponse(
                 responseCode = "404",
                 description = "Utilisateur non trouvé",
-                content = @Content)
+                content =
+                        @Content(
+                                schema =
+                                        @Schema(
+                                                example =
+                                                        "{\"error\": \"Utilisateur non trouvé\"}")))
     })
     @PutMapping(value = "/{id}", consumes = "application/json")
-    public ResponseEntity<UserDto> updateUser(
-            @Parameter(description = "Identifiant de l'utilisateur", example = "1", required = true)
+    ResponseEntity<UserDto> updateUser(
+            @NotNull(message = "L'ID de l'utilisateur est obligatoire")
+                    @Positive(message = "L'ID doit être un entier positif")
+                    @Parameter(
+                            description = "Identifiant de l'utilisateur",
+                            example = "1",
+                            required = true)
                     @PathVariable("id")
                     Integer id,
             @Validated({Default.class, ValidationGroups.Update.class}) @RequestBody
-                    UserDto userDto) {
-        UserDto updated = userService.updateUser(id, userDto);
-        return ResponseEntity.ok(updated);
-    }
+                    UserDto userDto);
 
     /**
      * Supprime un utilisateur à partir de son identifiant.
@@ -159,17 +161,24 @@ public class UserController {
         @ApiResponse(
                 responseCode = "404",
                 description = "Utilisateur non trouvé",
-                content = @Content)
+                content =
+                        @Content(
+                                schema =
+                                        @Schema(
+                                                example =
+                                                        "{\"error\": \"Utilisateur non trouvé\"}")))
     })
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<Void> deleteUser(
-            @Parameter(description = "Identifiant de l'utilisateur", example = "1", required = true)
+    ResponseEntity<Void> deleteUser(
+            @NotNull(message = "L'ID de l'utilisateur est obligatoire")
+                    @Positive(message = "L'ID doit être un entier positif")
+                    @Parameter(
+                            description = "Identifiant de l'utilisateur",
+                            example = "1",
+                            required = true)
                     @PathVariable("id")
-                    Integer id) {
-        userService.deleteUser(id);
-        return ResponseEntity.noContent().build();
-    }
+                    Integer id);
 
     /**
      * Ajoute un rôle à un utilisateur.
@@ -189,19 +198,27 @@ public class UserController {
         @ApiResponse(
                 responseCode = "404",
                 description = "Utilisateur ou rôle non trouvé",
-                content = @Content)
+                content =
+                        @Content(
+                                schema =
+                                        @Schema(
+                                                example =
+                                                        "{\"error\": \"Utilisateur ou rôle non trouvé\"}")))
     })
     @PostMapping(value = "/{id}/roles/{roleName}")
-    public ResponseEntity<UserDto> addRoleToUser(
-            @Parameter(description = "Identifiant de l'utilisateur", example = "1", required = true)
+    ResponseEntity<UserDto> addRoleToUser(
+            @NotNull(message = "L'ID de l'utilisateur est obligatoire")
+                    @Positive(message = "L'ID doit être un entier positif")
+                    @Parameter(
+                            description = "Identifiant de l'utilisateur",
+                            example = "1",
+                            required = true)
                     @PathVariable("id")
                     Integer id,
-            @Parameter(description = "Nom du rôle", example = "ROLE_USER", required = true)
+            @NotNull(message = "Le nom du rôle est obligatoire")
+                    @Parameter(description = "Nom du rôle", example = "ROLE_USER", required = true)
                     @PathVariable("roleName")
-                    String roleName) {
-        UserDto updated = userService.addRoleToUser(id, roleName);
-        return ResponseEntity.ok(updated);
-    }
+                    String roleName);
 
     /**
      * Met à jour l'ensemble des rôles d'un utilisateur.
@@ -222,15 +239,23 @@ public class UserController {
         @ApiResponse(
                 responseCode = "404",
                 description = "Utilisateur ou rôle non trouvé",
-                content = @Content)
+                content =
+                        @Content(
+                                schema =
+                                        @Schema(
+                                                example =
+                                                        "{\"error\": \"Utilisateur ou rôle non trouvé\"}")))
     })
     @PutMapping(value = "/{id}/roles", consumes = "application/json")
-    public ResponseEntity<UserDto> updateUserRoles(
-            @Parameter(description = "Identifiant de l'utilisateur", example = "1", required = true)
+    ResponseEntity<UserDto> updateUserRoles(
+            @NotNull(message = "L'ID de l'utilisateur est obligatoire")
+                    @Positive(message = "L'ID doit être un entier positif")
+                    @Parameter(
+                            description = "Identifiant de l'utilisateur",
+                            example = "1",
+                            required = true)
                     @PathVariable("id")
                     Integer id,
-            @RequestBody List<String> roleNames) {
-        UserDto updated = userService.updateUserRoles(id, roleNames);
-        return ResponseEntity.ok(updated);
-    }
+            @NotNull(message = "La liste des rôles est obligatoire") @RequestBody
+                    List<String> roleNames);
 }
