@@ -1,5 +1,6 @@
 package be.labil.anacarde.domain.model;
 
+import be.labil.anacarde.domain.enums.Format;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -7,30 +8,36 @@ import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
 @Entity
-@Table(name = "document", indexes = {@Index(columnList = "user_id")})
+@Table(name = "quality_document")
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
 /** Entité représentant un document dans le système. */
-public class Document {
+public class QualityDocument {
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "document_seq")
-	@SequenceGenerator(name = "document_seq", sequenceName = "document_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "quality_document_seq")
+	@SequenceGenerator(name = "quality_document_seq", sequenceName = "quality_document_seq", allocationSize = 1)
 	private Integer id;
 
 	@Column(nullable = false)
-	private String documentType;
+	private String name;
 
 	@Column(nullable = false)
-	private String format;
+	private Format format;
 
 	@Column(nullable = false)
-	private String storagePath;
+	private String filePath;
 
 	@Column(nullable = false)
 	private LocalDateTime uploadDate = LocalDateTime.now();
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "quality_certification_id", nullable = false)
+	@ToString.Exclude
+	private QualityCertification qualityCertification;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", nullable = false)
@@ -56,8 +63,8 @@ public class Document {
 				? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass()
 				: this.getClass();
 		if (thisEffectiveClass != oEffectiveClass) return false;
-		Document document = (Document) o;
-		return getId() != null && Objects.equals(getId(), document.getId());
+		QualityDocument qualityDocument = (QualityDocument) o;
+		return getId() != null && Objects.equals(getId(), qualityDocument.getId());
 	}
 
 	/**
