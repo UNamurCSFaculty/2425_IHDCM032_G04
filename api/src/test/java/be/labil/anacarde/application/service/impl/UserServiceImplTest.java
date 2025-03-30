@@ -2,9 +2,11 @@ package be.labil.anacarde.application.service.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import be.labil.anacarde.application.exception.BadRequestException;
 import be.labil.anacarde.application.exception.ResourceNotFoundException;
 import be.labil.anacarde.application.service.UserServiceImpl;
 import be.labil.anacarde.domain.dto.UserDto;
@@ -14,6 +16,7 @@ import be.labil.anacarde.domain.model.User;
 import be.labil.anacarde.infrastructure.persistence.RoleRepository;
 import be.labil.anacarde.infrastructure.persistence.UserRepository;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -59,7 +62,7 @@ public class UserServiceImplTest {
 		user.setId(1);
 		user.setEmail("test@example.com");
 		user.setPassword("rawPassword");
-		user.setRoles(Collections.emptySet());
+		user.setRoles(new HashSet<>());
 
 		userDto = new UserDto();
 		userDto.setId(1);
@@ -104,6 +107,7 @@ public class UserServiceImplTest {
 		when(userRepository.save(user)).thenReturn(user);
 
 		UserDto result = userServiceImpl.createUser(userDto);
+		assertEquals(encodedPassword, result.getPassword());
 		verify(passwordEncoder, times(1)).encode("rawPassword");
 		verify(userRepository, times(1)).save(user);
 		assertThat(result).isEqualTo(userDto);
@@ -223,6 +227,17 @@ public class UserServiceImplTest {
 		when(roleRepository.findByName("ROLE_USER")).thenReturn(Optional.empty());
 		assertThatThrownBy(() -> userServiceImpl.addRoleToUser(1, "ROLE_USER"))
 				.isInstanceOf(ResourceNotFoundException.class).hasMessage("Rôle non trouvé");
+	}
+
+	@Test
+	void testAddExistingRoleToUser() {
+		user.getRoles().add(role);
+
+		when(userRepository.findById(1)).thenReturn(Optional.of(user));
+		when(roleRepository.findByName("ROLE_USER")).thenReturn(Optional.of(role));
+
+		assertThatThrownBy(() -> userServiceImpl.addRoleToUser(1, "ROLE_USER")).isInstanceOf(BadRequestException.class)
+				.hasMessage("Le rôle est déjà attribué à l'utilisateur");
 	}
 
 	/** Test de la mise à jour réussie des rôles d'un utilisateur. */

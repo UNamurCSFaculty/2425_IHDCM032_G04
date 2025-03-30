@@ -2,12 +2,11 @@
 package be.labil.anacarde.application.service;
 
 import be.labil.anacarde.domain.dto.UserDto;
+
 import java.util.List;
 
 /**
- * Cette interface définit des méthodes pour créer, récupérer, mettre à jour et supprimer les informations d'un
- * utilisateur. Les méthodes opèrent sur des objets UserDto, qui servent de data transfer objects pour les données
- * utilisateur.
+ * Ce service offre des méthodes permettant de créer, récupérer, mettre à jour et supprimer des informations d'utilisateur.
  */
 public interface UserService {
 

@@ -1,4 +1,4 @@
-package be.labil.anacarde.config;
+package be.labil.anacarde.infrastructure.config;
 
 import be.labil.anacarde.infrastructure.security.AuthEntryPointJwt;
 import be.labil.anacarde.infrastructure.security.AuthTokenFilter;
@@ -51,8 +51,7 @@ public class SecurityConfiguration {
 	 */
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http.cors(cors -> cors.disable()).csrf(csrf -> csrf.disable())
-				.exceptionHandling(ex -> ex.authenticationEntryPoint(unauthorizedHandler))
+		http.csrf(csrf -> csrf.disable()).exceptionHandling(ex -> ex.authenticationEntryPoint(unauthorizedHandler))
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers("/api/auth/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")

@@ -13,14 +13,15 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.groups.Default;
-import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
- * Ce contrôleur fournit des points d'accès pour récupérer, créer, mettre à jour et supprimer des utilisateurs.
+ * Cette API offre des points d'accès permettant de récupérer, créer, mettre à jour et supprimer des utilisateurs.
  */
 @Validated
 @Tag(name = "Users", description = "API de gestion des utilisateurs")

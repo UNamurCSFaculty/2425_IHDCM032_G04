@@ -2,11 +2,12 @@
 package be.labil.anacarde.application.exception;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.Map;
 
 @Getter
 @Setter
