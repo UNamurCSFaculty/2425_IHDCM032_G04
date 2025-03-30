@@ -14,7 +14,9 @@ import org.springframework.test.context.ActiveProfiles;
  */
 class AnacardeApplicationTests {
 
-	/** Teste le chargement du contexte de l'application. */
+	/**
+	 * Teste le chargement du contexte de l'application.
+	 */
 	@Test
 	void contextLoads() {
 	}

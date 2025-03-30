@@ -2,11 +2,12 @@
 package be.labil.anacarde.application.service;
 
 import be.labil.anacarde.domain.dto.UserDto;
-
+import be.labil.anacarde.domain.dto.UserListDto;
 import java.util.List;
 
 /**
- * Ce service offre des méthodes permettant de créer, récupérer, mettre à jour et supprimer des informations d'utilisateur.
+ * Ce service offre des méthodes permettant de créer, récupérer, mettre à jour et supprimer des informations
+ * d'utilisateur.
  */
 public interface UserService {
 
@@ -33,7 +34,7 @@ public interface UserService {
 	 *
 	 * @return Une List de UserDto représentant tous les utilisateurs.
 	 */
-	List<UserDto> listUsers();
+	List<UserListDto> listUsers();
 
 	/**
 	 * Met à jour l'utilisateur identifié par l'ID donné avec les informations fournies dans le UserDto.

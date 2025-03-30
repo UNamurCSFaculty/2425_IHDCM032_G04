@@ -21,7 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  * chaîne de filtres de sécurité. Elle configure également les politiques de sécurité HTTP en désactivant CORS et CSRF,
  * en définissant la gestion de session en mode "stateless", et en configurant l'autorisation des requêtes.
  */
-public class SecurityConfiguration {
+public class SecurityConfig {
 
 	private final AuthEntryPointJwt unauthorizedHandler;
 	private final AuthTokenFilter authTokenFilter;

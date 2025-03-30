@@ -1,11 +1,10 @@
 package be.labil.anacarde.domain.model;
 
 import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.proxy.HibernateProxy;
-
 import java.time.LocalDateTime;
 import java.util.Objects;
+import lombok.*;
+import org.hibernate.proxy.HibernateProxy;
 
 @Entity
 @Table(name = "document", indexes = {@Index(columnList = "user_id")})

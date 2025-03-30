@@ -1,6 +1,7 @@
 package be.labil.anacarde.presentation.controller;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -96,7 +97,8 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 	@Test
 	public void testListUsers() throws Exception {
 		mockMvc.perform(get("/api/users").accept(MediaType.APPLICATION_JSON).with(jwt())).andExpect(status().isOk())
-				.andExpect(jsonPath("$").isArray());
+				// print
+				.andDo(print()).andExpect(jsonPath("$").isArray());
 	}
 
 	/**
@@ -110,7 +112,9 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 		updateUser.setLastName("Doe Updated");
 		updateUser.setEmail("email@updated.com");
 		updateUser.setPassword("newpassword");
-		updateUser.setRoles(Set.of(new RoleDto(null, getUserTestRole().getName())));
+		updateUser.setRoles(Set.of(new RoleDto(null, getAdminTestRole().getName())));
+
+		int userRoleSize = getMainTestUser().getRoles().size();
 
 		ObjectNode node = objectMapper.valueToTree(updateUser);
 		node.put("password", updateUser.getPassword()); // Ajout manuel car le mot de passe n'est pas sérialisé
@@ -124,7 +128,9 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 		User updatedUser = userRepository.findByEmail("email@updated.com")
 				.orElseThrow(() -> new AssertionError("Utilisateur non trouvé"));
 		// Vérifie que les rôles ne sont pas mis à jour
-		assertTrue(updatedUser.getRoles().isEmpty(), "Les rôles ne doivent pas être mis à jour");
+		assertEquals(updatedUser.getRoles().size(), userRoleSize, "Les rôles ne doivent pas être mis à jour");
+		assertEquals(updatedUser.getRoles().iterator().next().getName(), getUserTestRole().getName(),
+				"Le rôle ne doit pas être mis à jour avec le rôle ADMIN");
 		assertTrue(bCryptPasswordEncoder.matches("newpassword", updatedUser.getPassword()),
 				"Le mot de passe stocké doit correspondre au nouveau mot de passe 'newpassword'");
 	}
@@ -149,10 +155,10 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 	public void testAddRoleToUserIntegration() throws Exception {
 		Integer userId = getMainTestUser().getId();
 
-		mockMvc.perform(post("/api/users/" + userId + "/roles/" + getUserTestRole().getName())
+		mockMvc.perform(post("/api/users/" + userId + "/roles/" + getAdminTestRole().getName())
 				.accept(MediaType.APPLICATION_JSON).with(jwt())).andExpect(status().isOk())
 				.andExpect(jsonPath("$.roles").isArray())
-				.andExpect(jsonPath("$.roles[?(@.name=='" + getUserTestRole().getName() + "')]").exists());
+				.andExpect(jsonPath("$.roles[?(@.name=='" + getAdminTestRole().getName() + "')]").exists());
 	}
 
 	/**

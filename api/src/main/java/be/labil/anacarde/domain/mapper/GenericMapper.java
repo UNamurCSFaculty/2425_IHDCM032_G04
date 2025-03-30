@@ -1,10 +1,9 @@
 package be.labil.anacarde.domain.mapper;
 
+import java.util.Set;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
-
-import java.util.Set;
 
 /**
  * Cette interface définit des méthodes pour la conversion entre un Data Transfer Object (DTO) et son entité

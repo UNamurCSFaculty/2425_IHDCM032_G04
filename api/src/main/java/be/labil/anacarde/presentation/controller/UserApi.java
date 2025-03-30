@@ -1,6 +1,7 @@
 package be.labil.anacarde.presentation.controller;
 
 import be.labil.anacarde.domain.dto.UserDto;
+import be.labil.anacarde.domain.dto.UserListDto;
 import be.labil.anacarde.domain.dto.ValidationGroups;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -13,12 +14,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.groups.Default;
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * Cette API offre des points d'accès permettant de récupérer, créer, mettre à jour et supprimer des utilisateurs.
@@ -68,7 +68,7 @@ public interface UserApi {
 	@Operation(summary = "Lister tous les utilisateurs", description = "Renvoie la liste de tous les utilisateurs présents dans le système.")
 	@ApiResponse(responseCode = "200", description = "Liste récupérée avec succès")
 	@GetMapping
-	ResponseEntity<List<UserDto>> listUsers();
+	ResponseEntity<List<UserListDto>> listUsers();
 
 	/**
 	 * Met à jour un utilisateur existant en utilisant le groupe de validation "Update", qui rend le champ mot de passe

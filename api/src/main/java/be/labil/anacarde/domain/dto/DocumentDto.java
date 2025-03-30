@@ -2,9 +2,9 @@ package be.labil.anacarde.domain.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
-
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import lombok.Data;
 
 @Data
 @Schema(description = "Objet de transfert de données pour les entités Document.")
@@ -35,6 +35,6 @@ public class DocumentDto {
 
 	/** Identifiant de l'utilisateur associé au document. */
 	@Schema(description = "Identifiant de l'utilisateur associé au document", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
-	@NotBlank(message = "L'identifiant de l'utilisateur est requis")
+	@NotNull(message = "L'identifiant de l'utilisateur est requis")
 	private Integer userId;
 }

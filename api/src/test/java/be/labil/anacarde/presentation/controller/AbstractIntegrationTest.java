@@ -108,6 +108,12 @@ public abstract class AbstractIntegrationTest {
 		Role adminRole = Role.builder().name("ROLE_ADMIN").build();
 		userTestRole = roleRepository.save(userRole);
 		adminTestRole = roleRepository.save(adminRole);
+
+		// Utilisation de la méthode de commodité pour assurer la mise à jour bidirectionnelle
+		user1.addRole(userTestRole);
+		user2.addRole(adminTestRole);
+		user2.addRole(userTestRole);
+
 		mainTestUser = userRepository.save(user1);
 		secondTestUser = userRepository.save(user2);
 	}
