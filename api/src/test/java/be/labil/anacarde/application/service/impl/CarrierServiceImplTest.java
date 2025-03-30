@@ -83,6 +83,7 @@ public class CarrierServiceImplTest {
 		when(carrierRepository.findAll()).thenReturn(Collections.singletonList(carrier));
 		List<CarrierDto> result = carrierService.listCarriers();
 		assertThat(result).hasSize(1).contains(carrierDto);
+		verify(carrierRepository, times(1)).findAll();
 	}
 
 	@Test
@@ -109,6 +110,8 @@ public class CarrierServiceImplTest {
 		CarrierDto result = carrierService.updateCarrier(1, updatedDto);
 		assertThat(result.getKmRange()).isEqualTo(new BigDecimal("150.0"));
 		assertThat(result.getKmPrice()).isEqualTo(new BigDecimal("7.0"));
+
+		verify(carrierRepository, times(1)).save(carrier);
 	}
 
 	@Test
