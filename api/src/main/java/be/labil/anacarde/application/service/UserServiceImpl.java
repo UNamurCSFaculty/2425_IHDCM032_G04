@@ -1,5 +1,6 @@
 package be.labil.anacarde.application.service;
 
+import be.labil.anacarde.application.exception.BadRequestException;
 import be.labil.anacarde.application.exception.ResourceNotFoundException;
 import be.labil.anacarde.domain.dto.UserDto;
 import be.labil.anacarde.domain.mapper.UserMapper;
@@ -7,9 +8,6 @@ import be.labil.anacarde.domain.model.Role;
 import be.labil.anacarde.domain.model.User;
 import be.labil.anacarde.infrastructure.persistence.RoleRepository;
 import be.labil.anacarde.infrastructure.persistence.UserRepository;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,14 +16,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Service
 @Transactional
 @AllArgsConstructor
-/**
- * Ce service fournit des méthodes pour l'authentification et la gestion des utilisateurs, incluant la création, la
- * récupération, la mise à jour et la suppression des utilisateurs. Il utilise un UserRepository pour la persistance, un
- * UserMapper pour la conversion entre entités et DTO, et un PasswordEncoder pour sécuriser les mots de passe.
- */
 public class UserServiceImpl implements UserDetailsService, UserService {
 
 	private final UserRepository userRepository;
@@ -92,6 +89,10 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 				.orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé"));
 		Role role = roleRepository.findByName(roleName)
 				.orElseThrow(() -> new ResourceNotFoundException("Rôle non trouvé"));
+		// Vérifie si le rôle n'est pas déjà attribué à l'utilisateur
+		if (user.getRoles().contains(role)) {
+			throw new BadRequestException("Le rôle est déjà attribué à l'utilisateur");
+		}
 		user.getRoles().add(role);
 
 		User savedUser = userRepository.save(user);

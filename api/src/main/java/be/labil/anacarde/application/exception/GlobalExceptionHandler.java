@@ -2,12 +2,8 @@ package be.labil.anacarde.application.exception;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.StaleObjectStateException;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -21,6 +17,12 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Slf4j
 @RestControllerAdvice
@@ -74,6 +76,20 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(ResourceNotFoundException.class)
 	public ResponseEntity<ErrorResponse> handleResourceNotFound(ResourceNotFoundException ex) {
 		return new ResponseEntity<>(new ErrorResponse(ex.getMessage()), HttpStatus.NOT_FOUND);
+	}
+
+	/**
+	 * Retourne une réponse d'erreur avec le statut HTTP BAD_REQUEST lorsqu'une exception BadRequestException est levée.
+	 * Cela peut être dû à des paramètres manquants ou invalides dans la requête.
+	 * 
+	 * @param ex
+	 *            L'exception BadRequestException levée.
+	 * @return Une ResponseEntity contenant un objet ErrorResponse avec le message de l'exception et le statut HTTP
+	 *         BAD_REQUEST.
+	 */
+	@ExceptionHandler(BadRequestException.class)
+	public ResponseEntity<ErrorResponse> handleBadRequestException(BadRequestException ex) {
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(ex.getMessage()));
 	}
 
 	/**
@@ -145,8 +161,8 @@ public class GlobalExceptionHandler {
 	 * @return Une ResponseEntity contenant un objet ErrorResponse avec un message de conflit et le statut HTTP
 	 *         CONFLICT.
 	 */
-	@ExceptionHandler(org.hibernate.StaleObjectStateException.class)
-	public ResponseEntity<ErrorResponse> handleStaleObjectStateException(org.hibernate.StaleObjectStateException ex) {
+	@ExceptionHandler(StaleObjectStateException.class)
+	public ResponseEntity<ErrorResponse> handleStaleObjectStateException(StaleObjectStateException ex) {
 		return ResponseEntity.status(HttpStatus.CONFLICT)
 				.body(new ErrorResponse("La ressource a été modifiée par un autre utilisateur. Veuillez réessayer."));
 	}

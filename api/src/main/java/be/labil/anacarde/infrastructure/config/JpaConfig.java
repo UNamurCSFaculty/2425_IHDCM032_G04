@@ -1,4 +1,4 @@
-package be.labil.anacarde.config;
+package be.labil.anacarde.infrastructure.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;

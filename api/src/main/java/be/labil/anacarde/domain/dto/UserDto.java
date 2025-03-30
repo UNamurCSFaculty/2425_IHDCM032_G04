@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import java.util.Set;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import java.util.Set;
 
 /**
  * Represents a user for input and output.
@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
  *       responses.
  */
 @Data
-@NoArgsConstructor
 @Schema(description = "Data Transfer Object pour l'utilisateur")
 public class UserDto {
 

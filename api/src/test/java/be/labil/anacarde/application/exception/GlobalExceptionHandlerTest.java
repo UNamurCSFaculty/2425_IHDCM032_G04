@@ -68,6 +68,19 @@ public class GlobalExceptionHandlerTest {
 	}
 
 	@Test
+	public void testHandleBadRequestException() {
+		BadRequestException ex = new BadRequestException("Le rôle est déjà attribué à l'utilisateur");
+		GlobalExceptionHandler handler = new GlobalExceptionHandler(null);
+
+		ResponseEntity<ErrorResponse> response = handler.handleBadRequestException(ex);
+		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+
+		ErrorResponse body = response.getBody();
+		assertNotNull(body);
+		assertEquals("Le rôle est déjà attribué à l'utilisateur", body.getError());
+	}
+
+	@Test
 	public void testHandleDataIntegrityViolation_MissingPassword() {
 		StaticMessageSource messageSource = new StaticMessageSource();
 		messageSource.addMessage("password", Locale.FRENCH, "Le mot de passe est obligatoire");

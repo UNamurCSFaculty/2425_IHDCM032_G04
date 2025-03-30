@@ -1,8 +1,9 @@
 package be.labil.anacarde.infrastructure.persistence;
 
 import be.labil.anacarde.domain.model.User;
-import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
 
 /** Interface Repository pour les entités User. */
 public interface UserRepository extends JpaRepository<User, Integer> {
