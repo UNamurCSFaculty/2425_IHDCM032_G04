@@ -10,6 +10,8 @@ import be.labil.anacarde.application.exception.BadRequestException;
 import be.labil.anacarde.application.exception.ResourceNotFoundException;
 import be.labil.anacarde.application.service.UserServiceImpl;
 import be.labil.anacarde.domain.dto.UserDto;
+import be.labil.anacarde.domain.dto.UserListDto;
+import be.labil.anacarde.domain.mapper.UserListMapper;
 import be.labil.anacarde.domain.mapper.UserMapper;
 import be.labil.anacarde.domain.model.Role;
 import be.labil.anacarde.domain.model.User;
@@ -47,6 +49,8 @@ public class UserServiceImplTest {
 	@Mock
 	private UserMapper userMapper;
 	@Mock
+	private UserListMapper userListMapper;
+	@Mock
 	private PasswordEncoder passwordEncoder;
 
 	@InjectMocks
@@ -54,6 +58,7 @@ public class UserServiceImplTest {
 
 	private User user;
 	private UserDto userDto;
+	private UserListDto userListDto;
 	private Role role;
 
 	@BeforeEach
@@ -69,6 +74,11 @@ public class UserServiceImplTest {
 		userDto.setEmail("test@example.com");
 		userDto.setPassword("rawPassword");
 
+		userListDto = new UserListDto();
+		userListDto.setId(1);
+		userListDto.setEmail("test@example.com");
+		userListDto.setPassword("rawPassword");
+
 		role = new Role();
 		role.setId(100);
 		role.setName("ROLE_USER");
@@ -76,6 +86,7 @@ public class UserServiceImplTest {
 		// On suppose que le mapper convertit directement entre User et UserDto.
 		Mockito.lenient().when(userMapper.toEntity(any(UserDto.class))).thenReturn(user);
 		Mockito.lenient().when(userMapper.toDto(any(User.class))).thenReturn(userDto);
+		Mockito.lenient().when(userListMapper.toDto(any(User.class))).thenReturn(userListDto);
 	}
 
 	/** Test de la méthode loadUserByUsername avec un email valide. */
@@ -135,8 +146,8 @@ public class UserServiceImplTest {
 	@Test
 	void testListUsers() {
 		when(userRepository.findAll()).thenReturn(Collections.singletonList(user));
-		List<UserDto> users = userServiceImpl.listUsers();
-		assertThat(users).hasSize(1).contains(userDto);
+		List<UserListDto> users = userServiceImpl.listUsers();
+		assertThat(users).hasSize(1).contains(userListDto);
 	}
 
 	/**

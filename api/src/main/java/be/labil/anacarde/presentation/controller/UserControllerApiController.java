@@ -2,15 +2,15 @@ package be.labil.anacarde.presentation.controller;
 
 import be.labil.anacarde.application.service.UserService;
 import be.labil.anacarde.domain.dto.UserDto;
+import be.labil.anacarde.domain.dto.UserListDto;
+import java.net.URI;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -39,8 +39,8 @@ public class UserControllerApiController implements UserApi {
 	}
 
 	@Override
-	public ResponseEntity<List<UserDto>> listUsers() {
-		List<UserDto> users = userService.listUsers();
+	public ResponseEntity<List<UserListDto>> listUsers() {
+		List<UserListDto> users = userService.listUsers();
 		return ResponseEntity.ok(users);
 	}
 

@@ -1,18 +1,14 @@
 package be.labil.anacarde.domain.model;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
@@ -47,9 +43,29 @@ public class User implements UserDetails {
 	@Column(nullable = false)
 	private boolean active;
 
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles;
+
+	/**
+	 * Ajoute un rôle à cet utilisateur et met à jour le côté inverse (le rôle) pour maintenir la cohérence.
+	 *
+	 * @param role
+	 *            Le rôle à ajouter.
+	 */
+	public void addRole(Role role) {
+		if (role != null) {
+			if (roles == null) {
+				roles = new HashSet<>();
+			}
+			roles.add(role);
+
+			if (role.getUsers() == null) {
+				role.setUsers(new HashSet<>());
+			}
+			role.getUsers().add(this);
+		}
+	}
 
 	/**
 	 * Convertit les rôles assignés à l'utilisateur en une collection d'objets GrantedAuthority. Si aucun rôle n'est
@@ -60,7 +76,7 @@ public class User implements UserDetails {
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		if (roles == null) {
-			return Collections.emptyList();
+			return new ArrayList<>();
 		}
 		return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
 	}
@@ -72,7 +88,7 @@ public class User implements UserDetails {
 	 */
 	public Set<Role> getRoles() {
 		if (roles == null) {
-			return Set.of();
+			return new HashSet<>();
 		}
 		return roles;
 	}

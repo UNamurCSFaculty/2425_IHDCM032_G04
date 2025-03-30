@@ -11,4 +11,5 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
  * des entités.
  */
 public class JpaConfig {
+
 }

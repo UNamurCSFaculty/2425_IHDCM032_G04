@@ -1,11 +1,10 @@
 package be.labil.anacarde.domain.model;
 
 import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.proxy.HibernateProxy;
-
 import java.util.Objects;
 import java.util.Set;
+import lombok.*;
+import org.hibernate.proxy.HibernateProxy;
 
 @Entity
 @Table(name = "role", indexes = {@Index(name = "idx_role_name", columnList = "name")})
