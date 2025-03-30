@@ -46,6 +46,15 @@ public class CarrierApiControllerUnitTest {
 		ResponseEntity<CarrierDto> response = carrierApiController.createCarrier(carrierDto);
 		assertEquals(HttpStatus.CREATED, response.getStatusCode());
 		assertEquals(1, response.getBody().getId());
+		verify(carrierService, times(1)).createCarrier(any(CarrierDto.class));
+	}
+
+	@Test
+	void testCreateCarrierBadRequest() {
+		when(carrierService.createCarrier(null)).thenThrow(new IllegalArgumentException("Invalid input"));
+		assertThatThrownBy(() -> carrierApiController.createCarrier(null))
+		    .isInstanceOf(IllegalArgumentException.class)
+		    .hasMessage("Invalid input");
 	}
 
 	@Test
@@ -54,6 +63,15 @@ public class CarrierApiControllerUnitTest {
 		ResponseEntity<CarrierDto> response = carrierApiController.getCarrier(1);
 		assertEquals(HttpStatus.OK, response.getStatusCode());
 		assertEquals(1, response.getBody().getId());
+		verify(carrierService, times(1)).getCarrierById(1);
+	}
+
+	@Test
+	void testGetCarrierByIdNotFound() {
+		when(carrierService.getCarrierById(99)).thenThrow(new ResourceNotFoundException("Transporteur non trouvé"));
+		assertThatThrownBy(() -> carrierApiController.getCarrier(99))
+		    .isInstanceOf(ResourceNotFoundException.class)
+		    .hasMessage("Transporteur non trouvé");
 	}
 
 	@Test
@@ -62,6 +80,7 @@ public class CarrierApiControllerUnitTest {
 		ResponseEntity<List<CarrierDto>> response = carrierApiController.listCarriers();
 		assertEquals(HttpStatus.OK, response.getStatusCode());
 		assertEquals(1, response.getBody().get(0).getId());
+		verify(carrierService, times(1)).listCarriers();
 	}
 
 	@Test
@@ -70,6 +89,16 @@ public class CarrierApiControllerUnitTest {
 		ResponseEntity<CarrierDto> response = carrierApiController.updateCarrier(1, carrierDto);
 		assertEquals(HttpStatus.OK, response.getStatusCode());
 		assertEquals(1, response.getBody().getId());
+		verify(carrierService, times(1)).updateCarrier(eq(1), any(CarrierDto.class));
+	}
+
+	@Test
+	void testUpdateCarrierNotFound() {
+		when(carrierService.updateCarrier(eq(99), any(CarrierDto.class)))
+		    .thenThrow(new ResourceNotFoundException("Transporteur non trouvé"));
+		assertThatThrownBy(() -> carrierApiController.updateCarrier(99, carrierDto))
+		    .isInstanceOf(ResourceNotFoundException.class)
+		    .hasMessage("Transporteur non trouvé");
 	}
 
 	@Test
@@ -77,5 +106,14 @@ public class CarrierApiControllerUnitTest {
 		doNothing().when(carrierService).deleteCarrier(1);
 		ResponseEntity<Void> response = carrierApiController.deleteCarrier(1);
 		assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+		verify(carrierService, times(1)).deleteCarrier(1);
+	}
+
+	@Test
+	void testDeleteCarrierNotFound() {
+		doThrow(new ResourceNotFoundException("Transporteur non trouvé")).when(carrierService).deleteCarrier(99);
+		assertThatThrownBy(() -> carrierApiController.deleteCarrier(99))
+		    .isInstanceOf(ResourceNotFoundException.class)
+		    .hasMessage("Transporteur non trouvé");
 	}
 }
