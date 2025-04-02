@@ -37,7 +37,6 @@ jobs:
 
       - name: Generate JaCoCo Badge
         if: github.ref == 'refs/heads/main'
-        working-directory: ./api
         uses: cicirello/jacoco-badge-generator@v2
         id: jacoco
 
@@ -57,11 +56,10 @@ jobs:
 
       - name: Upload JaCoCo coverage report
         if: github.ref == 'refs/heads/main'
-        working-directory: ./api
         uses: actions/upload-artifact@v3
         with:
           name: jacoco-report
-          path: target/site/jacoco/
+          path: api/target/site/jacoco/
 
       - name: Generate Documentation with Doxygen
         working-directory: ./api
@@ -71,11 +69,10 @@ jobs:
           doxygen Doxyfile
 
       - name: Upload Doxygen Documentation
-        working-directory: ./api
         uses: actions/upload-artifact@v3
         with:
           name: doxygen-doc
-          path: docs/html
+          path: api/docs/html
 
   qodana_scan:
     runs-on: ubuntu-latest
