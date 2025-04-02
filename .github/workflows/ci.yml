@@ -39,6 +39,10 @@ jobs:
         if: github.ref == 'refs/heads/main'
         uses: cicirello/jacoco-badge-generator@v2
         id: jacoco
+        with:
+          jacoco-csv-file: api/target/site/jacoco/jacoco.csv
+          badges-directory: .github/badges
+          coverage-badge-filename: jacoco.svg
 
       - name: Log coverage percentages to workflow output
         if: github.ref == 'refs/heads/main'
