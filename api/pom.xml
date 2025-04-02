@@ -209,6 +209,34 @@
 					</systemPropertyVariables>
 				</configuration>
 			</plugin>
+			            <!-- Code coverage -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.12</version>
+                <configuration>
+					<excludes>
+						<exclude>**/generated-sources/**</exclude>
+						<exclude>**/test-classes/**</exclude>
+						<exclude>**/test-outputs/**</exclude>
+						<exclude>**/target/**</exclude>
+					</excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>generate-code-coverage-report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 			<plugin>
 				<groupId>org.graalvm.buildtools</groupId>
 				<artifactId>native-maven-plugin</artifactId>
