@@ -203,24 +203,25 @@
 				<version>${maven.surefire.plugin.version}</version>
 				<configuration>
 					<argLine>
-						-javaagent:"${settings.localRepository}/net/bytebuddy/byte-buddy-agent/1.15.11/byte-buddy-agent-1.15.11.jar"
+						@{argLine} -javaagent:"${settings.localRepository}/net/bytebuddy/byte-buddy-agent/1.15.11/byte-buddy-agent-1.15.11.jar"
 					</argLine>
+
 					<systemPropertyVariables>
 					</systemPropertyVariables>
 				</configuration>
 			</plugin>
 			            <!-- Code coverage -->
-            <plugin>
+			<plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.12</version>
                 <configuration>
-					<excludes>
+                    <excludes>
 						<exclude>**/generated-sources/**</exclude>
 						<exclude>**/test-classes/**</exclude>
 						<exclude>**/test-outputs/**</exclude>
 						<exclude>**/target/**</exclude>
-					</excludes>
+                    </excludes>
                 </configuration>
                 <executions>
                     <execution>
