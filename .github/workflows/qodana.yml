@@ -24,7 +24,7 @@ jobs:
       - name: Run Qodana JVM Community
         uses: docker://jetbrains/qodana-jvm-community:2024.3
         with:
-          args: --project-dir api --results-dir qodana-results --fail-threshold 0
+          args: --project-dir api --results-dir qodana-results --fail-threshold 1
 
       - name: List Qodana report files
         run: ls -R qodana-results || true
@@ -34,3 +34,11 @@ jobs:
         with:
           name: qodana-report
           path: qodana-results
+      - name: Check for critical/high severity issues
+        run: |
+          CRITICAL_COUNT=$(jq '[.runs[].results[] | select(.level=="error")] | length' qodana-results/qodana.sarif.json)
+          echo "Nombre de problèmes critiques/hauts : $CRITICAL_COUNT"
+          if [ "$CRITICAL_COUNT" -gt 0 ]; then
+            echo "Des problèmes critiques ou hautement sévères ont été détectés. Échec du build."
+            exit 1
+          fi
