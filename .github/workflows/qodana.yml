@@ -1,15 +1,15 @@
-name: Code Quality
+name: Qodana Scan
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-  workflow_dispatch:
+  workflow_run:
+    workflows: ["Java Pipeline"]
+    types:
+      - completed
 
 jobs:
-  code_quality:
+  qodana_scan:
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     permissions:
       contents: write
       pull-requests: write
@@ -17,12 +17,17 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0 
 
-      - name: Qodana Scan
-        uses: JetBrains/qodana-action@v2024.3
+      - name: Run Qodana JVM Community
+        uses: docker://jetbrains/qodana-jvm-community:2024.3
         with:
-          args: --fail-threshold,0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          args: --project-dir /github/workspace/api --save-report /github/workspace/qodana-results
+
+      - name: List Qodana report files
+        run: ls -R /github/workspace/qodana-results
+
+      - name: Upload Qodana Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: qodana-report
+          path: /github/workspace/qodana-results
