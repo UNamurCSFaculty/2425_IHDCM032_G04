@@ -1,4 +1,4 @@
-name: CI Pipeline
+name: Java Pipeline
 
 on:
   push:
@@ -77,26 +77,3 @@ jobs:
         with:
           name: doxygen-doc
           path: api/docs/html
-
-  qodana_scan:
-    runs-on: ubuntu-latest
-    needs: build-and-test
-    permissions:
-      contents: write
-      pull-requests: write
-      checks: write
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Run Qodana JVM Community
-        uses: docker://jetbrains/qodana-jvm-community:2024.3
-        with:
-          args: --project-dir /github/workspace/api --save-report /github/workspace/qodana-results
-
-      - name: Fail if critical issues are detected
-        run: |
-          if grep -qi "Critical" /github/workspace/qodana-results/report.txt; then
-            echo "Critical issues detected, failing the build."
-            exit 1
-          fi
