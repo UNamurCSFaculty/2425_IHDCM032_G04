@@ -1,15 +1,15 @@
-name: Qodana Scan
+name: Code Quality
 
 on:
-  workflow_run:
-    workflows: ["Java Pipeline"]
-    types:
-      - completed
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
-  qodana_scan:
+  code_quality:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     permissions:
       contents: write
       pull-requests: write
@@ -17,21 +17,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Run Qodana JVM Community
-        uses: docker://jetbrains/qodana-jvm-community:2024.3
         with:
-          args: --project-dir /github/workspace/api --save-report /github/workspace/qodana-results
+          fetch-depth: 0 
 
-      - name: Fail if critical issues are detected
-        run: |
-          if grep -qiE "([1-9][0-9]*\s+error|Critical)" /github/workspace/qodana-results/report.json; then
-            echo "Critical or error issues detected, failing the build."
-            exit 1
-          fi
-
-      - name: Upload Qodana Report
-        uses: actions/upload-artifact@v4
+      - name: Qodana Scan
+        uses: JetBrains/qodana-action@v2024.3
         with:
-          name: qodana-report
-          path: /github/workspace/qodana-results
+          args: --fail-threshold,0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
