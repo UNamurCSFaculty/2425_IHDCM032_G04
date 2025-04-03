@@ -21,10 +21,10 @@ jobs:
       - name: Run Qodana JVM Community
         uses: docker://jetbrains/qodana-jvm-community:2024.3
         with:
-          args: --project-dir /github/workspace/api --save-report /github/workspace/qodana-results
+          args: --project-dir /github/workspace/api --results-dir /github/workspace/qodana-results --fail-threshold,0
 
       - name: List Qodana report files
-        run: ls -R /github/workspace/qodana-results
+        run: ls -R /github/workspace/qodana-results || true
 
       - name: Upload Qodana Report
         uses: actions/upload-artifact@v4
