@@ -25,7 +25,13 @@ jobs:
 
       - name: Fail if critical issues are detected
         run: |
-          if grep -qi "Critical" /github/workspace/qodana-results/report.txt; then
-            echo "Critical issues detected, failing the build."
+          if grep -qiE "([1-9][0-9]*\s+error|Critical)" /github/workspace/qodana-results/report.txt; then
+            echo "Critical or error issues detected, failing the build."
             exit 1
           fi
+
+      - name: Upload Qodana Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: qodana-report
+          path: /github/workspace/qodana-results
