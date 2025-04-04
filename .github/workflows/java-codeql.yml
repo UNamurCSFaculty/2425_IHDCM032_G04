@@ -24,11 +24,16 @@ jobs:
           paths: ./api
 
       - name: Autobuild for API
+        with:
+          paths: ./api
         uses: github/codeql-action/autobuild@v3
         
       - name: Run CodeQL Analysis for API
         uses: github/codeql-action/analyze@v3
         with:
+          path: ./api
+          output: codeql-results.sarif
+          upload: true
           category: "api-java"
 
       - name: Fail if critical issues found
