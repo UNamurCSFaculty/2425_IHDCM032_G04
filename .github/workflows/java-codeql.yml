@@ -1,0 +1,41 @@
+name: CodeQL Analysis for API (Java)
+
+on:
+  workflow_run:
+    workflows: ["Java Pipeline"]
+    types:
+      - completed
+  schedule:
+    - cron: '20 14 * * 1'   # Scan hebdomadaire, chaque lundi à 14:20 UTC
+
+jobs:
+  codeql-java:
+    name: CodeQL Analysis for API (Java)
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Initialize CodeQL for Java
+        uses: github/codeql-action/init@v3
+        with:
+          languages: java
+          paths: ./api
+
+      - name: Autobuild for API
+        uses: github/codeql-action/autobuild@v3
+        
+      - name: Run CodeQL Analysis for API
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "api-java"
+
+      - name: Fail if critical issues found
+        run: |
+          CRITICAL_COUNT=$(jq '[.runs[].results[] | select(.level=="error" or .properties.severity=="High")] | length' codeql-results.sarif)
+          echo "Nombre d'alertes critiques : $CRITICAL_COUNT"
+          if [ "$CRITICAL_COUNT" -gt 0 ]; then
+            echo "Des vulnérabilités critiques ont été détectées, échec du workflow."
+            exit 1
+          fi

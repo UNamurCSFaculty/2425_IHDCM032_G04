@@ -8,7 +8,7 @@ version: "1.0"
 profile:
   name: qodana.starter
 
-projectJDK: 21 #(Applied in CI/CD pipeline)
+projectJDK: "21"
 
 paths:
   include:
@@ -17,4 +17,4 @@ paths:
     - client
 
 #Specify Qodana linter for analysis (Applied in CI/CD pipeline)
-linter: jetbrains/qodana-jvm:latest
+linter: jetbrains/qodana-jvm:2024.3
