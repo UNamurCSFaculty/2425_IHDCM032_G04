@@ -7,8 +7,6 @@ import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -17,12 +15,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 public class UserControllerApiController implements UserApi {
 
 	private final UserService userService;
-
-	@GetMapping("/greeting")
-	public ResponseEntity<String> greeting(@RequestParam String name, @RequestParam String lol) {
-		String message = "Hello, " + name + "!";
-		return ResponseEntity.ok(message);
-	}
 
 	@Override
 	public ResponseEntity<UserDto> getUser(Integer id) {
