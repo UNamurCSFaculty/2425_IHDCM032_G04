@@ -24,8 +24,7 @@ jobs:
           paths: ./api
 
       - name: Autobuild for API
-        with:
-          paths: ./api
+        working-directory: ./api
         uses: github/codeql-action/autobuild@v3
         
       - name: Run CodeQL Analysis for API
