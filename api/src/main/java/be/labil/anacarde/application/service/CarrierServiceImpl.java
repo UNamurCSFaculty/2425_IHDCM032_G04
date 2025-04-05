@@ -5,6 +5,7 @@ import be.labil.anacarde.domain.dto.CarrierDto;
 import be.labil.anacarde.domain.mapper.CarrierMapper;
 import be.labil.anacarde.domain.model.Carrier;
 import be.labil.anacarde.infrastructure.persistence.CarrierRepository;
+import be.labil.anacarde.infrastructure.persistence.UserRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -14,18 +15,17 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 @AllArgsConstructor
-/**
- * Ce service gère les opérations relatives aux transporteurs, y compris la création, récupération, mise à jour et
- * suppression. Il utilise un CarrierRepository pour la persistance et un CarrierMapper pour la conversion entre entités
- * et DTO.
- */
 public class CarrierServiceImpl implements CarrierService {
 
 	private final CarrierRepository carrierRepository;
 	private final CarrierMapper carrierMapper;
+	private final UserRepository userRepository;
 
 	@Override
 	public CarrierDto createCarrier(CarrierDto carrierDto) {
+		if (!userRepository.existsById(carrierDto.getUserId())) {
+			throw new ResourceNotFoundException("Utilisateur non trouvé");
+		}
 		Carrier carrier = carrierMapper.toEntity(carrierDto);
 		Carrier saved = carrierRepository.save(carrier);
 		return carrierMapper.toDto(saved);

@@ -24,8 +24,8 @@ public class CarrierApiController implements CarrierApi {
 	@Override
 	public ResponseEntity<CarrierDto> createCarrier(CarrierDto carrierDto) {
 		CarrierDto created = carrierService.createCarrier(carrierDto);
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(created.getId())
-				.toUri();
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+				.buildAndExpand(created.getUserId()).toUri();
 		return ResponseEntity.created(location).body(created);
 	}
 

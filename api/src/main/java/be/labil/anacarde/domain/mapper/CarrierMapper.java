@@ -7,7 +7,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
 /** Interface Mapper pour la conversion entre l'entité Carrier et CarrierDto. */
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {RoleMapper.class})
 public interface CarrierMapper extends GenericMapper<CarrierDto, Carrier> {
 
 	/**

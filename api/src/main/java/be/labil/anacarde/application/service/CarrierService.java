@@ -4,8 +4,8 @@ import be.labil.anacarde.domain.dto.CarrierDto;
 import java.util.List;
 
 /**
- * Cette interface définit des méthodes pour créer, récupérer, mettre à jour et supprimer les informations d'un
- * transporteur (Carrier). Les méthodes opèrent sur des objets CarrierDto.
+ * Ce service définit des méthodes pour créer, récupérer, mettre à jour et supprimer les informations d'un transporteur
+ * (Carrier). Les méthodes opèrent sur des objets CarrierDto.
  */
 public interface CarrierService {
 

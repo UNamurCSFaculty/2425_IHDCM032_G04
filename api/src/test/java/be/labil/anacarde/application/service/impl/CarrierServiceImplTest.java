@@ -10,8 +10,9 @@ import be.labil.anacarde.application.service.CarrierServiceImpl;
 import be.labil.anacarde.domain.dto.CarrierDto;
 import be.labil.anacarde.domain.mapper.CarrierMapper;
 import be.labil.anacarde.domain.model.Carrier;
+import be.labil.anacarde.domain.model.User;
 import be.labil.anacarde.infrastructure.persistence.CarrierRepository;
-import java.math.BigDecimal;
+import be.labil.anacarde.infrastructure.persistence.UserRepository;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +31,9 @@ public class CarrierServiceImplTest {
 	private CarrierRepository carrierRepository;
 
 	@Mock
+	private UserRepository userRepository;
+
+	@Mock
 	private CarrierMapper carrierMapper;
 
 	@InjectMocks
@@ -41,16 +45,19 @@ public class CarrierServiceImplTest {
 	@BeforeEach
 	void setUp() {
 		carrier = new Carrier();
-		carrier.setId(1);
+		User user = new User();
+		user.setId(1);
+		user.setEmail("test@hotmail.com");
+		carrier.setUser(user);
 		carrier.setGpsLocation("GEOGRAPHY(POINT, 4326)");
-		carrier.setKmRange(new BigDecimal("100.0"));
-		carrier.setKmPrice(new BigDecimal("5.0"));
+		carrier.setKmRange(new Double("100.0"));
+		carrier.setKmPrice(new Double("5.0"));
 
 		carrierDto = new CarrierDto();
-		carrierDto.setId(1);
+		carrierDto.setUserId(1);
 		carrierDto.setGpsLocation("GEOGRAPHY(POINT, 4326)");
-		carrierDto.setKmRange(new BigDecimal("100.0"));
-		carrierDto.setKmPrice(new BigDecimal("5.0"));
+		carrierDto.setKmRange(new Double("100.0"));
+		carrierDto.setKmPrice(new Double("5.0"));
 
 		Mockito.lenient().when(carrierMapper.toEntity(any(CarrierDto.class))).thenReturn(carrier);
 		Mockito.lenient().when(carrierMapper.toDto(any(Carrier.class))).thenReturn(carrierDto);
@@ -59,6 +66,7 @@ public class CarrierServiceImplTest {
 	@Test
 	void testCreateCarrier() {
 		when(carrierRepository.save(carrier)).thenReturn(carrier);
+		when(userRepository.existsById(carrier.getUser().getId())).thenReturn(true);
 		CarrierDto result = carrierService.createCarrier(carrierDto);
 		assertThat(result).isEqualTo(carrierDto);
 		verify(carrierRepository, times(1)).save(carrier);
@@ -89,8 +97,8 @@ public class CarrierServiceImplTest {
 	@Test
 	void testUpdateCarrier() {
 		CarrierDto updatedDto = new CarrierDto();
-		updatedDto.setKmRange(new BigDecimal("150.0"));
-		updatedDto.setKmPrice(new BigDecimal("7.0"));
+		updatedDto.setKmRange(new Double("150.0"));
+		updatedDto.setKmPrice(new Double("7.0"));
 
 		when(carrierRepository.findById(1)).thenReturn(Optional.of(carrier));
 		when(carrierMapper.partialUpdate(any(CarrierDto.class), any(Carrier.class))).thenAnswer(invocation -> {
@@ -108,8 +116,8 @@ public class CarrierServiceImplTest {
 		when(carrierMapper.toDto(carrier)).thenReturn(updatedDto);
 
 		CarrierDto result = carrierService.updateCarrier(1, updatedDto);
-		assertThat(result.getKmRange()).isEqualTo(new BigDecimal("150.0"));
-		assertThat(result.getKmPrice()).isEqualTo(new BigDecimal("7.0"));
+		assertThat(result.getKmRange()).isEqualTo(new Double("150.0"));
+		assertThat(result.getKmPrice()).isEqualTo(new Double("7.0"));
 
 		verify(carrierRepository, times(1)).save(carrier);
 	}
