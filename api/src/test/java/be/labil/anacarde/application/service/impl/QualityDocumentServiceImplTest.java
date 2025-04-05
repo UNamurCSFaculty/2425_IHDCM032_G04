@@ -2,18 +2,23 @@ package be.labil.anacarde.application.service.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import be.labil.anacarde.application.exception.ResourceNotFoundException;
-import be.labil.anacarde.application.service.DocumentServiceImpl;
-import be.labil.anacarde.domain.dto.DocumentDto;
+import be.labil.anacarde.application.service.QualityDocumentServiceImpl;
+import be.labil.anacarde.domain.dto.QualityDocumentDto;
 import be.labil.anacarde.domain.enums.Format;
-import be.labil.anacarde.domain.mapper.DocumentMapper;
+import be.labil.anacarde.domain.mapper.QualityDocumentMapper;
 import be.labil.anacarde.domain.model.QualityCertification;
-import be.labil.anacarde.domain.model.Document;
+import be.labil.anacarde.domain.model.QualityDocument;
 import be.labil.anacarde.domain.model.User;
-import be.labil.anacarde.infrastructure.persistence.DocumentRepository;
+import be.labil.anacarde.infrastructure.persistence.QualityCertificationRepository;
+import be.labil.anacarde.infrastructure.persistence.QualityDocumentRepository;
+import be.labil.anacarde.infrastructure.persistence.UserRepository;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -26,101 +31,109 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class DocumentServiceImplTest {
+class QualityDocumentServiceImplTest {
 
 	@Mock
-	private DocumentRepository documentRepository;
+	private QualityDocumentRepository qualityDocumentRepository;
 
 	@Mock
-	private DocumentMapper documentMapper;
+	private QualityCertificationRepository qualityCertificationRepository;
+
+	@Mock
+	private UserRepository userRepository;
+
+	@Mock
+	private QualityDocumentMapper qualitydocumentMapper;
 
 	@InjectMocks
-	private DocumentServiceImpl documentService;
+	private QualityDocumentServiceImpl qualityDocumentService;
 
-	private Document document;
-	private DocumentDto documentDto;
+	private QualityDocument qualityDocument;
+	private QualityDocumentDto qualityDocumentDto;
 
 	@BeforeEach
 	void setUp() {
-		document = new Document();
-		document.setId(1);
-		document.setName("Rapport_Qualité_2025");
-		document.setFormat(Format.IMAGE);
-		document.setFilePath("/documents/2025/03/document.pdf");
-		document.setUploadDate(LocalDateTime.of(2025, 3, 13, 10, 15, 30));
+		qualityDocument = new QualityDocument();
+		qualityDocument.setId(1);
+		qualityDocument.setName("Rapport_Qualité_2025");
+		qualityDocument.setFormat(Format.IMAGE);
+		qualityDocument.setFilePath("/documents/2025/03/document.pdf");
+		qualityDocument.setUploadDate(LocalDateTime.of(2025, 3, 13, 10, 15, 30));
 
-		Document document = new Document();
-		document.setId(3);
+		QualityDocument qualityDocument = new QualityDocument();
+		qualityDocument.setId(3);
 		QualityCertification qualityCertification = new QualityCertification();
-		document.setQualityCertification(qualityCertification);
+		qualityDocument.setQualityCertification(qualityCertification);
 
 		User user = new User();
 		user.setId(1);
-		document.setUser(user);
+		qualityDocument.setUser(user);
 
-		documentDto = new DocumentDto();
-		documentDto.setId(1);
-		documentDto.setName("Rapport_Qualité_2025");
-		documentDto.setFormat(Format.IMAGE);
-		documentDto.setFilePath("/documents/2025/03/document.pdf");
-		documentDto.setUploadDate(LocalDateTime.of(2025, 3, 13, 10, 15, 30));
-		documentDto.setQualityCertificationId(3);
-		documentDto.setUserId(1);
+		qualityDocumentDto = new QualityDocumentDto();
+		qualityDocumentDto.setId(1);
+		qualityDocumentDto.setName("Rapport_Qualité_2025");
+		qualityDocumentDto.setFormat(Format.IMAGE);
+		qualityDocumentDto.setFilePath("/documents/2025/03/document.pdf");
+		qualityDocumentDto.setUploadDate(LocalDateTime.of(2025, 3, 13, 10, 15, 30));
+		qualityDocumentDto.setQualityCertificationId(3);
+		qualityDocumentDto.setUserId(1);
 
-		lenient().when(documentMapper.toEntity(any(DocumentDto.class))).thenReturn(document);
-		lenient().when(documentMapper.toDto(any(Document.class))).thenReturn(documentDto);
+		lenient().when(qualitydocumentMapper.toEntity(any(QualityDocumentDto.class))).thenReturn(qualityDocument);
+		lenient().when(qualitydocumentMapper.toDto(any(QualityDocument.class))).thenReturn(qualityDocumentDto);
 	}
 
 	@Test
-	void testcreateDocument() {
-		when(documentRepository.save(any(Document.class))).thenReturn(document);
-		DocumentDto result = documentService.createDocument(documentDto);
-		assertThat(result).isEqualTo(documentDto);
-		verify(documentRepository, times(1)).save(any(Document.class));
+	void testCreateQualityDocumentSuccess() {
+		when(qualityDocumentRepository.save(any(QualityDocument.class))).thenReturn(qualityDocument);
+		when(qualityCertificationRepository.existsById(any(Integer.class))).thenReturn(true);
+		when(userRepository.existsById(any(Integer.class))).thenReturn(true);
+		QualityDocumentDto result = qualityDocumentService.createQualityDocument(qualityDocumentDto);
+		assertThat(result).isEqualTo(qualityDocumentDto);
+		verify(qualityDocumentRepository, times(1)).save(any(QualityDocument.class));
 	}
 
 	@Test
-	void testGetDocumentByIdSuccess() {
-		when(documentRepository.findById(1)).thenReturn(Optional.of(document));
-		DocumentDto result = documentService.getDocumentById(1);
-		assertThat(result).isEqualTo(documentDto);
+	void testGetQualityDocumentByIdSuccess() {
+		when(qualityDocumentRepository.findById(1)).thenReturn(Optional.of(qualityDocument));
+		QualityDocumentDto result = qualityDocumentService.getQualityDocumentById(1);
+		assertThat(result).isEqualTo(qualityDocumentDto);
 	}
 
 	@Test
-	void testGetDocumentByIdNotFound() {
-		when(documentRepository.findById(1)).thenReturn(Optional.empty());
-		assertThatThrownBy(() -> documentService.getDocumentById(1))
+	void testGetQualityDocumentByIdNotFound() {
+		when(qualityDocumentRepository.findById(1)).thenReturn(Optional.empty());
+		assertThatThrownBy(() -> qualityDocumentService.getQualityDocumentById(1))
 				.isInstanceOf(ResourceNotFoundException.class).hasMessage("Document de qualité non trouvé");
 	}
 
 	@Test
-	void testListDocuments() {
-		when(documentRepository.findAll()).thenReturn(Collections.singletonList(document));
-		List<DocumentDto> results = documentService.listDocuments();
-		assertThat(results).hasSize(1).contains(documentDto);
+	void testListQualityDocuments() {
+		when(qualityDocumentRepository.findAll()).thenReturn(Collections.singletonList(qualityDocument));
+		List<QualityDocumentDto> results = qualityDocumentService.listQualityDocuments();
+		assertThat(results).hasSize(1).contains(qualityDocumentDto);
 	}
 
 	@Test
-	void testUpdateDocument() {
-		when(documentRepository.findById(1)).thenReturn(Optional.of(document));
-		when(documentRepository.save(any(Document.class))).thenReturn(document);
-		when(documentMapper.partialUpdate(any(DocumentDto.class), any(Document.class)))
-				.thenReturn(document);
-		DocumentDto result = documentService.updateDocument(1, documentDto);
-		assertThat(result).isEqualTo(documentDto);
+	void testUpdateQualityDocument() {
+		when(qualityDocumentRepository.findById(1)).thenReturn(Optional.of(qualityDocument));
+		when(qualityDocumentRepository.save(any(QualityDocument.class))).thenReturn(qualityDocument);
+		when(qualitydocumentMapper.partialUpdate(any(QualityDocumentDto.class), any(QualityDocument.class)))
+				.thenReturn(qualityDocument);
+		QualityDocumentDto result = qualityDocumentService.updateQualityDocument(1, qualityDocumentDto);
+		assertThat(result).isEqualTo(qualityDocumentDto);
 	}
 
 	@Test
-	void testDeleteDocumentSuccess() {
-		when(documentRepository.existsById(1)).thenReturn(true);
-		documentService.deleteDocument(1);
-		verify(documentRepository, times(1)).deleteById(1);
+	void testDeleteQualityDocumentSuccess() {
+		when(qualityDocumentRepository.existsById(1)).thenReturn(true);
+		qualityDocumentService.deleteQualityDocument(1);
+		verify(qualityDocumentRepository, times(1)).deleteById(1);
 	}
 
 	@Test
 	void testDeleteQualityCertificationNotFound() {
-		when(documentRepository.existsById(1)).thenReturn(false);
-		assertThatThrownBy(() -> documentService.deleteDocument(1))
+		when(qualityDocumentRepository.existsById(1)).thenReturn(false);
+		assertThatThrownBy(() -> qualityDocumentService.deleteQualityDocument(1))
 				.isInstanceOf(ResourceNotFoundException.class).hasMessage("Document de qualité non trouvé");
 	}
 }

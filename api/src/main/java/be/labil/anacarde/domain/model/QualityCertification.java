@@ -12,7 +12,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import lombok.AllArgsConstructor;
@@ -51,19 +50,19 @@ public class QualityCertification {
 	private Quality quality;
 
 	@Column(nullable = false)
-	private BigDecimal weight;
+	private Double weight;
 
 	@Column(nullable = false)
-	private BigDecimal seeding;
+	private Double seeding;
 
 	@Column(nullable = false)
-	private BigDecimal kor;
+	private Double kor;
 
 	@Column(name = "humidity_rate", nullable = false)
-	private BigDecimal humidityRate;
+	private Double humidityRate;
 
 	@Column(name = "defect_rate", nullable = false)
-	private BigDecimal defectRate;
+	private Double defectRate;
 
 	@Override
 	public final boolean equals(Object o) {

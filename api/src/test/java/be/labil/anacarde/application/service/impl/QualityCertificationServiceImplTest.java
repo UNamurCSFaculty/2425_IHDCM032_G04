@@ -10,7 +10,9 @@ import be.labil.anacarde.application.service.QualityCertificationServiceImpl;
 import be.labil.anacarde.domain.dto.QualityCertificationDto;
 import be.labil.anacarde.domain.mapper.QualityCertificationMapper;
 import be.labil.anacarde.domain.model.QualityCertification;
+import be.labil.anacarde.domain.model.Store;
 import be.labil.anacarde.infrastructure.persistence.QualityCertificationRepository;
+import be.labil.anacarde.infrastructure.persistence.StoreRepository;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +32,9 @@ public class QualityCertificationServiceImplTest {
 	@Mock
 	private QualityCertificationMapper qualityCertificationMapper;
 
+	@Mock
+	private StoreRepository storeRepository;
+
 	@InjectMocks
 	private QualityCertificationServiceImpl qualityCertificationService;
 
@@ -40,9 +45,13 @@ public class QualityCertificationServiceImplTest {
 	void setUp() {
 		qualityCertification = new QualityCertification();
 		qualityCertification.setId(1);
+		Store store = new Store();
+		store.setId(1);
+		qualityCertification.setStore(store);
 
 		qualityCertificationDto = new QualityCertificationDto();
 		qualityCertificationDto.setId(1);
+		qualityCertificationDto.setStoreId(1);
 
 		lenient().when(qualityCertificationMapper.toEntity(any(QualityCertificationDto.class)))
 				.thenReturn(qualityCertification);
@@ -53,6 +62,7 @@ public class QualityCertificationServiceImplTest {
 	@Test
 	void testCreateQualityCertification() {
 		when(qualityCertificationRepository.save(any(QualityCertification.class))).thenReturn(qualityCertification);
+		when(storeRepository.existsById(any(Integer.class))).thenReturn(true);
 		QualityCertificationDto result = qualityCertificationService
 				.createQualityCertification(qualityCertificationDto);
 		assertThat(result).isEqualTo(qualityCertificationDto);

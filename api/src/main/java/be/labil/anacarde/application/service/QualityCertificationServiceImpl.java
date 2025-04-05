@@ -5,6 +5,7 @@ import be.labil.anacarde.domain.dto.QualityCertificationDto;
 import be.labil.anacarde.domain.mapper.QualityCertificationMapper;
 import be.labil.anacarde.domain.model.QualityCertification;
 import be.labil.anacarde.infrastructure.persistence.QualityCertificationRepository;
+import be.labil.anacarde.infrastructure.persistence.StoreRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -18,9 +19,13 @@ public class QualityCertificationServiceImpl implements QualityCertificationServ
 
 	private final QualityCertificationRepository qualityCertificationRepository;
 	private final QualityCertificationMapper qualityCertificationMapper;
+	private final StoreRepository storeRepository;
 
 	@Override
 	public QualityCertificationDto createQualityCertification(QualityCertificationDto qualityCertificationDto) {
+		if (!storeRepository.existsById(qualityCertificationDto.getStoreId())) {
+			throw new ResourceNotFoundException("Magasin associé non trouvé");
+		}
 		QualityCertification certification = qualityCertificationMapper.toEntity(qualityCertificationDto);
 		QualityCertification saved = qualityCertificationRepository.save(certification);
 		return qualityCertificationMapper.toDto(saved);

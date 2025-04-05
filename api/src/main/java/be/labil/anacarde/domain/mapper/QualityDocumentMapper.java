@@ -1,14 +1,14 @@
 package be.labil.anacarde.domain.mapper;
 
-import be.labil.anacarde.domain.dto.DocumentDto;
-import be.labil.anacarde.domain.model.Document;
+import be.labil.anacarde.domain.dto.QualityDocumentDto;
+import be.labil.anacarde.domain.model.QualityDocument;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
 /** Interface Mapper pour la conversion entre l'entité DocumentQuality et DocumentQualityDto. */
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface DocumentMapper extends GenericMapper<DocumentDto, Document> {
+public interface QualityDocumentMapper extends GenericMapper<QualityDocumentDto, QualityDocument> {
 
 	/**
 	 * Convertit une entité DocumentQuality en DocumentQualityDto.
@@ -18,9 +18,8 @@ public interface DocumentMapper extends GenericMapper<DocumentDto, Document> {
 	 * @return le DocumentQualityDto correspondant.
 	 */
 	@Override
-	@Mapping(source = "user.id", target = "userId")
 	@Mapping(source = "qualityCertification.id", target = "qualityCertificationId")
-	DocumentDto toDto(Document document);
+	QualityDocumentDto toDto(QualityDocument document);
 
 	/**
 	 * Convertit un DocumentQualityDto en entité DocumentQuality.
@@ -30,7 +29,6 @@ public interface DocumentMapper extends GenericMapper<DocumentDto, Document> {
 	 * @return l'entité DocumentQuality correspondante.
 	 */
 	@Override
-	@Mapping(source = "userId", target = "user.id")
 	@Mapping(source = "qualityCertificationId", target = "qualityCertification.id")
-	Document toEntity(DocumentDto documentDto);
+	QualityDocument toEntity(QualityDocumentDto documentDto);
 }
