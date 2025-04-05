@@ -1,5 +1,6 @@
 package be.labil.anacarde.domain.dto;
 
+import be.labil.anacarde.domain.enums.Format;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -15,19 +16,19 @@ public class DocumentDto {
 	private Integer id;
 
 	/** Type de document (par exemple, PDF, DOCX, etc.). */
-	@Schema(description = "Type de document", example = "PDF", requiredMode = Schema.RequiredMode.REQUIRED)
-	@NotBlank(message = "Le type de document est requis")
-	private String documentType;
+	@Schema(description = "Nom du document", example = "document1.pdf", requiredMode = Schema.RequiredMode.REQUIRED)
+	@NotBlank(message = "Le Nom du document est requis")
+	private String name;
 
 	/** Format du document (par exemple, A4, Lettre, etc.). */
-	@Schema(description = "Format du document", example = "A4", requiredMode = Schema.RequiredMode.REQUIRED)
+	@Schema(description = "Format du document", example = "TEXT", requiredMode = Schema.RequiredMode.REQUIRED)
 	@NotBlank(message = "Le format du document est requis")
-	private String format;
+	private Format format;
 
-	/** Chemin de stockage où le document est situé. */
+	/** Chemin de stockage du document. */
 	@Schema(description = "Chemin de stockage du document", example = "/documents/2025/03/document.pdf", requiredMode = Schema.RequiredMode.REQUIRED)
 	@NotBlank(message = "Le chemin de stockage est requis")
-	private String storagePath;
+	private String filePath;
 
 	/** Date et heure de l'envoi du document. */
 	@Schema(description = "Date et heure de l'envoi du document", example = "2025-03-13T10:15:30", accessMode = Schema.AccessMode.READ_ONLY)

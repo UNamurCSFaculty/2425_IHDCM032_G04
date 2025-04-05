@@ -15,6 +15,7 @@ public interface DocumentMapper extends GenericMapper<DocumentDto, Document> {
 	 *
 	 * @param document
 	 *            l'entité Document à convertir.
+	 *
 	 * @return le DocumentDto correspondant.
 	 */
 	@Override

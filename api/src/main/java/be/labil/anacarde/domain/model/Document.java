@@ -1,18 +1,22 @@
 package be.labil.anacarde.domain.model;
 
+import be.labil.anacarde.domain.enums.Format;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.proxy.HibernateProxy;
 
 @Entity
-@Table(name = "document", indexes = {@Index(columnList = "user_id")})
+@Table(name = "document")
 @Getter
 @Setter
 @ToString
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@Inheritance(strategy = InheritanceType.JOINED)
 /** Entité représentant un document dans le système. */
 public class Document {
 	@Id
@@ -21,13 +25,13 @@ public class Document {
 	private Integer id;
 
 	@Column(nullable = false)
-	private String documentType;
+	private String name;
 
 	@Column(nullable = false)
-	private String format;
+	private Format format;
 
 	@Column(nullable = false)
-	private String storagePath;
+	private String filePath;
 
 	@Column(nullable = false)
 	private LocalDateTime uploadDate = LocalDateTime.now();
