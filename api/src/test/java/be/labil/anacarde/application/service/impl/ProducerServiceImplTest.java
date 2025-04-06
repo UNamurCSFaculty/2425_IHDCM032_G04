@@ -12,6 +12,7 @@ import be.labil.anacarde.domain.mapper.ProducerMapper;
 import be.labil.anacarde.domain.model.Bidder;
 import be.labil.anacarde.domain.model.Cooperative;
 import be.labil.anacarde.domain.model.Producer;
+import be.labil.anacarde.infrastructure.persistence.BidderRepository;
 import be.labil.anacarde.infrastructure.persistence.ProducerRepository;
 import java.util.Collections;
 import java.util.List;
@@ -31,6 +32,9 @@ public class ProducerServiceImplTest {
 	private ProducerRepository producerRepository;
 
 	@Mock
+	private BidderRepository bidderRepository;
+
+	@Mock
 	private ProducerMapper producerMapper;
 
 	@InjectMocks
@@ -46,10 +50,14 @@ public class ProducerServiceImplTest {
 		Cooperative cooperative = new Cooperative();
 		cooperative.setId(1);
 		producer.setCooperative(cooperative);
+		Bidder bidder = new Bidder();
+		bidder.setId(1);
+		producer.setBidder(bidder);
 
 		producerDto = new ProducerDto();
 		producerDto.setId(1);
 		producerDto.setCooperativeId(1);
+		producerDto.setBidderId(1);
 
 		Mockito.lenient().when(producerMapper.toEntity(any(ProducerDto.class))).thenReturn(producer);
 		Mockito.lenient().when(producerMapper.toDto(any(Producer.class))).thenReturn(producerDto);
@@ -57,6 +65,7 @@ public class ProducerServiceImplTest {
 
 	@Test
 	void testCreateProducer() {
+		when(bidderRepository.existsById(1)).thenReturn(true);
 		when(producerRepository.save(producer)).thenReturn(producer);
 		ProducerDto result = producerService.createProducer(producerDto);
 		assertThat(result).isEqualTo(producerDto);

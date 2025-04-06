@@ -5,6 +5,7 @@ import be.labil.anacarde.domain.dto.FieldDto;
 import be.labil.anacarde.domain.mapper.FieldMapper;
 import be.labil.anacarde.domain.model.Field;
 import be.labil.anacarde.infrastructure.persistence.FieldRepository;
+import be.labil.anacarde.infrastructure.persistence.ProducerRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -17,10 +18,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class FieldServiceImpl implements FieldService {
 
 	private final FieldRepository fieldRepository;
+	private final ProducerRepository producerRepository;
 	private final FieldMapper fieldMapper;
 
 	@Override
 	public FieldDto createField(FieldDto fieldDto) {
+		if (!producerRepository.existsById(fieldDto.getProducerId())) {
+			throw new ResourceNotFoundException("Producteur associé non trouvé");
+		}
 		Field field = fieldMapper.toEntity(fieldDto);
 		Field saved = fieldRepository.save(field);
 		return fieldMapper.toDto(saved);

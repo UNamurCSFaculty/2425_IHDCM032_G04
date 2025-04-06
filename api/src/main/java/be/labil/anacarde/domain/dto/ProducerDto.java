@@ -1,6 +1,7 @@
 package be.labil.anacarde.domain.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,5 +17,6 @@ public class ProducerDto {
 	private Integer cooperativeId;
 
 	@Schema(description = "Identifiant de l'acheteur associé", example = "3", requiredMode = Schema.RequiredMode.REQUIRED)
+	@NotNull(message = "L'identifiant de l'acheteur associé est requis")
 	private Integer bidderId;
 }

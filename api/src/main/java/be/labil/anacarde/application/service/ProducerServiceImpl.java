@@ -4,6 +4,7 @@ import be.labil.anacarde.application.exception.ResourceNotFoundException;
 import be.labil.anacarde.domain.dto.ProducerDto;
 import be.labil.anacarde.domain.mapper.ProducerMapper;
 import be.labil.anacarde.domain.model.Producer;
+import be.labil.anacarde.infrastructure.persistence.BidderRepository;
 import be.labil.anacarde.infrastructure.persistence.ProducerRepository;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,9 +19,13 @@ public class ProducerServiceImpl implements ProducerService {
 
 	private final ProducerRepository producerRepository;
 	private final ProducerMapper producerMapper;
+	private final BidderRepository bidderRepository;
 
 	@Override
 	public ProducerDto createProducer(ProducerDto producerDto) {
+		if (!bidderRepository.existsById(producerDto.getBidderId())) {
+			throw new ResourceNotFoundException("Bidder associé non trouvé");
+		}
 		Producer producer = producerMapper.toEntity(producerDto);
 		Producer saved = producerRepository.save(producer);
 		return producerMapper.toDto(saved);

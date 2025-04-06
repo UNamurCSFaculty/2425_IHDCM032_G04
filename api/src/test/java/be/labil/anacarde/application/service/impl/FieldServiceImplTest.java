@@ -10,8 +10,9 @@ import be.labil.anacarde.application.service.FieldServiceImpl;
 import be.labil.anacarde.domain.dto.FieldDto;
 import be.labil.anacarde.domain.mapper.FieldMapper;
 import be.labil.anacarde.domain.model.Field;
+import be.labil.anacarde.domain.model.Producer;
 import be.labil.anacarde.infrastructure.persistence.FieldRepository;
-import java.math.BigDecimal;
+import be.labil.anacarde.infrastructure.persistence.ProducerRepository;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +31,9 @@ public class FieldServiceImplTest {
 	private FieldRepository fieldRepository;
 
 	@Mock
+	private ProducerRepository producerRepository;
+
+	@Mock
 	private FieldMapper fieldMapper;
 
 	@InjectMocks
@@ -43,14 +47,18 @@ public class FieldServiceImplTest {
 		field = new Field();
 		field.setId(1);
 		field.setLocation("GEOGRAPHY(POINT, 4326)");
-		field.setSurfaceAreaM2(new BigDecimal("500.0"));
+		field.setSurfaceAreaM2(new Double("500.0"));
 		field.setDetails("Sol argileux, riche en minéraux");
+		Producer producer = new Producer();
+		producer.setId(1);
+		field.setProducer(producer);
 
 		fieldDto = new FieldDto();
 		fieldDto.setId(1);
 		fieldDto.setLocation("GEOGRAPHY(POINT, 4326)");
-		fieldDto.setSurfaceAreaM2(new BigDecimal("500.0"));
+		fieldDto.setSurfaceAreaM2(new Double("500.0"));
 		fieldDto.setDetails("Sol argileux, riche en minéraux");
+		fieldDto.setProducerId(1);
 
 		Mockito.lenient().when(fieldMapper.toEntity(any(FieldDto.class))).thenReturn(field);
 		Mockito.lenient().when(fieldMapper.toDto(any(Field.class))).thenReturn(fieldDto);
@@ -58,6 +66,7 @@ public class FieldServiceImplTest {
 
 	@Test
 	void testCreateField() {
+		when(producerRepository.existsById(1)).thenReturn(true);
 		when(fieldRepository.save(field)).thenReturn(field);
 		FieldDto result = fieldService.createField(fieldDto);
 		assertThat(result).isEqualTo(fieldDto);
@@ -88,7 +97,7 @@ public class FieldServiceImplTest {
 	@Test
 	void testUpdateField() {
 		FieldDto updatedDto = new FieldDto();
-		updatedDto.setSurfaceAreaM2(new BigDecimal("750.0"));
+		updatedDto.setSurfaceAreaM2(new Double("750.0"));
 		updatedDto.setDetails("Sol sablonneux, bien drainé");
 
 		when(fieldRepository.findById(1)).thenReturn(Optional.of(field));
@@ -107,7 +116,7 @@ public class FieldServiceImplTest {
 		when(fieldMapper.toDto(field)).thenReturn(updatedDto);
 
 		FieldDto result = fieldService.updateField(1, updatedDto);
-		assertThat(result.getSurfaceAreaM2()).isEqualTo(new BigDecimal("750.0"));
+		assertThat(result.getSurfaceAreaM2()).isEqualTo(new Double("750.0"));
 		assertThat(result.getDetails()).isEqualTo("Sol sablonneux, bien drainé");
 	}
 

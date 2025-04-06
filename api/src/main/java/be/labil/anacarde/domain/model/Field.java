@@ -1,15 +1,29 @@
 package be.labil.anacarde.domain.model;
 
-import jakarta.persistence.*;
-import java.math.BigDecimal;
-import lombok.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.proxy.HibernateProxy;
 
 @Entity
 @Table(name = "field", indexes = {@Index(name = "idx_field_producer", columnList = "id_producer")})
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 /** Entité représentant un champ agricole. */
@@ -29,8 +43,30 @@ public class Field {
 	private String location;
 
 	@Column(name = "surface_area_m2", nullable = false)
-	private BigDecimal surfaceAreaM2;
+	private Double surfaceAreaM2;
 
 	@Column(name = "details", columnDefinition = "TEXT")
 	private String details;
+
+	@Override
+	public final boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null) return false;
+		Class<?> oEffectiveClass = o instanceof HibernateProxy
+				? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass()
+				: o.getClass();
+		Class<?> thisEffectiveClass = this instanceof HibernateProxy
+				? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass()
+				: this.getClass();
+		if (thisEffectiveClass != oEffectiveClass) return false;
+		Field field = (Field) o;
+		return getId() != null && Objects.equals(getId(), field.getId());
+	}
+
+	@Override
+	public final int hashCode() {
+		return this instanceof HibernateProxy
+				? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode()
+				: getClass().hashCode();
+	}
 }
