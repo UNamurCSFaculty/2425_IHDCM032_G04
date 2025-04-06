@@ -17,11 +17,10 @@ import org.hibernate.proxy.HibernateProxy;
 public class Document {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "document_seq")
-	@SequenceGenerator(name = "document_seq", sequenceName = "document_seq", allocationSize = 1)
 	private Integer id;
 
 	@Column(nullable = false)
-	private String documentType;
+	private String type;
 
 	@Column(nullable = false)
 	private String format;
@@ -33,7 +32,7 @@ public class Document {
 	private LocalDateTime uploadDate = LocalDateTime.now();
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id", nullable = false)
+	@JoinColumn(name = "user_id")
 	@ToString.Exclude
 	private User user;
 

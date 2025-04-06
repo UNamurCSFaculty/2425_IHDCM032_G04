@@ -12,9 +12,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
+@Inheritance(strategy = InheritanceType.JOINED)
 @Getter
 @Setter
-@ToString
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,7 +22,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class User implements UserDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
-	@SequenceGenerator(name = "user_seq", sequenceName = "user_seq", allocationSize = 1)
 	private Integer id;
 
 	@Column(nullable = false)
@@ -31,13 +30,15 @@ public class User implements UserDetails {
 	@Column(nullable = false)
 	private String firstName;
 
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String email;
 
 	@Column(nullable = false)
 	private String password;
 
+	@Column(nullable = false)
 	private LocalDateTime registrationDate;
+
 	private LocalDateTime validationDate;
 
 	@Column(nullable = false)
@@ -46,6 +47,13 @@ public class User implements UserDetails {
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles;
+
+	private String address;
+	private String phone;
+
+	@ManyToOne
+	@JoinColumn(nullable = false)
+	private Language language;
 
 	/**
 	 * Ajoute un rôle à cet utilisateur et met à jour le côté inverse (le rôle) pour maintenir la cohérence.
@@ -162,7 +170,7 @@ public class User implements UserDetails {
 	 * @return true si l'objet donné représente le même utilisateur ; sinon, false.
 	 */
 	@Override
-	public final boolean equals(Object o) {
+	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null) return false;
 		Class<?> oEffectiveClass = o instanceof HibernateProxy
@@ -182,7 +190,7 @@ public class User implements UserDetails {
 	 * @return Le hash code en tant qu'entier.
 	 */
 	@Override
-	public final int hashCode() {
+	public int hashCode() {
 		return this instanceof HibernateProxy
 				? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode()
 				: getClass().hashCode();

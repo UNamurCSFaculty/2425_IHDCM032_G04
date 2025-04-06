@@ -1,0 +1,20 @@
+package be.labil.anacarde.domain.model;
+
+import jakarta.persistence.*;
+import lombok.*;
+
+@Entity
+@Table(name = "auction_option", indexes = {@Index(columnList = "user_id")})
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+public class AuctionOption {
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_offer_status")
+	private Integer id;
+
+	@Column(nullable = false)
+	private String name;
+}

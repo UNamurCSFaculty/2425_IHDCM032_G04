@@ -17,7 +17,6 @@ import org.hibernate.proxy.HibernateProxy;
 public class News {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "news_seq")
-	@SequenceGenerator(name = "news_seq", sequenceName = "news_seq", allocationSize = 1)
 	private Integer id;
 
 	@Column(nullable = false)
@@ -29,12 +28,13 @@ public class News {
 	@Column(nullable = false)
 	private LocalDateTime creationDate = LocalDateTime.now();
 
+	@Column(nullable = false)
 	private LocalDateTime publicationDate;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "category_id", nullable = false)
 	@ToString.Exclude
-	private Category category;
+	private NewsCategory category;
 
 	/**
 	 * La comparaison se base sur l'identifiant unique de l'article. Cette méthode gère correctement les instances proxy

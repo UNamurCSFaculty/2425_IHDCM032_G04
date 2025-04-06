@@ -18,7 +18,6 @@ import org.hibernate.proxy.HibernateProxy;
 public class Role {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "role_seq")
-	@SequenceGenerator(name = "role_seq", sequenceName = "role_seq", allocationSize = 1)
 	private Integer id;
 
 	@Column(nullable = false, unique = true)
