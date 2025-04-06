@@ -9,8 +9,12 @@ import be.labil.anacarde.application.exception.ResourceNotFoundException;
 import be.labil.anacarde.application.service.ExporterServiceImpl;
 import be.labil.anacarde.domain.dto.ExporterDto;
 import be.labil.anacarde.domain.mapper.ExporterMapper;
+import be.labil.anacarde.domain.model.Bidder;
 import be.labil.anacarde.domain.model.Exporter;
+import be.labil.anacarde.domain.model.User;
+import be.labil.anacarde.infrastructure.persistence.BidderRepository;
 import be.labil.anacarde.infrastructure.persistence.ExporterRepository;
+import be.labil.anacarde.infrastructure.persistence.UserRepository;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +33,12 @@ public class ExporterServiceImplTest {
 	private ExporterRepository exporterRepository;
 
 	@Mock
+	private UserRepository userRepository;
+
+	@Mock
+	private BidderRepository bidderRepository;
+
+	@Mock
 	private ExporterMapper exporterMapper;
 
 	@InjectMocks
@@ -41,9 +51,17 @@ public class ExporterServiceImplTest {
 	void setUp() {
 		exporter = new Exporter();
 		exporter.setId(1);
+		User user = new User();
+		user.setId(1);
+		Bidder bidder = new Bidder();
+		bidder.setId(1);
+		exporter.setBidder(bidder);
+		exporter.setUser(user);
 
 		exporterDto = new ExporterDto();
 		exporterDto.setId(1);
+		exporterDto.setUserId(1);
+		exporterDto.setBidderId(1);
 
 		Mockito.lenient().when(exporterMapper.toEntity(any(ExporterDto.class))).thenReturn(exporter);
 		Mockito.lenient().when(exporterMapper.toDto(any(Exporter.class))).thenReturn(exporterDto);
@@ -51,6 +69,8 @@ public class ExporterServiceImplTest {
 
 	@Test
 	void testCreateExporter() {
+		when(bidderRepository.existsById(any(Integer.class))).thenReturn(true);
+		when(userRepository.existsById(any(Integer.class))).thenReturn(true);
 		when(exporterRepository.save(exporter)).thenReturn(exporter);
 		ExporterDto result = exporterService.createExporter(exporterDto);
 		assertThat(result).isEqualTo(exporterDto);

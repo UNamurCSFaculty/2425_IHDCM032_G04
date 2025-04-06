@@ -9,6 +9,7 @@ import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import java.util.Objects;
@@ -28,7 +29,7 @@ import org.hibernate.proxy.HibernateProxy;
 @NoArgsConstructor
 @AllArgsConstructor
 /** Entité représentant un acheteur (buyers). */
-public abstract class Buyer {
+public class Buyer {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "buyer_seq")
@@ -39,6 +40,11 @@ public abstract class Buyer {
 	@JoinColumn(name = "bidder_id", nullable = false)
 	@ToString.Exclude
 	private Bidder bidder;
+
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id", nullable = false)
+	@ToString.Exclude
+	private User user;
 
 	@Override
 	public final boolean equals(Object o) {

@@ -11,10 +11,12 @@ import org.mapstruct.ReportingPolicy;
 public interface TransformerMapper extends GenericMapper<TransformerDto, Transformer> {
 
 	@Override
-	@Mapping(source = "bidder.id", target = "bidderId")
+	@Mapping(source = "seller.id", target = "sellerId")
+	@Mapping(source = "buyer.id", target = "buyerId")
 	TransformerDto toDto(Transformer transformer);
 
 	@Override
-	@Mapping(source = "bidderId", target = "bidder.id")
+	@Mapping(source = "sellerId", target = "seller.id")
+	@Mapping(source = "buyerId", target = "buyer.id")
 	Transformer toEntity(TransformerDto transformerDto);
 }

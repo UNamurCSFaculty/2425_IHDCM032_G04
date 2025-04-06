@@ -9,7 +9,11 @@ import be.labil.anacarde.application.exception.ResourceNotFoundException;
 import be.labil.anacarde.application.service.TransformerServiceImpl;
 import be.labil.anacarde.domain.dto.TransformerDto;
 import be.labil.anacarde.domain.mapper.TransformerMapper;
+import be.labil.anacarde.domain.model.Buyer;
+import be.labil.anacarde.domain.model.Seller;
 import be.labil.anacarde.domain.model.Transformer;
+import be.labil.anacarde.infrastructure.persistence.BuyerRepository;
+import be.labil.anacarde.infrastructure.persistence.SellerRepository;
 import be.labil.anacarde.infrastructure.persistence.TransformerRepository;
 import java.util.Collections;
 import java.util.List;
@@ -27,6 +31,10 @@ public class TransformerServiceImplTest {
 
 	@Mock
 	private TransformerRepository transformerRepository;
+	@Mock
+	private BuyerRepository buyerRepository;
+	@Mock
+	private SellerRepository sellerRepository;
 
 	@Mock
 	private TransformerMapper transformerMapper;
@@ -42,10 +50,19 @@ public class TransformerServiceImplTest {
 		transformer = new Transformer();
 		transformer.setId(1);
 		transformer.setProductType("amande");
+		Buyer buyer = new Buyer();
+		buyer.setId(1);
+		Seller seller = new Seller();
+		seller.setId(1);
+
+		transformer.setBuyer(buyer);
+		transformer.setSeller(seller);
 
 		transformerDto = new TransformerDto();
 		transformerDto.setId(1);
 		transformerDto.setProductType("amande");
+		transformerDto.setBuyerId(1);
+		transformerDto.setSellerId(1);
 
 		Mockito.lenient().when(transformerMapper.toEntity(any(TransformerDto.class))).thenReturn(transformer);
 		Mockito.lenient().when(transformerMapper.toDto(any(Transformer.class))).thenReturn(transformerDto);
@@ -53,6 +70,8 @@ public class TransformerServiceImplTest {
 
 	@Test
 	void testCreateTransformer() {
+		when(buyerRepository.existsById(any(Integer.class))).thenReturn(true);
+		when(sellerRepository.existsById(any(Integer.class))).thenReturn(true);
 		when(transformerRepository.save(transformer)).thenReturn(transformer);
 		TransformerDto result = transformerService.createTransformer(transformerDto);
 		assertThat(result).isEqualTo(transformerDto);

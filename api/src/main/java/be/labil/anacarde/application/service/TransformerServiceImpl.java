@@ -4,6 +4,8 @@ import be.labil.anacarde.application.exception.ResourceNotFoundException;
 import be.labil.anacarde.domain.dto.TransformerDto;
 import be.labil.anacarde.domain.mapper.TransformerMapper;
 import be.labil.anacarde.domain.model.Transformer;
+import be.labil.anacarde.infrastructure.persistence.BuyerRepository;
+import be.labil.anacarde.infrastructure.persistence.SellerRepository;
 import be.labil.anacarde.infrastructure.persistence.TransformerRepository;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,9 +23,18 @@ public class TransformerServiceImpl implements TransformerService {
 
 	private final TransformerRepository transformerRepository;
 	private final TransformerMapper transformerMapper;
+	private final BuyerRepository buyerRepository;
+	private final SellerRepository sellerRepository;
 
 	@Override
 	public TransformerDto createTransformer(TransformerDto transformerDto) {
+		if (!buyerRepository.existsById(transformerDto.getBuyerId())) {
+			throw new ResourceNotFoundException("Acheteur associé non trouvé");
+		}
+
+		if (!sellerRepository.existsById(transformerDto.getSellerId())) {
+			throw new ResourceNotFoundException("Vendeur associé non trouvé");
+		}
 		Transformer transformer = transformerMapper.toEntity(transformerDto);
 		Transformer saved = transformerRepository.save(transformer);
 		return transformerMapper.toDto(saved);

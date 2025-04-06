@@ -4,7 +4,9 @@ import be.labil.anacarde.application.exception.ResourceNotFoundException;
 import be.labil.anacarde.domain.dto.ExporterDto;
 import be.labil.anacarde.domain.mapper.ExporterMapper;
 import be.labil.anacarde.domain.model.Exporter;
+import be.labil.anacarde.infrastructure.persistence.BidderRepository;
 import be.labil.anacarde.infrastructure.persistence.ExporterRepository;
+import be.labil.anacarde.infrastructure.persistence.UserRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -21,9 +23,17 @@ public class ExporterServiceImpl implements ExporterService {
 
 	private final ExporterRepository exporterRepository;
 	private final ExporterMapper exporterMapper;
+	private final UserRepository userRepository;
+	private final BidderRepository bidderRepository;
 
 	@Override
 	public ExporterDto createExporter(ExporterDto exporterDto) {
+		if (!bidderRepository.existsById(exporterDto.getBidderId())) {
+			throw new ResourceNotFoundException("Bidder associé non trouvé");
+		}
+		if (!userRepository.existsById(exporterDto.getUserId())) {
+			throw new ResourceNotFoundException("Utilisateur associé non trouvé");
+		}
 		Exporter exporter = exporterMapper.toEntity(exporterDto);
 		Exporter saved = exporterRepository.save(exporter);
 		return exporterMapper.toDto(saved);
