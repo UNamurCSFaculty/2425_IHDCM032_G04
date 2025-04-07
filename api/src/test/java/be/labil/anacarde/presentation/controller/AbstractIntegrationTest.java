@@ -91,6 +91,16 @@ public abstract class AbstractIntegrationTest {
 	}
 
 	/**
+	 * Renvoie la langue principale de test.
+	 */
+	public Language getMainLanguage() {
+		if (mainLanguage == null) {
+			throw new IllegalStateException("Langue principale non initialisée");
+		}
+		return mainLanguage;
+	}
+
+	/**
 	 * Initialise la base de données des utilisateurs avec deux utilisateurs de test et les rôles associés.
 	 */
 	public void initUserDatabase() {
