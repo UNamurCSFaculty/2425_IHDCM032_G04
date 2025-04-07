@@ -3,9 +3,15 @@ package be.labil.anacarde.domain.mapper;
 import be.labil.anacarde.domain.dto.RoleDto;
 import be.labil.anacarde.domain.model.Role;
 import org.mapstruct.Mapper;
-import org.mapstruct.ReportingPolicy;
+import org.mapstruct.Mapping;
 
-/** Interface Mapper pour la conversion entre l'entité Role et le DTO RoleDto. */
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring")
 public interface RoleMapper extends GenericMapper<RoleDto, Role> {
+
+	@Override
+	@Mapping(target = "users", ignore = true)
+	Role toEntity(RoleDto dto);
+
+	@Override
+	RoleDto toDto(Role role);
 }

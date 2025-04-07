@@ -61,6 +61,15 @@ public class UserDto {
 	private Integer languageId;
 
 	/** Rôles de l'utilisateur. */
-	@Schema(description = "Liste des rôles de l'utilisateur", example = "[\"ROLE_USER\"]", accessMode = Schema.AccessMode.READ_ONLY)
-	private Set<String> roles;
+	@Schema(description = "Liste des rôles de l'utilisateur", accessMode = Schema.AccessMode.READ_ONLY)
+	private Set<RoleDto> roles;
+
+
+	// TEMPORARY TO BE MODIFIED ---> See UserServiceImpl
+	public String getPassword() {
+		return "TEST";
+	}
+
+	public void setPassword(String encode) {
+	}
 }
