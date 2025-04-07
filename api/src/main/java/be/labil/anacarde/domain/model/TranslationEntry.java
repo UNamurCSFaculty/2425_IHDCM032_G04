@@ -7,6 +7,7 @@ import lombok.*;
 @Table(name = "translation_entry", uniqueConstraints = {
 		@UniqueConstraint(columnNames = {"translation_id", "language_id"})})
 @Setter
+@Getter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
