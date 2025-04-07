@@ -11,6 +11,7 @@ import org.hibernate.proxy.HibernateProxy;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Language {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_language")

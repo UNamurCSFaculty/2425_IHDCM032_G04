@@ -8,9 +8,9 @@ import be.labil.anacarde.domain.model.Admin;
 import be.labil.anacarde.domain.model.User;
 import be.labil.anacarde.infrastructure.persistence.UserRepository;
 import java.time.LocalDateTime;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,17 +20,13 @@ import org.springframework.test.web.servlet.MockMvc;
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
+@RequiredArgsConstructor
 /** Test d'intégration pour le contrôleur d'authentification. */
 public class AuthenticationApiControllerIntegrationTest {
 
-	@Autowired
-	private MockMvc mockMvc;
-
-	@Autowired
-	private UserRepository userRepository;
-
-	@Autowired
-	private PasswordEncoder passwordEncoder;
+	private final MockMvc mockMvc;
+	private final UserRepository userRepository;
+	private final PasswordEncoder passwordEncoder;
 
 	/** Prépare la base de données de test en créant un utilisateur. */
 	@BeforeEach

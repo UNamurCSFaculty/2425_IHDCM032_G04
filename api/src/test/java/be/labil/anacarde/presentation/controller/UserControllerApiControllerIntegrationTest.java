@@ -10,6 +10,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import be.labil.anacarde.domain.dto.RoleDto;
 import be.labil.anacarde.domain.dto.UserDetailDto;
 import be.labil.anacarde.domain.model.User;
+import be.labil.anacarde.infrastructure.persistence.LanguageRepository;
+import be.labil.anacarde.infrastructure.persistence.RoleRepository;
+import be.labil.anacarde.infrastructure.persistence.UserRepository;
+import be.labil.anacarde.infrastructure.security.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.util.List;
@@ -19,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -30,14 +35,19 @@ import org.springframework.test.web.servlet.request.RequestPostProcessor;
 @ActiveProfiles("test")
 public class UserControllerApiControllerIntegrationTest extends AbstractIntegrationTest {
 
-	@Autowired
-	private MockMvc mockMvc;
+	private final MockMvc mockMvc;
+	private final ObjectMapper objectMapper;
+	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	@Autowired
-	private ObjectMapper objectMapper;
-
-	@Autowired
-	private BCryptPasswordEncoder bCryptPasswordEncoder;
+	public UserControllerApiControllerIntegrationTest(JwtUtil jwtUtil, UserRepository userRepository,
+			RoleRepository roleRepository, LanguageRepository languageRepository, UserDetailsService userDetailsService,
+			MockMvc mockMvc, ObjectMapper objectMapper, BCryptPasswordEncoder bCryptPasswordEncoder) {
+		super(jwtUtil, userRepository, roleRepository, languageRepository, userDetailsService);
+		this.mockMvc = mockMvc;
+		this.objectMapper = objectMapper;
+		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+	}
 
 	/**
 	 * RequestPostProcessor qui ajoute automatiquement le cookie JWT à chaque requête.
