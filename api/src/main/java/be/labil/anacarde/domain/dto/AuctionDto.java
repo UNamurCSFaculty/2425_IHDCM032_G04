@@ -7,6 +7,9 @@ import java.time.LocalDateTime;
 import java.util.Set;
 import lombok.Data;
 
+/**
+ * DTO pour l'entité Action.
+ */
 @Data
 @Schema(description = "Objet de transfert de données pour les enchères.")
 public class AuctionDto {

@@ -5,6 +5,9 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO pour l'entité AuctionStrategy.
+ */
 @Data
 @NoArgsConstructor
 @Schema(description = "Objet de transfert de données pour les stratégies d'enchère.")

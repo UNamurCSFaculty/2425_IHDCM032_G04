@@ -1,13 +1,8 @@
 package be.labil.anacarde.domain.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.PrimaryKeyJoinColumn;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import java.util.Objects;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.SuperBuilder;
+import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.type.SqlTypes;
@@ -17,13 +12,19 @@ import org.locationtech.jts.geom.Point;
 @Table(name = "store")
 @Getter
 @Setter
-@SuperBuilder
+@ToString
 @NoArgsConstructor
-@PrimaryKeyJoinColumn(name = "id")
-public class Store extends User {
+@AllArgsConstructor
+public class Store {
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_store")
+	private Integer id;
 
 	@JdbcTypeCode(SqlTypes.GEOMETRY)
 	private Point location;
+
+	@ManyToOne(optional = false)
+	private User user;
 
 	@Override
 	public final boolean equals(Object o) {

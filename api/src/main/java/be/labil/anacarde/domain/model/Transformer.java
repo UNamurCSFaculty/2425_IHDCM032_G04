@@ -15,5 +15,5 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @PrimaryKeyJoinColumn(name = "id")
-public abstract class Transformer extends User {
+public class Transformer extends Trader {
 }

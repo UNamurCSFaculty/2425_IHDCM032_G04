@@ -6,6 +6,9 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import lombok.Data;
 
+/**
+ * DTO pour l'entité Document.
+ */
 @Data
 @Schema(description = "Objet de transfert de données pour les entités Document.")
 public class DocumentDto {

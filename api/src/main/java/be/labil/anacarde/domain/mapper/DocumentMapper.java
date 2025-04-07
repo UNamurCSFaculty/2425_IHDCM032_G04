@@ -1,9 +1,12 @@
 package be.labil.anacarde.domain.mapper;
 
 import be.labil.anacarde.domain.dto.DocumentDto;
+import be.labil.anacarde.domain.model.Carrier;
 import be.labil.anacarde.domain.model.Document;
+import be.labil.anacarde.domain.model.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 import org.mapstruct.ReportingPolicy;
 
 /** Interface Mapper pour la conversion entre l'entité Document et DocumentDto. */
@@ -19,6 +22,7 @@ public interface DocumentMapper extends GenericMapper<DocumentDto, Document> {
 	 */
 	@Override
 	@Mapping(source = "user.id", target = "userId")
+	@Mapping(source = "type", target = "documentType")
 	DocumentDto toDto(Document document);
 
 	/**
@@ -29,6 +33,18 @@ public interface DocumentMapper extends GenericMapper<DocumentDto, Document> {
 	 * @return l'entité Document correspondante.
 	 */
 	@Override
-	@Mapping(source = "userId", target = "user.id")
+	@Mapping(source = "userId", target = "user", qualifiedByName = "mapUserIdToUser")
+	@Mapping(source = "documentType", target = "type")
 	Document toEntity(DocumentDto documentDto);
+
+	@Named("mapUserIdToUser")
+	default User mapUserIdToUser(Integer userId) {
+		if (userId == null) {
+			return null;
+		}
+		// Par défaut, on retourne une instance concrète de User, ici Carrier.
+		Carrier user = new Carrier();
+		user.setId(userId);
+		return user;
+	}
 }
