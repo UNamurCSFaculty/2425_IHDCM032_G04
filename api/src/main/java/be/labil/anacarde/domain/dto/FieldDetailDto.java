@@ -1,30 +1,25 @@
 package be.labil.anacarde.domain.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.locationtech.jts.geom.Point;
+import lombok.*;
 
 /**
  * DTO pour l'entité Field.
  */
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @Schema(description = "Objet de transfert de données pour les champs.")
-public class FieldDetailDto extends TraderDetailDto {
+public class FieldDetailDto {
 
-	@Schema(description = "Identifiant unique du champ.", example = "F123")
+	@Schema(description = "Identifiant unique du champ.", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
 	private Integer id;
 
-	@Schema(description = "Identifiant du champ.", example = "field1")
+	@Schema(description = "Identifiant du champ (code unique)", example = "F123")
 	private String identifier;
 
-	@Schema(description = "Emplacement géographique du champ.")
-	private Point location;
+	@Schema(description = "Emplacement géographique du champ (format WKT ou GeoJSON selon l'usage).", example = "POINT(2.35 48.85)")
+	private String location;
 
 	@Schema(description = "Producteur associé au champ.")
 	private ProducerDetailDto producer;
