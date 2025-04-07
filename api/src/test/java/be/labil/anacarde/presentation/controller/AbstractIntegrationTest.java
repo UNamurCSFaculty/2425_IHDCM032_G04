@@ -1,5 +1,6 @@
 package be.labil.anacarde.presentation.controller;
 
+import be.labil.anacarde.domain.model.Admin;
 import be.labil.anacarde.domain.model.Role;
 import be.labil.anacarde.domain.model.User;
 import be.labil.anacarde.infrastructure.persistence.RoleRepository;
@@ -97,12 +98,12 @@ public abstract class AbstractIntegrationTest {
 	public void initUserDatabase() {
 		userRepository.deleteAll();
 
-		User user1 = User.builder().firstName("John").lastName("Doe").email("user@example.com")
+		User user1 = Admin.builder().firstName("John").lastName("Doe").email("user@example.com")
 				.password("$2a$10$abcdefghijklmnopqrstuv1234567890AB").registrationDate(LocalDateTime.now())
-				.active(true).build();
-		User user2 = User.builder().firstName("Foo").lastName("Bar").email("foo@bar.com")
+				.enabled(true).build();
+		User user2 = Admin.builder().firstName("Foo").lastName("Bar").email("foo@bar.com")
 				.password("$2a$10$abcdefghijklmnopqrstuv1234567890AB").registrationDate(LocalDateTime.now())
-				.active(true).build();
+				.enabled(true).build();
 
 		Role userRole = Role.builder().name("ROLE_USER").build();
 		Role adminRole = Role.builder().name("ROLE_ADMIN").build();

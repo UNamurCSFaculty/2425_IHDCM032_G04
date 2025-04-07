@@ -9,12 +9,11 @@ import org.mapstruct.Mapping;
 public interface AuctionOptionValueMapper extends GenericMapper<AuctionOptionValueDto, AuctionOptionValue> {
 
 	@Override
-	@Mapping(source = "auction", target = "auction")
+	@Mapping(target = "auction", ignore = true)
 	@Mapping(source = "auctionOption", target = "auctionOption")
 	AuctionOptionValue toEntity(AuctionOptionValueDto dto);
 
 	@Override
-	@Mapping(source = "auction", target = "auction")
 	@Mapping(source = "auctionOption", target = "auctionOption")
 	AuctionOptionValueDto toDto(AuctionOptionValue entity);
 }

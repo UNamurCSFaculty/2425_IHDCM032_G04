@@ -4,6 +4,7 @@ package be.labil.anacarde.presentation.controller;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import be.labil.anacarde.domain.model.Admin;
 import be.labil.anacarde.domain.model.User;
 import be.labil.anacarde.infrastructure.persistence.UserRepository;
 import java.time.LocalDateTime;
@@ -36,7 +37,7 @@ public class AuthenticationApiControllerIntegrationTest {
 	public void setUpDatabase() {
 		userRepository.deleteAll();
 
-		User user = new User();
+		User user = new Admin();
 		user.setFirstName("John");
 		user.setLastName("Doe");
 		user.setEmail("user@example.com");

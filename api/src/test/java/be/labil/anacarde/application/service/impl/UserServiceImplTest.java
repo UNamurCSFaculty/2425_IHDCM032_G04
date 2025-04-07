@@ -13,6 +13,7 @@ import be.labil.anacarde.domain.dto.UserDetailDto;
 import be.labil.anacarde.domain.dto.UserListDto;
 import be.labil.anacarde.domain.mapper.UserDetailMapper;
 import be.labil.anacarde.domain.mapper.UserListMapper;
+import be.labil.anacarde.domain.model.Admin;
 import be.labil.anacarde.domain.model.Role;
 import be.labil.anacarde.domain.model.User;
 import be.labil.anacarde.infrastructure.persistence.RoleRepository;
@@ -63,7 +64,7 @@ public class UserServiceImplTest {
 
 	@BeforeEach
 	void setUp() {
-		user = new User();
+		user = new Admin();
 		user.setId(1);
 		user.setEmail("test@example.com");
 		user.setPassword("rawPassword");

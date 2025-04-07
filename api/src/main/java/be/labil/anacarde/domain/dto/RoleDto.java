@@ -2,12 +2,14 @@ package be.labil.anacarde.domain.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
  * DTO pour l'entité Role.
  */
 @Data
+@AllArgsConstructor
 @Schema(description = "Objet de transfert de données pour les rôles.")
 public class RoleDto {
 

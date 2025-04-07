@@ -19,7 +19,6 @@ public interface InterestMapper extends GenericMapper<InterestDto, Interest> {
 	Interest toEntity(InterestDto dto);
 
 	@Override
-	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 	@Mapping(source = "intention", target = "intention")
 	@Mapping(source = "buyer", target = "buyer")
 	Interest partialUpdate(InterestDto dto, @MappingTarget Interest entity);
