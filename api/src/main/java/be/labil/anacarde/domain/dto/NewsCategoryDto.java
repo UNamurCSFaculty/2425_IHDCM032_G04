@@ -11,12 +11,12 @@ import lombok.Data;
 @Schema(description = "Objet de transfert de données pour les catégories de news.")
 public class NewsCategoryDto {
 
-    /** Identifiant unique de la catégorie. */
-    @Schema(description = "Identifiant unique de la catégorie", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
-    private Integer id;
+	/** Identifiant unique de la catégorie. */
+	@Schema(description = "Identifiant unique de la catégorie", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
+	private Integer id;
 
-    /** Nom de la catégorie. */
-    @Schema(description = "Nom de la catégorie", example = "Sports", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotBlank(message = "Le nom de la catégorie est requis")
-    private String name;
+	/** Nom de la catégorie. */
+	@Schema(description = "Nom de la catégorie", example = "Sports", requiredMode = Schema.RequiredMode.REQUIRED)
+	@NotBlank(message = "Le nom de la catégorie est requis")
+	private String name;
 }

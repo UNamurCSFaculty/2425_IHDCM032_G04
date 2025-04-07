@@ -13,31 +13,31 @@ import lombok.Data;
 @Schema(description = "Objet de transfert de données pour les notifications.")
 public class NotificationDto {
 
-    /** Identifiant unique de la notification. */
-    @Schema(description = "Identifiant unique de la notification", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
-    private Integer id;
+	/** Identifiant unique de la notification. */
+	@Schema(description = "Identifiant unique de la notification", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
+	private Integer id;
 
-    /** Message de la notification. */
-    @Schema(description = "Message de la notification", example = "Votre commande a été expédiée", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotBlank(message = "Le message est requis")
-    private String message;
+	/** Message de la notification. */
+	@Schema(description = "Message de la notification", example = "Votre commande a été expédiée", requiredMode = Schema.RequiredMode.REQUIRED)
+	@NotBlank(message = "Le message est requis")
+	private String message;
 
-    /** Type de la notification. */
-    @Schema(description = "Type de notification", example = "INFO", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotBlank(message = "Le type est requis")
-    private String type;
+	/** Type de la notification. */
+	@Schema(description = "Type de notification", example = "INFO", requiredMode = Schema.RequiredMode.REQUIRED)
+	@NotBlank(message = "Le type est requis")
+	private String type;
 
-    /** Date d'envoi de la notification. */
-    @Schema(description = "Date d'envoi de la notification", example = "2025-04-01T10:30:00", accessMode = Schema.AccessMode.READ_ONLY)
-    private LocalDateTime sendDate;
+	/** Date d'envoi de la notification. */
+	@Schema(description = "Date d'envoi de la notification", example = "2025-04-01T10:30:00", accessMode = Schema.AccessMode.READ_ONLY)
+	private LocalDateTime sendDate;
 
-    /** Statut de lecture de la notification. */
-    @Schema(description = "Statut de lecture de la notification", example = "UNREAD", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotBlank(message = "Le statut de lecture est requis")
-    private String readStatus;
+	/** Statut de lecture de la notification. */
+	@Schema(description = "Statut de lecture de la notification", example = "UNREAD", requiredMode = Schema.RequiredMode.REQUIRED)
+	@NotBlank(message = "Le statut de lecture est requis")
+	private String readStatus;
 
-    /** Identifiant de l'utilisateur associé à la notification. */
-    @Schema(description = "Identifiant de l'utilisateur associé à la notification", example = "42", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotNull(message = "L'identifiant de l'utilisateur est requis")
-    private Integer userId;
+	/** Identifiant de l'utilisateur associé à la notification. */
+	@Schema(description = "Identifiant de l'utilisateur associé à la notification", example = "42", requiredMode = Schema.RequiredMode.REQUIRED)
+	@NotNull(message = "L'identifiant de l'utilisateur est requis")
+	private Integer userId;
 }

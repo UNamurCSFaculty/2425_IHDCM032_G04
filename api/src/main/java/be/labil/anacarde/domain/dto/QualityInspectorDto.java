@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @Schema(description = "Objet de transfert de données pour les inspecteurs qualité.")
 public class QualityInspectorDto extends UserDto {
-    // Aucun champ supplémentaire à déclarer, on hérite de UserDto
+	// Aucun champ supplémentaire à déclarer, on hérite de UserDto
 }
