@@ -2,7 +2,6 @@ package be.labil.anacarde.domain.model;
 
 import jakarta.persistence.*;
 import java.util.Objects;
-import java.util.Set;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
@@ -10,7 +9,6 @@ import org.hibernate.proxy.HibernateProxy;
 @Table(name = "role", indexes = {@Index(name = "idx_role_name", columnList = "name")})
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -22,10 +20,6 @@ public class Role {
 
 	@Column(nullable = false, unique = true)
 	private String name;
-
-	@ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
-	@ToString.Exclude
-	private Set<User> users;
 
 	/**
 	 * La comparaison se base sur l'identifiant unique du rôle. Si les objets sont de classes effectives différentes,

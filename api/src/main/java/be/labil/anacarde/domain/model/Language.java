@@ -9,7 +9,6 @@ import org.hibernate.proxy.HibernateProxy;
 @Table(name = "language")
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class Language {

@@ -8,7 +8,6 @@ import lombok.*;
 @Table(name = "notification", indexes = {@Index(columnList = "user_id")})
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class Notification {

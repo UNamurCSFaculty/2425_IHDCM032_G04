@@ -10,7 +10,6 @@ import org.hibernate.proxy.HibernateProxy;
 @Table(name = "document", indexes = {@Index(columnList = "user_id")})
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 /** Entité représentant un document dans le système. */
@@ -33,7 +32,6 @@ public class Document {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
-	@ToString.Exclude
 	private User user;
 
 	/**

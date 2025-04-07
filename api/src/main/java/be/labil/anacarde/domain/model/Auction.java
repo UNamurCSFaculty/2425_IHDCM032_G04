@@ -11,7 +11,6 @@ import lombok.*;
 @Table(name = "auction")
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class Auction {
@@ -40,6 +39,6 @@ public class Auction {
 	@ManyToOne(optional = false)
 	private Product product;
 
-	@OneToMany(mappedBy = "auction", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "auction", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private Set<AuctionOptionValue> auctionOptionValues = new HashSet<>();
 }

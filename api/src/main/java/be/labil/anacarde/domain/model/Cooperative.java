@@ -8,7 +8,6 @@ import lombok.*;
 @Table(name = "cooperative")
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class Cooperative {

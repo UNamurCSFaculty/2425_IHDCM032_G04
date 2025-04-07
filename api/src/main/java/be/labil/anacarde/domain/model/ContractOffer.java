@@ -9,7 +9,6 @@ import lombok.*;
 @Table(name = "contract_offer")
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class ContractOffer {

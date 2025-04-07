@@ -9,7 +9,6 @@ import org.hibernate.proxy.HibernateProxy;
 @Table(name = "category", indexes = {@Index(name = "idx_category_name", columnList = "name")})
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 /** Entité représentant une catégorie dans le système. */

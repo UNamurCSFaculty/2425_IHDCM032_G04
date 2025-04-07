@@ -7,15 +7,22 @@ import be.labil.anacarde.domain.model.Producer;
 import be.labil.anacarde.domain.model.Trader;
 import be.labil.anacarde.domain.model.Transformer;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.ObjectFactory;
+import org.mapstruct.ReportingPolicy;
 
-@Mapper(componentModel = "spring", uses = {ProducerDetailMapper.class, TransformerDetailMapper.class})
+@Mapper(componentModel = "spring", uses = {RoleMapper.class,
+		LanguageMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface TraderDetailMapper extends GenericMapper<TraderDetailDto, Trader> {
 
 	@Override
+	@Mapping(source = "roles", target = "roles")
+	@Mapping(source = "language", target = "language")
 	Trader toEntity(TraderDetailDto dto);
 
 	@Override
+	@Mapping(source = "roles", target = "roles")
+	@Mapping(source = "language", target = "language")
 	TraderDetailDto toDto(Trader entity);
 
 	@ObjectFactory

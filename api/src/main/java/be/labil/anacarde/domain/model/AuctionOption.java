@@ -7,7 +7,6 @@ import lombok.*;
 @Table(name = "auction_option", indexes = {@Index(columnList = "user_id")})
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuctionOption {

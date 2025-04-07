@@ -69,11 +69,6 @@ public abstract class User implements UserDetails {
 				roles = new HashSet<>();
 			}
 			roles.add(role);
-
-			if (role.getUsers() == null) {
-				role.setUsers(new HashSet<>());
-			}
-			role.getUsers().add(this);
 		}
 	}
 
@@ -84,6 +79,7 @@ public abstract class User implements UserDetails {
 	 * @return Une Collection de GrantedAuthority représentant les rôles de l'utilisateur.
 	 */
 	@Override
+	@Transient
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		if (roles == null) {
 			return new ArrayList<>();
@@ -119,6 +115,7 @@ public abstract class User implements UserDetails {
 	 * @return L'adresse e-mail de l'utilisateur sous forme de String.
 	 */
 	@Override
+	@Transient
 	public String getUsername() {
 		return email;
 	}
@@ -129,6 +126,7 @@ public abstract class User implements UserDetails {
 	 * @return true, indiquant que le compte n'est pas expiré.
 	 */
 	@Override
+	@Transient
 	public boolean isAccountNonExpired() {
 		return true;
 	}
@@ -139,6 +137,7 @@ public abstract class User implements UserDetails {
 	 * @return true, indiquant que le compte n'est pas verrouillé.
 	 */
 	@Override
+	@Transient
 	public boolean isAccountNonLocked() {
 		return true;
 	}
@@ -149,6 +148,7 @@ public abstract class User implements UserDetails {
 	 * @return true, indiquant que les identifiants ne sont pas expirés.
 	 */
 	@Override
+	@Transient
 	public boolean isCredentialsNonExpired() {
 		return true;
 	}

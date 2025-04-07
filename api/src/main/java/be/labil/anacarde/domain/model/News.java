@@ -10,7 +10,6 @@ import org.hibernate.proxy.HibernateProxy;
 @Table(name = "news")
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 /** Entité représentant un article de presse dans le système. */
@@ -33,7 +32,6 @@ public class News {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "category_id", nullable = false)
-	@ToString.Exclude
 	private NewsCategory category;
 
 	/**

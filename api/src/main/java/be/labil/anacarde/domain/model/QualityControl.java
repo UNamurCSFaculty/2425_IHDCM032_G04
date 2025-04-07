@@ -8,7 +8,6 @@ import lombok.*;
 @Table(name = "quality_control")
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class QualityControl {

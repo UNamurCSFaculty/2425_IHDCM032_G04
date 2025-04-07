@@ -9,7 +9,6 @@ import lombok.*;
 @Table(name = "intention")
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class Intention {

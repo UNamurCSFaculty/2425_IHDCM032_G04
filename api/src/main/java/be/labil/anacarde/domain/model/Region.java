@@ -7,7 +7,6 @@ import lombok.*;
 @Table(name = "region")
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class Region {

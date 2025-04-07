@@ -7,7 +7,6 @@ import lombok.*;
 @Table(name = "translation")
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class Translation {

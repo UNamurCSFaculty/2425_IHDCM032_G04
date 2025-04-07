@@ -9,7 +9,6 @@ import lombok.*;
 @Table(name = "interest")
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class Interest {

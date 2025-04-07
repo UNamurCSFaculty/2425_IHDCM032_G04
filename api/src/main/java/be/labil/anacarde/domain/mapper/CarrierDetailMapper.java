@@ -8,15 +8,20 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.mapstruct.*;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {RoleMapper.class,
+		LanguageMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface CarrierDetailMapper extends GenericMapper<CarrierDetailDto, Carrier> {
 
 	@Override
 	@Mapping(source = "regions", target = "regionIds", qualifiedByName = "mapRegionsToIds")
+	@Mapping(source = "roles", target = "roles")
+	@Mapping(source = "language", target = "language")
 	CarrierDetailDto toDto(Carrier carrier);
 
 	@Override
 	@Mapping(source = "regionIds", target = "regions", qualifiedByName = "mapIdsToRegions")
+	@Mapping(source = "roles", target = "roles")
+	@Mapping(source = "language", target = "language")
 	Carrier toEntity(CarrierDetailDto dto);
 
 	// Convertit les entités Region → liste d’IDs

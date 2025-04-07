@@ -7,8 +7,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.ObjectFactory;
 import org.mapstruct.ReportingPolicy;
 
-@Mapper(componentModel = "spring", uses = {RoleMapper.class, LanguageMapper.class,
-		TraderDetailMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring", uses = {RoleMapper.class,
+		LanguageMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface UserDetailMapper extends GenericMapper<UserDetailDto, User> {
 
 	@Override

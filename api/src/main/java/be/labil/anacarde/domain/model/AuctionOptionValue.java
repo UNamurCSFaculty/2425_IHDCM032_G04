@@ -7,7 +7,6 @@ import lombok.*;
 @Table(name = "auction_option_value")
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuctionOptionValue {

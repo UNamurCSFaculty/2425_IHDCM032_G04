@@ -4,8 +4,10 @@ import be.labil.anacarde.domain.dto.AdminDetailDto;
 import be.labil.anacarde.domain.model.Admin;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
 
-@Mapper(componentModel = "spring", uses = {RoleMapper.class, LanguageMapper.class})
+@Mapper(componentModel = "spring", uses = {RoleMapper.class,
+		LanguageMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface AdminMapper extends GenericMapper<AdminDetailDto, Admin> {
 
 	@Override

@@ -10,7 +10,6 @@ import org.locationtech.jts.geom.Point;
 @Table(name = "field")
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class Field {

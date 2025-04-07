@@ -7,7 +7,6 @@ import lombok.*;
 @Table(name = "bid_status")
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class BidStatus {

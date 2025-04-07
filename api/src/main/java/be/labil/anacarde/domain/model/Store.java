@@ -12,7 +12,6 @@ import org.locationtech.jts.geom.Point;
 @Table(name = "store")
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class Store {
