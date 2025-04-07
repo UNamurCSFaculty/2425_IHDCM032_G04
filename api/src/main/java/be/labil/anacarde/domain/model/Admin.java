@@ -7,16 +7,17 @@ import java.util.Objects;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.proxy.HibernateProxy;
 
 @Entity
 @Table(name = "admin")
 @Getter
 @Setter
+@SuperBuilder
 @NoArgsConstructor
 @PrimaryKeyJoinColumn(name = "id")
 public class Admin extends User {
-	// Pas de champ supplémentaire
 
 	@Override
 	public final boolean equals(Object o) {

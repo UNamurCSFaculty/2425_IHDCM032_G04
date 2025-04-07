@@ -64,7 +64,6 @@ public class UserDto {
 	@Schema(description = "Liste des rôles de l'utilisateur", accessMode = Schema.AccessMode.READ_ONLY)
 	private Set<RoleDto> roles;
 
-
 	// TEMPORARY TO BE MODIFIED ---> See UserServiceImpl
 	public String getPassword() {
 		return "TEST";

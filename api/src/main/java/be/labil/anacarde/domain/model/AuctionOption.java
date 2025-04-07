@@ -12,7 +12,7 @@ import lombok.*;
 @AllArgsConstructor
 public class AuctionOption {
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_offer_status")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_auction_option")
 	private Integer id;
 
 	@Column(nullable = false)

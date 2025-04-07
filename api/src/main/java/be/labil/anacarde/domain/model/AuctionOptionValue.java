@@ -11,7 +11,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuctionOptionValue {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_auction_option_value")
 	private Integer id;

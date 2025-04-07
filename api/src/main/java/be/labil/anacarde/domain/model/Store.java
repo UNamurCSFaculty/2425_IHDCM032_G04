@@ -7,6 +7,7 @@ import java.util.Objects;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.type.SqlTypes;
@@ -16,6 +17,7 @@ import org.locationtech.jts.geom.Point;
 @Table(name = "store")
 @Getter
 @Setter
+@SuperBuilder
 @NoArgsConstructor
 @PrimaryKeyJoinColumn(name = "id")
 public class Store extends User {

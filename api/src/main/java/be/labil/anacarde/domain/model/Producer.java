@@ -4,11 +4,13 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "producer")
 @Getter
 @Setter
+@SuperBuilder
 @NoArgsConstructor
 @PrimaryKeyJoinColumn(name = "id")
 public class Producer extends Trader {

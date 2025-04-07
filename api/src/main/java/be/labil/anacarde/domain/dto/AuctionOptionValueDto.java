@@ -6,29 +6,22 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * DTO pour l'entité AuctionOptionValue.
- */
 @Data
 @NoArgsConstructor
 @Schema(description = "Objet de transfert de données pour les valeurs d'option d'enchère.")
 public class AuctionOptionValueDto {
 
-	/** Identifiant unique de la valeur d'option d'enchère. */
 	@Schema(description = "Identifiant unique de la valeur d'option d'enchère", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
 	private Integer id;
 
-	/** Enchère associée à cette valeur d'option. */
 	@NotNull(message = "L'enchère est requise")
 	@Schema(description = "Enchère associée", requiredMode = Schema.RequiredMode.REQUIRED)
 	private AuctionDto auction;
 
-	/** Option d'enchère associée. */
 	@NotNull(message = "L'option d'enchère est requise")
 	@Schema(description = "Option d'enchère associée", requiredMode = Schema.RequiredMode.REQUIRED)
 	private AuctionOptionDto auctionOption;
 
-	/** Valeur de l'option. */
 	@NotBlank(message = "La valeur est requise")
 	@Schema(description = "Valeur de l'option", example = "Extra option", requiredMode = Schema.RequiredMode.REQUIRED)
 	private String value;

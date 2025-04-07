@@ -16,7 +16,7 @@ import lombok.*;
 @AllArgsConstructor
 public class Auction {
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_sale_offer")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_auction")
 	private Integer id;
 
 	@Column(nullable = false)
@@ -42,12 +42,4 @@ public class Auction {
 
 	@OneToMany(mappedBy = "auction", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<AuctionOptionValue> auctionOptionValues = new HashSet<>();
-
-	/*
-	 * @ManyToMany
-	 * 
-	 * @JoinTable( name = "auction_auction_option", joinColumns = @JoinColumn(name = "auction_id"), inverseJoinColumns
-	 * = @JoinColumn(name = "auction_option_id") ) private Set<AuctionOption> auctionOptions = new HashSet<>();
-	 * 
-	 */
 }

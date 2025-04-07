@@ -6,11 +6,13 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "transformer")
 @Getter
 @Setter
+@SuperBuilder
 @NoArgsConstructor
 @PrimaryKeyJoinColumn(name = "id")
 public abstract class Transformer extends User {
