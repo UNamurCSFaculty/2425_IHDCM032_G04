@@ -15,7 +15,7 @@ import org.locationtech.jts.geom.Point;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Schema(description = "Objet de transfert de données pour les champs.")
-public class FieldDto extends TraderDto {
+public class FieldDetailDto extends TraderDetailDto {
 
 	@Schema(description = "Identifiant unique du champ.", example = "F123")
 	private Integer id;
@@ -27,5 +27,5 @@ public class FieldDto extends TraderDto {
 	private Point location;
 
 	@Schema(description = "Producteur associé au champ.")
-	private ProducerDto producer;
+	private ProducerDetailDto producer;
 }

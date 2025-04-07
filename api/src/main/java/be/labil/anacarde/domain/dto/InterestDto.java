@@ -35,5 +35,5 @@ public class InterestDto {
 	/** Le trader (acheteur) ayant exprimé l’intérêt. */
 	@NotNull
 	@Schema(description = "Acheteur ayant exprimé l'intérêt", requiredMode = Schema.RequiredMode.REQUIRED)
-	private TraderDto buyer;
+	private TraderDetailDto buyer;
 }

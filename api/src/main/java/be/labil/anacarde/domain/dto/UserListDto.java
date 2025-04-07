@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 import lombok.Data;
 
 @Data
@@ -29,6 +30,26 @@ public class UserListDto {
 	@NotBlank(message = "L'adresse email est requise")
 	@Email(message = "Invalid email format")
 	private String email;
+
+	/** Date d'enregistrement de l'utilisateur. */
+	@Schema(description = "Date d'enregistrement", example = "2025-04-01T09:30:00", accessMode = Schema.AccessMode.READ_ONLY)
+	private LocalDateTime registrationDate;
+
+	/** Date de validation de l'utilisateur. */
+	@Schema(description = "Date de validation", example = "2025-04-02T10:00:00", accessMode = Schema.AccessMode.READ_ONLY)
+	private LocalDateTime validationDate;
+
+	/** Statut d'activation du compte. */
+	@Schema(description = "Compte activé", example = "true")
+	private boolean enabled;
+
+	/** Adresse postale de l'utilisateur. */
+	@Schema(description = "Adresse postale de l'utilisateur", example = "Rue de la Loi 16, 1000 Bruxelles")
+	private String address;
+
+	/** Numéro de téléphone de l'utilisateur. */
+	@Schema(description = "Numéro de téléphone", example = "+32 475 12 34 56")
+	private String phone;
 
 	/**
 	 * User's password.

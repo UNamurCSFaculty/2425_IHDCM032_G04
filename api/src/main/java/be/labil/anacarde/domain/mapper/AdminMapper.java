@@ -1,21 +1,20 @@
 package be.labil.anacarde.domain.mapper;
 
-import be.labil.anacarde.domain.dto.AdminDto;
+import be.labil.anacarde.domain.dto.AdminDetailDto;
 import be.labil.anacarde.domain.model.Admin;
 import org.mapstruct.Mapper;
-import org.mapstruct.ObjectFactory;
+import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
-public interface AdminMapper extends GenericMapper<AdminDto, Admin> {
-
-	@Override
-	Admin toEntity(AdminDto dto);
+@Mapper(componentModel = "spring", uses = {RoleMapper.class, LanguageMapper.class})
+public interface AdminMapper extends GenericMapper<AdminDetailDto, Admin> {
 
 	@Override
-	AdminDto toDto(Admin admin);
+	@Mapping(source = "roles", target = "roles")
+	@Mapping(source = "language", target = "language")
+	Admin toEntity(AdminDetailDto dto);
 
-	@ObjectFactory
-	default Admin createAdmin(AdminDto dto) {
-		return new Admin();
-	}
+	@Override
+	@Mapping(source = "roles", target = "roles")
+	@Mapping(source = "language", target = "language")
+	AdminDetailDto toDto(Admin admin);
 }

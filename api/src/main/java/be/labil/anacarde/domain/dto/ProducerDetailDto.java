@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Schema(description = "Objet de transfert de données pour les producteurs.")
-public class ProducerDto extends TraderDto {
+public class ProducerDetailDto extends TraderDetailDto {
 
 	/** Identifiant agricole du producteur. */
 	@NotBlank

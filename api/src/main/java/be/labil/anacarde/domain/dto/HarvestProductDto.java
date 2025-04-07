@@ -18,17 +18,17 @@ public class HarvestProductDto extends ProductDto {
 	/** Magasin associé au produit récolté. */
 	@NotNull(message = "Le magasin est requis")
 	@Schema(description = "Magasin associé au produit récolté", requiredMode = Schema.RequiredMode.REQUIRED)
-	private StoreDto store;
+	private StoreDetailDto store;
 
 	/** Producteur associé au produit récolté. */
 	@NotNull(message = "Le producteur est requis")
 	@Schema(description = "Producteur associé au produit récolté", requiredMode = Schema.RequiredMode.REQUIRED)
-	private ProducerDto producer;
+	private ProducerDetailDto producer;
 
 	/** Champ associé au produit récolté. */
 	@NotNull(message = "Le champ est requis")
 	@Schema(description = "Champ associé au produit récolté", requiredMode = Schema.RequiredMode.REQUIRED)
-	private FieldDto field;
+	private FieldDetailDto field;
 
 	/** Produit transformé associé (facultatif). */
 	@Schema(description = "Produit transformé associé (facultatif)")

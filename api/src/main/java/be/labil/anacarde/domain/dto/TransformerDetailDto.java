@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Schema(description = "Objet de transfert de données pour les transformateurs.")
-public class TransformerDto extends TraderDto {
+public class TransformerDetailDto extends TraderDetailDto {
 	// Aucun champ supplémentaire n'est nécessaire ici.
 }

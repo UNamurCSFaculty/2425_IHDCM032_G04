@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Schema(description = "Objet de transfert de données pour les transporteurs.")
-public class CarrierDto extends UserDto {
+public class CarrierDetailDto extends UserDetailDto {
 
 	/** Prix par kilomètre facturé par le transporteur. */
 	@Schema(description = "Prix par kilomètre facturé par le transporteur", example = "1.50", requiredMode = Schema.RequiredMode.REQUIRED)

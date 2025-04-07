@@ -9,10 +9,10 @@ import static org.mockito.Mockito.*;
 import be.labil.anacarde.application.exception.BadRequestException;
 import be.labil.anacarde.application.exception.ResourceNotFoundException;
 import be.labil.anacarde.application.service.UserServiceImpl;
-import be.labil.anacarde.domain.dto.UserDto;
+import be.labil.anacarde.domain.dto.UserDetailDto;
 import be.labil.anacarde.domain.dto.UserListDto;
+import be.labil.anacarde.domain.mapper.UserDetailMapper;
 import be.labil.anacarde.domain.mapper.UserListMapper;
-import be.labil.anacarde.domain.mapper.UserMapper;
 import be.labil.anacarde.domain.model.Role;
 import be.labil.anacarde.domain.model.User;
 import be.labil.anacarde.infrastructure.persistence.RoleRepository;
@@ -47,7 +47,7 @@ public class UserServiceImplTest {
 	@Mock
 	private RoleRepository roleRepository;
 	@Mock
-	private UserMapper userMapper;
+	private UserDetailMapper userDetailMapper;
 	@Mock
 	private UserListMapper userListMapper;
 	@Mock
@@ -57,7 +57,7 @@ public class UserServiceImplTest {
 	private UserServiceImpl userServiceImpl;
 
 	private User user;
-	private UserDto userDto;
+	private UserDetailDto userDetailDto;
 	private UserListDto userListDto;
 	private Role role;
 
@@ -69,10 +69,10 @@ public class UserServiceImplTest {
 		user.setPassword("rawPassword");
 		user.setRoles(new HashSet<>());
 
-		userDto = new UserDto();
-		userDto.setId(1);
-		userDto.setEmail("test@example.com");
-		userDto.setPassword("rawPassword");
+		userDetailDto = new UserDetailDto();
+		userDetailDto.setId(1);
+		userDetailDto.setEmail("test@example.com");
+		userDetailDto.setPassword("rawPassword");
 
 		userListDto = new UserListDto();
 		userListDto.setId(1);
@@ -84,8 +84,8 @@ public class UserServiceImplTest {
 		role.setName("ROLE_USER");
 
 		// On suppose que le mapper convertit directement entre User et UserDto.
-		Mockito.lenient().when(userMapper.toEntity(any(UserDto.class))).thenReturn(user);
-		Mockito.lenient().when(userMapper.toDto(any(User.class))).thenReturn(userDto);
+		Mockito.lenient().when(userDetailMapper.toEntity(any(UserDetailDto.class))).thenReturn(user);
+		Mockito.lenient().when(userDetailMapper.toDto(any(User.class))).thenReturn(userDetailDto);
 		Mockito.lenient().when(userListMapper.toDto(any(User.class))).thenReturn(userListDto);
 	}
 
@@ -114,22 +114,22 @@ public class UserServiceImplTest {
 	void testCreateUser() {
 		String encodedPassword = "encodedPassword";
 		when(passwordEncoder.encode("rawPassword")).thenReturn(encodedPassword);
-		userDto.setPassword("rawPassword");
+		userDetailDto.setPassword("rawPassword");
 		when(userRepository.save(user)).thenReturn(user);
 
-		UserDto result = userServiceImpl.createUser(userDto);
+		UserDetailDto result = userServiceImpl.createUser(userDetailDto);
 		assertEquals(encodedPassword, result.getPassword());
 		verify(passwordEncoder, times(1)).encode("rawPassword");
 		verify(userRepository, times(1)).save(user);
-		assertThat(result).isEqualTo(userDto);
+		assertThat(result).isEqualTo(userDetailDto);
 	}
 
 	/** Test de la récupération d'un utilisateur existant par son identifiant. */
 	@Test
 	void testGetUserByIdSuccess() {
 		when(userRepository.findById(1)).thenReturn(Optional.of(user));
-		UserDto result = userServiceImpl.getUserById(1);
-		assertThat(result).isEqualTo(userDto);
+		UserDetailDto result = userServiceImpl.getUserById(1);
+		assertThat(result).isEqualTo(userDetailDto);
 	}
 
 	/**
@@ -158,14 +158,14 @@ public class UserServiceImplTest {
 	 */
 	@Test
 	void testUpdateUser() {
-		UserDto updateDto = new UserDto();
+		UserDetailDto updateDto = new UserDetailDto();
 		updateDto.setPassword("newPassword");
 		updateDto.setEmail("updated@example.com");
 
 		when(userRepository.findById(1)).thenReturn(Optional.of(user));
 
-		when(userMapper.partialUpdate(any(UserDto.class), any(User.class))).thenAnswer(invocation -> {
-			UserDto dto = invocation.getArgument(0);
+		when(userDetailMapper.partialUpdate(any(UserDetailDto.class), any(User.class))).thenAnswer(invocation -> {
+			UserDetailDto dto = invocation.getArgument(0);
 			User userToUpdate = invocation.getArgument(1);
 			if (dto.getEmail() != null) {
 				userToUpdate.setEmail(dto.getEmail());
@@ -173,9 +173,9 @@ public class UserServiceImplTest {
 			return userToUpdate;
 		});
 
-		when(userMapper.toDto(any(User.class))).thenAnswer(invocation -> {
+		when(userDetailMapper.toDto(any(User.class))).thenAnswer(invocation -> {
 			User updatedUser = invocation.getArgument(0);
-			UserDto dto = new UserDto();
+			UserDetailDto dto = new UserDetailDto();
 			dto.setEmail(updatedUser.getEmail());
 			dto.setPassword(updatedUser.getPassword());
 			return dto;
@@ -184,7 +184,7 @@ public class UserServiceImplTest {
 		when(passwordEncoder.encode("newPassword")).thenReturn("encodedNewPassword");
 		when(userRepository.save(user)).thenReturn(user);
 
-		UserDto result = userServiceImpl.updateUser(1, updateDto);
+		UserDetailDto result = userServiceImpl.updateUser(1, updateDto);
 		assertThat(result.getEmail()).isEqualTo("updated@example.com");
 		verify(passwordEncoder, times(1)).encode("newPassword");
 	}
@@ -214,13 +214,13 @@ public class UserServiceImplTest {
 		when(roleRepository.findByName("ROLE_USER")).thenReturn(Optional.of(role));
 		when(userRepository.save(user)).thenReturn(user);
 		// On suppose que le mapper retourne le même DTO pour simplifier
-		when(userMapper.toDto(user)).thenReturn(userDto);
+		when(userDetailMapper.toDto(user)).thenReturn(userDetailDto);
 
-		UserDto result = userServiceImpl.addRoleToUser(1, "ROLE_USER");
+		UserDetailDto result = userServiceImpl.addRoleToUser(1, "ROLE_USER");
 		verify(userRepository, times(1)).findById(1);
 		verify(roleRepository, times(1)).findByName("ROLE_USER");
 		verify(userRepository, times(1)).save(user);
-		assertThat(result).isEqualTo(userDto);
+		assertThat(result).isEqualTo(userDetailDto);
 	}
 
 	/** Test de l'ajout d'un rôle à un utilisateur inexistant. */
@@ -259,15 +259,15 @@ public class UserServiceImplTest {
 		when(userRepository.findById(1)).thenReturn(Optional.of(user));
 		when(roleRepository.findByName("ROLE_USER")).thenReturn(Optional.of(role));
 		when(userRepository.save(user)).thenReturn(user);
-		when(userMapper.toDto(user)).thenReturn(userDto);
+		when(userDetailMapper.toDto(user)).thenReturn(userDetailDto);
 
 		List<String> roleNames = List.of("ROLE_USER");
-		UserDto result = userServiceImpl.updateUserRoles(1, roleNames);
+		UserDetailDto result = userServiceImpl.updateUserRoles(1, roleNames);
 
 		verify(userRepository, times(1)).findById(1);
 		verify(roleRepository, times(1)).findByName("ROLE_USER");
 		verify(userRepository, times(1)).save(user);
-		assertThat(result).isEqualTo(userDto);
+		assertThat(result).isEqualTo(userDetailDto);
 	}
 
 	/** Test de la mise à jour des rôles d'un utilisateur lorsque l'un des rôles est introuvable. */

@@ -27,5 +27,5 @@ public class TransformedProductDto extends ProductDto {
 
 	/** Transformateur associé au produit transformé. */
 	@Schema(description = "Transformateur associé", requiredMode = Schema.RequiredMode.REQUIRED)
-	private TransformerDto transformer;
+	private TransformerDetailDto transformer;
 }

@@ -21,6 +21,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @AllArgsConstructor
 /** Entité représentant un utilisateur dans le système. */
 public class User implements UserDetails {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
 	private Integer id;
@@ -43,7 +44,7 @@ public class User implements UserDetails {
 	private LocalDateTime validationDate;
 
 	@Column(nullable = false)
-	private boolean active;
+	private boolean enabled;
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
@@ -159,7 +160,7 @@ public class User implements UserDetails {
 	 */
 	@Override
 	public boolean isEnabled() {
-		return active;
+		return enabled;
 	}
 
 	/**

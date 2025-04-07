@@ -43,12 +43,12 @@ public class ContractOfferDto {
 	/** Trader vendeur associé à l'offre. */
 	@NotNull(message = "Le vendeur est requis")
 	@Schema(description = "Vendeur associé à l'offre", requiredMode = Schema.RequiredMode.REQUIRED)
-	private TraderDto seller;
+	private TraderDetailDto seller;
 
 	/** Trader acheteur associé à l'offre. */
 	@NotNull(message = "L'acheteur est requis")
 	@Schema(description = "Acheteur associé à l'offre", requiredMode = Schema.RequiredMode.REQUIRED)
-	private TraderDto buyer;
+	private TraderDetailDto buyer;
 
 	/** Qualité associée à l'offre. */
 	@NotNull(message = "La qualité est requise")

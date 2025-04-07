@@ -42,5 +42,5 @@ public class IntentionDto {
 	/** Acheteur (trader) qui propose l’intention. */
 	@NotNull
 	@Schema(description = "Trader acheteur", requiredMode = Schema.RequiredMode.REQUIRED)
-	private TraderDto buyer;
+	private TraderDetailDto buyer;
 }

@@ -47,7 +47,7 @@ public class QualityControlDto {
 	/** Inspecteur qualité ayant réalisé le contrôle. */
 	@NotNull(message = "L'inspecteur qualité est requis")
 	@Schema(description = "Inspecteur qualité associé", requiredMode = Schema.RequiredMode.REQUIRED)
-	private QualityInspectorDto qualityInspector;
+	private QualityInspectorDetailDto qualityInspector;
 
 	/** Produit associé au contrôle qualité. */
 	@NotNull(message = "Le produit est requis")

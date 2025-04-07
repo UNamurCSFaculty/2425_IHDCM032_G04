@@ -1,7 +1,7 @@
 package be.labil.anacarde.presentation.controller;
 
 import be.labil.anacarde.application.service.UserService;
-import be.labil.anacarde.domain.dto.UserDto;
+import be.labil.anacarde.domain.dto.UserDetailDto;
 import be.labil.anacarde.domain.dto.UserListDto;
 import java.net.URI;
 import java.util.List;
@@ -17,14 +17,14 @@ public class UserControllerApiController implements UserApi {
 	private final UserService userService;
 
 	@Override
-	public ResponseEntity<UserDto> getUser(Integer id) {
-		UserDto user = userService.getUserById(id);
+	public ResponseEntity<UserDetailDto> getUser(Integer id) {
+		UserDetailDto user = userService.getUserById(id);
 		return ResponseEntity.ok(user);
 	}
 
 	@Override
-	public ResponseEntity<UserDto> createUser(UserDto userDto) {
-		UserDto created = userService.createUser(userDto);
+	public ResponseEntity<UserDetailDto> createUser(UserDetailDto userDetailDto) {
+		UserDetailDto created = userService.createUser(userDetailDto);
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(created.getId())
 				.toUri();
 		return ResponseEntity.created(location).body(created);
@@ -37,8 +37,8 @@ public class UserControllerApiController implements UserApi {
 	}
 
 	@Override
-	public ResponseEntity<UserDto> updateUser(Integer id, UserDto userDto) {
-		UserDto updated = userService.updateUser(id, userDto);
+	public ResponseEntity<UserDetailDto> updateUser(Integer id, UserDetailDto userDetailDto) {
+		UserDetailDto updated = userService.updateUser(id, userDetailDto);
 		return ResponseEntity.ok(updated);
 	}
 
@@ -49,14 +49,14 @@ public class UserControllerApiController implements UserApi {
 	}
 
 	@Override
-	public ResponseEntity<UserDto> addRoleToUser(Integer id, String roleName) {
-		UserDto updated = userService.addRoleToUser(id, roleName);
+	public ResponseEntity<UserDetailDto> addRoleToUser(Integer id, String roleName) {
+		UserDetailDto updated = userService.addRoleToUser(id, roleName);
 		return ResponseEntity.ok(updated);
 	}
 
 	@Override
-	public ResponseEntity<UserDto> updateUserRoles(Integer id, List<String> roleNames) {
-		UserDto updated = userService.updateUserRoles(id, roleNames);
+	public ResponseEntity<UserDetailDto> updateUserRoles(Integer id, List<String> roleNames) {
+		UserDetailDto updated = userService.updateUserRoles(id, roleNames);
 		return ResponseEntity.ok(updated);
 	}
 }

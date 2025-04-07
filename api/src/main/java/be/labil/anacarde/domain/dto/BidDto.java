@@ -42,7 +42,7 @@ public class BidDto {
 	/** Trader ayant passé l'offre. */
 	@NotNull(message = "Le trader est requis")
 	@Schema(description = "Trader ayant passé l'offre", requiredMode = Schema.RequiredMode.REQUIRED)
-	private TraderDto trader;
+	private TraderDetailDto trader;
 
 	/** Statut de l'offre. */
 	@NotNull(message = "Le statut est requis")

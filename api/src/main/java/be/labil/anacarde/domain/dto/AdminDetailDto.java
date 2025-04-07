@@ -7,5 +7,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Schema(description = "Objet de transfert de données pour les administrateurs.")
-public class AdminDto extends UserDto {
+public class AdminDetailDto extends UserDetailDto {
 }

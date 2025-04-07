@@ -1,7 +1,7 @@
 
 package be.labil.anacarde.application.service;
 
-import be.labil.anacarde.domain.dto.UserDto;
+import be.labil.anacarde.domain.dto.UserDetailDto;
 import be.labil.anacarde.domain.dto.UserListDto;
 import java.util.List;
 
@@ -14,11 +14,11 @@ public interface UserService {
 	/**
 	 * Crée un nouvel utilisateur dans le système en utilisant le UserDto fourni.
 	 *
-	 * @param userDto
+	 * @param userDetailDto
 	 *            Le UserDto contenant les informations du nouvel utilisateur.
 	 * @return Un UserDto représentant l'utilisateur créé.
 	 */
-	UserDto createUser(UserDto userDto);
+	UserDetailDto createUser(UserDetailDto userDetailDto);
 
 	/**
 	 * Retourne l'utilisateur correspondant à l'ID fourni.
@@ -27,7 +27,7 @@ public interface UserService {
 	 *            L'identifiant unique de l'utilisateur.
 	 * @return Un UserDto représentant l'utilisateur avec l'ID spécifié.
 	 */
-	UserDto getUserById(Integer id);
+	UserDetailDto getUserById(Integer id);
 
 	/**
 	 * Récupère tous les utilisateurs du système.
@@ -41,11 +41,11 @@ public interface UserService {
 	 *
 	 * @param id
 	 *            L'identifiant unique de l'utilisateur à mettre à jour.
-	 * @param userDto
+	 * @param userDetailDto
 	 *            Le UserDto contenant les informations mises à jour.
 	 * @return Un UserDto représentant l'utilisateur mis à jour.
 	 */
-	UserDto updateUser(Integer id, UserDto userDto);
+	UserDetailDto updateUser(Integer id, UserDetailDto userDetailDto);
 
 	/**
 	 * Supprime l'utilisateur identifié par l'ID donné du système.
@@ -64,7 +64,7 @@ public interface UserService {
 	 *            Le nom du rôle à ajouter.
 	 * @return Un UserDto représentant l'utilisateur mis à jour.
 	 */
-	UserDto addRoleToUser(Integer userId, String roleName);
+	UserDetailDto addRoleToUser(Integer userId, String roleName);
 
 	/**
 	 * Met à jour l'ensemble des rôles de l'utilisateur identifié par l'ID fourni.
@@ -75,5 +75,5 @@ public interface UserService {
 	 *            La List des noms de rôle à attribuer à l'utilisateur.
 	 * @return Un UserDto représentant l'utilisateur mis à jour.
 	 */
-	UserDto updateUserRoles(Integer userId, List<String> roleNames);
+	UserDetailDto updateUserRoles(Integer userId, List<String> roleNames);
 }

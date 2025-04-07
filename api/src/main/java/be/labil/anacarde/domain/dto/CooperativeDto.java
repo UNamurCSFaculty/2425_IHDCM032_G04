@@ -35,5 +35,5 @@ public class CooperativeDto {
 	/** Président de la coopérative. */
 	@NotNull
 	@Schema(description = "Président de la coopérative", requiredMode = Schema.RequiredMode.REQUIRED)
-	private ProducerDto president;
+	private ProducerDetailDto president;
 }

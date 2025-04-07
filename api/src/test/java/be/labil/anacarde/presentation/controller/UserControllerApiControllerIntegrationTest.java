@@ -8,7 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import be.labil.anacarde.domain.dto.RoleDto;
-import be.labil.anacarde.domain.dto.UserDto;
+import be.labil.anacarde.domain.dto.UserDetailDto;
 import be.labil.anacarde.domain.model.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -67,7 +67,7 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 	 */
 	@Test
 	public void testCreateUser() throws Exception {
-		UserDto newUser = new UserDto();
+		UserDetailDto newUser = new UserDetailDto();
 		newUser.setFirstName("Alice");
 		newUser.setLastName("Smith");
 		newUser.setEmail("alice.smith@example.com");
@@ -107,7 +107,7 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 	 */
 	@Test
 	public void testUpdateUser() throws Exception {
-		UserDto updateUser = new UserDto();
+		UserDetailDto updateUser = new UserDetailDto();
 		updateUser.setFirstName("John Updated");
 		updateUser.setLastName("Doe Updated");
 		updateUser.setEmail("email@updated.com");
@@ -193,7 +193,7 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 	 */
 	@Test
 	public void testCreateUserMissingEmail() throws Exception {
-		UserDto newUser = new UserDto();
+		UserDetailDto newUser = new UserDetailDto();
 		newUser.setFirstName("Bob");
 		newUser.setLastName("Smith");
 		newUser.setPassword("secret");

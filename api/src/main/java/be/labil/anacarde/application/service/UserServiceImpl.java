@@ -2,10 +2,10 @@ package be.labil.anacarde.application.service;
 
 import be.labil.anacarde.application.exception.BadRequestException;
 import be.labil.anacarde.application.exception.ResourceNotFoundException;
-import be.labil.anacarde.domain.dto.UserDto;
+import be.labil.anacarde.domain.dto.UserDetailDto;
 import be.labil.anacarde.domain.dto.UserListDto;
+import be.labil.anacarde.domain.mapper.UserDetailMapper;
 import be.labil.anacarde.domain.mapper.UserListMapper;
-import be.labil.anacarde.domain.mapper.UserMapper;
 import be.labil.anacarde.domain.model.Role;
 import be.labil.anacarde.domain.model.User;
 import be.labil.anacarde.infrastructure.persistence.RoleRepository;
@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
 	private final UserRepository userRepository;
 	private final RoleRepository roleRepository;
-	private final UserMapper userMapper;
+	private final UserDetailMapper userDetailMapper;
 	private final UserListMapper userListMapper;
 	private final PasswordEncoder bCryptPasswordEncoder;
 
@@ -39,21 +39,21 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	}
 
 	@Override
-	public UserDto createUser(UserDto userDto) {
-		if (userDto.getPassword() != null && !userDto.getPassword().isBlank()) {
-			userDto.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
+	public UserDetailDto createUser(UserDetailDto userDetailDto) {
+		if (userDetailDto.getPassword() != null && !userDetailDto.getPassword().isBlank()) {
+			userDetailDto.setPassword(bCryptPasswordEncoder.encode(userDetailDto.getPassword()));
 		}
-		User user = userMapper.toEntity(userDto);
+		User user = userDetailMapper.toEntity(userDetailDto);
 		User saved = userRepository.save(user);
-		return userMapper.toDto(saved);
+		return userDetailMapper.toDto(saved);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public UserDto getUserById(Integer id) {
+	public UserDetailDto getUserById(Integer id) {
 		User user = userRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé"));
-		return userMapper.toDto(user);
+		return userDetailMapper.toDto(user);
 	}
 
 	@Override
@@ -63,18 +63,18 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	}
 
 	@Override
-	public UserDto updateUser(Integer id, UserDto userDto) {
+	public UserDetailDto updateUser(Integer id, UserDetailDto userDetailDto) {
 		User existingUser = userRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé"));
 		// Mets uniquement à jour les champs non nuls du DTO
-		User updatedUser = userMapper.partialUpdate(userDto, existingUser);
+		User updatedUser = userDetailMapper.partialUpdate(userDetailDto, existingUser);
 
-		if (userDto.getPassword() != null && !userDto.getPassword().isBlank()) {
-			updatedUser.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
+		if (userDetailDto.getPassword() != null && !userDetailDto.getPassword().isBlank()) {
+			updatedUser.setPassword(bCryptPasswordEncoder.encode(userDetailDto.getPassword()));
 		}
 
 		User saved = userRepository.save(updatedUser);
-		return userMapper.toDto(saved);
+		return userDetailMapper.toDto(saved);
 	}
 
 	@Override
@@ -86,7 +86,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	}
 
 	@Override
-	public UserDto addRoleToUser(Integer userId, String roleName) {
+	public UserDetailDto addRoleToUser(Integer userId, String roleName) {
 		User user = userRepository.findById(userId)
 				.orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé"));
 		Role role = roleRepository.findByName(roleName)
@@ -98,11 +98,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 		user.getRoles().add(role);
 
 		User savedUser = userRepository.save(user);
-		return userMapper.toDto(savedUser);
+		return userDetailMapper.toDto(savedUser);
 	}
 
 	@Override
-	public UserDto updateUserRoles(Integer userId, List<String> roleNames) {
+	public UserDetailDto updateUserRoles(Integer userId, List<String> roleNames) {
 		User user = userRepository.findById(userId)
 				.orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé"));
 
@@ -114,6 +114,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 		user.setRoles(newRoles);
 
 		User savedUser = userRepository.save(user);
-		return userMapper.toDto(savedUser);
+		return userDetailMapper.toDto(savedUser);
 	}
 }

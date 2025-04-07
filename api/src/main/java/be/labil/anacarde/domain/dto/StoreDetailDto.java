@@ -13,7 +13,7 @@ import org.locationtech.jts.geom.Point;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Schema(description = "Objet de transfert de données pour les magasins.")
-public class StoreDto extends UserDto {
+public class StoreDetailDto extends UserDetailDto {
 
 	/** Emplacement géographique du magasin sous forme de Point. */
 	@Schema(description = "Emplacement géographique du magasin", example = "POINT(4.3517 50.8503)", requiredMode = Schema.RequiredMode.REQUIRED)
