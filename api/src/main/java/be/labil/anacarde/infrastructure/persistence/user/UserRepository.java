@@ -1,11 +1,13 @@
-package be.labil.anacarde.infrastructure.persistence;
+package be.labil.anacarde.infrastructure.persistence.user;
 
 import be.labil.anacarde.domain.model.User;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 /** Interface Repository pour les entités User. */
+@Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
 	/**
 	 * Recherche une entité User dont l'adresse e-mail concide avec celle fournie.

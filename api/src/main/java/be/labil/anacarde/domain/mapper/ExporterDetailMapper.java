@@ -1,6 +1,6 @@
 package be.labil.anacarde.domain.mapper;
 
-import be.labil.anacarde.domain.dto.ExporterDetailDto;
+import be.labil.anacarde.domain.dto.user.ExporterDetailDto;
 import be.labil.anacarde.domain.model.Exporter;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

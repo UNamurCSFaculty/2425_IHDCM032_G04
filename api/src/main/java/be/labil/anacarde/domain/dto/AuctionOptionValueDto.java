@@ -23,5 +23,5 @@ public class AuctionOptionValueDto {
 
 	@NotBlank(message = "La valeur est requise")
 	@Schema(description = "Valeur de l'option", example = "Extra option", requiredMode = Schema.RequiredMode.REQUIRED)
-	private String value;
+	private String optionValue;
 }

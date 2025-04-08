@@ -1,6 +1,6 @@
 package be.labil.anacarde.domain.mapper;
 
-import be.labil.anacarde.domain.dto.ProducerDetailDto;
+import be.labil.anacarde.domain.dto.user.ProducerDetailDto;
 import be.labil.anacarde.domain.model.Producer;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

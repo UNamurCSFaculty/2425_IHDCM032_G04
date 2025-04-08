@@ -1,8 +1,8 @@
 package be.labil.anacarde.presentation.controller;
 
 import be.labil.anacarde.application.service.UserService;
-import be.labil.anacarde.domain.dto.UserDetailDto;
-import be.labil.anacarde.domain.dto.UserListDto;
+import be.labil.anacarde.domain.dto.user.UserDetailDto;
+import be.labil.anacarde.domain.dto.user.UserListDto;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ public class UserControllerApiController implements UserApi {
 	private final UserService userService;
 
 	@Override
-	public ResponseEntity<UserDetailDto> getUser(Integer id) {
+	public ResponseEntity<? extends UserDetailDto> getUser(Integer id) {
 		UserDetailDto user = userService.getUserById(id);
 		return ResponseEntity.ok(user);
 	}
@@ -31,7 +31,7 @@ public class UserControllerApiController implements UserApi {
 	}
 
 	@Override
-	public ResponseEntity<List<UserListDto>> listUsers() {
+	public ResponseEntity<List<? extends UserListDto>> listUsers() {
 		List<UserListDto> users = userService.listUsers();
 		return ResponseEntity.ok(users);
 	}
@@ -49,13 +49,13 @@ public class UserControllerApiController implements UserApi {
 	}
 
 	@Override
-	public ResponseEntity<UserDetailDto> addRoleToUser(Integer id, String roleName) {
+	public ResponseEntity<? extends UserDetailDto> addRoleToUser(Integer id, String roleName) {
 		UserDetailDto updated = userService.addRoleToUser(id, roleName);
 		return ResponseEntity.ok(updated);
 	}
 
 	@Override
-	public ResponseEntity<UserDetailDto> updateUserRoles(Integer id, List<String> roleNames) {
+	public ResponseEntity<? extends UserDetailDto> updateUserRoles(Integer id, List<String> roleNames) {
 		UserDetailDto updated = userService.updateUserRoles(id, roleNames);
 		return ResponseEntity.ok(updated);
 	}

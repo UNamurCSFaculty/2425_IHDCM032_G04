@@ -7,23 +7,22 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import be.labil.anacarde.domain.dto.LanguageDto;
 import be.labil.anacarde.domain.dto.RoleDto;
-import be.labil.anacarde.domain.dto.UserDetailDto;
+import be.labil.anacarde.domain.dto.user.AdminDetailDto;
+import be.labil.anacarde.domain.dto.user.ExporterDetailDto;
+import be.labil.anacarde.domain.dto.user.UserDetailDto;
 import be.labil.anacarde.domain.model.User;
-import be.labil.anacarde.infrastructure.persistence.LanguageRepository;
-import be.labil.anacarde.infrastructure.persistence.RoleRepository;
-import be.labil.anacarde.infrastructure.persistence.UserRepository;
-import be.labil.anacarde.infrastructure.security.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -35,19 +34,9 @@ import org.springframework.test.web.servlet.request.RequestPostProcessor;
 @ActiveProfiles("test")
 public class UserControllerApiControllerIntegrationTest extends AbstractIntegrationTest {
 
-	private final MockMvc mockMvc;
-	private final ObjectMapper objectMapper;
-	private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
-	@Autowired
-	public UserControllerApiControllerIntegrationTest(JwtUtil jwtUtil, UserRepository userRepository,
-			RoleRepository roleRepository, LanguageRepository languageRepository, UserDetailsService userDetailsService,
-			MockMvc mockMvc, ObjectMapper objectMapper, BCryptPasswordEncoder bCryptPasswordEncoder) {
-		super(jwtUtil, userRepository, roleRepository, languageRepository, userDetailsService);
-		this.mockMvc = mockMvc;
-		this.objectMapper = objectMapper;
-		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-	}
+	private @Autowired MockMvc mockMvc;
+	private @Autowired ObjectMapper objectMapper;
+	private @Autowired BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	/**
 	 * RequestPostProcessor qui ajoute automatiquement le cookie JWT à chaque requête.
@@ -68,7 +57,8 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 	@Test
 	public void testGetUser() throws Exception {
 		mockMvc.perform(get("/api/users/" + getMainTestUser().getId()).accept(MediaType.APPLICATION_JSON).with(jwt()))
-				.andExpect(status().isOk()).andExpect(jsonPath("$.email").value(getMainTestUser().getEmail()));
+				.andExpect(status().isOk()).andDo(print())
+				.andExpect(jsonPath("$.email").value(getMainTestUser().getEmail()));
 	}
 
 	/**
@@ -77,11 +67,14 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 	 */
 	@Test
 	public void testCreateUser() throws Exception {
-		UserDetailDto newUser = new UserDetailDto();
+		LanguageDto languageDto = new LanguageDto();
+		languageDto.setId(getMainLanguage().getId());
+		UserDetailDto newUser = new AdminDetailDto();
 		newUser.setFirstName("Alice");
 		newUser.setLastName("Smith");
 		newUser.setEmail("alice.smith@example.com");
 		newUser.setPassword("secret");
+		newUser.setLanguage(languageDto);
 
 		ObjectNode node = objectMapper.valueToTree(newUser);
 		node.put("password", newUser.getPassword()); // Ajout manuel car le mot de passe n'est pas sérialisé
@@ -101,6 +94,38 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 	}
 
 	/**
+	 * Teste que la création d'un utilisateur échoue si le champ "type" n'est pas présent dans le JSON.
+	 */
+	@Test
+	public void testCreateUserMissingTypeFails() throws Exception {
+		LanguageDto languageDto = new LanguageDto();
+		languageDto.setId(getMainLanguage().getId());
+
+		UserDetailDto newUser = new ExporterDetailDto();
+		newUser.setFirstName("Charlie");
+		newUser.setLastName("Brown");
+		newUser.setEmail("charlie.brown@example.com");
+		newUser.setPassword("secret");
+		newUser.setLanguage(languageDto);
+
+		ObjectNode node = objectMapper.valueToTree(newUser);
+		node.put("password", newUser.getPassword());
+		node.remove("type"); // Supprime le champ "type" pour simuler l'absence de ce champ
+
+		String jsonContent = node.toString();
+
+		String responseContent = mockMvc
+				.perform(post("/api/users").contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwt()))
+				.andExpect(status().isBadRequest()).andReturn().getResponse().getContentAsString();
+
+		Map<String, Object> responseMap = objectMapper.readValue(responseContent, Map.class);
+		String errorMessage = (String) responseMap.get("error");
+
+		assertTrue(errorMessage.contains("Le champ discriminant 'type' est obligatoire pour le type d'utilisateur."),
+				"Le message d'erreur doit mentionner le problème lié au champ 'type'");
+	}
+
+	/**
 	 * Teste la récupération de la liste de tous les utilisateurs.
 	 * 
 	 */
@@ -117,12 +142,17 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 	 */
 	@Test
 	public void testUpdateUser() throws Exception {
-		UserDetailDto updateUser = new UserDetailDto();
+
+		LanguageDto languageDto = new LanguageDto();
+		languageDto.setId(getMainLanguage().getId());
+
+		UserDetailDto updateUser = new AdminDetailDto();
 		updateUser.setFirstName("John Updated");
 		updateUser.setLastName("Doe Updated");
 		updateUser.setEmail("email@updated.com");
 		updateUser.setPassword("newpassword");
 		updateUser.setRoles(Set.of(new RoleDto(null, getAdminTestRole().getName())));
+		updateUser.setLanguage(languageDto);
 
 		int userRoleSize = getMainTestUser().getRoles().size();
 
@@ -203,7 +233,7 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 	 */
 	@Test
 	public void testCreateUserMissingEmail() throws Exception {
-		UserDetailDto newUser = new UserDetailDto();
+		UserDetailDto newUser = new AdminDetailDto();
 		newUser.setFirstName("Bob");
 		newUser.setLastName("Smith");
 		newUser.setPassword("secret");

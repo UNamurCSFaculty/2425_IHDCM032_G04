@@ -3,7 +3,6 @@ package be.labil.anacarde.domain.mapper;
 import be.labil.anacarde.domain.dto.NewsDto;
 import be.labil.anacarde.domain.model.News;
 import org.mapstruct.*;
-import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring", uses = {NewsCategoryMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface NewsMapper extends GenericMapper<NewsDto, News> {

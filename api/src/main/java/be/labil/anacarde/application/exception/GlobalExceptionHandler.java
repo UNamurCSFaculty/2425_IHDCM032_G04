@@ -1,6 +1,7 @@
 package be.labil.anacarde.application.exception;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.exc.InvalidTypeIdException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
@@ -145,6 +146,12 @@ public class GlobalExceptionHandler {
 		Optional<Throwable> root = Optional.ofNullable(ex.getCause());
 		if (root.isPresent() && root.get() instanceof JsonParseException) {
 			message = "Erreur de syntaxe JSON : " + root.get().getMessage();
+		} else if (root.isPresent() && root.get() instanceof InvalidTypeIdException invalidTypeIdException) {
+			if (invalidTypeIdException.getOriginalMessage().contains("missing type id property 'type'")) {
+				message = "Le champ discriminant 'type' est obligatoire pour le type d'utilisateur.";
+			} else {
+				message = "Erreur de syntaxe JSON : " + invalidTypeIdException.getOriginalMessage();
+			}
 		} else {
 			message = "Message HTTP illisible.";
 		}

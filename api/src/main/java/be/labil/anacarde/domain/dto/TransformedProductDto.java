@@ -1,5 +1,6 @@
 package be.labil.anacarde.domain.dto;
 
+import be.labil.anacarde.domain.dto.user.TransformerDetailDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

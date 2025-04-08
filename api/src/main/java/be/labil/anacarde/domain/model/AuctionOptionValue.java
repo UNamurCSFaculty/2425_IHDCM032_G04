@@ -1,7 +1,10 @@
 package be.labil.anacarde.domain.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "auction_option_value")
@@ -22,6 +25,5 @@ public class AuctionOptionValue {
 	@JoinColumn(name = "auction_option_id", nullable = false)
 	private AuctionOption auctionOption;
 
-	@Column(nullable = false)
-	private String value;
+	private String optionValue;
 }

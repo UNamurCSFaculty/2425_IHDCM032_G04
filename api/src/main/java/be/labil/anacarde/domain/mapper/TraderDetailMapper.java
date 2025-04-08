@@ -1,8 +1,8 @@
 package be.labil.anacarde.domain.mapper;
 
-import be.labil.anacarde.domain.dto.ProducerDetailDto;
-import be.labil.anacarde.domain.dto.TraderDetailDto;
-import be.labil.anacarde.domain.dto.TransformerDetailDto;
+import be.labil.anacarde.domain.dto.user.ProducerDetailDto;
+import be.labil.anacarde.domain.dto.user.TraderDetailDto;
+import be.labil.anacarde.domain.dto.user.TransformerDetailDto;
 import be.labil.anacarde.domain.model.Producer;
 import be.labil.anacarde.domain.model.Trader;
 import be.labil.anacarde.domain.model.Transformer;

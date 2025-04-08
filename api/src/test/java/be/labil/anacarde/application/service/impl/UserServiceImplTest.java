@@ -9,15 +9,17 @@ import static org.mockito.Mockito.*;
 import be.labil.anacarde.application.exception.BadRequestException;
 import be.labil.anacarde.application.exception.ResourceNotFoundException;
 import be.labil.anacarde.application.service.UserServiceImpl;
-import be.labil.anacarde.domain.dto.UserDetailDto;
-import be.labil.anacarde.domain.dto.UserListDto;
+import be.labil.anacarde.domain.dto.user.AdminDetailDto;
+import be.labil.anacarde.domain.dto.user.AdminListDto;
+import be.labil.anacarde.domain.dto.user.UserDetailDto;
+import be.labil.anacarde.domain.dto.user.UserListDto;
 import be.labil.anacarde.domain.mapper.UserDetailMapper;
 import be.labil.anacarde.domain.mapper.UserListMapper;
 import be.labil.anacarde.domain.model.Admin;
 import be.labil.anacarde.domain.model.Role;
 import be.labil.anacarde.domain.model.User;
 import be.labil.anacarde.infrastructure.persistence.RoleRepository;
-import be.labil.anacarde.infrastructure.persistence.UserRepository;
+import be.labil.anacarde.infrastructure.persistence.user.UserRepository;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -70,12 +72,12 @@ public class UserServiceImplTest {
 		user.setPassword("rawPassword");
 		user.setRoles(new HashSet<>());
 
-		userDetailDto = new UserDetailDto();
+		userDetailDto = new AdminDetailDto();
 		userDetailDto.setId(1);
 		userDetailDto.setEmail("test@example.com");
 		userDetailDto.setPassword("rawPassword");
 
-		userListDto = new UserListDto();
+		userListDto = new AdminListDto();
 		userListDto.setId(1);
 		userListDto.setEmail("test@example.com");
 		userListDto.setPassword("rawPassword");
@@ -159,7 +161,7 @@ public class UserServiceImplTest {
 	 */
 	@Test
 	void testUpdateUser() {
-		UserDetailDto updateDto = new UserDetailDto();
+		UserDetailDto updateDto = new AdminDetailDto();
 		updateDto.setPassword("newPassword");
 		updateDto.setEmail("updated@example.com");
 
@@ -176,7 +178,7 @@ public class UserServiceImplTest {
 
 		when(userDetailMapper.toDto(any(User.class))).thenAnswer(invocation -> {
 			User updatedUser = invocation.getArgument(0);
-			UserDetailDto dto = new UserDetailDto();
+			UserDetailDto dto = new AdminDetailDto();
 			dto.setEmail(updatedUser.getEmail());
 			dto.setPassword(updatedUser.getPassword());
 			return dto;

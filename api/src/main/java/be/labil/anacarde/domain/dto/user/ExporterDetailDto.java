@@ -1,15 +1,15 @@
-package be.labil.anacarde.domain.dto;
+package be.labil.anacarde.domain.dto.user;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
- * DTO pour l'entité Transformer.
+ * DTO pour l'entité Exporter.
  */
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Schema(description = "Objet de transfert de données pour les transformateurs.")
-public class TransformerDetailDto extends TraderDetailDto {
+@Schema(description = "Objet de transfert de données pour les exportateurs.")
+public class ExporterDetailDto extends TraderDetailDto {
 	// Aucun champ supplémentaire n'est nécessaire ici.
 }

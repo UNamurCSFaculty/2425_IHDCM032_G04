@@ -1,6 +1,10 @@
-package be.labil.anacarde.domain.dto;
+package be.labil.anacarde.domain.dto.user;
 
+import be.labil.anacarde.domain.dto.ValidationGroups;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import io.swagger.v3.oas.annotations.media.DiscriminatorMapping;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -8,8 +12,22 @@ import java.time.LocalDateTime;
 import lombok.Data;
 
 @Data
-@Schema(description = "Data Transfer Object pour une liste d'utilisateurs")
-public class UserListDto {
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type", visible = true)
+@JsonSubTypes({@JsonSubTypes.Type(value = AdminDetailDto.class, name = "admin"),
+		@JsonSubTypes.Type(value = ProducerDetailDto.class, name = "producer"),
+		@JsonSubTypes.Type(value = TransformerDetailDto.class, name = "transformer"),
+		@JsonSubTypes.Type(value = QualityInspectorDetailDto.class, name = "quality_inspector"),
+		@JsonSubTypes.Type(value = ExporterDetailDto.class, name = "exporter"),
+		@JsonSubTypes.Type(value = CarrierDetailDto.class, name = "carrier")})
+@Schema(description = "Data Transfer Object pour un utilisateur", requiredProperties = {
+		"type"}, discriminatorProperty = "type", discriminatorMapping = {
+				@DiscriminatorMapping(value = "admin", schema = AdminDetailDto.class),
+				@DiscriminatorMapping(value = "producer", schema = ProducerDetailDto.class),
+				@DiscriminatorMapping(value = "transformer", schema = TransformerDetailDto.class),
+				@DiscriminatorMapping(value = "quality_inspector", schema = QualityInspectorDetailDto.class),
+				@DiscriminatorMapping(value = "exporter", schema = ExporterDetailDto.class),
+				@DiscriminatorMapping(value = "carrier", schema = CarrierDetailDto.class)})
+public abstract class UserListDto {
 
 	/** Unique identifier for the user. */
 	@Schema(description = "Identifiant de l'utilisateur", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
@@ -33,7 +51,7 @@ public class UserListDto {
 
 	/** Date d'enregistrement de l'utilisateur. */
 	@Schema(description = "Date d'enregistrement", example = "2025-04-01T09:30:00", accessMode = Schema.AccessMode.READ_ONLY)
-	private LocalDateTime registrationDate;
+	private LocalDateTime registrationDate = LocalDateTime.now();
 
 	/** Date de validation de l'utilisateur. */
 	@Schema(description = "Date de validation", example = "2025-04-02T10:00:00", accessMode = Schema.AccessMode.READ_ONLY)
@@ -61,4 +79,14 @@ public class UserListDto {
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	@NotBlank(groups = ValidationGroups.Create.class, message = "Le mot de passe est requis")
 	private String password;
+
+	/**
+	 * Propriété virtuelle pour Swagger. Ce getter n'est pas utilisé par Jackson car il est ignoré, mais permet
+	 * d'afficher dans le schéma OpenAPI une propriété "type" avec un exemple et des valeurs autorisées.
+	 */
+	@Schema(name = "type", description = "Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier", requiredMode = Schema.RequiredMode.REQUIRED, example = "admin", allowableValues = {
+			"admin", "producer", "transformer", "quality_inspector", "exporter", "carrier"})
+	public String getVirtualTypeForSwagger() {
+		return null;
+	}
 }

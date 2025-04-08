@@ -5,12 +5,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import be.labil.anacarde.domain.model.Admin;
+import be.labil.anacarde.domain.model.Language;
 import be.labil.anacarde.domain.model.User;
-import be.labil.anacarde.infrastructure.persistence.UserRepository;
+import be.labil.anacarde.infrastructure.persistence.LanguageRepository;
+import be.labil.anacarde.infrastructure.persistence.user.UserRepository;
 import java.time.LocalDateTime;
-import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,19 +22,22 @@ import org.springframework.test.web.servlet.MockMvc;
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-@RequiredArgsConstructor
 /** Test d'intégration pour le contrôleur d'authentification. */
 public class AuthenticationApiControllerIntegrationTest {
 
-	private final MockMvc mockMvc;
-	private final UserRepository userRepository;
-	private final PasswordEncoder passwordEncoder;
+	private @Autowired MockMvc mockMvc;
+	private @Autowired UserRepository userRepository;
+	private @Autowired PasswordEncoder passwordEncoder;
+	private @Autowired LanguageRepository languageRepository;
 
 	/** Prépare la base de données de test en créant un utilisateur. */
 	@BeforeEach
 	public void setUpDatabase() {
 		userRepository.deleteAll();
+		languageRepository.deleteAll();
 
+		Language language = Language.builder().name("fr").build();
+		language = languageRepository.save(language);
 		User user = new Admin();
 		user.setFirstName("John");
 		user.setLastName("Doe");
@@ -40,6 +45,7 @@ public class AuthenticationApiControllerIntegrationTest {
 		user.setPassword(passwordEncoder.encode("password"));
 		user.setRegistrationDate(LocalDateTime.now());
 		user.setEnabled(true);
+		user.setLanguage(language);
 
 		userRepository.save(user);
 	}

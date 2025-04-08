@@ -4,7 +4,10 @@ import be.labil.anacarde.domain.dto.NotificationDto;
 import be.labil.anacarde.domain.model.Carrier;
 import be.labil.anacarde.domain.model.Notification;
 import be.labil.anacarde.domain.model.User;
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
+import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface NotificationMapper extends GenericMapper<NotificationDto, Notification> {

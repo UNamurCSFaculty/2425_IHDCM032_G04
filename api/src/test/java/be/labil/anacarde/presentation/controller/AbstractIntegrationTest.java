@@ -6,28 +6,32 @@ import be.labil.anacarde.domain.model.Role;
 import be.labil.anacarde.domain.model.User;
 import be.labil.anacarde.infrastructure.persistence.LanguageRepository;
 import be.labil.anacarde.infrastructure.persistence.RoleRepository;
-import be.labil.anacarde.infrastructure.persistence.UserRepository;
+import be.labil.anacarde.infrastructure.persistence.user.UserRepository;
 import be.labil.anacarde.infrastructure.security.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import java.time.LocalDateTime;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 /**
  * Classe de base pour les tests d'intégration qui nécessitent des utilisateurs et des rôles de test en base de données.
  */
-@RequiredArgsConstructor
 public abstract class AbstractIntegrationTest {
 
-	final protected JwtUtil jwtUtil;
-	final protected UserRepository userRepository;
-	final protected RoleRepository roleRepository;
-	final protected LanguageRepository languageRepository;
-	final protected UserDetailsService userDetailsService;
+	@Autowired
+	protected JwtUtil jwtUtil;
+	@Autowired
+	protected UserRepository userRepository;
+	@Autowired
+	protected RoleRepository roleRepository;
+	@Autowired
+	protected LanguageRepository languageRepository;
+	@Autowired
+	protected UserDetailsService userDetailsService;
 
 	private Language mainLanguage;
 	private User mainTestUser;
@@ -107,7 +111,7 @@ public abstract class AbstractIntegrationTest {
 		userRepository.deleteAll();
 		languageRepository.deleteAll();
 
-		Language language = Language.builder().name("Français").name("fr").build();
+		Language language = Language.builder().name("fr").build();
 		mainLanguage = languageRepository.save(language);
 
 		User user1 = Admin.builder().firstName("John").lastName("Doe").email("user@example.com")

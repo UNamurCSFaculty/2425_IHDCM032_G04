@@ -1,12 +1,15 @@
 package be.labil.anacarde.domain.mapper;
 
-import be.labil.anacarde.domain.dto.CarrierDetailDto;
+import be.labil.anacarde.domain.dto.user.CarrierDetailDto;
 import be.labil.anacarde.domain.model.Carrier;
 import be.labil.anacarde.domain.model.Region;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
+import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring", uses = {RoleMapper.class,
 		LanguageMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)

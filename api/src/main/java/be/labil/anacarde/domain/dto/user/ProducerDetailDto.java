@@ -1,5 +1,6 @@
-package be.labil.anacarde.domain.dto;
+package be.labil.anacarde.domain.dto.user;
 
+import be.labil.anacarde.domain.dto.CooperativeDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

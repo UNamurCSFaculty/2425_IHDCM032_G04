@@ -1,7 +1,10 @@
 package be.labil.anacarde.domain.dto;
 
+import be.labil.anacarde.domain.dto.user.ProducerDetailDto;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 /**
  * DTO pour l'entité Field.

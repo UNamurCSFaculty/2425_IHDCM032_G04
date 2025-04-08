@@ -1,8 +1,8 @@
 
 package be.labil.anacarde.application.service;
 
-import be.labil.anacarde.domain.dto.UserDetailDto;
-import be.labil.anacarde.domain.dto.UserListDto;
+import be.labil.anacarde.domain.dto.user.UserDetailDto;
+import be.labil.anacarde.domain.dto.user.UserListDto;
 import java.util.List;
 
 /**

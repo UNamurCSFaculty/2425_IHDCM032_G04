@@ -1,6 +1,6 @@
 package be.labil.anacarde.domain.mapper;
 
-import be.labil.anacarde.domain.dto.TransformerDetailDto;
+import be.labil.anacarde.domain.dto.user.TransformerDetailDto;
 import be.labil.anacarde.domain.model.Transformer;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
