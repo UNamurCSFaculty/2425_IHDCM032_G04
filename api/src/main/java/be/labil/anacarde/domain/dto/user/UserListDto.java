@@ -1,6 +1,7 @@
 package be.labil.anacarde.domain.dto.user;
 
 import be.labil.anacarde.domain.dto.ValidationGroups;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -86,6 +87,7 @@ public abstract class UserListDto {
 	 */
 	@Schema(name = "type", description = "Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier", requiredMode = Schema.RequiredMode.REQUIRED, example = "admin", allowableValues = {
 			"admin", "producer", "transformer", "quality_inspector", "exporter", "carrier"})
+	@JsonInclude(JsonInclude.Include.NON_NULL)
 	public String getVirtualTypeForSwagger() {
 		return null;
 	}
