@@ -2,14 +2,13 @@ package be.labil.anacarde.application.service;
 
 import be.labil.anacarde.application.exception.BadRequestException;
 import be.labil.anacarde.application.exception.ResourceNotFoundException;
-import be.labil.anacarde.domain.dto.UserDto;
-import be.labil.anacarde.domain.dto.UserListDto;
-import be.labil.anacarde.domain.mapper.UserListMapper;
-import be.labil.anacarde.domain.mapper.UserMapper;
+import be.labil.anacarde.domain.dto.user.UserDetailDto;
+import be.labil.anacarde.domain.dto.user.UserListDto;
+import be.labil.anacarde.domain.mapper.*;
 import be.labil.anacarde.domain.model.Role;
 import be.labil.anacarde.domain.model.User;
 import be.labil.anacarde.infrastructure.persistence.RoleRepository;
-import be.labil.anacarde.infrastructure.persistence.UserRepository;
+import be.labil.anacarde.infrastructure.persistence.user.*;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -26,9 +25,24 @@ import org.springframework.transaction.annotation.Transactional;
 @AllArgsConstructor
 public class UserServiceImpl implements UserDetailsService, UserService {
 
-	private final UserRepository userRepository;
 	private final RoleRepository roleRepository;
-	private final UserMapper userMapper;
+
+	private final UserRepository userRepository;
+	private final AdminRepository adminRepository;
+	private final ProducerRepository producerRepository;
+	private final TransformerRepository transformerRepository;
+	private final ExporterRepository exporterRepository;
+	private final QualityInspectorRepository qualityInspectorRepository;
+	private final CarrierRepository carrierRepository;
+
+	private final UserDetailMapper userDetailMapper;
+	private final AdminDetailMapper adminDetailMapper;
+	private final ProducerDetailMapper producerDetailMapper;
+	private final TransformerDetailMapper transformerDetailMapper;
+	private final ExporterDetailMapper exporterDetailMapper;
+	private final QualityInspectorDetailMapper qualityInspectorDetailMapper;
+	private final CarrierDetailMapper carrierDetailMapper;
+
 	private final UserListMapper userListMapper;
 	private final PasswordEncoder bCryptPasswordEncoder;
 
@@ -39,21 +53,41 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	}
 
 	@Override
-	public UserDto createUser(UserDto userDto) {
-		if (userDto.getPassword() != null && !userDto.getPassword().isBlank()) {
-			userDto.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
+	public UserDetailDto createUser(UserDetailDto dto) {
+		if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
+			dto.setPassword(bCryptPasswordEncoder.encode(dto.getPassword()));
 		}
-		User user = userMapper.toEntity(userDto);
+
+		User user = userDetailMapper.toEntity(dto);
 		User saved = userRepository.save(user);
-		return userMapper.toDto(saved);
+		return userDetailMapper.toDto(saved);
+
+		/*
+		 * Si il faut une logiqiue de création spécifique pour chaque type d'utilisateur: switch (dto) { case
+		 * AdminDetailDto adminDetailDto -> { Admin admin = adminDetailMapper.toEntity(adminDetailDto); Admin saved =
+		 * adminRepository.save(admin); return adminDetailMapper.toDto(saved); } case ProducerDetailDto
+		 * producerDetailDto -> { Producer producer = producerDetailMapper.toEntity(producerDetailDto); Producer saved =
+		 * producerRepository.save(producer); return producerDetailMapper.toDto(saved); } case TransformerDetailDto
+		 * transformerDetailDto -> { Transformer transformer = transformerDetailMapper.toEntity(transformerDetailDto);
+		 * Transformer saved = transformerRepository.save(transformer); return transformerDetailMapper.toDto(saved); }
+		 * case ExporterDetailDto exporterDetailDto -> { Exporter exporter =
+		 * exporterDetailMapper.toEntity(exporterDetailDto); Exporter saved = exporterRepository.save(exporter); return
+		 * exporterDetailMapper.toDto(saved); } case QualityInspectorDetailDto qualityInspectorDetailDto -> {
+		 * QualityInspector qualityInspector = qualityInspectorDetailMapper.toEntity(qualityInspectorDetailDto);
+		 * QualityInspector saved = qualityInspectorRepository.save(qualityInspector); return
+		 * qualityInspectorDetailMapper.toDto(saved); } case CarrierDetailDto carrierDetailDto -> { Carrier
+		 * qualityInspector = carrierDetailMapper.toEntity(carrierDetailDto); Carrier saved =
+		 * carrierRepository.save(qualityInspector); return carrierDetailMapper.toDto(saved); } default -> throw new
+		 * IllegalArgumentException("Type d'utilisateur non supporté : " + dto.getClass()); }
+		 */
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public UserDto getUserById(Integer id) {
+	public UserDetailDto getUserById(Integer id) {
 		User user = userRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé"));
-		return userMapper.toDto(user);
+		return userDetailMapper.toDto(user);
 	}
 
 	@Override
@@ -63,18 +97,18 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	}
 
 	@Override
-	public UserDto updateUser(Integer id, UserDto userDto) {
+	public UserDetailDto updateUser(Integer id, UserDetailDto userDetailDto) {
 		User existingUser = userRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé"));
 		// Mets uniquement à jour les champs non nuls du DTO
-		User updatedUser = userMapper.partialUpdate(userDto, existingUser);
+		User updatedUser = userDetailMapper.partialUpdate(userDetailDto, existingUser);
 
-		if (userDto.getPassword() != null && !userDto.getPassword().isBlank()) {
-			updatedUser.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
+		if (userDetailDto.getPassword() != null && !userDetailDto.getPassword().isBlank()) {
+			updatedUser.setPassword(bCryptPasswordEncoder.encode(userDetailDto.getPassword()));
 		}
 
 		User saved = userRepository.save(updatedUser);
-		return userMapper.toDto(saved);
+		return userDetailMapper.toDto(saved);
 	}
 
 	@Override
@@ -86,7 +120,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	}
 
 	@Override
-	public UserDto addRoleToUser(Integer userId, String roleName) {
+	public UserDetailDto addRoleToUser(Integer userId, String roleName) {
 		User user = userRepository.findById(userId)
 				.orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé"));
 		Role role = roleRepository.findByName(roleName)
@@ -98,11 +132,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 		user.getRoles().add(role);
 
 		User savedUser = userRepository.save(user);
-		return userMapper.toDto(savedUser);
+		return userDetailMapper.toDto(savedUser);
 	}
 
 	@Override
-	public UserDto updateUserRoles(Integer userId, List<String> roleNames) {
+	public UserDetailDto updateUserRoles(Integer userId, List<String> roleNames) {
 		User user = userRepository.findById(userId)
 				.orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé"));
 
@@ -114,6 +148,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 		user.setRoles(newRoles);
 
 		User savedUser = userRepository.save(user);
-		return userMapper.toDto(savedUser);
+		return userDetailMapper.toDto(savedUser);
 	}
 }

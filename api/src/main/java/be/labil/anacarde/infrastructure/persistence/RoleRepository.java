@@ -3,8 +3,10 @@ package be.labil.anacarde.infrastructure.persistence;
 import be.labil.anacarde.domain.model.Role;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 /** Interface Repository pour les entités Role. */
+@Repository
 public interface RoleRepository extends JpaRepository<Role, Integer> {
 
 	/**

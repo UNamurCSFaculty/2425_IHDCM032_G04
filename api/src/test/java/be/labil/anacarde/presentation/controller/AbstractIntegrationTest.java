@@ -1,9 +1,12 @@
 package be.labil.anacarde.presentation.controller;
 
+import be.labil.anacarde.domain.model.Admin;
+import be.labil.anacarde.domain.model.Language;
 import be.labil.anacarde.domain.model.Role;
 import be.labil.anacarde.domain.model.User;
+import be.labil.anacarde.infrastructure.persistence.LanguageRepository;
 import be.labil.anacarde.infrastructure.persistence.RoleRepository;
-import be.labil.anacarde.infrastructure.persistence.UserRepository;
+import be.labil.anacarde.infrastructure.persistence.user.UserRepository;
 import be.labil.anacarde.infrastructure.security.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import java.time.LocalDateTime;
@@ -21,16 +24,16 @@ public abstract class AbstractIntegrationTest {
 
 	@Autowired
 	protected JwtUtil jwtUtil;
-
 	@Autowired
 	protected UserRepository userRepository;
-
 	@Autowired
 	protected RoleRepository roleRepository;
-
+	@Autowired
+	protected LanguageRepository languageRepository;
 	@Autowired
 	protected UserDetailsService userDetailsService;
 
+	private Language mainLanguage;
 	private User mainTestUser;
 	private User secondTestUser;
 	private Role userTestRole;
@@ -92,17 +95,31 @@ public abstract class AbstractIntegrationTest {
 	}
 
 	/**
+	 * Renvoie la langue principale de test.
+	 */
+	public Language getMainLanguage() {
+		if (mainLanguage == null) {
+			throw new IllegalStateException("Langue principale non initialisée");
+		}
+		return mainLanguage;
+	}
+
+	/**
 	 * Initialise la base de données des utilisateurs avec deux utilisateurs de test et les rôles associés.
 	 */
 	public void initUserDatabase() {
 		userRepository.deleteAll();
+		languageRepository.deleteAll();
 
-		User user1 = User.builder().firstName("John").lastName("Doe").email("user@example.com")
+		Language language = Language.builder().name("fr").build();
+		mainLanguage = languageRepository.save(language);
+
+		User user1 = Admin.builder().firstName("John").lastName("Doe").email("user@example.com")
 				.password("$2a$10$abcdefghijklmnopqrstuv1234567890AB").registrationDate(LocalDateTime.now())
-				.active(true).build();
-		User user2 = User.builder().firstName("Foo").lastName("Bar").email("foo@bar.com")
+				.language(mainLanguage).enabled(true).build();
+		User user2 = Admin.builder().firstName("Foo").lastName("Bar").email("foo@bar.com")
 				.password("$2a$10$abcdefghijklmnopqrstuv1234567890AB").registrationDate(LocalDateTime.now())
-				.active(true).build();
+				.language(mainLanguage).enabled(true).build();
 
 		Role userRole = Role.builder().name("ROLE_USER").build();
 		Role adminRole = Role.builder().name("ROLE_ADMIN").build();

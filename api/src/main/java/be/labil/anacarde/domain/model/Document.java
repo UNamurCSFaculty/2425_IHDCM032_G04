@@ -3,25 +3,26 @@ package be.labil.anacarde.domain.model;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.proxy.HibernateProxy;
 
 @Entity
 @Table(name = "document", indexes = {@Index(columnList = "user_id")})
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 /** Entité représentant un document dans le système. */
 public class Document {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "document_seq")
-	@SequenceGenerator(name = "document_seq", sequenceName = "document_seq", allocationSize = 1)
 	private Integer id;
 
 	@Column(nullable = false)
-	private String documentType;
+	private String type;
 
 	@Column(nullable = false)
 	private String format;
@@ -33,8 +34,7 @@ public class Document {
 	private LocalDateTime uploadDate = LocalDateTime.now();
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id", nullable = false)
-	@ToString.Exclude
+	@JoinColumn(name = "user_id")
 	private User user;
 
 	/**

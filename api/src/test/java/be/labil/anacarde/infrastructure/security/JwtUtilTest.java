@@ -2,6 +2,7 @@ package be.labil.anacarde.infrastructure.security;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import be.labil.anacarde.domain.model.Admin;
 import be.labil.anacarde.domain.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,7 +33,7 @@ public class JwtUtilTest {
 	@Test
 	public void testGenerateAndValidateToken() {
 		// Crée un utilisateur fictif sans autorités
-		User user = new User();
+		User user = new Admin();
 		user.setEmail("myUser");
 		user.setPassword("password");
 
@@ -62,7 +63,7 @@ public class JwtUtilTest {
 		// Pour tester l'expiration, on définit la validité du token à 0 heure (expiration
 		// immédiate)
 		ReflectionTestUtils.setField(jwtUtil, "tokenValidityHours", 0L);
-		User user = new User();
+		User user = new Admin();
 		user.setEmail("myUser");
 		user.setPassword("password");
 

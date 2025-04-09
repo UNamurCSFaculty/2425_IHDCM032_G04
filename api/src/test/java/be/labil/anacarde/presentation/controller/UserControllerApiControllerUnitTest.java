@@ -9,7 +9,8 @@ import static org.mockito.Mockito.when;
 
 import be.labil.anacarde.application.exception.ResourceNotFoundException;
 import be.labil.anacarde.application.service.UserService;
-import be.labil.anacarde.domain.dto.UserDto;
+import be.labil.anacarde.domain.dto.user.AdminDetailDto;
+import be.labil.anacarde.domain.dto.user.UserDetailDto;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,15 +43,15 @@ public class UserControllerApiControllerUnitTest {
 	/** Teste la récupération d'un utilisateur existant. */
 	@Test
 	public void testGetUser() {
-		UserDto userDto = new UserDto();
-		userDto.setId(1);
-		userDto.setFirstName("John");
-		userDto.setLastName("Doe");
-		userDto.setEmail("john.doe@example.com");
+		UserDetailDto userDetailDto = new AdminDetailDto();
+		userDetailDto.setId(1);
+		userDetailDto.setFirstName("John");
+		userDetailDto.setLastName("Doe");
+		userDetailDto.setEmail("john.doe@example.com");
 
-		when(userService.getUserById(1)).thenReturn(userDto);
+		when(userService.getUserById(1)).thenReturn(userDetailDto);
 
-		ResponseEntity<UserDto> response = userController.getUser(1);
+		ResponseEntity<? extends UserDetailDto> response = userController.getUser(1);
 		assertEquals(HttpStatus.OK, response.getStatusCode());
 		assertEquals("John", response.getBody().getFirstName());
 	}
@@ -58,21 +59,21 @@ public class UserControllerApiControllerUnitTest {
 	/** Teste la création d'un nouvel utilisateur. */
 	@Test
 	public void testCreateUser() {
-		UserDto inputDto = new UserDto();
+		UserDetailDto inputDto = new AdminDetailDto();
 		inputDto.setFirstName("Alice");
 		inputDto.setLastName("Smith");
 		inputDto.setEmail("alice.smith@example.com");
 		inputDto.setPassword("secret");
 
-		UserDto createdDto = new UserDto();
+		UserDetailDto createdDto = new AdminDetailDto();
 		createdDto.setId(1);
 		createdDto.setFirstName("Alice");
 		createdDto.setLastName("Smith");
 		createdDto.setEmail("alice.smith@example.com");
 
-		when(userService.createUser(any(UserDto.class))).thenReturn(createdDto);
+		when(userService.createUser(any(UserDetailDto.class))).thenReturn(createdDto);
 
-		ResponseEntity<UserDto> response = userController.createUser(inputDto);
+		ResponseEntity<UserDetailDto> response = userController.createUser(inputDto);
 		assertEquals(HttpStatus.CREATED, response.getStatusCode());
 		assertEquals("Alice", response.getBody().getFirstName());
 	}
@@ -80,21 +81,21 @@ public class UserControllerApiControllerUnitTest {
 	/** Teste la mise à jour d'un utilisateur existant. */
 	@Test
 	public void testUpdateUser() {
-		UserDto updateDto = new UserDto();
+		UserDetailDto updateDto = new AdminDetailDto();
 		updateDto.setFirstName("John Updated");
 		updateDto.setLastName("Doe Updated");
 		updateDto.setEmail("john.updated@example.com");
 		updateDto.setPassword("newpassword");
 
-		UserDto updatedDto = new UserDto();
+		UserDetailDto updatedDto = new AdminDetailDto();
 		updatedDto.setId(1);
 		updatedDto.setFirstName("John Updated");
 		updatedDto.setLastName("Doe Updated");
 		updatedDto.setEmail("john.updated@example.com");
 
-		when(userService.updateUser(eq(1), any(UserDto.class))).thenReturn(updatedDto);
+		when(userService.updateUser(eq(1), any(UserDetailDto.class))).thenReturn(updatedDto);
 
-		ResponseEntity<UserDto> response = userController.updateUser(1, updateDto);
+		ResponseEntity<UserDetailDto> response = userController.updateUser(1, updateDto);
 		assertEquals(HttpStatus.OK, response.getStatusCode());
 		assertEquals("John Updated", response.getBody().getFirstName());
 	}
@@ -113,7 +114,7 @@ public class UserControllerApiControllerUnitTest {
 	public void testUpdateUserRolesSuccess() {
 		List<String> roleNames = List.of("ROLE_USER");
 
-		UserDto updatedDto = new UserDto();
+		UserDetailDto updatedDto = new AdminDetailDto();
 		updatedDto.setId(1);
 		updatedDto.setEmail("john.doe@example.com");
 		updatedDto.setFirstName("John");
@@ -121,7 +122,7 @@ public class UserControllerApiControllerUnitTest {
 
 		when(userService.updateUserRoles(eq(1), any(List.class))).thenReturn(updatedDto);
 
-		ResponseEntity<UserDto> response = userController.updateUserRoles(1, roleNames);
+		ResponseEntity<? extends UserDetailDto> response = userController.updateUserRoles(1, roleNames);
 
 		// Vérifie le code de réponse et le contenu
 		assertEquals(HttpStatus.OK, response.getStatusCode());

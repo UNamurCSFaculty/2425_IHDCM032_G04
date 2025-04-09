@@ -5,12 +5,16 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+/**
+ * DTO pour l'entité Role.
+ */
 @Data
 @AllArgsConstructor
-@Schema(description = "Objet de transfert de données pour les rôles")
+@Schema(description = "Objet de transfert de données pour les rôles.")
 public class RoleDto {
+
 	/** Identifiant unique du rôle. */
-	@Schema(description = "Identifiant du rôle", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
+	@Schema(description = "Identifiant unique du rôle", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
 	private Integer id;
 
 	/** Nom du rôle. */

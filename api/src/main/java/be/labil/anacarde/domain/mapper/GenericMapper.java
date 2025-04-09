@@ -28,7 +28,8 @@ public interface GenericMapper<D, E> {
 	Set<E> toEntity(Set<D> dtos);
 
 	Set<D> toDto(Set<E> entities);
-
-	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-	Set<E> partialUpdate(Set<D> dtos, @MappingTarget Set<E> entities);
+	/*
+	 * @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE) Set<E>
+	 * partialUpdate(Set<D> dtos, @MappingTarget Set<E> entities);
+	 */
 }

@@ -4,7 +4,11 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,17 +16,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
+@Inheritance(strategy = InheritanceType.JOINED)
 @Getter
 @Setter
-@ToString
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 /** Entité représentant un utilisateur dans le système. */
-public class User implements UserDetails {
+public abstract class User implements UserDetails {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
-	@SequenceGenerator(name = "user_seq", sequenceName = "user_seq", allocationSize = 1)
 	private Integer id;
 
 	@Column(nullable = false)
@@ -31,21 +35,30 @@ public class User implements UserDetails {
 	@Column(nullable = false)
 	private String firstName;
 
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String email;
 
 	@Column(nullable = false)
 	private String password;
 
+	@Column(nullable = false)
 	private LocalDateTime registrationDate;
+
 	private LocalDateTime validationDate;
 
 	@Column(nullable = false)
-	private boolean active;
+	private boolean enabled;
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles;
+
+	private String address;
+	private String phone;
+
+	@ManyToOne
+	@JoinColumn(nullable = false)
+	private Language language;
 
 	/**
 	 * Ajoute un rôle à cet utilisateur et met à jour le côté inverse (le rôle) pour maintenir la cohérence.
@@ -59,11 +72,6 @@ public class User implements UserDetails {
 				roles = new HashSet<>();
 			}
 			roles.add(role);
-
-			if (role.getUsers() == null) {
-				role.setUsers(new HashSet<>());
-			}
-			role.getUsers().add(this);
 		}
 	}
 
@@ -74,6 +82,7 @@ public class User implements UserDetails {
 	 * @return Une Collection de GrantedAuthority représentant les rôles de l'utilisateur.
 	 */
 	@Override
+	@Transient
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		if (roles == null) {
 			return new ArrayList<>();
@@ -109,6 +118,7 @@ public class User implements UserDetails {
 	 * @return L'adresse e-mail de l'utilisateur sous forme de String.
 	 */
 	@Override
+	@Transient
 	public String getUsername() {
 		return email;
 	}
@@ -119,6 +129,7 @@ public class User implements UserDetails {
 	 * @return true, indiquant que le compte n'est pas expiré.
 	 */
 	@Override
+	@Transient
 	public boolean isAccountNonExpired() {
 		return true;
 	}
@@ -129,6 +140,7 @@ public class User implements UserDetails {
 	 * @return true, indiquant que le compte n'est pas verrouillé.
 	 */
 	@Override
+	@Transient
 	public boolean isAccountNonLocked() {
 		return true;
 	}
@@ -139,6 +151,7 @@ public class User implements UserDetails {
 	 * @return true, indiquant que les identifiants ne sont pas expirés.
 	 */
 	@Override
+	@Transient
 	public boolean isCredentialsNonExpired() {
 		return true;
 	}
@@ -150,7 +163,7 @@ public class User implements UserDetails {
 	 */
 	@Override
 	public boolean isEnabled() {
-		return active;
+		return enabled;
 	}
 
 	/**
@@ -162,7 +175,7 @@ public class User implements UserDetails {
 	 * @return true si l'objet donné représente le même utilisateur ; sinon, false.
 	 */
 	@Override
-	public final boolean equals(Object o) {
+	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null) return false;
 		Class<?> oEffectiveClass = o instanceof HibernateProxy
@@ -182,7 +195,7 @@ public class User implements UserDetails {
 	 * @return Le hash code en tant qu'entier.
 	 */
 	@Override
-	public final int hashCode() {
+	public int hashCode() {
 		return this instanceof HibernateProxy
 				? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode()
 				: getClass().hashCode();

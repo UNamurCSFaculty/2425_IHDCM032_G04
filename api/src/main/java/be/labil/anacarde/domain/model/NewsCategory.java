@@ -1,31 +1,27 @@
 package be.labil.anacarde.domain.model;
 
 import jakarta.persistence.*;
-import java.util.List;
 import java.util.Objects;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.proxy.HibernateProxy;
 
 @Entity
 @Table(name = "category", indexes = {@Index(name = "idx_category_name", columnList = "name")})
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 /** Entité représentant une catégorie dans le système. */
-public class Category {
+public class NewsCategory {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "category_seq")
-	@SequenceGenerator(name = "category_seq", sequenceName = "category_seq", allocationSize = 1)
 	private Integer id;
 
 	@Column(nullable = false, unique = true)
 	private String name;
-
-	@OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
-	@ToString.Exclude
-	private List<News> news;
 
 	/**
 	 * La comparaison est basée sur l'identifiant unique de la catégorie. Elle gère correctement les instances proxy de
@@ -46,8 +42,8 @@ public class Category {
 				? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass()
 				: this.getClass();
 		if (thisEffectiveClass != oEffectiveClass) return false;
-		Category category = (Category) o;
-		return getId() != null && Objects.equals(getId(), category.getId());
+		NewsCategory newsCategory = (NewsCategory) o;
+		return getId() != null && Objects.equals(getId(), newsCategory.getId());
 	}
 
 	/**
