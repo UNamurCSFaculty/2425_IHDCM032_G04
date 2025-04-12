@@ -5,6 +5,7 @@ import be.labil.anacarde.domain.dto.ValidationGroups;
 import be.labil.anacarde.presentation.controller.annotations.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.groups.Default;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +17,10 @@ import java.util.List;
 @Validated
 @SecurityRequirement(name = "jwt")
 @RequestMapping(value = "/api/stores", produces = "application/json")
+@Tag(name = "stores", description = "Operations related to stores")
 public interface StoreApi {
 
-	@Operation(summary = "Get a store", description = "", tags = {"stores"})
+	@Operation(summary = "Obtenir un magasin")
 	@GetMapping("/{id}")
 	@ApiResponseGet
 	ResponseEntity<? extends StoreDetailDto> getStore(
@@ -26,7 +28,7 @@ public interface StoreApi {
 			@PathVariable("id")
 			Integer id);
 
-	@Operation(summary = "Create a store", description = "", tags = {"stores"})
+	@Operation(summary = "Créer un magasin")
 	@PostMapping
 	@ApiResponsePost
 	ResponseEntity<? extends StoreDetailDto> createStore(
@@ -34,7 +36,7 @@ public interface StoreApi {
 			@RequestBody
 			StoreDetailDto storeDetailDto);
 
-	@Operation(summary = "Update a store", description = "", tags = {"stores"})
+	@Operation(summary = "Mettre à jour un magasin")
 	@ApiResponsePut
 	@PutMapping(value = "/{id}", consumes = "application/json")
 	ResponseEntity<? extends StoreDetailDto> updateStore(
@@ -46,12 +48,12 @@ public interface StoreApi {
 			StoreDetailDto storeDetailDto);
 
 
-	@Operation(summary = "List all stores", description = "", tags = {"stores"})
+	@Operation(summary = "Obtenir tous les magasins")
 	@ApiResponseGet
 	@GetMapping
 	ResponseEntity<List<? extends StoreDetailDto>> listStores();
 
-	@Operation(summary = "Delete a store", description = "", tags= {"stores"})
+	@Operation(summary = "Supprimer un magasin")
 	@ApiResponseDelete
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
