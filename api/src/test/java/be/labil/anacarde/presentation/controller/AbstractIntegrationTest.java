@@ -1,11 +1,9 @@
 package be.labil.anacarde.presentation.controller;
 
-import be.labil.anacarde.domain.model.Admin;
-import be.labil.anacarde.domain.model.Language;
-import be.labil.anacarde.domain.model.Role;
-import be.labil.anacarde.domain.model.User;
+import be.labil.anacarde.domain.model.*;
 import be.labil.anacarde.infrastructure.persistence.LanguageRepository;
 import be.labil.anacarde.infrastructure.persistence.RoleRepository;
+import be.labil.anacarde.infrastructure.persistence.StoreRepository;
 import be.labil.anacarde.infrastructure.persistence.user.UserRepository;
 import be.labil.anacarde.infrastructure.security.JwtUtil;
 import jakarta.servlet.http.Cookie;
@@ -13,6 +11,9 @@ import java.time.LocalDateTime;
 import lombok.Getter;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -29,6 +30,8 @@ public abstract class AbstractIntegrationTest {
 	@Autowired
 	protected RoleRepository roleRepository;
 	@Autowired
+	protected StoreRepository storeRepository;
+	@Autowired
 	protected LanguageRepository languageRepository;
 	@Autowired
 	protected UserDetailsService userDetailsService;
@@ -38,6 +41,7 @@ public abstract class AbstractIntegrationTest {
 	private User secondTestUser;
 	private Role userTestRole;
 	private Role adminTestRole;
+	private Store mainTestStore;
 
 	@Getter
 	private Cookie jwtCookie;
@@ -50,6 +54,7 @@ public abstract class AbstractIntegrationTest {
 
 	@AfterEach
 	public void tearDown() {
+		storeRepository.deleteAll();
 		userRepository.deleteAll();
 		roleRepository.deleteAll();
 	}
@@ -105,6 +110,16 @@ public abstract class AbstractIntegrationTest {
 	}
 
 	/**
+	 * Renvoie le magasin de test principal.
+	 */
+	public Store getMainTestStore() {
+		if (mainTestStore == null) {
+			throw new IllegalStateException("Magasin de test non initialisé");
+		}
+		return mainTestStore;
+	}
+
+	/**
 	 * Initialise la base de données des utilisateurs avec deux utilisateurs de test et les rôles associés.
 	 */
 	public void initUserDatabase() {
@@ -133,6 +148,10 @@ public abstract class AbstractIntegrationTest {
 
 		mainTestUser = userRepository.save(user1);
 		secondTestUser = userRepository.save(user2);
+
+		Point storeLocation = new GeometryFactory().createPoint(new Coordinate(2.3522, 48.8566));
+		Store store = Store.builder().location(storeLocation).user(user1).build();
+		mainTestStore = storeRepository.save(store);
 	}
 
 	/**
