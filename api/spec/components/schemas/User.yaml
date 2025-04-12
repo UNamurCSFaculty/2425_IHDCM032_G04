@@ -20,6 +20,7 @@ allOf:
         type: string
       register_date:
         type: string
+        format: date-time
         readOnly: true
       is_active:
         type: boolean
@@ -28,9 +29,10 @@ allOf:
       category:
         type: string
         enum:
-          - bidder
+          - trader
           - carrier
           - quality_manager
+          - store_manager
     required:
       - first_name
       - last_name
@@ -45,7 +47,7 @@ allOf:
   - discriminator:
       propertyName: category
       mapping:
-        Bidder: ./Trader.yaml
+        Trader: ./Trader.yaml
         Carrier: ./Carrier.yaml
         QualityManager: ./QualityManager.yaml
         StoreManager: ./StoreManager.yaml

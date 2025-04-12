@@ -19,4 +19,10 @@ public abstract class Product {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_seq")
 	private Integer id;
+
+	@Column(nullable = false)
+	private Double weightKg;
+
+	@OneToOne
+	private QualityControl qualityControl;
 }

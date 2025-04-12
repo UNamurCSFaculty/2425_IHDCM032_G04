@@ -28,6 +28,19 @@ get:
                 type: array
                 items:
                   $ref: ../components/schemas/Bid.yaml
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
+
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
 
 post:
     summary: Create a bid
@@ -60,6 +73,20 @@ post:
       '400':
         description: Bad request
         content: 
+          application/json:
+            schema:
+              $ref: ../components/schemas/ApiError.yaml
+
+      '401':
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/ApiError.yaml
+
+      '403':
+        description: Forbidden
+        content:
           application/json:
             schema:
               $ref: ../components/schemas/ApiError.yaml

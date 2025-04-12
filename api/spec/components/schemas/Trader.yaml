@@ -1,6 +1,19 @@
-type: object
-properties:
-  category:
-    type: string
-required:
-  - category
+allOf:
+  - type: object
+    properties:
+      id:
+        type: integer
+        readOnly: true
+      category:
+        type: string
+        enum:
+          - producer
+          - transformer
+  - oneOf:
+    - $ref: ./Producer.yaml
+    - $ref: ./Transformer.yaml
+  - discriminator:
+      propertyName: category
+      mapping:
+        Producer: ./Producer.yaml
+        Transformer: ./Transformer.yaml

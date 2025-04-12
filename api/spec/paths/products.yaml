@@ -33,6 +33,20 @@ get:
                 items: 
                   $ref: ../components/schemas/Product.yaml
 
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
+
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
+
 post:
   summary: Create a product
   operationId: createProduct
@@ -43,7 +57,7 @@ post:
     content:
       application/json:
         schema:
-        $ref: ../components/schemas/Product.yaml             
+          $ref: ../components/schemas/Product.yaml             
   responses:
     '201':
       description: "Created"

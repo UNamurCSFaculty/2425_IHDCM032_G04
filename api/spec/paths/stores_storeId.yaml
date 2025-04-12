@@ -1,13 +1,13 @@
 get:
   tags:
-    - products
-  summary: Get a product by ID
-  description: Return a single product
-  operationId: getProduct
+    - stores
+  summary: Get a store by ID
+  description: Return a single store
+  operationId: getStore
   parameters:
-    - name: productId
+    - name: storeId
       in: path
-      description: ID of product to return
+      description: ID of store to return
       required: true
       schema:
         type: integer
@@ -18,8 +18,7 @@ get:
       content:
         application/json:
           schema:
-            $ref: '../components/schemas/Product.yaml'
-
+            $ref: '../components/schemas/Store.yaml'
     '400':
       description: Bad request
       content: 
@@ -43,25 +42,30 @@ get:
 
 put:
   tags:
-    - products
-  summary: Update a product
+    - stores
+  summary: Update a store
   description: ''
-  operationId: updateProduct
+  operationId: updatestore
   parameters:
-    - name: productId
+    - name: storeId
       in: path
-      description: ID of product to update
+      description: ID of store to update
       required: true
       schema:
         type: integer
         format: int64
+    - name: name
+      in: query
+      description: Name of store to update
+      schema:
+        type: string
   responses:
     '200':
       description: Request successful
       content:
         application/json:
           schema:
-            $ref: '../components/schemas/Product.yaml'
+            $ref: '../components/schemas/Store.yaml'
     '400':
       description: Bad request
       content: 
@@ -85,14 +89,14 @@ put:
 
 delete:
   tags:
-    - products
-  summary: Delete a product
+    - stores
+  summary: Delete a store
   description: ''
-  operationId: deleteProduct
+  operationId: deletestore
   parameters:
-    - name: productId
+    - name: storeId
       in: path
-      description: Product id to delete
+      description: Store id to delete
       required: true
       schema:
         type: integer
@@ -103,7 +107,7 @@ delete:
       content:
         application/json:
           schema:
-            $ref: '../components/schemas/Product.yaml'
+            $ref: '../components/schemas/Store.yaml'
     '400':
       description: Bad request
       content: 

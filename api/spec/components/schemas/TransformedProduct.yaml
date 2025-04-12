@@ -1,6 +1,17 @@
 type: object
+
 properties:
+  identifier: 
+    type: string
+  location:
+    type: string
+  transformer:
+    $ref: ./Transformer.yaml
   category:
     type: string
+
 required:
+  - identifier
+  - location
+  - transformer
   - category

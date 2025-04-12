@@ -1,6 +1,21 @@
 type: object
+
 properties:
+  store:
+    $ref: ./Store.yaml
+  delivery_date:
+    type: string
+    format: date-time
+  field: 
+    type: string
+  producer: 
+    $ref: ./Producer.yaml
   category:
     type: string
+
 required:
+  - store
+  - delivery_date
+  - field
+  - producer
   - category

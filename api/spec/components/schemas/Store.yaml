@@ -1,0 +1,14 @@
+type: object
+
+properties:
+  id: 
+    type: integer
+    readOnly: true
+  location:
+    type: string
+  user:
+    $ref: ./User.yaml
+
+required:
+  - location
+  - user

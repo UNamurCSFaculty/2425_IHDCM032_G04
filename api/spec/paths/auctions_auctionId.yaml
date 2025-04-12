@@ -12,7 +12,32 @@ get:
         type: string
   responses:
     '200':
-      description: Auction retrieved successfully
+      description: Request successful
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/Auction.yaml'
+
+    '400':
+      description: Bad request
+      content: 
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
+    
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
+
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
 
 put:
   summary: Update an auction
@@ -28,7 +53,32 @@ put:
         type: string
   responses:
     '200':
-      description: Auction closed successfully
+      description: Request successful
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/Auction.yaml'
+
+    '400':
+      description: Bad request
+      content: 
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
+    
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
+
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
 
 delete:
   tags:
@@ -45,5 +95,30 @@ delete:
         type: integer
         format: int64
   responses:
+    '200':
+      description: Request successful
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/Auction.yaml'
+    
     '400':
-      description: Invalid Auction value
+      description: Bad request
+      content: 
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
+    
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
+
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml

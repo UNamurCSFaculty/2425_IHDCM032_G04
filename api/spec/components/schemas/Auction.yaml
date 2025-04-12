@@ -1,4 +1,30 @@
 type: object
+
 properties:
-  category:
+  id: 
+    type: integer
+    readOnly: true
+  price:
+    type: number
+  product_quantity:
+    type: integer
+  creation_date:
     type: string
+    format: date-time
+    readOnly: true
+  expiration_date:
+    type: string
+    format: date-time
+  is_active:
+    type: boolean
+  product:
+    $ref: ./Product.yaml
+  strategy:
+    type: string
+
+required:
+  - price
+  - product_quantity
+  - expiration_date
+  - product
+  - strategy

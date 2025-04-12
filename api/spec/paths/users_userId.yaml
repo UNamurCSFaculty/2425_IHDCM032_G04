@@ -1,7 +1,7 @@
 get:
   tags:
     - users
-  summary: Find a user by ID
+  summary: Get a user by ID
   description: Return a single user
   operationId: getUser
   parameters:
@@ -14,15 +14,31 @@ get:
         format: int64
   responses:
     '200':
-      description: Successful operation
+      description: Request successful
       content:
         application/json:
           schema:
-            $ref: ..\components\schemas\User.yaml
+            $ref: '../components/schemas/User.yaml'
     '400':
-      description: Invalid ID supplied
-    '404':
-      description: User not found
+      description: Bad request
+      content: 
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
+
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
+
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
 
 put:
   tags:
@@ -44,8 +60,32 @@ put:
       schema:
         type: string
   responses:
-    '405':
-      description: Invalid input
+    '200':
+      description: Request successful
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/User.yaml'
+    '400':
+      description: Bad request
+      content: 
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
+
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
+
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
 
 delete:
   tags:
@@ -62,5 +102,29 @@ delete:
         type: integer
         format: int64
   responses:
+    '200':
+      description: Request successful
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/User.yaml'
     '400':
-      description: Invalid user value
+      description: Bad request
+      content: 
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
+
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
+
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
