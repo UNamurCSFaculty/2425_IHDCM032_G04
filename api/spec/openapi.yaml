@@ -1,0 +1,49 @@
+openapi: 3.0.3
+
+info: 
+  title: e-Anacarde API
+  version: "0.1"
+  description: |-
+    An API for interacting with the **e-Anacarde** application.
+    
+    ![UNamur Logo](https://www.unamur.be/themes/custom/unamur_theme/logo.svg)
+    
+    ---
+  contact:
+    name: Labo Ing. Logicielle / Groupe 04
+    email: foo@unamur.be
+    url: http://www.unamur.be
+  license:
+    url:  https://www.apache.org/licenses/LICENSE-2.0.html
+    name: Apache 2.0
+
+tags:
+  - name: users
+    description: Users and Authentication
+  - name: auctions
+    description: Auctions and Bids
+  - name: products
+    description: Harvest and Transformed Products
+
+servers:
+- url: http://localhost:8080/api/v1
+
+paths:
+  /users:
+    $ref: paths/users.yaml
+  /users/{userId}:
+    $ref: paths/users_userId.yaml
+
+  /products:
+    $ref: paths/products.yaml
+  /products/{productId}:
+    $ref: paths/products_productId.yaml
+
+  /auctions:
+    $ref: paths/auctions.yaml
+  /auctions/{auctionId}:
+    $ref: paths/auctions_auctionId.yaml
+  /auctions/{auctionId}/bids:
+    $ref: paths/auctions_auctionId_bids.yaml
+  /auctions/{auctionId}/bids/{bidId}:
+    $ref: paths/auctions_auctionId_bids_bidId.yaml

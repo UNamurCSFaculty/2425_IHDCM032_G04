@@ -1,0 +1,72 @@
+get:
+  summary: Get all users
+  operationId: getUsers
+  tags: 
+    - users
+  description: Get a list of all users
+  parameters:
+    - name: category
+      description: Filter users by category
+      in: query
+      schema:
+        type: string
+        enum:
+          - bidder
+          - carrier
+          - quality_manager
+          - store_manager
+  responses:
+    '200': 
+      description: A list of users
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              items: 
+                type: array
+                items: 
+                  $ref: ../components/schemas/User.yaml
+
+post:
+  summary: Create a user
+  operationId: createUser
+  tags: 
+      - users
+  requestBody:
+    description: "Create a user"
+    content:
+      application/json:
+        schema:
+        $ref: ../components/schemas/User.yaml             
+  responses:
+    '201':
+      description: "Created"
+      headers:
+        Location:
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/User.yaml
+    '400':
+      description: Bad request
+      content: 
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
+    
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
+
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml

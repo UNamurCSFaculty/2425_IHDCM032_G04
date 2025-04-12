@@ -1,0 +1,49 @@
+get:
+  summary: Get an auction by ID
+  operationId: getAuction
+  tags:
+    - auctions
+  parameters:
+    - name: auctionId
+      in: path
+      required: true
+      description: ID of the auction to close
+      schema:
+        type: string
+  responses:
+    '200':
+      description: Auction retrieved successfully
+
+put:
+  summary: Update an auction
+  operationId: updateAuction
+  tags:
+    - auctions
+  parameters:
+    - name: auctionId
+      in: path
+      required: true
+      description: ID of the auction to close
+      schema:
+        type: string
+  responses:
+    '200':
+      description: Auction closed successfully
+
+delete:
+  tags:
+    - auctions
+  summary: Delete an auction
+  description: ''
+  operationId: deleteAuction
+  parameters:
+    - name: auctionId
+      in: path
+      description: Auction ID to delete
+      required: true
+      schema:
+        type: integer
+        format: int64
+  responses:
+    '400':
+      description: Invalid Auction value

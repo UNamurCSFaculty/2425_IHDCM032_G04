@@ -1,0 +1,51 @@
+allOf:
+  - type: object
+    properties:
+      id:
+        type: integer
+        readOnly: true
+      first_name:
+        type: string
+      last_name:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+        writeOnly: true
+        minLength: 8
+      phone:
+        type: string
+      address:
+        type: string
+      register_date:
+        type: string
+        readOnly: true
+      is_active:
+        type: boolean
+        readOnly: true
+        default: false
+      category:
+        type: string
+        enum:
+          - bidder
+          - carrier
+          - quality_manager
+    required:
+      - first_name
+      - last_name
+      - email
+      - phone 
+      - address
+  - oneOf:
+    - $ref: ./Trader.yaml
+    - $ref: ./Carrier.yaml
+    - $ref: ./QualityManager.yaml
+    - $ref: ./StoreManager.yaml
+  - discriminator:
+      propertyName: category
+      mapping:
+        Bidder: ./Trader.yaml
+        Carrier: ./Carrier.yaml
+        QualityManager: ./QualityManager.yaml
+        StoreManager: ./StoreManager.yaml

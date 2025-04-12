@@ -1,0 +1,5 @@
+description: Auction object
+content:
+  application/json:
+    schema:
+      $ref: ..\schemas\Auction.yaml
