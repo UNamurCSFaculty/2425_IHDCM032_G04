@@ -111,16 +111,27 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 	 */
 	@Test
 	public void testUpdateAuction() throws Exception {
+		AuctionStrategyDto strategyDto = new AuctionStrategyDto();
+		strategyDto.setId(getTestAuctionStrategy().getId());
+
+		ProductDto productDto = new HarvestProductDto();
+		productDto.setId(getMainTestProduct().getId());
+
 		AuctionDto updateAuction = new AuctionDto();
-		updateAuction.setId(getTestAuction().getId());
-		updateAuction.setProductQuantity(123456789);
+		updateAuction.setPrice(new BigDecimal("999.99"));
+		updateAuction.setProductQuantity(99);
+		updateAuction.setActive(true);
+		updateAuction.setCreationDate(LocalDateTime.now());
+		updateAuction.setExpirationDate(LocalDateTime.now());
+		updateAuction.setStrategy(strategyDto);
+		updateAuction.setProduct(productDto);
 
 		ObjectNode node = objectMapper.valueToTree(updateAuction);
 		String jsonContent = node.toString();
 
 		mockMvc.perform(put("/api/auctions/" + getTestAuction().getId()).contentType(MediaType.APPLICATION_JSON)
 				.content(jsonContent).with(jwt())).andExpect(status().isOk())
-				.andExpect(jsonPath("$.productQuantity").value("123456789"));
+				.andExpect(jsonPath("$.productQuantity").value("99"));
 	}
 
 	/**

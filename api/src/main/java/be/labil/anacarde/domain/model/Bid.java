@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "bid")
@@ -14,6 +15,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@SuperBuilder
 public class Bid {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_purchase_offer")
@@ -22,6 +24,7 @@ public class Bid {
 	@Column(nullable = false)
 	private BigDecimal amount;
 
+	// TODO zak qu'est-ce que ça fait là ?
 	@Column(nullable = false)
 	private LocalDateTime auctionDate;
 

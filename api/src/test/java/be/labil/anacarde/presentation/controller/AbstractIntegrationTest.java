@@ -39,6 +39,10 @@ public abstract class AbstractIntegrationTest {
 	@Autowired
 	protected AuctionStrategyRepository auctionStrategyRepository;
 	@Autowired
+	protected BidRepository bidRepository;
+	@Autowired
+	protected BidStatusRepository bidStatusRepository;
+	@Autowired
 	protected UserDetailsService userDetailsService;
 
 	private Language mainLanguage;
@@ -51,6 +55,8 @@ public abstract class AbstractIntegrationTest {
 	private Product mainTestProduct;
 	private Auction testAuction;
 	private AuctionStrategy testAuctionStrategy;
+	private Bid testBid;
+	private BidStatus testBidStatus;
 
 	@Getter
 	private Cookie jwtCookie;
@@ -63,6 +69,8 @@ public abstract class AbstractIntegrationTest {
 
 	@AfterEach
 	public void tearDown() {
+		bidRepository.deleteAll();
+		bidStatusRepository.deleteAll();
 		auctionRepository.deleteAll();
 		productRepository.deleteAll();
 		storeRepository.deleteAll();
@@ -157,6 +165,20 @@ public abstract class AbstractIntegrationTest {
 		return testAuction;
 	}
 
+	public Bid getTestBid() {
+		if (testBid == null) {
+			throw new IllegalStateException("Enchère de test non initialisée");
+		}
+		return testBid;
+	}
+
+	public BidStatus getTestBidStatus() {
+		if (testBidStatus == null) {
+			throw new IllegalStateException("Enchère de test non initialisée");
+		}
+		return testBidStatus;
+	}
+
 	public AuctionStrategy getTestAuctionStrategy() {
 		if (testAuctionStrategy == null) {
 			throw new IllegalStateException("Stratégie de test non initialisée");
@@ -205,17 +227,45 @@ public abstract class AbstractIntegrationTest {
 		Store store = Store.builder().location(storeLocation).user(user1).build();
 		mainTestStore = storeRepository.save(store);
 
+		// A product
 		Product product = HarvestProduct.builder().producer((Producer) producerTestUser).store(mainTestStore)
 				.deliveryDate(LocalDateTime.now()).weightKg(2000.0).build();
 		mainTestProduct = productRepository.save(product);
 
+		// Another product
+		Product product2 = HarvestProduct.builder().producer((Producer) producerTestUser).store(mainTestStore)
+				.deliveryDate(LocalDateTime.now()).weightKg(1000.0).build();
+		productRepository.save(product2);
+
 		AuctionStrategy strategy = AuctionStrategy.builder().name("Meilleure offre").build();
 		testAuctionStrategy = auctionStrategyRepository.save(strategy);
 
+		// An auction
 		Auction auction = Auction.builder().price(new BigDecimal("500.0")).productQuantity(10).active(true)
 				.creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now()).product(product)
 				.strategy(testAuctionStrategy).build();
 		testAuction = auctionRepository.save(auction);
+
+		// Another auction
+		Auction auction2 = Auction.builder().price(new BigDecimal("10000.0")).productQuantity(1000).active(true)
+				.creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now()).product(product2)
+				.strategy(testAuctionStrategy).build();
+		auctionRepository.save(auction2);
+
+		BidStatus bidStatus = BidStatus.builder().name("Accepté").build();
+		testBidStatus = bidStatusRepository.save(bidStatus);
+
+		// A bid on an auction
+		Bid bid = Bid.builder().amount(new BigDecimal("10.0")).auctionDate(LocalDateTime.now())
+				.creationDate(LocalDateTime.now()).auction(auction).trader((Trader) producer).status(testBidStatus)
+				.build();
+		testBid = bidRepository.save(bid);
+
+		// A bid on a different auction
+		Bid bid2 = Bid.builder().amount(new BigDecimal("500.0")).auctionDate(LocalDateTime.now())
+				.creationDate(LocalDateTime.now()).auction(auction2).trader((Trader) producer).status(testBidStatus)
+				.build();
+		bidRepository.save(bid2);
 	}
 
 	/**
