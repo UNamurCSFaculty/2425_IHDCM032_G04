@@ -214,8 +214,8 @@ public abstract class AbstractIntegrationTest {
 	 * Initialise la base de données des utilisateurs avec deux utilisateurs de test et les rôles associés.
 	 */
 	public void initUserDatabase() {
-		userRepository.deleteAll();
-		languageRepository.deleteAll();
+		// userRepository.deleteAll();
+		// languageRepository.deleteAll();
 
 		Language language = Language.builder().name("fr").build();
 		mainLanguage = languageRepository.save(language);
@@ -254,7 +254,7 @@ public abstract class AbstractIntegrationTest {
 		transformerTestUser = userRepository.save(transformer);
 
 		Point storeLocation = new GeometryFactory().createPoint(new Coordinate(2.3522, 48.8566));
-		Store store = Store.builder().location(storeLocation).user(user1).build();
+		Store store = Store.builder().location(storeLocation).user(mainTestUser).build();
 		mainTestStore = storeRepository.save(store);
 
 		// A harvest product
