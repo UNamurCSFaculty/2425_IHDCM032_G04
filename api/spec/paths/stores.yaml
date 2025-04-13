@@ -1,0 +1,75 @@
+get:
+  summary: Get all stores
+  operationId: getStores
+  tags: 
+    - stores
+  description: Get a list of all stores
+  responses:
+    '200': 
+      description: A list of stores
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              items: 
+                type: array
+                items: 
+                  $ref: ../components/schemas/Store.yaml
+    
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
+
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
+
+post:
+  summary: Create a store
+  operationId: createStore
+  tags: 
+      - stores
+  requestBody:
+    description: "Create a store"
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/Store.yaml             
+  responses:
+    '201':
+      description: "Created"
+      headers:
+        Location:
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/Store.yaml
+    '400':
+      description: Bad request
+      content: 
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
+    
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
+
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml

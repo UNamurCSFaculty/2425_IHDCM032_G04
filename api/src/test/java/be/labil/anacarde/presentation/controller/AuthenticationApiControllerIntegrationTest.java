@@ -10,6 +10,7 @@ import be.labil.anacarde.domain.model.User;
 import be.labil.anacarde.infrastructure.persistence.LanguageRepository;
 import be.labil.anacarde.infrastructure.persistence.user.UserRepository;
 import java.time.LocalDateTime;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +34,6 @@ public class AuthenticationApiControllerIntegrationTest {
 	/** Prépare la base de données de test en créant un utilisateur. */
 	@BeforeEach
 	public void setUpDatabase() {
-		userRepository.deleteAll();
-		languageRepository.deleteAll();
-
 		Language language = Language.builder().name("fr").build();
 		language = languageRepository.save(language);
 		User user = new Admin();
@@ -48,6 +46,12 @@ public class AuthenticationApiControllerIntegrationTest {
 		user.setLanguage(language);
 
 		userRepository.save(user);
+	}
+
+	@AfterEach
+	public void tearDownDatabase() {
+		userRepository.deleteAll();
+		languageRepository.deleteAll();
 	}
 
 	/**

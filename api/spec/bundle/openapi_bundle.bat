@@ -1,0 +1,1 @@
+npx @redocly/cli@latest bundle .\openapi.yaml -o bundle.generated.yaml

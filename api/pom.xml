@@ -64,6 +64,7 @@
 		<hibernate-spatial.version>6.6.13.Final</hibernate-spatial.version>
 		<maven.surefire.plugin.version>3.5.3</maven.surefire.plugin.version>
 		<spotless.version>2.44.3</spotless.version>
+		<openapitools.version>7.12.0</openapitools.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<dependencies>
@@ -155,6 +156,12 @@
 			<groupId>org.hibernate.orm</groupId>
 			<artifactId>hibernate-spatial</artifactId>
 			<version>${hibernate-spatial.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openapitools</groupId>
+			<artifactId>openapi-generator-maven-plugin</artifactId>
+			<version>${openapitools.version}</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 
@@ -296,6 +303,25 @@
 					</execution>
 				</executions>
 			</plugin>
+
+			<!--<plugin>
+				<groupId>io.swagger.codegen.v3</groupId>
+				<artifactId>swagger-codegen-maven-plugin</artifactId>
+				<version>3.0.68</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<inputSpec>${project.basedir}/spec/bundle.yaml</inputSpec>
+							<language>spring</language>
+							<configOptions>
+							</configOptions>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>-->
 
 		</plugins>
 	</build>
