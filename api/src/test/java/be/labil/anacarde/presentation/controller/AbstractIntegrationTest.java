@@ -2,6 +2,7 @@ package be.labil.anacarde.presentation.controller;
 
 import be.labil.anacarde.domain.model.*;
 import be.labil.anacarde.infrastructure.persistence.LanguageRepository;
+import be.labil.anacarde.infrastructure.persistence.ProductRepository;
 import be.labil.anacarde.infrastructure.persistence.RoleRepository;
 import be.labil.anacarde.infrastructure.persistence.StoreRepository;
 import be.labil.anacarde.infrastructure.persistence.user.UserRepository;
@@ -30,18 +31,22 @@ public abstract class AbstractIntegrationTest {
 	@Autowired
 	protected RoleRepository roleRepository;
 	@Autowired
+	protected LanguageRepository languageRepository;
+	@Autowired
 	protected StoreRepository storeRepository;
 	@Autowired
-	protected LanguageRepository languageRepository;
+	protected ProductRepository productRepository;
 	@Autowired
 	protected UserDetailsService userDetailsService;
 
 	private Language mainLanguage;
 	private User mainTestUser;
 	private User secondTestUser;
+	private User producerTestUser;
 	private Role userTestRole;
 	private Role adminTestRole;
 	private Store mainTestStore;
+	private Product mainTestProduct;
 
 	@Getter
 	private Cookie jwtCookie;
@@ -54,6 +59,7 @@ public abstract class AbstractIntegrationTest {
 
 	@AfterEach
 	public void tearDown() {
+		productRepository.deleteAll();
 		storeRepository.deleteAll();
 		userRepository.deleteAll();
 		roleRepository.deleteAll();
@@ -77,6 +83,16 @@ public abstract class AbstractIntegrationTest {
 			throw new IllegalStateException("Second utilisateur de test non initialisé");
 		}
 		return secondTestUser;
+	}
+
+	/**
+	 * Renvoie le second utilisateur de test.
+	 */
+	public User getProducerTestUser() {
+		if (producerTestUser == null) {
+			throw new IllegalStateException("Second utilisateur de test non initialisé");
+		}
+		return producerTestUser;
 	}
 
 	/**
@@ -120,6 +136,16 @@ public abstract class AbstractIntegrationTest {
 	}
 
 	/**
+	 * Renvoie le produit de test principal.
+	 */
+	public Product getMainTestProduct() {
+		if (mainTestProduct == null) {
+			throw new IllegalStateException("Produit de test non initialisé");
+		}
+		return mainTestProduct;
+	}
+
+	/**
 	 * Initialise la base de données des utilisateurs avec deux utilisateurs de test et les rôles associés.
 	 */
 	public void initUserDatabase() {
@@ -132,26 +158,37 @@ public abstract class AbstractIntegrationTest {
 		User user1 = Admin.builder().firstName("John").lastName("Doe").email("user@example.com")
 				.password("$2a$10$abcdefghijklmnopqrstuv1234567890AB").registrationDate(LocalDateTime.now())
 				.language(mainLanguage).enabled(true).build();
+
 		User user2 = Admin.builder().firstName("Foo").lastName("Bar").email("foo@bar.com")
 				.password("$2a$10$abcdefghijklmnopqrstuv1234567890AB").registrationDate(LocalDateTime.now())
 				.language(mainLanguage).enabled(true).build();
+
+		User producer = Producer.builder().firstName("Bruce").lastName("Banner").email("bruce@hulk.com")
+				.password("$2a$10$abcdefghijklmnopqrstuv1234567890AB").registrationDate(LocalDateTime.now())
+				.language(mainLanguage).enabled(true).agriculturalIdentifier("111-222-333").build();
 
 		Role userRole = Role.builder().name("ROLE_USER").build();
 		Role adminRole = Role.builder().name("ROLE_ADMIN").build();
 		userTestRole = roleRepository.save(userRole);
 		adminTestRole = roleRepository.save(adminRole);
 
-		// Utilisation de la méthode de commodité pour assurer la mise à jour bidirectionnelle
+		// Assurer la mise à jour bidirectionnelle TODO zak: quoi ??
 		user1.addRole(userTestRole);
 		user2.addRole(adminTestRole);
 		user2.addRole(userTestRole);
+		producer.addRole(userTestRole);
 
 		mainTestUser = userRepository.save(user1);
 		secondTestUser = userRepository.save(user2);
+		producerTestUser = userRepository.save(producer);
 
 		Point storeLocation = new GeometryFactory().createPoint(new Coordinate(2.3522, 48.8566));
 		Store store = Store.builder().location(storeLocation).user(user1).build();
 		mainTestStore = storeRepository.save(store);
+
+		Product product = HarvestProduct.builder().producer((Producer) producerTestUser).store(mainTestStore)
+				.deliveryDate(LocalDateTime.now()).weightKg(2000.0).build();
+		mainTestProduct = productRepository.save(product);
 	}
 
 	/**

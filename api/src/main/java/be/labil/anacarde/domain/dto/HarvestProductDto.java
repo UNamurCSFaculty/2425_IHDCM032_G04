@@ -27,7 +27,7 @@ public class HarvestProductDto extends ProductDto {
 	private ProducerDetailDto producer;
 
 	/** Champ associé au produit récolté. */
-	@NotNull(message = "Le champ est requis")
+	// @NotNull(message = "Le champ est requis") TODO field set not null
 	@Schema(description = "Champ associé au produit récolté", requiredMode = Schema.RequiredMode.REQUIRED)
 	private FieldDetailDto field;
 

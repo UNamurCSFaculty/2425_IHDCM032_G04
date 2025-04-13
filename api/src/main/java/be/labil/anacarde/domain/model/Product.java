@@ -23,6 +23,7 @@ public abstract class Product {
 	@Column(nullable = false)
 	private Double weightKg;
 
-	@OneToOne
+	// TODO qualityControl set optional false
+	@OneToOne(optional = true)
 	private QualityControl qualityControl;
 }

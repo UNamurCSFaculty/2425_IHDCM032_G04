@@ -27,7 +27,8 @@ public class HarvestProduct extends Product {
 	@ManyToOne(optional = false)
 	private Producer producer;
 
-	@ManyToOne(optional = false)
+	// TOOD set optional = false
+	@ManyToOne(optional = true)
 	private Field field;
 
 	// TODO zak: pourquoi ça là et pas dans l'autre sens

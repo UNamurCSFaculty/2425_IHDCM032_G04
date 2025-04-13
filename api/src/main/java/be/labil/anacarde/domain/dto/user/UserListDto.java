@@ -73,7 +73,6 @@ public abstract class UserListDto {
 	/**
 	 * User's password.
 	 *
-	 * <p>
 	 * This field is only used during creation and is write-only.
 	 */
 	@Schema(description = "Mot de passe de l'utilisateur", accessMode = Schema.AccessMode.WRITE_ONLY, example = "p@ssw0rd")
