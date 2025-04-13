@@ -1,13 +1,11 @@
 package be.labil.anacarde.presentation.controller;
 
 import be.labil.anacarde.domain.model.*;
-import be.labil.anacarde.infrastructure.persistence.LanguageRepository;
-import be.labil.anacarde.infrastructure.persistence.ProductRepository;
-import be.labil.anacarde.infrastructure.persistence.RoleRepository;
-import be.labil.anacarde.infrastructure.persistence.StoreRepository;
+import be.labil.anacarde.infrastructure.persistence.*;
 import be.labil.anacarde.infrastructure.persistence.user.UserRepository;
 import be.labil.anacarde.infrastructure.security.JwtUtil;
 import jakarta.servlet.http.Cookie;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import org.junit.jupiter.api.AfterEach;
@@ -37,6 +35,10 @@ public abstract class AbstractIntegrationTest {
 	@Autowired
 	protected ProductRepository productRepository;
 	@Autowired
+	protected AuctionRepository auctionRepository;
+	@Autowired
+	protected AuctionStrategyRepository auctionStrategyRepository;
+	@Autowired
 	protected UserDetailsService userDetailsService;
 
 	private Language mainLanguage;
@@ -47,6 +49,8 @@ public abstract class AbstractIntegrationTest {
 	private Role adminTestRole;
 	private Store mainTestStore;
 	private Product mainTestProduct;
+	private Auction testAuction;
+	private AuctionStrategy testAuctionStrategy;
 
 	@Getter
 	private Cookie jwtCookie;
@@ -59,6 +63,7 @@ public abstract class AbstractIntegrationTest {
 
 	@AfterEach
 	public void tearDown() {
+		auctionRepository.deleteAll();
 		productRepository.deleteAll();
 		storeRepository.deleteAll();
 		userRepository.deleteAll();
@@ -145,6 +150,20 @@ public abstract class AbstractIntegrationTest {
 		return mainTestProduct;
 	}
 
+	public Auction getTestAuction() {
+		if (testAuction == null) {
+			throw new IllegalStateException("Enchère de test non initialisée");
+		}
+		return testAuction;
+	}
+
+	public AuctionStrategy getTestAuctionStrategy() {
+		if (testAuctionStrategy == null) {
+			throw new IllegalStateException("Stratégie de test non initialisée");
+		}
+		return testAuctionStrategy;
+	}
+
 	/**
 	 * Initialise la base de données des utilisateurs avec deux utilisateurs de test et les rôles associés.
 	 */
@@ -189,6 +208,14 @@ public abstract class AbstractIntegrationTest {
 		Product product = HarvestProduct.builder().producer((Producer) producerTestUser).store(mainTestStore)
 				.deliveryDate(LocalDateTime.now()).weightKg(2000.0).build();
 		mainTestProduct = productRepository.save(product);
+
+		AuctionStrategy strategy = AuctionStrategy.builder().name("Meilleure offre").build();
+		testAuctionStrategy = auctionStrategyRepository.save(strategy);
+
+		Auction auction = Auction.builder().price(new BigDecimal("500.0")).productQuantity(10).active(true)
+				.creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now()).product(product)
+				.strategy(testAuctionStrategy).build();
+		testAuction = auctionRepository.save(auction);
 	}
 
 	/**
