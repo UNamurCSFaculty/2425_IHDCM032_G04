@@ -65,7 +65,7 @@ public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 	@Test
 	public void testCreateBid() throws Exception {
 		ProductDto productDto = new HarvestProductDto();
-		productDto.setId(getMainTestProduct().getId());
+		productDto.setId(getTestHarvestProduct().getId());
 
 		ProducerDetailDto producer = new ProducerDetailDto();
 		producer.setId(getProducerTestUser().getId());

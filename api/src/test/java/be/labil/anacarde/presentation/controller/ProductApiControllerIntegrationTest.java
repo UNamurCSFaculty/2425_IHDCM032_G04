@@ -1,12 +1,15 @@
 package be.labil.anacarde.presentation.controller;
 
 import static org.hamcrest.Matchers.containsString;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import be.labil.anacarde.domain.dto.HarvestProductDto;
 import be.labil.anacarde.domain.dto.StoreDetailDto;
+import be.labil.anacarde.domain.dto.TransformedProductDto;
 import be.labil.anacarde.domain.dto.user.ProducerDetailDto;
+import be.labil.anacarde.domain.dto.user.TransformerDetailDto;
 import be.labil.anacarde.domain.mapper.ProductMapper;
 import be.labil.anacarde.domain.model.Product;
 import be.labil.anacarde.infrastructure.persistence.ProductRepository;
@@ -52,24 +55,31 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 	 * 
 	 */
 	@Test
-	public void testGetProduct() throws Exception {
-		// mockMvc.perform(get("/api/products/" + getMainTestProduct().getId())
-		// .accept(MediaType.APPLICATION_JSON).with(jwt()))
-		// .andExpect(status().isOk()).andDo(print())
-		// .andExpect(jsonPath("$.location").value("POINT (2.3522 48.8566)"));
+	public void testGetHarvestProduct() throws Exception {
+		mockMvc.perform(
+				get("/api/products/" + getTestHarvestProduct().getId()).accept(MediaType.APPLICATION_JSON).with(jwt()))
+				.andExpect(status().isOk()).andDo(print()).andExpect(jsonPath("$.type").value("harvest"))
+				.andExpect(jsonPath("$.store.location").value("POINT (2.3522 48.8566)"))
+				.andExpect(jsonPath("$.weightKg").value("2000.0"));
+	}
+
+	@Test
+	public void testGetTransformedProduct() throws Exception {
+		mockMvc.perform(get("/api/products/" + getTestTransformedProduct().getId()).accept(MediaType.APPLICATION_JSON)
+				.with(jwt())).andExpect(status().isOk()).andDo(print())
+				.andExpect(jsonPath("$.type").value("transformed")).andExpect(jsonPath("$.identifier").value("XYZ"))
+				.andExpect(jsonPath("$.location").value("Zone B")).andExpect(jsonPath("$.weightKg").value("2000.0"));
 	}
 
 	/**
-	 * Teste la création d'un nouveau produit.
+	 * Teste la création d'un nouveau produit de récolte.
 	 * 
 	 */
 	@Test
-	public void testCreateProduct() throws Exception {
-		// TODO return dto directly from AbstractIntegrationTest
+	public void testCreateHarvestProduct() throws Exception {
 		ProducerDetailDto newProducer = new ProducerDetailDto();
 		newProducer.setId(getProducerTestUser().getId());
 
-		// TODO return dto directly from AbstractIntegrationTest
 		StoreDetailDto newStore = new StoreDetailDto();
 		newStore.setId(getMainTestStore().getId());
 
@@ -85,11 +95,43 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 		mockMvc.perform(post("/api/products").contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwt()))
 				.andExpect(status().isCreated())
 				.andExpect(header().string("Location", containsString("/api/products/")))
-				.andExpect(jsonPath("$.location").value("POINT (2.3522 48.8566)"))
-				.andExpect(jsonPath("$.userId").value(getMainTestUser().getId()));
+				.andExpect(jsonPath("$.type").value("harvest")).andExpect(jsonPath("$.weightKg").value("200.0"))
+				.andExpect(jsonPath("$.producer.id").value(getProducerTestUser().getId()));
 
 		Product createdProduct = productRepository.findAll().stream()
-				.filter(product -> product.getWeightKg().equals("1800")).findFirst()
+				.filter(product -> product.getWeightKg().equals(200.0)).findFirst()
+				.orElseThrow(() -> new AssertionError("Product non trouvé"));
+	}
+
+	/**
+	 * Teste la création d'un nouveau produit transformé.
+	 *
+	 */
+	@Test
+	public void testCreateTransformedProduct() throws Exception {
+		TransformerDetailDto newTransformer = new TransformerDetailDto();
+		newTransformer.setId(getTransformerTestUser().getId());
+
+		StoreDetailDto newStore = new StoreDetailDto();
+		newStore.setId(getMainTestStore().getId());
+
+		TransformedProductDto newProduct = new TransformedProductDto();
+		newProduct.setTransformer(newTransformer);
+		newProduct.setLocation("Zone A"); // TODO coordonnees geopoint?
+		newProduct.setWeightKg(1234567.0);
+		newProduct.setIdentifier("TP001");
+
+		ObjectNode node = objectMapper.valueToTree(newProduct);
+		String jsonContent = node.toString();
+
+		mockMvc.perform(post("/api/products").contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwt()))
+				.andExpect(status().isCreated())
+				.andExpect(header().string("Location", containsString("/api/products/")))
+				.andExpect(jsonPath("$.type").value("transformed")).andExpect(jsonPath("$.weightKg").value("1234567.0"))
+				.andExpect(jsonPath("$.transformer.id").value(getTransformerTestUser().getId()));
+
+		Product createdProduct = productRepository.findAll().stream()
+				.filter(product -> product.getWeightKg().equals(1234567.0)).findFirst()
 				.orElseThrow(() -> new AssertionError("Product non trouvé"));
 	}
 
@@ -99,10 +141,8 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 	 */
 	@Test
 	public void testListProducts() throws Exception {
-		// mockMvc.perform(get("/api/products").accept(MediaType.APPLICATION_JSON).with(jwt()))
-		// .andExpect(status().isOk())
-		// .andDo(print())
-		// .andExpect(jsonPath("$").isArray());
+		mockMvc.perform(get("/api/products").accept(MediaType.APPLICATION_JSON).with(jwt())).andExpect(status().isOk())
+				.andDo(print()).andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(2));
 	}
 
 	/**
@@ -125,15 +165,15 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 	}
 
 	/**
-	 * Teste la suppression d'un produit.
+	 * Teste la suppression d'un produit de récolte.
 	 * 
 	 */
 	@Test
-	public void testDeleteProduct() throws Exception {
-		// mockMvc.perform(delete("/api/products/" + getMainTestProduct().getId()).with(jwt()))
-		// .andExpect(status().isNoContent());
-		//
-		// mockMvc.perform(get("/api/products/" +
-		// getMainTestProduct().getId()).with(jwt())).andExpect(status().isNotFound());
+	public void testDeleteHarvestProduct() throws Exception {
+		mockMvc.perform(delete("/api/products/" + getTestHarvestProduct().getId()).with(jwt()))
+				.andExpect(status().isNoContent());
+
+		mockMvc.perform(get("/api/products/" + getTestHarvestProduct().getId()).with(jwt()))
+				.andExpect(status().isNotFound());
 	}
 }

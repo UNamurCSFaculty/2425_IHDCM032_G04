@@ -49,10 +49,12 @@ public abstract class AbstractIntegrationTest {
 	private User mainTestUser;
 	private User secondTestUser;
 	private User producerTestUser;
+	private User transformerTestUser;
 	private Role userTestRole;
 	private Role adminTestRole;
 	private Store mainTestStore;
-	private Product mainTestProduct;
+	private Product testHarvestProduct;
+	private Product testTransformedProduct;
 	private Auction testAuction;
 	private AuctionStrategy testAuctionStrategy;
 	private Bid testBid;
@@ -72,10 +74,12 @@ public abstract class AbstractIntegrationTest {
 		bidRepository.deleteAll();
 		bidStatusRepository.deleteAll();
 		auctionRepository.deleteAll();
+		auctionStrategyRepository.deleteAll();
 		productRepository.deleteAll();
 		storeRepository.deleteAll();
 		userRepository.deleteAll();
 		roleRepository.deleteAll();
+		languageRepository.deleteAll();
 	}
 
 	/**
@@ -99,13 +103,23 @@ public abstract class AbstractIntegrationTest {
 	}
 
 	/**
-	 * Renvoie le second utilisateur de test.
+	 * Renvoie un utilisateur producteur de test.
 	 */
 	public User getProducerTestUser() {
 		if (producerTestUser == null) {
 			throw new IllegalStateException("Second utilisateur de test non initialisé");
 		}
 		return producerTestUser;
+	}
+
+	/**
+	 * Renvoie un utilisateur transformateur de test.
+	 */
+	public User getTransformerTestUser() {
+		if (transformerTestUser == null) {
+			throw new IllegalStateException("Second utilisateur de test non initialisé");
+		}
+		return transformerTestUser;
 	}
 
 	/**
@@ -149,13 +163,23 @@ public abstract class AbstractIntegrationTest {
 	}
 
 	/**
-	 * Renvoie le produit de test principal.
+	 * Renvoie le produit de récolte de test.
 	 */
-	public Product getMainTestProduct() {
-		if (mainTestProduct == null) {
+	public Product getTestHarvestProduct() {
+		if (testHarvestProduct == null) {
 			throw new IllegalStateException("Produit de test non initialisé");
 		}
-		return mainTestProduct;
+		return testHarvestProduct;
+	}
+
+	/**
+	 * Renvoie le produit transformé de test.
+	 */
+	public Product getTestTransformedProduct() {
+		if (testTransformedProduct == null) {
+			throw new IllegalStateException("Produit de test non initialisé");
+		}
+		return testTransformedProduct;
 	}
 
 	public Auction getTestAuction() {
@@ -208,6 +232,10 @@ public abstract class AbstractIntegrationTest {
 				.password("$2a$10$abcdefghijklmnopqrstuv1234567890AB").registrationDate(LocalDateTime.now())
 				.language(mainLanguage).enabled(true).agriculturalIdentifier("111-222-333").build();
 
+		User transformer = Transformer.builder().firstName("Scott").lastName("Summers").email("scott@xmen.com")
+				.password("$2a$10$abcdefghijklmnopqrstuv1234567890AB").registrationDate(LocalDateTime.now())
+				.language(mainLanguage).enabled(true).build();
+
 		Role userRole = Role.builder().name("ROLE_USER").build();
 		Role adminRole = Role.builder().name("ROLE_ADMIN").build();
 		userTestRole = roleRepository.save(userRole);
@@ -218,37 +246,39 @@ public abstract class AbstractIntegrationTest {
 		user2.addRole(adminTestRole);
 		user2.addRole(userTestRole);
 		producer.addRole(userTestRole);
+		transformer.addRole(userTestRole);
 
 		mainTestUser = userRepository.save(user1);
 		secondTestUser = userRepository.save(user2);
 		producerTestUser = userRepository.save(producer);
+		transformerTestUser = userRepository.save(transformer);
 
 		Point storeLocation = new GeometryFactory().createPoint(new Coordinate(2.3522, 48.8566));
 		Store store = Store.builder().location(storeLocation).user(user1).build();
 		mainTestStore = storeRepository.save(store);
 
-		// A product
-		Product product = HarvestProduct.builder().producer((Producer) producerTestUser).store(mainTestStore)
+		// A harvest product
+		Product productHarvest = HarvestProduct.builder().producer((Producer) producerTestUser).store(mainTestStore)
 				.deliveryDate(LocalDateTime.now()).weightKg(2000.0).build();
-		mainTestProduct = productRepository.save(product);
+		testHarvestProduct = productRepository.save(productHarvest);
 
-		// Another product
-		Product product2 = HarvestProduct.builder().producer((Producer) producerTestUser).store(mainTestStore)
-				.deliveryDate(LocalDateTime.now()).weightKg(1000.0).build();
-		productRepository.save(product2);
+		// A transformed product
+		Product productTransform = TransformedProduct.builder().transformer((Transformer) transformerTestUser)
+				.identifier("XYZ").location("Zone B").weightKg(2000.0).build();
+		testTransformedProduct = productRepository.save(productTransform);
 
 		AuctionStrategy strategy = AuctionStrategy.builder().name("Meilleure offre").build();
 		testAuctionStrategy = auctionStrategyRepository.save(strategy);
 
-		// An auction
+		// An auction with a harvest product
 		Auction auction = Auction.builder().price(new BigDecimal("500.0")).productQuantity(10).active(true)
-				.creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now()).product(product)
+				.creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now()).product(productHarvest)
 				.strategy(testAuctionStrategy).build();
 		testAuction = auctionRepository.save(auction);
 
-		// Another auction
+		// An auction with a transformed product
 		Auction auction2 = Auction.builder().price(new BigDecimal("10000.0")).productQuantity(1000).active(true)
-				.creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now()).product(product2)
+				.creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now()).product(productTransform)
 				.strategy(testAuctionStrategy).build();
 		auctionRepository.save(auction2);
 
