@@ -4,10 +4,7 @@ import be.labil.anacarde.domain.dto.DocumentDto;
 import be.labil.anacarde.domain.model.Carrier;
 import be.labil.anacarde.domain.model.Document;
 import be.labil.anacarde.domain.model.User;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Named;
-import org.mapstruct.ReportingPolicy;
+import org.mapstruct.*;
 
 /** Interface Mapper pour la conversion entre l'entité Document et DocumentDto. */
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
@@ -36,6 +33,12 @@ public interface DocumentMapper extends GenericMapper<DocumentDto, Document> {
 	@Mapping(source = "userId", target = "user", qualifiedByName = "mapUserIdToUser")
 	@Mapping(source = "documentType", target = "type")
 	Document toEntity(DocumentDto documentDto);
+
+	@Override
+	@Mapping(source = "userId", target = "user", qualifiedByName = "mapUserIdToUser")
+	@Mapping(source = "documentType", target = "type")
+	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+	Document partialUpdate(DocumentDto documentDto, @MappingTarget Document entity);
 
 	@Named("mapUserIdToUser")
 	default User mapUserIdToUser(Integer userId) {

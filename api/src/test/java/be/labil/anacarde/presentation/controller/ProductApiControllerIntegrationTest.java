@@ -1,13 +1,13 @@
 package be.labil.anacarde.presentation.controller;
 
 import static org.hamcrest.Matchers.containsString;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import be.labil.anacarde.domain.dto.HarvestProductDto;
 import be.labil.anacarde.domain.dto.StoreDetailDto;
 import be.labil.anacarde.domain.dto.user.ProducerDetailDto;
-import be.labil.anacarde.domain.model.Producer;
+import be.labil.anacarde.domain.mapper.ProductMapper;
 import be.labil.anacarde.domain.model.Product;
 import be.labil.anacarde.infrastructure.persistence.ProductRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,6 +21,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
+import java.time.LocalDateTime;
+
 /** Tests d'intégration pour le contrôleur des produits. */
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -31,6 +33,8 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 	private @Autowired ObjectMapper objectMapper;
 	@Autowired
 	protected ProductRepository productRepository;
+	@Autowired
+	private ProductMapper productMapper;
 
 	/**
 	 * RequestPostProcessor qui ajoute automatiquement le cookie JWT à chaque requête.
@@ -65,17 +69,16 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 		// TODO return dto directly from AbstractIntegrationTest
 		ProducerDetailDto newProducer = new ProducerDetailDto();
 		newProducer.setId(getProducerTestUser().getId());
-		newProducer.setAgriculturalIdentifier(((Producer) getProducerTestUser()).getAgriculturalIdentifier());
 
 		// TODO return dto directly from AbstractIntegrationTest
 		StoreDetailDto newStore = new StoreDetailDto();
 		newStore.setId(getMainTestStore().getId());
-		newStore.setLocation(getMainTestStore().getLocation().toString());
-		newStore.setUserId(getProducerTestUser().getId());
 
 		HarvestProductDto newProduct = new HarvestProductDto();
 		newProduct.setProducer(newProducer);
 		newProduct.setStore(newStore);
+		newProduct.setWeightKg(200.0);
+		newProduct.setDeliveryDate(LocalDateTime.now().plusMonths(1));
 
 		ObjectNode node = objectMapper.valueToTree(newProduct);
 		String jsonContent = node.toString();
