@@ -27,9 +27,7 @@ public abstract class ProductDto {
 	@Schema(description = "Poids en kg du produit", example = "100.0")
 	private Double weightKg;
 
-	// TODO qualityControl set optional false
-	// @OneToOne(optional = true)
-	// private QualityControl qualityControl;
+	private QualityControlDto qualityControl;
 
 	/**
 	 * Propriété virtuelle pour Swagger. Ce getter n'est pas utilisé par Jackson car il est ignoré, mais permet

@@ -24,11 +24,6 @@ public interface UserDetailMapper extends GenericMapper<UserDetailDto, User> {
 	@Mapping(target = "roles", ignore = true) // On ignore les rôles pour la mise à jour partielle
 	User partialUpdate(UserDetailDto dto, @MappingTarget User entity);
 
-	// Implémentation par défaut pour obtenir l'instance du TraderDetailMapper
-	default TraderDetailMapper getTraderDetailMapper() {
-		return org.mapstruct.factory.Mappers.getMapper(TraderDetailMapper.class);
-	}
-
 	@ObjectFactory
 	default User createUser(UserDetailDto dto) {
 		if (dto instanceof AdminDetailDto) {
