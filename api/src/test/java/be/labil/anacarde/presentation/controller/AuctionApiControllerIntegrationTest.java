@@ -9,14 +9,12 @@ import be.labil.anacarde.domain.dto.AuctionDto;
 import be.labil.anacarde.domain.dto.AuctionStrategyDto;
 import be.labil.anacarde.domain.dto.HarvestProductDto;
 import be.labil.anacarde.domain.dto.ProductDto;
-import be.labil.anacarde.domain.mapper.AuctionMapper;
 import be.labil.anacarde.domain.model.Auction;
 import be.labil.anacarde.infrastructure.persistence.AuctionRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -88,14 +86,12 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		mockMvc.perform(post("/api/auctions").contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwt()))
 				.andExpect(status().isCreated())
 				.andExpect(header().string("Location", containsString("/api/auctions/")))
-				.andExpect(jsonPath("$.price").value("111.11"))
-				.andExpect(jsonPath("$.productQuantity").value("11"))
+				.andExpect(jsonPath("$.price").value("111.11")).andExpect(jsonPath("$.productQuantity").value("11"))
 				.andExpect(jsonPath("$.active").value("true"))
 				.andExpect(jsonPath("$.strategy.id").value(getTestAuctionStrategy().getId()));
 
 		Auction createdAuction = auctionRepository.findAll().stream()
-				.filter(auction -> auction.getPrice().equals(new BigDecimal("111.11")))
-				.findFirst()
+				.filter(auction -> auction.getPrice().equals(new BigDecimal("111.11"))).findFirst()
 				.orElseThrow(() -> new AssertionError("Enchère non trouvée"));
 	}
 
@@ -115,17 +111,16 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 	 */
 	@Test
 	public void testUpdateAuction() throws Exception {
-		 AuctionDto updateAuction = new AuctionDto();
-		 updateAuction.setId(getTestAuction().getId());
-		 updateAuction.setProductQuantity(123456789);
+		AuctionDto updateAuction = new AuctionDto();
+		updateAuction.setId(getTestAuction().getId());
+		updateAuction.setProductQuantity(123456789);
 
-		 ObjectNode node = objectMapper.valueToTree(updateAuction);
-		 String jsonContent = node.toString();
+		ObjectNode node = objectMapper.valueToTree(updateAuction);
+		String jsonContent = node.toString();
 
-		 mockMvc.perform(put("/api/auctions/" + getTestAuction().getId()).contentType(MediaType.APPLICATION_JSON)
-		 .content(jsonContent).with(jwt()))
-				 .andExpect(status().isOk())
-				 .andExpect(jsonPath("$.productQuantity").value("123456789"));
+		mockMvc.perform(put("/api/auctions/" + getTestAuction().getId()).contentType(MediaType.APPLICATION_JSON)
+				.content(jsonContent).with(jwt())).andExpect(status().isOk())
+				.andExpect(jsonPath("$.productQuantity").value("123456789"));
 	}
 
 	/**
@@ -134,10 +129,9 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 	 */
 	@Test
 	public void testDeleteAuction() throws Exception {
-		 mockMvc.perform(delete("/api/auctions/" + getTestAuction().getId()).with(jwt()))
-		 .andExpect(status().isNoContent());
+		mockMvc.perform(delete("/api/auctions/" + getTestAuction().getId()).with(jwt()))
+				.andExpect(status().isNoContent());
 
-		 mockMvc.perform(get("/api/auctions/" +
-		 getTestAuction().getId()).with(jwt())).andExpect(status().isNotFound());
+		mockMvc.perform(get("/api/auctions/" + getTestAuction().getId()).with(jwt())).andExpect(status().isNotFound());
 	}
 }
