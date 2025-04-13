@@ -33,7 +33,9 @@ public class AuctionMapperTest {
 		auction.setActive("true");
 
 		AuctionStrategy strategy = new AuctionStrategy();
+		strategy.setId(1);
 		Product product = new HarvestProduct();
+		product.setId(1);
 
 		auction.setStrategy(strategy);
 		auction.setProduct(product);
@@ -47,6 +49,9 @@ public class AuctionMapperTest {
 		assertEquals(auction.getExpirationDate(), auctionDto.getExpirationDate());
 		assertEquals(auction.getCreationDate(), auctionDto.getCreationDate());
 		assertEquals(auction.getActive(), auctionDto.getActive());
+		assertEquals(auction.getStrategy().getId(), auctionDto.getStrategy().getId());
+		assertEquals(auction.getProduct().getId(), auctionDto.getProduct().getId());
+
 	}
 
 	@Test
@@ -60,7 +65,9 @@ public class AuctionMapperTest {
 		auctionDto.setActive("true");
 
 		AuctionStrategyDto strategyDto = new AuctionStrategyDto();
+		strategyDto.setId(1);
 		ProductDto productDto = new HarvestProductDto();
+		strategyDto.setId(2);
 
 		auctionDto.setStrategy(strategyDto);
 		auctionDto.setProduct(productDto);
@@ -74,5 +81,8 @@ public class AuctionMapperTest {
 		assertEquals(auctionDto.getExpirationDate(), auction.getExpirationDate());
 		assertEquals(auctionDto.getCreationDate(), auction.getCreationDate());
 		assertEquals(auctionDto.getActive(), auction.getActive());
+		assertEquals(auctionDto.getStrategy().getId(), auction.getStrategy().getId());
+		assertEquals(auctionDto.getProduct().getId(), auction.getProduct().getId());
+
 	}
 }
