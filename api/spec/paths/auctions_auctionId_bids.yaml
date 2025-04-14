@@ -1,0 +1,92 @@
+get:
+  summary: Get all bids in an auction
+  operationId: getBidsInAuction
+  tags:
+    - auctions
+  parameters:
+    - name: auctionId
+      in: path
+      required: true
+      description: ID of the auction
+      schema:
+        type: string
+    - name: userId
+      in: query
+      required: true
+      description: ID of the user whose bids to retrieve
+      schema:
+        type: string
+  responses:
+    '200':
+      description: List of bids made by the user in the auction
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              items:
+                type: array
+                items:
+                  $ref: ../components/schemas/Bid.yaml
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
+
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
+
+post:
+    summary: Create a bid
+    operationId: createBid
+    tags:
+      - auctions
+    parameters:
+      - name: auctionId
+        in: path
+        required: true
+        description: ID of the auction
+        schema:
+          type: string
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/Bid.yaml
+    responses:
+      '201':
+        description: Bid created successfully
+        headers:
+          Location:
+            schema:
+              type: string
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/Bid.yaml
+      '400':
+        description: Bad request
+        content: 
+          application/json:
+            schema:
+              $ref: ../components/schemas/ApiError.yaml
+
+      '401':
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/ApiError.yaml
+
+      '403':
+        description: Forbidden
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/ApiError.yaml

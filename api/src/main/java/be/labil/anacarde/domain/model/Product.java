@@ -19,4 +19,11 @@ public abstract class Product {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_seq")
 	private Integer id;
+
+	@Column(nullable = false)
+	private Double weightKg;
+
+	// TODO qualityControl set optional false
+	@OneToOne(optional = true)
+	private QualityControl qualityControl;
 }

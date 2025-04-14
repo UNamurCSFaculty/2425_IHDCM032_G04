@@ -1,0 +1,1237 @@
+openapi: 3.0.3
+info:
+  title: e-Anacarde API
+  version: '0.1'
+  description: |-
+    An API for interacting with the **e-Anacarde** application.
+
+    ![UNamur Logo](https://www.unamur.be/themes/custom/unamur_theme/logo.svg)
+
+    ---
+  contact:
+    name: Labo Ing. Logicielle / Groupe 04
+    email: foo@unamur.be
+    url: http://www.unamur.be
+  license:
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+    name: Apache 2.0
+servers:
+  - url: http://foo.bar/api/v1
+security:
+  - bearerAuth: []
+tags:
+  - name: users
+    description: Users and Authentication
+  - name: auctions
+    description: Auctions and Bids
+  - name: products
+    description: Harvest and Transformed Products
+  - name: stores
+    description: Stores
+paths:
+  /users:
+    get:
+      summary: Get all users
+      operationId: getUsers
+      tags:
+        - users
+      description: Get a list of all users
+      parameters:
+        - name: category
+          description: Filter users by category
+          in: query
+          schema:
+            type: string
+            enum:
+              - bidder
+              - carrier
+              - quality_manager
+              - store_manager
+      responses:
+        '200':
+          description: A list of users
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    post:
+      summary: Create a user
+      operationId: createUser
+      tags:
+        - users
+      requestBody:
+        description: Create a user
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: Created
+          headers:
+            Location:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /users/{userId}:
+    get:
+      tags:
+        - users
+      summary: Get a user by ID
+      description: Return a single user
+      operationId: getUser
+      parameters:
+        - name: userId
+          in: path
+          description: ID of user to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Request successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    put:
+      tags:
+        - users
+      summary: Update a user
+      description: ''
+      operationId: updateUser
+      parameters:
+        - name: userId
+          in: path
+          description: ID of user to update
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: name
+          in: query
+          description: Name of user to update
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Request successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    delete:
+      tags:
+        - users
+      summary: Delete a user
+      description: ''
+      operationId: deleteUser
+      parameters:
+        - name: userId
+          in: path
+          description: User id to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Request successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /stores:
+    get:
+      summary: Get all stores
+      operationId: getStores
+      tags:
+        - stores
+      description: Get a list of all stores
+      responses:
+        '200':
+          description: A list of stores
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Store'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    post:
+      summary: Create a store
+      operationId: createStore
+      tags:
+        - stores
+      requestBody:
+        description: Create a store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Store'
+      responses:
+        '201':
+          description: Created
+          headers:
+            Location:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Store'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /stores/{storeId}:
+    get:
+      tags:
+        - stores
+      summary: Get a store by ID
+      description: Return a single store
+      operationId: getStore
+      parameters:
+        - name: storeId
+          in: path
+          description: ID of store to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Request successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Store'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    put:
+      tags:
+        - stores
+      summary: Update a store
+      description: ''
+      operationId: updatestore
+      parameters:
+        - name: storeId
+          in: path
+          description: ID of store to update
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: name
+          in: query
+          description: Name of store to update
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Request successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Store'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    delete:
+      tags:
+        - stores
+      summary: Delete a store
+      description: ''
+      operationId: deletestore
+      parameters:
+        - name: storeId
+          in: path
+          description: Store id to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Request successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Store'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /products:
+    get:
+      summary: Get all products
+      operationId: getProducts
+      tags:
+        - products
+      description: Get a list of all products
+      parameters:
+        - name: category
+          in: query
+          description: Filter products by category
+          required: false
+          schema:
+            type: string
+            enum:
+              - harvest_product
+              - transformed_product
+        - name: traderId
+          in: query
+          description: ID of the trader to filter the auctions
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of products
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Product'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    post:
+      summary: Create a product
+      operationId: createProduct
+      tags:
+        - products
+      requestBody:
+        description: Create a product
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '201':
+          description: Created
+          headers:
+            Location:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /products/{productId}:
+    get:
+      tags:
+        - products
+      summary: Get a product by ID
+      description: Return a single product
+      operationId: getProduct
+      parameters:
+        - name: productId
+          in: path
+          description: ID of product to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Request successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    put:
+      tags:
+        - products
+      summary: Update a product
+      description: ''
+      operationId: updateProduct
+      parameters:
+        - name: productId
+          in: path
+          description: ID of product to update
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Request successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    delete:
+      tags:
+        - products
+      summary: Delete a product
+      description: ''
+      operationId: deleteProduct
+      parameters:
+        - name: productId
+          in: path
+          description: Product id to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Request successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /auctions:
+    get:
+      summary: Get all auctions
+      operationId: getAuctions
+      tags:
+        - auctions
+      parameters:
+        - name: traderId
+          in: query
+          description: ID of the trader to filter the auctions
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of auctions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Auction'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    post:
+      summary: Create a new auction
+      operationId: createAuction
+      tags:
+        - auctions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Auction'
+      responses:
+        '201':
+          description: Auction created successfully
+          headers:
+            Location:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Auction'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /auctions/{auctionId}:
+    get:
+      summary: Get an auction by ID
+      operationId: getAuction
+      tags:
+        - auctions
+      parameters:
+        - name: auctionId
+          in: path
+          required: true
+          description: ID of the auction to close
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Request successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Auction'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    put:
+      summary: Update an auction
+      operationId: updateAuction
+      tags:
+        - auctions
+      parameters:
+        - name: auctionId
+          in: path
+          required: true
+          description: ID of the auction to close
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Request successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Auction'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    delete:
+      tags:
+        - auctions
+      summary: Delete an auction
+      description: ''
+      operationId: deleteAuction
+      parameters:
+        - name: auctionId
+          in: path
+          description: Auction ID to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Request successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Auction'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /auctions/{auctionId}/bids:
+    get:
+      summary: Get all bids in an auction
+      operationId: getBidsInAuction
+      tags:
+        - auctions
+      parameters:
+        - name: auctionId
+          in: path
+          required: true
+          description: ID of the auction
+          schema:
+            type: string
+        - name: userId
+          in: query
+          required: true
+          description: ID of the user whose bids to retrieve
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of bids made by the user in the auction
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Bid'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    post:
+      summary: Create a bid
+      operationId: createBid
+      tags:
+        - auctions
+      parameters:
+        - name: auctionId
+          in: path
+          required: true
+          description: ID of the auction
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Bid'
+      responses:
+        '201':
+          description: Bid created successfully
+          headers:
+            Location:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bid'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /auctions/{auctionId}/bids/{bidId}:
+    put:
+      summary: Update a bid
+      operationId: updateBid
+      tags:
+        - auctions
+      parameters:
+        - name: auctionId
+          in: path
+          required: true
+          description: ID of the auction
+          schema:
+            type: string
+        - name: bidId
+          in: path
+          required: true
+          description: ID of the bid
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Bid'
+      responses:
+        '201':
+          description: Bid created successfully
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    delete:
+      tags:
+        - auctions
+      summary: Delete a bid
+      description: ''
+      operationId: deleteBid
+      parameters:
+        - name: auctionId
+          in: path
+          required: true
+          description: ID of the auction
+          schema:
+            type: string
+        - name: bidId
+          in: path
+          required: true
+          description: ID of the bid
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bid'
+        '400':
+          description: Invalid bid value
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Producer:
+      type: object
+      properties:
+        category:
+          type: string
+        agriculturalIdentifier:
+          type: string
+      required:
+        - category
+        - agriculturalIdentifier
+    Transformer:
+      type: object
+      properties:
+        category:
+          type: string
+      required:
+        - category
+    Trader:
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: integer
+              readOnly: true
+            category:
+              type: string
+              enum:
+                - producer
+                - transformer
+        - oneOf:
+            - $ref: '#/components/schemas/Producer'
+            - $ref: '#/components/schemas/Transformer'
+        - discriminator:
+            propertyName: category
+            mapping:
+              Producer: '#/components/schemas/Producer'
+              Transformer: '#/components/schemas/Transformer'
+    Carrier:
+      type: object
+      properties:
+        category:
+          type: string
+      required:
+        - category
+    QualityManager:
+      type: object
+      properties:
+        category:
+          type: string
+      required:
+        - category
+    StoreManager:
+      type: object
+      properties:
+        category:
+          type: string
+      required:
+        - category
+    User:
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: integer
+              readOnly: true
+            first_name:
+              type: string
+            last_name:
+              type: string
+            email:
+              type: string
+            password:
+              type: string
+              writeOnly: true
+              minLength: 8
+            phone:
+              type: string
+            address:
+              type: string
+            register_date:
+              type: string
+              format: date-time
+              readOnly: true
+            is_active:
+              type: boolean
+              readOnly: true
+              default: false
+            category:
+              type: string
+              enum:
+                - trader
+                - carrier
+                - quality_manager
+                - store_manager
+          required:
+            - first_name
+            - last_name
+            - email
+            - phone
+            - address
+        - oneOf:
+            - $ref: '#/components/schemas/Trader'
+            - $ref: '#/components/schemas/Carrier'
+            - $ref: '#/components/schemas/QualityManager'
+            - $ref: '#/components/schemas/StoreManager'
+        - discriminator:
+            propertyName: category
+            mapping:
+              Trader: '#/components/schemas/Trader'
+              Carrier: '#/components/schemas/Carrier'
+              QualityManager: '#/components/schemas/QualityManager'
+              StoreManager: '#/components/schemas/StoreManager'
+    ApiError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: human-readable error message
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              path:
+                type: string
+                description: |
+                  For input validation errors, identifies where in the 
+                  JSON request body the error occurred.
+              message:
+                type: string
+                description: Human-readable error message.
+              errorCode:
+                type: string
+                description: Code indicating error type.
+    Store:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        location:
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+      required:
+        - location
+        - user
+    HarvestProduct:
+      type: object
+      properties:
+        store:
+          $ref: '#/components/schemas/Store'
+        delivery_date:
+          type: string
+          format: date-time
+        field:
+          type: string
+        producer:
+          $ref: '#/components/schemas/Producer'
+        category:
+          type: string
+      required:
+        - store
+        - delivery_date
+        - field
+        - producer
+        - category
+    TransformedProduct:
+      type: object
+      properties:
+        identifier:
+          type: string
+        location:
+          type: string
+        transformer:
+          $ref: '#/components/schemas/Transformer'
+        category:
+          type: string
+      required:
+        - identifier
+        - location
+        - transformer
+        - category
+    Product:
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: integer
+              readOnly: true
+            weight_kg:
+              type: number
+            id_quality_control:
+              type: integer
+            category:
+              type: string
+              enum:
+                - harvest_product
+                - transformed_product
+          required:
+            - weight_kg
+        - oneOf:
+            - $ref: '#/components/schemas/HarvestProduct'
+            - $ref: '#/components/schemas/TransformedProduct'
+        - discriminator:
+            propertyName: category
+            mapping:
+              HarvestProduct: '#/components/schemas/HarvestProduct'
+              TransformedProduct: '#/components/schemas/TransformedProduct'
+    Auction:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        price:
+          type: number
+        product_quantity:
+          type: integer
+        creation_date:
+          type: string
+          format: date-time
+          readOnly: true
+        expiration_date:
+          type: string
+          format: date-time
+        is_active:
+          type: boolean
+        product:
+          $ref: '#/components/schemas/Product'
+        strategy:
+          type: string
+      required:
+        - price
+        - product_quantity
+        - expiration_date
+        - product
+        - strategy
+    Bid:
+      type: object
+      properties:
+        category:
+          type: string

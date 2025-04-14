@@ -35,7 +35,7 @@ public class AuctionDto {
 
 	@NotNull(message = "Le statut actif est requis")
 	@Schema(description = "Statut actif de l'enchère", example = "true", requiredMode = Schema.RequiredMode.REQUIRED)
-	private String active;
+	private Boolean active;
 
 	@NotNull(message = "La stratégie est requise")
 	@Schema(description = "Stratégie d'enchère associée", requiredMode = Schema.RequiredMode.REQUIRED)

@@ -1,0 +1,25 @@
+allOf:
+  - type: object
+    properties:
+      id:
+        type: integer
+        readOnly: true
+      weight_kg:
+        type: number
+      id_quality_control:
+        type: integer
+      category:
+        type: string
+        enum:
+          - harvest_product
+          - transformed_product
+    required:
+      - weight_kg
+  - oneOf:
+    - $ref: ./HarvestProduct.yaml
+    - $ref: ./TransformedProduct.yaml
+  - discriminator:
+      propertyName: category
+      mapping:
+        HarvestProduct: ./HarvestProduct.yaml
+        TransformedProduct: ./TransformedProduct.yaml

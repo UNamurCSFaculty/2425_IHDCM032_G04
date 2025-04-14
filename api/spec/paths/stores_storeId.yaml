@@ -1,0 +1,130 @@
+get:
+  tags:
+    - stores
+  summary: Get a store by ID
+  description: Return a single store
+  operationId: getStore
+  parameters:
+    - name: storeId
+      in: path
+      description: ID of store to return
+      required: true
+      schema:
+        type: integer
+        format: int64
+  responses:
+    '200':
+      description: Request successful
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/Store.yaml'
+    '400':
+      description: Bad request
+      content: 
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
+
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
+
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
+
+put:
+  tags:
+    - stores
+  summary: Update a store
+  description: ''
+  operationId: updatestore
+  parameters:
+    - name: storeId
+      in: path
+      description: ID of store to update
+      required: true
+      schema:
+        type: integer
+        format: int64
+    - name: name
+      in: query
+      description: Name of store to update
+      schema:
+        type: string
+  responses:
+    '200':
+      description: Request successful
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/Store.yaml'
+    '400':
+      description: Bad request
+      content: 
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
+
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
+
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
+
+delete:
+  tags:
+    - stores
+  summary: Delete a store
+  description: ''
+  operationId: deletestore
+  parameters:
+    - name: storeId
+      in: path
+      description: Store id to delete
+      required: true
+      schema:
+        type: integer
+        format: int64
+  responses:
+    '200':
+      description: Request successful
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/Store.yaml'
+    '400':
+      description: Bad request
+      content: 
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
+
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
+
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml

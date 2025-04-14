@@ -2,10 +2,7 @@ package be.labil.anacarde.domain.model;
 
 import jakarta.persistence.*;
 import java.util.Objects;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.type.SqlTypes;
@@ -17,6 +14,7 @@ import org.locationtech.jts.geom.Point;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Store {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_store")

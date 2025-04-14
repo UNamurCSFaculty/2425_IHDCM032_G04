@@ -1,0 +1,91 @@
+get:
+  summary: Get all products
+  operationId: getProducts
+  tags: 
+    - products
+  description: Get a list of all products
+  parameters:
+    - name: category
+      in: query
+      description: Filter products by category
+      required: false
+      schema:
+        type: string
+        enum:
+          - harvest_product
+          - transformed_product
+    - name: traderId
+      in: query
+      description: ID of the trader to filter the auctions
+      required: false
+      schema:
+        type: string
+  responses:
+    '200': 
+      description: A list of products
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              items: 
+                type: array
+                items: 
+                  $ref: ../components/schemas/Product.yaml
+
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
+
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
+
+post:
+  summary: Create a product
+  operationId: createProduct
+  tags: 
+      - products
+  requestBody:
+    description: "Create a product"
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/Product.yaml             
+  responses:
+    '201':
+      description: "Created"
+      headers:
+        Location:
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/Product.yaml
+    '400':
+      description: Bad request
+      content: 
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
+    
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
+
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml

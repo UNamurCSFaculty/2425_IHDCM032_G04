@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "auction")
@@ -16,6 +17,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@SuperBuilder
 public class Auction {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_auction")
@@ -34,7 +36,7 @@ public class Auction {
 	private LocalDateTime creationDate;
 
 	@Column(nullable = false)
-	private String active;
+	private Boolean active;
 
 	@ManyToOne(optional = false)
 	private AuctionStrategy strategy;

@@ -1,0 +1,22 @@
+type: object
+properties: 
+  message:
+    type: string
+    description: human-readable error message
+  errors:
+    type: array
+    items:
+      type: object
+      properties:
+        path:
+          type: string
+          description: |
+            For input validation errors, identifies where in the 
+            JSON request body the error occurred.
+        message:
+          type: string 
+          description: Human-readable error message.
+        errorCode:
+          type: string
+          description: Code indicating error type.
+  

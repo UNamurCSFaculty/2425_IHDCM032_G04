@@ -1,0 +1,1 @@
+npx @redocly/cli@latest lint .\openapi.yaml

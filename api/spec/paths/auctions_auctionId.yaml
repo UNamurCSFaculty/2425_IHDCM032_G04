@@ -1,0 +1,124 @@
+get:
+  summary: Get an auction by ID
+  operationId: getAuction
+  tags:
+    - auctions
+  parameters:
+    - name: auctionId
+      in: path
+      required: true
+      description: ID of the auction to close
+      schema:
+        type: string
+  responses:
+    '200':
+      description: Request successful
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/Auction.yaml'
+
+    '400':
+      description: Bad request
+      content: 
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
+    
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
+
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
+
+put:
+  summary: Update an auction
+  operationId: updateAuction
+  tags:
+    - auctions
+  parameters:
+    - name: auctionId
+      in: path
+      required: true
+      description: ID of the auction to close
+      schema:
+        type: string
+  responses:
+    '200':
+      description: Request successful
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/Auction.yaml'
+
+    '400':
+      description: Bad request
+      content: 
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
+    
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
+
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
+
+delete:
+  tags:
+    - auctions
+  summary: Delete an auction
+  description: ''
+  operationId: deleteAuction
+  parameters:
+    - name: auctionId
+      in: path
+      description: Auction ID to delete
+      required: true
+      schema:
+        type: integer
+        format: int64
+  responses:
+    '200':
+      description: Request successful
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/Auction.yaml'
+    
+    '400':
+      description: Bad request
+      content: 
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
+    
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
+
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/ApiError.yaml
