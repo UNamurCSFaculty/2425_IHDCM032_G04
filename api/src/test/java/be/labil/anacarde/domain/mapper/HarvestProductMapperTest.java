@@ -13,7 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 class HarvestProductMapperTest {
 
 	@Autowired
-	private HarvestProductMapper mapper;
+	private ProductMapper mapper;
 
 	@Test
 	void shouldMapEntityToDto() {

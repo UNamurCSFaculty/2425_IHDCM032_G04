@@ -14,7 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 class TransformedProductMapperTest {
 
 	@Autowired
-	private TransformedProductMapper mapper;
+	private ProductMapper mapper;
 
 	@Test
 	void testToDto() {

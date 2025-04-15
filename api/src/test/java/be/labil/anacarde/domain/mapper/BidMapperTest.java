@@ -24,7 +24,10 @@ class BidMapperTest {
 		bid.setAmount(new BigDecimal("250.00"));
 		bid.setAuctionDate(LocalDateTime.of(2025, 4, 7, 12, 0));
 		bid.setCreationDate(LocalDateTime.of(2025, 4, 7, 11, 30));
-		bid.setAuction(new Auction());
+		Auction auction = new Auction();
+		auction.setId(1);
+		auction.setProduct(HarvestProduct.builder().id(1).build());
+		bid.setAuction(auction);
 		bid.setTrader(new Transformer());
 		bid.setStatus(new BidStatus());
 
@@ -47,7 +50,10 @@ class BidMapperTest {
 		dto.setAmount(new BigDecimal("180.50"));
 		dto.setAuctionDate(LocalDateTime.of(2025, 4, 8, 14, 0));
 		dto.setCreationDate(LocalDateTime.of(2025, 4, 8, 13, 0));
-		dto.setAuction(new AuctionDto());
+		AuctionDto auction = new AuctionDto();
+		auction.setId(1);
+		auction.setProduct(new HarvestProductDto());
+		dto.setAuction(auction);
 		dto.setTrader(new TransformerDetailDto());
 		dto.setStatus(new BidStatusDto());
 

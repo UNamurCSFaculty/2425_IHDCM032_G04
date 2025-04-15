@@ -30,7 +30,7 @@ public class AuctionMapperTest {
 		auction.setProductQuantity(10);
 		auction.setExpirationDate(LocalDateTime.of(2025, 12, 31, 23, 59, 59, 0));
 		auction.setCreationDate(LocalDateTime.of(2025, 1, 1, 0, 0, 0, 0));
-		auction.setActive("true");
+		auction.setActive(true);
 
 		AuctionStrategy strategy = new AuctionStrategy();
 		strategy.setId(1);
@@ -62,7 +62,7 @@ public class AuctionMapperTest {
 		auctionDto.setProductQuantity(10);
 		auctionDto.setExpirationDate(LocalDateTime.of(2025, 12, 31, 23, 59, 59, 0));
 		auctionDto.setCreationDate(LocalDateTime.of(2025, 1, 1, 0, 0, 0, 0));
-		auctionDto.setActive("true");
+		auctionDto.setActive(true);
 
 		AuctionStrategyDto strategyDto = new AuctionStrategyDto();
 		strategyDto.setId(1);
