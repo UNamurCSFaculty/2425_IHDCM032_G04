@@ -35,6 +35,7 @@ jobs:
         uses: github/codeql-action/init@v3
         with:
           languages: java
+          paths: ./api
 
       - name: Build API manually
         working-directory: ./api
@@ -45,14 +46,6 @@ jobs:
       - name: Run CodeQL Analysis for API
         uses: github/codeql-action/analyze@v3
         with:
-          paths: ./api
           output: codeql-results.sarif
           upload: true
           category: "api-java"
-
-#      - name: Upload CodeQL SARIF Report
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: codeql-sarif-report
-#          path: ./api/codeql-results.sarif
-#          retention-days: 7
