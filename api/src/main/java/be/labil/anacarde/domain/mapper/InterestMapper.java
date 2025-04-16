@@ -2,9 +2,11 @@ package be.labil.anacarde.domain.mapper;
 
 import be.labil.anacarde.domain.dto.InterestDto;
 import be.labil.anacarde.domain.model.Interest;
+import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring", uses = {IntentionMapper.class,
@@ -24,5 +26,6 @@ public interface InterestMapper extends GenericMapper<InterestDto, Interest> {
 	@Override
 	@Mapping(source = "intention", target = "intention")
 	@Mapping(source = "buyer", target = "buyer")
+	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 	Interest partialUpdate(InterestDto dto, @MappingTarget Interest entity);
 }
