@@ -35,7 +35,6 @@ jobs:
         uses: github/codeql-action/init@v3
         with:
           languages: java
-          paths: ./api
 
       - name: Build API manually
         working-directory: ./api
