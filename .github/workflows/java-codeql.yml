@@ -33,6 +33,8 @@ jobs:
 
       - name: Initialize CodeQL for Java
         uses: github/codeql-action/init@v3
+        with:
+          languages: java
 
       - name: Build API manually
         working-directory: ./api
@@ -42,3 +44,8 @@ jobs:
 
       - name: Run CodeQL Analysis for API
         uses: github/codeql-action/analyze@v3
+        with:
+          paths: ./api
+          output: codeql-results.sarif
+          upload: true
+          category: "api-java"
