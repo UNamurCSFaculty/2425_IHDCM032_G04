@@ -28,16 +28,20 @@ tags:
     description: Stores
 
 servers:
-- url: http://foo.bar/api/v1
+- url: http://anacarde.io/api/v1
 
 security:
   - bearerAuth: []
 
 paths:
-  /users:
-    $ref: paths/users.yaml
-  /users/{userId}:
-    $ref: paths/users_userId.yaml
+  /auctions:
+    $ref: paths/auctions.yaml
+  /auctions/{auctionId}:
+    $ref: paths/auctions_auctionId.yaml
+  /auctions/{auctionId}/bids:
+    $ref: paths/auctions_auctionId_bids.yaml
+  /auctions/{auctionId}/bids/{bidId}:
+    $ref: paths/auctions_auctionId_bids_bidId.yaml
 
   /stores:
     $ref: paths/stores.yaml
@@ -49,14 +53,14 @@ paths:
   /products/{productId}:
     $ref: paths/products_productId.yaml
 
-  /auctions:
-    $ref: paths/auctions.yaml
-  /auctions/{auctionId}:
-    $ref: paths/auctions_auctionId.yaml
-  /auctions/{auctionId}/bids:
-    $ref: paths/auctions_auctionId_bids.yaml
-  /auctions/{auctionId}/bids/{bidId}:
-    $ref: paths/auctions_auctionId_bids_bidId.yaml
+  /users:
+    $ref: paths/users.yaml
+  /users/{userId}:
+    $ref: paths/users_userId.yaml
+  /users/{userId}/fields:
+    $ref: paths/users_userId_fields.yaml
+  /users/{userId}/fields/{fieldId}:
+    $ref: paths/users_userId_fields_fieldId.yaml
 
 components:
   securitySchemes:

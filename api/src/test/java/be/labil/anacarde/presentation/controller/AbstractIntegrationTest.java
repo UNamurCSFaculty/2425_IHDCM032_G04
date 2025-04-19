@@ -44,6 +44,8 @@ public abstract class AbstractIntegrationTest {
 	protected BidStatusRepository bidStatusRepository;
 	@Autowired
 	protected UserDetailsService userDetailsService;
+	@Autowired
+	protected FieldRepository fieldRepository;
 
 	private Language mainLanguage;
 	private User mainTestUser;
@@ -59,6 +61,7 @@ public abstract class AbstractIntegrationTest {
 	private AuctionStrategy testAuctionStrategy;
 	private Bid testBid;
 	private BidStatus testBidStatus;
+	private Field mainTestField;
 
 	@Getter
 	private Cookie jwtCookie;
@@ -71,6 +74,7 @@ public abstract class AbstractIntegrationTest {
 
 	@AfterEach
 	public void tearDown() {
+		fieldRepository.deleteAll();
 		bidRepository.deleteAll();
 		bidStatusRepository.deleteAll();
 		auctionRepository.deleteAll();
@@ -210,6 +214,13 @@ public abstract class AbstractIntegrationTest {
 		return testAuctionStrategy;
 	}
 
+	public Field getMainTestField() {
+		if (mainTestField == null) {
+			throw new IllegalStateException("Champs de test non initialisé");
+		}
+		return mainTestField;
+	}
+
 	/**
 	 * Initialise la base de données des utilisateurs avec deux utilisateurs de test et les rôles associés.
 	 */
@@ -232,6 +243,10 @@ public abstract class AbstractIntegrationTest {
 				.password("$2a$10$abcdefghijklmnopqrstuv1234567890AB").registrationDate(LocalDateTime.now())
 				.language(mainLanguage).enabled(true).agriculturalIdentifier("111-222-333").build();
 
+		User producer2 = Producer.builder().firstName("Steve").lastName("Rogers").email("steve@captain.com")
+				.password("$2a$10$abcdefghijklmnopqrstuv1234567890AB").registrationDate(LocalDateTime.now())
+				.language(mainLanguage).enabled(true).agriculturalIdentifier("000-111-222").build();
+
 		User transformer = Transformer.builder().firstName("Scott").lastName("Summers").email("scott@xmen.com")
 				.password("$2a$10$abcdefghijklmnopqrstuv1234567890AB").registrationDate(LocalDateTime.now())
 				.language(mainLanguage).enabled(true).build();
@@ -251,6 +266,7 @@ public abstract class AbstractIntegrationTest {
 		mainTestUser = userRepository.save(user1);
 		secondTestUser = userRepository.save(user2);
 		producerTestUser = userRepository.save(producer);
+		userRepository.save(producer2);
 		transformerTestUser = userRepository.save(transformer);
 
 		Point storeLocation = new GeometryFactory().createPoint(new Coordinate(2.3522, 48.8566));
@@ -296,6 +312,18 @@ public abstract class AbstractIntegrationTest {
 				.creationDate(LocalDateTime.now()).auction(auction2).trader((Trader) producer).status(testBidStatus)
 				.build();
 		bidRepository.save(bid2);
+
+		// A field binded to main producer
+		Point pointField = new GeometryFactory().createPoint(new Coordinate(2.3522, 48.8566));
+		Field field = Field.builder().producer((Producer) producer).identifier("FIELD-001").location(pointField)
+				.build();
+		mainTestField = fieldRepository.save(field);
+
+		// A field to another producer
+		Point pointField2 = new GeometryFactory().createPoint(new Coordinate(1.198, 10.300));
+		Field field2 = Field.builder().producer((Producer) producer2).identifier("FIELD-002").location(pointField2)
+				.build();
+		fieldRepository.save(field2);
 	}
 
 	/**
