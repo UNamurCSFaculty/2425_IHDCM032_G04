@@ -40,6 +40,10 @@ public class FieldApiControllerIntegrationTest extends AbstractIntegrationTest {
 		};
 	}
 
+	/**
+	 * Teste la récupération d'un champ.
+	 *
+	 */
 	@Test
 	public void testGetField() throws Exception {
 		mockMvc.perform(get("/api/users/" + getProducerTestUser().getId() + "/fields/" + getMainTestField().getId())
@@ -48,6 +52,10 @@ public class FieldApiControllerIntegrationTest extends AbstractIntegrationTest {
 				.andExpect(jsonPath("$.identifier").value(getMainTestField().getIdentifier()));
 	}
 
+	/**
+	 * Teste la création d'un champ.
+	 *
+	 */
 	@Test
 	public void testCreateField() throws Exception {
 		FieldDetailDto newFieldDto = new FieldDetailDto();
@@ -72,13 +80,21 @@ public class FieldApiControllerIntegrationTest extends AbstractIntegrationTest {
 				.orElseThrow(() -> new AssertionError("Field non trouvé"));
 	}
 
+	/**
+	 * Teste la récupération de la liste de tous les champs d'un utilisateur donné.
+	 *
+	 */
 	@Test
 	public void testListFields() throws Exception {
 		mockMvc.perform(get("/api/users/" + getProducerTestUser().getId() + "/fields")
 				.accept(MediaType.APPLICATION_JSON).with(jwt())).andExpect(status().isOk()).andDo(print())
-				.andExpect(jsonPath("$").isArray());
+				.andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(1));
 	}
 
+	/**
+	 * Teste la mise à jour d'un champ.
+	 *
+	 */
 	@Test
 	public void testUpdateField() throws Exception {
 		FieldDetailDto updateField = new FieldDetailDto();
@@ -97,6 +113,10 @@ public class FieldApiControllerIntegrationTest extends AbstractIntegrationTest {
 				.andExpect(jsonPath("$.identifier").value("FIELD-UPDATED"));
 	}
 
+	/**
+	 * Teste la suppression d'un champ.
+	 *
+	 */
 	@Test
 	public void testDeleteField() throws Exception {
 		// //TODO: Décommenter quand le delete sera activé

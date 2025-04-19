@@ -243,6 +243,10 @@ public abstract class AbstractIntegrationTest {
 				.password("$2a$10$abcdefghijklmnopqrstuv1234567890AB").registrationDate(LocalDateTime.now())
 				.language(mainLanguage).enabled(true).agriculturalIdentifier("111-222-333").build();
 
+		User producer2 = Producer.builder().firstName("Steve").lastName("Rogers").email("steve@captain.com")
+				.password("$2a$10$abcdefghijklmnopqrstuv1234567890AB").registrationDate(LocalDateTime.now())
+				.language(mainLanguage).enabled(true).agriculturalIdentifier("000-111-222").build();
+
 		User transformer = Transformer.builder().firstName("Scott").lastName("Summers").email("scott@xmen.com")
 				.password("$2a$10$abcdefghijklmnopqrstuv1234567890AB").registrationDate(LocalDateTime.now())
 				.language(mainLanguage).enabled(true).build();
@@ -262,6 +266,7 @@ public abstract class AbstractIntegrationTest {
 		mainTestUser = userRepository.save(user1);
 		secondTestUser = userRepository.save(user2);
 		producerTestUser = userRepository.save(producer);
+		userRepository.save(producer2);
 		transformerTestUser = userRepository.save(transformer);
 
 		Point storeLocation = new GeometryFactory().createPoint(new Coordinate(2.3522, 48.8566));
@@ -308,12 +313,17 @@ public abstract class AbstractIntegrationTest {
 				.build();
 		bidRepository.save(bid2);
 
-		// A field Binded To main producer
+		// A field binded to main producer
 		Point pointField = new GeometryFactory().createPoint(new Coordinate(2.3522, 48.8566));
-		Field field = Field.builder().producer((Producer) producerTestUser).identifier("FIELD-001").location(pointField)
+		Field field = Field.builder().producer((Producer) producer).identifier("FIELD-001").location(pointField)
 				.build();
 		mainTestField = fieldRepository.save(field);
 
+		// A field to another producer
+		Point pointField2 = new GeometryFactory().createPoint(new Coordinate(1.198, 10.300));
+		Field field2 = Field.builder().producer((Producer) producer2).identifier("FIELD-002").location(pointField2)
+				.build();
+		fieldRepository.save(field2);
 	}
 
 	/**
