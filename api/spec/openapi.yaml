@@ -62,6 +62,12 @@ paths:
   /users/{userId}/fields/{fieldId}:
     $ref: paths/users_userId_fields_fieldId.yaml
 
+  /cooperatives:
+    $ref: paths/cooperatives.yaml
+  /cooperatives/{userId}:
+    $ref: paths/cooperatives_cooperativeId.yaml
+
+
 components:
   securitySchemes:
     bearerAuth:
