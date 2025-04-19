@@ -44,6 +44,8 @@ public abstract class AbstractIntegrationTest {
 	protected BidStatusRepository bidStatusRepository;
 	@Autowired
 	protected UserDetailsService userDetailsService;
+	@Autowired
+	protected FieldRepository fieldRepository;
 
 	private Language mainLanguage;
 	private User mainTestUser;
@@ -59,6 +61,7 @@ public abstract class AbstractIntegrationTest {
 	private AuctionStrategy testAuctionStrategy;
 	private Bid testBid;
 	private BidStatus testBidStatus;
+	private Field mainTestField;
 
 	@Getter
 	private Cookie jwtCookie;
@@ -71,6 +74,7 @@ public abstract class AbstractIntegrationTest {
 
 	@AfterEach
 	public void tearDown() {
+		fieldRepository.deleteAll();
 		bidRepository.deleteAll();
 		bidStatusRepository.deleteAll();
 		auctionRepository.deleteAll();
@@ -210,6 +214,13 @@ public abstract class AbstractIntegrationTest {
 		return testAuctionStrategy;
 	}
 
+	public Field getMainTestField() {
+		if (mainTestField == null) {
+			throw new IllegalStateException("Champs de test non initialisé");
+		}
+		return mainTestField;
+	}
+
 	/**
 	 * Initialise la base de données des utilisateurs avec deux utilisateurs de test et les rôles associés.
 	 */
@@ -296,6 +307,13 @@ public abstract class AbstractIntegrationTest {
 				.creationDate(LocalDateTime.now()).auction(auction2).trader((Trader) producer).status(testBidStatus)
 				.build();
 		bidRepository.save(bid2);
+
+		// A field Binded To main producer
+		Point pointField = new GeometryFactory().createPoint(new Coordinate(2.3522, 48.8566));
+		Field field = Field.builder().producer((Producer) producerTestUser).identifier("FIELD-001").location(pointField)
+				.build();
+		mainTestField = fieldRepository.save(field);
+
 	}
 
 	/**
