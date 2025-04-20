@@ -22,8 +22,8 @@ public class RegionApiController implements RegionApi {
 	}
 
 	@Override
-	public ResponseEntity<List<? extends RegionDto>> listRegions() {
-		List<RegionDto> regions = regionService.listRegions();
+	public ResponseEntity<List<? extends RegionDto>> listRegions(Integer carrierId) {
+		List<RegionDto> regions = regionService.listRegions(carrierId);
 		return ResponseEntity.ok(regions);
 	}
 
@@ -48,9 +48,8 @@ public class RegionApiController implements RegionApi {
 	}
 
 	@Override
-	public ResponseEntity<Void> addRegionToCarrier(Integer carrierId, Integer regionId) {
-		regionService.addRegionToCarrier(carrierId, regionId);
+	public ResponseEntity<Void> addCarrier(Integer carrierId, Integer regionId) {
+		regionService.addCarrier(carrierId, regionId);
 		return ResponseEntity.ok().build();
 	}
-
 }

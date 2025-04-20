@@ -29,9 +29,11 @@ public interface RegionService {
 	/**
 	 * Récupère la liste de toutes les régions du système.
 	 *
+	 * @param carrierId
+	 *            Si mentionné, filtre les régions par transporteur.
 	 * @return Une liste de RegionDto représentant toutes les régions.
 	 */
-	List<RegionDto> listRegions();
+	List<RegionDto> listRegions(Integer carrierId);
 
 	/**
 	 * Met à jour une région existante avec les nouvelles informations fournies.
@@ -60,5 +62,5 @@ public interface RegionService {
 	 * @param regionId
 	 *            L'identifiant de la région à associer au transporteur.
 	 */
-	void addRegionToCarrier(Integer carrierId, Integer regionId);
+	void addCarrier(Integer carrierId, Integer regionId);
 }

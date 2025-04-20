@@ -8,6 +8,8 @@ import jakarta.servlet.http.Cookie;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Set;
+
 import lombok.Getter;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -281,6 +283,10 @@ public abstract class AbstractIntegrationTest {
 		Language language = Language.builder().name("fr").build();
 		mainLanguage = languageRepository.save(language);
 
+		// A simple region
+		Region region = Region.builder().name("sud").build();
+		mainTestRegion = regionRepository.save(region);
+
 		User user1 = Admin.builder().firstName("John").lastName("Doe").email("user@example.com")
 				.password("$2a$10$abcdefghijklmnopqrstuv1234567890AB").registrationDate(LocalDateTime.now())
 				.language(mainLanguage).enabled(true).build();
@@ -301,9 +307,11 @@ public abstract class AbstractIntegrationTest {
 				.password("$2a$10$abcdefghijklmnopqrstuv1234567890AB").registrationDate(LocalDateTime.now())
 				.language(mainLanguage).enabled(true).build();
 
+		Set regions = new HashSet<>();
+		regions.add(mainTestRegion);
 		User carrier = Carrier.builder().firstName("Pierre").lastName("Verse").email("pierre@verse.com")
 				.password("$2a$10$abcdefghijklmnopqrstuv1234567890AB").registrationDate(LocalDateTime.now())
-				.language(mainLanguage).enabled(true).regions(new HashSet<>()).pricePerKm(new BigDecimal(100)).build();
+				.language(mainLanguage).enabled(true).regions(regions).pricePerKm(new BigDecimal(100)).build();
 
 		Role userRole = Role.builder().name("ROLE_USER").build();
 		Role adminRole = Role.builder().name("ROLE_ADMIN").build();
@@ -385,10 +393,6 @@ public abstract class AbstractIntegrationTest {
 				.address("Quartier Albarika, Rue 12, Parakou, Bénin").president((Producer) producer)
 				.creationDate(LocalDateTime.of(2025, 4, 7, 12, 0)).build();
 		mainTestCooperative = cooperativeRepository.save(cooperative);
-
-		// A simple region
-		Region region = Region.builder().name("sud").build();
-		mainTestRegion = regionRepository.save(region);
 
 	}
 

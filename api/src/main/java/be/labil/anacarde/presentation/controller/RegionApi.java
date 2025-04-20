@@ -39,7 +39,8 @@ public interface RegionApi {
 	@Operation(summary = "Lister toutes les régions")
 	@GetMapping
 	@ApiResponseGet
-	ResponseEntity<List<? extends RegionDto>> listRegions();
+	ResponseEntity<List<? extends RegionDto>> listRegions(
+			@RequestParam(value = "carrierId", required = false) Integer carrierId);
 
 	@Operation(summary = "Supprimer une région")
 	@DeleteMapping("/{id}")
@@ -47,10 +48,10 @@ public interface RegionApi {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	ResponseEntity<Void> deleteRegion(@ApiValidId @PathVariable("id") Integer id);
 
-	@Operation(summary = "Associer une région à un transporteur")
+	@Operation(summary = "Associer un transporteur à une région")
 	@PutMapping("{regionId}/carriers/{carrierId}")
 	@ApiResponsePost
 	@ResponseStatus(HttpStatus.OK)
-	ResponseEntity<Void> addRegionToCarrier(@ApiValidId @PathVariable("carrierId") Integer carrierId,
+	ResponseEntity<Void> addCarrier(@ApiValidId @PathVariable("carrierId") Integer carrierId,
 			@ApiValidId @PathVariable("regionId") Integer regionId);
 }

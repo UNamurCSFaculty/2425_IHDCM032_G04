@@ -39,8 +39,13 @@ public class RegionServiceImpl implements RegionService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<RegionDto> listRegions() {
-		List<Region> regions = regionRepository.findAll();
+	public List<RegionDto> listRegions(Integer carrierId) {
+		List<Region> regions;
+		if (carrierId == null) {
+			regions = regionRepository.findAll();
+		} else {
+			regions = carrierRepository.findCarrierRegions(carrierId);
+		}
 		return regions.stream().map(regionMapper::toDto).collect(Collectors.toList());
 	}
 
@@ -63,7 +68,7 @@ public class RegionServiceImpl implements RegionService {
 	}
 
 	@Override
-	public void addRegionToCarrier(Integer carrierId, Integer regionId) {
+	public void addCarrier(Integer carrierId, Integer regionId) {
 		Carrier carrier = carrierRepository.findById(carrierId)
 				.orElseThrow(() -> new ResourceNotFoundException("Transporter non Trouvé"));
 		Region region = regionRepository.findById(regionId)
