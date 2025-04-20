@@ -46,11 +46,14 @@ public abstract class AbstractIntegrationTest {
 	protected UserDetailsService userDetailsService;
 	@Autowired
 	protected FieldRepository fieldRepository;
+	@Autowired
+	protected CooperativeRepository cooperativeRepository;
 
 	private Language mainLanguage;
 	private User mainTestUser;
 	private User secondTestUser;
 	private User producerTestUser;
+	private User secondTestProducer;
 	private User transformerTestUser;
 	private Role userTestRole;
 	private Role adminTestRole;
@@ -62,6 +65,7 @@ public abstract class AbstractIntegrationTest {
 	private Bid testBid;
 	private BidStatus testBidStatus;
 	private Field mainTestField;
+	private Cooperative mainTestCooperative;
 
 	@Getter
 	private Cookie jwtCookie;
@@ -74,6 +78,7 @@ public abstract class AbstractIntegrationTest {
 
 	@AfterEach
 	public void tearDown() {
+		cooperativeRepository.deleteAll();
 		fieldRepository.deleteAll();
 		bidRepository.deleteAll();
 		bidStatusRepository.deleteAll();
@@ -114,6 +119,16 @@ public abstract class AbstractIntegrationTest {
 			throw new IllegalStateException("Second utilisateur de test non initialisé");
 		}
 		return producerTestUser;
+	}
+
+	/**
+	 * Renvoie un second utilisateur producteur de test.
+	 */
+	public User getSecondTestProducer() {
+		if (secondTestProducer == null) {
+			throw new IllegalStateException("Second utilisateur de test non initialisé");
+		}
+		return secondTestProducer;
 	}
 
 	/**
@@ -222,6 +237,16 @@ public abstract class AbstractIntegrationTest {
 	}
 
 	/**
+	 * Renvoie une coopérative de test.
+	 */
+	public Cooperative getMainTestCooperative() {
+		if (mainTestCooperative == null) {
+			throw new IllegalStateException("Cooperative de test non initialisée");
+		}
+		return mainTestCooperative;
+	}
+
+	/**
 	 * Initialise la base de données des utilisateurs avec deux utilisateurs de test et les rôles associés.
 	 */
 	public void initUserDatabase() {
@@ -266,7 +291,7 @@ public abstract class AbstractIntegrationTest {
 		mainTestUser = userRepository.save(user1);
 		secondTestUser = userRepository.save(user2);
 		producerTestUser = userRepository.save(producer);
-		userRepository.save(producer2);
+		secondTestProducer = userRepository.save(producer2);
 		transformerTestUser = userRepository.save(transformer);
 
 		Point storeLocation = new GeometryFactory().createPoint(new Coordinate(2.3522, 48.8566));
@@ -324,6 +349,13 @@ public abstract class AbstractIntegrationTest {
 		Field field2 = Field.builder().producer((Producer) producer2).identifier("FIELD-002").location(pointField2)
 				.build();
 		fieldRepository.save(field2);
+
+		// A Cooperative who as for president 'producer'
+		Cooperative cooperative = Cooperative.builder().name("Coopérative Agricole de Parakou")
+				.address("Quartier Albarika, Rue 12, Parakou, Bénin").president((Producer) producer)
+				.creationDate(LocalDateTime.of(2025, 4, 7, 12, 0)).build();
+		mainTestCooperative = cooperativeRepository.save(cooperative);
+
 	}
 
 	/**
