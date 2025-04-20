@@ -67,6 +67,13 @@ paths:
   /cooperatives/{userId}:
     $ref: paths/cooperatives_cooperativeId.yaml
 
+  /regions:
+    $ref: paths/regions.yaml
+  /regions/{userId}:
+    $ref: paths/regions_regionId.yaml
+  /regions/{userId}/carriers/{carrierId}:
+    $ref: paths/regions_regionId_carriers_carrierId.yaml
+
 
 components:
   securitySchemes:
