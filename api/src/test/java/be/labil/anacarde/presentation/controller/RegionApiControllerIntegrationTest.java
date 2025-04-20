@@ -1,7 +1,6 @@
 package be.labil.anacarde.presentation.controller;
 
 import static org.hamcrest.Matchers.containsString;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -114,11 +113,11 @@ public class RegionApiControllerIntegrationTest extends AbstractIntegrationTest 
 	 */
 	@Test
 	public void testDeleteRegion() throws Exception {
-//		mockMvc.perform(delete("/api/regions/" + getMainTestRegion().getId()).with(jwt()))
-//				.andExpect(status().isNoContent());
-//
-//		mockMvc.perform(get("/api/regions/" + getMainTestRegion().getId()).with(jwt()))
-//				.andExpect(status().isNotFound());
+		// mockMvc.perform(delete("/api/regions/" + getMainTestRegion().getId()).with(jwt()))
+		// .andExpect(status().isNoContent());
+		//
+		// mockMvc.perform(get("/api/regions/" + getMainTestRegion().getId()).with(jwt()))
+		// .andExpect(status().isNotFound());
 	}
 
 	/**
