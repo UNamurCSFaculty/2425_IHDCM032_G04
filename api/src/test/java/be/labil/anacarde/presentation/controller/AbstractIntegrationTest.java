@@ -7,6 +7,7 @@ import be.labil.anacarde.infrastructure.security.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import lombok.Getter;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,6 +49,8 @@ public abstract class AbstractIntegrationTest {
 	protected FieldRepository fieldRepository;
 	@Autowired
 	protected CooperativeRepository cooperativeRepository;
+	@Autowired
+	protected RegionRepository regionRepository;
 
 	private Language mainLanguage;
 	private User mainTestUser;
@@ -55,6 +58,7 @@ public abstract class AbstractIntegrationTest {
 	private User producerTestUser;
 	private User secondTestProducer;
 	private User transformerTestUser;
+	private User mainTestCarrier;
 	private Role userTestRole;
 	private Role adminTestRole;
 	private Store mainTestStore;
@@ -66,6 +70,7 @@ public abstract class AbstractIntegrationTest {
 	private BidStatus testBidStatus;
 	private Field mainTestField;
 	private Cooperative mainTestCooperative;
+	private Region mainTestRegion;
 
 	@Getter
 	private Cookie jwtCookie;
@@ -247,6 +252,26 @@ public abstract class AbstractIntegrationTest {
 	}
 
 	/**
+	 * Renvoie une région de test.
+	 */
+	public Region getMainTestRegion() {
+		if (mainTestRegion == null) {
+			throw new IllegalStateException("Région de test non initialisée");
+		}
+		return mainTestRegion;
+	}
+
+	/**
+	 * Renvoie un transporter de test.
+	 */
+	public User getMainTestCarrier() {
+		if (mainTestCarrier == null) {
+			throw new IllegalStateException("Transporteur de test non initialisée");
+		}
+		return mainTestCarrier;
+	}
+
+	/**
 	 * Initialise la base de données des utilisateurs avec deux utilisateurs de test et les rôles associés.
 	 */
 	public void initUserDatabase() {
@@ -276,6 +301,10 @@ public abstract class AbstractIntegrationTest {
 				.password("$2a$10$abcdefghijklmnopqrstuv1234567890AB").registrationDate(LocalDateTime.now())
 				.language(mainLanguage).enabled(true).build();
 
+		User carrier = Carrier.builder().firstName("Pierre").lastName("Verse").email("pierre@verse.com")
+				.password("$2a$10$abcdefghijklmnopqrstuv1234567890AB").registrationDate(LocalDateTime.now())
+				.language(mainLanguage).enabled(true).regions(new HashSet<>()).pricePerKm(new BigDecimal(100)).build();
+
 		Role userRole = Role.builder().name("ROLE_USER").build();
 		Role adminRole = Role.builder().name("ROLE_ADMIN").build();
 		userTestRole = roleRepository.save(userRole);
@@ -293,6 +322,7 @@ public abstract class AbstractIntegrationTest {
 		producerTestUser = userRepository.save(producer);
 		secondTestProducer = userRepository.save(producer2);
 		transformerTestUser = userRepository.save(transformer);
+		mainTestCarrier = userRepository.save(carrier);
 
 		Point storeLocation = new GeometryFactory().createPoint(new Coordinate(2.3522, 48.8566));
 		Store store = Store.builder().location(storeLocation).user(mainTestUser).build();
@@ -350,11 +380,15 @@ public abstract class AbstractIntegrationTest {
 				.build();
 		fieldRepository.save(field2);
 
-		// A Cooperative who as for president 'producer'
+		// A cooperative who has for president 'producer'
 		Cooperative cooperative = Cooperative.builder().name("Coopérative Agricole de Parakou")
 				.address("Quartier Albarika, Rue 12, Parakou, Bénin").president((Producer) producer)
 				.creationDate(LocalDateTime.of(2025, 4, 7, 12, 0)).build();
 		mainTestCooperative = cooperativeRepository.save(cooperative);
+
+		// A simple region
+		Region region = Region.builder().name("sud").build();
+		mainTestRegion = regionRepository.save(region);
 
 	}
 
