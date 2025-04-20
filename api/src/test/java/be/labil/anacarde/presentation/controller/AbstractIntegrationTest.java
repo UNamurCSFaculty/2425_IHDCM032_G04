@@ -241,7 +241,7 @@ public abstract class AbstractIntegrationTest {
 	 */
 	public Cooperative getMainTestCooperative() {
 		if (mainTestCooperative == null) {
-			throw new IllegalStateException("Cooperative de test non initialisé");
+			throw new IllegalStateException("Cooperative de test non initialisée");
 		}
 		return mainTestCooperative;
 	}

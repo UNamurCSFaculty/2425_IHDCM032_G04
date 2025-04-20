@@ -128,7 +128,7 @@ public class CooperativeApiControllerIntegrationTest extends AbstractIntegration
 	}
 
 	/**
-	 * Teste la suppression d'un champ.
+	 * Teste la suppression d'une coopérative.
 	 *
 	 */
 	@Test
