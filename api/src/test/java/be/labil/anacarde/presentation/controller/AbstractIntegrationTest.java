@@ -54,6 +54,8 @@ public abstract class AbstractIntegrationTest {
 	protected RegionRepository regionRepository;
 	@Autowired
 	protected DocumentRepository documentRepository;
+	@Autowired
+	protected QualityRepository qualityRepository;
 
 	private Language mainLanguage;
 	private User mainTestUser;
@@ -75,6 +77,7 @@ public abstract class AbstractIntegrationTest {
 	private Cooperative mainTestCooperative;
 	private Region mainTestRegion;
 	private Document mainTestDocument;
+	private Quality mainTestQuality;
 
 	@Getter
 	private Cookie jwtCookie;
@@ -87,6 +90,7 @@ public abstract class AbstractIntegrationTest {
 
 	@AfterEach
 	public void tearDown() {
+		qualityRepository.deleteAll();
 		documentRepository.deleteAll();
 		cooperativeRepository.deleteAll();
 		fieldRepository.deleteAll();
@@ -286,6 +290,13 @@ public abstract class AbstractIntegrationTest {
 		return mainTestDocument;
 	}
 
+	public Quality getMainTestQuality() {
+		if (mainTestQuality == null) {
+			throw new IllegalStateException("Qualité de test non initialisée");
+		}
+		return mainTestQuality;
+	}
+
 	/**
 	 * Initialise la base de données des utilisateurs avec deux utilisateurs de test et les rôles associés.
 	 */
@@ -415,9 +426,10 @@ public abstract class AbstractIntegrationTest {
 		// A document with a qualityInspector
 		Document document = Document.builder().format("text").type("TEXT").storagePath("/storage")
 				.user(qualityInspector).uploadDate(LocalDateTime.now()).build();
-
 		mainTestDocument = documentRepository.save(document);
 
+		Quality quality = Quality.builder().name("WW160").build();
+		mainTestQuality = qualityRepository.save(quality);
 	}
 
 	/**
