@@ -51,5 +51,5 @@ public interface DocumentApi {
 	@Operation(summary = "Lister les documents par utilisateur")
 	@GetMapping("/users/{userId}")
 	@ApiResponseGet
-	ResponseEntity<List<? extends DocumentDto>> listDocumentsByUser(@PathVariable Integer userId);
+	ResponseEntity<List<? extends DocumentDto>> listDocumentsByUser(@ApiValidId @PathVariable Integer userId);
 }
