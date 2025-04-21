@@ -102,8 +102,7 @@ function RouteComponent() {
                     </li>
                     <li>
                       ✓ Interface{" "}
-                      <span className="font-semibold">intuitive</span> (Tailwind
-                      + DaisyUI)
+                      <span className="font-semibold">intuitive</span>
                     </li>
                   </ul>
                 </div>
