@@ -30,8 +30,7 @@ function RouteComponent() {
     const user: User = {
       id: 1,
       email,
-      nom: email.split("@")[0],
-      roles: [],
+      name: email.split("@")[0],
     };
 
     setUser(user);

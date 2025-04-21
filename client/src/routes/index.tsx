@@ -16,7 +16,7 @@ function RouteComponent() {
         <div className="alert alert-success shadow-lg rounded-none text-lg justify-center">
           <div>
             <span>
-              Bienvenue, <strong>{user.nom}</strong> ! Prêt(e) pour vos
+              Bienvenue, <strong>{user.name}</strong> ! Prêt(e) pour vos
               prochaines enchères ?
             </span>
           </div>
