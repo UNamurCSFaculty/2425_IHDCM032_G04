@@ -1,26 +1,43 @@
 export function Footer() {
   return (
-    <footer className="footer sm:footer-horizontal bg-neutral text-neutral-content p-10">
-      <nav>
-        <h6 className="footer-title">Services</h6>
-        <a className="link link-hover">Branding</a>
-        <a className="link link-hover">Design</a>
-        <a className="link link-hover">Marketing</a>
-        <a className="link link-hover">Advertisement</a>
-      </nav>
-      <nav>
-        <h6 className="footer-title">Company</h6>
-        <a className="link link-hover">About us</a>
-        <a className="link link-hover">Contact</a>
-        <a className="link link-hover">Jobs</a>
-        <a className="link link-hover">Press kit</a>
-      </nav>
-      <nav>
-        <h6 className="footer-title">Legal</h6>
-        <a className="link link-hover">Terms of use</a>
-        <a className="link link-hover">Privacy policy</a>
-        <a className="link link-hover">Cookie policy</a>
-      </nav>
+    <footer className="bg-neutral text-neutral-content">
+      {/* on garde .footer pour la grille DaisyUI, on lui ajoute container + flex */}
+      <div className="footer sm:footer-horizontal container mx-auto flex justify-evenly p-10">
+        {/* Logo */}
+        <nav className="flex-1">
+          <img
+            src="/public/logo.svg"
+            alt="Logo e-Annacarde"
+            className="mx-auto w-48 sm:mx-0"
+          />
+        </nav>
+
+        {/* Enchères */}
+        <nav className="flex-1">
+          <h6 className="footer-title">Enchères</h6>
+          <a className="link link-hover">En cours</a>
+          <a className="link link-hover">À venir</a>
+          <a className="link link-hover">Mes offres</a>
+          <a className="link link-hover">Historique</a>
+        </nav>
+
+        {/* Société */}
+        <nav className="flex-1">
+          <h6 className="footer-title">Société</h6>
+          <a className="link link-hover">À propos</a>
+          <a className="link link-hover">Contact</a>
+          <a className="link link-hover">Recrutement</a>
+          <a className="link link-hover">Presse</a>
+        </nav>
+
+        {/* Mentions légales */}
+        <nav className="flex-1">
+          <h6 className="footer-title">Mentions légales</h6>
+          <a className="link link-hover">Conditions d’utilisation</a>
+          <a className="link link-hover">Politique de confidentialité</a>
+          <a className="link link-hover">Politique de cookies</a>
+        </nav>
+      </div>
     </footer>
-  );
+  )
 }
