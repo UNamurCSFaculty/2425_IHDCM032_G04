@@ -1,3 +1,5 @@
+import logo from "@/assets/logo.svg";
+
 export function Footer() {
   return (
     <footer className="bg-neutral text-neutral-content">
@@ -6,7 +8,7 @@ export function Footer() {
         {/* Logo */}
         <nav className="flex-1">
           <img
-            src="/public/logo.svg"
+            src={logo}
             alt="Logo e-Annacarde"
             className="mx-auto w-48 sm:mx-0"
           />
@@ -39,5 +41,5 @@ export function Footer() {
         </nav>
       </div>
     </footer>
-  )
+  );
 }

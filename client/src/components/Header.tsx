@@ -1,10 +1,17 @@
-import { useUserStore } from '@/store/userStore'
-import { Link } from '@tanstack/react-router'
+import { useUserStore } from "@/store/userStore";
+import logo from "@/assets/logo.svg";
+import { Link, useNavigate } from "@tanstack/react-router";
 
 export function Header() {
-  // on va utiliser user store
-  const user = useUserStore(state => state.user)
-  const isLoggedIn = Boolean(user)
+  const user = useUserStore((state) => state.user);
+  const logout = useUserStore((state) => state.logout);
+  const isLoggedIn = Boolean(user);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate({ to: "/", replace: true });
+  };
 
   return (
     <header>
@@ -12,7 +19,7 @@ export function Header() {
         <div className="container mx-auto flex items-center justify-between">
           <div className="navbar-start">
             <div className="dropdown">
-              <div
+              <label
                 tabIndex={0}
                 role="button"
                 className="btn btn-ghost lg:hidden"
@@ -31,98 +38,119 @@ export function Header() {
                     d="M4 6h16M4 12h8m-8 6h16"
                   />
                 </svg>
-              </div>
+              </label>
               <ul
                 tabIndex={0}
                 className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
               >
                 <li>
-                  <a>Accueil</a>
+                  <Link to="/">
+                    <a>Accueil</a>
+                  </Link>
                 </li>
                 <li>
                   <a>Enchères</a>
                   <ul className="p-2">
                     <li>
-                      <a>Noix de cajou</a>
+                      <Link to="/enchères/cajou">
+                        <a>Noix de cajou</a>
+                      </Link>
                     </li>
                     <li>
-                      <a>Autres matières</a>
+                      <Link to="/enchères/autres">
+                        <a>Autres matières</a>
+                      </Link>
                     </li>
                   </ul>
                 </li>
                 <li>
-                  <a>À propos</a>
+                  <Link to="/à-propos">
+                    <a>À propos</a>
+                  </Link>
                 </li>
               </ul>
             </div>
 
             <Link to="/">
-              <img
-                className="w-48"
-                src="/public/logo.svg"
-                alt="Logo e-Annacarde"
-              />
+              <img className="w-48" src={logo} alt="Logo e‑Annacarde" />
             </Link>
           </div>
+
           <div className="navbar-center hidden lg:flex">
             <ul className="menu menu-horizontal text-md px-1">
               <li>
-                <a>Accueil</a>
+                <Link to="/">
+                  <a>Accueil</a>
+                </Link>
               </li>
               <li>
                 <details>
                   <summary>Enchères</summary>
                   <ul className="p-2">
                     <li>
-                      <a>Noix de cajou</a>
+                      <Link to="/enchères/cajou">
+                        <a>Noix de cajou</a>
+                      </Link>
                     </li>
                     <li>
-                      <a>Autres matières</a>
+                      <Link to="/enchères/autres">
+                        <a>Autres matières</a>
+                      </Link>
                     </li>
                   </ul>
                 </details>
               </li>
               <li>
-                <a>À propos</a>
+                <Link to="/à-propos">
+                  <a>À propos</a>
+                </Link>
               </li>
             </ul>
           </div>
-          {!isLoggedIn && (
+
+          {!isLoggedIn ? (
             <div className="navbar-end">
               <Link to="/login">
-                <a className="btn">Login</a>
+                <a className="btn btn-primary">Connexion</a>
               </Link>
             </div>
-          )}
-          {isLoggedIn && (
+          ) : (
             <div className="dropdown dropdown-end navbar-end">
-              <div
-                tabIndex={0}
-                role="button"
-                className="btn btn-ghost btn-circle avatar"
-              >
+              <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
                 <div className="w-10 rounded-full">
                   <img
                     alt="Avatar utilisateur"
-                    src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                    src={
+                      user.avatarUrl ??
+                      "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                    }
                   />
                 </div>
-              </div>
+              </label>
               <ul
                 tabIndex={0}
                 className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
               >
                 <li>
-                  <a className="justify-between">
-                    Profil
-                    <span className="badge">Nouveau</span>
-                  </a>
+                  <Link to="/profil">
+                    <a className="justify-between">
+                      Profil
+                      <span className="badge">Nouveau</span>
+                    </a>
+                  </Link>
                 </li>
                 <li>
-                  <a>Paramètres</a>
+                  <Link to="/paramètres">
+                    <a>Paramètres</a>
+                  </Link>
                 </li>
                 <li>
-                  <a>Déconnexion</a>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left px-4 py-2"
+                  >
+                    Déconnexion
+                  </button>
                 </li>
               </ul>
             </div>
@@ -130,5 +158,5 @@ export function Header() {
         </div>
       </div>
     </header>
-  )
+  );
 }
