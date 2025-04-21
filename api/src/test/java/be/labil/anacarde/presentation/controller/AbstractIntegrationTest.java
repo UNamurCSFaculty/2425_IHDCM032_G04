@@ -56,6 +56,8 @@ public abstract class AbstractIntegrationTest {
 	protected DocumentRepository documentRepository;
 	@Autowired
 	protected QualityRepository qualityRepository;
+	@Autowired
+	protected ContractOfferRepository contractOfferRepository;
 
 	private Language mainLanguage;
 	private User mainTestUser;
@@ -78,6 +80,7 @@ public abstract class AbstractIntegrationTest {
 	private Region mainTestRegion;
 	private Document mainTestDocument;
 	private Quality mainTestQuality;
+	private ContractOffer mainTestContractOffer;
 
 	@Getter
 	private Cookie jwtCookie;
@@ -90,6 +93,7 @@ public abstract class AbstractIntegrationTest {
 
 	@AfterEach
 	public void tearDown() {
+		contractOfferRepository.deleteAll();
 		qualityRepository.deleteAll();
 		documentRepository.deleteAll();
 		cooperativeRepository.deleteAll();
@@ -290,11 +294,21 @@ public abstract class AbstractIntegrationTest {
 		return mainTestDocument;
 	}
 
+	/**
+	 * Renvoie une Qualité de test.
+	 */
 	public Quality getMainTestQuality() {
 		if (mainTestQuality == null) {
 			throw new IllegalStateException("Qualité de test non initialisée");
 		}
 		return mainTestQuality;
+	}
+
+	public ContractOffer getMainTestContractOffer() {
+		if (mainTestQuality == null) {
+			throw new IllegalStateException("Contrat de test non initialisé");
+		}
+		return mainTestContractOffer;
 	}
 
 	/**
@@ -428,8 +442,15 @@ public abstract class AbstractIntegrationTest {
 				.user(qualityInspector).uploadDate(LocalDateTime.now()).build();
 		mainTestDocument = documentRepository.save(document);
 
+		// A quality
 		Quality quality = Quality.builder().name("WW160").build();
 		mainTestQuality = qualityRepository.save(quality);
+
+		// A contract
+		ContractOffer contractOffer = ContractOffer.builder().status("Accepted").pricePerKg(new BigDecimal("20.0"))
+				.creationDate(LocalDateTime.now()).endDate(LocalDateTime.now()).seller((Trader) producer)
+				.buyer((Trader) transformer).quality(quality).build();
+		mainTestContractOffer = contractOfferRepository.save(contractOffer);
 	}
 
 	/**

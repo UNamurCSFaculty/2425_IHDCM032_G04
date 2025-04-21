@@ -36,10 +36,10 @@ public class ContractOfferDto {
 	@Schema(description = "Date de création de l'offre", example = "2025-04-07T10:00:00", accessMode = Schema.AccessMode.READ_ONLY)
 	private LocalDateTime creationDate;
 
-	/** Durée de validité de l'offre (en jours). */
-	@NotNull(message = "La durée est requise")
-	@Schema(description = "Durée de validité de l'offre en jours", example = "30.0", requiredMode = Schema.RequiredMode.REQUIRED)
-	private Float duration;
+	/** Date de terminaison de l'offre de contrat. */
+	@NotNull(message = "La date de terminaison est requise")
+	@Schema(description = "Date de terminaison de l'offre", example = "2025-04-07T10:00:00", requiredMode = Schema.RequiredMode.REQUIRED)
+	private LocalDateTime endDate;
 
 	/** Trader vendeur associé à l'offre. */
 	@NotNull(message = "Le vendeur est requis")

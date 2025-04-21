@@ -3,10 +3,7 @@ package be.labil.anacarde.domain.model;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "contract_offer")
@@ -14,6 +11,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class ContractOffer {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_contract_offer")
@@ -29,7 +27,7 @@ public class ContractOffer {
 	private LocalDateTime creationDate;
 
 	@Column(nullable = false)
-	private Float duration;
+	private LocalDateTime endDate;
 
 	@ManyToOne(optional = false)
 	private Trader seller;
