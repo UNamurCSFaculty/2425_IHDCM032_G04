@@ -1,10 +1,7 @@
 package be.labil.anacarde.domain.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "quality")
@@ -12,6 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Quality {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_quality")
