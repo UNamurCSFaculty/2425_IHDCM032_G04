@@ -43,7 +43,7 @@ class ContractOfferMapperTest {
 		entity.setStatus("En attente");
 		entity.setPricePerKg(new BigDecimal("2.50"));
 		entity.setCreationDate(LocalDateTime.of(2025, 4, 7, 10, 0));
-		entity.setDuration(30.0f);
+		entity.setCreationDate(LocalDateTime.of(2025, 4, 7, 10, 0));
 		entity.setSeller(seller);
 		entity.setBuyer(buyer);
 		entity.setQuality(quality);
@@ -55,7 +55,7 @@ class ContractOfferMapperTest {
 		assertEquals(entity.getStatus(), dto.getStatus());
 		assertEquals(entity.getPricePerKg(), dto.getPricePerKg());
 		assertEquals(entity.getCreationDate(), dto.getCreationDate());
-		assertEquals(entity.getDuration(), dto.getDuration());
+		assertEquals(entity.getEndDate(), dto.getEndDate());
 
 		assertEquals(entity.getSeller().getId(), dto.getSeller().getId());
 		assertEquals(entity.getBuyer().getId(), dto.getBuyer().getId());
@@ -81,7 +81,7 @@ class ContractOfferMapperTest {
 		dto.setStatus("Accepté");
 		dto.setPricePerKg(new BigDecimal("3.00"));
 		dto.setCreationDate(LocalDateTime.of(2025, 4, 8, 15, 0));
-		dto.setDuration(45.0f);
+		dto.setEndDate(LocalDateTime.of(2025, 4, 8, 15, 0));
 		dto.setSeller(seller);
 		dto.setBuyer(buyer);
 		dto.setQuality(quality);
@@ -93,7 +93,7 @@ class ContractOfferMapperTest {
 		assertEquals(dto.getStatus(), entity.getStatus());
 		assertEquals(dto.getPricePerKg(), entity.getPricePerKg());
 		assertEquals(dto.getCreationDate(), entity.getCreationDate());
-		assertEquals(dto.getDuration(), entity.getDuration());
+		assertEquals(dto.getEndDate(), entity.getEndDate());
 
 		assertEquals(dto.getSeller().getId(), entity.getSeller().getId());
 		assertEquals(dto.getBuyer().getId(), entity.getBuyer().getId());
