@@ -52,6 +52,8 @@ public abstract class AbstractIntegrationTest {
 	protected CooperativeRepository cooperativeRepository;
 	@Autowired
 	protected RegionRepository regionRepository;
+	@Autowired
+	protected DocumentRepository documentRepository;
 
 	private Language mainLanguage;
 	private User mainTestUser;
@@ -72,6 +74,7 @@ public abstract class AbstractIntegrationTest {
 	private Field mainTestField;
 	private Cooperative mainTestCooperative;
 	private Region mainTestRegion;
+	private Document mainTestDocument;
 
 	@Getter
 	private Cookie jwtCookie;
@@ -84,6 +87,7 @@ public abstract class AbstractIntegrationTest {
 
 	@AfterEach
 	public void tearDown() {
+		documentRepository.deleteAll();
 		cooperativeRepository.deleteAll();
 		fieldRepository.deleteAll();
 		bidRepository.deleteAll();
@@ -267,9 +271,19 @@ public abstract class AbstractIntegrationTest {
 	 */
 	public User getMainTestCarrier() {
 		if (mainTestCarrier == null) {
-			throw new IllegalStateException("Transporteur de test non initialisée");
+			throw new IllegalStateException("Transporteur de test non initialisé");
 		}
 		return mainTestCarrier;
+	}
+
+	/**
+	 * Renvoie un Document de test.
+	 */
+	public Document getMainTestDocument() {
+		if (mainTestDocument == null) {
+			throw new IllegalStateException("Document de test non initialisé");
+		}
+		return mainTestDocument;
 	}
 
 	/**
@@ -306,6 +320,10 @@ public abstract class AbstractIntegrationTest {
 				.password("$2a$10$abcdefghijklmnopqrstuv1234567890AB").registrationDate(LocalDateTime.now())
 				.language(mainLanguage).enabled(true).build();
 
+		User qualityInspector = QualityInspector.builder().firstName("Inspector").lastName("Best")
+				.email("inspector@best.com").password("$2a$10$abcdefghijklmnopqrstuv1234567890AB")
+				.registrationDate(LocalDateTime.now()).language(mainLanguage).enabled(true).build();
+
 		Set regions = new HashSet<>();
 		regions.add(mainTestRegion);
 		User carrier = Carrier.builder().firstName("Pierre").lastName("Verse").email("pierre@verse.com")
@@ -330,6 +348,7 @@ public abstract class AbstractIntegrationTest {
 		secondTestProducer = userRepository.save(producer2);
 		transformerTestUser = userRepository.save(transformer);
 		mainTestCarrier = userRepository.save(carrier);
+		userRepository.save(qualityInspector);
 
 		Point storeLocation = new GeometryFactory().createPoint(new Coordinate(2.3522, 48.8566));
 		Store store = Store.builder().location(storeLocation).user(mainTestUser).build();
@@ -392,6 +411,12 @@ public abstract class AbstractIntegrationTest {
 				.address("Quartier Albarika, Rue 12, Parakou, Bénin").president((Producer) producer)
 				.creationDate(LocalDateTime.of(2025, 4, 7, 12, 0)).build();
 		mainTestCooperative = cooperativeRepository.save(cooperative);
+
+		// A document with a qualityInspector
+		Document document = Document.builder().format("text").type("TEXT").storagePath("/storage")
+				.user(qualityInspector).uploadDate(LocalDateTime.now()).build();
+
+		mainTestDocument = documentRepository.save(document);
 
 	}
 

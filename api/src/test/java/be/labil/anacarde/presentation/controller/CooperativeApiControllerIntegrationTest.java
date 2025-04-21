@@ -66,7 +66,7 @@ public class CooperativeApiControllerIntegrationTest extends AbstractIntegration
 		CooperativeDto dto = new CooperativeDto();
 		dto.setName("Coopérative de Natitingou");
 		dto.setAddress("Quartier Kpébié, Natitingou, Bénin");
-		dto.setCreationDate(LocalDateTime.of(2020, 5, 20, 0, 0)); // date de création précise
+		dto.setCreationDate(LocalDateTime.of(2020, 5, 20, 0, 0));
 
 		ProducerDetailDto producerDetailDto = new ProducerDetailDto();
 		producerDetailDto.setId(getSecondTestProducer().getId());
@@ -114,7 +114,7 @@ public class CooperativeApiControllerIntegrationTest extends AbstractIntegration
 
 		dto.setName("Coop MAJ");
 		dto.setAddress(cooperative.getAddress());
-		dto.setCreationDate(LocalDateTime.of(2020, 5, 20, 0, 0)); // date de création précise
+		dto.setCreationDate(LocalDateTime.of(2020, 5, 20, 0, 0));
 
 		ObjectNode json = objectMapper.valueToTree(dto);
 
