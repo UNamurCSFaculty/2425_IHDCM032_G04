@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,6 +14,7 @@ import org.hibernate.proxy.HibernateProxy;
 @Table(name = "document", indexes = {@Index(columnList = "user_id")})
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 /** Entité représentant un document dans le système. */
