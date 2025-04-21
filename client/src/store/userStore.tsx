@@ -1,4 +1,4 @@
-import { create } from 'zustand'
+import { create } from 'zustand'
 import type { User } from '@/types/api'
 
 interface UserState {
@@ -7,8 +7,8 @@ interface UserState {
   logout: () => void
 }
 
-export const useUserStore = create<UserState>((set) => ({
+export const useUserStore = create<UserState>(set => ({
   user: null,
-  setUser: (user) => set({ user }),
+  setUser: user => set({ user }),
   logout: () => set({ user: null }),
 }))
