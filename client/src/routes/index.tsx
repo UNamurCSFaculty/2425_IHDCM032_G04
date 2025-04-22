@@ -26,7 +26,7 @@ function RouteComponent() {
       {/* Contenu principal */}
       <main className="flex-grow container mx-auto px-4 py-12 space-y-16">
         {/* Hero */}
-        <section className="relative overflow-hidden bg-gradient-to-r from-green-500 to-yellow-400">
+        <section className="relative overflow-hidden bg-gradient-to-r from-green-500 to-yellow-400 rounded-xl">
           {/* Décorations circulaires */}
           <div className="absolute -top-16 -left-16 w-72 h-72 rounded-full bg-white/20 blur-3xl"></div>
           <div className="absolute -bottom-16 -right-16 w-96 h-96 rounded-full bg-white/10 blur-2xl"></div>
