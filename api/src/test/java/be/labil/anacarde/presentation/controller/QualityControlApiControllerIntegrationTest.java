@@ -2,6 +2,7 @@ package be.labil.anacarde.presentation.controller;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.startsWith;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -177,12 +178,11 @@ public class QualityControlApiControllerIntegrationTest extends AbstractIntegrat
 	 */
 	@Test
 	public void testDeleteQualityControl() throws Exception {
-		// mockMvc.perform(delete("/api/products/" + getMainTestQualityControl().getProduct().getId()
-		// + "/quality-controls/" + getMainTestQualityControl().getId()).with(jwt()))
-		// .andExpect(status().isNoContent());
-		//
-		// mockMvc.perform(get("/api/products/" + getMainTestQualityControl().getProduct().getId() +
-		// "/quality-controls/"
-		// + getMainTestQualityControl().getId()).with(jwt())).andExpect(status().isNotFound());
+		mockMvc.perform(delete("/api/products/" + getMainTestQualityControl().getProduct().getId()
+				+ "/quality-controls/" + getMainTestQualityControl().getId()).with(jwt()))
+				.andExpect(status().isNoContent());
+
+		mockMvc.perform(get("/api/products/" + getMainTestQualityControl().getProduct().getId() + "/quality-controls/"
+				+ getMainTestQualityControl().getId()).with(jwt())).andExpect(status().isNotFound());
 	}
 }
