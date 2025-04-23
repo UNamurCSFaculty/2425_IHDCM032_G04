@@ -58,6 +58,8 @@ public abstract class AbstractIntegrationTest {
 	protected QualityRepository qualityRepository;
 	@Autowired
 	protected ContractOfferRepository contractOfferRepository;
+	@Autowired
+	protected QualityControlRepository qualityControlRepository;
 
 	private Language mainLanguage;
 	private User mainTestUser;
@@ -81,6 +83,7 @@ public abstract class AbstractIntegrationTest {
 	private Document mainTestDocument;
 	private Quality mainTestQuality;
 	private ContractOffer mainTestContractOffer;
+	private QualityControl mainTestQualityControl;
 
 	@Getter
 	private Cookie jwtCookie;
@@ -93,6 +96,7 @@ public abstract class AbstractIntegrationTest {
 
 	@AfterEach
 	public void tearDown() {
+		qualityControlRepository.deleteAll();
 		contractOfferRepository.deleteAll();
 		qualityRepository.deleteAll();
 		documentRepository.deleteAll();
@@ -279,7 +283,7 @@ public abstract class AbstractIntegrationTest {
 	 */
 	public User getMainTestCarrier() {
 		if (mainTestCarrier == null) {
-			throw new IllegalStateException("Transporteur de test non initialisé");
+			throw new IllegalStateException("Transporteur de test non initialisée");
 		}
 		return mainTestCarrier;
 	}
@@ -309,6 +313,16 @@ public abstract class AbstractIntegrationTest {
 			throw new IllegalStateException("Contrat de test non initialisé");
 		}
 		return mainTestContractOffer;
+	}
+
+	/**
+	 * Renvoie un control de qualité de test.
+	 */
+	public QualityControl getMainTestQualityControl() {
+		if (mainTestQualityControl == null) {
+			throw new IllegalStateException("Transporteur de test non initialisée");
+		}
+		return mainTestQualityControl;
 	}
 
 	/**
@@ -451,6 +465,14 @@ public abstract class AbstractIntegrationTest {
 				.creationDate(LocalDateTime.now()).endDate(LocalDateTime.now()).seller((Trader) producer)
 				.buyer((Trader) transformer).quality(quality).build();
 		mainTestContractOffer = contractOfferRepository.save(contractOffer);
+
+		QualityControl qualityControl = QualityControl.builder().identifier("QC-001")
+				.controlDate(LocalDateTime.of(2025, 4, 7, 10, 0)).granularity(0.5f).korTest(0.8f).humidity(12.5f)
+				.qualityInspector((QualityInspector) qualityInspector).product(productTransform).quality(quality)
+				.document(document).build();
+
+		mainTestQualityControl = qualityControlRepository.save(qualityControl);
+
 	}
 
 	/**
