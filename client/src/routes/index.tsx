@@ -1,42 +1,41 @@
-import { createFileRoute } from "@tanstack/react-router";
-import imgNoix from "@/assets/Noix de cajou bol.webp";
-import { useUserStore } from "@/store/userStore";
+import { createFileRoute, Link } from '@tanstack/react-router'
+import imgNoix from '@/assets/Noix de cajou bol.webp'
+import { useUserStore } from '@/store/userStore'
+import { Button } from '@/components/ui/button'
+import { ArrowUpRight, UserRound } from 'lucide-react'
+import { FeaturesSection } from '@/components/FeatureSection'
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute('/')({
   component: RouteComponent,
-});
+})
 
 function RouteComponent() {
-  const user = useUserStore((state) => state.user);
+  const user = useUserStore(state => state.user)
 
   return (
-    <div className="min-h-screen flex flex-col bg-base-200">
+    <div className="bg-base-200 flex min-h-screen flex-col">
       {/* --- Bandeau de bienvenue si connecté --- */}
       {user && (
-        <div className="alert alert-success shadow-lg rounded-none text-lg justify-center">
-          <div>
-            <span>
-              Bienvenue, <strong>{user.name}</strong> ! Prêt(e) pour vos
-              prochaines enchères ?
-            </span>
-          </div>
+        <div className="bg-amber-950 p-4 text-center text-sm text-white">
+          <span>
+            Bienvenue, <strong>{user.name}</strong> ! Prêt(e) pour vos
+            prochaines enchères ?
+          </span>
         </div>
       )}
 
       {/* Contenu principal */}
-      <main className="flex-grow container mx-auto px-4 py-12 space-y-16">
+      <main>
         {/* Hero */}
-        <section className="relative overflow-hidden bg-gradient-to-r from-green-500 to-yellow-400 rounded-xl">
+        <section className="relative overflow-hidden bg-gradient-to-r from-green-500 to-yellow-400">
           {/* Décorations circulaires */}
-          <div className="absolute -top-16 -left-16 w-72 h-72 rounded-full bg-white/20 blur-3xl"></div>
-          <div className="absolute -bottom-16 -right-16 w-96 h-96 rounded-full bg-white/10 blur-2xl"></div>
+          <div className="absolute -top-16 -left-16 h-72 w-72 rounded-full bg-white/20 blur-3xl"></div>
+          <div className="absolute -right-16 -bottom-16 h-96 w-96 rounded-full bg-white/10 blur-2xl"></div>
 
-          <div className="container mx-auto px-6 py-24 lg:flex lg:items-center lg:justify-between">
+          <div className="container mx-auto px-6 py-24 lg:flex lg:items-center lg:justify-around">
             {/* Texte */}
-            <div className="text-center lg:text-left lg:max-w-xl">
-              <h1 className="text-6xl font-extrabold leading-tight text-white drop-shadow-lg mb-6">
-                e‑Annacarde
-                <br />
+            <div className="text-center lg:max-w-xl lg:text-left">
+              <h1 className="mb-6 text-6xl leading-tight font-extrabold text-white drop-shadow-lg">
                 Enchères & Marché du Cajou
               </h1>
               <p className="mb-8 text-xl text-white/90">
@@ -46,77 +45,35 @@ function RouteComponent() {
                 confiance.
               </p>
               {!user && (
-                <div className="flex flex-col sm:flex-row sm:gap-4 justify-center lg:justify-start">
-                  <a
-                    href="/login"
-                    className="btn btn-lg bg-white text-green-600 hover:bg-white/90 shadow-lg"
-                  >
-                    Démarrer maintenant
-                  </a>
-                  <a
-                    href="/register"
-                    className="btn btn-outline btn-lg border-white text-white hover:bg-white/20 mt-4 sm:mt-0"
-                  >
-                    Créer un compte
-                  </a>
+                <div className="flex flex-col justify-center sm:flex-row sm:gap-4 lg:justify-start">
+                  <Link to="/login">
+                    <Button size="lg">
+                      Démarrer maintenant <ArrowUpRight className="!h-5 !w-5" />
+                    </Button>
+                  </Link>
+                  <Link to="/register">
+                    <Button variant="outline" size="lg">
+                      Créer un compte <UserRound className="!h-5 !w-5" />
+                    </Button>
+                  </Link>
                 </div>
               )}
             </div>
 
             {/* Illustration */}
-            <div className="mt-12 lg:mt-0 lg:flex-shrink-0">
+            <div className="relative mt-12 animate-spin duration-[120s] before:absolute before:inset-0 before:rounded-full before:bg-white/50 before:blur-2xl before:content-[''] lg:mt-0 lg:flex-shrink-0">
               <img
                 src={imgNoix}
                 alt="Illustration noix de cajou"
-                className="w-full max-w-md mx-auto lg:mx-0 drop-shadow-2xl"
+                className="mx-auto w-full max-w-md drop-shadow-2xl lg:mx-0"
               />
             </div>
           </div>
         </section>
-        {/* Fonctionnalités */}
-        <section>
-          <h2 className="text-3xl font-semibold text-center mb-8">
-            Pourquoi choisir e‑Annacarde ?
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="card bg-base-100 shadow-md p-6 text-center">
-              <div className="mb-4 text-5xl">🕒</div>
-              <h3 className="text-xl font-bold mb-2">Enchères en temps réel</h3>
-              <p>
-                Suivez chaque enchère et ne manquez aucune opportunité de
-                surenchérir.
-              </p>
-            </div>
-            <div className="card bg-base-100 shadow-md p-6 text-center">
-              <div className="mb-4 text-5xl">🔒</div>
-              <h3 className="text-xl font-bold mb-2">
-                Transactions sécurisées
-              </h3>
-              <p>
-                Paiement et livraison gérés de bout en bout pour votre
-                tranquillité d’esprit.
-              </p>
-            </div>
-            <div className="card bg-base-100 shadow-md p-6 text-center">
-              <div className="mb-4 text-5xl">🤝</div>
-              <h3 className="text-xl font-bold mb-2">Soutien à la filière</h3>
-              <p>
-                Valorisez les producteurs locaux et contribuez au développement
-                durable.
-              </p>
-            </div>
-          </div>
-        </section>
 
-        {/* Appel à l'action */}
-        {!user && (
-          <section className="text-center">
-            <a href="/register" className="btn btn-secondary btn-lg">
-              Créer un compte
-            </a>
-          </section>
-        )}
+        {/* Fonctionnalités */}
+        <FeaturesSection />
       </main>
     </div>
-  );
+  )
 }

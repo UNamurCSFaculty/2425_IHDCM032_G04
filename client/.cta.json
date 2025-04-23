@@ -3,11 +3,13 @@
   "projectName": "client",
   "typescript": true,
   "tailwind": true,
-  "packageManager": "npm",
+  "packageManager": "bun",
   "toolchain": "none",
   "mode": "file-router",
   "git": true,
   "variableValues": {},
   "version": 1,
-  "existingAddOns": []
+  "existingAddOns": [
+    "shadcn"
+  ]
 }
