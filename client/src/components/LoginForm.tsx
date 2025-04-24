@@ -2,13 +2,19 @@ import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Link, useNavigate } from '@tanstack/react-router'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import logo from '@/assets/logo.svg'
 import { LockIcon, UserIcon } from 'lucide-react'
-import { useState } from 'react'
 import { useUserStore } from '@/store/userStore'
-import type { User } from '@/types/api'
+
+import z from 'zod'
+import { useAppForm } from './form'
+
+const LoginSchema = z.object({
+  email: z.email('Adresse e-mail invalide'),
+  password: z
+    .string()
+    .min(8, 'Le mot de passe doit faire au moins 8 caractères'),
+})
 
 export function LoginForm({
   className,
@@ -16,34 +22,32 @@ export function LoginForm({
 }: React.ComponentProps<'div'>) {
   const navigate = useNavigate()
   const setUser = useUserStore(state => state.setUser)
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [, setError] = useState<string | null>(null)
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError(null)
 
-    if (!email || !password) {
-      setError('Veuillez remplir tous les champs')
-      return
-    }
-
-    // Simulation de la connexion utilisateur
-    const user: User = {
-      id: 1,
-      email,
-      name: email.split('@')[0],
-    }
-
-    setUser(user)
-    navigate({ to: '/', replace: true })
-  }
+  const form = useAppForm({
+    defaultValues: { email: '', password: '' },
+    onSubmit: async ({ value }) => {
+      const user = {
+        id: 1,
+        email: value.email,
+        name: value.email.split('@')[0],
+      }
+      setUser(user)
+      navigate({ to: '/', replace: true })
+    },
+    validators: { onChange: LoginSchema },
+  })
 
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
       <Card className="overflow-hidden">
         <CardContent>
-          <form className="p-6 md:p-8" onSubmit={handleSubmit}>
+          <form
+            className="p-6 md:p-8"
+            onSubmit={e => {
+              e.preventDefault()
+              form.handleSubmit()
+            }}
+          >
             <div className="flex flex-col gap-6">
               <div className="flex flex-col items-center text-center">
                 <img src={logo} alt="Logo e‑Annacarde" className="h-20" />
@@ -52,40 +56,44 @@ export function LoginForm({
                 </p>
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="email">Adresse e-mail</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
-                  endIcon={UserIcon}
-                  required
-                  value={email}
-                  onChange={e => setEmail(e.currentTarget.value)}
+                <form.AppField
+                  name="email"
+                  children={field => (
+                    <field.TextField
+                      label="Adresse e-mail"
+                      type="email"
+                      endIcon={UserIcon}
+                      placeholder="m@example.com"
+                    />
+                  )}
                 />
               </div>
               <div className="grid gap-2">
+                <form.AppField
+                  name="password"
+                  children={field => (
+                    <field.TextField
+                      label="Mot de passe"
+                      type="password"
+                      endIcon={LockIcon}
+                      placeholder="••••••••••"
+                    />
+                  )}
+                />
                 <div className="flex items-center">
-                  <Label htmlFor="password">Mot de passe</Label>
-                  <a
-                    href="#"
+                  <Link
+                    to="/recover-password"
                     className="ml-auto text-sm underline-offset-2 hover:underline"
                   >
                     Mot de passe oublié ?
-                  </a>
+                  </Link>
                 </div>
-                <Input
-                  id="password"
-                  type="password"
-                  required
-                  endIcon={LockIcon}
-                  value={password}
-                  onChange={e => setPassword(e.currentTarget.value)}
-                  placeholder="••••••••••••"
-                />
               </div>
-              <Button type="submit" className="w-full">
-                Se connecter
-              </Button>
+              <form.AppForm>
+                <form.SubmitButton className="w-full">
+                  Se connecter
+                </form.SubmitButton>
+              </form.AppForm>
               <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
                 <span className="bg-background text-muted-foreground relative z-10 px-2">
                   Ou continuer avec

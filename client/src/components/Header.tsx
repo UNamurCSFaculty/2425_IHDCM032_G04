@@ -1,5 +1,6 @@
 import { useUserStore } from '@/store/userStore'
 import logo from '@/assets/logo.svg'
+import avatar from '@/assets/avatar.webp'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { Menu, Trees, Zap } from 'lucide-react'
 
@@ -73,6 +74,7 @@ export function Header() {
       ],
     },
     { title: 'À propos', url: '/a-propos' },
+    { title: 'Contact', url: '/contact' },
   ]
 
   return (
@@ -110,10 +112,7 @@ export function Header() {
                   <button className="flex items-center gap-2">
                     <Avatar>
                       <AvatarImage
-                        src={
-                          user?.avatarUrl ||
-                          'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
-                        }
+                        src={user?.avatarUrl || avatar}
                         alt="Avatar utilisateur"
                       />
                       <AvatarFallback>{user?.name?.[0]}</AvatarFallback>

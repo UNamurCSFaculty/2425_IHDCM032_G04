@@ -1,7 +1,7 @@
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Link } from '@tanstack/react-router'
 import { Clock, Lock, Handshake } from 'lucide-react'
-import { Button } from './ui/button'
+import { Button } from '../ui/button'
 
 const features = [
   {
@@ -45,7 +45,7 @@ export function FeaturesSection() {
               key={title}
               className={`animate-appear-on-view animate-in fade-in slide-in-from-bottom duration-500 ease-out delay-${idx * 150} fill-mode-forwards`}
             >
-              <Card className="intersect-half intersect:scale-100 intersect:opacity-100 h-full scale-50 transform rounded-2xl bg-white opacity-0 shadow-lg transition duration-1000 hover:scale-105 hover:shadow-2xl">
+              <Card className="intersect-once intersect-half intersect:scale-100 intersect:opacity-100 h-full scale-50 transform rounded-2xl bg-white opacity-0 shadow-lg transition duration-500 hover:scale-105 hover:shadow-2xl">
                 <CardHeader className="flex flex-col items-center space-y-4 pt-6">
                   <div className="rounded-full bg-green-100 p-4 text-green-600">
                     <Icon className="h-8 w-8" />
@@ -76,3 +76,5 @@ export function FeaturesSection() {
     </section>
   )
 }
+
+export default FeaturesSection
