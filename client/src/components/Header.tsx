@@ -42,6 +42,12 @@ interface MenuItem {
   items?: MenuItem[]
 }
 
+const activeStyle = {
+  style: {
+    color: 'var(--anacarde-dark-green)',
+  },
+}
+
 export function Header() {
   const user = useUserStore(state => state.user)
   const logout = useUserStore(state => state.logout)
@@ -240,6 +246,7 @@ const renderMenuItem = (item: MenuItem) => {
       <NavigationMenuLink asChild>
         <Link
           to={item.url}
+          activeProps={activeStyle}
           className="group bg-background hover:bg-muted hover:text-accent-foreground inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors"
         >
           {item.title}
