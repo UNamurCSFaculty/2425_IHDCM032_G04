@@ -151,8 +151,15 @@ export function LoginForm({
       </Card>
       <div className="text-muted-foreground hover:[&_a]:text-primary text-center text-xs text-balance [&_a]:underline [&_a]:underline-offset-4">
         En cliquant sur Continuer, vous acceptez nos{' '}
-        <a href="#">Conditions d’utilisation</a> et notre{' '}
-        <a href="#">Politique de confidentialité</a>.
+        <Link to="/terms" className="underline underline-offset-4">
+          Conditions d’utilisation
+        </Link>{' '}
+        et notre
+        <Link to="/privacy" className="underline underline-offset-4">
+          {' '}
+          Politique de confidentialité
+        </Link>
+        .
       </div>
     </div>
   )

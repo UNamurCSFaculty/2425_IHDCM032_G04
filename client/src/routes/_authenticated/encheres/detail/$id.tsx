@@ -26,7 +26,7 @@ export const Route = createFileRoute('/_authenticated/encheres/detail/$id')({
     console.log('Loading data for enchere with id:', params.id)
     await new Promise(resolve => setTimeout(resolve, 1000))
     // IF ID NOT FOUND
-    if (false) {
+    if (params.id < 0) {
       throw notFound()
     }
     // Return the data

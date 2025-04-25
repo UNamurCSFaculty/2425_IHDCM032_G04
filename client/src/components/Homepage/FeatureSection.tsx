@@ -31,7 +31,7 @@ export function FeaturesSection() {
         <div className="mb-16 text-center">
           <h2 className="mb-4 text-4xl font-extrabold text-gray-900 sm:text-5xl">
             Pourquoi choisir <span className="text-green-600">e‑Annacarde</span>
-             ?
+            ?
           </h2>
           <p className="mx-auto max-w-2xl text-lg text-gray-700">
             Découvrez comment notre plateforme révolutionne les enchères de noix
