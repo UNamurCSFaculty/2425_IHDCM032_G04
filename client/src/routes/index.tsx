@@ -21,8 +21,8 @@ function RouteComponent() {
       {user && (
         <div className="bg-amber-950 p-4 text-center text-sm text-white">
           <span>
-            Bienvenue, <strong>{user.name}</strong> ! Prêt(e) pour vos
-            prochaines enchères ?
+            Bienvenue, <strong>{user.name}</strong>! Prêt(e) pour vos prochaines
+            enchères ?
           </span>
         </div>
       )}

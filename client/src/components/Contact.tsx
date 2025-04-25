@@ -23,6 +23,7 @@ export const ContactForm: React.FC = () => {
     },
     onSubmit: async ({ value }) => {
       // TODO: envoyer les données au serveur
+      console.log('Form submitted:', value)
       navigate({ to: '/merci' })
     },
     validators: {
