@@ -13,7 +13,12 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as LoginImport } from './routes/login'
 import { Route as ContactImport } from './routes/contact'
+import { Route as AuthenticatedImport } from './routes/_authenticated'
 import { Route as IndexImport } from './routes/index'
+import { Route as AuthenticatedEncheresIndexImport } from './routes/_authenticated/encheres/index'
+import { Route as AuthenticatedEncheresCajouImport } from './routes/_authenticated/encheres/cajou'
+import { Route as AuthenticatedEncheresAutresImport } from './routes/_authenticated/encheres/autres'
+import { Route as AuthenticatedEncheresDetailIdImport } from './routes/_authenticated/encheres/detail/$id'
 
 // Create/Update Routes
 
@@ -29,11 +34,46 @@ const ContactRoute = ContactImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const AuthenticatedRoute = AuthenticatedImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRoute,
 } as any)
+
+const AuthenticatedEncheresIndexRoute = AuthenticatedEncheresIndexImport.update(
+  {
+    id: '/encheres/',
+    path: '/encheres/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any
+)
+
+const AuthenticatedEncheresCajouRoute = AuthenticatedEncheresCajouImport.update(
+  {
+    id: '/encheres/cajou',
+    path: '/encheres/cajou',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any
+)
+
+const AuthenticatedEncheresAutresRoute =
+  AuthenticatedEncheresAutresImport.update({
+    id: '/encheres/autres',
+    path: '/encheres/autres',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+
+const AuthenticatedEncheresDetailIdRoute =
+  AuthenticatedEncheresDetailIdImport.update({
+    id: '/encheres/detail/$id',
+    path: '/encheres/detail/$id',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -44,6 +84,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthenticatedImport
       parentRoute: typeof rootRoute
     }
     '/contact': {
@@ -60,47 +107,135 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginImport
       parentRoute: typeof rootRoute
     }
+    '/_authenticated/encheres/autres': {
+      id: '/_authenticated/encheres/autres'
+      path: '/encheres/autres'
+      fullPath: '/encheres/autres'
+      preLoaderRoute: typeof AuthenticatedEncheresAutresImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/encheres/cajou': {
+      id: '/_authenticated/encheres/cajou'
+      path: '/encheres/cajou'
+      fullPath: '/encheres/cajou'
+      preLoaderRoute: typeof AuthenticatedEncheresCajouImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/encheres/': {
+      id: '/_authenticated/encheres/'
+      path: '/encheres'
+      fullPath: '/encheres'
+      preLoaderRoute: typeof AuthenticatedEncheresIndexImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/encheres/detail/$id': {
+      id: '/_authenticated/encheres/detail/$id'
+      path: '/encheres/detail/$id'
+      fullPath: '/encheres/detail/$id'
+      preLoaderRoute: typeof AuthenticatedEncheresDetailIdImport
+      parentRoute: typeof AuthenticatedImport
+    }
   }
 }
 
 // Create and export the route tree
 
+interface AuthenticatedRouteChildren {
+  AuthenticatedEncheresAutresRoute: typeof AuthenticatedEncheresAutresRoute
+  AuthenticatedEncheresCajouRoute: typeof AuthenticatedEncheresCajouRoute
+  AuthenticatedEncheresIndexRoute: typeof AuthenticatedEncheresIndexRoute
+  AuthenticatedEncheresDetailIdRoute: typeof AuthenticatedEncheresDetailIdRoute
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedEncheresAutresRoute: AuthenticatedEncheresAutresRoute,
+  AuthenticatedEncheresCajouRoute: AuthenticatedEncheresCajouRoute,
+  AuthenticatedEncheresIndexRoute: AuthenticatedEncheresIndexRoute,
+  AuthenticatedEncheresDetailIdRoute: AuthenticatedEncheresDetailIdRoute,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren
+)
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '': typeof AuthenticatedRouteWithChildren
   '/contact': typeof ContactRoute
   '/login': typeof LoginRoute
+  '/encheres/autres': typeof AuthenticatedEncheresAutresRoute
+  '/encheres/cajou': typeof AuthenticatedEncheresCajouRoute
+  '/encheres': typeof AuthenticatedEncheresIndexRoute
+  '/encheres/detail/$id': typeof AuthenticatedEncheresDetailIdRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '': typeof AuthenticatedRouteWithChildren
   '/contact': typeof ContactRoute
   '/login': typeof LoginRoute
+  '/encheres/autres': typeof AuthenticatedEncheresAutresRoute
+  '/encheres/cajou': typeof AuthenticatedEncheresCajouRoute
+  '/encheres': typeof AuthenticatedEncheresIndexRoute
+  '/encheres/detail/$id': typeof AuthenticatedEncheresDetailIdRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/contact': typeof ContactRoute
   '/login': typeof LoginRoute
+  '/_authenticated/encheres/autres': typeof AuthenticatedEncheresAutresRoute
+  '/_authenticated/encheres/cajou': typeof AuthenticatedEncheresCajouRoute
+  '/_authenticated/encheres/': typeof AuthenticatedEncheresIndexRoute
+  '/_authenticated/encheres/detail/$id': typeof AuthenticatedEncheresDetailIdRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/contact' | '/login'
+  fullPaths:
+    | '/'
+    | ''
+    | '/contact'
+    | '/login'
+    | '/encheres/autres'
+    | '/encheres/cajou'
+    | '/encheres'
+    | '/encheres/detail/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/contact' | '/login'
-  id: '__root__' | '/' | '/contact' | '/login'
+  to:
+    | '/'
+    | ''
+    | '/contact'
+    | '/login'
+    | '/encheres/autres'
+    | '/encheres/cajou'
+    | '/encheres'
+    | '/encheres/detail/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/contact'
+    | '/login'
+    | '/_authenticated/encheres/autres'
+    | '/_authenticated/encheres/cajou'
+    | '/_authenticated/encheres/'
+    | '/_authenticated/encheres/detail/$id'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   ContactRoute: typeof ContactRoute
   LoginRoute: typeof LoginRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
   ContactRoute: ContactRoute,
   LoginRoute: LoginRoute,
 }
@@ -116,6 +251,7 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/_authenticated",
         "/contact",
         "/login"
       ]
@@ -123,11 +259,36 @@ export const routeTree = rootRoute
     "/": {
       "filePath": "index.tsx"
     },
+    "/_authenticated": {
+      "filePath": "_authenticated.tsx",
+      "children": [
+        "/_authenticated/encheres/autres",
+        "/_authenticated/encheres/cajou",
+        "/_authenticated/encheres/",
+        "/_authenticated/encheres/detail/$id"
+      ]
+    },
     "/contact": {
       "filePath": "contact.tsx"
     },
     "/login": {
       "filePath": "login.tsx"
+    },
+    "/_authenticated/encheres/autres": {
+      "filePath": "_authenticated/encheres/autres.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/encheres/cajou": {
+      "filePath": "_authenticated/encheres/cajou.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/encheres/": {
+      "filePath": "_authenticated/encheres/index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/encheres/detail/$id": {
+      "filePath": "_authenticated/encheres/detail/$id.tsx",
+      "parent": "/_authenticated"
     }
   }
 }
