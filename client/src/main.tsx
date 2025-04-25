@@ -13,18 +13,24 @@ import reportWebVitals from './reportWebVitals.ts'
 import NotFound from './components/NotFound.tsx'
 import { ErrorBoundary } from './components/ErrorBoundary.tsx'
 
+import { useUserStore } from './store/userStore.tsx'
+import { GlobalSkeleton } from './components/GlobalSkeleton.tsx'
+
 // Create React Query client
 const queryClient = new QueryClient()
 
 // Create a new router instance
 const router = createRouter({
   routeTree,
-  context: {},
+  context: {
+    user: undefined!,
+  },
   defaultPreload: 'intent',
   scrollRestoration: true,
   defaultStructuralSharing: true,
   defaultPreloadStaleTime: 0,
   defaultNotFoundComponent: NotFound,
+  defaultPendingComponent: GlobalSkeleton,
 })
 
 // Register the router instance for type safety
@@ -35,17 +41,26 @@ declare module '@tanstack/react-router' {
 }
 
 // Render the app
+function AppWithProvider() {
+  // Appel du Hook à l’intérieur d’un composant React
+  const user = useUserStore(state => state.user)
+
+  return (
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} context={{ user }} />
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
+    </ErrorBoundary>
+  )
+}
+
 const rootElement = document.getElementById('app')
 if (rootElement && !rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement)
   root.render(
     <StrictMode>
-      <ErrorBoundary>
-        <QueryClientProvider client={queryClient}>
-          <RouterProvider router={router} />
-          <ReactQueryDevtools initialIsOpen={false} />
-        </QueryClientProvider>
-      </ErrorBoundary>
+      <AppWithProvider />
     </StrictMode>
   )
 }
@@ -53,7 +68,6 @@ if (rootElement && !rootElement.innerHTML) {
 // Require for
 Observer.start()
 router.subscribe('onRendered', () => {
-  console.log('Router rendered')
   Observer.restart()
 })
 

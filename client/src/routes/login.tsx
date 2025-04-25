@@ -1,9 +1,13 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useUserStore } from '@/store/userStore'
 import { LoginForm } from '@/components/LoginForm'
+import z from 'zod'
 
 export const Route = createFileRoute('/login')({
   component: RouteComponent,
+  validateSearch: z.object({
+    redirect: z.string().optional(),
+  }),
 })
 
 function RouteComponent() {

@@ -1,13 +1,14 @@
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { Link, useNavigate } from '@tanstack/react-router'
+import { Link, useNavigate, useRouter, useSearch } from '@tanstack/react-router'
 import logo from '@/assets/logo.svg'
 import { LockIcon, UserIcon } from 'lucide-react'
 import { useUserStore } from '@/store/userStore'
 
 import z from 'zod'
 import { useAppForm } from './form'
+import { Route as LoginRoute } from '@/routes/login'
 
 const LoginSchema = z.object({
   email: z.email('Adresse e-mail invalide'),
@@ -22,6 +23,10 @@ export function LoginForm({
 }: React.ComponentProps<'div'>) {
   const navigate = useNavigate()
   const setUser = useUserStore(state => state.setUser)
+  const { redirect: redirectParam } = useSearch({
+    from: LoginRoute.id,
+  })
+  const router = useRouter()
 
   const form = useAppForm({
     defaultValues: { email: '', password: '' },
@@ -32,7 +37,13 @@ export function LoginForm({
         name: value.email.split('@')[0],
       }
       setUser(user)
-      navigate({ to: '/', replace: true })
+
+      if (redirectParam) {
+        // decodeURIComponent si jamais vous avez encodé l’URL
+        router.history.replace(decodeURIComponent(redirectParam))
+      } else {
+        navigate({ to: '/', replace: true })
+      }
     },
     validators: { onChange: LoginSchema },
   })
@@ -130,7 +141,7 @@ export function LoginForm({
               </div>
               <div className="text-center text-sm">
                 Vous n’avez pas de compte ?{' '}
-                <Link to="/register" className="" underline underline-offset-4>
+                <Link to="/register" className="underline underline-offset-4">
                   Inscrivez-vous
                 </Link>
               </div>

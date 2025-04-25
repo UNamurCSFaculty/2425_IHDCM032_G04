@@ -52,7 +52,11 @@ function RouteComponent() {
                     </Button>
                   </Link>
                   <Link to="/register">
-                    <Button variant="outline" size="lg">
+                    <Button
+                      variant="outline"
+                      size="lg"
+                      className="mt-4 sm:mt-0"
+                    >
                       Créer un compte <UserRound className="!h-5 !w-5" />
                     </Button>
                   </Link>
