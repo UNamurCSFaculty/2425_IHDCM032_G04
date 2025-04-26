@@ -11,7 +11,7 @@
     "format": "prettier --write \"src/**/*.{js,ts,tsx,css,html,json,md}\"",
     "format:check": "prettier --check \"src/**/*.{js,ts,tsx,css,html,json,md}\"",
     "lint": "eslint . --ext ts,tsx --fix --report-unused-disable-directives --max-warnings 0",
-    "lint:check": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
+    "generate:api": "openapi-ts && node scripts/fix-zod.js"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.8",
@@ -43,6 +43,8 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.25.1",
+    "@hey-api/client-fetch": "^0.10.0",
+    "@hey-api/openapi-ts": "^0.66.6",
     "@tanstack/react-query-devtools": "^5.74.6",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.3.0",

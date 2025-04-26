@@ -7,6 +7,7 @@ import { FeaturesSection } from '@/components/Homepage/FeatureSection'
 import { BlogSection } from '@/components/Homepage/BlogSection'
 import FaqSection from '@/components/Homepage/FaqSection'
 import { HeroSection } from '@/components/Homepage/HeroSection'
+import { listUsers } from '@/api/generated'
 
 export const Route = createFileRoute('/')({
   component: RouteComponent,
@@ -14,6 +15,14 @@ export const Route = createFileRoute('/')({
 
 function RouteComponent() {
   const user = useUserStore(state => state.user)
+
+  listUsers()
+    .then(data => {
+      console.log('Liste des utilisateurs:', data)
+    })
+    .catch(error => {
+      console.error('Erreur lors de la récupération des utilisateurs:', error)
+    })
 
   return (
     <div className="bg-base-200 flex min-h-screen flex-col">
