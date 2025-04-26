@@ -2,12 +2,7 @@ package be.labil.anacarde.domain.mapper;
 
 import be.labil.anacarde.domain.dto.InterestDto;
 import be.labil.anacarde.domain.model.Interest;
-import org.mapstruct.BeanMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.NullValuePropertyMappingStrategy;
-import org.mapstruct.ReportingPolicy;
+import org.mapstruct.*;
 
 @Mapper(componentModel = "spring", uses = {IntentionMapper.class,
 		TraderDetailMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)

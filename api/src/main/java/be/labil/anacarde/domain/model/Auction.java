@@ -3,13 +3,8 @@ package be.labil.anacarde.domain.model;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Set;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.SuperBuilder;
+import lombok.*;
 
 @Entity
 @Table(name = "auction")
@@ -17,7 +12,7 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
+@Builder
 public class Auction {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_auction")
@@ -45,5 +40,5 @@ public class Auction {
 	private Product product;
 
 	@OneToMany(mappedBy = "auction", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-	private Set<AuctionOptionValue> auctionOptionValues = new HashSet<>();
+	private Set<AuctionOptionValue> auctionOptionValues;
 }
