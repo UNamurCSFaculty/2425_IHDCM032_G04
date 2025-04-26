@@ -2,12 +2,14 @@ import js from '@eslint/js'
 import globals from 'globals'
 import tseslint from 'typescript-eslint'
 import pluginReact from 'eslint-plugin-react'
+import reactCompiler from 'eslint-plugin-react-compiler'
 import eslintConfigPrettier from 'eslint-config-prettier/flat'
 import jsxA11y from 'eslint-plugin-jsx-a11y'
 import reactHooks from 'eslint-plugin-react-hooks'
-import { defineConfig } from 'eslint/config'
+import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
+  globalIgnores(['src/api/generated/']),
   {
     files: ['vite.config.js', '.prettierrc.cjs'],
     languageOptions: {
@@ -34,6 +36,7 @@ export default defineConfig([
   pluginReact.configs.flat.recommended,
   reactHooks.configs['recommended-latest'],
   jsxA11y.flatConfigs.recommended,
+  reactCompiler.configs.recommended,
   eslintConfigPrettier,
   {
     files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'],
