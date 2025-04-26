@@ -17,7 +17,8 @@ import lombok.Data;
 @Schema(description = "Data Transfer Object pour un produit", requiredProperties = {
 		"type"}, discriminatorProperty = "type", discriminatorMapping = {
 				@DiscriminatorMapping(value = "harvest", schema = HarvestProductDto.class),
-				@DiscriminatorMapping(value = "transformed", schema = TransformedProductDto.class)})
+				@DiscriminatorMapping(value = "transformed", schema = TransformedProductDto.class)}, subTypes = {
+						HarvestProductDto.class, TransformedProductDto.class})
 public abstract class ProductDto {
 
 	/** Identifiant unique du produit. */

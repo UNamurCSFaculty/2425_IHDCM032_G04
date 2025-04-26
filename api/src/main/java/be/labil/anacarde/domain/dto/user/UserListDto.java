@@ -27,7 +27,8 @@ import lombok.Data;
 				@DiscriminatorMapping(value = "transformer", schema = TransformerDetailDto.class),
 				@DiscriminatorMapping(value = "quality_inspector", schema = QualityInspectorDetailDto.class),
 				@DiscriminatorMapping(value = "exporter", schema = ExporterDetailDto.class),
-				@DiscriminatorMapping(value = "carrier", schema = CarrierDetailDto.class)})
+				@DiscriminatorMapping(value = "carrier", schema = CarrierDetailDto.class)}, subTypes = {
+						TraderListDto.class, CarrierListDto.class, QualityInspectorListDto.class, AdminListDto.class})
 public abstract class UserListDto {
 
 	/** Unique identifier for the user. */
