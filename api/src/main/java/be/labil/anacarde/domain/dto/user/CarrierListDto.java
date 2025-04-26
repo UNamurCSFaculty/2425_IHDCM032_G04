@@ -13,7 +13,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Schema(description = "Objet de transfert de données pour les transporteurs.")
+@Schema(description = "Objet de transfert de données pour les transporteurs.", subTypes = {TraderListDto.class,
+		CarrierListDto.class, QualityInspectorListDto.class, AdminListDto.class})
 public class CarrierListDto extends UserListDto {
 
 	/** Prix par kilomètre facturé par le transporteur. */

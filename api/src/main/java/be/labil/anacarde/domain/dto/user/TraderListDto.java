@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
  */
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Schema(description = "Objet de transfert de données pour les traders.")
+@Schema(description = "Objet de transfert de données pour les traders.", subTypes = {ProducerListDto.class,
+		TransformerListDto.class, ExporterListDto.class,})
 public abstract class TraderListDto extends UserListDto {
 	// Aucun champ supplémentaire à déclarer, on hérite de UserDto
 }
