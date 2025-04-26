@@ -11,7 +11,7 @@ import { defineConfig, globalIgnores } from 'eslint/config'
 export default defineConfig([
   globalIgnores(['src/api/generated/']),
   {
-    files: ['vite.config.js', '.prettierrc.cjs'],
+    files: ['vite.config.js', '.prettierrc.cjs', 'scripts/*.js'],
     languageOptions: {
       globals: globals.node, // __dirname, process, module, require…
       parserOptions: {
