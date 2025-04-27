@@ -1,0 +1,28 @@
+{
+  "app": {
+    "title": "My awesome app",
+    "welcome": {
+      "title": "Welcome",
+      "message": "Ready for your next auction?"
+    },
+    "loading": "Loading…",
+    "networkError": "Cannot reach server"
+  },
+  "validation": {
+    "minLength": "The field must have at least {{count}} character",
+    "minLength_plural": "The field must have at least {{count}} characters",
+    "maxLength": "The field must have at most {{count}} character",
+    "maxLength_plural": "The field must have at most {{count}} characters",
+    "min": "The field must be at least {{count}}",
+    "max": "The field must be at most {{count}}",
+    "required": "This field is required",
+    "email": "Invalid email format",
+    "phone": {
+      "benin": "Invalid Benin phone number: expected +229XXXXXXXX or +22901XXXXXXXX"
+    }
+  },
+  "buttons": {
+    "submit": "Submit",
+    "cancel": "Cancel"
+  }
+}

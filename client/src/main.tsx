@@ -5,6 +5,10 @@ import { RouterProvider, createRouter } from '@tanstack/react-router'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
+// initialisation i18n
+import './i18n'
+import '@/utils/zod-config.ts'
+
 // Import the generated route tree
 import { routeTree } from './routeTree.gen'
 

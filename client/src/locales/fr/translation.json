@@ -1,0 +1,28 @@
+{
+  "app": {
+    "title": "Mon super app",
+    "welcome": {
+      "title": "Bienvenue",
+      "message": "Prêt(e) pour vos prochaines enchères ?"
+    },
+    "loading": "Chargement…",
+    "networkError": "Impossible de joindre le serveur"
+  },
+  "validation": {
+    "minLength": "Le champ doit avoir au moins {{count}} caractère",
+    "minLength_plural": "Le champ doit avoir au moins {{count}} caractères",
+    "maxLength": "Le champ doit avoir au plus {{count}} caractère",
+    "maxLength_plural": "Le champ doit avoir au plus {{count}} caractères",
+    "min": "Le champ doit être au moins {{count}}",
+    "max": "Le champ doit être au plus {{count}}",
+    "required": "Ce champ est requis",
+    "email": "Format d’email invalide",
+    "phone": {
+      "benin": "Numéro béninois invalide : +229XXXXXXXX ou +22901XXXXXXXX attendu"
+    }
+  },
+  "buttons": {
+    "submit": "Envoyer",
+    "cancel": "Annuler"
+  }
+}

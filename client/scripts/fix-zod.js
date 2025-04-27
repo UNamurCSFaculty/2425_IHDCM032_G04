@@ -11,11 +11,8 @@ async function fixZod() {
   // 2) .string().datetime() → .iso.datetime()
   src = src.replace(/\.string\(\)\.datetime\(\)/g, '.iso.datetime()')
 
-  // 3) Cast du lazy pour restaurer .merge() côté TS
-  src = src.replace(
-    /z\.lazy\(\(\) =>\s*\{\s*return\s+([\w\d_]+Dto);\s*\}\)/g,
-    '(z.lazy(() => { return $1; }) as unknown as z.ZodObject<any>)'
-  )
+  // 3) merge(...) → and(...)
+  src = src.replace(/merge\(([^)]+)\)/g, 'and($1)')
 
   await writeFile(file, src, 'utf8')
   console.log('✅ src/api/generated/zod.gen.ts patché')

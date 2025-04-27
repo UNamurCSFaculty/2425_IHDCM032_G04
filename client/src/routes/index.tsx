@@ -7,7 +7,7 @@ import { FeaturesSection } from '@/components/Homepage/FeatureSection'
 import { BlogSection } from '@/components/Homepage/BlogSection'
 import FaqSection from '@/components/Homepage/FaqSection'
 import { HeroSection } from '@/components/Homepage/HeroSection'
-import { listUsers } from '@/api/generated'
+import { useTranslation } from 'react-i18next'
 
 export const Route = createFileRoute('/')({
   component: RouteComponent,
@@ -15,14 +15,7 @@ export const Route = createFileRoute('/')({
 
 function RouteComponent() {
   const user = useUserStore(state => state.user)
-
-  listUsers()
-    .then(data => {
-      console.log('Liste des utilisateurs:', data)
-    })
-    .catch(error => {
-      console.error('Erreur lors de la récupération des utilisateurs:', error)
-    })
+  const { t } = useTranslation()
 
   return (
     <div className="bg-base-200 flex min-h-screen flex-col">
@@ -30,8 +23,8 @@ function RouteComponent() {
       {user && (
         <div className="bg-amber-950 p-4 text-center text-sm text-white">
           <span>
-            Bienvenue, <strong>{user.name}</strong>! Prêt(e) pour vos prochaines
-            enchères ?
+            {t('app.welcome.title')}, <strong>{user.name}</strong>!
+            {t('app.welcome.message')}
           </span>
         </div>
       )}

@@ -1,26 +1,16 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { useAppForm } from './form'
-import z from 'zod'
-
-const ContactSchema = z.object({
-  name: z.string().min(3, 'Le nom doit comporter au moins 3 caractères'),
-  email: z.email('Adresse e-mail invalide'),
-  message: z
-    .string()
-    .min(10, 'Le message doit comporter au moins 10 caractères')
-    .max(500, 'Le message doit comporter au maximum 500 caractères'),
-})
+import {
+  ContactSchema,
+  ContactSchemaDefaultValues,
+} from '@/schemas/form-schemas'
+import { LanguageSwitcher } from './LanguageSwitcher'
 
 export const ContactForm: React.FC = () => {
   const navigate = useNavigate()
-
   const form = useAppForm({
-    defaultValues: {
-      name: '',
-      email: '',
-      message: '',
-    },
+    defaultValues: ContactSchemaDefaultValues,
     onSubmit: async ({ value }) => {
       // TODO: envoyer les données au serveur
       console.log('Form submitted:', value)
@@ -33,6 +23,7 @@ export const ContactForm: React.FC = () => {
 
   return (
     <section className="body-font relative text-gray-600">
+      <LanguageSwitcher />
       <div className="container mx-auto px-5 py-24">
         <div className="mb-12 flex w-full flex-col text-center">
           <h1 className="title-font mb-4 text-2xl font-medium text-gray-900 sm:text-3xl">
