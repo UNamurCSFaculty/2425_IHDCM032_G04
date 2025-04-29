@@ -15,8 +15,8 @@ type Language = {
 }
 
 const languages: Language[] = [
-  { id: 1, langue: 'fr' },
-  { id: 2, langue: 'en' },
+  { id: 1, langue: 'fr'},
+  { id: 2, langue: 'en'},
 ]
 
 export function SelectLanguageField() {
@@ -25,7 +25,7 @@ export function SelectLanguageField() {
   const currentId = field.state.value.id.toString()
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-1">
       <Label htmlFor={field.name}>Langue</Label>
       <Select
         value={currentId}
@@ -35,7 +35,7 @@ export function SelectLanguageField() {
           field.handleChange(langObj)
         }}
       >
-        <SelectTrigger id={field.name} onBlur={field.handleBlur}>
+        <SelectTrigger className="w-full" id={field.name} onBlur={field.handleBlur}>
           <SelectValue placeholder="Choisissez une langue" />
         </SelectTrigger>
         <SelectContent>
