@@ -11,6 +11,7 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as SignupImport } from './routes/signup'
 import { Route as LoginImport } from './routes/login'
 import { Route as ContactImport } from './routes/contact'
 import { Route as AuthenticatedImport } from './routes/_authenticated'
@@ -21,6 +22,12 @@ import { Route as AuthenticatedEncheresAutresImport } from './routes/_authentica
 import { Route as AuthenticatedEncheresDetailIdImport } from './routes/_authenticated/encheres/detail/$id'
 
 // Create/Update Routes
+
+const SignupRoute = SignupImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const LoginRoute = LoginImport.update({
   id: '/login',
@@ -50,7 +57,7 @@ const AuthenticatedEncheresIndexRoute = AuthenticatedEncheresIndexImport.update(
     id: '/encheres/',
     path: '/encheres/',
     getParentRoute: () => AuthenticatedRoute,
-  } as any
+  } as any,
 )
 
 const AuthenticatedEncheresCajouRoute = AuthenticatedEncheresCajouImport.update(
@@ -58,7 +65,7 @@ const AuthenticatedEncheresCajouRoute = AuthenticatedEncheresCajouImport.update(
     id: '/encheres/cajou',
     path: '/encheres/cajou',
     getParentRoute: () => AuthenticatedRoute,
-  } as any
+  } as any,
 )
 
 const AuthenticatedEncheresAutresRoute =
@@ -105,6 +112,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginImport
+      parentRoute: typeof rootRoute
+    }
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupImport
       parentRoute: typeof rootRoute
     }
     '/_authenticated/encheres/autres': {
@@ -155,7 +169,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
-  AuthenticatedRouteChildren
+  AuthenticatedRouteChildren,
 )
 
 export interface FileRoutesByFullPath {
@@ -163,6 +177,7 @@ export interface FileRoutesByFullPath {
   '': typeof AuthenticatedRouteWithChildren
   '/contact': typeof ContactRoute
   '/login': typeof LoginRoute
+  '/signup': typeof SignupRoute
   '/encheres/autres': typeof AuthenticatedEncheresAutresRoute
   '/encheres/cajou': typeof AuthenticatedEncheresCajouRoute
   '/encheres': typeof AuthenticatedEncheresIndexRoute
@@ -174,6 +189,7 @@ export interface FileRoutesByTo {
   '': typeof AuthenticatedRouteWithChildren
   '/contact': typeof ContactRoute
   '/login': typeof LoginRoute
+  '/signup': typeof SignupRoute
   '/encheres/autres': typeof AuthenticatedEncheresAutresRoute
   '/encheres/cajou': typeof AuthenticatedEncheresCajouRoute
   '/encheres': typeof AuthenticatedEncheresIndexRoute
@@ -186,6 +202,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/contact': typeof ContactRoute
   '/login': typeof LoginRoute
+  '/signup': typeof SignupRoute
   '/_authenticated/encheres/autres': typeof AuthenticatedEncheresAutresRoute
   '/_authenticated/encheres/cajou': typeof AuthenticatedEncheresCajouRoute
   '/_authenticated/encheres/': typeof AuthenticatedEncheresIndexRoute
@@ -199,6 +216,7 @@ export interface FileRouteTypes {
     | ''
     | '/contact'
     | '/login'
+    | '/signup'
     | '/encheres/autres'
     | '/encheres/cajou'
     | '/encheres'
@@ -209,6 +227,7 @@ export interface FileRouteTypes {
     | ''
     | '/contact'
     | '/login'
+    | '/signup'
     | '/encheres/autres'
     | '/encheres/cajou'
     | '/encheres'
@@ -219,6 +238,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/contact'
     | '/login'
+    | '/signup'
     | '/_authenticated/encheres/autres'
     | '/_authenticated/encheres/cajou'
     | '/_authenticated/encheres/'
@@ -231,6 +251,7 @@ export interface RootRouteChildren {
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   ContactRoute: typeof ContactRoute
   LoginRoute: typeof LoginRoute
+  SignupRoute: typeof SignupRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -238,6 +259,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   ContactRoute: ContactRoute,
   LoginRoute: LoginRoute,
+  SignupRoute: SignupRoute,
 }
 
 export const routeTree = rootRoute
@@ -253,7 +275,8 @@ export const routeTree = rootRoute
         "/",
         "/_authenticated",
         "/contact",
-        "/login"
+        "/login",
+        "/signup"
       ]
     },
     "/": {
@@ -273,6 +296,9 @@ export const routeTree = rootRoute
     },
     "/login": {
       "filePath": "login.tsx"
+    },
+    "/signup": {
+      "filePath": "signup.tsx"
     },
     "/_authenticated/encheres/autres": {
       "filePath": "_authenticated/encheres/autres.tsx",
