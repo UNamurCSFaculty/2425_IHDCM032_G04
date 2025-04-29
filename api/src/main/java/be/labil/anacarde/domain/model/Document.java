@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.proxy.HibernateProxy;
 
 @Entity
@@ -29,6 +30,7 @@ public class Document {
 	private String storagePath;
 
 	@Column(nullable = false)
+	@CreationTimestamp
 	private LocalDateTime uploadDate;
 
 	@ManyToOne(fetch = FetchType.LAZY)

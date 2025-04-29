@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table(name = "bid")
@@ -29,6 +30,7 @@ public class Bid {
 	private LocalDateTime auctionDate;
 
 	@Column(nullable = false)
+	@CreationTimestamp
 	private LocalDateTime creationDate;
 
 	@ManyToOne(optional = false)
