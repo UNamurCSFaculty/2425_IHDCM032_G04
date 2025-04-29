@@ -54,6 +54,8 @@ public abstract class User implements UserDetails {
 	private Set<Role> roles;
 
 	private String address;
+
+	@Column(nullable = false, unique = true)
 	private String phone;
 
 	@ManyToOne

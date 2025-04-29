@@ -8,9 +8,8 @@ import be.labil.anacarde.domain.model.Product;
 import be.labil.anacarde.domain.model.TransformedProduct;
 import org.mapstruct.*;
 
-@Mapper(componentModel = "spring", uses = {DocumentMapper.class, ProducerDetailMapper.class, StoreMapper.class,
-		FieldDetailMapper.class, UserDetailMapper.class, TransformerDetailMapper.class,
-		QualityInspectorDetailMapper.class})
+@Mapper(componentModel = "spring", uses = {DocumentMapper.class, UserDetailMapper.class, StoreMapper.class,
+		FieldDetailMapper.class})
 public interface ProductMapper extends GenericMapper<ProductDto, Product> {
 
 	default Product toEntity(ProductDto dto) {
@@ -84,30 +83,4 @@ public interface ProductMapper extends GenericMapper<ProductDto, Product> {
 	@Mapping(source = "qualityControl", target = "qualityControl")
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 	HarvestProduct partialUpdate(HarvestProductDto dto, @MappingTarget HarvestProduct entity);
-
-	/**
-	 * Méthode factory pour créer une instance concrète de Product lors du mapping depuis ProductDto vers Product.
-	 */
-	@ObjectFactory
-	default Product createEntity(ProductDto dto) {
-		if (dto instanceof HarvestProductDto) {
-			return new HarvestProduct();
-		} else if (dto instanceof TransformedProductDto) {
-			return new TransformedProduct();
-		}
-		throw new IllegalArgumentException("Type de ProductDto non supporté : " + dto.getClass());
-	}
-
-	/**
-	 * Méthode factory pour créer une instance concrète de ProductDto lors du mapping depuis Product vers ProductDto.
-	 */
-	@ObjectFactory
-	default ProductDto createDto(Product product) {
-		if (product instanceof HarvestProduct) {
-			return new HarvestProductDto();
-		} else if (product instanceof TransformedProduct) {
-			return new TransformedProductDto();
-		}
-		throw new IllegalArgumentException("Type de Product non supporté : " + product.getClass());
-	}
 }

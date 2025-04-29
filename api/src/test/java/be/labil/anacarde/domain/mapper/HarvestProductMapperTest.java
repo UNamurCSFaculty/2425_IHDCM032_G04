@@ -2,7 +2,10 @@ package be.labil.anacarde.domain.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import be.labil.anacarde.domain.dto.*;
+import be.labil.anacarde.domain.dto.FieldDetailDto;
+import be.labil.anacarde.domain.dto.HarvestProductDto;
+import be.labil.anacarde.domain.dto.StoreDetailDto;
+import be.labil.anacarde.domain.dto.TransformedProductDto;
 import be.labil.anacarde.domain.dto.user.ProducerDetailDto;
 import be.labil.anacarde.domain.model.*;
 import org.junit.jupiter.api.Test;

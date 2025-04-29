@@ -1,6 +1,7 @@
 package be.labil.anacarde.domain.mapper;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import be.labil.anacarde.domain.dto.FieldDetailDto;
 import be.labil.anacarde.domain.dto.user.ProducerDetailDto;

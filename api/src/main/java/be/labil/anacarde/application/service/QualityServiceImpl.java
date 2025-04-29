@@ -20,8 +20,8 @@ public class QualityServiceImpl implements QualityService {
 
 	@Override
 	public QualityDto createQuality(QualityDto dto) {
-		Quality Quality = qualityMapper.toEntity(dto);
-		Quality saved = qualityRepository.save(Quality);
+		Quality quality = qualityMapper.toEntity(dto);
+		Quality saved = qualityRepository.save(quality);
 		return qualityMapper.toDto(saved);
 	}
 

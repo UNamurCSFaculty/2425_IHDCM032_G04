@@ -9,7 +9,7 @@ import org.locationtech.jts.io.WKTReader;
 import org.locationtech.jts.io.WKTWriter;
 import org.mapstruct.*;
 
-@Mapper(componentModel = "spring", uses = {ProducerDetailMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring", uses = {UserDetailMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface FieldDetailMapper extends GenericMapper<FieldDetailDto, Field> {
 
 	@Override

@@ -40,6 +40,7 @@ public class AuthenticationApiControllerIntegrationTest {
 		user.setFirstName("John");
 		user.setLastName("Doe");
 		user.setEmail("user@example.com");
+		user.setPhone("+2290197020000");
 		user.setPassword(passwordEncoder.encode("password"));
 		user.setRegistrationDate(LocalDateTime.now());
 		user.setEnabled(true);

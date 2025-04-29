@@ -20,8 +20,8 @@ public class AuctionServiceImpl implements AuctionService {
 
 	@Override
 	public AuctionDto createAuction(AuctionDto dto) {
-		Auction Auction = auctionMapper.toEntity(dto);
-		Auction saved = auctionRepository.save(Auction);
+		Auction auction = auctionMapper.toEntity(dto);
+		Auction saved = auctionRepository.save(auction);
 		return auctionMapper.toDto(saved);
 	}
 

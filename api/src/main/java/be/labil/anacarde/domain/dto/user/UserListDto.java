@@ -10,6 +10,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
+
+import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 @Data
@@ -68,7 +70,8 @@ public abstract class UserListDto {
 	private String address;
 
 	/** Numéro de téléphone de l'utilisateur. */
-	@Schema(description = "Numéro de téléphone", example = "+32 475 12 34 56")
+	@Pattern(regexp = "^(?:\\+229)?(?:01[2-9]\\d{7}|[2-9]\\d{7})$", message = "Numéro invalide – doit être +229XXXXXXXX ou +22901XXXXXXXX")
+	@Schema(description = "Numéro de téléphone (Bénin, ancien et nouveau formats)", example = "+2290197123456", pattern = "^(?:\\+229)?(?:01[2-9]\\d{7}|[2-9]\\d{7})$")
 	private String phone;
 
 	/**

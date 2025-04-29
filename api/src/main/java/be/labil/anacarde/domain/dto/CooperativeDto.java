@@ -29,7 +29,6 @@ public class CooperativeDto {
 	private String address;
 
 	/** Date de création de la coopérative. */
-	@NotNull
 	@Schema(description = "Date de création", example = "2023-06-15T00:00:00", requiredMode = Schema.RequiredMode.REQUIRED)
 	private LocalDateTime creationDate;
 
