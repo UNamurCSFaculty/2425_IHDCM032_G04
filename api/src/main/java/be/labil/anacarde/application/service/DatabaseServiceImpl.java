@@ -1,5 +1,6 @@
 package be.labil.anacarde.application.service;
 
+import be.labil.anacarde.domain.model.Producer;
 import be.labil.anacarde.infrastructure.persistence.*;
 import be.labil.anacarde.infrastructure.persistence.user.UserRepository;
 import lombok.AllArgsConstructor;
@@ -29,10 +30,19 @@ public class DatabaseServiceImpl implements DatabaseService {
 
 	@Override
 	public void dropDatabase() {
+		// Remove all associations with cooperative
+		userRepository.findAll().forEach(p -> {
+			if (p instanceof Producer c) {
+				c.setCooperative(null);
+				userRepository.save(c);
+			}
+		});
+		userRepository.flush();
+		// Delete all entities in the correct order to avoid foreign key constraint violations
+		cooperativeRepository.deleteAllInBatch();
 		contractOfferRepository.deleteAllInBatch();
 		qualityRepository.deleteAllInBatch();
 		documentRepository.deleteAllInBatch();
-		cooperativeRepository.deleteAllInBatch();
 		bidRepository.deleteAllInBatch();
 		bidStatusRepository.deleteAllInBatch();
 		auctionRepository.deleteAllInBatch();

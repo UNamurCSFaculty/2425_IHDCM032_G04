@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "auction_option", uniqueConstraints = {@UniqueConstraint(columnNames = {"name"})})
+@Table(name = "auction_option")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -17,6 +17,6 @@ public class AuctionOption {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_auction_option")
 	private Integer id;
 
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String name;
 }
