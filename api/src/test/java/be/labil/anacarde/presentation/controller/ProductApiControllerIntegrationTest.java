@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import be.labil.anacarde.domain.dto.FieldDetailDto;
 import be.labil.anacarde.domain.dto.HarvestProductDto;
 import be.labil.anacarde.domain.dto.StoreDetailDto;
 import be.labil.anacarde.domain.dto.TransformedProductDto;
@@ -84,11 +85,15 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 		StoreDetailDto store = new StoreDetailDto();
 		store.setId(getMainTestStore().getId());
 
+		FieldDetailDto field = new FieldDetailDto();
+		field.setId(getMainTestField().getId());
+
 		HarvestProductDto newProduct = new HarvestProductDto();
 		newProduct.setProducer(producer);
 		newProduct.setStore(store);
 		newProduct.setWeightKg(200.0);
 		newProduct.setDeliveryDate(LocalDateTime.now().plusMonths(1));
+		newProduct.setField(field);
 
 		ObjectNode node = objectMapper.valueToTree(newProduct);
 		String jsonContent = node.toString();
@@ -121,6 +126,7 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 		newProduct.setLocation("Zone A"); // TODO coordonnees geopoint?
 		newProduct.setWeightKg(1234567.0);
 		newProduct.setIdentifier("TP001");
+		newProduct.setDeliveryDate(LocalDateTime.now().minusDays(1));
 
 		ObjectNode node = objectMapper.valueToTree(newProduct);
 		String jsonContent = node.toString();

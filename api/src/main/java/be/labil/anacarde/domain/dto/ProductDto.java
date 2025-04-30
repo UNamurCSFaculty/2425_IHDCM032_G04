@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.swagger.v3.oas.annotations.media.DiscriminatorMapping;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
+import java.time.LocalDateTime;
 import lombok.Data;
 
 /**
@@ -40,4 +42,7 @@ public abstract class ProductDto {
 	public String getVirtualTypeForSwagger() {
 		return null;
 	}
+
+	@Column(nullable = false)
+	private LocalDateTime deliveryDate;
 }

@@ -5,9 +5,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import be.labil.anacarde.domain.dto.FieldDetailDto;
 import be.labil.anacarde.domain.dto.HarvestProductDto;
 import be.labil.anacarde.domain.dto.StoreDetailDto;
-import be.labil.anacarde.domain.dto.TransformedProductDto;
 import be.labil.anacarde.domain.dto.user.ProducerDetailDto;
-import be.labil.anacarde.domain.model.*;
+import be.labil.anacarde.domain.model.Field;
+import be.labil.anacarde.domain.model.HarvestProduct;
+import be.labil.anacarde.domain.model.Producer;
+import be.labil.anacarde.domain.model.Store;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,10 +26,8 @@ class HarvestProductMapperTest {
 		producer.setId(20);
 		Store store = new Store();
 		store.setId(10);
-		TransformedProduct transformedProduct = new TransformedProduct();
-		transformedProduct.setId(40);
 		HarvestProduct entity = HarvestProduct.builder().id(1).store(store).producer(producer)
-				.field(new Field(30, "F001", null, null)).transformedProduct(transformedProduct).build();
+				.field(new Field(30, "F001", null, null)).build();
 
 		HarvestProductDto dto = mapper.toDto(entity);
 
@@ -42,9 +42,6 @@ class HarvestProductMapperTest {
 
 		assertThat(dto.getField()).isNotNull();
 		assertThat(dto.getField().getId()).isEqualTo(30);
-
-		assertThat(dto.getTransformedProduct()).isNotNull();
-		assertThat(dto.getTransformedProduct().getId()).isEqualTo(40);
 	}
 
 	@Test
@@ -64,10 +61,6 @@ class HarvestProductMapperTest {
 		field.setId(300);
 		dto.setField(field);
 
-		TransformedProductDto transformed = new TransformedProductDto();
-		transformed.setId(400);
-		dto.setTransformedProduct(transformed);
-
 		HarvestProduct entity = mapper.toEntity(dto);
 
 		assertThat(entity).isNotNull();
@@ -81,22 +74,5 @@ class HarvestProductMapperTest {
 
 		assertThat(entity.getField()).isNotNull();
 		assertThat(entity.getField().getId()).isEqualTo(300);
-
-		assertThat(entity.getTransformedProduct()).isNotNull();
-		assertThat(entity.getTransformedProduct().getId()).isEqualTo(400);
-	}
-
-	@Test
-	void shouldHandleNullTransformedProduct() {
-		Producer producer = new Producer();
-		producer.setId(1);
-		Store store = new Store();
-		store.setId(1);
-		HarvestProduct entity = HarvestProduct.builder().id(2).store(store).producer(producer)
-				.field(new Field(3, "F002", null, null)).transformedProduct(null).build();
-
-		HarvestProductDto dto = mapper.toDto(entity);
-
-		assertThat(dto.getTransformedProduct()).isNull();
 	}
 }

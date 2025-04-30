@@ -43,7 +43,6 @@ public interface ProductMapper extends GenericMapper<ProductDto, Product> {
 	@Mapping(source = "store", target = "store")
 	@Mapping(source = "producer", target = "producer")
 	@Mapping(source = "field", target = "field")
-	@Mapping(source = "transformedProduct", target = "transformedProduct")
 	@Mapping(source = "qualityControl", target = "qualityControl")
 	HarvestProduct toEntity(HarvestProductDto dto);
 
@@ -51,7 +50,6 @@ public interface ProductMapper extends GenericMapper<ProductDto, Product> {
 	@Mapping(source = "store", target = "store")
 	@Mapping(source = "producer", target = "producer")
 	@Mapping(source = "field", target = "field")
-	@Mapping(source = "transformedProduct", target = "transformedProduct")
 	@Mapping(source = "qualityControl", target = "qualityControl")
 	HarvestProductDto toDto(HarvestProduct entity);
 
@@ -79,7 +77,6 @@ public interface ProductMapper extends GenericMapper<ProductDto, Product> {
 	@Mapping(source = "store", target = "store")
 	@Mapping(source = "producer", target = "producer")
 	@Mapping(source = "field", target = "field")
-	@Mapping(source = "transformedProduct", target = "transformedProduct")
 	@Mapping(source = "qualityControl", target = "qualityControl")
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 	HarvestProduct partialUpdate(HarvestProductDto dto, @MappingTarget HarvestProduct entity);

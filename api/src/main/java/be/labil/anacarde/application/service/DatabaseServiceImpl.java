@@ -29,20 +29,20 @@ public class DatabaseServiceImpl implements DatabaseService {
 
 	@Override
 	public void dropDatabase() {
-		contractOfferRepository.deleteAll();
-		qualityRepository.deleteAll();
-		documentRepository.deleteAll();
-		cooperativeRepository.deleteAll();
-		fieldRepository.deleteAll();
-		bidRepository.deleteAll();
-		bidStatusRepository.deleteAll();
-		auctionRepository.deleteAll();
-		auctionStrategyRepository.deleteAll();
-		productRepository.deleteAll();
-		storeRepository.deleteAll();
-		userRepository.deleteAll();
-		roleRepository.deleteAll();
-		regionRepository.deleteAll();
-		languageRepository.deleteAll();
+		contractOfferRepository.deleteAllInBatch();
+		qualityRepository.deleteAllInBatch();
+		documentRepository.deleteAllInBatch();
+		cooperativeRepository.deleteAllInBatch();
+		bidRepository.deleteAllInBatch();
+		bidStatusRepository.deleteAllInBatch();
+		auctionRepository.deleteAllInBatch();
+		auctionStrategyRepository.deleteAllInBatch();
+		productRepository.deleteAllInBatch();
+		fieldRepository.deleteAllInBatch();
+		storeRepository.deleteAllInBatch();
+		userRepository.deleteAllInBatch();
+		roleRepository.deleteAllInBatch();
+		regionRepository.deleteAllInBatch();
+		languageRepository.deleteAllInBatch();
 	}
 }

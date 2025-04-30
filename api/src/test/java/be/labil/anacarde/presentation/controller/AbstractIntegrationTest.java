@@ -373,14 +373,28 @@ public abstract class AbstractIntegrationTest {
 		Store store = Store.builder().location(storeLocation).user(mainTestUser).build();
 		mainTestStore = storeRepository.save(store);
 
+		// Fields
+		// A field binded to main producer
+		Point pointField = new GeometryFactory().createPoint(new Coordinate(2.3522, 48.8566));
+		Field field = Field.builder().producer((Producer) producerTestUser).identifier("FIELD-001").location(pointField)
+				.build();
+
+		mainTestField = fieldRepository.save(field);
+
+		// A field to another producer
+		Point pointField2 = new GeometryFactory().createPoint(new Coordinate(1.198, 10.300));
+		Field field2 = Field.builder().producer((Producer) producerTestUser).identifier("FIELD-002")
+				.location(pointField2).build();
+		fieldRepository.save(field2);
+
 		// A harvest product
 		Product productHarvest = HarvestProduct.builder().producer((Producer) producerTestUser).store(mainTestStore)
-				.deliveryDate(LocalDateTime.now()).weightKg(2000.0).build();
+				.deliveryDate(LocalDateTime.now()).weightKg(2000.0).field(mainTestField).build();
 		testHarvestProduct = productRepository.save(productHarvest);
 
 		// A transformed product
 		Product productTransform = TransformedProduct.builder().transformer((Transformer) transformerTestUser)
-				.identifier("XYZ").location("Zone B").weightKg(2000.0).build();
+				.deliveryDate(LocalDateTime.now()).identifier("XYZ").location("Zone B").weightKg(2000.0).build();
 		testTransformedProduct = productRepository.save(productTransform);
 
 		AuctionStrategy strategy = AuctionStrategy.builder().name("Meilleure offre").build();
@@ -412,18 +426,6 @@ public abstract class AbstractIntegrationTest {
 				.creationDate(LocalDateTime.now()).auction(auction2).trader((Trader) producer).status(testBidStatus)
 				.build();
 		bidRepository.save(bid2);
-
-		// A field binded to main producer
-		Point pointField = new GeometryFactory().createPoint(new Coordinate(2.3522, 48.8566));
-		Field field = Field.builder().producer((Producer) producer).identifier("FIELD-001").location(pointField)
-				.build();
-		mainTestField = fieldRepository.save(field);
-
-		// A field to another producer
-		Point pointField2 = new GeometryFactory().createPoint(new Coordinate(1.198, 10.300));
-		Field field2 = Field.builder().producer((Producer) producer2).identifier("FIELD-002").location(pointField2)
-				.build();
-		fieldRepository.save(field2);
 
 		// A cooperative who has for president 'producer'
 		Cooperative cooperative = Cooperative.builder().name("Coopérative Agricole de Parakou")
