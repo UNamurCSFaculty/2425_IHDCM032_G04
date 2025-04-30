@@ -44,4 +44,7 @@ public abstract class ProductDto {
 	public String getVirtualTypeForSwagger() {
 		return null;
 	}
+
+	@Column(nullable = false)
+	private LocalDateTime deliveryDate;
 }
