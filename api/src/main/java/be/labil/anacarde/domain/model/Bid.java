@@ -25,20 +25,22 @@ public class Bid {
 	@Column(nullable = false)
 	private BigDecimal amount;
 
-	// TODO zak qu'est-ce que ça fait là ?
 	@Column(nullable = false)
 	private LocalDateTime auctionDate;
 
-	@Column(nullable = false)
+	@Column(nullable = false, updatable = false)
 	@CreationTimestamp
 	private LocalDateTime creationDate;
 
 	@ManyToOne(optional = false)
+	@JoinColumn(name = "auction_id", nullable = false)
 	private Auction auction;
 
-	@ManyToOne(optional = false)
+	@ManyToOne(optional = false, fetch = FetchType.LAZY)
+	@JoinColumn(name = "trader_id", nullable = false)
 	private Trader trader;
 
 	@ManyToOne(optional = false)
+	@JoinColumn(name = "status_id", nullable = false)
 	private BidStatus status;
 }

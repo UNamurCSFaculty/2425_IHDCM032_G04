@@ -27,6 +27,9 @@ public abstract class ProductDto {
 	@Schema(description = "Identifiant unique du produit", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
 	private Integer id;
 
+	@Column(nullable = false)
+	private LocalDateTime deliveryDate;
+
 	@Schema(description = "Poids en kg du produit", example = "100.0")
 	private Double weightKg;
 
@@ -42,7 +45,4 @@ public abstract class ProductDto {
 	public String getVirtualTypeForSwagger() {
 		return null;
 	}
-
-	@Column(nullable = false)
-	private LocalDateTime deliveryDate;
 }

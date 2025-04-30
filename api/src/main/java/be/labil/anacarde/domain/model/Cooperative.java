@@ -1,5 +1,6 @@
 package be.labil.anacarde.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import lombok.*;
@@ -23,10 +24,12 @@ public class Cooperative {
 	@Column(nullable = false)
 	private String address;
 
-	@Column(nullable = false)
+	@Column(nullable = false, updatable = false)
 	@CreationTimestamp
 	private LocalDateTime creationDate;
 
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "president_id", unique = true)
+	@JsonManagedReference("coop-producers")
 	private Producer president;
 }

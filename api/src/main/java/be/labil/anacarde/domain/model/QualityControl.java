@@ -1,5 +1,6 @@
 package be.labil.anacarde.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -33,15 +34,20 @@ public class QualityControl {
 	@Column(nullable = false)
 	private Float humidity;
 
-	@ManyToOne(optional = false)
+	@ManyToOne(optional = false, fetch = FetchType.LAZY)
+	@JoinColumn(name = "qualityInspector_id", nullable = false)
 	private QualityInspector qualityInspector;
 
-	@ManyToOne(optional = false)
+	@OneToOne(optional = false)
+	@JoinColumn(name = "product_id", nullable = false, unique = true)
+	@JsonBackReference
 	private Product product;
 
 	@ManyToOne(optional = false)
+	@JoinColumn(name = "quality_id", nullable = false)
 	private Quality quality;
 
-	@ManyToOne(optional = false)
+	@ManyToOne(optional = false, fetch = FetchType.LAZY)
+	@JoinColumn(name = "document_id", nullable = false)
 	private Document document;
 }

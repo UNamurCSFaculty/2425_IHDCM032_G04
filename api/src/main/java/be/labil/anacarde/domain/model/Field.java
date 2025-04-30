@@ -25,5 +25,6 @@ public class Field {
 	private Point location;
 
 	@ManyToOne(optional = false)
+	@JoinColumn(name = "producer_id", nullable = false)
 	private Producer producer;
 }

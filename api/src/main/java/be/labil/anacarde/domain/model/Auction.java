@@ -36,11 +36,14 @@ public class Auction {
 	private Boolean active;
 
 	@ManyToOne(optional = false)
+	@JoinColumn(name = "strategy_id", nullable = false)
 	private AuctionStrategy strategy;
 
 	@ManyToOne(optional = false)
+	@JoinColumn(name = "product_id", nullable = false)
 	private Product product;
 
-	@OneToMany(mappedBy = "auction", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	@JoinColumn(name = "auction_id")
 	private Set<AuctionOptionValue> auctionOptionValues;
 }

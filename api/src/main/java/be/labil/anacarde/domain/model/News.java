@@ -28,9 +28,9 @@ public class News {
 	@Column(columnDefinition = "TEXT")
 	private String content;
 
-	@Column(nullable = false)
+	@Column(nullable = false, updatable = false)
 	@CreationTimestamp
-	private LocalDateTime creationDate;
+	private LocalDateTime creationDate = LocalDateTime.now();
 
 	@Column(nullable = false)
 	private LocalDateTime publicationDate;

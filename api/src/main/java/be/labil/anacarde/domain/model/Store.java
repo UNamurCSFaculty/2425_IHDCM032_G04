@@ -23,7 +23,8 @@ public class Store {
 	@JdbcTypeCode(SqlTypes.GEOMETRY)
 	private Point location;
 
-	@ManyToOne(optional = false)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 
 	@Override

@@ -6,7 +6,7 @@ import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
 @Entity
-@Table(name = "role", indexes = {@Index(name = "idx_role_name", columnList = "name")})
+@Table(name = "role")
 @Getter
 @Setter
 @NoArgsConstructor
