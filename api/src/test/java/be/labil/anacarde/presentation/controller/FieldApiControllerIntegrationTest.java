@@ -88,7 +88,7 @@ public class FieldApiControllerIntegrationTest extends AbstractIntegrationTest {
 	public void testListFields() throws Exception {
 		mockMvc.perform(get("/api/users/" + getProducerTestUser().getId() + "/fields")
 				.accept(MediaType.APPLICATION_JSON).with(jwt())).andExpect(status().isOk()).andDo(print())
-				.andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(1));
+				.andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(2));
 	}
 
 	/**

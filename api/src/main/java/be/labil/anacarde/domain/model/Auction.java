@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Set;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table(name = "auction")
@@ -28,6 +29,7 @@ public class Auction {
 	private LocalDateTime expirationDate;
 
 	@Column(nullable = false)
+	@CreationTimestamp
 	private LocalDateTime creationDate;
 
 	@Column(nullable = false)

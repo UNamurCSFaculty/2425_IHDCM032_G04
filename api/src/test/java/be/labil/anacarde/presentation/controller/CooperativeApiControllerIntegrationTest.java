@@ -12,7 +12,6 @@ import be.labil.anacarde.infrastructure.persistence.CooperativeRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -48,12 +47,10 @@ public class CooperativeApiControllerIntegrationTest extends AbstractIntegration
 	@Test
 	public void testGetCooperative() throws Exception {
 		Cooperative coop = getMainTestCooperative();
-		String expectedDate = coop.getCreationDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
 
 		mockMvc.perform(get("/api/cooperatives/" + coop.getId()).accept(MediaType.APPLICATION_JSON).with(jwt()))
 				.andExpect(status().isOk()).andExpect(jsonPath("$.name").value(coop.getName()))
 				.andExpect(jsonPath("$.address").value(coop.getAddress()))
-				.andExpect(jsonPath("$.creationDate").value(expectedDate))
 				.andExpect(jsonPath("$.president.id").value(coop.getPresident().getId()));
 	}
 
@@ -66,7 +63,6 @@ public class CooperativeApiControllerIntegrationTest extends AbstractIntegration
 		CooperativeDto dto = new CooperativeDto();
 		dto.setName("Coopérative de Natitingou");
 		dto.setAddress("Quartier Kpébié, Natitingou, Bénin");
-		dto.setCreationDate(LocalDateTime.of(2020, 5, 20, 0, 0));
 
 		ProducerDetailDto producerDetailDto = new ProducerDetailDto();
 		producerDetailDto.setId(getSecondTestProducer().getId());
@@ -80,7 +76,6 @@ public class CooperativeApiControllerIntegrationTest extends AbstractIntegration
 				.andExpect(header().string("Location", containsString("/api/cooperatives/")))
 				.andExpect(jsonPath("$.name").value("Coopérative de Natitingou"))
 				.andExpect(jsonPath("$.address").value("Quartier Kpébié, Natitingou, Bénin"))
-				.andExpect(jsonPath("$.creationDate").value("2020-05-20T00:00:00"))
 				.andExpect(jsonPath("$.president.id").value(getSecondTestProducer().getId()));
 
 		Cooperative created = cooperativeRepository.findAll().stream()

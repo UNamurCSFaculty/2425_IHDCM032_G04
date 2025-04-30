@@ -1,6 +1,7 @@
 package be.labil.anacarde.domain.mapper;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import be.labil.anacarde.domain.dto.TransformedProductDto;
 import be.labil.anacarde.domain.dto.user.TransformerDetailDto;

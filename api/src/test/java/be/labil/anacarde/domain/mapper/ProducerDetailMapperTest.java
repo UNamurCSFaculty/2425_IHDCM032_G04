@@ -41,7 +41,7 @@ class ProducerDetailMapperTest {
 		dto.setCooperative(coopDto);
 		dto.setLanguage(languageDto);
 		dto.setRoles(Set.of(roleDto));
-		dto.setPhone("+32444444444");
+		dto.setPhone("+2290197000002");
 
 		Producer entity = mapper.toEntity(dto);
 
@@ -51,7 +51,7 @@ class ProducerDetailMapperTest {
 		assertThat(entity.getEmail()).isEqualTo("paul@farm.com");
 		assertThat(entity.getPassword()).isEqualTo("farmsecure");
 		assertThat(entity.getAgriculturalIdentifier()).isEqualTo("AGRI2025");
-		assertThat(entity.getPhone()).isEqualTo("+32444444444");
+		assertThat(entity.getPhone()).isEqualTo("+2290197000002");
 
 		assertThat(entity.getCooperative()).isNotNull();
 		assertThat(entity.getCooperative().getId()).isEqualTo(10);

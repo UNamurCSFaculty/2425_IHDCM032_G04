@@ -2,13 +2,16 @@ package be.labil.anacarde.application.service;
 
 import be.labil.anacarde.application.exception.BadRequestException;
 import be.labil.anacarde.application.exception.ResourceNotFoundException;
+import be.labil.anacarde.domain.dto.user.ProducerDetailDto;
 import be.labil.anacarde.domain.dto.user.UserDetailDto;
 import be.labil.anacarde.domain.dto.user.UserListDto;
-import be.labil.anacarde.domain.mapper.*;
+import be.labil.anacarde.domain.mapper.UserDetailMapper;
+import be.labil.anacarde.domain.mapper.UserListMapper;
 import be.labil.anacarde.domain.model.Role;
 import be.labil.anacarde.domain.model.User;
 import be.labil.anacarde.infrastructure.persistence.RoleRepository;
-import be.labil.anacarde.infrastructure.persistence.user.*;
+import be.labil.anacarde.infrastructure.persistence.user.UserRepository;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -28,20 +31,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	private final RoleRepository roleRepository;
 
 	private final UserRepository userRepository;
-	private final AdminRepository adminRepository;
-	private final ProducerRepository producerRepository;
-	private final TransformerRepository transformerRepository;
-	private final ExporterRepository exporterRepository;
-	private final QualityInspectorRepository qualityInspectorRepository;
-	private final CarrierRepository carrierRepository;
-
 	private final UserDetailMapper userDetailMapper;
-	private final AdminDetailMapper adminDetailMapper;
-	private final ProducerDetailMapper producerDetailMapper;
-	private final TransformerDetailMapper transformerDetailMapper;
-	private final ExporterDetailMapper exporterDetailMapper;
-	private final QualityInspectorDetailMapper qualityInspectorDetailMapper;
-	private final CarrierDetailMapper carrierDetailMapper;
 
 	private final UserListMapper userListMapper;
 	private final PasswordEncoder bCryptPasswordEncoder;
@@ -57,8 +47,13 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 		if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
 			dto.setPassword(bCryptPasswordEncoder.encode(dto.getPassword()));
 		}
-
-		User user = userDetailMapper.toEntity(dto);
+		User user;
+		if (dto instanceof ProducerDetailDto producerDto) {
+			user = userDetailMapper.toEntity(producerDto);
+		} else {
+			user = userDetailMapper.toEntity(dto);
+		}
+		user.setRegistrationDate(LocalDateTime.now());
 		User saved = userRepository.save(user);
 		return userDetailMapper.toDto(saved);
 

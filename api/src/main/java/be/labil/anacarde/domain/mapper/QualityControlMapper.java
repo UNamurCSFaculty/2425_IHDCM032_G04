@@ -4,7 +4,7 @@ import be.labil.anacarde.domain.dto.QualityControlDto;
 import be.labil.anacarde.domain.model.QualityControl;
 import org.mapstruct.*;
 
-@Mapper(componentModel = "spring", uses = {QualityInspectorDetailMapper.class, ProductMapper.class, QualityMapper.class,
+@Mapper(componentModel = "spring", uses = {UserDetailMapper.class, ProductMapper.class, QualityMapper.class,
 		DocumentMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface QualityControlMapper extends GenericMapper<QualityControlDto, QualityControl> {
 

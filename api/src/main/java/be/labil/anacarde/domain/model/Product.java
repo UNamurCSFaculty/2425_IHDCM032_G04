@@ -1,6 +1,7 @@
 package be.labil.anacarde.domain.model;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,9 @@ public abstract class Product {
 
 	@Column(nullable = false)
 	private Double weightKg;
+
+	@Column(nullable = false)
+	private LocalDateTime deliveryDate;
 
 	// TODO qualityControl set optional false
 	@OneToOne(optional = true)

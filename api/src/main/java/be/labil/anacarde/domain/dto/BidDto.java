@@ -31,7 +31,6 @@ public class BidDto {
 	private LocalDateTime auctionDate;
 
 	/** Date de création de l'offre. */
-	@NotNull(message = "La date de création est requise")
 	@Schema(description = "Date de création de l'offre", example = "2025-04-07T11:30:00", accessMode = Schema.AccessMode.READ_ONLY)
 	private LocalDateTime creationDate;
 

@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.proxy.HibernateProxy;
 
 @Entity
@@ -28,7 +29,8 @@ public class News {
 	private String content;
 
 	@Column(nullable = false)
-	private LocalDateTime creationDate = LocalDateTime.now();
+	@CreationTimestamp
+	private LocalDateTime creationDate;
 
 	@Column(nullable = false)
 	private LocalDateTime publicationDate;

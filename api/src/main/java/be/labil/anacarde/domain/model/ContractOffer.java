@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table(name = "contract_offer")
@@ -24,6 +25,7 @@ public class ContractOffer {
 	private BigDecimal pricePerKg;
 
 	@Column(nullable = false)
+	@CreationTimestamp
 	private LocalDateTime creationDate;
 
 	@Column(nullable = false)

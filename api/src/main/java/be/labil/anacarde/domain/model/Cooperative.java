@@ -3,6 +3,7 @@ package be.labil.anacarde.domain.model;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table(name = "cooperative")
@@ -23,6 +24,7 @@ public class Cooperative {
 	private String address;
 
 	@Column(nullable = false)
+	@CreationTimestamp
 	private LocalDateTime creationDate;
 
 	@OneToOne

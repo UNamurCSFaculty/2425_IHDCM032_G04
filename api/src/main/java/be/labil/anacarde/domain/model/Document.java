@@ -3,11 +3,8 @@ package be.labil.anacarde.domain.model;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.proxy.HibernateProxy;
 
 @Entity
@@ -33,7 +30,8 @@ public class Document {
 	private String storagePath;
 
 	@Column(nullable = false)
-	private LocalDateTime uploadDate = LocalDateTime.now();
+	@CreationTimestamp
+	private LocalDateTime uploadDate;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")

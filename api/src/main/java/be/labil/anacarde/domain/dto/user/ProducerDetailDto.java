@@ -1,9 +1,10 @@
 package be.labil.anacarde.domain.dto.user;
 
 import be.labil.anacarde.domain.dto.CooperativeDto;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -15,6 +16,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Schema(description = "Objet de transfert de données pour les producteurs.")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class ProducerDetailDto extends TraderDetailDto {
 
 	/** Identifiant agricole du producteur. */
@@ -23,7 +25,6 @@ public class ProducerDetailDto extends TraderDetailDto {
 	private String agriculturalIdentifier;
 
 	/** Coopérative à laquelle appartient le producteur. */
-	@NotNull
-	@Schema(description = "Coopérative du producteur", requiredMode = Schema.RequiredMode.REQUIRED)
+	@Schema(description = "Coopérative du producteur")
 	private CooperativeDto cooperative;
 }

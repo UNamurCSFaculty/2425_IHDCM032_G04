@@ -1,5 +1,6 @@
 package be.labil.anacarde.presentation.controller;
 
+import be.labil.anacarde.application.service.DatabaseService;
 import be.labil.anacarde.domain.model.*;
 import be.labil.anacarde.infrastructure.persistence.*;
 import be.labil.anacarde.infrastructure.persistence.user.UserRepository;
@@ -58,6 +59,8 @@ public abstract class AbstractIntegrationTest {
 	protected QualityRepository qualityRepository;
 	@Autowired
 	protected ContractOfferRepository contractOfferRepository;
+	@Autowired
+	protected DatabaseService databaseService;
 
 	private Language mainLanguage;
 	private User mainTestUser;
@@ -93,20 +96,7 @@ public abstract class AbstractIntegrationTest {
 
 	@AfterEach
 	public void tearDown() {
-		contractOfferRepository.deleteAll();
-		qualityRepository.deleteAll();
-		documentRepository.deleteAll();
-		cooperativeRepository.deleteAll();
-		fieldRepository.deleteAll();
-		bidRepository.deleteAll();
-		bidStatusRepository.deleteAll();
-		auctionRepository.deleteAll();
-		auctionStrategyRepository.deleteAll();
-		productRepository.deleteAll();
-		storeRepository.deleteAll();
-		userRepository.deleteAll();
-		roleRepository.deleteAll();
-		languageRepository.deleteAll();
+		databaseService.dropDatabase();
 	}
 
 	/**
@@ -327,33 +317,37 @@ public abstract class AbstractIntegrationTest {
 
 		User user1 = Admin.builder().firstName("John").lastName("Doe").email("user@example.com")
 				.password("$2a$10$abcdefghijklmnopqrstuv1234567890AB").registrationDate(LocalDateTime.now())
-				.language(mainLanguage).enabled(true).build();
+				.phone("+2290197000000").language(mainLanguage).enabled(true).build();
 
 		User user2 = Admin.builder().firstName("Foo").lastName("Bar").email("foo@bar.com")
 				.password("$2a$10$abcdefghijklmnopqrstuv1234567890AB").registrationDate(LocalDateTime.now())
-				.language(mainLanguage).enabled(true).build();
+				.phone("+2290197000001").language(mainLanguage).enabled(true).build();
 
 		User producer = Producer.builder().firstName("Bruce").lastName("Banner").email("bruce@hulk.com")
 				.password("$2a$10$abcdefghijklmnopqrstuv1234567890AB").registrationDate(LocalDateTime.now())
-				.language(mainLanguage).enabled(true).agriculturalIdentifier("111-222-333").build();
+				.phone("+2290197000002").language(mainLanguage).enabled(true).agriculturalIdentifier("111-222-333")
+				.build();
 
 		User producer2 = Producer.builder().firstName("Steve").lastName("Rogers").email("steve@captain.com")
 				.password("$2a$10$abcdefghijklmnopqrstuv1234567890AB").registrationDate(LocalDateTime.now())
-				.language(mainLanguage).enabled(true).agriculturalIdentifier("000-111-222").build();
+				.phone("+2290197000003").language(mainLanguage).enabled(true).agriculturalIdentifier("000-111-222")
+				.build();
 
 		User transformer = Transformer.builder().firstName("Scott").lastName("Summers").email("scott@xmen.com")
 				.password("$2a$10$abcdefghijklmnopqrstuv1234567890AB").registrationDate(LocalDateTime.now())
-				.language(mainLanguage).enabled(true).build();
+				.phone("+2290197000004").language(mainLanguage).enabled(true).build();
 
 		User qualityInspector = QualityInspector.builder().firstName("Inspector").lastName("Best")
 				.email("inspector@best.com").password("$2a$10$abcdefghijklmnopqrstuv1234567890AB")
-				.registrationDate(LocalDateTime.now()).language(mainLanguage).enabled(true).build();
+				.phone("+2290197000005").registrationDate(LocalDateTime.now()).language(mainLanguage).enabled(true)
+				.build();
 
 		Set regions = new HashSet<>();
 		regions.add(mainTestRegion);
 		User carrier = Carrier.builder().firstName("Pierre").lastName("Verse").email("pierre@verse.com")
 				.password("$2a$10$abcdefghijklmnopqrstuv1234567890AB").registrationDate(LocalDateTime.now())
-				.language(mainLanguage).enabled(true).regions(regions).pricePerKm(new BigDecimal(100)).build();
+				.phone("+2290197000006").language(mainLanguage).enabled(true).regions(regions)
+				.pricePerKm(new BigDecimal(100)).build();
 
 		Role userRole = Role.builder().name("ROLE_USER").build();
 		Role adminRole = Role.builder().name("ROLE_ADMIN").build();
@@ -379,14 +373,28 @@ public abstract class AbstractIntegrationTest {
 		Store store = Store.builder().location(storeLocation).user(mainTestUser).build();
 		mainTestStore = storeRepository.save(store);
 
+		// Fields
+		// A field binded to main producer
+		Point pointField = new GeometryFactory().createPoint(new Coordinate(2.3522, 48.8566));
+		Field field = Field.builder().producer((Producer) producerTestUser).identifier("FIELD-001").location(pointField)
+				.build();
+
+		mainTestField = fieldRepository.save(field);
+
+		// A field to another producer
+		Point pointField2 = new GeometryFactory().createPoint(new Coordinate(1.198, 10.300));
+		Field field2 = Field.builder().producer((Producer) producerTestUser).identifier("FIELD-002")
+				.location(pointField2).build();
+		fieldRepository.save(field2);
+
 		// A harvest product
 		Product productHarvest = HarvestProduct.builder().producer((Producer) producerTestUser).store(mainTestStore)
-				.deliveryDate(LocalDateTime.now()).weightKg(2000.0).build();
+				.deliveryDate(LocalDateTime.now()).weightKg(2000.0).field(mainTestField).build();
 		testHarvestProduct = productRepository.save(productHarvest);
 
 		// A transformed product
 		Product productTransform = TransformedProduct.builder().transformer((Transformer) transformerTestUser)
-				.identifier("XYZ").location("Zone B").weightKg(2000.0).build();
+				.deliveryDate(LocalDateTime.now()).identifier("XYZ").location("Zone B").weightKg(2000.0).build();
 		testTransformedProduct = productRepository.save(productTransform);
 
 		AuctionStrategy strategy = AuctionStrategy.builder().name("Meilleure offre").build();
@@ -418,18 +426,6 @@ public abstract class AbstractIntegrationTest {
 				.creationDate(LocalDateTime.now()).auction(auction2).trader((Trader) producer).status(testBidStatus)
 				.build();
 		bidRepository.save(bid2);
-
-		// A field binded to main producer
-		Point pointField = new GeometryFactory().createPoint(new Coordinate(2.3522, 48.8566));
-		Field field = Field.builder().producer((Producer) producer).identifier("FIELD-001").location(pointField)
-				.build();
-		mainTestField = fieldRepository.save(field);
-
-		// A field to another producer
-		Point pointField2 = new GeometryFactory().createPoint(new Coordinate(1.198, 10.300));
-		Field field2 = Field.builder().producer((Producer) producer2).identifier("FIELD-002").location(pointField2)
-				.build();
-		fieldRepository.save(field2);
 
 		// A cooperative who has for president 'producer'
 		Cooperative cooperative = Cooperative.builder().name("Coopérative Agricole de Parakou")

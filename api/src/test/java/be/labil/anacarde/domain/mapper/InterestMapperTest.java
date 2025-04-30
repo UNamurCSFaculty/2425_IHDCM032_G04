@@ -1,17 +1,14 @@
 package be.labil.anacarde.domain.mapper;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import be.labil.anacarde.domain.dto.IntentionDto;
 import be.labil.anacarde.domain.dto.InterestDto;
 import be.labil.anacarde.domain.dto.QualityDto;
 import be.labil.anacarde.domain.dto.user.TraderDetailDto;
 import be.labil.anacarde.domain.dto.user.TransformerDetailDto;
-import be.labil.anacarde.domain.model.Intention;
-import be.labil.anacarde.domain.model.Interest;
-import be.labil.anacarde.domain.model.Quality;
-import be.labil.anacarde.domain.model.Trader;
-import be.labil.anacarde.domain.model.Transformer;
+import be.labil.anacarde.domain.model.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;

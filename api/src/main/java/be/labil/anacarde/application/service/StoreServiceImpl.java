@@ -20,8 +20,8 @@ public class StoreServiceImpl implements StoreService {
 
 	@Override
 	public StoreDetailDto createStore(StoreDetailDto dto) {
-		Store Store = storeMapper.toEntity(dto);
-		Store saved = storeRepository.save(Store);
+		Store store = storeMapper.toEntity(dto);
+		Store saved = storeRepository.save(store);
 		return storeMapper.toDto(saved);
 	}
 
