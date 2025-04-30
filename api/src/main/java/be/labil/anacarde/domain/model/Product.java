@@ -31,6 +31,5 @@ public abstract class Product {
 
 	@OneToOne(mappedBy = "product")
 	@JoinColumn(name = "qualityControl_id")
-	@JsonManagedReference
 	private QualityControl qualityControl;
 }

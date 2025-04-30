@@ -1,6 +1,5 @@
 package be.labil.anacarde.domain.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import lombok.*;

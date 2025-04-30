@@ -2,7 +2,6 @@ package be.labil.anacarde.domain.dto;
 
 import be.labil.anacarde.domain.dto.user.ProducerDetailDto;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -39,6 +38,5 @@ public class CooperativeDto {
 	/** Président de la coopérative. */
 	@NotNull
 	@Schema(description = "Président de la coopérative", requiredMode = Schema.RequiredMode.REQUIRED)
-	@JsonManagedReference("coop-producers")
 	private ProducerDetailDto president;
 }
