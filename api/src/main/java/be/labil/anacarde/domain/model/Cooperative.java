@@ -30,6 +30,5 @@ public class Cooperative {
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "president_id", unique = true)
-	@JsonManagedReference("coop-producers")
 	private Producer president;
 }

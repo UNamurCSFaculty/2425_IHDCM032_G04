@@ -1,6 +1,5 @@
 package be.labil.anacarde.domain.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -40,7 +39,6 @@ public class QualityControl {
 
 	@OneToOne(optional = false)
 	@JoinColumn(name = "product_id", nullable = false, unique = true)
-	@JsonBackReference
 	private Product product;
 
 	@ManyToOne(optional = false)

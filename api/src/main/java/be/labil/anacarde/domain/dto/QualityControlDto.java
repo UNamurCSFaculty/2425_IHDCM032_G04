@@ -1,6 +1,7 @@
 package be.labil.anacarde.domain.dto;
 
 import be.labil.anacarde.domain.dto.user.QualityInspectorDetailDto;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -53,6 +54,7 @@ public class QualityControlDto {
 	/** Produit associé au contrôle qualité. */
 	@NotNull(message = "Le produit est requis")
 	@Schema(description = "Produit associé", requiredMode = Schema.RequiredMode.REQUIRED)
+	@JsonBackReference
 	private ProductDto product;
 
 	/** Qualité du produit mesurée. */

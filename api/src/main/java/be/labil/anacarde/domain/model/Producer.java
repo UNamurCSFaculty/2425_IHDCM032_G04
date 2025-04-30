@@ -1,6 +1,5 @@
 package be.labil.anacarde.domain.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +20,5 @@ public class Producer extends Trader {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cooperative_id")
-	@JsonBackReference("coop-producers")
 	private Cooperative cooperative;
 }

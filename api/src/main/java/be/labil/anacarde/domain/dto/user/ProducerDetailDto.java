@@ -1,6 +1,7 @@
 package be.labil.anacarde.domain.dto.user;
 
 import be.labil.anacarde.domain.dto.CooperativeDto;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -26,5 +27,6 @@ public class ProducerDetailDto extends TraderDetailDto {
 
 	/** Coopérative à laquelle appartient le producteur. */
 	@Schema(description = "Coopérative du producteur")
+	@JsonBackReference("coop-producers")
 	private CooperativeDto cooperative;
 }
