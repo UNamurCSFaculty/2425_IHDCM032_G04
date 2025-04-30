@@ -1,6 +1,8 @@
 package be.labil.anacarde.domain.dto;
 
 import be.labil.anacarde.domain.dto.user.ProducerDetailDto;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -12,6 +14,7 @@ import lombok.Data;
  */
 @Data
 @Schema(description = "Représente une coopérative.")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class CooperativeDto {
 
 	/** Identifiant unique de la coopérative. */
