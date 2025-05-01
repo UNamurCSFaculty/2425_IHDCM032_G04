@@ -70,7 +70,7 @@ function AppWithProvider() {
     }
 
     fetchUser()
-  }, [])
+  }, [setLoading, setUser])
 
   if (loading) {
     return <GlobalSkeleton />
