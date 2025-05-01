@@ -49,9 +49,9 @@ public class CooperativeApiControllerIntegrationTest extends AbstractIntegration
 		Cooperative coop = getMainTestCooperative();
 
 		mockMvc.perform(get("/api/cooperatives/" + coop.getId()).accept(MediaType.APPLICATION_JSON).with(jwt()))
-				.andExpect(status().isOk()).andExpect(jsonPath("$.name").value(coop.getName()))
+				.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.name").value(coop.getName()))
 				.andExpect(jsonPath("$.address").value(coop.getAddress()))
-				.andExpect(jsonPath("$.president.id").value(coop.getPresident().getId()));
+				.andExpect(jsonPath("$.presidentId").value(coop.getPresident().getId()));
 	}
 
 	/**
@@ -66,7 +66,7 @@ public class CooperativeApiControllerIntegrationTest extends AbstractIntegration
 
 		ProducerDetailDto producerDetailDto = new ProducerDetailDto();
 		producerDetailDto.setId(getSecondTestProducer().getId());
-		dto.setPresident(producerDetailDto);
+		dto.setPresidentId(producerDetailDto.getId());
 
 		ObjectNode json = objectMapper.valueToTree(dto);
 
@@ -76,7 +76,7 @@ public class CooperativeApiControllerIntegrationTest extends AbstractIntegration
 				.andExpect(header().string("Location", containsString("/api/cooperatives/")))
 				.andExpect(jsonPath("$.name").value("Coopérative de Natitingou"))
 				.andExpect(jsonPath("$.address").value("Quartier Kpébié, Natitingou, Bénin"))
-				.andExpect(jsonPath("$.president.id").value(getSecondTestProducer().getId()));
+				.andExpect(jsonPath("$.presidentId").value(getSecondTestProducer().getId()));
 
 		Cooperative created = cooperativeRepository.findAll().stream()
 				.filter(c -> "Coopérative de Natitingou".equals(c.getName())).findFirst()
@@ -105,7 +105,7 @@ public class CooperativeApiControllerIntegrationTest extends AbstractIntegration
 
 		ProducerDetailDto producerDetailDto = new ProducerDetailDto();
 		producerDetailDto.setId(getMainTestCooperative().getPresident().getId());
-		dto.setPresident(producerDetailDto);
+		dto.setPresidentId(producerDetailDto.getId());
 
 		dto.setName("Coop MAJ");
 		dto.setAddress(cooperative.getAddress());
@@ -118,7 +118,7 @@ public class CooperativeApiControllerIntegrationTest extends AbstractIntegration
 				.andExpect(jsonPath("$.name").value("Coop MAJ"))
 				.andExpect(jsonPath("$.address").value(cooperative.getAddress()))
 				.andExpect(jsonPath("$.creationDate").value("2020-05-20T00:00:00"))
-				.andExpect(jsonPath("$.president.id").value(cooperative.getPresident().getId()));
+				.andExpect(jsonPath("$.presidentId").value(cooperative.getPresident().getId()));
 
 	}
 

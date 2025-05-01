@@ -9,7 +9,7 @@ import be.labil.anacarde.domain.model.TransformedProduct;
 import org.mapstruct.*;
 
 @Mapper(componentModel = "spring", uses = {DocumentMapper.class, UserDetailMapper.class, StoreMapper.class,
-		FieldDetailMapper.class})
+		FieldMapper.class})
 public interface ProductMapper extends GenericMapper<ProductDto, Product> {
 
 	default Product toEntity(ProductDto dto) {
@@ -43,41 +43,41 @@ public interface ProductMapper extends GenericMapper<ProductDto, Product> {
 	@Mapping(source = "store", target = "store")
 	@Mapping(source = "producer", target = "producer")
 	@Mapping(source = "field", target = "field")
-	@Mapping(source = "qualityControl", target = "qualityControl")
+	@Mapping(target = "qualityControl", ignore = true)
 	HarvestProduct toEntity(HarvestProductDto dto);
 
 	// Mapping inverse vers le DTO
 	@Mapping(source = "store", target = "store")
 	@Mapping(source = "producer", target = "producer")
 	@Mapping(source = "field", target = "field")
-	@Mapping(source = "qualityControl", target = "qualityControl")
+	@Mapping(target = "qualityControlId", ignore = true)
 	HarvestProductDto toDto(HarvestProduct entity);
 
 	// Mapping vers l'entité
 	@Mapping(source = "identifier", target = "identifier")
 	@Mapping(source = "location", target = "location")
 	@Mapping(source = "transformer", target = "transformer")
-	@Mapping(source = "qualityControl", target = "qualityControl")
+	@Mapping(target = "qualityControl", ignore = true)
 	TransformedProduct toEntity(TransformedProductDto dto);
 
 	// Mapping inverse vers le DTO
 	@Mapping(source = "identifier", target = "identifier")
 	@Mapping(source = "location", target = "location")
 	@Mapping(source = "transformer", target = "transformer")
-	@Mapping(source = "qualityControl", target = "qualityControl")
+	@Mapping(target = "qualityControlId", ignore = true)
 	TransformedProductDto toDto(TransformedProduct entity);
 
 	@Mapping(source = "identifier", target = "identifier")
 	@Mapping(source = "location", target = "location")
 	@Mapping(source = "transformer", target = "transformer")
-	@Mapping(source = "qualityControl", target = "qualityControl")
+	@Mapping(target = "qualityControl", ignore = true)
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 	TransformedProduct partialUpdate(TransformedProductDto dto, @MappingTarget TransformedProduct entity);
 
 	@Mapping(source = "store", target = "store")
 	@Mapping(source = "producer", target = "producer")
 	@Mapping(source = "field", target = "field")
-	@Mapping(source = "qualityControl", target = "qualityControl")
+	@Mapping(target = "qualityControl", ignore = true)
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 	HarvestProduct partialUpdate(HarvestProductDto dto, @MappingTarget HarvestProduct entity);
 }

@@ -38,8 +38,8 @@ class CooperativeMapperTest {
 		assertThat(dto.getName()).isEqualTo("Coopérative du Nord");
 		assertThat(dto.getAddress()).isEqualTo("Abobo, Abidjan");
 		assertThat(dto.getCreationDate()).isEqualTo("2023-06-15T00:00:00");
-		assertThat(dto.getPresident()).isNotNull();
-		assertThat(dto.getPresident().getId()).isEqualTo(1);
+		assertThat(dto.getPresidentId()).isNotNull();
+		assertThat(dto.getPresidentId()).isEqualTo(1);
 	}
 
 	@Test
@@ -54,7 +54,7 @@ class CooperativeMapperTest {
 		dto.setName("Coopérative du Sud");
 		dto.setAddress("Yopougon, Abidjan");
 		dto.setCreationDate(LocalDateTime.of(2024, 1, 1, 12, 0));
-		dto.setPresident(presidentDto);
+		dto.setPresidentId(presidentDto.getId());
 
 		Cooperative entity = mapper.toEntity(dto);
 

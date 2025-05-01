@@ -1,6 +1,6 @@
 package be.labil.anacarde.presentation.controller;
 
-import be.labil.anacarde.domain.dto.FieldDetailDto;
+import be.labil.anacarde.domain.dto.FieldDto;
 import be.labil.anacarde.domain.dto.ValidationGroups;
 import be.labil.anacarde.presentation.controller.annotations.*;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,24 +23,24 @@ public interface FieldApi {
 	@Operation(summary = "Obtenir un champ")
 	@GetMapping("/{id}")
 	@ApiResponseGet
-	ResponseEntity<? extends FieldDetailDto> getField(@ApiValidId @PathVariable("id") Integer id);
+	ResponseEntity<? extends FieldDto> getField(@ApiValidId @PathVariable("id") Integer id);
 
 	@Operation(summary = "Créer un champ")
 	@PostMapping
 	@ApiResponsePost
-	ResponseEntity<? extends FieldDetailDto> createField(
-			@Validated({Default.class, ValidationGroups.Create.class}) @RequestBody FieldDetailDto fieldDetailDto);
+	ResponseEntity<? extends FieldDto> createField(
+			@Validated({Default.class, ValidationGroups.Create.class}) @RequestBody FieldDto fieldDto);
 
 	@Operation(summary = "Mettre à jour un champ")
 	@PutMapping(value = "/{id}", consumes = "application/json")
 	@ApiResponsePut
-	ResponseEntity<? extends FieldDetailDto> updateField(@ApiValidId @PathVariable("id") Integer id,
-			@Validated({Default.class, ValidationGroups.Update.class}) @RequestBody FieldDetailDto fieldDetailDto);
+	ResponseEntity<? extends FieldDto> updateField(@ApiValidId @PathVariable("id") Integer id,
+			@Validated({Default.class, ValidationGroups.Update.class}) @RequestBody FieldDto fieldDto);
 
 	@Operation(summary = "Obtenir tous les champs d’un utilisateur")
 	@GetMapping
 	@ApiResponseGet
-	ResponseEntity<List<? extends FieldDetailDto>> listFields(@PathVariable("userId") Integer userId);
+	ResponseEntity<List<? extends FieldDto>> listFields(@PathVariable("userId") Integer userId);
 
 	@Operation(summary = "Supprimer un champ")
 	@DeleteMapping("/{id}")

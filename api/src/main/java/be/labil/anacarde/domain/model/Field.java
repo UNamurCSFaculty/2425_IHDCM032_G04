@@ -18,7 +18,7 @@ public class Field {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_field")
 	private Integer id;
 
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String identifier;
 
 	@JdbcTypeCode(SqlTypes.GEOMETRY)

@@ -6,7 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import be.labil.anacarde.domain.dto.FieldDetailDto;
+import be.labil.anacarde.domain.dto.FieldDto;
 import be.labil.anacarde.domain.dto.HarvestProductDto;
 import be.labil.anacarde.domain.dto.StoreDetailDto;
 import be.labil.anacarde.domain.dto.TransformedProductDto;
@@ -85,7 +85,7 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 		StoreDetailDto store = new StoreDetailDto();
 		store.setId(getMainTestStore().getId());
 
-		FieldDetailDto field = new FieldDetailDto();
+		FieldDto field = new FieldDto();
 		field.setId(getMainTestField().getId());
 
 		HarvestProductDto newProduct = new HarvestProductDto();

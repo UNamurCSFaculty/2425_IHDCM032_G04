@@ -2,7 +2,7 @@ package be.labil.anacarde.domain.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import be.labil.anacarde.domain.dto.FieldDetailDto;
+import be.labil.anacarde.domain.dto.FieldDto;
 import be.labil.anacarde.domain.dto.HarvestProductDto;
 import be.labil.anacarde.domain.dto.StoreDetailDto;
 import be.labil.anacarde.domain.dto.user.ProducerDetailDto;
@@ -57,7 +57,7 @@ class HarvestProductMapperTest {
 		producer.setId(200);
 		dto.setProducer(producer);
 
-		FieldDetailDto field = new FieldDetailDto();
+		FieldDto field = new FieldDto();
 		field.setId(300);
 		dto.setField(field);
 

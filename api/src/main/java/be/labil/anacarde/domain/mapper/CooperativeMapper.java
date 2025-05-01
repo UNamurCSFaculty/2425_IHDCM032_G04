@@ -9,10 +9,10 @@ import org.mapstruct.Mapping;
 public interface CooperativeMapper extends GenericMapper<CooperativeDto, Cooperative> {
 
 	@Override
-	@Mapping(source = "president", target = "president")
+	@Mapping(source = "presidentId", target = "president.id")
 	Cooperative toEntity(CooperativeDto dto);
 
 	@Override
-	@Mapping(source = "president", target = "president")
+	@Mapping(source = "president.id", target = "presidentId")
 	CooperativeDto toDto(Cooperative entity);
 }

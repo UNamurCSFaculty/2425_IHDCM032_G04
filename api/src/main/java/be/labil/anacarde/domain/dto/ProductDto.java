@@ -1,8 +1,6 @@
 package be.labil.anacarde.domain.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.*;
 import io.swagger.v3.oas.annotations.media.DiscriminatorMapping;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
@@ -33,7 +31,8 @@ public abstract class ProductDto {
 	@Schema(description = "Poids en kg du produit", example = "100.0")
 	private Double weightKg;
 
-	private QualityControlDto qualityControl;
+	@JsonIgnoreProperties("product")
+	private Integer qualityControlId;
 
 	/**
 	 * Propriété virtuelle pour Swagger. Ce getter n'est pas utilisé par Jackson car il est ignoré, mais permet
