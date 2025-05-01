@@ -22,24 +22,24 @@ public interface StoreApi {
 	@Operation(summary = "Obtenir un magasin")
 	@GetMapping("/{id}")
 	@ApiResponseGet
-	ResponseEntity<? extends StoreDetailDto> getStore(@ApiValidId @PathVariable("id") Integer id);
+	ResponseEntity<StoreDetailDto> getStore(@ApiValidId @PathVariable("id") Integer id);
 
 	@Operation(summary = "Créer un magasin")
 	@PostMapping
 	@ApiResponsePost
-	ResponseEntity<? extends StoreDetailDto> createStore(
+	ResponseEntity<StoreDetailDto> createStore(
 			@Validated({Default.class, ValidationGroups.Create.class}) @RequestBody StoreDetailDto storeDetailDto);
 
 	@Operation(summary = "Mettre à jour un magasin")
 	@ApiResponsePut
 	@PutMapping(value = "/{id}", consumes = "application/json")
-	ResponseEntity<? extends StoreDetailDto> updateStore(@ApiValidId @PathVariable("id") Integer id,
+	ResponseEntity<StoreDetailDto> updateStore(@ApiValidId @PathVariable("id") Integer id,
 			@Validated({Default.class, ValidationGroups.Update.class}) @RequestBody StoreDetailDto storeDetailDto);
 
 	@Operation(summary = "Obtenir tous les magasins")
 	@ApiResponseGet
 	@GetMapping
-	ResponseEntity<List<? extends StoreDetailDto>> listStores();
+	ResponseEntity<List<StoreDetailDto>> listStores();
 
 	@Operation(summary = "Supprimer un magasin")
 	@ApiResponseDelete

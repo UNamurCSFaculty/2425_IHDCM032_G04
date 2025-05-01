@@ -2,6 +2,14 @@
 
 import { z } from 'zod';
 
+export const zCooperativeDto = z.object({
+    id: z.number().int().readonly().optional(),
+    name: z.string().min(1),
+    address: z.string().min(1),
+    creationDate: z.iso.datetime(),
+    presidentId: z.number().int()
+});
+
 export const zRoleDto = z.object({
     id: z.number().int().readonly().optional(),
     name: z.string().min(1)
@@ -10,6 +18,49 @@ export const zRoleDto = z.object({
 export const zLanguageDto = z.object({
     id: z.number().int().readonly().optional(),
     name: z.string().min(1)
+});
+
+export const zProducerDetailDto = z.object({
+    id: z.number().int().readonly().optional(),
+    firstName: z.string().min(1),
+    lastName: z.string().min(1),
+    email: z.string().min(1),
+    registrationDate: z.iso.datetime().readonly().optional(),
+    validationDate: z.iso.datetime().readonly().optional(),
+    enabled: z.boolean().optional(),
+    address: z.string().optional(),
+    phone: z.string().regex(/^(?:\+229)?(?:01[2-9]\d{7}|[2-9]\d{7})$/).optional(),
+    password: z.string().optional(),
+    roles: z.array(zRoleDto).readonly().optional(),
+    language: zLanguageDto,
+    agriculturalIdentifier: z.string().min(1),
+    cooperative: zCooperativeDto.optional(),
+    type: z.enum([
+        'admin',
+        'producer',
+        'transformer',
+        'quality_inspector',
+        'exporter',
+        'carrier'
+    ])
+});
+
+export const zFieldDto = z.object({
+    id: z.number().int().readonly().optional(),
+    identifier: z.string().optional(),
+    location: z.string().optional(),
+    producer: zProducerDetailDto.optional()
+});
+
+export const zApiErrorErrors = z.object({
+    path: z.string().optional(),
+    message: z.string().optional(),
+    errorCode: z.string().optional()
+});
+
+export const zApiError = z.object({
+    message: z.string().optional(),
+    errors: z.array(zApiErrorErrors).optional()
 });
 
 export const zUserDetailDto = z.object({
@@ -35,41 +86,6 @@ export const zUserDetailDto = z.object({
     ])
 });
 
-export const zTraderDetailDto = zUserDetailDto;
-
-export const zProducerDetailDto: z.ZodTypeAny = zTraderDetailDto.and(z.object({
-    agriculturalIdentifier: z.string().min(1),
-    cooperative: z.lazy(() => {
-        return zCooperativeDto;
-    }).optional()
-}));
-
-export const zCooperativeDto: z.ZodObject = z.object({
-    id: z.number().int().readonly().optional(),
-    name: z.string().min(1),
-    address: z.string().min(1),
-    creationDate: z.iso.datetime(),
-    president: zProducerDetailDto
-});
-
-export const zFieldDetailDto = z.object({
-    id: z.number().int().readonly().optional(),
-    identifier: z.string().optional(),
-    location: z.string().optional(),
-    producer: zProducerDetailDto.optional()
-});
-
-export const zApiErrorErrors = z.object({
-    path: z.string().optional(),
-    message: z.string().optional(),
-    errorCode: z.string().optional()
-});
-
-export const zApiError = z.object({
-    message: z.string().optional(),
-    errors: z.array(zApiErrorErrors).optional()
-});
-
 export const zAdminDetailDto = zUserDetailDto;
 
 export const zCarrierDetailDto = zUserDetailDto.and(z.object({
@@ -77,11 +93,34 @@ export const zCarrierDetailDto = zUserDetailDto.and(z.object({
     regionIds: z.array(z.number().int())
 }));
 
+export const zTraderDetailDto = zUserDetailDto;
+
 export const zExporterDetailDto = zTraderDetailDto;
 
 export const zQualityInspectorDetailDto = zUserDetailDto;
 
-export const zTransformerDetailDto = zTraderDetailDto;
+export const zTransformerDetailDto = z.object({
+    id: z.number().int().readonly().optional(),
+    firstName: z.string().min(1),
+    lastName: z.string().min(1),
+    email: z.string().min(1),
+    registrationDate: z.iso.datetime().readonly().optional(),
+    validationDate: z.iso.datetime().readonly().optional(),
+    enabled: z.boolean().optional(),
+    address: z.string().optional(),
+    phone: z.string().regex(/^(?:\+229)?(?:01[2-9]\d{7}|[2-9]\d{7})$/).optional(),
+    password: z.string().optional(),
+    roles: z.array(zRoleDto).readonly().optional(),
+    language: zLanguageDto,
+    type: z.enum([
+        'admin',
+        'producer',
+        'transformer',
+        'quality_inspector',
+        'exporter',
+        'carrier'
+    ])
+});
 
 export const zStoreDetailDto = z.object({
     id: z.number().int().readonly().optional(),
@@ -99,6 +138,33 @@ export const zQualityDto = z.object({
     name: z.string().min(1)
 });
 
+export const zProductDto = z.object({
+    id: z.number().int().readonly().optional(),
+    deliveryDate: z.iso.datetime().optional(),
+    weightKg: z.number().optional(),
+    qualityControlId: z.number().int().optional(),
+    type: z.enum([
+        'harvest',
+        'transformed'
+    ])
+});
+
+export const zHarvestProductDto = zProductDto.and(z.object({
+    type: z.literal('harvest')
+})).and(z.object({
+    store: zStoreDetailDto,
+    producer: zProducerDetailDto,
+    field: zFieldDto
+}));
+
+export const zTransformedProductDto = zProductDto.and(z.object({
+    type: z.literal('transformed')
+})).and(z.object({
+    identifier: z.string().min(1),
+    location: z.string().min(1),
+    transformer: zTransformerDetailDto
+}));
+
 export const zDocumentDto = z.object({
     id: z.number().int().readonly().optional(),
     documentType: z.string().min(1),
@@ -107,53 +173,6 @@ export const zDocumentDto = z.object({
     uploadDate: z.iso.datetime().readonly().optional(),
     userId: z.number().int()
 });
-
-export const zTransformedProductDto: z.ZodTypeAny = z.lazy(() => {
-    return zProductDto;
-}).and(z.object({
-    type: z.literal('transformed')
-})).and(z.object({
-    identifier: z.string().min(1),
-    location: z.string().min(1),
-    transformer: zTransformerDetailDto
-}));
-
-export const zQualityControlDto: z.ZodObject = z.object({
-    id: z.number().int().readonly().optional(),
-    identifier: z.string().min(1),
-    controlDate: z.iso.datetime(),
-    granularity: z.number(),
-    korTest: z.number(),
-    humidity: z.number(),
-    qualityInspector: zQualityInspectorDetailDto,
-    product: z.union([
-        z.lazy(() => {
-            return zHarvestProductDto;
-        }),
-        zTransformedProductDto
-    ]),
-    quality: zQualityDto,
-    document: zDocumentDto
-});
-
-export const zProductDto: z.ZodObject = z.object({
-    id: z.number().int().readonly().optional(),
-    weightKg: z.number().optional(),
-    qualityControl: zQualityControlDto.optional(),
-    deliveryDate: z.iso.datetime().optional(),
-    type: z.enum([
-        'harvest',
-        'transformed'
-    ])
-});
-
-export const zHarvestProductDto: z.ZodTypeAny = zProductDto.and(z.object({
-    type: z.literal('harvest')
-})).and(z.object({
-    store: zStoreDetailDto,
-    producer: zProducerDetailDto,
-    field: zFieldDetailDto
-}));
 
 export const zContractOfferDto = z.object({
     id: z.number().int().readonly().optional(),
@@ -313,6 +332,6 @@ export const zAddRoleToUserResponse = zUserDetailDto;
 
 export const zAuthenticateUserResponse = zUserDetailDto;
 
-export const zTestResponse = z.string();
+export const zListAuctionsResponse = z.array(zAuctionDto);
 
 export const zGetCurrentUserResponse = zUserDetailDto;

@@ -23,24 +23,24 @@ public interface FieldApi {
 	@Operation(summary = "Obtenir un champ")
 	@GetMapping("/{id}")
 	@ApiResponseGet
-	ResponseEntity<? extends FieldDto> getField(@ApiValidId @PathVariable("id") Integer id);
+	ResponseEntity<FieldDto> getField(@ApiValidId @PathVariable("id") Integer id);
 
 	@Operation(summary = "Créer un champ")
 	@PostMapping
 	@ApiResponsePost
-	ResponseEntity<? extends FieldDto> createField(
+	ResponseEntity<FieldDto> createField(
 			@Validated({Default.class, ValidationGroups.Create.class}) @RequestBody FieldDto fieldDto);
 
 	@Operation(summary = "Mettre à jour un champ")
 	@PutMapping(value = "/{id}", consumes = "application/json")
 	@ApiResponsePut
-	ResponseEntity<? extends FieldDto> updateField(@ApiValidId @PathVariable("id") Integer id,
+	ResponseEntity<FieldDto> updateField(@ApiValidId @PathVariable("id") Integer id,
 			@Validated({Default.class, ValidationGroups.Update.class}) @RequestBody FieldDto fieldDto);
 
 	@Operation(summary = "Obtenir tous les champs d’un utilisateur")
 	@GetMapping
 	@ApiResponseGet
-	ResponseEntity<List<? extends FieldDto>> listFields(@PathVariable("userId") Integer userId);
+	ResponseEntity<List<FieldDto>> listFields(@PathVariable("userId") Integer userId);
 
 	@Operation(summary = "Supprimer un champ")
 	@DeleteMapping("/{id}")

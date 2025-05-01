@@ -22,24 +22,24 @@ public interface ContractOfferApi {
 	@Operation(summary = "Obtenir un contrat")
 	@GetMapping("/{id}")
 	@ApiResponseGet
-	ResponseEntity<? extends ContractOfferDto> getContractOffer(@ApiValidId @PathVariable("id") Integer id);
+	ResponseEntity<ContractOfferDto> getContractOffer(@ApiValidId @PathVariable("id") Integer id);
 
 	@Operation(summary = "Créer un contrat")
 	@PostMapping
 	@ApiResponsePost
-	ResponseEntity<? extends ContractOfferDto> createContractOffer(
+	ResponseEntity<ContractOfferDto> createContractOffer(
 			@Validated({Default.class, ValidationGroups.Create.class}) @RequestBody ContractOfferDto storeDetailDto);
 
 	@Operation(summary = "Mettre à jour un contrat")
 	@ApiResponsePut
 	@PutMapping(value = "/{id}", consumes = "application/json")
-	ResponseEntity<? extends ContractOfferDto> updateContractOffer(@ApiValidId @PathVariable("id") Integer id,
+	ResponseEntity<ContractOfferDto> updateContractOffer(@ApiValidId @PathVariable("id") Integer id,
 			@Validated({Default.class, ValidationGroups.Update.class}) @RequestBody ContractOfferDto storeDetailDto);
 
 	@Operation(summary = "Obtenir tous les contrats")
 	@ApiResponseGet
 	@GetMapping
-	ResponseEntity<List<? extends ContractOfferDto>> listContractOffers();
+	ResponseEntity<List<ContractOfferDto>> listContractOffers();
 
 	@Operation(summary = "Supprimer un contrat")
 	@ApiResponseDelete

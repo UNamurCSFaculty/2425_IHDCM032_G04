@@ -22,25 +22,24 @@ public interface AuctionStrategyApi {
 	@Operation(summary = "Obtenir une stratégie d'enchère")
 	@GetMapping("/{id}")
 	@ApiResponseGet
-	ResponseEntity<? extends AuctionStrategyDto> getAuctionStrategy(@ApiValidId @PathVariable("id") Integer id);
+	ResponseEntity<AuctionStrategyDto> getAuctionStrategy(@ApiValidId @PathVariable("id") Integer id);
 
 	@Operation(summary = "Créer une stratégie d'enchère")
 	@PostMapping
 	@ApiResponsePost
-	ResponseEntity<? extends AuctionStrategyDto> createAuctionStrategy(@Validated({Default.class,
+	ResponseEntity<AuctionStrategyDto> createAuctionStrategy(@Validated({Default.class,
 			ValidationGroups.Create.class}) @RequestBody AuctionStrategyDto auctionStrategyDto);
 
 	@Operation(summary = "Mettre à jour une stratégie d'enchère")
 	@PutMapping("/{id}")
 	@ApiResponsePut
-	ResponseEntity<? extends AuctionStrategyDto> updateAuctionStrategy(@ApiValidId @PathVariable("id") Integer id,
-			@Validated({Default.class,
-					ValidationGroups.Update.class}) @RequestBody AuctionStrategyDto auctionStrategyDto);
+	ResponseEntity<AuctionStrategyDto> updateAuctionStrategy(@ApiValidId @PathVariable("id") Integer id, @Validated({
+			Default.class, ValidationGroups.Update.class}) @RequestBody AuctionStrategyDto auctionStrategyDto);
 
 	@Operation(summary = "Obtenir toutes les stratégies d'enchère")
 	@GetMapping
 	@ApiResponseGet
-	ResponseEntity<List<? extends AuctionStrategyDto>> listAuctionStrategies();
+	ResponseEntity<List<AuctionStrategyDto>> listAuctionStrategies();
 
 	@Operation(summary = "Supprimer une stratégie d'enchère")
 	@DeleteMapping("/{id}")

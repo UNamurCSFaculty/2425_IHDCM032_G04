@@ -16,19 +16,19 @@ public class RegionApiController implements RegionApi {
 	private final RegionService regionService;
 
 	@Override
-	public ResponseEntity<? extends RegionDto> getRegion(Integer id) {
+	public ResponseEntity<RegionDto> getRegion(Integer id) {
 		RegionDto region = regionService.getRegion(id);
 		return ResponseEntity.ok(region);
 	}
 
 	@Override
-	public ResponseEntity<List<? extends RegionDto>> listRegions(Integer carrierId) {
+	public ResponseEntity<List<RegionDto>> listRegions(Integer carrierId) {
 		List<RegionDto> regions = regionService.listRegions(carrierId);
 		return ResponseEntity.ok(regions);
 	}
 
 	@Override
-	public ResponseEntity<? extends RegionDto> createRegion(RegionDto regionDto) {
+	public ResponseEntity<RegionDto> createRegion(RegionDto regionDto) {
 		RegionDto created = regionService.createRegion(regionDto);
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(created.getId())
 				.toUri();
@@ -36,7 +36,7 @@ public class RegionApiController implements RegionApi {
 	}
 
 	@Override
-	public ResponseEntity<? extends RegionDto> updateRegion(Integer id, RegionDto regionDto) {
+	public ResponseEntity<RegionDto> updateRegion(Integer id, RegionDto regionDto) {
 		RegionDto updated = regionService.updateRegion(id, regionDto);
 		return ResponseEntity.ok(updated);
 	}

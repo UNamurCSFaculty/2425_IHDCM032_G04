@@ -2,7 +2,6 @@ package be.labil.anacarde.presentation.controller;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import be.labil.anacarde.domain.dto.QualityDto;
@@ -50,7 +49,7 @@ public class QualityApiControllerIntegrationTest extends AbstractIntegrationTest
 	public void testGetQuality() throws Exception {
 		mockMvc.perform(
 				get("/api/qualities/" + getMainTestQuality().getId()).accept(MediaType.APPLICATION_JSON).with(jwt()))
-				.andExpect(status().isOk()).andDo(print()).andExpect(jsonPath("$.name").value("WW160"));
+				.andExpect(status().isOk()).andExpect(jsonPath("$.name").value("WW160"));
 	}
 
 	/**
@@ -82,7 +81,7 @@ public class QualityApiControllerIntegrationTest extends AbstractIntegrationTest
 	@Test
 	public void testListQualities() throws Exception {
 		mockMvc.perform(get("/api/qualities").accept(MediaType.APPLICATION_JSON).with(jwt())).andExpect(status().isOk())
-				.andDo(print()).andExpect(jsonPath("$").isArray());
+				.andExpect(jsonPath("$").isArray());
 	}
 
 	/**

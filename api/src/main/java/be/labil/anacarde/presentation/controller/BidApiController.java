@@ -15,13 +15,13 @@ public class BidApiController implements BidApi {
 	private final BidService bidService;
 
 	@Override
-	public ResponseEntity<? extends BidDto> getBid(Integer bidId) {
+	public ResponseEntity<BidDto> getBid(Integer bidId) {
 		BidDto bid = bidService.getBidById(bidId);
 		return ResponseEntity.ok(bid);
 	}
 
 	@Override
-	public ResponseEntity<List<? extends BidDto>> listBids(Integer auctionId) {
+	public ResponseEntity<List<BidDto>> listBids(Integer auctionId) {
 		List<BidDto> bids = bidService.listBids(auctionId);
 		return ResponseEntity.ok(bids);
 	}

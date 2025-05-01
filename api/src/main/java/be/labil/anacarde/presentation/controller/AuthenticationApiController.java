@@ -2,7 +2,6 @@ package be.labil.anacarde.presentation.controller;
 
 import be.labil.anacarde.domain.dto.user.UserDetailDto;
 import be.labil.anacarde.domain.mapper.UserDetailMapper;
-import be.labil.anacarde.domain.model.Producer;
 import be.labil.anacarde.domain.model.User;
 import be.labil.anacarde.infrastructure.security.JwtUtil;
 import be.labil.anacarde.presentation.payload.LoginRequest;
@@ -56,11 +55,6 @@ public class AuthenticationApiController implements AuthenticationApi {
 
 			response.addCookie(jwtCookie);
 
-			// TODO: REMOVE THIS HACK.
-			if (user instanceof Producer producer) {
-				producer.setCooperative(null);
-			}
-
 			UserDetailDto dto = userDetailMapper.toDto(user);
 
 			return ResponseEntity.ok(dto);
@@ -79,10 +73,7 @@ public class AuthenticationApiController implements AuthenticationApi {
 		if (currentUser == null) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
-		// TODO: REMOVE THIS HACK.
-		if (currentUser instanceof Producer producer) {
-			producer.setCooperative(null);
-		}
+
 		UserDetailDto dto = userDetailMapper.toDto(currentUser);
 		return ResponseEntity.ok(dto);
 	}

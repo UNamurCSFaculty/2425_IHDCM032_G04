@@ -16,13 +16,13 @@ public class DocumentApiController implements DocumentApi {
 	private final DocumentService documentService;
 
 	@Override
-	public ResponseEntity<? extends DocumentDto> getDocument(Integer id) {
+	public ResponseEntity<DocumentDto> getDocument(Integer id) {
 		DocumentDto document = documentService.getDocumentById(id);
 		return ResponseEntity.ok(document);
 	}
 
 	@Override
-	public ResponseEntity<? extends DocumentDto> createDocument(DocumentDto documentDto) {
+	public ResponseEntity<DocumentDto> createDocument(DocumentDto documentDto) {
 		DocumentDto created = documentService.createDocument(documentDto);
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(created.getId())
 				.toUri();
@@ -30,7 +30,7 @@ public class DocumentApiController implements DocumentApi {
 	}
 
 	@Override
-	public ResponseEntity<? extends DocumentDto> updateDocument(Integer id, DocumentDto documentDto) {
+	public ResponseEntity<DocumentDto> updateDocument(Integer id, DocumentDto documentDto) {
 		DocumentDto updated = documentService.updateDocument(id, documentDto);
 		return ResponseEntity.ok(updated);
 	}
@@ -42,13 +42,13 @@ public class DocumentApiController implements DocumentApi {
 	}
 
 	// @Override
-	// public ResponseEntity<List<? extends DocumentDto>> listDocumentsByQualityControl(Integer qualityControlId) {
+	// public ResponseEntity<List<DocumentDto>> listDocumentsByQualityControl(Integer qualityControlId) {
 	// List<DocumentDto> documents = documentService.listDocumentsByQualityControl(qualityControlId);
 	// return ResponseEntity.ok(documents);
 	// }
 
 	@Override
-	public ResponseEntity<List<? extends DocumentDto>> listDocumentsByUser(Integer userId) {
+	public ResponseEntity<List<DocumentDto>> listDocumentsByUser(Integer userId) {
 		List<DocumentDto> documents = documentService.listDocumentsByUser(userId);
 		return ResponseEntity.ok(documents);
 	}

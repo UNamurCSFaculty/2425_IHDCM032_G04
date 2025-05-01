@@ -16,13 +16,13 @@ public class FieldApiController implements FieldApi {
 	private final FieldService fieldService;
 
 	@Override
-	public ResponseEntity<? extends FieldDto> getField(Integer id) {
+	public ResponseEntity<FieldDto> getField(Integer id) {
 		FieldDto field = fieldService.getFieldById(id);
 		return ResponseEntity.ok(field);
 	}
 
 	@Override
-	public ResponseEntity<List<? extends FieldDto>> listFields(Integer userId) {
+	public ResponseEntity<List<FieldDto>> listFields(Integer userId) {
 		List<FieldDto> fields = fieldService.listFields(userId);
 		return ResponseEntity.ok(fields);
 	}

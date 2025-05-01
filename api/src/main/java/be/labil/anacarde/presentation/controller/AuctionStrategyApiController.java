@@ -16,19 +16,19 @@ public class AuctionStrategyApiController implements AuctionStrategyApi {
 	private final AuctionStrategyService auctionStrategyService;
 
 	@Override
-	public ResponseEntity<? extends AuctionStrategyDto> getAuctionStrategy(Integer id) {
+	public ResponseEntity<AuctionStrategyDto> getAuctionStrategy(Integer id) {
 		AuctionStrategyDto strategy = auctionStrategyService.getAuctionStrategyById(id);
 		return ResponseEntity.ok(strategy);
 	}
 
 	@Override
-	public ResponseEntity<List<? extends AuctionStrategyDto>> listAuctionStrategies() {
+	public ResponseEntity<List<AuctionStrategyDto>> listAuctionStrategies() {
 		List<AuctionStrategyDto> strategies = auctionStrategyService.listAuctionStrategies();
 		return ResponseEntity.ok(strategies);
 	}
 
 	@Override
-	public ResponseEntity<? extends AuctionStrategyDto> createAuctionStrategy(AuctionStrategyDto auctionStrategyDto) {
+	public ResponseEntity<AuctionStrategyDto> createAuctionStrategy(AuctionStrategyDto auctionStrategyDto) {
 		AuctionStrategyDto created = auctionStrategyService.createAuctionStrategy(auctionStrategyDto);
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(created.getId())
 				.toUri();
@@ -36,8 +36,7 @@ public class AuctionStrategyApiController implements AuctionStrategyApi {
 	}
 
 	@Override
-	public ResponseEntity<? extends AuctionStrategyDto> updateAuctionStrategy(Integer id,
-			AuctionStrategyDto auctionStrategyDto) {
+	public ResponseEntity<AuctionStrategyDto> updateAuctionStrategy(Integer id, AuctionStrategyDto auctionStrategyDto) {
 		AuctionStrategyDto updated = auctionStrategyService.updateAuctionStrategy(id, auctionStrategyDto);
 		return ResponseEntity.ok(updated);
 	}

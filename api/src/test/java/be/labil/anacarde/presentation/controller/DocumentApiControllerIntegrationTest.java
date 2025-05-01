@@ -3,7 +3,6 @@ package be.labil.anacarde.presentation.controller;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.startsWith;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import be.labil.anacarde.domain.dto.DocumentDto;
@@ -53,8 +52,7 @@ public class DocumentApiControllerIntegrationTest extends AbstractIntegrationTes
 				.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
 		mockMvc.perform(
 				get("/api/documents/" + getMainTestDocument().getId()).accept(MediaType.APPLICATION_JSON).with(jwt()))
-				.andExpect(status().isOk()).andDo(print())
-				.andExpect(jsonPath("$.id").value(getMainTestDocument().getId()))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.id").value(getMainTestDocument().getId()))
 				.andExpect(jsonPath("$.storagePath").value(getMainTestDocument().getStoragePath()))
 				.andExpect(jsonPath("$.userId").value(getMainTestDocument().getUser().getId()))
 				.andExpect(jsonPath("$.format").value(getMainTestDocument().getFormat()))
@@ -135,7 +133,7 @@ public class DocumentApiControllerIntegrationTest extends AbstractIntegrationTes
 	@Test
 	public void testListDocumentsForAUser() throws Exception {
 		mockMvc.perform(get("/api/documents/users/" + getMainTestDocument().getUser().getId())
-				.accept(MediaType.APPLICATION_JSON).with(jwt())).andExpect(status().isOk()).andDo(print())
+				.accept(MediaType.APPLICATION_JSON).with(jwt())).andExpect(status().isOk())
 				.andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(1))
 				.andExpect(jsonPath("$[0].id").value(getMainTestDocument().getId()));
 	}
