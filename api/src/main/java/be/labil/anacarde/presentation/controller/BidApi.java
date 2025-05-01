@@ -22,24 +22,24 @@ public interface BidApi {
 	@Operation(summary = "Obtenir une offre")
 	@GetMapping("/{bidId}")
 	@ApiResponseGet
-	ResponseEntity<? extends BidDto> getBid(@ApiValidId @PathVariable("bidId") Integer bidId);
+	ResponseEntity<BidDto> getBid(@ApiValidId @PathVariable("bidId") Integer bidId);
 
 	@Operation(summary = "Créer une offre")
 	@ApiResponsePost
 	@PostMapping
-	ResponseEntity<? extends BidDto> createBid(
+	ResponseEntity<BidDto> createBid(
 			@Validated({Default.class, ValidationGroups.Create.class}) @RequestBody BidDto bidDto);
 
 	@Operation(summary = "Mettre à jour une offre")
 	@ApiResponsePut
 	@PutMapping(value = "/{bidId}", consumes = "application/json")
-	ResponseEntity<? extends BidDto> updateBid(@ApiValidId @PathVariable("bidId") Integer bidId,
+	ResponseEntity<BidDto> updateBid(@ApiValidId @PathVariable("bidId") Integer bidId,
 			@Validated({Default.class, ValidationGroups.Update.class}) @RequestBody BidDto bidDto);
 
 	@Operation(summary = "Obtenir toutes les offres")
 	@ApiResponseGet
 	@GetMapping
-	ResponseEntity<List<? extends BidDto>> listBids(@ApiValidId @PathVariable("auctionId") Integer auctionId);
+	ResponseEntity<List<BidDto>> listBids(@ApiValidId @PathVariable("auctionId") Integer auctionId);
 
 	@Operation(summary = "Supprimer une offre")
 	@ApiResponseDelete

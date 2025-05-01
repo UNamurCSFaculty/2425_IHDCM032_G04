@@ -2,7 +2,6 @@ package be.labil.anacarde.presentation.controller;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import be.labil.anacarde.domain.dto.FieldDto;
@@ -47,7 +46,7 @@ public class FieldApiControllerIntegrationTest extends AbstractIntegrationTest {
 	@Test
 	public void testGetField() throws Exception {
 		mockMvc.perform(get("/api/users/" + getProducerTestUser().getId() + "/fields/" + getMainTestField().getId())
-				.accept(MediaType.APPLICATION_JSON).with(jwt())).andExpect(status().isOk()).andDo(print())
+				.accept(MediaType.APPLICATION_JSON).with(jwt())).andExpect(status().isOk())
 				.andExpect(jsonPath("$.location").value("POINT (2.3522 48.8566)"))
 				.andExpect(jsonPath("$.identifier").value(getMainTestField().getIdentifier()));
 	}
@@ -87,7 +86,7 @@ public class FieldApiControllerIntegrationTest extends AbstractIntegrationTest {
 	@Test
 	public void testListFields() throws Exception {
 		mockMvc.perform(get("/api/users/" + getProducerTestUser().getId() + "/fields")
-				.accept(MediaType.APPLICATION_JSON).with(jwt())).andExpect(status().isOk()).andDo(print())
+				.accept(MediaType.APPLICATION_JSON).with(jwt())).andExpect(status().isOk())
 				.andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(2));
 	}
 

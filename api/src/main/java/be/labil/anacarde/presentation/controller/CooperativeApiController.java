@@ -16,13 +16,13 @@ public class CooperativeApiController implements CooperativeApi {
 	private final CooperativeService cooperativeService;
 
 	@Override
-	public ResponseEntity<? extends CooperativeDto> getCooperative(Integer id) {
+	public ResponseEntity<CooperativeDto> getCooperative(Integer id) {
 		CooperativeDto cooperative = cooperativeService.getCooperativeById(id);
 		return ResponseEntity.ok(cooperative);
 	}
 
 	@Override
-	public ResponseEntity<List<? extends CooperativeDto>> listCooperatives() {
+	public ResponseEntity<List<CooperativeDto>> listCooperatives() {
 		List<CooperativeDto> cooperatives = cooperativeService.listCooperatives();
 		return ResponseEntity.ok(cooperatives);
 	}

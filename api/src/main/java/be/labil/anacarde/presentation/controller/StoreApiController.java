@@ -15,13 +15,13 @@ public class StoreApiController implements StoreApi {
 	private final StoreService storeService;
 
 	@Override
-	public ResponseEntity<? extends StoreDetailDto> getStore(Integer id) {
+	public ResponseEntity<StoreDetailDto> getStore(Integer id) {
 		StoreDetailDto store = storeService.getStoreById(id);
 		return ResponseEntity.ok(store);
 	}
 
 	@Override
-	public ResponseEntity<List<? extends StoreDetailDto>> listStores() {
+	public ResponseEntity<List<StoreDetailDto>> listStores() {
 		List<StoreDetailDto> stores = storeService.listStores();
 		return ResponseEntity.ok(stores);
 	}

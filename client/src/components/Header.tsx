@@ -2,7 +2,7 @@ import { useUserStore } from '@/store/userStore'
 import logo from '@/assets/logo.svg'
 import avatar from '@/assets/avatar.webp'
 import { Link, useNavigate } from '@tanstack/react-router'
-import { Menu, Trees, Zap } from 'lucide-react'
+import { Menu, Trees, Zap, HandCoins } from 'lucide-react'
 import { logout as logoutApiCall } from '@/api/generated/sdk.gen'
 
 import {
@@ -68,6 +68,12 @@ export function Header() {
       url: '#',
       items: [
         {
+          title: 'Toute les enchères',
+          description: 'Voir toutes les enchères en cours',
+          icon: <HandCoins className="size-5 shrink-0" />,
+          url: '/encheres',
+        },
+        {
           title: 'Noix de cajou',
           description: 'Enchérissez sur la noix de cajou brute',
           icon: <Trees className="size-5 shrink-0" />,
@@ -123,9 +129,9 @@ export function Header() {
                         src={user?.avatarUrl || avatar}
                         alt="Avatar utilisateur"
                       />
-                      <AvatarFallback>{user?.name?.[0]}</AvatarFallback>
+                      <AvatarFallback>{user?.firstName?.[0]}</AvatarFallback>
                     </Avatar>
-                    <span className="font-medium">{user?.name}</span>
+                    <span className="font-medium">{user?.firstName}</span>
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">

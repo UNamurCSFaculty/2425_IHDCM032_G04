@@ -4,6 +4,10 @@ import be.labil.anacarde.domain.dto.AuctionDto;
 import be.labil.anacarde.domain.dto.ValidationGroups;
 import be.labil.anacarde.presentation.controller.annotations.*;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.groups.Default;
@@ -22,24 +26,24 @@ public interface AuctionApi {
 	@Operation(summary = "Obtenir une enchère")
 	@GetMapping("/{id}")
 	@ApiResponseGet
-	ResponseEntity<? extends AuctionDto> getAuction(@ApiValidId @PathVariable("id") Integer id);
+	ResponseEntity<AuctionDto> getAuction(@ApiValidId @PathVariable("id") Integer id);
 
 	@Operation(summary = "Créer une enchère")
 	@PostMapping
 	@ApiResponsePost
-	ResponseEntity<? extends AuctionDto> createAuction(
+	ResponseEntity<AuctionDto> createAuction(
 			@Validated({Default.class, ValidationGroups.Create.class}) @RequestBody AuctionDto auctionDto);
 
 	@Operation(summary = "Mettre à jour une enchère")
 	@ApiResponsePut
 	@PutMapping(value = "/{id}", consumes = "application/json")
-	ResponseEntity<? extends AuctionDto> updateAuction(@ApiValidId @PathVariable("id") Integer id,
+	ResponseEntity<AuctionDto> updateAuction(@ApiValidId @PathVariable("id") Integer id,
 			@Validated({Default.class, ValidationGroups.Update.class}) @RequestBody AuctionDto auctionDto);
 
 	@Operation(summary = "Obtenir toutes les enchères")
-	@ApiResponseGet
+	@ApiResponse(responseCode = "200", description = "Liste des enchères", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = AuctionDto.class))))
 	@GetMapping
-	ResponseEntity<List<? extends AuctionDto>> listAuctions();
+	ResponseEntity<List<AuctionDto>> listAuctions();
 
 	@Operation(summary = "Supprimer une enchère")
 	@ApiResponseDelete

@@ -2,7 +2,6 @@ package be.labil.anacarde.presentation.controller;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import be.labil.anacarde.domain.dto.StoreDetailDto;
@@ -49,8 +48,7 @@ public class StoreApiControllerIntegrationTest extends AbstractIntegrationTest {
 	@Test
 	public void testGetStore() throws Exception {
 		mockMvc.perform(get("/api/stores/" + getMainTestStore().getId()).accept(MediaType.APPLICATION_JSON).with(jwt()))
-				.andExpect(status().isOk()).andDo(print())
-				.andExpect(jsonPath("$.location").value("POINT (2.3522 48.8566)"));
+				.andExpect(status().isOk()).andExpect(jsonPath("$.location").value("POINT (2.3522 48.8566)"));
 	}
 
 	/**
@@ -83,7 +81,7 @@ public class StoreApiControllerIntegrationTest extends AbstractIntegrationTest {
 	@Test
 	public void testListStores() throws Exception {
 		mockMvc.perform(get("/api/stores").accept(MediaType.APPLICATION_JSON).with(jwt())).andExpect(status().isOk())
-				.andDo(print()).andExpect(jsonPath("$").isArray());
+				.andExpect(jsonPath("$").isArray());
 	}
 
 	/**

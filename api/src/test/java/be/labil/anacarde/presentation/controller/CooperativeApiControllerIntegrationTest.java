@@ -2,7 +2,6 @@ package be.labil.anacarde.presentation.controller;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import be.labil.anacarde.domain.dto.CooperativeDto;
@@ -49,7 +48,7 @@ public class CooperativeApiControllerIntegrationTest extends AbstractIntegration
 		Cooperative coop = getMainTestCooperative();
 
 		mockMvc.perform(get("/api/cooperatives/" + coop.getId()).accept(MediaType.APPLICATION_JSON).with(jwt()))
-				.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.name").value(coop.getName()))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.name").value(coop.getName()))
 				.andExpect(jsonPath("$.address").value(coop.getAddress()))
 				.andExpect(jsonPath("$.presidentId").value(coop.getPresident().getId()));
 	}
@@ -91,7 +90,7 @@ public class CooperativeApiControllerIntegrationTest extends AbstractIntegration
 	public void testListCooperatives() throws Exception {
 		mockMvc.perform(get("/api/cooperatives").accept(MediaType.APPLICATION_JSON).with(jwt()))
 				.andExpect(status().isOk()).andExpect(jsonPath("$").isArray())
-				.andExpect(jsonPath("$.length()").value(1)).andDo(print());
+				.andExpect(jsonPath("$.length()").value(1));
 	}
 
 	/**

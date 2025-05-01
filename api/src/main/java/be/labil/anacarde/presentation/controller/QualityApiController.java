@@ -15,13 +15,13 @@ public class QualityApiController implements QualityApi {
 	private final QualityService qualityService;
 
 	@Override
-	public ResponseEntity<? extends QualityDto> getQuality(Integer id) {
+	public ResponseEntity<QualityDto> getQuality(Integer id) {
 		QualityDto quality = qualityService.getQualityById(id);
 		return ResponseEntity.ok(quality);
 	}
 
 	@Override
-	public ResponseEntity<List<? extends QualityDto>> listQualities() {
+	public ResponseEntity<List<QualityDto>> listQualities() {
 		List<QualityDto> qualitys = qualityService.listQualities();
 		return ResponseEntity.ok(qualitys);
 	}

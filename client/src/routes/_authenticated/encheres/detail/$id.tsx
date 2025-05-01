@@ -24,6 +24,7 @@ export const Route = createFileRoute('/_authenticated/encheres/detail/$id')({
   loader: async ({ params }) => {
     // Simulate a network request
     console.log('Loading data for enchere with id:', params.id)
+    // NE PAS FAIRE DE AWAIT DANS LE LOADER !!!
     await new Promise(resolve => setTimeout(resolve, 1000))
     // IF ID NOT FOUND
     if (params.id < 0) {

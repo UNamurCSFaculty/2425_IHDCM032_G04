@@ -22,24 +22,24 @@ public interface QualityApi {
 	@Operation(summary = "Obtenir une qualité")
 	@GetMapping("/{id}")
 	@ApiResponseGet
-	ResponseEntity<? extends QualityDto> getQuality(@ApiValidId @PathVariable("id") Integer id);
+	ResponseEntity<QualityDto> getQuality(@ApiValidId @PathVariable("id") Integer id);
 
 	@Operation(summary = "Créer une qualité")
 	@PostMapping
 	@ApiResponsePost
-	ResponseEntity<? extends QualityDto> createQuality(
+	ResponseEntity<QualityDto> createQuality(
 			@Validated({Default.class, ValidationGroups.Create.class}) @RequestBody QualityDto qualityDto);
 
 	@Operation(summary = "Mettre à jour une qualité")
 	@ApiResponsePut
 	@PutMapping(value = "/{id}", consumes = "application/json")
-	ResponseEntity<? extends QualityDto> updateQuality(@ApiValidId @PathVariable("id") Integer id,
+	ResponseEntity<QualityDto> updateQuality(@ApiValidId @PathVariable("id") Integer id,
 			@Validated({Default.class, ValidationGroups.Update.class}) @RequestBody QualityDto qualityDto);
 
 	@Operation(summary = "Obtenir toutes les qualités")
 	@ApiResponseGet
 	@GetMapping
-	ResponseEntity<List<? extends QualityDto>> listQualities();
+	ResponseEntity<List<QualityDto>> listQualities();
 
 	@Operation(summary = "Supprimer une qualité")
 	@ApiResponseDelete

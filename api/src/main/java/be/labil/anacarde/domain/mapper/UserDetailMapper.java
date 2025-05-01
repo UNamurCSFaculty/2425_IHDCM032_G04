@@ -10,8 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  * Mapper pour convertir les DTOs UserDetailDto (hors Producer) en leurs entités correspondantes. Les Producteurs sont
  * mappés dans un mapper dédié (ProducerDetailMapper) pour éviter les ambiguïtés.
  */
-@Mapper(componentModel = "spring", uses = {RoleMapper.class, LanguageMapper.class,
-		CooperativeMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring", uses = {RoleMapper.class, LanguageMapper.class, CooperativeMapper.class,
+		HibernateUnproxy.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class UserDetailMapper implements GenericMapper<UserDetailDto, User> {
 
 	@Autowired

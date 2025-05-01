@@ -22,24 +22,24 @@ public interface CooperativeApi {
 	@Operation(summary = "Obtenir une coopérative")
 	@GetMapping("/{id}")
 	@ApiResponseGet
-	ResponseEntity<? extends CooperativeDto> getCooperative(@ApiValidId @PathVariable("id") Integer id);
+	ResponseEntity<CooperativeDto> getCooperative(@ApiValidId @PathVariable("id") Integer id);
 
 	@Operation(summary = "Créer une coopérative")
 	@PostMapping
 	@ApiResponsePost
-	ResponseEntity<? extends CooperativeDto> createCooperative(
+	ResponseEntity<CooperativeDto> createCooperative(
 			@Validated({Default.class, ValidationGroups.Create.class}) @RequestBody CooperativeDto cooperativeDto);
 
 	@Operation(summary = "Mettre à jour une coopérative")
 	@PutMapping(value = "/{id}", consumes = "application/json")
 	@ApiResponsePut
-	ResponseEntity<? extends CooperativeDto> updateCooperative(@ApiValidId @PathVariable("id") Integer id,
+	ResponseEntity<CooperativeDto> updateCooperative(@ApiValidId @PathVariable("id") Integer id,
 			@Validated({Default.class, ValidationGroups.Update.class}) @RequestBody CooperativeDto cooperativeDto);
 
 	@Operation(summary = "Lister toutes les coopératives")
 	@GetMapping
 	@ApiResponseGet
-	ResponseEntity<List<? extends CooperativeDto>> listCooperatives();
+	ResponseEntity<List<CooperativeDto>> listCooperatives();
 
 	@Operation(summary = "Supprimer une coopérative")
 	@DeleteMapping("/{id}")

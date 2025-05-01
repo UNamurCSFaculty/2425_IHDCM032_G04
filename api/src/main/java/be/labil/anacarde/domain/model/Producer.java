@@ -18,7 +18,7 @@ public class Producer extends Trader {
 	@Column(nullable = false)
 	private String agriculturalIdentifier;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "cooperative_id")
 	private Cooperative cooperative;
 }

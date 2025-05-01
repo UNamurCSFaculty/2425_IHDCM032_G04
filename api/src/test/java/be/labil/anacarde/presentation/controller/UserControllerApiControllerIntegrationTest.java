@@ -4,7 +4,6 @@ import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -60,8 +59,7 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 	@Test
 	public void testGetUser() throws Exception {
 		mockMvc.perform(get("/api/users/" + getMainTestUser().getId()).accept(MediaType.APPLICATION_JSON).with(jwt()))
-				.andExpect(status().isOk()).andDo(print())
-				.andExpect(jsonPath("$.email").value(getMainTestUser().getEmail()));
+				.andExpect(status().isOk()).andExpect(jsonPath("$.email").value(getMainTestUser().getEmail()));
 	}
 
 	/**
@@ -74,11 +72,12 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 		languageDto.setId(getMainLanguage().getId());
 		CooperativeDto cooperativeDto = new CooperativeDto();
 		cooperativeDto.setId(getMainTestCooperative().getId());
+
 		ProducerDetailDto newUser = new ProducerDetailDto();
 		newUser.setFirstName("Alice");
 		newUser.setLastName("Smith");
 		newUser.setEmail("alice.smith@example.com");
-		newUser.setPassword("secret");
+		newUser.setPassword("secret!!!");
 		newUser.setLanguage(languageDto);
 		newUser.setPhone("+2290197005502");
 		newUser.setAgriculturalIdentifier("TS450124");
@@ -97,7 +96,7 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 
 		User createdUser = userRepository.findByEmail("alice.smith@example.com")
 				.orElseThrow(() -> new AssertionError("Utilisateur non trouvé"));
-		assertTrue(bCryptPasswordEncoder.matches("secret", createdUser.getPassword()),
+		assertTrue(bCryptPasswordEncoder.matches("secret!!!", createdUser.getPassword()),
 				"Le mot de passe stocké doit correspondre au mot de passe brut 'secret'");
 	}
 
@@ -141,7 +140,7 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 	public void testListUsers() throws Exception {
 		mockMvc.perform(get("/api/users").accept(MediaType.APPLICATION_JSON).with(jwt())).andExpect(status().isOk())
 				// print
-				.andDo(print()).andExpect(jsonPath("$").isArray());
+				.andExpect(jsonPath("$").isArray());
 	}
 
 	/**
@@ -253,7 +252,7 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 		String jsonContent = node.toString();
 
 		mockMvc.perform(post("/api/users").contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwt()))
-				.andDo(print()).andExpect(status().isBadRequest())
+				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.errors.email", containsString("L'adresse email est requise")));
 	}
 

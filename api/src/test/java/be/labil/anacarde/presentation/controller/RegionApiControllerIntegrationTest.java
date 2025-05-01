@@ -2,7 +2,6 @@ package be.labil.anacarde.presentation.controller;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import be.labil.anacarde.domain.dto.RegionDto;
@@ -45,8 +44,7 @@ public class RegionApiControllerIntegrationTest extends AbstractIntegrationTest 
 	public void testGetRegion() throws Exception {
 		mockMvc.perform(
 				get("/api/regions/" + getMainTestRegion().getId()).accept(MediaType.APPLICATION_JSON).with(jwt()))
-				.andExpect(status().isOk()).andDo(print())
-				.andExpect(jsonPath("$.name").value(getMainTestRegion().getName()));
+				.andExpect(status().isOk()).andExpect(jsonPath("$.name").value(getMainTestRegion().getName()));
 	}
 
 	/**
@@ -74,7 +72,7 @@ public class RegionApiControllerIntegrationTest extends AbstractIntegrationTest 
 	@Test
 	public void testListRegions() throws Exception {
 		mockMvc.perform(get("/api/regions").accept(MediaType.APPLICATION_JSON).with(jwt())).andExpect(status().isOk())
-				.andDo(print()).andExpect(jsonPath("$").isArray())
+				.andExpect(jsonPath("$").isArray())
 				.andExpect(jsonPath("$.length()").value(regionRepository.findAll().size()));
 	}
 
@@ -84,7 +82,7 @@ public class RegionApiControllerIntegrationTest extends AbstractIntegrationTest 
 	@Test
 	public void testListRegionsByCarrier() throws Exception {
 		mockMvc.perform(get("/api/regions?carrierId=" + getMainTestCarrier().getId()).accept(MediaType.APPLICATION_JSON)
-				.with(jwt())).andExpect(status().isOk()).andDo(print()).andExpect(jsonPath("$").isArray())
+				.with(jwt())).andExpect(status().isOk()).andExpect(jsonPath("$").isArray())
 				.andExpect(jsonPath("$.length()").value(1));
 	}
 

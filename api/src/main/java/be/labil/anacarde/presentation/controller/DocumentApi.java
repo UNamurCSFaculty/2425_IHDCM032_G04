@@ -22,18 +22,18 @@ public interface DocumentApi {
 	@Operation(summary = "Obtenir un document")
 	@GetMapping("/{id}")
 	@ApiResponseGet
-	ResponseEntity<? extends DocumentDto> getDocument(@ApiValidId @PathVariable("id") Integer id);
+	ResponseEntity<DocumentDto> getDocument(@ApiValidId @PathVariable("id") Integer id);
 
 	@Operation(summary = "Créer un document")
 	@PostMapping
 	@ApiResponsePost
-	ResponseEntity<? extends DocumentDto> createDocument(
+	ResponseEntity<DocumentDto> createDocument(
 			@Validated({Default.class, ValidationGroups.Create.class}) @RequestBody DocumentDto documentDto);
 
 	@Operation(summary = "Mettre à jour un document")
 	@PutMapping("/{id}")
 	@ApiResponsePut
-	ResponseEntity<? extends DocumentDto> updateDocument(@ApiValidId @PathVariable("id") Integer id,
+	ResponseEntity<DocumentDto> updateDocument(@ApiValidId @PathVariable("id") Integer id,
 			@Validated({Default.class, ValidationGroups.Update.class}) @RequestBody DocumentDto documentDto);
 
 	@Operation(summary = "Supprimer un document")
@@ -45,11 +45,11 @@ public interface DocumentApi {
 	// @Operation(summary = "Lister les documents par contrôle qualité")
 	// @GetMapping("/quality-controls/{qualityControlId}")
 	// @ApiResponseGet
-	// ResponseEntity<List<? extends DocumentDto>> listDocumentsByQualityControl(@PathVariable Integer
+	// ResponseEntity<List<DocumentDto>> listDocumentsByQualityControl(@PathVariable Integer
 	// qualityControlId);
 
 	@Operation(summary = "Lister les documents par utilisateur")
 	@GetMapping("/users/{userId}")
 	@ApiResponseGet
-	ResponseEntity<List<? extends DocumentDto>> listDocumentsByUser(@ApiValidId @PathVariable Integer userId);
+	ResponseEntity<List<DocumentDto>> listDocumentsByUser(@ApiValidId @PathVariable Integer userId);
 }

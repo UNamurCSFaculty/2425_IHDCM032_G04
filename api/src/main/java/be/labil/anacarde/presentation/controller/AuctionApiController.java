@@ -15,13 +15,13 @@ public class AuctionApiController implements AuctionApi {
 	private final AuctionService auctionService;
 
 	@Override
-	public ResponseEntity<? extends AuctionDto> getAuction(Integer id) {
+	public ResponseEntity<AuctionDto> getAuction(Integer id) {
 		AuctionDto auction = auctionService.getAuctionById(id);
 		return ResponseEntity.ok(auction);
 	}
 
 	@Override
-	public ResponseEntity<List<? extends AuctionDto>> listAuctions() {
+	public ResponseEntity<List<AuctionDto>> listAuctions() {
 		List<AuctionDto> auctions = auctionService.listAuctions();
 		return ResponseEntity.ok(auctions);
 	}

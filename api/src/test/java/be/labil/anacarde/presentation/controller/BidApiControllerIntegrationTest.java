@@ -2,7 +2,6 @@ package be.labil.anacarde.presentation.controller;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import be.labil.anacarde.domain.dto.*;
@@ -52,7 +51,7 @@ public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 	@Test
 	public void testGetBid() throws Exception {
 		mockMvc.perform(get("/api/auctions/" + getTestAuction().getId() + "/bids/" + getTestBid().getId())
-				.accept(MediaType.APPLICATION_JSON).with(jwt())).andExpect(status().isOk()).andDo(print())
+				.accept(MediaType.APPLICATION_JSON).with(jwt())).andExpect(status().isOk())
 				.andExpect(jsonPath("$.amount").value("10.0"))
 				.andExpect(jsonPath("$.auction.id").value(getTestAuction().getId()))
 				.andExpect(jsonPath("$.auction.price").value(getTestAuction().getPrice()));
@@ -109,7 +108,7 @@ public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 	@Test
 	public void testListBids() throws Exception {
 		mockMvc.perform(get("/api/auctions/" + getTestAuction().getId() + "/bids/").accept(MediaType.APPLICATION_JSON)
-				.with(jwt())).andExpect(status().isOk()).andDo(print()).andExpect(jsonPath("$").isArray())
+				.with(jwt())).andExpect(status().isOk()).andExpect(jsonPath("$").isArray())
 				.andExpect(jsonPath("$.length()").value(1));
 	}
 

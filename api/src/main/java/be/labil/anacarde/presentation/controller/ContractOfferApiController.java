@@ -15,13 +15,13 @@ public class ContractOfferApiController implements ContractOfferApi {
 	private final ContractOfferService contractOfferService;
 
 	@Override
-	public ResponseEntity<? extends ContractOfferDto> getContractOffer(Integer id) {
+	public ResponseEntity<ContractOfferDto> getContractOffer(Integer id) {
 		ContractOfferDto contractOffer = contractOfferService.getContractOfferById(id);
 		return ResponseEntity.ok(contractOffer);
 	}
 
 	@Override
-	public ResponseEntity<List<? extends ContractOfferDto>> listContractOffers() {
+	public ResponseEntity<List<ContractOfferDto>> listContractOffers() {
 		List<ContractOfferDto> contractOffers = contractOfferService.listContractOffers();
 		return ResponseEntity.ok(contractOffers);
 	}

@@ -2,7 +2,6 @@ package be.labil.anacarde.presentation.controller;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import be.labil.anacarde.domain.dto.ContractOfferDto;
@@ -54,8 +53,8 @@ public class ContractOfferApiControllerIntegrationTest extends AbstractIntegrati
 	@Test
 	public void testGetContractOffer() throws Exception {
 		mockMvc.perform(get("/api/contracts/" + getMainTestContractOffer().getId()).accept(MediaType.APPLICATION_JSON)
-				.with(jwt())).andExpect(status().isOk()).andDo(print())
-				.andExpect(jsonPath("$.status").value("Accepted")).andExpect(jsonPath("$.pricePerKg").value("20.0"))
+				.with(jwt())).andExpect(status().isOk()).andExpect(jsonPath("$.status").value("Accepted"))
+				.andExpect(jsonPath("$.pricePerKg").value("20.0"))
 				.andExpect(jsonPath("$.seller.id").value(getProducerTestUser().getId()))
 				.andExpect(jsonPath("$.buyer.id").value(getTransformerTestUser().getId()));
 	}
@@ -107,7 +106,7 @@ public class ContractOfferApiControllerIntegrationTest extends AbstractIntegrati
 	@Test
 	public void testListContractOffers() throws Exception {
 		mockMvc.perform(get("/api/contracts").accept(MediaType.APPLICATION_JSON).with(jwt())).andExpect(status().isOk())
-				.andDo(print()).andExpect(jsonPath("$").isArray());
+				.andExpect(jsonPath("$").isArray());
 	}
 
 	/**

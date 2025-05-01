@@ -22,25 +22,24 @@ public interface RegionApi {
 	@Operation(summary = "Obtenir une région par ID")
 	@GetMapping("/{id}")
 	@ApiResponseGet
-	ResponseEntity<? extends RegionDto> getRegion(@ApiValidId @PathVariable("id") Integer id);
+	ResponseEntity<RegionDto> getRegion(@ApiValidId @PathVariable("id") Integer id);
 
 	@Operation(summary = "Créer une nouvelle région")
 	@PostMapping
 	@ApiResponsePost
-	ResponseEntity<? extends RegionDto> createRegion(
+	ResponseEntity<RegionDto> createRegion(
 			@Validated({Default.class, ValidationGroups.Create.class}) @RequestBody RegionDto regionDto);
 
 	@Operation(summary = "Mettre à jour une région")
 	@PutMapping("/{id}")
 	@ApiResponsePut
-	ResponseEntity<? extends RegionDto> updateRegion(@ApiValidId @PathVariable("id") Integer id,
+	ResponseEntity<RegionDto> updateRegion(@ApiValidId @PathVariable("id") Integer id,
 			@Validated({Default.class, ValidationGroups.Update.class}) @RequestBody RegionDto regionDto);
 
 	@Operation(summary = "Lister toutes les régions")
 	@GetMapping
 	@ApiResponseGet
-	ResponseEntity<List<? extends RegionDto>> listRegions(
-			@RequestParam(value = "carrierId", required = false) Integer carrierId);
+	ResponseEntity<List<RegionDto>> listRegions(@RequestParam(value = "carrierId", required = false) Integer carrierId);
 
 	@Operation(summary = "Supprimer une région")
 	@DeleteMapping("/{id}")
