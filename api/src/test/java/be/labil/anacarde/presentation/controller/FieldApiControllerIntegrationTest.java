@@ -60,7 +60,7 @@ public class FieldApiControllerIntegrationTest extends AbstractIntegrationTest {
 	public void testCreateField() throws Exception {
 		FieldDto newFieldDto = new FieldDto();
 		newFieldDto.setLocation("POINT(2.3522 48.8566)");
-		newFieldDto.setIdentifier("FIELD-001");
+		newFieldDto.setIdentifier("FIELD-666");
 		ProducerDetailDto producerDetailDto = new ProducerDetailDto();
 		producerDetailDto.setId(getProducerTestUser().getId());
 		newFieldDto.setProducer(producerDetailDto);
@@ -76,7 +76,7 @@ public class FieldApiControllerIntegrationTest extends AbstractIntegrationTest {
 				.andExpect(jsonPath("$.producer.id").value(getProducerTestUser().getId()));
 
 		Field createdField = fieldRepository.findAll().stream()
-				.filter(field -> "FIELD-001".equals(field.getIdentifier())).findFirst()
+				.filter(field -> "FIELD-666".equals(field.getIdentifier())).findFirst()
 				.orElseThrow(() -> new AssertionError("Field non trouvé"));
 	}
 
