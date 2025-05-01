@@ -1,19 +1,23 @@
 import { create } from 'zustand'
-import type { User } from '@/types/api'
+import { type UserDetailDtoReadable } from '@/api/generated/types.gen'
 
 interface UserState {
-  user: User | null
-  setUser: (user: User) => void
+  user: UserDetailDtoReadable | null
+  loading: boolean
+
+  setUser: (user: UserDetailDtoReadable) => void
   logout: () => void
+  setLoading: (loading: boolean) => void
+
   isAuthenticated: () => boolean
 }
 
-export const useUserStore = create<UserState>(set => ({
+export const useUserStore = create<UserState>((set, get) => ({
   user: null,
+  loading: true,
   setUser: user => set({ user }),
   logout: () => set({ user: null }),
-  isAuthenticated: () => {
-    const { user } = useUserStore.getState() as UserState
-    return user !== null
-  },
+  setLoading: loading => set({ loading }),
+
+  isAuthenticated: () => !!get().user,
 }))

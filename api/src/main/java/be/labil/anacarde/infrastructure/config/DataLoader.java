@@ -51,6 +51,7 @@ public class DataLoader implements CommandLineRunner {
 
 		// 4. Ajout du producteur à la coopérative
 		((ProducerDetailDto) producer).setCooperative(cooperativeDto);
+		producer.setPassword(null); // on ne veut pas que le mot de passe soit mis à jour
 		producer = userService.updateUser(producer.getId(), producer);
 
 		// 5. Création de l'utilisateur admin
@@ -137,7 +138,8 @@ public class DataLoader implements CommandLineRunner {
 		admin.setFirstName("John");
 		admin.setLastName("Doe");
 		admin.setEmail("johndoe@gmail.com");
-		admin.setPassword("azerty");
+		admin.setPassword("azertyui");
+		admin.setAddress("Rue de la Loi");
 		admin.setEnabled(true);
 		admin.setEnabled(true);
 		admin.setRegistrationDate(LocalDateTime.now());
@@ -152,12 +154,12 @@ public class DataLoader implements CommandLineRunner {
 		producer.setFirstName("Fabrice");
 		producer.setLastName("Cipolla");
 		producer.setEmail("fabricecipolla@gmail.com");
-		producer.setPassword("azerty");
+		producer.setPassword("azertyui");
 		producer.setEnabled(true);
+		producer.setAddress("Rue de la Paix");
 		producer.setRegistrationDate(LocalDateTime.now());
 		producer.setValidationDate(LocalDateTime.now());
 		producer.setPhone("+2290197000000");
-		producer.setAddress("Cotonou");
 		producer.setAgriculturalIdentifier("123456789");
 		producer.setLanguage(languageDto);
 		return producer;
@@ -168,7 +170,8 @@ public class DataLoader implements CommandLineRunner {
 		exporter.setFirstName("Stephane");
 		exporter.setLastName("Glibert");
 		exporter.setEmail("stephaneglibert@gmail.com");
-		exporter.setPassword("azerty");
+		exporter.setPassword("azertyui");
+		exporter.setAddress("Rue du Commerce");
 		exporter.setEnabled(true);
 		exporter.setRegistrationDate(LocalDateTime.now());
 		exporter.setValidationDate(LocalDateTime.now());

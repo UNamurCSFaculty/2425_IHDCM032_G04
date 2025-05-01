@@ -3,6 +3,7 @@ import logo from '@/assets/logo.svg'
 import avatar from '@/assets/avatar.webp'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { Menu, Trees, Zap } from 'lucide-react'
+import { logout as logoutApiCall } from '@/api/generated/sdk.gen'
 
 import {
   Accordion,
@@ -55,6 +56,7 @@ export function Header() {
   const navigate = useNavigate()
 
   const handleLogout = () => {
+    logoutApiCall()
     logout()
     navigate({ to: '/', replace: true })
   }
