@@ -12,7 +12,7 @@ import { useSuspenseQuery } from '@tanstack/react-query'
 
 const queryOptions = {
   ...listAuctionsOptions(),
-  staleTime: 10_000,
+  staleTime: 10_000, // 10 secondes avant de recharger les données
 }
 
 export const Route = createFileRoute('/_authenticated/encheres/')({
