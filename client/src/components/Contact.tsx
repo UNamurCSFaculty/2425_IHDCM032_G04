@@ -5,7 +5,6 @@ import {
   ContactSchema,
   ContactSchemaDefaultValues,
 } from '@/schemas/form-schemas'
-import { LanguageSwitcher } from './LanguageSwitcher'
 
 export const ContactForm: React.FC = () => {
   const navigate = useNavigate()
@@ -23,7 +22,6 @@ export const ContactForm: React.FC = () => {
 
   return (
     <section className="body-font relative text-gray-600">
-      <LanguageSwitcher />
       <div className="container mx-auto px-5 py-24">
         <div className="mb-12 flex w-full flex-col text-center">
           <h1 className="title-font mb-4 text-2xl font-medium text-gray-900 sm:text-3xl">

@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
 import lombok.Data;
 
@@ -81,6 +82,7 @@ public abstract class UserListDto {
 	@Schema(description = "Mot de passe de l'utilisateur", accessMode = Schema.AccessMode.WRITE_ONLY, example = "p@ssw0rd")
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	@NotBlank(groups = ValidationGroups.Create.class, message = "Le mot de passe est requis")
+	@Size(min = 8, message = "Le mot de passe doit contenir au moins {min} caractères", groups = ValidationGroups.Create.class)
 	private String password;
 
 	/**

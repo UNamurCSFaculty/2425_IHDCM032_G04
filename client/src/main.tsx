@@ -1,4 +1,4 @@
-import { StrictMode } from 'react'
+import { StrictMode, useEffect } from 'react'
 import ReactDOM from 'react-dom/client'
 import { Observer } from 'tailwindcss-intersect'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
@@ -19,6 +19,12 @@ import { ErrorBoundary } from './components/ErrorBoundary.tsx'
 
 import { useUserStore } from './store/userStore.tsx'
 import { GlobalSkeleton } from './components/GlobalSkeleton.tsx'
+
+import { client } from '@/api/generated/client.gen.ts'
+import { getCurrentUser } from './api/generated/sdk.gen.ts'
+client.setConfig({
+  credentials: 'include',
+})
 
 // Create React Query client
 const queryClient = new QueryClient()
@@ -48,6 +54,26 @@ declare module '@tanstack/react-router' {
 function AppWithProvider() {
   // Appel du Hook à l’intérieur d’un composant React
   const user = useUserStore(state => state.user)
+  const setUser = useUserStore(state => state.setUser)
+  const loading = useUserStore(state => state.loading)
+  const setLoading = useUserStore(state => state.setLoading)
+
+  useEffect(() => {
+    async function fetchUser() {
+      const { data, error } = await getCurrentUser()
+      if (!error && data) {
+        setUser(data)
+      }
+
+      setLoading(false)
+    }
+
+    fetchUser()
+  })
+
+  if (loading) {
+    return <GlobalSkeleton />
+  }
 
   return (
     <ErrorBoundary>

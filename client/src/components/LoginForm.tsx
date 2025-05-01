@@ -9,9 +9,10 @@ import { useUserStore } from '@/store/userStore'
 import z from 'zod'
 import { useAppForm } from './form'
 import { Route as LoginRoute } from '@/routes/login'
+import { authenticateUser } from '@/api/generated/index'
 
 const LoginSchema = z.object({
-  email: z.email('Adresse e-mail invalide'),
+  username: z.email('Adresse e-mail invalide'),
   password: z
     .string()
     .min(8, 'Le mot de passe doit faire au moins 8 caractères'),
@@ -29,15 +30,16 @@ export function LoginForm({
   const router = useRouter()
 
   const form = useAppForm({
-    defaultValues: { email: '', password: '' },
+    defaultValues: { username: '', password: '' },
     onSubmit: async ({ value }) => {
-      const user = {
-        id: 1,
-        email: value.email,
-        name: value.email.split('@')[0],
+      const { data, error } = await authenticateUser({
+        body: value,
+      })
+      if (error) {
+        console.error("Erreur d'authentification", error)
+        return
       }
-      setUser(user)
-
+      setUser(data)
       if (redirectParam) {
         // decodeURIComponent si jamais vous avez encodé l’URL
         router.history.replace(decodeURIComponent(redirectParam))
@@ -68,7 +70,7 @@ export function LoginForm({
               </div>
               <div className="grid gap-2">
                 <form.AppField
-                  name="email"
+                  name="username"
                   children={field => (
                     <field.TextField
                       label="Adresse e-mail"

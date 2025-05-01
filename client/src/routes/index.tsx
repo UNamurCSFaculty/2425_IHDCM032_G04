@@ -23,8 +23,11 @@ function RouteComponent() {
       {user && (
         <div className="bg-amber-950 p-4 text-center text-sm text-white">
           <span>
-            {t('app.welcome.title')}, <strong>{user.name}</strong>!
-            {t('app.welcome.message')}
+            {t('app.welcome.title')},{' '}
+            <strong>
+              {user.lastName} {user.firstName}
+            </strong>
+            ! {t('app.welcome.message')}
           </span>
         </div>
       )}

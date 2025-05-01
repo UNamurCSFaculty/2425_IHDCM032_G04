@@ -44,9 +44,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
 	@Override
 	public UserDetailDto createUser(UserDetailDto dto) {
-		if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
-			dto.setPassword(bCryptPasswordEncoder.encode(dto.getPassword()));
-		}
+		dto.setPassword(bCryptPasswordEncoder.encode(dto.getPassword()));
 		User user;
 		if (dto instanceof ProducerDetailDto producerDto) {
 			user = userDetailMapper.toEntity(producerDto);
@@ -56,25 +54,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 		user.setRegistrationDate(LocalDateTime.now());
 		User saved = userRepository.save(user);
 		return userDetailMapper.toDto(saved);
-
-		/*
-		 * Si il faut une logiqiue de création spécifique pour chaque type d'utilisateur: switch (dto) { case
-		 * AdminDetailDto adminDetailDto -> { Admin admin = adminDetailMapper.toEntity(adminDetailDto); Admin saved =
-		 * adminRepository.save(admin); return adminDetailMapper.toDto(saved); } case ProducerDetailDto
-		 * producerDetailDto -> { Producer producer = producerDetailMapper.toEntity(producerDetailDto); Producer saved =
-		 * producerRepository.save(producer); return producerDetailMapper.toDto(saved); } case TransformerDetailDto
-		 * transformerDetailDto -> { Transformer transformer = transformerDetailMapper.toEntity(transformerDetailDto);
-		 * Transformer saved = transformerRepository.save(transformer); return transformerDetailMapper.toDto(saved); }
-		 * case ExporterDetailDto exporterDetailDto -> { Exporter exporter =
-		 * exporterDetailMapper.toEntity(exporterDetailDto); Exporter saved = exporterRepository.save(exporter); return
-		 * exporterDetailMapper.toDto(saved); } case QualityInspectorDetailDto qualityInspectorDetailDto -> {
-		 * QualityInspector qualityInspector = qualityInspectorDetailMapper.toEntity(qualityInspectorDetailDto);
-		 * QualityInspector saved = qualityInspectorRepository.save(qualityInspector); return
-		 * qualityInspectorDetailMapper.toDto(saved); } case CarrierDetailDto carrierDetailDto -> { Carrier
-		 * qualityInspector = carrierDetailMapper.toEntity(carrierDetailDto); Carrier saved =
-		 * carrierRepository.save(qualityInspector); return carrierDetailMapper.toDto(saved); } default -> throw new
-		 * IllegalArgumentException("Type d'utilisateur non supporté : " + dto.getClass()); }
-		 */
 	}
 
 	@Override

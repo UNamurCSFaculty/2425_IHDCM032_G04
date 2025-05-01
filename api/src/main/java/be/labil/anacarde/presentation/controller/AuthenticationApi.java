@@ -1,5 +1,7 @@
 package be.labil.anacarde.presentation.controller;
 
+import be.labil.anacarde.domain.dto.user.UserDetailDto;
+import be.labil.anacarde.domain.model.User;
 import be.labil.anacarde.presentation.payload.LoginRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -13,6 +15,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +23,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 /**
  * Cette API offre un point d'accès pour l'authentification des utilisateurs.
  *
- * En cas de succès, un token JWT est généré et renvoyé sous forme de cookie HTTP-only.
+ * En cas de succès, un token JWT est généré et renvoyé sous forme de cookie HTTP-only, et le détail de l'utilisateur
+ * est renvoyé dans le corps de la réponse.
  */
 @Validated
 @Tag(name = "Authentication", description = "API pour l'authentification des utilisateurs")
@@ -28,21 +32,43 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public interface AuthenticationApi {
 
 	/**
-	 * Authentifie un utilisateur et renvoie un token JWT sous forme de cookie HTTP-only.
+	 * Authentifie un utilisateur et renvoie un token JWT sous forme de cookie HTTP-only, ainsi que les détails de
+	 * l'utilisateur authentifié dans le corps.
 	 *
 	 * @param loginRequest
 	 *            Le payload contenant les identifiants (nom d'utilisateur et mot de passe).
 	 * @param response
 	 *            La réponse HTTP à laquelle le cookie JWT sera ajouté.
-	 * @return Une ResponseEntity avec un message de succès si l'authentification est réussie, ou un message d'erreur
-	 *         sinon.
+	 * @return Une ResponseEntity contenant un UserDetailDto si l'authentification est réussie, ou un statut 401 sinon.
 	 */
-	@Operation(summary = "Authentifier l'utilisateur", description = "Authentifie un utilisateur et renvoie un token JWT sous forme de cookie HTTP-only")
+	@Operation(summary = "Authentifier l'utilisateur", description = "Authentifie un utilisateur et renvoie un token JWT "
+			+ "sous forme de cookie HTTP-only ainsi que son UserDetailDto")
 	@ApiResponses({
-			@ApiResponse(responseCode = "200", description = "Utilisateur authentifié avec succès", content = @Content(schema = @Schema(implementation = String.class))),
-			@ApiResponse(responseCode = "401", description = "Échec de l'authentification", content = @Content(schema = @Schema(implementation = String.class)))})
+			@ApiResponse(responseCode = "200", description = "Utilisateur authentifié avec succès", content = @Content(schema = @Schema(implementation = UserDetailDto.class))),
+			@ApiResponse(responseCode = "400", description = "Requête mal formée (loginRequest invalide)"),
+			@ApiResponse(responseCode = "401", description = "Échec de l'authentification")})
 	@PostMapping("/signin")
-	ResponseEntity<?> authenticateUser(
-			@NotNull(message = "Les identifiants de connexion sont obligatoires") @Valid @RequestBody @Parameter(description = "Identifiants de connexion", required = true, schema = @Schema(implementation = LoginRequest.class)) LoginRequest loginRequest,
+	ResponseEntity<UserDetailDto> authenticateUser(
+			@Parameter(description = "Identifiants de connexion", required = true, schema = @Schema(implementation = LoginRequest.class)) @NotNull(message = "Les identifiants de connexion sont obligatoires") @Valid @RequestBody LoginRequest loginRequest,
 			HttpServletResponse response);
+
+	/**
+	 * Renvoie les détails de l'utilisateur actuellement authentifié.
+	 *
+	 * @return Une ResponseEntity contenant un UserDetailDto si le client présente un cookie JWT valide, ou 401 sinon.
+	 */
+	@Operation(summary = "Récupérer l'utilisateur courant", description = "Renvoie les détails (UserDetailDto) de l'utilisateur authentifié via le cookie JWT")
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "Utilisateur authentifié", content = @Content(schema = @Schema(implementation = UserDetailDto.class))),
+			@ApiResponse(responseCode = "401", description = "Utilisateur non authentifié")})
+	@GetMapping("/me")
+	ResponseEntity<UserDetailDto> getCurrentUser(User currentUser);
+
+	/**
+	 * Déconnecte l'utilisateur en supprimant le cookie JWT côté client.
+	 */
+	@Operation(summary = "Déconnecter l'utilisateur", description = "Supprime le cookie JWT pour déconnecter l'utilisateur")
+	@ApiResponses({@ApiResponse(responseCode = "200", description = "Utilisateur déconnecté avec succès")})
+	@PostMapping("/signout")
+	ResponseEntity<Void> logout(HttpServletResponse response);
 }
