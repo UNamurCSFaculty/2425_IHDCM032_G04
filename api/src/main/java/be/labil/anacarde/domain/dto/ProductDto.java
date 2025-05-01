@@ -1,8 +1,6 @@
 package be.labil.anacarde.domain.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.*;
 import io.swagger.v3.oas.annotations.media.DiscriminatorMapping;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
@@ -27,10 +25,14 @@ public abstract class ProductDto {
 	@Schema(description = "Identifiant unique du produit", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
 	private Integer id;
 
+	@Column(nullable = false)
+	private LocalDateTime deliveryDate;
+
 	@Schema(description = "Poids en kg du produit", example = "100.0")
 	private Double weightKg;
 
-	private QualityControlDto qualityControl;
+	@JsonIgnoreProperties("product")
+	private Integer qualityControlId;
 
 	/**
 	 * Propriété virtuelle pour Swagger. Ce getter n'est pas utilisé par Jackson car il est ignoré, mais permet
@@ -42,7 +44,4 @@ public abstract class ProductDto {
 	public String getVirtualTypeForSwagger() {
 		return null;
 	}
-
-	@Column(nullable = false)
-	private LocalDateTime deliveryDate;
 }

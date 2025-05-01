@@ -1,8 +1,6 @@
 package be.labil.anacarde.domain.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,11 +15,14 @@ import lombok.experimental.SuperBuilder;
 public class HarvestProduct extends Product {
 
 	@ManyToOne(optional = false)
+	@JoinColumn(name = "store_id", nullable = false)
 	private Store store;
 
 	@ManyToOne(optional = false)
+	@JoinColumn(name = "producer_id", nullable = false)
 	private Producer producer;
 
-	@ManyToOne(optional = false)
+	@ManyToOne(optional = false, fetch = FetchType.LAZY)
+	@JoinColumn(name = "field_id")
 	private Field field;
 }

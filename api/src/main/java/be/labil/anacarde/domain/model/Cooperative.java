@@ -23,10 +23,11 @@ public class Cooperative {
 	@Column(nullable = false)
 	private String address;
 
-	@Column(nullable = false)
+	@Column(nullable = false, updatable = false)
 	@CreationTimestamp
 	private LocalDateTime creationDate;
 
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "president_id", unique = true)
 	private Producer president;
 }

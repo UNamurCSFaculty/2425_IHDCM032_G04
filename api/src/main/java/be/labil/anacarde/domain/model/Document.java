@@ -29,7 +29,7 @@ public class Document {
 	@Column(nullable = false)
 	private String storagePath;
 
-	@Column(nullable = false)
+	@Column(nullable = false, updatable = false)
 	@CreationTimestamp
 	private LocalDateTime uploadDate;
 

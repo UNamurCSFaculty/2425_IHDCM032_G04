@@ -5,7 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import be.labil.anacarde.domain.dto.FieldDetailDto;
+import be.labil.anacarde.domain.dto.FieldDto;
 import be.labil.anacarde.domain.dto.user.ProducerDetailDto;
 import be.labil.anacarde.domain.model.Field;
 import be.labil.anacarde.infrastructure.persistence.FieldRepository;
@@ -58,9 +58,9 @@ public class FieldApiControllerIntegrationTest extends AbstractIntegrationTest {
 	 */
 	@Test
 	public void testCreateField() throws Exception {
-		FieldDetailDto newFieldDto = new FieldDetailDto();
+		FieldDto newFieldDto = new FieldDto();
 		newFieldDto.setLocation("POINT(2.3522 48.8566)");
-		newFieldDto.setIdentifier("FIELD-001");
+		newFieldDto.setIdentifier("FIELD-666");
 		ProducerDetailDto producerDetailDto = new ProducerDetailDto();
 		producerDetailDto.setId(getProducerTestUser().getId());
 		newFieldDto.setProducer(producerDetailDto);
@@ -72,11 +72,11 @@ public class FieldApiControllerIntegrationTest extends AbstractIntegrationTest {
 				.contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwt()))
 				.andExpect(status().isCreated()).andExpect(header().string("Location", containsString("/api/users/")))
 				.andExpect(jsonPath("$.location").value("POINT (2.3522 48.8566)"))
-				.andExpect(jsonPath("$.identifier").value("FIELD-001"))
+				.andExpect(jsonPath("$.identifier").value("FIELD-666"))
 				.andExpect(jsonPath("$.producer.id").value(getProducerTestUser().getId()));
 
 		Field createdField = fieldRepository.findAll().stream()
-				.filter(field -> "FIELD-001".equals(field.getIdentifier())).findFirst()
+				.filter(field -> "FIELD-666".equals(field.getIdentifier())).findFirst()
 				.orElseThrow(() -> new AssertionError("Field non trouvé"));
 	}
 
@@ -97,7 +97,7 @@ public class FieldApiControllerIntegrationTest extends AbstractIntegrationTest {
 	 */
 	@Test
 	public void testUpdateField() throws Exception {
-		FieldDetailDto updateField = new FieldDetailDto();
+		FieldDto updateField = new FieldDto();
 		updateField.setLocation("POINT (1.111 2.222)");
 		updateField.setIdentifier("FIELD-UPDATED");
 		ProducerDetailDto producerDetailDto = new ProducerDetailDto();

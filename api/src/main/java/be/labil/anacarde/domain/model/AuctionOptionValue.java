@@ -18,10 +18,6 @@ public class AuctionOptionValue {
 	private Integer id;
 
 	@ManyToOne(optional = false)
-	@JoinColumn(name = "auction_id", nullable = false)
-	private Auction auction;
-
-	@ManyToOne(optional = false)
 	@JoinColumn(name = "auction_option_id", nullable = false)
 	private AuctionOption auctionOption;
 

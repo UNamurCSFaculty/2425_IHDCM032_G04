@@ -433,6 +433,10 @@ public abstract class AbstractIntegrationTest {
 				.creationDate(LocalDateTime.of(2025, 4, 7, 12, 0)).build();
 		mainTestCooperative = cooperativeRepository.save(cooperative);
 
+		Producer p = (Producer) producer;
+		p.setCooperative(mainTestCooperative);
+		producerTestUser = userRepository.save(p);
+
 		// A document with a qualityInspector
 		Document document = Document.builder().format("text").type("TEXT").storagePath("/storage")
 				.user(qualityInspector).uploadDate(LocalDateTime.now()).build();

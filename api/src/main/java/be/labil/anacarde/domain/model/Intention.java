@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table(name = "intention")
@@ -22,15 +23,18 @@ public class Intention {
 	@Column(nullable = false)
 	private BigDecimal price;
 
-	@Column(nullable = false)
+	@Column(nullable = false, updatable = false)
+	@CreationTimestamp
 	private LocalDateTime date;
 
 	@Column(nullable = false)
 	private Integer quantity;
 
 	@ManyToOne(optional = false)
+	@JoinColumn(name = "quality_id", nullable = false)
 	private Quality quality;
 
 	@ManyToOne(optional = false)
+	@JoinColumn(name = "buyer_id", nullable = false)
 	private Trader buyer;
 }

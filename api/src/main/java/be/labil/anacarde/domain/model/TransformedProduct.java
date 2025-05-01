@@ -1,9 +1,6 @@
 package be.labil.anacarde.domain.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,6 +20,7 @@ public class TransformedProduct extends Product {
 	@Column(nullable = false)
 	private String location;
 
-	@ManyToOne
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "transformer_id", nullable = false)
 	private Transformer transformer;
 }

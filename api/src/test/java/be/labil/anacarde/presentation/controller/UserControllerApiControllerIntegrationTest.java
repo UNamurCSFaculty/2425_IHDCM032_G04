@@ -8,10 +8,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import be.labil.anacarde.domain.dto.CooperativeDto;
 import be.labil.anacarde.domain.dto.LanguageDto;
 import be.labil.anacarde.domain.dto.RoleDto;
 import be.labil.anacarde.domain.dto.user.AdminDetailDto;
 import be.labil.anacarde.domain.dto.user.ExporterDetailDto;
+import be.labil.anacarde.domain.dto.user.ProducerDetailDto;
 import be.labil.anacarde.domain.dto.user.UserDetailDto;
 import be.labil.anacarde.domain.model.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -70,13 +72,17 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 	public void testCreateUser() throws Exception {
 		LanguageDto languageDto = new LanguageDto();
 		languageDto.setId(getMainLanguage().getId());
-		UserDetailDto newUser = new AdminDetailDto();
+		CooperativeDto cooperativeDto = new CooperativeDto();
+		cooperativeDto.setId(getMainTestCooperative().getId());
+		ProducerDetailDto newUser = new ProducerDetailDto();
 		newUser.setFirstName("Alice");
 		newUser.setLastName("Smith");
 		newUser.setEmail("alice.smith@example.com");
 		newUser.setPassword("secret");
 		newUser.setLanguage(languageDto);
 		newUser.setPhone("+2290197005502");
+		newUser.setAgriculturalIdentifier("TS450124");
+		newUser.setCooperative(cooperativeDto);
 
 		ObjectNode node = objectMapper.valueToTree(newUser);
 		node.put("password", newUser.getPassword()); // Ajout manuel car le mot de passe n'est pas sérialisé

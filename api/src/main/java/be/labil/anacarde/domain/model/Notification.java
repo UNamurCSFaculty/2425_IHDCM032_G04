@@ -31,5 +31,6 @@ public class Notification {
 	private String readStatus;
 
 	@ManyToOne(optional = false)
+	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 }

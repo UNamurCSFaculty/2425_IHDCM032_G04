@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import be.labil.anacarde.domain.dto.AuctionOptionDto;
 import be.labil.anacarde.domain.dto.AuctionOptionValueDto;
-import be.labil.anacarde.domain.model.Auction;
 import be.labil.anacarde.domain.model.AuctionOption;
 import be.labil.anacarde.domain.model.AuctionOptionValue;
 import org.junit.jupiter.api.Test;
@@ -23,23 +22,20 @@ public class AuctionOptionValueMapperTest {
 		AuctionOptionValue auctionOptionValue = new AuctionOptionValue();
 		auctionOptionValue.setId(1);
 
-		Auction auction = new Auction();
-		auction.setId(1);
 		AuctionOption auctionOption = new AuctionOption();
 		auctionOption.setId(1);
 		auctionOption.setName("Option A");
-
-		auctionOptionValue.setAuction(auction);
 		auctionOptionValue.setAuctionOption(auctionOption);
+
 		auctionOptionValue.setOptionValue("Extra option");
 
-		AuctionOptionValueDto auctionOptionValueDto = auctionOptionValueMapper.toDto(auctionOptionValue);
+		AuctionOptionValueDto dto = auctionOptionValueMapper.toDto(auctionOptionValue);
 
-		assertNotNull(auctionOptionValueDto);
-		assertEquals(auctionOptionValue.getId(), auctionOptionValueDto.getId());
-		assertEquals(auctionOptionValue.getOptionValue(), auctionOptionValueDto.getOptionValue());
-		assertNotNull(auctionOptionValueDto.getAuctionOption());
-		assertEquals(auctionOptionValue.getAuctionOption().getId(), auctionOptionValueDto.getAuctionOption().getId());
+		assertNotNull(dto);
+		assertEquals(auctionOptionValue.getId(), dto.getId());
+		assertEquals(auctionOptionValue.getOptionValue(), dto.getOptionValue());
+		assertNotNull(dto.getAuctionOption());
+		assertEquals(auctionOptionValue.getAuctionOption().getId(), dto.getAuctionOption().getId());
 	}
 
 	@Test

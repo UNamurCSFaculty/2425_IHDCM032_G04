@@ -18,12 +18,13 @@ public class Field {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_field")
 	private Integer id;
 
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String identifier;
 
 	@JdbcTypeCode(SqlTypes.GEOMETRY)
 	private Point location;
 
 	@ManyToOne(optional = false)
+	@JoinColumn(name = "producer_id", nullable = false)
 	private Producer producer;
 }

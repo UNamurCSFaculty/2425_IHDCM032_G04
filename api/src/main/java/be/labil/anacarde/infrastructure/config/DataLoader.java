@@ -26,6 +26,7 @@ public class DataLoader implements CommandLineRunner {
 	private final LanguageService languageService;
 	private final CooperativeService cooperativeService;
 	private final AuctionStrategyService auctionStrategyService;
+	private final FieldService fieldService;
 	// Repositories
 
 	@Override
@@ -41,6 +42,8 @@ public class DataLoader implements CommandLineRunner {
 		// 2. Création du producteur (sans coopérative)
 		UserDetailDto producer = createProducer(languageDto);
 		producer = userService.createUser(producer);
+		FieldDto field = createField((ProducerDetailDto) producer);
+		field = fieldService.createField(field);
 
 		// 3. Création de la coopérative
 		CooperativeDto cooperativeDto = createCooperative((ProducerDetailDto) producer);
@@ -63,7 +66,7 @@ public class DataLoader implements CommandLineRunner {
 		store = storeService.createStore(store);
 
 		// 8. Création d'un produit
-		ProductDto product = createHarvestProduct(store, producer, 1000);
+		ProductDto product = createHarvestProduct(store, producer, field, 1000);
 		product = productService.createProduct(product);
 
 		// 9. Création d'une stratégie d'enchère
@@ -86,16 +89,26 @@ public class DataLoader implements CommandLineRunner {
 		cooperativeDto.setName("Cooperative de test");
 		cooperativeDto.setCreationDate(LocalDateTime.now().minusDays(30));
 		cooperativeDto.setAddress("Adresse de la cooperative");
-		cooperativeDto.setPresident(producer);
+		cooperativeDto.setPresidentId(producer.getId());
 		return cooperativeDto;
 	}
 
-	private HarvestProductDto createHarvestProduct(StoreDetailDto store, UserDetailDto producer, double weight) {
+	private FieldDto createField(ProducerDetailDto producer) {
+		FieldDto fieldDto = new FieldDto();
+		fieldDto.setLocation("POINT (2.3522 48.8566)");
+		fieldDto.setIdentifier("F12748");
+		fieldDto.setProducer(producer);
+		return fieldDto;
+	}
+
+	private HarvestProductDto createHarvestProduct(StoreDetailDto store, UserDetailDto producer, FieldDto field,
+			double weight) {
 		HarvestProductDto harvestProduct = new HarvestProductDto();
 		harvestProduct.setProducer((ProducerDetailDto) producer);
 		harvestProduct.setStore(store);
 		harvestProduct.setWeightKg(weight);
 		harvestProduct.setDeliveryDate(LocalDateTime.now());
+		harvestProduct.setField(field);
 		return harvestProduct;
 	}
 

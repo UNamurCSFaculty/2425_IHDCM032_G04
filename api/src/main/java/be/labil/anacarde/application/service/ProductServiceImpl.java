@@ -17,10 +17,19 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProductServiceImpl implements ProductService {
 	private final ProductRepository productRepository;
 	private final ProductMapper productMapper;
+	// private final QualityControlRepository qualityControlRepository;
 
 	@Override
 	public ProductDto createProduct(ProductDto dto) {
 		Product product = productMapper.toEntity(dto);
+
+		/*
+		 * A ajouter une le repo qualityControl dispo if (dto.getQualityControlId() != null) { QualityControl qc =
+		 * qualityControlRepository.findById(dto.getQualityControlId()) .orElseThrow(() -> new
+		 * ResourceNotFoundException( "QualityControl non trouvé pour id " + dto.getQualityControlId()));
+		 * product.setQualityControl(qc); }
+		 */
+
 		Product saved = productRepository.save(product);
 		return productMapper.toDto(saved);
 	}

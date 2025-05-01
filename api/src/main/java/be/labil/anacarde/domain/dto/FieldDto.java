@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @Schema(description = "Objet de transfert de données pour les champs.")
-public class FieldDetailDto {
+public class FieldDto {
 
 	@Schema(description = "Identifiant unique du champ.", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
 	private Integer id;

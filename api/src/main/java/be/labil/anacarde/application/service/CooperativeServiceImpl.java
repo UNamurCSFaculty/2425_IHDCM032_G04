@@ -4,7 +4,9 @@ import be.labil.anacarde.application.exception.ResourceNotFoundException;
 import be.labil.anacarde.domain.dto.CooperativeDto;
 import be.labil.anacarde.domain.mapper.CooperativeMapper;
 import be.labil.anacarde.domain.model.Cooperative;
+import be.labil.anacarde.domain.model.Producer;
 import be.labil.anacarde.infrastructure.persistence.CooperativeRepository;
+import be.labil.anacarde.infrastructure.persistence.user.ProducerRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -18,6 +20,7 @@ public class CooperativeServiceImpl implements CooperativeService {
 
 	private final CooperativeRepository cooperativeRepository;
 	private final CooperativeMapper cooperativeMapper;
+	private final ProducerRepository producerRepository;
 
 	@Override
 	public CooperativeDto createCooperative(CooperativeDto dto) {
@@ -52,11 +55,22 @@ public class CooperativeServiceImpl implements CooperativeService {
 		return cooperativeMapper.toDto(saved);
 	}
 
+	/**
+	 * @Override public void deleteCooperative(Integer id) { if (!cooperativeRepository.existsById(id)) { throw new
+	 *           ResourceNotFoundException("Coopérative non trouvée"); } cooperativeRepository.deleteById(id); }
+	 */
+
 	@Override
 	public void deleteCooperative(Integer id) {
-		if (!cooperativeRepository.existsById(id)) {
-			throw new ResourceNotFoundException("Coopérative non trouvée");
+		Cooperative coop = cooperativeRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Coopérative non trouvée"));
+
+		Producer president = coop.getPresident();
+		if (president != null) {
+			president.setCooperative(null);
+			producerRepository.save(president);
 		}
-		cooperativeRepository.deleteById(id);
+
+		cooperativeRepository.delete(coop);
 	}
 }

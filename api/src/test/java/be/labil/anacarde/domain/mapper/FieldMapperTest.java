@@ -3,7 +3,7 @@ package be.labil.anacarde.domain.mapper;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import be.labil.anacarde.domain.dto.FieldDetailDto;
+import be.labil.anacarde.domain.dto.FieldDto;
 import be.labil.anacarde.domain.dto.user.ProducerDetailDto;
 import be.labil.anacarde.domain.model.Field;
 import be.labil.anacarde.domain.model.Producer;
@@ -15,10 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class FieldDetailMapperTest {
+class FieldMapperTest {
 
 	@Autowired
-	private FieldDetailMapper mapper;
+	private FieldMapper mapper;
 
 	private final GeometryFactory geometryFactory = new GeometryFactory();
 
@@ -35,7 +35,7 @@ class FieldDetailMapperTest {
 		field.setLocation(location);
 		field.setProducer(producer);
 
-		FieldDetailDto dto = mapper.toDto(field);
+		FieldDto dto = mapper.toDto(field);
 
 		assertThat(dto).isNotNull();
 		assertThat(dto.getId()).isEqualTo(100);
@@ -50,7 +50,7 @@ class FieldDetailMapperTest {
 		ProducerDetailDto producerDto = new ProducerDetailDto();
 		producerDto.setId(1);
 
-		FieldDetailDto dto = new FieldDetailDto();
+		FieldDto dto = new FieldDto();
 		dto.setId(100);
 		dto.setIdentifier("F123");
 		dto.setLocation("POINT(2.35 48.85)");
@@ -70,7 +70,7 @@ class FieldDetailMapperTest {
 
 	@Test
 	void shouldHandleNullLocation() {
-		FieldDetailDto dto = new FieldDetailDto();
+		FieldDto dto = new FieldDto();
 		dto.setLocation(null);
 
 		Field entity = mapper.toEntity(dto);
@@ -80,7 +80,7 @@ class FieldDetailMapperTest {
 
 	@Test
 	void shouldFailOnInvalidWKT() {
-		FieldDetailDto dto = new FieldDetailDto();
+		FieldDto dto = new FieldDto();
 		dto.setLocation("INVALID_WKT");
 
 		assertThatThrownBy(() -> mapper.toEntity(dto)).isInstanceOf(IllegalArgumentException.class)

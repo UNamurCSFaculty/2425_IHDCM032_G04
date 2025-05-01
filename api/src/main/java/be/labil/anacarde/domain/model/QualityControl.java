@@ -33,15 +33,19 @@ public class QualityControl {
 	@Column(nullable = false)
 	private Float humidity;
 
-	@ManyToOne(optional = false)
+	@ManyToOne(optional = false, fetch = FetchType.LAZY)
+	@JoinColumn(name = "qualityInspector_id", nullable = false)
 	private QualityInspector qualityInspector;
 
-	@ManyToOne(optional = false)
+	@OneToOne(optional = false)
+	@JoinColumn(name = "product_id", nullable = false, unique = true)
 	private Product product;
 
 	@ManyToOne(optional = false)
+	@JoinColumn(name = "quality_id", nullable = false)
 	private Quality quality;
 
-	@ManyToOne(optional = false)
+	@ManyToOne(optional = false, fetch = FetchType.LAZY)
+	@JoinColumn(name = "document_id", nullable = false)
 	private Document document;
 }
