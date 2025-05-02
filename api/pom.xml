@@ -239,6 +239,9 @@
                 <version>0.8.13</version>
                 <configuration>
                     <excludes>
+                        <exclude>**/config/**</exclude>
+                        <exclude>**/domain/mapper/**</exclude>
+                        <exclude>**/domain/model/**</exclude>
                         <exclude>**/generated-sources/**</exclude>
                         <exclude>**/test-classes/**</exclude>
                         <exclude>**/test-outputs/**</exclude>

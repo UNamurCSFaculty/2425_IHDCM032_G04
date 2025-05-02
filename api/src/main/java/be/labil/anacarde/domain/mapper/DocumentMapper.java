@@ -8,7 +8,7 @@ import org.mapstruct.*;
 
 /** Interface Mapper pour la conversion entre l'entité Document et DocumentDto. */
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface DocumentMapper extends GenericMapper<DocumentDto, Document> {
+public abstract class DocumentMapper {
 
 	/**
 	 * Convertit une entité Document en DocumentDto.
@@ -17,10 +17,10 @@ public interface DocumentMapper extends GenericMapper<DocumentDto, Document> {
 	 *            l'entité Document à convertir.
 	 * @return le DocumentDto correspondant.
 	 */
-	@Override
+
 	@Mapping(source = "user.id", target = "userId")
 	@Mapping(source = "type", target = "documentType")
-	DocumentDto toDto(Document document);
+	public abstract DocumentDto toDto(Document document);
 
 	/**
 	 * Convertit un DocumentDto en entité Document.
@@ -29,19 +29,18 @@ public interface DocumentMapper extends GenericMapper<DocumentDto, Document> {
 	 *            le DocumentDto à convertir.
 	 * @return l'entité Document correspondante.
 	 */
-	@Override
+
 	@Mapping(source = "userId", target = "user", qualifiedByName = "mapUserIdToUser")
 	@Mapping(source = "documentType", target = "type")
-	Document toEntity(DocumentDto documentDto);
+	public abstract Document toEntity(DocumentDto documentDto);
 
-	@Override
 	@Mapping(source = "userId", target = "user", qualifiedByName = "mapUserIdToUser")
 	@Mapping(source = "documentType", target = "type")
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-	Document partialUpdate(DocumentDto documentDto, @MappingTarget Document entity);
+	public abstract Document partialUpdate(DocumentDto documentDto, @MappingTarget Document entity);
 
 	@Named("mapUserIdToUser")
-	default User mapUserIdToUser(Integer userId) {
+	public static User mapUserIdToUser(Integer userId) {
 		if (userId == null) {
 			return null;
 		}

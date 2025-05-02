@@ -1,6 +1,5 @@
 package be.labil.anacarde.domain.mapper;
 
-import be.labil.anacarde.domain.dto.CooperativeDto;
 import be.labil.anacarde.domain.dto.user.*;
 import be.labil.anacarde.domain.model.*;
 import org.mapstruct.*;
@@ -10,9 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
  * Mapper pour convertir les DTOs UserDetailDto (hors Producer) en leurs entités correspondantes. Les Producteurs sont
  * mappés dans un mapper dédié (ProducerDetailMapper) pour éviter les ambiguïtés.
  */
-@Mapper(componentModel = "spring", uses = {RoleMapper.class, LanguageMapper.class, CooperativeMapper.class,
-		HibernateUnproxy.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public abstract class UserDetailMapper implements GenericMapper<UserDetailDto, User> {
+@Mapper(componentModel = "spring", uses = {HibernateLazyCondition.class, HibernateLazyCondition.class, RoleMapper.class,
+		LanguageMapper.class, CooperativeMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public abstract class UserDetailMapper {
 
 	@Autowired
 	private CooperativeMapper cooperativeMapper;
@@ -44,7 +43,7 @@ public abstract class UserDetailMapper implements GenericMapper<UserDetailDto, U
 	@Mapping(source = "roles", target = "roles")
 	@Mapping(source = "language", target = "language")
 	@Mapping(source = "agriculturalIdentifier", target = "agriculturalIdentifier")
-	@Mapping(target = "cooperative", ignore = true)
+	@Mapping(target = "cooperative", source = "cooperative")
 	public abstract Producer toEntity(ProducerDetailDto dto);
 
 	/**
@@ -93,6 +92,7 @@ public abstract class UserDetailMapper implements GenericMapper<UserDetailDto, U
 
 	@Mapping(source = "roles", target = "roles")
 	@Mapping(source = "language", target = "language")
+	@Mapping(source = "cooperative", target = "cooperative")
 	public abstract ProducerDetailDto toDto(Producer entity);
 
 	/**
@@ -117,20 +117,15 @@ public abstract class UserDetailMapper implements GenericMapper<UserDetailDto, U
 
 	// —————— Hooks AfterMapping ——————
 
-	@AfterMapping
-	public void linkCooperative(ProducerDetailDto dto, @MappingTarget Producer prod) {
-		if (dto.getCooperative() != null) {
-			prod.setCooperative(cooperativeMapper.toEntity(dto.getCooperative()));
-		}
-	}
-
-	@AfterMapping
-	public void linkCoopDto(Producer entity, @MappingTarget ProducerDetailDto dto) {
-		if (entity.getCooperative() != null) {
-			CooperativeDto cooperativeDto = cooperativeMapper.toDto(entity.getCooperative());
-			dto.setCooperative(cooperativeDto);
-		}
-	}
+	/*
+	 * @AfterMapping public void linkCooperative(ProducerDetailDto dto, @MappingTarget Producer prod) { if
+	 * (dto.getCooperative() != null) { prod.setCooperative(cooperativeMapper.toEntity(dto.getCooperative())); } }
+	 */
+	/*
+	 * @AfterMapping public void linkCoopDto(Producer entity, @MappingTarget ProducerDetailDto dto) { if
+	 * (entity.getCooperative() != null && Hibernate.isInitialized(entity.getCooperative())) { CooperativeDto
+	 * cooperativeDto = cooperativeMapper.toDto(entity.getCooperative()); dto.setCooperative(cooperativeDto); } }
+	 */
 
 	/*------------------------------------*/
 	/* 3) Mise à jour partielle (partialUpdate) */

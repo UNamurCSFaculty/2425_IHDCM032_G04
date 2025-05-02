@@ -4,26 +4,23 @@ import be.labil.anacarde.domain.dto.BidDto;
 import be.labil.anacarde.domain.model.Bid;
 import org.mapstruct.*;
 
-@Mapper(componentModel = "spring", uses = {AuctionMapper.class, TraderDetailMapper.class,
+@Mapper(componentModel = "spring", uses = {HibernateLazyCondition.class, AuctionMapper.class, TraderDetailMapper.class,
 		BidStatusMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface BidMapper extends GenericMapper<BidDto, Bid> {
+public abstract class BidMapper {
 
-	@Override
 	@Mapping(source = "auction", target = "auction")
 	@Mapping(source = "trader", target = "trader")
 	@Mapping(source = "status", target = "status")
-	BidDto toDto(Bid bid);
+	public abstract BidDto toDto(Bid bid);
 
-	@Override
 	@Mapping(source = "auction", target = "auction")
 	@Mapping(source = "trader", target = "trader")
 	@Mapping(source = "status", target = "status")
-	Bid toEntity(BidDto dto);
+	public abstract Bid toEntity(BidDto dto);
 
-	@Override
 	@Mapping(source = "auction", target = "auction")
 	@Mapping(source = "trader", target = "trader")
 	@Mapping(source = "status", target = "status")
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-	Bid partialUpdate(BidDto dto, @MappingTarget Bid entity);
+	public abstract Bid partialUpdate(BidDto dto, @MappingTarget Bid entity);
 }

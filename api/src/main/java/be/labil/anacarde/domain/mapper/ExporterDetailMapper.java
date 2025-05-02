@@ -6,17 +6,15 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
-@Mapper(componentModel = "spring", uses = {RoleMapper.class,
+@Mapper(componentModel = "spring", uses = {HibernateLazyCondition.class, RoleMapper.class,
 		LanguageMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface ExporterDetailMapper extends GenericMapper<ExporterDetailDto, Exporter> {
+public abstract class ExporterDetailMapper {
 
-	@Override
 	@Mapping(source = "roles", target = "roles")
 	@Mapping(source = "language", target = "language")
-	Exporter toEntity(ExporterDetailDto dto);
+	public abstract Exporter toEntity(ExporterDetailDto dto);
 
-	@Override
 	@Mapping(source = "roles", target = "roles")
 	@Mapping(source = "language", target = "language")
-	ExporterDetailDto toDto(Exporter entity);
+	public abstract ExporterDetailDto toDto(Exporter entity);
 }

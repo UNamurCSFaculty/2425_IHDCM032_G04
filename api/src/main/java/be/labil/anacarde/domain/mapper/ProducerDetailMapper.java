@@ -6,19 +6,17 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
-@Mapper(componentModel = "spring", uses = {RoleMapper.class,
+@Mapper(componentModel = "spring", uses = {HibernateLazyCondition.class, RoleMapper.class,
 		LanguageMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface ProducerDetailMapper extends GenericMapper<ProducerDetailDto, Producer> {
+public abstract class ProducerDetailMapper {
 
-	@Override
 	@Mapping(source = "cooperative", target = "cooperative")
 	@Mapping(source = "roles", target = "roles")
 	@Mapping(source = "language", target = "language")
-	Producer toEntity(ProducerDetailDto dto);
+	public abstract Producer toEntity(ProducerDetailDto dto);
 
-	@Override
 	@Mapping(source = "cooperative", target = "cooperative")
 	@Mapping(source = "roles", target = "roles")
 	@Mapping(source = "language", target = "language")
-	ProducerDetailDto toDto(Producer entity);
+	public abstract ProducerDetailDto toDto(Producer entity);
 }

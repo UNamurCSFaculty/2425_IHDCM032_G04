@@ -2,17 +2,19 @@ package be.labil.anacarde.domain.mapper;
 
 import be.labil.anacarde.domain.dto.CooperativeDto;
 import be.labil.anacarde.domain.model.Cooperative;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
 
-@Mapper(componentModel = "spring", uses = {ProducerDetailMapper.class})
-public interface CooperativeMapper extends GenericMapper<CooperativeDto, Cooperative> {
+@Mapper(componentModel = "spring", uses = {HibernateLazyCondition.class, ProducerDetailMapper.class})
+public abstract class CooperativeMapper {
 
-	@Override
 	@Mapping(source = "presidentId", target = "president.id")
-	Cooperative toEntity(CooperativeDto dto);
+	public abstract Cooperative toEntity(CooperativeDto dto);
 
-	@Override
+	// on ignore complètement le mapping automatique de presidentId
 	@Mapping(source = "president.id", target = "presidentId")
-	CooperativeDto toDto(Cooperative entity);
+	public abstract CooperativeDto toDto(Cooperative entity);
+
+	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+	@Mapping(target = "president", ignore = true)
+	public abstract Cooperative partialUpdate(CooperativeDto dto, @MappingTarget Cooperative entity);
 }

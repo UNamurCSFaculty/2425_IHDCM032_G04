@@ -5,11 +5,9 @@ import be.labil.anacarde.domain.model.Role;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface RoleMapper extends GenericMapper<RoleDto, Role> {
+public abstract class RoleMapper {
 
-	@Override
-	Role toEntity(RoleDto dto);
+	public abstract Role toEntity(RoleDto dto);
 
-	@Override
-	RoleDto toDto(Role role);
+	public abstract RoleDto toDto(Role role);
 }

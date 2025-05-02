@@ -11,22 +11,20 @@ import org.mapstruct.Mapping;
 import org.mapstruct.ObjectFactory;
 import org.mapstruct.ReportingPolicy;
 
-@Mapper(componentModel = "spring", uses = {RoleMapper.class,
+@Mapper(componentModel = "spring", uses = {HibernateLazyCondition.class, RoleMapper.class,
 		LanguageMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface TraderDetailMapper extends GenericMapper<TraderDetailDto, Trader> {
+public abstract class TraderDetailMapper {
 
-	@Override
 	@Mapping(source = "roles", target = "roles")
 	@Mapping(source = "language", target = "language")
-	Trader toEntity(TraderDetailDto dto);
+	public abstract Trader toEntity(TraderDetailDto dto);
 
-	@Override
 	@Mapping(source = "roles", target = "roles")
 	@Mapping(source = "language", target = "language")
-	TraderDetailDto toDto(Trader entity);
+	public abstract TraderDetailDto toDto(Trader entity);
 
 	@ObjectFactory
-	default Trader createTrader(TraderDetailDto dto) {
+	public static Trader createTrader(TraderDetailDto dto) {
 		if (dto instanceof ProducerDetailDto) {
 			return new Producer();
 		} else if (dto instanceof TransformerDetailDto) {
@@ -37,7 +35,7 @@ public interface TraderDetailMapper extends GenericMapper<TraderDetailDto, Trade
 	}
 
 	@ObjectFactory
-	default TraderDetailDto createTrader(Trader entity) {
+	public static TraderDetailDto createTrader(Trader entity) {
 		if (entity instanceof Producer) {
 			return new ProducerDetailDto();
 		} else if (entity instanceof Transformer) {

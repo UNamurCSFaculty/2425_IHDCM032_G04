@@ -2,14 +2,18 @@ package be.labil.anacarde.domain.mapper;
 
 import be.labil.anacarde.domain.dto.AuctionStrategyDto;
 import be.labil.anacarde.domain.model.AuctionStrategy;
+import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(componentModel = "spring")
-public interface AuctionStrategyMapper extends GenericMapper<AuctionStrategyDto, AuctionStrategy> {
+public abstract class AuctionStrategyMapper {
 
-	@Override
-	AuctionStrategy toEntity(AuctionStrategyDto dto);
+	public abstract AuctionStrategy toEntity(AuctionStrategyDto dto);
 
-	@Override
-	AuctionStrategyDto toDto(AuctionStrategy entity);
+	public abstract AuctionStrategyDto toDto(AuctionStrategy entity);
+
+	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+	public abstract AuctionStrategy partialUpdate(AuctionStrategyDto dto, @MappingTarget AuctionStrategy entity);
 }

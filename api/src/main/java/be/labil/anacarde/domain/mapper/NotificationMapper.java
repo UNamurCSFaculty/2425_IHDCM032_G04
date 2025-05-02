@@ -10,18 +10,16 @@ import org.mapstruct.Named;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface NotificationMapper extends GenericMapper<NotificationDto, Notification> {
+public abstract class NotificationMapper {
 
-	@Override
 	@Mapping(source = "user.id", target = "userId")
-	NotificationDto toDto(Notification notification);
+	public abstract NotificationDto toDto(Notification notification);
 
-	@Override
 	@Mapping(source = "userId", target = "user", qualifiedByName = "mapUserIdToUser")
-	Notification toEntity(NotificationDto dto);
+	public abstract Notification toEntity(NotificationDto dto);
 
 	@Named("mapUserIdToUser")
-	default User mapUserIdToUser(Integer userId) {
+	public static User mapUserIdToUser(Integer userId) {
 		if (userId == null) {
 			return null;
 		}

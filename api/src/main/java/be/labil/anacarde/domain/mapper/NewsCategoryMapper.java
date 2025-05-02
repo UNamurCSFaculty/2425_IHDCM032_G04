@@ -5,15 +5,12 @@ import be.labil.anacarde.domain.model.NewsCategory;
 import org.mapstruct.*;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface NewsCategoryMapper extends GenericMapper<NewsCategoryDto, NewsCategory> {
+public abstract class NewsCategoryMapper {
 
-	@Override
-	NewsCategoryDto toDto(NewsCategory entity);
+	public abstract NewsCategoryDto toDto(NewsCategory entity);
 
-	@Override
-	NewsCategory toEntity(NewsCategoryDto dto);
+	public abstract NewsCategory toEntity(NewsCategoryDto dto);
 
-	@Override
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-	NewsCategory partialUpdate(NewsCategoryDto dto, @MappingTarget NewsCategory entity);
+	public abstract NewsCategory partialUpdate(NewsCategoryDto dto, @MappingTarget NewsCategory entity);
 }

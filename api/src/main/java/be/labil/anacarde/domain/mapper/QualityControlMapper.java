@@ -4,29 +4,26 @@ import be.labil.anacarde.domain.dto.QualityControlDto;
 import be.labil.anacarde.domain.model.QualityControl;
 import org.mapstruct.*;
 
-@Mapper(componentModel = "spring", uses = {UserDetailMapper.class, ProductMapper.class, QualityMapper.class,
-		DocumentMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface QualityControlMapper extends GenericMapper<QualityControlDto, QualityControl> {
+@Mapper(componentModel = "spring", uses = {HibernateLazyCondition.class, UserDetailMapper.class, ProductMapper.class,
+		QualityMapper.class, DocumentMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public abstract class QualityControlMapper {
 
-	@Override
 	@Mapping(source = "qualityInspector", target = "qualityInspector")
 	@Mapping(source = "product", target = "product")
 	@Mapping(source = "quality", target = "quality")
 	@Mapping(source = "document", target = "document")
-	QualityControlDto toDto(QualityControl entity);
+	public abstract QualityControlDto toDto(QualityControl entity);
 
-	@Override
 	@Mapping(source = "qualityInspector", target = "qualityInspector")
 	@Mapping(source = "product", target = "product")
 	@Mapping(source = "quality", target = "quality")
 	@Mapping(source = "document", target = "document")
-	QualityControl toEntity(QualityControlDto dto);
+	public abstract QualityControl toEntity(QualityControlDto dto);
 
-	@Override
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 	@Mapping(source = "qualityInspector", target = "qualityInspector")
 	@Mapping(source = "product", target = "product")
 	@Mapping(source = "quality", target = "quality")
 	@Mapping(source = "document", target = "document")
-	QualityControl partialUpdate(QualityControlDto dto, @MappingTarget QualityControl entity);
+	public abstract QualityControl partialUpdate(QualityControlDto dto, @MappingTarget QualityControl entity);
 }

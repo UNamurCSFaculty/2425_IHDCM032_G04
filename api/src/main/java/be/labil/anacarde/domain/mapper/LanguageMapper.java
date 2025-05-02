@@ -5,11 +5,9 @@ import be.labil.anacarde.domain.model.Language;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface LanguageMapper extends GenericMapper<LanguageDto, Language> {
+public abstract class LanguageMapper {
 
-	@Override
-	Language toEntity(LanguageDto dto);
+	public abstract Language toEntity(LanguageDto dto);
 
-	@Override
-	LanguageDto toDto(Language entity);
+	public abstract LanguageDto toDto(Language entity);
 }
