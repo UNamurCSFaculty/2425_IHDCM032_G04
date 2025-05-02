@@ -13,10 +13,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class QualityControl {
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_quality_control")
-	private Integer id;
+public class QualityControl extends BaseEntity {
 
 	@Column(nullable = false)
 	private String identifier;

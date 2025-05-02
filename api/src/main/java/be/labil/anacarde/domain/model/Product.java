@@ -17,10 +17,7 @@ import org.hibernate.annotations.CreationTimestamp;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public abstract class Product {
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_seq")
-	private Integer id;
+public abstract class Product extends BaseEntity {
 
 	@Column(nullable = false, updatable = false)
 	@CreationTimestamp

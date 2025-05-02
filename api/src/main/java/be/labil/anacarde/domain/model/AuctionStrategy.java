@@ -14,10 +14,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class AuctionStrategy {
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_strategy")
-	private Integer id;
+public class AuctionStrategy extends BaseEntity {
 
 	@Column(nullable = false)
 	private String name;

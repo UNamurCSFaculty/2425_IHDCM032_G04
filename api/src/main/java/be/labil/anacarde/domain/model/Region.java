@@ -2,18 +2,16 @@ package be.labil.anacarde.domain.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "region")
 @Getter
 @Setter
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Region {
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_region")
-	private Integer id;
+public class Region extends BaseEntity {
 
 	@Column(nullable = false)
 	private String name;

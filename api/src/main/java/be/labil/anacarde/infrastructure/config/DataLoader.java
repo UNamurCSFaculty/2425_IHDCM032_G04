@@ -9,6 +9,7 @@ import be.labil.anacarde.domain.dto.user.UserDetailDto;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Profile("dev")
 @RequiredArgsConstructor
+@Slf4j
 public class DataLoader implements CommandLineRunner {
 
 	private final StoreService storeService;
@@ -32,6 +34,10 @@ public class DataLoader implements CommandLineRunner {
 	@Override
 	public void run(String... args) {
 
+		if (!userService.listUsers().isEmpty()) {
+			log.info("Database already initialized");
+			return;
+		}
 		databaseService.dropDatabase();
 
 		// 1. Langue

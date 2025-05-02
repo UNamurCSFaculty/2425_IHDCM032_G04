@@ -2,6 +2,7 @@ package be.labil.anacarde.domain.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "quality")
@@ -9,11 +10,8 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class Quality {
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_quality")
-	private Integer id;
+@SuperBuilder
+public class Quality extends BaseEntity {
 
 	@Column(nullable = false)
 	private String name;

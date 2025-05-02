@@ -19,7 +19,7 @@ class NewsMapperTest {
 
 	@Test
 	void shouldMapToDto() {
-		NewsCategory category = new NewsCategory(1, "Économie");
+		NewsCategory category = NewsCategory.builder().id(1).name("Économie").build();
 
 		News news = new News();
 		news.setId(10);
@@ -71,7 +71,7 @@ class NewsMapperTest {
 
 	@Test
 	void shouldPartialUpdateEntity() {
-		NewsCategory existingCategory = new NewsCategory(5, "Sport");
+		NewsCategory existingCategory = NewsCategory.builder().id(5).name("Sport").build();
 
 		News existing = new News();
 		existing.setId(1);

@@ -12,11 +12,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Translation {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "translation_seq")
-	private Integer id;
+public class Translation extends BaseEntity {
 
 	@Column(name = "translation_key", nullable = false, unique = true)
 	private String key;

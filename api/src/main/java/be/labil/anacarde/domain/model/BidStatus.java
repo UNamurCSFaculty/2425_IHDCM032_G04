@@ -14,10 +14,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class BidStatus {
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_offer_status")
-	private Integer id;
+public class BidStatus extends BaseEntity {
 
 	@Column(nullable = false)
 	private String name;

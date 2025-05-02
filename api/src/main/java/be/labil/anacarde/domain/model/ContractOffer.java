@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
@@ -12,11 +13,8 @@ import org.hibernate.annotations.CreationTimestamp;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class ContractOffer {
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_contract_offer")
-	private Integer id;
+@SuperBuilder
+public class ContractOffer extends BaseEntity {
 
 	@Column(nullable = false)
 	private String status;

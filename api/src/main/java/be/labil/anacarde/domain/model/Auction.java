@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Set;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
@@ -13,11 +14,8 @@ import org.hibernate.annotations.CreationTimestamp;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class Auction {
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_auction")
-	private Integer id;
+@SuperBuilder
+public class Auction extends BaseEntity {
 
 	@Column(nullable = false)
 	private BigDecimal price;

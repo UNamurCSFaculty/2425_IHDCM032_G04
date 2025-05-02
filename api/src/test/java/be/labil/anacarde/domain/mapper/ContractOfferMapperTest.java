@@ -33,7 +33,7 @@ class ContractOfferMapperTest {
 		buyer.setFirstName("Bob");
 		buyer.setEmail("bob@market.com");
 
-		Quality quality = new Quality(1, "Qualité Premium");
+		Quality quality = Quality.builder().id(1).name("Qualité Premium").build();
 
 		ContractOffer entity = new ContractOffer();
 		entity.setId(10);

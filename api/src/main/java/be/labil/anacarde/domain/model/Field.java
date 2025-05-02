@@ -2,6 +2,7 @@ package be.labil.anacarde.domain.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import org.locationtech.jts.geom.Point;
@@ -10,13 +11,10 @@ import org.locationtech.jts.geom.Point;
 @Table(name = "field")
 @Getter
 @Setter
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Field {
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_field")
-	private Integer id;
+public class Field extends BaseEntity {
 
 	@Column(nullable = false, unique = true)
 	private String identifier;

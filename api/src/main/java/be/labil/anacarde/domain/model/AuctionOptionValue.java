@@ -12,10 +12,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuctionOptionValue {
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_auction_option_value")
-	private Integer id;
+public class AuctionOptionValue extends BaseEntity {
 
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "auction_option_id", nullable = false)

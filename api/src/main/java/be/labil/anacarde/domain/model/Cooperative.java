@@ -3,6 +3,7 @@ package be.labil.anacarde.domain.model;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
@@ -11,11 +12,8 @@ import org.hibernate.annotations.CreationTimestamp;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class Cooperative {
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_cooperative")
-	private Integer id;
+@SuperBuilder
+public class Cooperative extends BaseEntity {
 
 	@Column(nullable = false)
 	private String name;

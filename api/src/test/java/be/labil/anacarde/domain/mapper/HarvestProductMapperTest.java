@@ -26,8 +26,9 @@ class HarvestProductMapperTest {
 		producer.setId(20);
 		Store store = new Store();
 		store.setId(10);
+
 		HarvestProduct entity = HarvestProduct.builder().id(1).store(store).producer(producer)
-				.field(new Field(30, "F001", null, null)).build();
+				.field(Field.builder().id(30).identifier("F002").build()).build();
 
 		HarvestProductDto dto = mapper.toDto(entity);
 
