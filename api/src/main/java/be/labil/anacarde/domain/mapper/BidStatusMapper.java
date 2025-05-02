@@ -6,11 +6,9 @@ import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface BidStatusMapper extends GenericMapper<BidStatusDto, BidStatus> {
+public abstract class BidStatusMapper {
 
-	@Override
-	BidStatusDto toDto(BidStatus status);
+	public abstract BidStatusDto toDto(BidStatus status);
 
-	@Override
-	BidStatus toEntity(BidStatusDto dto);
+	public abstract BidStatus toEntity(BidStatusDto dto);
 }

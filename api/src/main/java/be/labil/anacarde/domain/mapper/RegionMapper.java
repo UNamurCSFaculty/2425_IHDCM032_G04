@@ -5,15 +5,12 @@ import be.labil.anacarde.domain.model.Region;
 import org.mapstruct.*;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface RegionMapper extends GenericMapper<RegionDto, Region> {
+public abstract class RegionMapper {
 
-	@Override
-	Region toEntity(RegionDto dto);
+	public abstract Region toEntity(RegionDto dto);
 
-	@Override
-	RegionDto toDto(Region entity);
+	public abstract RegionDto toDto(Region entity);
 
-	@Override
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-	Region partialUpdate(RegionDto dto, @MappingTarget Region entity);
+	public abstract Region partialUpdate(RegionDto dto, @MappingTarget Region entity);
 }

@@ -2,15 +2,15 @@ package be.labil.anacarde.domain.mapper;
 
 import be.labil.anacarde.domain.dto.QualityDto;
 import be.labil.anacarde.domain.model.Quality;
-import org.mapstruct.Mapper;
-import org.mapstruct.ReportingPolicy;
+import org.mapstruct.*;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface QualityMapper extends GenericMapper<QualityDto, Quality> {
+public abstract class QualityMapper {
 
-	@Override
-	QualityDto toDto(Quality entity);
+	public abstract QualityDto toDto(Quality entity);
 
-	@Override
-	Quality toEntity(QualityDto dto);
+	public abstract Quality toEntity(QualityDto dto);
+
+	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+	public abstract Quality partialUpdate(QualityDto dto, @MappingTarget Quality entity);
 }

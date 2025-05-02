@@ -5,11 +5,9 @@ import be.labil.anacarde.domain.model.AuctionOption;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface AuctionOptionMapper extends GenericMapper<AuctionOptionDto, AuctionOption> {
+public abstract class AuctionOptionMapper {
 
-	@Override
-	AuctionOption toEntity(AuctionOptionDto dto);
+	public abstract AuctionOption toEntity(AuctionOptionDto dto);
 
-	@Override
-	AuctionOptionDto toDto(AuctionOption entity);
+	public abstract AuctionOptionDto toDto(AuctionOption entity);
 }

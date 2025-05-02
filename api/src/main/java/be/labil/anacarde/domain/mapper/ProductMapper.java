@@ -8,11 +8,11 @@ import be.labil.anacarde.domain.model.Product;
 import be.labil.anacarde.domain.model.TransformedProduct;
 import org.mapstruct.*;
 
-@Mapper(componentModel = "spring", uses = {DocumentMapper.class, UserDetailMapper.class, StoreMapper.class,
-		FieldMapper.class})
-public interface ProductMapper extends GenericMapper<ProductDto, Product> {
+@Mapper(componentModel = "spring", uses = {HibernateLazyCondition.class, DocumentMapper.class, UserDetailMapper.class,
+		StoreMapper.class, FieldMapper.class})
+public abstract class ProductMapper {
 
-	default Product toEntity(ProductDto dto) {
+	public Product toEntity(ProductDto dto) {
 		if (dto instanceof HarvestProductDto) {
 			return toEntity((HarvestProductDto) dto);
 		} else if (dto instanceof TransformedProductDto) {
@@ -21,7 +21,7 @@ public interface ProductMapper extends GenericMapper<ProductDto, Product> {
 		throw new IllegalArgumentException("Type de ProductDto non supporté : " + dto.getClass().getName());
 	}
 
-	default ProductDto toDto(Product entity) {
+	public ProductDto toDto(Product entity) {
 		if (entity instanceof HarvestProduct) {
 			return toDto((HarvestProduct) entity);
 		} else if (entity instanceof TransformedProduct) {
@@ -30,7 +30,7 @@ public interface ProductMapper extends GenericMapper<ProductDto, Product> {
 		throw new IllegalArgumentException("Type de Product non supporté : " + entity.getClass().getName());
 	}
 
-	default Product partialUpdate(ProductDto dto, Product entity) {
+	public Product partialUpdate(ProductDto dto, Product entity) {
 		if (dto instanceof HarvestProductDto && entity instanceof HarvestProduct) {
 			return partialUpdate((HarvestProductDto) dto, (HarvestProduct) entity);
 		} else if (dto instanceof TransformedProductDto && entity instanceof TransformedProduct) {
@@ -44,40 +44,41 @@ public interface ProductMapper extends GenericMapper<ProductDto, Product> {
 	@Mapping(source = "producer", target = "producer")
 	@Mapping(source = "field", target = "field")
 	@Mapping(target = "qualityControl", ignore = true)
-	HarvestProduct toEntity(HarvestProductDto dto);
+	public abstract HarvestProduct toEntity(HarvestProductDto dto);
 
 	// Mapping inverse vers le DTO
 	@Mapping(source = "store", target = "store")
 	@Mapping(source = "producer", target = "producer")
 	@Mapping(source = "field", target = "field")
 	@Mapping(target = "qualityControlId", ignore = true)
-	HarvestProductDto toDto(HarvestProduct entity);
+	public abstract HarvestProductDto toDto(HarvestProduct entity);
 
 	// Mapping vers l'entité
 	@Mapping(source = "identifier", target = "identifier")
 	@Mapping(source = "location", target = "location")
 	@Mapping(source = "transformer", target = "transformer")
 	@Mapping(target = "qualityControl", ignore = true)
-	TransformedProduct toEntity(TransformedProductDto dto);
+	public abstract TransformedProduct toEntity(TransformedProductDto dto);
 
 	// Mapping inverse vers le DTO
 	@Mapping(source = "identifier", target = "identifier")
 	@Mapping(source = "location", target = "location")
 	@Mapping(source = "transformer", target = "transformer")
 	@Mapping(target = "qualityControlId", ignore = true)
-	TransformedProductDto toDto(TransformedProduct entity);
+	public abstract TransformedProductDto toDto(TransformedProduct entity);
 
 	@Mapping(source = "identifier", target = "identifier")
 	@Mapping(source = "location", target = "location")
 	@Mapping(source = "transformer", target = "transformer")
 	@Mapping(target = "qualityControl", ignore = true)
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-	TransformedProduct partialUpdate(TransformedProductDto dto, @MappingTarget TransformedProduct entity);
+	public abstract TransformedProduct partialUpdate(TransformedProductDto dto,
+			@MappingTarget TransformedProduct entity);
 
 	@Mapping(source = "store", target = "store")
 	@Mapping(source = "producer", target = "producer")
 	@Mapping(source = "field", target = "field")
 	@Mapping(target = "qualityControl", ignore = true)
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-	HarvestProduct partialUpdate(HarvestProductDto dto, @MappingTarget HarvestProduct entity);
+	public abstract HarvestProduct partialUpdate(HarvestProductDto dto, @MappingTarget HarvestProduct entity);
 }

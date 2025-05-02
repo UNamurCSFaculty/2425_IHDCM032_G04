@@ -4,19 +4,17 @@ import be.labil.anacarde.domain.dto.NewsDto;
 import be.labil.anacarde.domain.model.News;
 import org.mapstruct.*;
 
-@Mapper(componentModel = "spring", uses = {NewsCategoryMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface NewsMapper extends GenericMapper<NewsDto, News> {
+@Mapper(componentModel = "spring", uses = {HibernateLazyCondition.class,
+		NewsCategoryMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public abstract class NewsMapper {
 
-	@Override
 	@Mapping(source = "category", target = "category")
-	NewsDto toDto(News entity);
+	public abstract NewsDto toDto(News entity);
 
-	@Override
 	@Mapping(source = "category", target = "category")
-	News toEntity(NewsDto dto);
+	public abstract News toEntity(NewsDto dto);
 
-	@Override
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 	@Mapping(source = "category", target = "category")
-	News partialUpdate(NewsDto dto, @MappingTarget News entity);
+	public abstract News partialUpdate(NewsDto dto, @MappingTarget News entity);
 }
