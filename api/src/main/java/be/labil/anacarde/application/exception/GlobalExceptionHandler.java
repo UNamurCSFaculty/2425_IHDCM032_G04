@@ -16,6 +16,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingPathVariableException;
@@ -75,7 +76,8 @@ public class GlobalExceptionHandler {
 	 */
 	@ExceptionHandler(ResourceNotFoundException.class)
 	public ResponseEntity<ErrorResponse> handleResourceNotFound(ResourceNotFoundException ex) {
-		return new ResponseEntity<>(new ErrorResponse(ex.getMessage()), HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>(new ErrorResponse(ex.getMessage(), HttpStatus.NOT_FOUND.value()),
+				HttpStatus.NOT_FOUND);
 	}
 
 	/**
@@ -89,7 +91,8 @@ public class GlobalExceptionHandler {
 	 */
 	@ExceptionHandler(BadRequestException.class)
 	public ResponseEntity<ErrorResponse> handleBadRequestException(BadRequestException ex) {
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(ex.getMessage()));
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+				.body(new ErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
 	}
 
 	/**
@@ -112,7 +115,7 @@ public class GlobalExceptionHandler {
 		// Réalise une recherche du message localisé en fonction du code d'erreur extrait
 		String message = messageSource.getMessage(errorCode, null, defaultMessage, LocaleContextHolder.getLocale());
 
-		return new ResponseEntity<>(new ErrorResponse(message), HttpStatus.CONFLICT);
+		return new ResponseEntity<>(new ErrorResponse(message, HttpStatus.CONFLICT.value()), HttpStatus.CONFLICT);
 	}
 
 	/**
@@ -155,7 +158,8 @@ public class GlobalExceptionHandler {
 		} else {
 			message = "Message HTTP illisible.";
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(message));
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+				.body(new ErrorResponse(message, HttpStatus.BAD_REQUEST.value()));
 	}
 
 	/**
@@ -170,7 +174,8 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(StaleObjectStateException.class)
 	public ResponseEntity<ErrorResponse> handleStaleObjectStateException(StaleObjectStateException ex) {
 		return ResponseEntity.status(HttpStatus.CONFLICT)
-				.body(new ErrorResponse("La ressource a été modifiée par un autre utilisateur. Veuillez réessayer."));
+				.body(new ErrorResponse("La ressource a été modifiée par un autre utilisateur. Veuillez réessayer.",
+						HttpStatus.CONFLICT.value()));
 	}
 
 	/**
@@ -185,8 +190,10 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<ErrorResponse> handleGenericExceptions(Exception ex) {
 
 		log.error("Unhandled internal error", ex);
-		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse(
-				"Une erreur interne s'est produite. Veuillez contacter le support si le problème persiste."));
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+				.body(new ErrorResponse(
+						"Une erreur interne s'est produite. Veuillez contacter le support si le problème persiste.",
+						HttpStatus.INTERNAL_SERVER_ERROR.value()));
 	}
 
 	/**
@@ -199,7 +206,8 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(NoHandlerFoundException.class)
 	public ResponseEntity<ErrorResponse> handleNoHandlerFoundException(NoHandlerFoundException ex) {
 		String message = "Aucun endpoint ne correspond à l'URL " + ex.getRequestURL();
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(message));
+		return ResponseEntity.status(HttpStatus.NOT_FOUND)
+				.body(new ErrorResponse(message, HttpStatus.NOT_FOUND.value()));
 	}
 
 	/**
@@ -216,7 +224,7 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<ErrorResponse> handleMissingPathVariableException(HttpServletRequest request,
 			MissingPathVariableException ex) {
 		String message = "Le paramètre de chemin manquant : " + ex.getVariableName();
-		ErrorResponse errorResponse = new ErrorResponse(message);
+		ErrorResponse errorResponse = new ErrorResponse(message, HttpStatus.BAD_REQUEST.value());
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
 	}
 
@@ -234,7 +242,22 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<ErrorResponse> handleMissingServletRequestParameterException(HttpServletRequest request,
 			MissingServletRequestParameterException ex) {
 		String message = "Le paramètre de requête manquant : " + ex.getParameterName();
-		ErrorResponse errorResponse = new ErrorResponse(message);
+		ErrorResponse errorResponse = new ErrorResponse(message, HttpStatus.BAD_REQUEST.value());
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+	}
+
+	/**
+	 * Retourne une réponse d'erreur avec le statut HTTP UNAUTHORIZED lorsqu'une exception AuthenticationException est
+	 * levée.
+	 *
+	 * @param ex
+	 *            L'exception AuthenticationException levée.
+	 * @return Une ResponseEntity contenant un objet ErrorResponse avec un message d'erreur et le statut HTTP
+	 *         UNAUTHORIZED.
+	 */
+	@ExceptionHandler(AuthenticationException.class)
+	public ResponseEntity<ErrorResponse> handleAuthenticationException(AuthenticationException ex) {
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+				new ErrorResponse("Échec de l'authentification : " + ex.getMessage(), HttpStatus.UNAUTHORIZED.value()));
 	}
 }

@@ -16,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,31 +35,27 @@ public class AuthenticationApiController implements AuthenticationApi {
 
 	@Override
 	public ResponseEntity<UserDetailDto> authenticateUser(LoginRequest loginRequest, HttpServletResponse response) {
-		try {
-			Authentication authentication = authenticationManager.authenticate(
-					new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+		Authentication authentication = authenticationManager.authenticate(
+				new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
-			String jwt = jwtUtil.generateToken(
-					(org.springframework.security.core.userdetails.UserDetails) authentication.getPrincipal());
+		String jwt = jwtUtil.generateToken(
+				(org.springframework.security.core.userdetails.UserDetails) authentication.getPrincipal());
 
-			User user = (User) authentication.getPrincipal();
+		User user = (User) authentication.getPrincipal();
 
-			Cookie jwtCookie = new Cookie("jwt", jwt);
-			jwtCookie.setHttpOnly(true);
-			boolean isProd = Arrays.stream(environment.getActiveProfiles())
-					.anyMatch(profile -> profile.equalsIgnoreCase("prod"));
-			jwtCookie.setSecure(isProd);
-			jwtCookie.setPath("/");
-			jwtCookie.setMaxAge(tokenValidityHours * 3600);
+		Cookie jwtCookie = new Cookie("jwt", jwt);
+		jwtCookie.setHttpOnly(true);
+		boolean isProd = Arrays.stream(environment.getActiveProfiles())
+				.anyMatch(profile -> profile.equalsIgnoreCase("prod"));
+		jwtCookie.setSecure(isProd);
+		jwtCookie.setPath("/");
+		jwtCookie.setMaxAge(tokenValidityHours * 3600);
 
-			response.addCookie(jwtCookie);
+		response.addCookie(jwtCookie);
 
-			UserDetailDto dto = userDetailMapper.toDto(user);
+		UserDetailDto dto = userDetailMapper.toDto(user);
 
-			return ResponseEntity.ok(dto);
-		} catch (AuthenticationException e) {
-			return ResponseEntity.status(401).build();
-		}
+		return ResponseEntity.ok(dto);
 	}
 
 	/**

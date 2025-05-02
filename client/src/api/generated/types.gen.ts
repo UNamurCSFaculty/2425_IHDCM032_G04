@@ -1096,6 +1096,30 @@ export type LoginRequest = {
 };
 
 /**
+ * Structure de réponse pour les erreurs de validation
+ */
+export type ValidationErrorResponse = {
+    /**
+     * Map des erreurs de validation (champ -> message)
+     */
+    errors?: {
+        [key: string]: string;
+    };
+    status?: number;
+};
+
+/**
+ * Error response structure
+ */
+export type ErrorResponse = {
+    /**
+     * Message d'erreur
+     */
+    error?: string;
+    status?: number;
+};
+
+/**
  * Objet de transfert de données pour les administrateurs.
  */
 export type AdminListDtoReadable = UserListDtoReadable & {
@@ -3279,11 +3303,11 @@ export type AuthenticateUserErrors = {
     /**
      * Requête mal formée (loginRequest invalide)
      */
-    400: AdminDetailDtoReadable | CarrierDetailDtoReadable | QualityInspectorDetailDtoReadable | TraderDetailDtoReadable | ExporterDetailDtoReadable | ProducerDetailDtoReadable | TransformerDetailDtoReadable;
+    400: ValidationErrorResponse;
     /**
      * Échec de l'authentification
      */
-    401: AdminDetailDtoReadable | CarrierDetailDtoReadable | QualityInspectorDetailDtoReadable | TraderDetailDtoReadable | ExporterDetailDtoReadable | ProducerDetailDtoReadable | TransformerDetailDtoReadable;
+    401: ErrorResponse;
 };
 
 export type AuthenticateUserError = AuthenticateUserErrors[keyof AuthenticateUserErrors];

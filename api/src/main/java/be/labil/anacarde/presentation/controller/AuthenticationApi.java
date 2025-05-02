@@ -1,5 +1,7 @@
 package be.labil.anacarde.presentation.controller;
 
+import be.labil.anacarde.application.exception.ErrorResponse;
+import be.labil.anacarde.application.exception.ValidationErrorResponse;
 import be.labil.anacarde.domain.dto.user.UserDetailDto;
 import be.labil.anacarde.domain.model.User;
 import be.labil.anacarde.presentation.payload.LoginRequest;
@@ -45,8 +47,8 @@ public interface AuthenticationApi {
 			+ "sous forme de cookie HTTP-only ainsi que son UserDetailDto")
 	@ApiResponses({
 			@ApiResponse(responseCode = "200", description = "Utilisateur authentifié avec succès", content = @Content(schema = @Schema(implementation = UserDetailDto.class))),
-			@ApiResponse(responseCode = "400", description = "Requête mal formée (loginRequest invalide)"),
-			@ApiResponse(responseCode = "401", description = "Échec de l'authentification")})
+			@ApiResponse(responseCode = "400", description = "Requête mal formée (loginRequest invalide)", content = @Content(schema = @Schema(implementation = ValidationErrorResponse.class))),
+			@ApiResponse(responseCode = "401", description = "Échec de l'authentification", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))})
 	@PostMapping("/signin")
 	ResponseEntity<UserDetailDto> authenticateUser(
 			@Parameter(description = "Identifiants de connexion", required = true, schema = @Schema(implementation = LoginRequest.class)) @NotNull(message = "Les identifiants de connexion sont obligatoires") @Valid @RequestBody LoginRequest loginRequest,
