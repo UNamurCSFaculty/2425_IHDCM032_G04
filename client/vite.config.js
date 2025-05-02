@@ -6,11 +6,22 @@ import eslint from 'vite-plugin-eslint'
 import { TanStackRouterVite } from '@tanstack/router-plugin/vite'
 import { resolve } from 'node:path'
 
+const babelPlugins = [['babel-plugin-react-compiler', {}]]
+
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   plugins: [
     TanStackRouterVite({ autoCodeSplitting: true }),
-    viteReact(),
+    viteReact({
+      babel: {
+        plugins: [
+          ...babelPlugins,
+          ...(command === 'serve'
+            ? [['@babel/plugin-transform-react-jsx-development']]
+            : []),
+        ],
+      },
+    }),
     tailwindcss(),
     eslint({
       lintOnStart: true,
@@ -32,4 +43,4 @@ export default defineConfig({
       '@': resolve(__dirname, './src'),
     },
   },
-})
+}))
