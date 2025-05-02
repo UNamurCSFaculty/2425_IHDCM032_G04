@@ -27,13 +27,15 @@ class InterestMapperTest {
 		trader.setId(1);
 		trader.setFirstName("John Doe");
 
-		Quality quality = new Quality(1, "Premium");
+		Quality quality = Quality.builder().id(1).name("Premium").build();
 
 		LocalDateTime intentionDate = LocalDateTime.of(2024, 4, 10, 12, 0);
-		Intention intention = new Intention(1, BigDecimal.valueOf(2000), intentionDate, 100, quality, trader);
+		Intention intention = Intention.builder().id(1).price(BigDecimal.valueOf(2000)).date(intentionDate)
+				.quantity(100).quality(quality).buyer(trader).build();
 
 		LocalDateTime interestDate = LocalDateTime.of(2024, 4, 11, 14, 0);
-		Interest interest = new Interest(10, BigDecimal.valueOf(1500), interestDate, intention, trader);
+		Interest interest = Interest.builder().id(10).price(BigDecimal.valueOf(1500)).date(interestDate)
+				.intention(intention).buyer(trader).build();
 
 		InterestDto dto = interestMapper.toDto(interest);
 
@@ -113,10 +115,10 @@ class InterestMapperTest {
 		trader.setId(5);
 		trader.setFirstName("Jane Smith");
 
-		Quality quality = new Quality(6, "Standard");
-
+		Quality quality = Quality.builder().id(6).name("Standard").build();
 		LocalDateTime intentionDate = LocalDateTime.of(2023, 12, 31, 8, 0);
-		Intention intention = new Intention(20, BigDecimal.valueOf(2200), intentionDate, 300, quality, trader);
+		Intention intention = Intention.builder().id(20).price(BigDecimal.valueOf(2200)).date(intentionDate)
+				.quantity(300).quality(quality).buyer(trader).build();
 		entity.setIntention(intention);
 		entity.setBuyer(trader);
 

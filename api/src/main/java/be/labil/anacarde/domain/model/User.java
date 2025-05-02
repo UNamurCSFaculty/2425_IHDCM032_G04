@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.proxy.HibernateProxy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,11 +23,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @NoArgsConstructor
 @AllArgsConstructor
 /** Entité représentant un utilisateur dans le système. */
-public abstract class User implements UserDetails {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
-	private Integer id;
+public abstract class User extends BaseEntity implements UserDetails {
 
 	@Column(nullable = false)
 	private String lastName;
@@ -168,40 +163,5 @@ public abstract class User implements UserDetails {
 	@Override
 	public boolean isEnabled() {
 		return enabled;
-	}
-
-	/**
-	 * La comparaison est basée sur l'identifiant unique de l'utilisateur. Une gestion particulière est prévue pour
-	 * comparer correctement les instances proxy gérées par Hibernate.
-	 *
-	 * @param o
-	 *            L'objet à comparer avec cet utilisateur.
-	 * @return true si l'objet donné représente le même utilisateur ; sinon, false.
-	 */
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null) return false;
-		Class<?> oEffectiveClass = o instanceof HibernateProxy
-				? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass()
-				: o.getClass();
-		Class<?> thisEffectiveClass = this instanceof HibernateProxy
-				? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass()
-				: this.getClass();
-		if (thisEffectiveClass != oEffectiveClass) return false;
-		User that = (User) o;
-		return getId() != null && Objects.equals(getId(), that.getId());
-	}
-
-	/**
-	 * Le hash code est basé sur le type de la classe, en tenant compte des instances proxy de Hibernate.
-	 *
-	 * @return Le hash code en tant qu'entier.
-	 */
-	@Override
-	public int hashCode() {
-		return this instanceof HibernateProxy
-				? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode()
-				: getClass().hashCode();
 	}
 }

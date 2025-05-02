@@ -13,10 +13,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Notification {
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_notification")
-	private Integer id;
+public class Notification extends BaseEntity {
 
 	@Column(nullable = false)
 	private String message;

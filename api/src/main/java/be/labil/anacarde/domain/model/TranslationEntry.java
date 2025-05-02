@@ -13,11 +13,7 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TranslationEntry {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "translation_entry_seq")
-	private Integer id;
+public class TranslationEntry extends BaseEntity {
 
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "translation_id", nullable = false)

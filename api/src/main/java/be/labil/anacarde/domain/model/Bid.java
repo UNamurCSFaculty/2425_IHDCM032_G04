@@ -17,10 +17,7 @@ import org.hibernate.annotations.CreationTimestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class Bid {
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_purchase_offer")
-	private Integer id;
+public class Bid extends BaseEntity {
 
 	@Column(nullable = false)
 	private BigDecimal amount;

@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
@@ -15,10 +16,8 @@ import org.hibernate.annotations.CreationTimestamp;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Intention {
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_intention")
-	private Integer id;
+@SuperBuilder
+public class Intention extends BaseEntity {
 
 	@Column(nullable = false)
 	private BigDecimal price;
