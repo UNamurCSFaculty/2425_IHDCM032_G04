@@ -18,4 +18,5 @@ import lombok.Setter;
 public class ErrorResponse {
 	@Schema(description = "Message d'erreur", example = "Ressource introuvable")
 	private String error;
+	int status;
 }

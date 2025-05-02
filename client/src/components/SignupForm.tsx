@@ -27,8 +27,8 @@ export function SignupForm() {
     },
   })
 
-  console.log(form.state.values.type)
   const type = useStore(form.store, state => state.values.type)
+  const canSubmit = useStore(form.store, state => state.canSubmit)
 
   return (
     <section className="body-font relative text-gray-600">
@@ -136,7 +136,9 @@ export function SignupForm() {
             </div>
             <div className="flex w-full items-center justify-center gap-4 p-2">
               <form.AppForm>
-                <form.SubmitButton>Envoyer</form.SubmitButton>
+                <form.SubmitButton disabled={!canSubmit}>
+                  Envoyer
+                </form.SubmitButton>
                 <form.ResetButton>Réinitialiser</form.ResetButton>
               </form.AppForm>
             </div>

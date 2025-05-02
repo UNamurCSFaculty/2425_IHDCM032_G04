@@ -20,4 +20,5 @@ import lombok.Setter;
 public class ValidationErrorResponse {
 	@Schema(description = "Map des erreurs de validation (champ -> message)", example = "{\"name\": \"Le nom ne doit pas être vide\"}")
 	private Map<String, String> errors;
+	final int status = 400;
 }

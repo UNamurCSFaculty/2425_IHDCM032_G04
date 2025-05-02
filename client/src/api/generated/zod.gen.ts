@@ -248,6 +248,16 @@ export const zLoginRequest = z.object({
     password: z.string()
 });
 
+export const zValidationErrorResponse = z.object({
+    errors: z.object({}).optional(),
+    status: z.number().int().optional()
+});
+
+export const zErrorResponse = z.object({
+    error: z.string().optional(),
+    status: z.number().int().optional()
+});
+
 export const zUserListDto = z.object({
     id: z.number().int().readonly().optional(),
     firstName: z.string().min(1),
