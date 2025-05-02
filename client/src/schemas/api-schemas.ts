@@ -9,7 +9,7 @@ export const zRole = z.object({
 })
 
 export const zLanguage = z.object({
-  id: z.number().int().readonly().optional(),
+  id: z.number().int().readonly(),
   name: z.string().min(1),
 })
 
@@ -24,58 +24,55 @@ export const zUser = z.object({
   registrationDate: z.iso.datetime().readonly().optional(),
   validationDate: z.iso.datetime().readonly().optional(),
   enabled: z.boolean().optional(),
-  address: z.string().optional(),
-  phone: z
-      .string()
-      .regex(/^(?:\+229)?(?:01[2-9]\d{7}|[2-9]\d{7})$/)
-      .optional(),
-  password: z.string().optional(),
-  roles: z.array(zRole).readonly().optional(),
+  address: z.string().min(1),
+  phone: z.string().regex(/^(?:\+229)?(?:01[2-9]\d{7}|[2-9]\d{7})$/),
+  password: z.string().min(8),
   language: zLanguage,
+  agriculturalIdentifier: z.string().min(1),
 })
 
 const zProducer = zUser.extend({
-  type: z.literal("producer"),
+  type: z.literal('producer'),
   agriculturalIdentifier: z.string().min(1),
 })
 
 const zTransformer = zUser.extend({
-  type: z.literal("transformer"),
+  type: z.literal('transformer'),
 })
 
 const zCarrier = zUser.extend({
-  type: z.literal("carrier"),
+  type: z.literal('carrier'),
   pricePerKm: z.number().positive(),
   regionIds: z.array(z.number().int()).nonempty(),
 })
 
 const zExporter = zUser.extend({
-  type: z.literal("exporter"),
+  type: z.literal('exporter'),
 })
 
 const zQualityInspector = zUser.extend({
-  type: z.literal("quality_inspector"),
+  type: z.literal('quality_inspector'),
 })
 
-export const zUserRegistration = z.discriminatedUnion("type", [
-  zProducer,
-  zTransformer,
-  zCarrier,
-  zExporter,
-  zQualityInspector,
-]).and(
+export const zUserRegistration = z
+  .discriminatedUnion('type', [
+    zProducer,
+    zTransformer,
+    zCarrier,
+    zExporter,
+    zQualityInspector,
+  ])
+  .and(
     z.object({
       passwordValidation: z.string(),
     })
-).refine(
-    data => data.password === data.passwordValidation,
-    {
-      path: ['passwordValidation'],
-      message: 'Les mots de passe ne correspondent pas',
-    },
-)
+  )
+  .refine(data => data.password === data.passwordValidation, {
+    path: ['passwordValidation'],
+    message: 'Les mots de passe ne correspondent pas',
+  })
 
-export const zTrader = z.discriminatedUnion("type", [
+export const zTrader = z.discriminatedUnion('type', [
   zExporter,
   zProducer,
   zTransformer,
@@ -134,13 +131,13 @@ export const zProduct: z.ZodObject = z.object({
 })
 
 export const zTransformedProduct = zProduct.extend({
-  type: z.literal("transformed"),
+  type: z.literal('transformed'),
   location: z.string().min(1),
   transformer: zTransformer,
 })
 
 export const zHarvestProduct = zProduct.extend({
-  type: z.literal("harvest"),
+  type: z.literal('harvest'),
   store: zStore,
   producer: zProducer,
   field: zField,
@@ -148,7 +145,7 @@ export const zHarvestProduct = zProduct.extend({
   deliveryDate: z.iso.datetime().optional(),
 })
 
-export const zProductDeposit = z.discriminatedUnion("type", [
+export const zProductDeposit = z.discriminatedUnion('type', [
   zTransformedProduct,
   zHarvestProduct,
 ])
@@ -169,22 +166,21 @@ export const zQualityControl: z.ZodObject = z.object({
   document: zDocument,
 })
 
-export const zContractOffer = z.object({
-  id: z.number().int().readonly().optional(),
-  status: z.string().min(1),
-  pricePerKg: z.number(),
-  creationDate: z.iso.datetime().readonly(),
-  endDate: z.iso.datetime(),
-  seller: zTrader,
-  buyer: zTrader,
-  quality: zQuality,
-}).refine(
-    data => data.seller.id !== data.buyer.id,
-    {
-      path: ['buyer'],
-      message: "Le vendeur et l'acheteur doivent être différents"
-    }
-)
+export const zContractOffer = z
+  .object({
+    id: z.number().int().readonly().optional(),
+    status: z.string().min(1),
+    pricePerKg: z.number(),
+    creationDate: z.iso.datetime().readonly(),
+    endDate: z.iso.datetime(),
+    seller: zTrader,
+    buyer: zTrader,
+    quality: zQuality,
+  })
+  .refine(data => data.seller.id !== data.buyer.id, {
+    path: ['buyer'],
+    message: "Le vendeur et l'acheteur doivent être différents",
+  })
 
 /**
  * Les offres avec leurs enchères, options et stratégies
