@@ -5,6 +5,10 @@
       "title": "Bienvenue",
       "message": "Prêt(e) pour vos prochaines enchères ?"
     },
+    "statut": {
+      "connection": "Connexion...",
+      "log_in": "Se Connecter"
+    },
     "loading": "Chargement…",
     "networkError": "Impossible de joindre le serveur"
   },
@@ -19,6 +23,10 @@
     "email": "Format d’email invalide",
     "phone": {
       "benin": "Numéro béninois invalide : +229XXXXXXXX ou +22901XXXXXXXX attendu"
+    },
+    "password": {
+      "does_not_natch": "Les mots de passe ne correspondent pas",
+      "too_weak": "Le mot de passe doit contenir au moins une minuscule, une majuscule, un chiffre et un caractère special"
     }
   },
   "buttons": {

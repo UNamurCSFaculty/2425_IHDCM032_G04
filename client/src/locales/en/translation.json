@@ -5,6 +5,10 @@
       "title": "Welcome",
       "message": "Ready for your next auction?"
     },
+    "statut": {
+      "connection": "Connection...",
+      "log_in": "Log In"
+    },
     "loading": "Loading…",
     "networkError": "Cannot reach server"
   },
@@ -19,6 +23,10 @@
     "email": "Invalid email format",
     "phone": {
       "benin": "Invalid Benin phone number: expected +229XXXXXXXX or +22901XXXXXXXX"
+    },
+    "password": {
+      "does_not_natch": "Passwords doesn't match",
+      "too_weak": "The password must have at least one lowercase, one capital, one digit and one special character"
     }
   },
   "buttons": {

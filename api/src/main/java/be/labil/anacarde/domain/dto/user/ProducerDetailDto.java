@@ -24,7 +24,7 @@ public class ProducerDetailDto extends TraderDetailDto {
 	@Schema(description = "Identifiant agricole", example = "AGRI123456", requiredMode = Schema.RequiredMode.REQUIRED)
 	private String agriculturalIdentifier;
 
-	/** Id de la coopérative à laquelle appartient le producteur. */
-	@Schema(description = "id de la coopérative du producteur")
+	/** Coopérative à laquelle appartient le producteur. */
+	@Schema(description = "Coopérative du producteur")
 	private CooperativeDto cooperative;
 }

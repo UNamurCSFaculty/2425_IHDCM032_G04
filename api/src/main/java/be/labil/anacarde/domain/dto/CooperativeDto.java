@@ -34,7 +34,7 @@ public class CooperativeDto {
 	@Schema(description = "Date de création", example = "2023-06-15T00:00:00", requiredMode = Schema.RequiredMode.REQUIRED)
 	private LocalDateTime creationDate;
 
-	/** Président de la coopérative. */
+	/** Id du Président de la coopérative. */
 	@NotNull
 	@Schema(description = "Président de la coopérative", requiredMode = Schema.RequiredMode.REQUIRED)
 	private Integer presidentId;

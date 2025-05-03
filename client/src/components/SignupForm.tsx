@@ -1,10 +1,21 @@
 import { zUserRegistration } from '@/schemas/api-schemas'
-import { useNavigate } from '@tanstack/react-router'
+import {useNavigate} from '@tanstack/react-router'
 import { useAppForm } from '@/components/form'
 import { useStore } from '@tanstack/react-form'
+import { useMutation } from "@tanstack/react-query";
+import { createUserMutation } from "@/api/generated/@tanstack/react-query.gen.ts";
 
-export function SignupForm() {
+
+export function SignupForm() : React.ComponentProps<'div'> {
   const navigate = useNavigate()
+
+  const signinMutation = useMutation({
+    ...createUserMutation(),
+    onSuccess(data) {
+      console.log(data)
+        navigate({ to: '/'})
+    }
+  })
 
   const form = useAppForm({
     validators: { onChange: zUserRegistration },
@@ -17,18 +28,19 @@ export function SignupForm() {
       address: '',
       password: '',
       passwordValidation: '',
-      language: { id: 1, name: 'Français' },
+      language: { id: 1352, name: "Français" },
       agriculturalIdentifier: '',
     },
-    onSubmit: async ({ value }) => {
-      // TODO: envoyer les données au serveur
-      console.log('Form submitted:', value)
-      navigate({ to: '/login' })
-    },
+    onSubmit({ value }) {
+      const validatedValue = zUserRegistration.parse(value);
+      signinMutation.mutate({ body: validatedValue})
+    }
   })
 
   const type = useStore(form.store, state => state.values.type)
   const canSubmit = useStore(form.store, state => state.canSubmit)
+
+  const isPending = signinMutation.isPending
 
   return (
     <section className="body-font relative text-gray-600">
