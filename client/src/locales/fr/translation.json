@@ -10,7 +10,15 @@
       "log_in": "Se Connecter"
     },
     "loading": "Chargement…",
-    "networkError": "Impossible de joindre le serveur"
+    "networkError": "Impossible de joindre le serveur",
+    "accueil": {
+      "titre": "Enchères & Marché du Cajou",
+      "sous_titre": "Rejoignez la plateforme d’enchères en temps réel pour la noix de\n cajou et ses produits transformés au Bénin. Surveillez,\n surenchérissez et soutenez les producteurs locaux en toute\n confiance."
+    },
+    "signup": {
+      "titre": "Contactez-nous",
+      "sous_titre": "N'hésitez pas à nous envoyer vos questions ou commentaires."
+    }
   },
   "validation": {
     "minLength": "Le champ doit avoir au moins {{count}} caractère",
@@ -29,9 +37,24 @@
       "too_weak": "Le mot de passe doit contenir au moins une minuscule, une majuscule, un chiffre et un caractère special"
     }
   },
+  "form": {
+    "type": "Je suis",
+    "last_name": "Nom",
+    "first_name": "Prénom",
+    "language": "Langue",
+    "mail": "Adresse mail",
+    "address": "adresse",
+    "phone": "Téléphone",
+    "agricultural_identifier": "Identifiant agricole",
+    "password": "Mot de passe",
+    "confirm_password": "Valider le mot de passe"
+  },
   "buttons": {
     "submit": "Envoyer",
-    "cancel": "Annuler"
+    "cancel": "Annuler",
+    "reinitialise": "Réinitialiser",
+    "connection": "Démarrer maintenant",
+    "subscribe": "Créer un compte"
   },
   "errors": {
     "unauthorized": "Vous n’êtes pas autorisé à accéder à cette ressource",

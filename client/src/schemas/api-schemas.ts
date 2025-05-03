@@ -37,7 +37,6 @@ export const zUser = z.object({
   phone: z.string().regex(/^(?:\+229)?(?:01[2-9]\d{7}|[2-9]\d{7})$/),
   password: z.string().min(8, i18n.t("validation.minLength")),
   language: zLanguage,
-  agriculturalIdentifier: z.string().min(1, i18n.t("validation.required")),
 })
 
 const zProducer = zUser.extend({

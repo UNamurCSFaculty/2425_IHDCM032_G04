@@ -8,6 +8,7 @@ import {
   SelectValue,
 } from '../ui/select'
 import { FieldErrors } from './field-errors'
+import React from "react";
 
 type Language = {
   id: number
@@ -15,11 +16,16 @@ type Language = {
 }
 
 const languages: Language[] = [
-  { id: 1, langue: 'fr'},
+  { id: 1352, langue: 'fr'},
   { id: 2, langue: 'en'},
 ]
 
-export function SelectLanguageField() {
+type SelectLanguageFieldProps = {
+    disabled: boolean
+} & React.InputHTMLAttributes<HTMLInputElement>
+
+export function SelectLanguageField({
+    disabled}: SelectLanguageFieldProps) {
   const field = useFieldContext<Language>()
   console.log(field.state.value)
   const currentId = field.state.value.id.toString()
@@ -40,7 +46,7 @@ export function SelectLanguageField() {
         </SelectTrigger>
         <SelectContent>
           {languages.map(l => (
-            <SelectItem key={l.id} value={l.id.toString()}>
+            <SelectItem key={l.id} value={l.id.toString()} disabled={disabled}>
               {l.langue}
             </SelectItem>
           ))}

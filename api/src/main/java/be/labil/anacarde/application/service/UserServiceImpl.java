@@ -45,6 +45,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	@Override
 	public UserDetailDto createUser(UserDetailDto dto) {
 		dto.setPassword(bCryptPasswordEncoder.encode(dto.getPassword()));
+		dto.setEnabled(true);
 		User user;
 		if (dto instanceof ProducerDetailDto producerDto) {
 			user = userDetailMapper.toEntity(producerDto);
