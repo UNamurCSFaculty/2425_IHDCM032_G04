@@ -15,7 +15,7 @@ export function SignupForm() : React.ComponentProps<'div'> {
     ...createUserMutation(),
     onSuccess(data) {
       console.log(data)
-        navigate({ to: '/'})
+        navigate({ to: '/login'})
     }
   })
 
