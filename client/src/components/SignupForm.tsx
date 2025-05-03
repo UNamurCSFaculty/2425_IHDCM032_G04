@@ -15,8 +15,13 @@ export function SignupForm() : React.ComponentProps<'div'> {
     ...createUserMutation(),
     onSuccess() {
         navigate({ to: '/login'})
+    },
+    onError(error) {
+      console.error("Requête invalide :", error)
     }
   })
+
+  const { isPending, isError, error } = signinMutation
 
   const form = useAppForm({
     validators: { onChange: zUserRegistration },
@@ -40,8 +45,6 @@ export function SignupForm() : React.ComponentProps<'div'> {
 
   const type = useStore(form.store, state => state.values.type)
   const canSubmit = useStore(form.store, state => state.canSubmit)
-
-  const isPending = signinMutation.isPending
 
   return (
     <section className="body-font relative text-gray-600">
@@ -150,6 +153,18 @@ export function SignupForm() : React.ComponentProps<'div'> {
                 )}
               />
             </div>
+            {isError && error?.errors?.length > 0 && (
+                <div className="flex w-full p-2 justify-center text-sm text-red-600">
+                  {error.errors.map((err, idx) => (
+                      <div key={idx}>
+                        {err.field
+                            ? `${err.field} : ${err.message}`
+                            : err.message
+                        }
+                      </div>
+                  ))}
+                </div>
+            )}
             <div className="flex w-full items-center justify-center gap-4 p-2">
               <form.AppForm>
                 <form.SubmitButton disabled={isPending || !canSubmit}>

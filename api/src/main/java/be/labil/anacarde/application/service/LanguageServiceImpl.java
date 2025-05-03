@@ -1,6 +1,6 @@
 package be.labil.anacarde.application.service;
 
-import be.labil.anacarde.application.exception.EntityNotFoundException;
+import be.labil.anacarde.application.exception.ResourceNotFoundException;
 import be.labil.anacarde.domain.dto.LanguageDto;
 import be.labil.anacarde.domain.mapper.LanguageMapper;
 import be.labil.anacarde.domain.model.Language;
@@ -30,7 +30,7 @@ public class LanguageServiceImpl implements LanguageService {
 	@Transactional(readOnly = true)
 	public LanguageDto getLanguageById(Integer id) {
 		Language language = languageRepository.findById(id)
-				.orElseThrow(() -> new EntityNotFoundException("Langue non trouvée pour l'id " + id));
+				.orElseThrow(() -> new ResourceNotFoundException("Langue non trouvée pour l'id " + id));
 		return languageMapper.toDto(language);
 	}
 
@@ -43,7 +43,7 @@ public class LanguageServiceImpl implements LanguageService {
 	@Override
 	public LanguageDto updateLanguage(Integer id, LanguageDto languageDto) {
 		Language existing = languageRepository.findById(id)
-				.orElseThrow(() -> new EntityNotFoundException("Langue non trouvée pour l'id " + id));
+				.orElseThrow(() -> new ResourceNotFoundException("Langue non trouvée pour l'id " + id));
 		// Met à jour les champs pertinents
 		existing.setName(languageDto.getName());
 		Language updated = languageRepository.save(existing);
@@ -53,7 +53,7 @@ public class LanguageServiceImpl implements LanguageService {
 	@Override
 	public void deleteLanguage(Integer id) {
 		if (!languageRepository.existsById(id)) {
-			throw new EntityNotFoundException("Langue non trouvée pour l'id " + id);
+			throw new ResourceNotFoundException("Langue non trouvée pour l'id " + id);
 		}
 		languageRepository.deleteById(id);
 	}
