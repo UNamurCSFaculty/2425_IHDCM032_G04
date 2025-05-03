@@ -26,7 +26,7 @@ public class ApiErrorResponse {
 	@Schema(description = "Chemin de la requête ayant provoqué l'erreur", example = "/api/users/123", required = true)
 	private String path;
 
-	@Schema(description = "Code interne d'erreur", example = "resource.not_found", required = true)
+	@Schema(description = "Code global d'erreur", example = "validation.error", required = true)
 	private String code;
 
 	@Schema(description = "Liste des erreurs détaillées", required = true)
