@@ -3,9 +3,12 @@ package be.labil.anacarde.application.exception;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.exc.InvalidTypeIdException;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Locale;
 import org.hibernate.StaleObjectStateException;
 import org.junit.jupiter.api.Test;
@@ -18,15 +21,21 @@ import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 public class GlobalExceptionHandlerTest {
+
+	private final HttpServletRequest request = new MockHttpServletRequest();
 
 	@Test
 	public void testExtractErrorCode() throws Exception {
@@ -46,25 +55,32 @@ public class GlobalExceptionHandlerTest {
 	}
 
 	@Test
-	public void testHandleValidationExceptions() {
+	public void testHandleValidation() {
 		MethodArgumentNotValidException ex = createTestValidationException("username", "doit être non nul");
 		GlobalExceptionHandler handler = new GlobalExceptionHandler(null);
-		ResponseEntity<ValidationErrorResponse> response = handler.handleValidationExceptions(ex);
+
+		ResponseEntity<ApiErrorResponse> response = handler.handleValidation(ex, request);
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-		ValidationErrorResponse body = response.getBody();
+		ApiErrorResponse body = response.getBody();
 		assertNotNull(body, "Le corps de la réponse ne doit pas être null");
-		assertTrue(body.getErrors().containsKey("username"), "L'erreur pour 'username' doit être présente");
+		assertNotNull(body.getErrors(), "La liste d'erreurs ne doit pas être null");
+		assertEquals(1, body.getErrors().size(), "Une seule erreur doit être présente");
+		ErrorDetail detail = body.getErrors().get(0);
+		assertEquals("username", detail.getField(), "Le champ doit être 'username'");
+		assertEquals("doit être non nul", detail.getMessage(), "Le message d'erreur doit correspondre");
 	}
 
 	@Test
 	public void testHandleResourceNotFound() {
 		ResourceNotFoundException ex = new ResourceNotFoundException("Utilisateur non trouvé");
 		GlobalExceptionHandler handler = new GlobalExceptionHandler(null);
-		ResponseEntity<ErrorResponse> response = handler.handleResourceNotFound(ex);
+
+		ResponseEntity<ApiErrorResponse> response = handler.handleNotFound(ex, request);
 		assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-		ErrorResponse body = response.getBody();
+		ApiErrorResponse body = response.getBody();
 		assertNotNull(body);
-		assertEquals("Utilisateur non trouvé", body.getError());
+		ErrorDetail detail = body.getErrors().get(0);
+		assertEquals("Utilisateur non trouvé", detail.getMessage());
 	}
 
 	@Test
@@ -72,12 +88,13 @@ public class GlobalExceptionHandlerTest {
 		BadRequestException ex = new BadRequestException("Le rôle est déjà attribué à l'utilisateur");
 		GlobalExceptionHandler handler = new GlobalExceptionHandler(null);
 
-		ResponseEntity<ErrorResponse> response = handler.handleBadRequestException(ex);
+		ResponseEntity<ApiErrorResponse> response = handler.handleBadRequest(ex, request);
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 
-		ErrorResponse body = response.getBody();
+		ApiErrorResponse body = response.getBody();
 		assertNotNull(body);
-		assertEquals("Le rôle est déjà attribué à l'utilisateur", body.getError());
+		ErrorDetail detail = body.getErrors().get(0);
+		assertEquals("Le rôle est déjà attribué à l'utilisateur", detail.getMessage());
 	}
 
 	@Test
@@ -90,56 +107,139 @@ public class GlobalExceptionHandlerTest {
 		Exception rootCause = new Exception("Violation de contrainte [password]");
 		DataIntegrityViolationException ex = new DataIntegrityViolationException("Erreur", rootCause);
 
-		ResponseEntity<ErrorResponse> response = handler.handleDataIntegrityViolation(ex);
+		ResponseEntity<ApiErrorResponse> response = handler.handleConflict(ex, request);
 		assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
-		ErrorResponse body = response.getBody();
+		ApiErrorResponse body = response.getBody();
 		assertNotNull(body);
-		assertEquals("Le mot de passe est obligatoire", body.getError());
+		ErrorDetail detail = body.getErrors().get(0);
+		assertEquals("Le mot de passe est obligatoire", detail.getMessage());
+	}
+
+	@Test
+	public void testHandleDataIntegrityViolation_DefaultError() {
+		StaticMessageSource messageSource = new StaticMessageSource();
+		LocaleContextHolder.setLocale(Locale.FRENCH);
+
+		GlobalExceptionHandler handler = new GlobalExceptionHandler(messageSource);
+		Exception rootCause = new Exception("Une autre erreur sans contrainte");
+		DataIntegrityViolationException ex = new DataIntegrityViolationException("Erreur", rootCause);
+
+		ResponseEntity<ApiErrorResponse> response = handler.handleConflict(ex, request);
+		assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
+		ApiErrorResponse body = response.getBody();
+		assertNotNull(body);
+		ErrorDetail detail = body.getErrors().get(0);
+		assertEquals("Erreur d'intégrité des données", detail.getMessage());
 	}
 
 	@Test
 	public void testHandleHttpMessageNotReadable_WithJsonParseException() {
 		HttpMessageNotReadableException ex = createHttpMessageNotReadableExceptionWithJsonParseException();
 		GlobalExceptionHandler handler = new GlobalExceptionHandler(null);
-		ResponseEntity<ErrorResponse> response = handler.handleHttpMessageNotReadable(ex);
+
+		ResponseEntity<ApiErrorResponse> response = handler.handleUnreadable(ex, request);
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-		ErrorResponse body = response.getBody();
+		ApiErrorResponse body = response.getBody();
 		assertNotNull(body);
-		assertTrue(body.getError().contains("Erreur de syntaxe JSON"));
+		ErrorDetail detail = body.getErrors().get(0);
+		assertTrue(detail.getMessage().contains("Syntaxe JSON invalide"), "Doit indiquer une syntaxe JSON invalide");
 	}
 
 	@Test
-	public void testHandleHttpMessageNotReadable_WithoutJsonParseException() {
+	public void testHandleHttpMessageNotReadable_InvalidTypeIdException() {
+		InvalidTypeIdException iti = new InvalidTypeIdException(null, "missing type id property 'type'", null, "type");
+		HttpMessageNotReadableException ex = new HttpMessageNotReadableException("Erreur", iti,
+				createDummyHttpInputMessage());
+		GlobalExceptionHandler handler = new GlobalExceptionHandler(null);
+
+		ResponseEntity<ApiErrorResponse> response = handler.handleUnreadable(ex, request);
+		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+		ApiErrorResponse body = response.getBody();
+		assertNotNull(body);
+		ErrorDetail detail = body.getErrors().getFirst();
+		assertEquals("Le champ discriminant 'type' est obligatoire.", detail.getMessage());
+	}
+
+	@Test
+	public void testHandleHttpMessageNotReadable_Other() {
 		HttpMessageNotReadableException ex = new HttpMessageNotReadableException("Erreur",
 				createDummyHttpInputMessage());
 		GlobalExceptionHandler handler = new GlobalExceptionHandler(null);
-		ResponseEntity<ErrorResponse> response = handler.handleHttpMessageNotReadable(ex);
+
+		ResponseEntity<ApiErrorResponse> response = handler.handleUnreadable(ex, request);
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-		ErrorResponse body = response.getBody();
+		ApiErrorResponse body = response.getBody();
 		assertNotNull(body);
-		assertEquals("Message HTTP illisible.", body.getError());
+		ErrorDetail detail = body.getErrors().getFirst();
+		assertEquals("Message HTTP illisible.", detail.getMessage());
+	}
+
+	@Test
+	public void testHandleMethodNotAllowed() {
+		HttpRequestMethodNotSupportedException ex = new HttpRequestMethodNotSupportedException("PUT",
+				List.of("GET", "POST"));
+		GlobalExceptionHandler handler = new GlobalExceptionHandler(null);
+
+		ResponseEntity<ApiErrorResponse> response = handler.handleMethodNotAllowed(ex, request);
+		assertEquals(HttpStatus.METHOD_NOT_ALLOWED, response.getStatusCode());
+		ApiErrorResponse body = response.getBody();
+		assertNotNull(body);
+		ErrorDetail detail = body.getErrors().getFirst();
+		assertTrue(detail.getMessage().contains("PUT"));
+		assertTrue(detail.getMessage().contains("GET, POST"));
+	}
+
+	@Test
+	public void testHandleAuthenticationException() {
+		AuthenticationException ex = new AuthenticationException("Échec de login") {
+		};
+		GlobalExceptionHandler handler = new GlobalExceptionHandler(null);
+
+		ResponseEntity<ApiErrorResponse> response = handler.handleAuthenticationException(ex, request);
+		assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+		ApiErrorResponse body = response.getBody();
+		assertNotNull(body);
+		ErrorDetail detail = body.getErrors().getFirst();
+		assertTrue(detail.getMessage().contains("Échec de l'authentification"));
+	}
+
+	@Test
+	public void testHandleAccessDenied() {
+		AccessDeniedException ex = new AccessDeniedException("Accès refusé");
+		GlobalExceptionHandler handler = new GlobalExceptionHandler(null);
+
+		ResponseEntity<ApiErrorResponse> response = handler.handleAccessDenied(ex, request);
+		assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+		ApiErrorResponse body = response.getBody();
+		assertNotNull(body);
+		ErrorDetail detail = body.getErrors().getFirst();
+		assertTrue(detail.getMessage().contains("Accès refusé"));
 	}
 
 	@Test
 	public void testHandleStaleObjectStateException() {
 		StaleObjectStateException ex = new StaleObjectStateException("Test", null);
 		GlobalExceptionHandler handler = new GlobalExceptionHandler(null);
-		ResponseEntity<ErrorResponse> response = handler.handleStaleObjectStateException(ex);
+
+		ResponseEntity<ApiErrorResponse> response = handler.handleStale(ex, request);
 		assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
-		ErrorResponse body = response.getBody();
+		ApiErrorResponse body = response.getBody();
 		assertNotNull(body);
-		assertTrue(body.getError().contains("modifiée par un autre utilisateur"));
+		ErrorDetail detail = body.getErrors().getFirst();
+		assertTrue(detail.getMessage().contains("modifiée par un autre utilisateur"));
 	}
 
 	@Test
 	public void testHandleGenericExceptions() {
 		Exception ex = new Exception("Erreur générique");
 		GlobalExceptionHandler handler = new GlobalExceptionHandler(null);
-		ResponseEntity<ErrorResponse> response = handler.handleGenericExceptions(ex);
+
+		ResponseEntity<ApiErrorResponse> response = handler.handleGeneric(ex, request);
 		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
-		ErrorResponse body = response.getBody();
+		ApiErrorResponse body = response.getBody();
 		assertNotNull(body);
-		assertTrue(body.getError().contains("Une erreur interne s'est produite"));
+		ErrorDetail detail = body.getErrors().getFirst();
+		assertTrue(detail.getMessage().contains("Une erreur interne s'est produite"));
 	}
 
 	@Test
@@ -147,11 +247,13 @@ public class GlobalExceptionHandlerTest {
 		HttpHeaders headers = new HttpHeaders();
 		NoHandlerFoundException ex = new NoHandlerFoundException("GET", "/inexistant", headers);
 		GlobalExceptionHandler handler = new GlobalExceptionHandler(null);
-		ResponseEntity<ErrorResponse> response = handler.handleNoHandlerFoundException(ex);
+
+		ResponseEntity<ApiErrorResponse> response = handler.handleNoHandlerFound(ex, request);
 		assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-		ErrorResponse body = response.getBody();
+		ApiErrorResponse body = response.getBody();
 		assertNotNull(body);
-		assertTrue(body.getError().contains("/inexistant"));
+		ErrorDetail detail = body.getErrors().getFirst();
+		assertTrue(detail.getMessage().contains("/inexistant"));
 	}
 
 	@Test
@@ -159,33 +261,35 @@ public class GlobalExceptionHandlerTest {
 		MethodParameter param = obtainTestMethodParameter();
 		MissingPathVariableException ex = new MissingPathVariableException("id", param);
 		GlobalExceptionHandler handler = new GlobalExceptionHandler(null);
-		ResponseEntity<ErrorResponse> response = handler.handleMissingPathVariableException(null, ex);
+
+		ResponseEntity<ApiErrorResponse> response = handler.handleMissingPathVariable(request, ex);
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-		ErrorResponse body = response.getBody();
+		ApiErrorResponse body = response.getBody();
 		assertNotNull(body);
-		assertTrue(body.getError().contains("id"));
+		ErrorDetail detail = body.getErrors().getFirst();
+		assertTrue(detail.getMessage().contains("id"));
 	}
 
 	@Test
 	public void testHandleMissingServletRequestParameterException() {
 		MissingServletRequestParameterException ex = new MissingServletRequestParameterException("name", "String");
 		GlobalExceptionHandler handler = new GlobalExceptionHandler(null);
-		ResponseEntity<ErrorResponse> response = handler.handleMissingServletRequestParameterException(null, ex);
+
+		ResponseEntity<ApiErrorResponse> response = handler.handleMissingServletParam(request, ex);
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-		ErrorResponse body = response.getBody();
+		ApiErrorResponse body = response.getBody();
 		assertNotNull(body);
-		assertTrue(body.getError().contains("name"));
+		ErrorDetail detail = body.getErrors().getFirst();
+		assertTrue(detail.getMessage().contains("name"));
 	}
 
-	/**
-	 * Renvoie une implémentation dummy de HttpInputMessage. Cette méthode est factorisée pour être utilisée dans les
-	 * tests qui nécessitent de fournir un HttpInputMessage (ex. pour simuler une HttpMessageNotReadableException).
-	 */
+	// Helpers
+
 	private static HttpInputMessage createDummyHttpInputMessage() {
 		return new HttpInputMessage() {
 			@Override
-			public HttpHeaders getHeaders() {
-				return new HttpHeaders();
+			public org.springframework.http.HttpHeaders getHeaders() {
+				return new org.springframework.http.HttpHeaders();
 			}
 
 			@Override
@@ -195,19 +299,11 @@ public class GlobalExceptionHandlerTest {
 		};
 	}
 
-	/**
-	 * Crée une HttpMessageNotReadableException simulée avec un JsonParseException. Utilise un HttpInputMessage dummy
-	 * pour satisfaire le constructeur non déprécié.
-	 */
 	private static HttpMessageNotReadableException createHttpMessageNotReadableExceptionWithJsonParseException() {
-		JsonParseException jpe = new JsonParseException(null, "Syntaxe JSON invalide");
+		JsonParseException jpe = new JsonParseException(null, "Original parse error");
 		return new HttpMessageNotReadableException("Erreur", jpe, createDummyHttpInputMessage());
 	}
 
-	/**
-	 * Construit une MethodArgumentNotValidException simulée en créant un BindingResult contenant un FieldError pour le
-	 * champ spécifié. Cela permet de centraliser la création de cette exception pour les tests.
-	 */
 	private MethodArgumentNotValidException createTestValidationException(String field, String errorMessage) {
 		Object target = new Object();
 		BindingResult bindingResult = new BeanPropertyBindingResult(target, "target");
@@ -215,18 +311,12 @@ public class GlobalExceptionHandlerTest {
 		return new MethodArgumentNotValidException(null, bindingResult);
 	}
 
-	/**
-	 * Permet d'obtenir un objet MethodParameter en utilisant une méthode de support de cette classe. Cela évite
-	 * d'ajouter une méthode "dummy" dans le code de production et centralise la logique de création du MethodParameter
-	 * pour les tests.
-	 */
 	private MethodParameter obtainTestMethodParameter() throws NoSuchMethodException {
 		Method method = this.getClass().getDeclaredMethod("helperMethodForParameter", String.class);
 		return new MethodParameter(method, 0);
 	}
 
-	/** Méthode de support utilisée uniquement pour obtenir un MethodParameter dans les tests. */
 	private void helperMethodForParameter(String dummy) {
-		// Méthode vide, uniquement pour obtenir un MethodParameter.
+		// Méthode de support pour obtenir un MethodParameter dans les tests
 	}
 }

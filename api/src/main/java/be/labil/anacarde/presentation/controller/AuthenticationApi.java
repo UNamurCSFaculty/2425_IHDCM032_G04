@@ -1,7 +1,6 @@
 package be.labil.anacarde.presentation.controller;
 
-import be.labil.anacarde.application.exception.ErrorResponse;
-import be.labil.anacarde.application.exception.ValidationErrorResponse;
+import be.labil.anacarde.application.exception.ApiErrorResponse;
 import be.labil.anacarde.domain.dto.user.UserDetailDto;
 import be.labil.anacarde.domain.model.User;
 import be.labil.anacarde.presentation.payload.LoginRequest;
@@ -47,8 +46,8 @@ public interface AuthenticationApi {
 			+ "sous forme de cookie HTTP-only ainsi que son UserDetailDto")
 	@ApiResponses({
 			@ApiResponse(responseCode = "200", description = "Utilisateur authentifié avec succès", content = @Content(schema = @Schema(implementation = UserDetailDto.class))),
-			@ApiResponse(responseCode = "400", description = "Requête mal formée (loginRequest invalide)", content = @Content(schema = @Schema(implementation = ValidationErrorResponse.class))),
-			@ApiResponse(responseCode = "401", description = "Échec de l'authentification", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))})
+			@ApiResponse(responseCode = "400", description = "Requête mal formée (loginRequest invalide)", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
+			@ApiResponse(responseCode = "401", description = "Échec de l'authentification", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
 	@PostMapping("/signin")
 	ResponseEntity<UserDetailDto> authenticateUser(
 			@Parameter(description = "Identifiants de connexion", required = true, schema = @Schema(implementation = LoginRequest.class)) @NotNull(message = "Les identifiants de connexion sont obligatoires") @Valid @RequestBody LoginRequest loginRequest,
@@ -62,7 +61,7 @@ public interface AuthenticationApi {
 	@Operation(summary = "Récupérer l'utilisateur courant", description = "Renvoie les détails (UserDetailDto) de l'utilisateur authentifié via le cookie JWT")
 	@ApiResponses({
 			@ApiResponse(responseCode = "200", description = "Utilisateur authentifié", content = @Content(schema = @Schema(implementation = UserDetailDto.class))),
-			@ApiResponse(responseCode = "401", description = "Utilisateur non authentifié")})
+			@ApiResponse(responseCode = "401", description = "Utilisateur non authentifié", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
 	@GetMapping("/me")
 	ResponseEntity<UserDetailDto> getCurrentUser(User currentUser);
 
@@ -70,7 +69,8 @@ public interface AuthenticationApi {
 	 * Déconnecte l'utilisateur en supprimant le cookie JWT côté client.
 	 */
 	@Operation(summary = "Déconnecter l'utilisateur", description = "Supprime le cookie JWT pour déconnecter l'utilisateur")
-	@ApiResponses({@ApiResponse(responseCode = "200", description = "Utilisateur déconnecté avec succès")})
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "Utilisateur déconnecté avec succès", content = @Content())})
 	@PostMapping("/signout")
 	ResponseEntity<Void> logout(HttpServletResponse response);
 }

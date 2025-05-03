@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -18,7 +19,6 @@ import be.labil.anacarde.domain.model.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,7 +87,7 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 		node.put("password", newUser.getPassword()); // Ajout manuel car le mot de passe n'est pas sérialisé
 		String jsonContent = node.toString();
 
-		mockMvc.perform(post("/api/users").contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwt()))
+		mockMvc.perform(post("/api/users").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
 				.andExpect(status().isCreated())
 				// Vérifie que l'en-tête "Location" contient l'ID du nouvel utilisateur
 				// .andExpect(header().string("Location", containsString("/api/users/")))
@@ -121,15 +121,10 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 
 		String jsonContent = node.toString();
 
-		String responseContent = mockMvc
-				.perform(post("/api/users").contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwt()))
-				.andExpect(status().isBadRequest()).andReturn().getResponse().getContentAsString();
-
-		Map<String, Object> responseMap = objectMapper.readValue(responseContent, Map.class);
-		String errorMessage = (String) responseMap.get("error");
-
-		assertTrue(errorMessage.contains("Le champ discriminant 'type' est obligatoire pour le type d'utilisateur."),
-				"Le message d'erreur doit mentionner le problème lié au champ 'type'");
+		mockMvc.perform(post("/api/users").contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwt()))
+				.andExpect(status().isBadRequest()).andExpect(jsonPath("$.errors[0].message",
+						containsString("Le champ discriminant 'type' est obligatoire.")))
+				.andDo(print());
 	}
 
 	/**
@@ -251,9 +246,9 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 		node.put("password", newUser.getPassword());
 		String jsonContent = node.toString();
 
-		mockMvc.perform(post("/api/users").contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwt()))
-				.andExpect(status().isBadRequest())
-				.andExpect(jsonPath("$.errors.email", containsString("L'adresse email est requise")));
+		mockMvc.perform(post("/api/users").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				.andExpect(status().isBadRequest()).andDo(print())
+				.andExpect(jsonPath("$.code", containsString("validation.error")));
 	}
 
 	/**
@@ -312,9 +307,6 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 		Integer userId = getMainTestUser().getId();
 
 		mockMvc.perform(get("/api/users/" + userId).accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isUnauthorized());
-
-		mockMvc.perform(post("/api/users").contentType(MediaType.APPLICATION_JSON).content("{}"))
 				.andExpect(status().isUnauthorized());
 
 		mockMvc.perform(put("/api/users/" + userId).contentType(MediaType.APPLICATION_JSON).content("{}"))

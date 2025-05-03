@@ -24,5 +24,20 @@
   "buttons": {
     "submit": "Submit",
     "cancel": "Cancel"
+  },
+  "errors": {
+    "validation.error": "Validation failed",
+    "resource.not_found": "Resource not found",
+    "bad_request": "Bad request",
+    "default.error": "Data integrity violation",
+    "message.not_readable": "Unreadable HTTP message",
+    "method.not_allowed": "Method not allowed",
+    "stale.object": "The resource has been modified by another user. Please retry.",
+    "no_handler_found": "No endpoint matches the requested URL",
+    "missing.path_variable": "Missing path variable",
+    "missing.request_param": "Missing request parameter",
+    "access.unauthorized": "Authentication failed",
+    "access.denied": "Access denied: you do not have sufficient permissions.",
+    "internal_error": "An internal error occurred. Contact support if the problem persists."
   }
 }

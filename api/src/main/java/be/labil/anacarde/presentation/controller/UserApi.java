@@ -1,5 +1,6 @@
 package be.labil.anacarde.presentation.controller;
 
+import be.labil.anacarde.application.exception.ApiErrorResponse;
 import be.labil.anacarde.domain.dto.ValidationGroups;
 import be.labil.anacarde.domain.dto.user.UserDetailDto;
 import be.labil.anacarde.domain.dto.user.UserListDto;
@@ -39,7 +40,7 @@ public interface UserApi {
 	@Operation(summary = "Récupérer les détails d'un utilisateur", description = "Renvoie les informations détaillées d'un utilisateur à partir de son ID.")
 	@ApiResponses({
 			@ApiResponse(responseCode = "200", description = "Utilisateur trouvé", content = @Content(schema = @Schema(implementation = UserDetailDto.class))),
-			@ApiResponse(responseCode = "404", description = "Utilisateur non trouvé", content = @Content(schema = @Schema(example = "{\"error\": \"Utilisateur non trouvé\"}")))})
+			@ApiResponse(responseCode = "404", description = "Utilisateur non trouvé", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
 	@GetMapping("/{id}")
 	ResponseEntity<? extends UserDetailDto> getUser(
 			@NotNull(message = "L'ID de l'utilisateur est obligatoire") @Positive(message = "L'ID doit être un entier positif") @Parameter(description = "Identifiant de l'utilisateur", example = "1", required = true) @PathVariable("id") Integer id);
@@ -57,7 +58,7 @@ public interface UserApi {
 	// true)
 	@ApiResponses({
 			@ApiResponse(responseCode = "201", description = "Utilisateur créé avec succès", content = @Content(schema = @Schema(implementation = UserDetailDto.class, discriminatorProperty = "type"))),
-			@ApiResponse(responseCode = "400", description = "Erreur de validation ou JSON invalide", content = @Content(schema = @Schema(example = "{\"error\": \"Données invalides\"}")))})
+			@ApiResponse(responseCode = "400", description = "Erreur de validation ou JSON invalide", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
 	@PostMapping(consumes = "application/json")
 	ResponseEntity<? extends UserDetailDto> createUser(
 			@Validated({Default.class, ValidationGroups.Create.class}) @RequestBody UserDetailDto userDetailDto);
@@ -85,8 +86,8 @@ public interface UserApi {
 	@Operation(summary = "Mettre à jour un utilisateur", description = "Met à jour un utilisateur existant en utilisant l'ID spécifié dans l'URL.")
 	@ApiResponses({
 			@ApiResponse(responseCode = "200", description = "Utilisateur mis à jour avec succès", content = @Content(schema = @Schema(implementation = UserDetailDto.class))),
-			@ApiResponse(responseCode = "400", description = "Erreur de validation ou JSON invalide", content = @Content(schema = @Schema(example = "{\"error\": \"Données invalides\"}"))),
-			@ApiResponse(responseCode = "404", description = "Utilisateur non trouvé", content = @Content(schema = @Schema(example = "{\"error\": \"Utilisateur non trouvé\"}")))})
+			@ApiResponse(responseCode = "400", description = "Erreur de validation ou JSON invalide", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
+			@ApiResponse(responseCode = "404", description = "Utilisateur non trouvé", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
 	@PutMapping(value = "/{id}", consumes = "application/json")
 	ResponseEntity<? extends UserDetailDto> updateUser(
 			@NotNull(message = "L'ID de l'utilisateur est obligatoire") @Positive(message = "L'ID doit être un entier positif") @Parameter(description = "Identifiant de l'utilisateur", example = "1", required = true) @PathVariable("id") Integer id,
@@ -100,7 +101,7 @@ public interface UserApi {
 	 */
 	@Operation(summary = "Supprimer un utilisateur", description = "Supprime un utilisateur en fonction de son identifiant.")
 	@ApiResponses({@ApiResponse(responseCode = "204", description = "Utilisateur supprimé avec succès"),
-			@ApiResponse(responseCode = "404", description = "Utilisateur non trouvé", content = @Content(schema = @Schema(example = "{\"error\": \"Utilisateur non trouvé\"}")))})
+			@ApiResponse(responseCode = "404", description = "Utilisateur non trouvé", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	ResponseEntity<Void> deleteUser(
@@ -118,7 +119,8 @@ public interface UserApi {
 	@Operation(summary = "Ajouter un rôle à un utilisateur", description = "Ajoute un rôle spécifique à l'utilisateur en utilisant le nom du rôle.")
 	@ApiResponses({
 			@ApiResponse(responseCode = "200", description = "Rôle ajouté avec succès", content = @Content(schema = @Schema(implementation = UserDetailDto.class))),
-			@ApiResponse(responseCode = "404", description = "Utilisateur ou rôle non trouvé", content = @Content(schema = @Schema(example = "{\"error\": \"Utilisateur ou rôle non trouvé\"}")))})
+			@ApiResponse(responseCode = "400", description = "Erreur de validation ou JSON invalide", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
+			@ApiResponse(responseCode = "404", description = "Utilisateur ou rôle non trouvé", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
 	@PostMapping(value = "/{id}/roles/{roleName}")
 	ResponseEntity<? extends UserDetailDto> addRoleToUser(
 			@NotNull(message = "L'ID de l'utilisateur est obligatoire") @Positive(message = "L'ID doit être un entier positif") @Parameter(description = "Identifiant de l'utilisateur", example = "1", required = true) @PathVariable("id") Integer id,
@@ -136,7 +138,8 @@ public interface UserApi {
 	@Operation(summary = "Mettre à jour les rôles d'un utilisateur", description = "Remplace l'ensemble des rôles de l'utilisateur spécifié par la liste fournie.")
 	@ApiResponses({
 			@ApiResponse(responseCode = "200", description = "Rôles mis à jour avec succès", content = @Content(schema = @Schema(implementation = UserDetailDto.class))),
-			@ApiResponse(responseCode = "404", description = "Utilisateur ou rôle non trouvé", content = @Content(schema = @Schema(example = "{\"error\": \"Utilisateur ou rôle non trouvé\"}")))})
+			@ApiResponse(responseCode = "400", description = "Erreur de validation ou JSON invalide", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
+			@ApiResponse(responseCode = "404", description = "Utilisateur ou rôle non trouvé", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
 	@PutMapping(value = "/{id}/roles", consumes = "application/json")
 	ResponseEntity<? extends UserDetailDto> updateUserRoles(
 			@NotNull(message = "L'ID de l'utilisateur est obligatoire") @Positive(message = "L'ID doit être un entier positif") @Parameter(description = "Identifiant de l'utilisateur", example = "1", required = true) @PathVariable("id") Integer id,
