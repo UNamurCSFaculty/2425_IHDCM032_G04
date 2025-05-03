@@ -27,6 +27,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 	private final DocumentRepository documentRepository;
 	private final QualityRepository qualityRepository;
 	private final ContractOfferRepository contractOfferRepository;
+	private final QualityControlRepository qualityControlRepository;
 
 	@Override
 	public void dropDatabase() {
@@ -39,6 +40,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 		});
 		userRepository.flush();
 		// Delete all entities in the correct order to avoid foreign key constraint violations
+		qualityControlRepository.deleteAllInBatch();
 		cooperativeRepository.deleteAllInBatch();
 		contractOfferRepository.deleteAllInBatch();
 		qualityRepository.deleteAllInBatch();
