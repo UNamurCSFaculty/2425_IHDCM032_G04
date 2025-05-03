@@ -60,6 +60,8 @@ public abstract class AbstractIntegrationTest {
 	@Autowired
 	protected ContractOfferRepository contractOfferRepository;
 	@Autowired
+	protected QualityControlRepository qualityControlRepository;
+	@Autowired
 	protected DatabaseService databaseService;
 
 	private Language mainLanguage;
@@ -84,6 +86,7 @@ public abstract class AbstractIntegrationTest {
 	private Document mainTestDocument;
 	private Quality mainTestQuality;
 	private ContractOffer mainTestContractOffer;
+	private QualityControl mainTestQualityControl;
 
 	@Getter
 	private Cookie jwtCookie;
@@ -269,7 +272,7 @@ public abstract class AbstractIntegrationTest {
 	 */
 	public User getMainTestCarrier() {
 		if (mainTestCarrier == null) {
-			throw new IllegalStateException("Transporteur de test non initialisé");
+			throw new IllegalStateException("Transporteur de test non initialisée");
 		}
 		return mainTestCarrier;
 	}
@@ -299,6 +302,16 @@ public abstract class AbstractIntegrationTest {
 			throw new IllegalStateException("Contrat de test non initialisé");
 		}
 		return mainTestContractOffer;
+	}
+
+	/**
+	 * Renvoie un control de qualité de test.
+	 */
+	public QualityControl getMainTestQualityControl() {
+		if (mainTestQualityControl == null) {
+			throw new IllegalStateException("Transporteur de test non initialisée");
+		}
+		return mainTestQualityControl;
 	}
 
 	/**
@@ -367,7 +380,7 @@ public abstract class AbstractIntegrationTest {
 		secondTestProducer = userRepository.save(producer2);
 		transformerTestUser = userRepository.save(transformer);
 		mainTestCarrier = userRepository.save(carrier);
-		userRepository.save(qualityInspector);
+		qualityInspector = userRepository.save(qualityInspector);
 
 		Point storeLocation = new GeometryFactory().createPoint(new Coordinate(2.3522, 48.8566));
 		Store store = Store.builder().location(storeLocation).user(mainTestUser).build();
@@ -451,6 +464,14 @@ public abstract class AbstractIntegrationTest {
 				.creationDate(LocalDateTime.now()).endDate(LocalDateTime.now()).seller((Trader) producer)
 				.buyer((Trader) transformer).quality(quality).build();
 		mainTestContractOffer = contractOfferRepository.save(contractOffer);
+
+		QualityControl qualityControl = QualityControl.builder().identifier("QC-001")
+				.controlDate(LocalDateTime.of(2025, 4, 7, 10, 0)).granularity(0.5f).korTest(0.8f).humidity(12.5f)
+				.qualityInspector((QualityInspector) qualityInspector).product(productTransform).quality(quality)
+				.document(document).build();
+
+		mainTestQualityControl = qualityControlRepository.save(qualityControl);
+
 	}
 
 	/**
