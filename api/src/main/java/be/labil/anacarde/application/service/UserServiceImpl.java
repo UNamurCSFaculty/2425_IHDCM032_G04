@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 		if (userRepository.findByEmail(dto.getEmail()).isPresent()) {
 			throw new BadRequestException("Cet email est déjà utilisé.");
 		}
-		if(userRepository.findByPhone(dto.getPhone()).isPresent()) {
+		if (userRepository.findByPhone(dto.getPhone()).isPresent()) {
 			throw new BadRequestException("Ce numéro de téléphone est déjà utilisé.");
 		}
 		User user;
