@@ -532,6 +532,46 @@ export type UserDetailDtoWritable = {
 };
 
 /**
+ * Réponse d'erreur standardisée
+ */
+export type ApiErrorResponse = {
+    /**
+     * Code HTTP de la réponse
+     */
+    status: number;
+    /**
+     * Horodatage de l'erreur
+     */
+    timestamp: string;
+    /**
+     * Chemin de la requête ayant provoqué l'erreur
+     */
+    path: string;
+    /**
+     * Code interne d'erreur
+     */
+    code: string;
+    /**
+     * Liste des erreurs détaillées
+     */
+    errors: Array<ErrorDetail>;
+};
+
+/**
+ * Détail d'une erreur individuelle
+ */
+export type ErrorDetail = {
+    /**
+     * Nom du champ en erreur (absent pour erreurs globales)
+     */
+    field?: string;
+    /**
+     * Message décrivant l'erreur
+     */
+    message: string;
+};
+
+/**
  * Objet de transfert de données pour un entrepôt (store).
  */
 export type StoreDetailDtoReadable = {
@@ -1096,30 +1136,6 @@ export type LoginRequest = {
 };
 
 /**
- * Structure de réponse pour les erreurs de validation
- */
-export type ValidationErrorResponse = {
-    /**
-     * Map des erreurs de validation (champ -> message)
-     */
-    errors?: {
-        [key: string]: string;
-    };
-    status?: number;
-};
-
-/**
- * Error response structure
- */
-export type ErrorResponse = {
-    /**
-     * Message d'erreur
-     */
-    error?: string;
-    status?: number;
-};
-
-/**
  * Objet de transfert de données pour les administrateurs.
  */
 export type AdminListDtoReadable = UserListDtoReadable & {
@@ -1437,7 +1453,7 @@ export type DeleteUserErrors = {
     /**
      * Utilisateur non trouvé
      */
-    404: string;
+    404: ApiErrorResponse;
 };
 
 export type DeleteUserError = DeleteUserErrors[keyof DeleteUserErrors];
@@ -1467,7 +1483,7 @@ export type GetUserErrors = {
     /**
      * Utilisateur non trouvé
      */
-    404: string;
+    404: ApiErrorResponse;
 };
 
 export type GetUserError = GetUserErrors[keyof GetUserErrors];
@@ -1497,11 +1513,11 @@ export type UpdateUserErrors = {
     /**
      * Erreur de validation ou JSON invalide
      */
-    400: string;
+    400: ApiErrorResponse;
     /**
      * Utilisateur non trouvé
      */
-    404: string;
+    404: ApiErrorResponse;
 };
 
 export type UpdateUserError = UpdateUserErrors[keyof UpdateUserErrors];
@@ -1529,9 +1545,13 @@ export type UpdateUserRolesData = {
 
 export type UpdateUserRolesErrors = {
     /**
+     * Erreur de validation ou JSON invalide
+     */
+    400: ApiErrorResponse;
+    /**
      * Utilisateur ou rôle non trouvé
      */
-    404: string;
+    404: ApiErrorResponse;
 };
 
 export type UpdateUserRolesError = UpdateUserRolesErrors[keyof UpdateUserRolesErrors];
@@ -2756,7 +2776,7 @@ export type CreateUserErrors = {
     /**
      * Erreur de validation ou JSON invalide
      */
-    400: string;
+    400: ApiErrorResponse;
 };
 
 export type CreateUserError = CreateUserErrors[keyof CreateUserErrors];
@@ -2852,9 +2872,13 @@ export type AddRoleToUserData = {
 
 export type AddRoleToUserErrors = {
     /**
+     * Erreur de validation ou JSON invalide
+     */
+    400: ApiErrorResponse;
+    /**
      * Utilisateur ou rôle non trouvé
      */
-    404: string;
+    404: ApiErrorResponse;
 };
 
 export type AddRoleToUserError = AddRoleToUserErrors[keyof AddRoleToUserErrors];
@@ -3303,11 +3327,11 @@ export type AuthenticateUserErrors = {
     /**
      * Requête mal formée (loginRequest invalide)
      */
-    400: ValidationErrorResponse;
+    400: ApiErrorResponse;
     /**
      * Échec de l'authentification
      */
-    401: ErrorResponse;
+    401: ApiErrorResponse;
 };
 
 export type AuthenticateUserError = AuthenticateUserErrors[keyof AuthenticateUserErrors];
@@ -3544,7 +3568,7 @@ export type GetCurrentUserErrors = {
     /**
      * Utilisateur non authentifié
      */
-    401: AdminDetailDtoReadable | CarrierDetailDtoReadable | QualityInspectorDetailDtoReadable | TraderDetailDtoReadable | ExporterDetailDtoReadable | ProducerDetailDtoReadable | TransformerDetailDtoReadable;
+    401: ApiErrorResponse;
 };
 
 export type GetCurrentUserError = GetCurrentUserErrors[keyof GetCurrentUserErrors];

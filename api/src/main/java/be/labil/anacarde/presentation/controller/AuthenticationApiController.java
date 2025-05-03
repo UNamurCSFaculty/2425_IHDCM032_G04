@@ -17,8 +17,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -58,11 +56,7 @@ public class AuthenticationApiController implements AuthenticationApi {
 		return ResponseEntity.ok(dto);
 	}
 
-	/**
-	 * Vérifie si le client est connecté : Spring Security rejettera automatiquement les requêtes non authentifiées
-	 * avant d’entrer ici.
-	 */
-	@GetMapping("/me")
+	@Override
 	public ResponseEntity<UserDetailDto> getCurrentUser(@AuthenticationPrincipal User currentUser) {
 		// Si jamais on arrive ici sans user (extra safety), on renvoie 401
 		if (currentUser == null) {
@@ -73,11 +67,7 @@ public class AuthenticationApiController implements AuthenticationApi {
 		return ResponseEntity.ok(dto);
 	}
 
-	/**
-	 * Supprime le JWT HttpOnly en renvoyant un cookie vide à Max-Age=0.
-	 */
 	@Override
-	@PostMapping("/signout")
 	public ResponseEntity<Void> logout(HttpServletResponse response) {
 		Cookie cleanCookie = new Cookie("jwt", "");
 		cleanCookie.setHttpOnly(true);

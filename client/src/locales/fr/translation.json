@@ -24,5 +24,23 @@
   "buttons": {
     "submit": "Envoyer",
     "cancel": "Annuler"
+  },
+  "errors": {
+    "unauthorized": "Vous n’êtes pas autorisé à accéder à cette ressource",
+    "notFound": "Ressource introuvable",
+    "serverError": "Erreur interne du serveur",
+    "validation.error": "Erreur de validation",
+    "resource.not_found": "Ressource introuvable",
+    "bad_request": "Requête incorrecte",
+    "default.error": "Violation d’intégrité des données",
+    "message.not_readable": "Message HTTP illisible",
+    "method.not_allowed": "Méthode non autorisée",
+    "stale.object": "La ressource a été modifiée par un autre utilisateur. Veuillez réessayer.",
+    "no_handler_found": "Aucun endpoint ne correspond à l’URL demandée",
+    "missing.path_variable": "Paramètre de chemin manquant",
+    "missing.request_param": "Paramètre de requête manquant",
+    "access.unauthorized": "Échec de l’authentification",
+    "access.denied": "Accès refusé : vous n’avez pas les droits suffisants.",
+    "internal_error": "Une erreur interne s’est produite. Contactez le support si le problème persiste."
   }
 }

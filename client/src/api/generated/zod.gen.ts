@@ -122,6 +122,19 @@ export const zTransformerDetailDto = z.object({
     ])
 });
 
+export const zErrorDetail = z.object({
+    field: z.string().optional(),
+    message: z.string()
+});
+
+export const zApiErrorResponse = z.object({
+    status: z.number().int(),
+    timestamp: z.iso.datetime(),
+    path: z.string(),
+    code: z.string(),
+    errors: z.array(zErrorDetail)
+});
+
 export const zStoreDetailDto = z.object({
     id: z.number().int().readonly().optional(),
     location: z.string(),
@@ -246,16 +259,6 @@ export const zBidDto = z.object({
 export const zLoginRequest = z.object({
     username: z.string(),
     password: z.string()
-});
-
-export const zValidationErrorResponse = z.object({
-    errors: z.object({}).optional(),
-    status: z.number().int().optional()
-});
-
-export const zErrorResponse = z.object({
-    error: z.string().optional(),
-    status: z.number().int().optional()
 });
 
 export const zUserListDto = z.object({

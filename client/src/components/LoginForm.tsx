@@ -13,7 +13,7 @@ import { useUserStore } from '@/store/userStore'
 import { authenticateUserMutation } from '@/api/generated/@tanstack/react-query.gen'
 import type { LoginRequest } from '@/api/generated/index'
 import { useStore } from '@tanstack/react-form'
-import { displayErrorMessage } from '@/utils/apiError'
+import { useTranslation } from 'react-i18next'
 
 const LoginSchema = z.object({
   username: z.email('Adresse e-mail invalide'),
@@ -27,6 +27,7 @@ export function LoginForm({
   ...props
 }: React.ComponentProps<'div'>) {
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const router = useRouter()
   const setUser = useUserStore(s => s.setUser)
   const { redirect: redirectParam } = useSearch({ from: LoginRoute.id })
@@ -41,23 +42,6 @@ export function LoginForm({
         navigate({ to: '/', replace: true })
       }
     },
-    /*
-    onError(error) {
-      if (error.status) {
-        switch (error.status) {
-          case 400:
-            setApiErrorMessage('Requête mal formée')
-            break
-          case 401:
-            setApiErrorMessage('Identifiants incorrects')
-            break
-          default:
-            setApiErrorMessage(`Erreur serveur (${error.status})`)
-        }
-        return
-      }
-    },
-    */
   })
 
   const form = useAppForm({
@@ -70,7 +54,6 @@ export function LoginForm({
   const canSubmit = useStore(form.store, state => state.canSubmit)
 
   const isPending = loginMutation.isPending
-  console.error('Login error', loginMutation.error)
 
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
@@ -135,7 +118,7 @@ export function LoginForm({
               {/* Erreur */}
               {loginMutation.error && (
                 <p className="text-sm text-red-600">
-                  {displayErrorMessage(loginMutation.error)}
+                  {t('errors.' + loginMutation.error.code)}
                 </p>
               )}
               {/* Bouton submit */}

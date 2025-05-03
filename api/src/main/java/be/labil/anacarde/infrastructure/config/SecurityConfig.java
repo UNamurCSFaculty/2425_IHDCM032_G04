@@ -6,6 +6,7 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -77,15 +78,30 @@ public class SecurityConfig {
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.cors(Customizer.withDefaults()).csrf(AbstractHttpConfigurer::disable)
 				.exceptionHandling(ex -> ex.authenticationEntryPoint(unauthorizedHandler))
-				.sessionManagement(session -> session
-						.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-				.authorizeHttpRequests(
-						auth -> auth.requestMatchers("/api/auth/**", "/v3/api-docs.yaml", "/v3/api-docs/**",
-								"/swagger-ui/**", "/swagger-ui.html").permitAll().anyRequest().authenticated());
+				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+		configureAuthorization(http);
 
 		// Ajout du filtre JWT avant le filtre d'authentification standard
 		http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
 
 		return http.build();
+	}
+
+	/**
+	 * Configure l'autorisation des requêtes HTTP.
+	 *
+	 * @param http
+	 *            L'instance HttpSecurity à configurer.
+	 * @throws Exception
+	 *             en cas d'erreur lors de la configuration.
+	 */
+	private void configureAuthorization(HttpSecurity http) throws Exception {
+		http.authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.POST, "/api/users").permitAll()
+				.requestMatchers("/api/auth/**", "/v3/api-docs.yaml", "/v3/api-docs/**", "/swagger-ui/**",
+						"/swagger-ui.html")
+				.permitAll()
+				// tout le reste nécessite une authentification
+				.anyRequest().authenticated());
 	}
 }
