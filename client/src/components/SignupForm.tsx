@@ -13,8 +13,7 @@ export function SignupForm() : React.ComponentProps<'div'> {
 
   const signinMutation = useMutation({
     ...createUserMutation(),
-    onSuccess(data) {
-      console.log(data)
+    onSuccess() {
         navigate({ to: '/login'})
     }
   })

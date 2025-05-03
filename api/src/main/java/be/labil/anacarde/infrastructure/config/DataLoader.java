@@ -43,7 +43,9 @@ public class DataLoader implements CommandLineRunner {
 		// 1. Langue
 		LanguageDto languageDto = new LanguageDto();
 		languageDto.setName("Français");
-		languageDto = languageService.create(languageDto);
+		languageDto = languageService.createLanguage(languageDto);
+		languageDto.setName("English");
+		languageDto = languageService.createLanguage(languageDto);
 
 		// 2. Création du producteur (sans coopérative) et d'un champ
 		UserDetailDto producer = createProducer(languageDto);
