@@ -262,7 +262,7 @@ public class GlobalExceptionHandlerTest {
 		MissingPathVariableException ex = new MissingPathVariableException("id", param);
 		GlobalExceptionHandler handler = new GlobalExceptionHandler(null);
 
-		ResponseEntity<ApiErrorResponse> response = handler.handleMissingPathVariable(request, ex);
+		ResponseEntity<ApiErrorResponse> response = handler.handleMissingPathVariable(ex, request);
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 		ApiErrorResponse body = response.getBody();
 		assertNotNull(body);
@@ -275,7 +275,7 @@ public class GlobalExceptionHandlerTest {
 		MissingServletRequestParameterException ex = new MissingServletRequestParameterException("name", "String");
 		GlobalExceptionHandler handler = new GlobalExceptionHandler(null);
 
-		ResponseEntity<ApiErrorResponse> response = handler.handleMissingServletParam(request, ex);
+		ResponseEntity<ApiErrorResponse> response = handler.handleMissingServletParam(ex, request);
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 		ApiErrorResponse body = response.getBody();
 		assertNotNull(body);
