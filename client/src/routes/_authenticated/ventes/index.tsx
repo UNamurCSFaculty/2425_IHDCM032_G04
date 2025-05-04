@@ -9,6 +9,20 @@ import { useAuctionStore } from '@/store/auctionStore';
 import { useState } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 
+const formatDate = (dateString: string | undefined): string => {
+  if (!dateString) {
+    return "—";
+  }
+
+  return new Date(dateString).toLocaleString('fr-FR', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+};
+
 const listAuctionsQueryOptions = (userId: number) => ({
   ...listAuctionsOptions({ query: { traderId: userId } }),
   staleTime: 10_000,
@@ -80,9 +94,9 @@ export function RouteComponent() {
         <TableBody>
           {(auctionsData as AuctionDtoReadable[]).map((auction: AuctionDtoReadable) => (
             <TableRow key={auction.id}>
-              <TableCell>{auction.product.type}</TableCell>
+              <TableCell>{auction.product.type == "harvest" ? "Récolte" : "Transformé"}</TableCell>
               <TableCell>{auction.productQuantity} kg</TableCell>
-              <TableCell>{auction.product.qualityControlId}</TableCell>
+              <TableCell>{auction.product.qualityControlId ?? "N/A"}</TableCell>
               <TableCell>{auction.price.toLocaleString()} CFA</TableCell>
               <TableCell>
                 { auction.product.type == "harvest" 
@@ -90,9 +104,9 @@ export function RouteComponent() {
                   : (auction.product as TransformedProductDtoReadable).location
                 }
               </TableCell>
-              <TableCell>{auction.product.deliveryDate ? new Date(auction.product.deliveryDate).toLocaleDateString() : "—"}</TableCell>
-              <TableCell>{auction.creationDate ? new Date(auction.creationDate).toLocaleDateString() : "—"}</TableCell>
-              <TableCell>{new Date(auction.expirationDate).toLocaleDateString()}</TableCell>
+              <TableCell>{formatDate(auction.product.deliveryDate)}</TableCell>
+              <TableCell>{formatDate(auction.creationDate)}</TableCell>
+              <TableCell>{formatDate(auction.expirationDate)}</TableCell>
               <TableCell>
                 <Button
                   onClick={() => {
@@ -118,8 +132,8 @@ export function RouteComponent() {
       <Dialog.Root open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 backdrop-blur-xs" />
-        <Dialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg w-auto max-w-[90%]">
-          <Dialog.Title id="dialog-title" className="text-xl font-bold">Offres pour votre enchère</Dialog.Title>
+        <Dialog.Content aria-describedby={undefined} className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg w-auto max-w-[90%]">
+          <Dialog.Title className="text-xl font-bold">Offres pour votre enchère</Dialog.Title>
           <Dialog.Close asChild>
             <button className="absolute top-2 right-2 text-gray-500 hover:text-gray-700">✕</button>
           </Dialog.Close>
@@ -139,7 +153,7 @@ export function RouteComponent() {
                 <TableBody>
                   {(bidsData as BidDtoReadable[]).map((bid: BidDtoReadable) => (
                     <TableRow key={bid.id}>
-                      <TableCell>{bid.creationDate ? new Date(bid.creationDate).toLocaleDateString() : "—"}</TableCell>
+                      <TableCell>{formatDate(bid.creationDate)}</TableCell>
                       <TableCell>{bid.trader.firstName} {bid.trader.lastName}</TableCell>
                       <TableCell>{bid.amount.toLocaleString()} CFA</TableCell>
                       <TableCell><Button>Accepter</Button></TableCell>
