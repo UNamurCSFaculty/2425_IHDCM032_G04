@@ -16,6 +16,7 @@ import { Route as LoginImport } from './routes/login'
 import { Route as ContactImport } from './routes/contact'
 import { Route as AuthenticatedImport } from './routes/_authenticated'
 import { Route as IndexImport } from './routes/index'
+import { Route as AuthenticatedAdminImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedEncheresIndexImport } from './routes/_authenticated/encheres/index'
 import { Route as AuthenticatedEncheresCajouImport } from './routes/_authenticated/encheres/cajou'
 import { Route as AuthenticatedEncheresAutresImport } from './routes/_authenticated/encheres/autres'
@@ -50,6 +51,12 @@ const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRoute,
+} as any)
+
+const AuthenticatedAdminRoute = AuthenticatedAdminImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
 
 const AuthenticatedEncheresIndexRoute = AuthenticatedEncheresIndexImport.update(
@@ -121,6 +128,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignupImport
       parentRoute: typeof rootRoute
     }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminImport
+      parentRoute: typeof AuthenticatedImport
+    }
     '/_authenticated/encheres/autres': {
       id: '/_authenticated/encheres/autres'
       path: '/encheres/autres'
@@ -155,6 +169,7 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 interface AuthenticatedRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
   AuthenticatedEncheresAutresRoute: typeof AuthenticatedEncheresAutresRoute
   AuthenticatedEncheresCajouRoute: typeof AuthenticatedEncheresCajouRoute
   AuthenticatedEncheresIndexRoute: typeof AuthenticatedEncheresIndexRoute
@@ -162,6 +177,7 @@ interface AuthenticatedRouteChildren {
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
   AuthenticatedEncheresAutresRoute: AuthenticatedEncheresAutresRoute,
   AuthenticatedEncheresCajouRoute: AuthenticatedEncheresCajouRoute,
   AuthenticatedEncheresIndexRoute: AuthenticatedEncheresIndexRoute,
@@ -178,6 +194,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/encheres/autres': typeof AuthenticatedEncheresAutresRoute
   '/encheres/cajou': typeof AuthenticatedEncheresCajouRoute
   '/encheres': typeof AuthenticatedEncheresIndexRoute
@@ -190,6 +207,7 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/encheres/autres': typeof AuthenticatedEncheresAutresRoute
   '/encheres/cajou': typeof AuthenticatedEncheresCajouRoute
   '/encheres': typeof AuthenticatedEncheresIndexRoute
@@ -203,6 +221,7 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/encheres/autres': typeof AuthenticatedEncheresAutresRoute
   '/_authenticated/encheres/cajou': typeof AuthenticatedEncheresCajouRoute
   '/_authenticated/encheres/': typeof AuthenticatedEncheresIndexRoute
@@ -217,6 +236,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/login'
     | '/signup'
+    | '/admin'
     | '/encheres/autres'
     | '/encheres/cajou'
     | '/encheres'
@@ -228,6 +248,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/login'
     | '/signup'
+    | '/admin'
     | '/encheres/autres'
     | '/encheres/cajou'
     | '/encheres'
@@ -239,6 +260,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/login'
     | '/signup'
+    | '/_authenticated/admin'
     | '/_authenticated/encheres/autres'
     | '/_authenticated/encheres/cajou'
     | '/_authenticated/encheres/'
@@ -285,6 +307,7 @@ export const routeTree = rootRoute
     "/_authenticated": {
       "filePath": "_authenticated.tsx",
       "children": [
+        "/_authenticated/admin",
         "/_authenticated/encheres/autres",
         "/_authenticated/encheres/cajou",
         "/_authenticated/encheres/",
@@ -299,6 +322,10 @@ export const routeTree = rootRoute
     },
     "/signup": {
       "filePath": "signup.tsx"
+    },
+    "/_authenticated/admin": {
+      "filePath": "_authenticated/admin.tsx",
+      "parent": "/_authenticated"
     },
     "/_authenticated/encheres/autres": {
       "filePath": "_authenticated/encheres/autres.tsx",

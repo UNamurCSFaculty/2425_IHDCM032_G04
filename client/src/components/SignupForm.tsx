@@ -1,5 +1,5 @@
 import { zUserRegistration } from '@/schemas/api-schemas'
-import {useNavigate} from '@tanstack/react-router'
+import { useNavigate } from '@tanstack/react-router'
 import { useAppForm } from '@/components/form'
 import { useStore } from '@tanstack/react-form'
 import { useMutation } from "@tanstack/react-query";

@@ -165,7 +165,7 @@ export type ProducerDetailDtoReadable = {
      */
     agriculturalIdentifier: string;
     /**
-     * id de la coopérative du producteur
+     * Coopérative du producteur
      */
     cooperative?: CooperativeDtoReadable;
     /**
@@ -215,7 +215,7 @@ export type ProducerDetailDtoWritable = {
      */
     agriculturalIdentifier: string;
     /**
-     * id de la coopérative du producteur
+     * Coopérative du producteur
      */
     cooperative?: CooperativeDtoWritable;
     /**
@@ -2065,6 +2065,100 @@ export type UpdateProductResponses = {
     200: unknown;
 };
 
+export type DeleteLanguageData = {
+    body?: never;
+    path: {
+        /**
+         * Identifiant de la langue
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/languages/{id}';
+};
+
+export type DeleteLanguageErrors = {
+    /**
+     * Langue non trouvée
+     */
+    404: ApiErrorResponse;
+};
+
+export type DeleteLanguageError = DeleteLanguageErrors[keyof DeleteLanguageErrors];
+
+export type DeleteLanguageResponses = {
+    /**
+     * Langue supprimée avec succès
+     */
+    204: void;
+};
+
+export type DeleteLanguageResponse = DeleteLanguageResponses[keyof DeleteLanguageResponses];
+
+export type GetLanguageData = {
+    body?: never;
+    path: {
+        /**
+         * Identifiant de la langue
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/languages/{id}';
+};
+
+export type GetLanguageErrors = {
+    /**
+     * Langue non trouvée
+     */
+    404: ApiErrorResponse;
+};
+
+export type GetLanguageError = GetLanguageErrors[keyof GetLanguageErrors];
+
+export type GetLanguageResponses = {
+    /**
+     * Langue trouvée
+     */
+    200: LanguageDtoReadable;
+};
+
+export type GetLanguageResponse = GetLanguageResponses[keyof GetLanguageResponses];
+
+export type UpdateLanguageData = {
+    body: LanguageDtoWritable;
+    path: {
+        /**
+         * Identifiant de la langue
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/languages/{id}';
+};
+
+export type UpdateLanguageErrors = {
+    /**
+     * Erreur de validation ou JSON invalide
+     */
+    400: ApiErrorResponse;
+    /**
+     * Langue non trouvée
+     */
+    404: ApiErrorResponse;
+};
+
+export type UpdateLanguageError = UpdateLanguageErrors[keyof UpdateLanguageErrors];
+
+export type UpdateLanguageResponses = {
+    /**
+     * Langue mise à jour avec succès
+     */
+    200: LanguageDtoReadable;
+};
+
+export type UpdateLanguageResponse = UpdateLanguageResponses[keyof UpdateLanguageResponses];
+
 export type DeleteDocumentData = {
     body?: never;
     path: {
@@ -3146,6 +3240,47 @@ export type CreateProductResponses = {
      */
     201: unknown;
 };
+
+export type ListLanguagesData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/languages';
+};
+
+export type ListLanguagesResponses = {
+    /**
+     * Liste récupérée avec succès
+     */
+    200: Array<LanguageDtoReadable>;
+};
+
+export type ListLanguagesResponse = ListLanguagesResponses[keyof ListLanguagesResponses];
+
+export type CreateLanguageData = {
+    body: LanguageDtoWritable;
+    path?: never;
+    query?: never;
+    url: '/api/languages';
+};
+
+export type CreateLanguageErrors = {
+    /**
+     * Erreur de validation ou JSON invalide
+     */
+    400: ApiErrorResponse;
+};
+
+export type CreateLanguageError = CreateLanguageErrors[keyof CreateLanguageErrors];
+
+export type CreateLanguageResponses = {
+    /**
+     * Langue créée avec succès
+     */
+    201: LanguageDtoReadable;
+};
+
+export type CreateLanguageResponse = CreateLanguageResponses[keyof CreateLanguageResponses];
 
 export type CreateDocumentData = {
     body: DocumentDtoWritable;

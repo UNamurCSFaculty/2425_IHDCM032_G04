@@ -325,6 +325,12 @@ export const zDeleteQualityResponse = z.void();
 
 export const zDeleteProductResponse = z.void();
 
+export const zDeleteLanguageResponse = z.void();
+
+export const zGetLanguageResponse = zLanguageDto;
+
+export const zUpdateLanguageResponse = zLanguageDto;
+
 export const zDeleteDocumentResponse = z.void();
 
 export const zDeleteCooperativeResponse = z.void();
@@ -342,6 +348,10 @@ export const zListUsersResponse = z.array(z.unknown());
 export const zCreateUserResponse = zUserDetailDto;
 
 export const zAddRoleToUserResponse = zUserDetailDto;
+
+export const zListLanguagesResponse = z.array(zLanguageDto);
+
+export const zCreateLanguageResponse = zLanguageDto;
 
 export const zAuthenticateUserResponse = zUserDetailDto;
 

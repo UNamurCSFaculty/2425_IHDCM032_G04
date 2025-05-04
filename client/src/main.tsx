@@ -22,9 +22,13 @@ import { ErrorBoundary } from './components/ErrorBoundary.tsx'
 
 import { useUserStore } from './store/userStore.tsx'
 import { GlobalSkeleton } from './components/GlobalSkeleton.tsx'
+import { useAppStore } from "@/store/appStore.tsx";
 
 import { client } from '@/api/generated/client.gen.ts'
-import { getCurrentUserOptions } from './api/generated/@tanstack/react-query.gen.ts'
+import {
+  getCurrentUserOptions,
+  listLanguagesOptions
+} from './api/generated/@tanstack/react-query.gen.ts'
 
 client.setConfig({
   credentials: 'include', // pour les cookies (HTTP Only)
@@ -62,7 +66,22 @@ function AppWithProvider() {
     }
   }, [data, setUser])
 
-  if (isLoading) {
+
+  const languages = useAppStore(s => s.languages)
+  const setLanguages = useAppStore(s => s.setLanguages)
+
+  const { appData, appDataIsLoading } = useQuery({
+    ...listLanguagesOptions(),
+    staleTime: Infinity, // jamais stale tant qu’on est connecté
+  })
+
+  useEffect(() => {
+    if (appData) {
+      setLanguages(appData)
+    }
+  }, [appData, setLanguages])
+
+  if (isLoading || appDataIsLoading) {
     return <GlobalSkeleton />
   }
 
