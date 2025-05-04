@@ -56,6 +56,10 @@
     "connection": "Get Started",
     "subscribe": "Create an Account"
   },
+  "languages": {
+    "fr": "French",
+    "en": "English"
+  },
   "errors": {
     "validation.error": "Validation failed",
     "resource.not_found": "Resource not found",
@@ -69,6 +73,14 @@
     "missing.request_param": "Missing request parameter",
     "access.unauthorized": "Authentication failed",
     "access.denied": "Access denied: you do not have sufficient permissions.",
-    "internal_error": "An internal error occurred. Contact support if the problem persists."
+    "internal_error": "An internal error occurred. Contact support if the problem persists.",
+    "email.exists": "This email is already in use",
+    "phone.exists": "This phone number is already in use",
+    "agricultural_identifier.exists": "This agricultural identifier is already in use",
+    "fields": {
+      "email": "Email",
+      "phone": "Phone",
+      "agricultural_identifier": "Agricultural identifier"
+    }
   }
 }

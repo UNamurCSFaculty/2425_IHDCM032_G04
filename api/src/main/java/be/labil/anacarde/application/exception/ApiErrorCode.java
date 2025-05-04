@@ -12,6 +12,9 @@ public enum ApiErrorCode {
 	MISSING_PATH_VARIABLE("missing.path_variable"),
 	MISSING_REQUEST_PARAM("missing.request_param"),
 	NO_HANDLER_FOUND("no_handler_found"),
+	CONFLICT_EMAIL_EXISTS("email.exists"),
+	CONFLICT_PHONE_EXISTS("phone.exists"),
+	CONFLICT_AGRICULTURE_ID_EXISTS("agriculture_id.exists"),
 	RESOURCE_NOT_FOUND("resource.not_found"),
 	STALE_OBJECT("stale.object"),
 	VALIDATION_ERROR("validation.error");

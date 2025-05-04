@@ -56,6 +56,35 @@
     "connection": "Démarrer maintenant",
     "subscribe": "Créer un compte"
   },
+  "languages": {
+    "fr": "Français",
+    "en": "Anglais"
+  },
+  "common": {
+    "yes": "Oui",
+    "no": "Non",
+    "ok": "OK",
+    "close": "Fermer",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "add": "Ajouter",
+    "view": "Voir",
+    "search": "Rechercher",
+    "select": "Sélectionner",
+    "clear": "Effacer"
+  },
+  "pagination": {
+    "previous": "Précédent",
+    "next": "Suivant",
+    "page": "Page",
+    "of": "de",
+    "showing": "Affichage de",
+    "to": "à",
+    "all": "Tout",
+    "no_entries": "Aucune entrée trouvée",
+    "entries": "entrées"
+  },
   "errors": {
     "unauthorized": "Vous n’êtes pas autorisé à accéder à cette ressource",
     "notFound": "Ressource introuvable",
@@ -72,6 +101,14 @@
     "missing.request_param": "Paramètre de requête manquant",
     "access.unauthorized": "Échec de l’authentification",
     "access.denied": "Accès refusé : vous n’avez pas les droits suffisants.",
-    "internal_error": "Une erreur interne s’est produite. Contactez le support si le problème persiste."
+    "internal_error": "Une erreur interne s’est produite. Contactez le support si le problème persiste.",
+    "email.exists": "Cet email est déjà utilisé",
+    "phone.exists": "Ce numéro de téléphone est déjà utilisé",
+    "agricultural_identifier.exists": "Cet identifiant agricole est déjà utilisé",
+    "fields": {
+      "email": "Email",
+      "phone": "Téléphone",
+      "agricultural_identifier": "Identifiant agricole"
+    }
   }
 }

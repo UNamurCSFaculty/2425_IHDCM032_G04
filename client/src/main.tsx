@@ -5,7 +5,7 @@ import { RouterProvider, createRouter } from '@tanstack/react-router'
 import {
   QueryClient,
   QueryClientProvider,
-  useQuery,
+  useQueries,
 } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
@@ -27,8 +27,9 @@ import { useAppStore } from "@/store/appStore.tsx";
 import { client } from '@/api/generated/client.gen.ts'
 import {
   getCurrentUserOptions,
-  listLanguagesOptions
+  getApplicationDataOptions,
 } from './api/generated/@tanstack/react-query.gen.ts'
+import { useAppStore } from './store/appStore.tsx'
 
 client.setConfig({
   credentials: 'include', // pour les cookies (HTTP Only)
@@ -53,35 +54,33 @@ const router = createRouter({
 function AppWithProvider() {
   const user = useUserStore(s => s.user)
   const setUser = useUserStore(s => s.setUser)
+  const setAppData = useAppStore(s => s.setAppData)
 
-  const { data, isLoading } = useQuery({
-    ...getCurrentUserOptions(),
-    retry: false, // pas de retry pour current user
-    staleTime: Infinity, // jamais stale tant qu’on est connecté
+  const [currentUserQuery, appDataQuery] = useQueries({
+    queries: [
+      {
+        ...getCurrentUserOptions(),
+        retry: false,
+        staleTime: Infinity,
+      },
+      {
+        ...getApplicationDataOptions(),
+        staleTime: Infinity,
+      },
+    ],
   })
+  const { data: currentUser, isLoading: isLoadingUser } = currentUserQuery
+  const { data: appData, isLoading: isLoadingApp } = appDataQuery
 
   useEffect(() => {
-    if (data) {
-      setUser(data)
-    }
-  }, [data, setUser])
-
-
-  const languages = useAppStore(s => s.languages)
-  const setLanguages = useAppStore(s => s.setLanguages)
-
-  const { appData, appDataIsLoading } = useQuery({
-    ...listLanguagesOptions(),
-    staleTime: Infinity, // jamais stale tant qu’on est connecté
-  })
+    if (currentUser) setUser(currentUser)
+  }, [currentUser, setUser])
 
   useEffect(() => {
-    if (appData) {
-      setLanguages(appData)
-    }
-  }, [appData, setLanguages])
+    if (appData) setAppData(appData)
+  }, [appData, setAppData])
 
-  if (isLoading || appDataIsLoading) {
+  if (isLoadingUser || isLoadingApp) {
     return <GlobalSkeleton />
   }
 

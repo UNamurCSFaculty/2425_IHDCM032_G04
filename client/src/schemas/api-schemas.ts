@@ -6,11 +6,12 @@ import i18n from '../i18n'
  */
 export const zRole = z.object({
   id: z.number().int().readonly().optional(),
-  name: z.string().min(1, i18n.t("validation.required")),
+  name: z.string().min(1, i18n.t('validation.required')),
 })
 
 export const zLanguage = z.object({
-  id: z.number().int().readonly(),
+  id: z.number().int().readonly().optional(),
+  code: z.string().min(1),
   name: z.string().min(1),
 })
 
@@ -25,23 +26,23 @@ export const zUser = z.object({
     'transformer',
     'quality_inspector',
     'exporter',
-    'carrier'
+    'carrier',
   ]),
-  firstName: z.string().min(1, i18n.t("validation.required")),
-  lastName: z.string().min(1, i18n.t("validation.required")),
-  email: z.string().min(1, i18n.t("validation.required")),
+  firstName: z.string().min(1, i18n.t('validation.required')),
+  lastName: z.string().min(1, i18n.t('validation.required')),
+  email: z.string().min(1, i18n.t('validation.required')),
   registrationDate: z.iso.datetime().readonly().optional(),
   validationDate: z.iso.datetime().readonly().optional(),
   enabled: z.boolean().optional(),
-  address: z.string().min(1, i18n.t("validation.required")),
+  address: z.string().min(1, i18n.t('validation.required')),
   phone: z.string().regex(/^(?:\+229)?(?:01[2-9]\d{7}|[2-9]\d{7})$/),
-  password: z.string().min(8, i18n.t("validation.minLength")),
+  password: z.string().min(8, i18n.t('validation.minLength')),
   language: zLanguage,
 })
 
 const zProducer = zUser.extend({
   type: z.literal('producer'),
-  agriculturalIdentifier: z.string().min(1, i18n.t("validation.required")),
+  agriculturalIdentifier: z.string().min(1, i18n.t('validation.required')),
 })
 
 const zTransformer = zUser.extend({
@@ -77,7 +78,7 @@ export const zUserRegistration = z
   )
   .refine(data => data.password === data.passwordValidation, {
     path: ['passwordValidation'],
-    message: i18n.t('Les mots de passe ne correspondent pas')
+    message: i18n.t('Les mots de passe ne correspondent pas'),
   })
 
 export const zTrader = z.discriminatedUnion('type', [
@@ -98,8 +99,8 @@ export const zField = z.object({
 
 export const zCooperative: z.ZodObject = z.object({
   id: z.number().int().readonly().optional(),
-  name: z.string().min(1, i18n.t("validation.required")),
-  address: z.string().min(1, i18n.t("validation.required")),
+  name: z.string().min(1, i18n.t('validation.required')),
+  address: z.string().min(1, i18n.t('validation.required')),
   creationDate: z.iso.datetime(),
   president: zProducer,
 })
@@ -112,19 +113,19 @@ export const zStore = z.object({
 
 export const zRegion = z.object({
   id: z.number().int().readonly().optional(),
-  name: z.string().min(1, i18n.t("validation.required")),
+  name: z.string().min(1, i18n.t('validation.required')),
 })
 
 export const zQuality = z.object({
   id: z.number().int().readonly().optional(),
-  name: z.string().min(1, i18n.t("validation.required")),
+  name: z.string().min(1, i18n.t('validation.required')),
 })
 
 export const zDocument = z.object({
   id: z.number().int().readonly().optional(),
-  documentType: z.string().min(1, i18n.t("validation.required")),
-  format: z.string().min(1, i18n.t("validation.required")),
-  storagePath: z.string().min(1, i18n.t("validation.required")),
+  documentType: z.string().min(1, i18n.t('validation.required')),
+  format: z.string().min(1, i18n.t('validation.required')),
+  storagePath: z.string().min(1, i18n.t('validation.required')),
   uploadDate: z.iso.datetime().readonly().optional(),
   userId: z.number().int(),
 })
@@ -140,7 +141,7 @@ export const zProduct: z.ZodObject = z.object({
 
 export const zTransformedProduct = zProduct.extend({
   type: z.literal('transformed'),
-  location: z.string().min(1, i18n.t("validation.required")),
+  location: z.string().min(1, i18n.t('validation.required')),
   transformer: zTransformer,
 })
 
@@ -163,7 +164,7 @@ export const zProductDeposit = z.discriminatedUnion('type', [
  */
 export const zQualityControl: z.ZodObject = z.object({
   id: z.number().int().readonly().optional(),
-  identifier: z.string().min(1, i18n.t("validation.required")),
+  identifier: z.string().min(1, i18n.t('validation.required')),
   controlDate: z.iso.datetime(),
   granularity: z.number(),
   korTest: z.number(),
@@ -177,7 +178,7 @@ export const zQualityControl: z.ZodObject = z.object({
 export const zContractOffer = z
   .object({
     id: z.number().int().readonly().optional(),
-    status: z.string().min(1, i18n.t("validation.required")),
+    status: z.string().min(1, i18n.t('validation.required')),
     pricePerKg: z.number(),
     creationDate: z.iso.datetime().readonly(),
     endDate: z.iso.datetime(),
@@ -187,7 +188,7 @@ export const zContractOffer = z
   })
   .refine(data => data.seller.id !== data.buyer.id, {
     path: ['buyer'],
-    message: i18n.t("Le vendeur et l'acheteur doivent être différents")
+    message: i18n.t("Le vendeur et l'acheteur doivent être différents"),
   })
 
 /**
@@ -195,18 +196,18 @@ export const zContractOffer = z
  */
 export const zAuctionStrategy = z.object({
   id: z.number().int().readonly().optional(),
-  name: z.string().min(1, i18n.t("validation.required")),
+  name: z.string().min(1, i18n.t('validation.required')),
 })
 
 export const zAuctionOption = z.object({
   id: z.number().int().readonly().optional(),
-  name: z.string().min(1, i18n.t("validation.required")),
+  name: z.string().min(1, i18n.t('validation.required')),
 })
 
 export const zAuctionOptionValue = z.object({
   id: z.number().int().readonly().optional(),
   auctionOption: zAuctionOption,
-  optionValue: z.string().min(1, i18n.t("validation.required")),
+  optionValue: z.string().min(1, i18n.t('validation.required')),
 })
 
 export const zAuction = z.object({
@@ -223,7 +224,7 @@ export const zAuction = z.object({
 
 export const zBidStatus = z.object({
   id: z.number().int().readonly().optional(),
-  name: z.string().min(1, i18n.t("validation.required")),
+  name: z.string().min(1, i18n.t('validation.required')),
 })
 
 export const zBid = z.object({

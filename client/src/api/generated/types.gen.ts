@@ -7,7 +7,7 @@ export type CooperativeDtoReadable = {
     /**
      * Identifiant de la coopérative
      */
-    readonly id?: number;
+    readonly id: number;
     /**
      * Nom de la coopérative
      */
@@ -55,7 +55,7 @@ export type FieldDtoReadable = {
     /**
      * Identifiant unique du champ.
      */
-    readonly id?: number;
+    readonly id: number;
     /**
      * Identifiant du champ (code unique)
      */
@@ -95,7 +95,11 @@ export type LanguageDtoReadable = {
     /**
      * Identifiant de la langue
      */
-    readonly id?: number;
+    readonly id: number;
+    /**
+     * Code de la langue
+     */
+    code: string;
     /**
      * Nom de la langue
      */
@@ -106,6 +110,10 @@ export type LanguageDtoReadable = {
  * Objet de transfert de données pour une langue.
  */
 export type LanguageDtoWritable = {
+    /**
+     * Code de la langue
+     */
+    code: string;
     /**
      * Nom de la langue
      */
@@ -119,7 +127,7 @@ export type ProducerDetailDtoReadable = {
     /**
      * Identifiant de l'utilisateur
      */
-    readonly id?: number;
+    readonly id: number;
     /**
      * Prénom de l'utilisateur
      */
@@ -231,7 +239,7 @@ export type RoleDtoReadable = {
     /**
      * Identifiant unique du rôle
      */
-    readonly id?: number;
+    readonly id: number;
     /**
      * Nom du rôle
      */
@@ -346,7 +354,7 @@ export type TransformerDetailDtoReadable = {
     /**
      * Identifiant de l'utilisateur
      */
-    readonly id?: number;
+    readonly id: number;
     /**
      * Prénom de l'utilisateur
      */
@@ -442,7 +450,7 @@ export type UserDetailDtoReadable = {
     /**
      * Identifiant de l'utilisateur
      */
-    readonly id?: number;
+    readonly id: number;
     /**
      * Prénom de l'utilisateur
      */
@@ -548,7 +556,7 @@ export type ApiErrorResponse = {
      */
     path: string;
     /**
-     * Code interne d'erreur
+     * Code global d'erreur
      */
     code: string;
     /**
@@ -566,6 +574,10 @@ export type ErrorDetail = {
      */
     field?: string;
     /**
+     * Code d'erreur détaillé
+     */
+    code: string;
+    /**
      * Message décrivant l'erreur
      */
     message: string;
@@ -578,7 +590,7 @@ export type StoreDetailDtoReadable = {
     /**
      * Identifiant du store
      */
-    readonly id?: number;
+    readonly id: number;
     /**
      * Coordonnées géographiques du store (au format GeoJSON, WKT ou équivalent)
      */
@@ -610,7 +622,7 @@ export type RegionDtoReadable = {
     /**
      * Identifiant unique de la région
      */
-    readonly id?: number;
+    readonly id: number;
     /**
      * Nom de la région
      */
@@ -634,7 +646,7 @@ export type QualityDtoReadable = {
     /**
      * Identifiant de la qualité
      */
-    readonly id?: number;
+    readonly id: number;
     /**
      * Nom de la qualité
      */
@@ -649,6 +661,58 @@ export type QualityDtoWritable = {
      * Nom de la qualité
      */
     name: string;
+};
+
+/**
+ * Objet de transfert de données pour les entités Document.
+ */
+export type DocumentDtoReadable = {
+    /**
+     * Identifiant unique du document
+     */
+    readonly id: number;
+    /**
+     * Type de document
+     */
+    documentType: string;
+    /**
+     * Format du document
+     */
+    format: string;
+    /**
+     * Chemin de stockage du document
+     */
+    storagePath: string;
+    /**
+     * Date et heure de l'envoi du document
+     */
+    readonly uploadDate?: string;
+    /**
+     * Identifiant de l'utilisateur associé au document
+     */
+    userId: number;
+};
+
+/**
+ * Objet de transfert de données pour les entités Document.
+ */
+export type DocumentDtoWritable = {
+    /**
+     * Type de document
+     */
+    documentType: string;
+    /**
+     * Format du document
+     */
+    format: string;
+    /**
+     * Chemin de stockage du document
+     */
+    storagePath: string;
+    /**
+     * Identifiant de l'utilisateur associé au document
+     */
+    userId: number;
 };
 
 /**
@@ -698,7 +762,7 @@ export type ProductDtoReadable = {
     /**
      * Identifiant unique du produit
      */
-    readonly id?: number;
+    readonly id: number;
     deliveryDate?: string;
     /**
      * Poids en kg du produit
@@ -725,6 +789,94 @@ export type ProductDtoWritable = {
      * Type de produit.
      */
     type: 'harvest' | 'transformed';
+};
+
+/**
+ * Objet de transfert de données pour le contrôle qualité.
+ */
+export type QualityControlDtoReadable = {
+    /**
+     * Identifiant unique du contrôle qualité
+     */
+    readonly id: number;
+    /**
+     * Identifiant du contrôle qualité
+     */
+    identifier: string;
+    /**
+     * Date de contrôle qualité
+     */
+    controlDate: string;
+    /**
+     * Granularité mesurée
+     */
+    granularity: number;
+    /**
+     * Résultat du test KOR
+     */
+    korTest: number;
+    /**
+     * Taux d'humidité mesuré
+     */
+    humidity: number;
+    /**
+     * Inspecteur qualité associé
+     */
+    qualityInspector: QualityInspectorDetailDtoReadable;
+    /**
+     * Produit associé
+     */
+    product: HarvestProductDtoReadable | TransformedProductDtoReadable;
+    /**
+     * Qualité associée
+     */
+    quality: QualityDtoReadable;
+    /**
+     * Document associé au contrôle qualité
+     */
+    document: DocumentDtoReadable;
+};
+
+/**
+ * Objet de transfert de données pour le contrôle qualité.
+ */
+export type QualityControlDtoWritable = {
+    /**
+     * Identifiant du contrôle qualité
+     */
+    identifier: string;
+    /**
+     * Date de contrôle qualité
+     */
+    controlDate: string;
+    /**
+     * Granularité mesurée
+     */
+    granularity: number;
+    /**
+     * Résultat du test KOR
+     */
+    korTest: number;
+    /**
+     * Taux d'humidité mesuré
+     */
+    humidity: number;
+    /**
+     * Inspecteur qualité associé
+     */
+    qualityInspector: QualityInspectorDetailDtoWritable;
+    /**
+     * Produit associé
+     */
+    product: HarvestProductDtoWritable | TransformedProductDtoWritable;
+    /**
+     * Qualité associée
+     */
+    quality: QualityDtoWritable;
+    /**
+     * Document associé au contrôle qualité
+     */
+    document: DocumentDtoWritable;
 };
 
 /**
@@ -768,65 +920,13 @@ export type TransformedProductDtoWritable = ProductDtoWritable & {
 };
 
 /**
- * Objet de transfert de données pour les entités Document.
- */
-export type DocumentDtoReadable = {
-    /**
-     * Identifiant unique du document
-     */
-    readonly id?: number;
-    /**
-     * Type de document
-     */
-    documentType: string;
-    /**
-     * Format du document
-     */
-    format: string;
-    /**
-     * Chemin de stockage du document
-     */
-    storagePath: string;
-    /**
-     * Date et heure de l'envoi du document
-     */
-    readonly uploadDate?: string;
-    /**
-     * Identifiant de l'utilisateur associé au document
-     */
-    userId: number;
-};
-
-/**
- * Objet de transfert de données pour les entités Document.
- */
-export type DocumentDtoWritable = {
-    /**
-     * Type de document
-     */
-    documentType: string;
-    /**
-     * Format du document
-     */
-    format: string;
-    /**
-     * Chemin de stockage du document
-     */
-    storagePath: string;
-    /**
-     * Identifiant de l'utilisateur associé au document
-     */
-    userId: number;
-};
-
-/**
  * Objet de transfert de données pour les offres de contrat.
  */
 export type ContractOfferDtoReadable = {
     /**
      * Identifiant unique de l'offre de contrat
      */
-    readonly id?: number;
+    readonly id: number;
     /**
      * Statut de l'offre de contrat
      */
@@ -894,7 +994,7 @@ export type AuctionDtoReadable = {
     /**
      * Identifiant unique de l'enchère
      */
-    readonly id?: number;
+    readonly id: number;
     /**
      * Prix de l'enchère
      */
@@ -970,7 +1070,7 @@ export type AuctionOptionDtoReadable = {
     /**
      * Identifiant unique de l'option d'enchère
      */
-    readonly id?: number;
+    readonly id: number;
     /**
      * Nom de l'option d'enchère
      */
@@ -994,7 +1094,7 @@ export type AuctionOptionValueDtoReadable = {
     /**
      * Identifiant unique de la valeur d'option d'enchère
      */
-    readonly id?: number;
+    readonly id: number;
     /**
      * Option d'enchère associée
      */
@@ -1026,7 +1126,7 @@ export type AuctionStrategyDtoReadable = {
     /**
      * Identifiant unique de la stratégie d'enchère
      */
-    readonly id?: number;
+    readonly id: number;
     /**
      * Nom de la stratégie d'enchère
      */
@@ -1050,7 +1150,7 @@ export type BidDtoReadable = {
     /**
      * Identifiant unique de l'offre d'achat
      */
-    readonly id?: number;
+    readonly id: number;
     /**
      * Montant de l'offre
      */
@@ -1110,7 +1210,7 @@ export type BidStatusDtoReadable = {
     /**
      * Identifiant unique du statut
      */
-    readonly id?: number;
+    readonly id: number;
     /**
      * Nom du statut
      */
@@ -1246,7 +1346,7 @@ export type UserListDtoReadable = {
     /**
      * Identifiant de l'utilisateur
      */
-    readonly id?: number;
+    readonly id: number;
     /**
      * Prénom de l'utilisateur
      */
@@ -1321,6 +1421,26 @@ export type UserListDtoWritable = {
      * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
      */
     type: 'admin' | 'producer' | 'transformer' | 'quality_inspector' | 'exporter' | 'carrier';
+};
+
+/**
+ * Données nécessaires pour l'application cliente.
+ */
+export type ApplicationDataDtoReadable = {
+    /**
+     * Liste des stratégies d'enchères disponibles.
+     */
+    languages: Array<LanguageDtoReadable>;
+};
+
+/**
+ * Données nécessaires pour l'application cliente.
+ */
+export type ApplicationDataDtoWritable = {
+    /**
+     * Liste des stratégies d'enchères disponibles.
+     */
+    languages: Array<LanguageDtoWritable>;
 };
 
 export type DeleteFieldData = {
@@ -1945,6 +2065,120 @@ export type UpdateQualityErrors = {
 export type UpdateQualityError = UpdateQualityErrors[keyof UpdateQualityErrors];
 
 export type UpdateQualityResponses = {
+    /**
+     * Updated successfully
+     */
+    200: unknown;
+};
+
+export type DeleteQualityControlData = {
+    body?: never;
+    path: {
+        /**
+         * Identifiant de la ressource
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/products/{productId}/quality-controls/{id}';
+};
+
+export type DeleteQualityControlErrors = {
+    /**
+     * Unauthorized
+     */
+    401: ApiError;
+    /**
+     * Forbidden
+     */
+    403: ApiError;
+    /**
+     * Not Found
+     */
+    404: ApiError;
+};
+
+export type DeleteQualityControlError = DeleteQualityControlErrors[keyof DeleteQualityControlErrors];
+
+export type DeleteQualityControlResponses = {
+    /**
+     * Deleted successfully
+     */
+    204: void;
+};
+
+export type DeleteQualityControlResponse = DeleteQualityControlResponses[keyof DeleteQualityControlResponses];
+
+export type GetQualityControlData = {
+    body?: never;
+    path: {
+        /**
+         * Identifiant de la ressource
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/products/{productId}/quality-controls/{id}';
+};
+
+export type GetQualityControlErrors = {
+    /**
+     * Unauthorized
+     */
+    401: ApiError;
+    /**
+     * Forbidden
+     */
+    403: ApiError;
+    /**
+     * Not Found
+     */
+    404: ApiError;
+};
+
+export type GetQualityControlError = GetQualityControlErrors[keyof GetQualityControlErrors];
+
+export type GetQualityControlResponses = {
+    /**
+     * Success
+     */
+    200: unknown;
+};
+
+export type UpdateQualityControlData = {
+    body: QualityControlDtoWritable;
+    path: {
+        /**
+         * Identifiant de la ressource
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/products/{productId}/quality-controls/{id}';
+};
+
+export type UpdateQualityControlErrors = {
+    /**
+     * Bad Request
+     */
+    400: ApiError;
+    /**
+     * Unauthorized
+     */
+    401: ApiError;
+    /**
+     * Forbidden
+     */
+    403: ApiError;
+    /**
+     * Not Found
+     */
+    404: ApiError;
+};
+
+export type UpdateQualityControlError = UpdateQualityControlErrors[keyof UpdateQualityControlErrors];
+
+export type UpdateQualityControlResponses = {
     /**
      * Updated successfully
      */
@@ -2871,6 +3105,10 @@ export type CreateUserErrors = {
      * Erreur de validation ou JSON invalide
      */
     400: ApiErrorResponse;
+    /**
+     * Conflit avec un utilisateur existant
+     */
+    409: ApiErrorResponse;
 };
 
 export type CreateUserError = CreateUserErrors[keyof CreateUserErrors];
@@ -3235,6 +3473,70 @@ export type CreateProductErrors = {
 export type CreateProductError = CreateProductErrors[keyof CreateProductErrors];
 
 export type CreateProductResponses = {
+    /**
+     * Created
+     */
+    201: unknown;
+};
+
+export type ListQualityControlsData = {
+    body?: never;
+    path: {
+        productId: number;
+    };
+    query?: never;
+    url: '/api/products/{productId}/quality-controls';
+};
+
+export type ListQualityControlsErrors = {
+    /**
+     * Unauthorized
+     */
+    401: ApiError;
+    /**
+     * Forbidden
+     */
+    403: ApiError;
+    /**
+     * Not Found
+     */
+    404: ApiError;
+};
+
+export type ListQualityControlsError = ListQualityControlsErrors[keyof ListQualityControlsErrors];
+
+export type ListQualityControlsResponses = {
+    /**
+     * Success
+     */
+    200: unknown;
+};
+
+export type CreateQualityControlData = {
+    body: QualityControlDtoWritable;
+    path?: never;
+    query?: never;
+    url: '/api/products/{productId}/quality-controls';
+};
+
+export type CreateQualityControlErrors = {
+    /**
+     * Bad Request
+     */
+    400: ApiError;
+    /**
+     * Unauthorized
+     */
+    401: ApiError;
+    /**
+     * Forbidden
+     */
+    403: ApiError;
+};
+
+export type CreateQualityControlError = CreateQualityControlErrors[keyof CreateQualityControlErrors];
+
+export type CreateQualityControlResponses = {
     /**
      * Created
      */
@@ -3716,6 +4018,22 @@ export type GetCurrentUserResponses = {
 };
 
 export type GetCurrentUserResponse = GetCurrentUserResponses[keyof GetCurrentUserResponses];
+
+export type GetApplicationDataData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/app';
+};
+
+export type GetApplicationDataResponses = {
+    /**
+     * OK
+     */
+    200: ApplicationDataDtoReadable;
+};
+
+export type GetApplicationDataResponse = GetApplicationDataResponses[keyof GetApplicationDataResponses];
 
 export type ClientOptions = {
     baseUrl: 'http://localhost:8080' | (string & {});

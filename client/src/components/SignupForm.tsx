@@ -2,28 +2,43 @@ import { zUserRegistration } from '@/schemas/api-schemas'
 import { useNavigate } from '@tanstack/react-router'
 import { useAppForm } from '@/components/form'
 import { useStore } from '@tanstack/react-form'
-import { useMutation } from "@tanstack/react-query";
-import { createUserMutation } from "@/api/generated/@tanstack/react-query.gen.ts";
+import { useMutation } from '@tanstack/react-query'
+import { createUserMutation } from '@/api/generated/@tanstack/react-query.gen.ts'
 import { useTranslation } from 'react-i18next'
+import type z from 'zod'
+import { useAppData } from '@/store/appStore'
 
+export type UserRegistration = z.infer<typeof zUserRegistration>
 
-export function SignupForm() : React.ComponentProps<'div'> {
+export function SignupForm(): React.ComponentProps<'div'> {
   const navigate = useNavigate()
   const { t } = useTranslation()
+  const appData = useAppData()
 
   const signinMutation = useMutation({
     ...createUserMutation(),
     onSuccess() {
-        navigate({ to: '/login'})
+      navigate({ to: '/login' })
     },
     onError(error) {
-      console.error("Requête invalide :", error)
-    }
+      console.error('Requête invalide :', error)
+    },
   })
 
   const { isPending, isError, error } = signinMutation
 
-  const form = useAppForm({
+  const form = useAppForm<
+    UserRegistration, // TFormData
+    undefined, // TOnMount
+    typeof zUserRegistration, // TOnChange
+    undefined, // TOnChangeAsync
+    undefined, // TOnBlur
+    undefined, // TOnBlurAsync
+    undefined, // TOnSubmit
+    undefined, // TOnSubmitAsync
+    undefined, // TOnServer
+    undefined // TSubmitMeta
+  >({
     validators: { onChange: zUserRegistration },
     defaultValues: {
       type: 'producer',
@@ -34,13 +49,13 @@ export function SignupForm() : React.ComponentProps<'div'> {
       address: '',
       password: '',
       passwordValidation: '',
-      language: { id: 1352, name: "Français" },
-      agriculturalIdentifier: ''
+      language: appData.languages[0],
+      agriculturalIdentifier: '',
     },
     onSubmit({ value }) {
-      const validatedValue = zUserRegistration.parse(value);
-      signinMutation.mutate({ body: validatedValue})
-    }
+      const validatedValue = zUserRegistration.parse(value)
+      signinMutation.mutate({ body: validatedValue })
+    },
   })
 
   const type = useStore(form.store, state => state.values.type)
@@ -86,39 +101,65 @@ export function SignupForm() : React.ComponentProps<'div'> {
             <div className="w-1/2 p-2">
               <form.AppField
                 name="lastName"
-                children={field => <field.TextField label={t('form.last_name')} disabled={isPending} />}
+                children={field => (
+                  <field.TextField
+                    label={t('form.last_name')}
+                    disabled={isPending}
+                  />
+                )}
               />
             </div>
             <div className="w-1/2 p-2">
               <form.AppField
                 name="firstName"
-                children={field => <field.TextField label={t('form.first_name')} disabled={isPending} />}
+                children={field => (
+                  <field.TextField
+                    label={t('form.first_name')}
+                    disabled={isPending}
+                  />
+                )}
               />
             </div>
             <div className="w-1/2 p-2">
               <form.AppField
                 name="language"
-                children={field => <field.SelectLanguageField disabled={isPending} />}
+                children={field => (
+                  <field.SelectLanguageField disabled={isPending} />
+                )}
               />
             </div>
             <div className="w-1/2 p-2">
               <form.AppField
                 name="email"
                 children={field => (
-                  <field.TextField type="email" label={t('form.mail')} disabled={isPending} />
+                  <field.TextField
+                    type="email"
+                    label={t('form.mail')}
+                    disabled={isPending}
+                  />
                 )}
               />
             </div>
             <div className="w-1/2 p-2">
               <form.AppField
                 name="address"
-                children={field => <field.TextField label={t('form.address')} disabled={isPending} />}
+                children={field => (
+                  <field.TextField
+                    label={t('form.address')}
+                    disabled={isPending}
+                  />
+                )}
               />
             </div>
             <div className="w-1/2 p-2">
               <form.AppField
                 name="phone"
-                children={field => <field.TextField label={t('form.phone')} disabled={isPending} />}
+                children={field => (
+                  <field.TextField
+                    label={t('form.phone')}
+                    disabled={isPending}
+                  />
+                )}
               />
             </div>
             {type === 'producer' ? (
@@ -126,18 +167,25 @@ export function SignupForm() : React.ComponentProps<'div'> {
                 <form.AppField
                   name="agriculturalIdentifier"
                   children={field => (
-                    <field.TextField label={t('form.agricultural_identifier')} disabled={isPending} />
+                    <field.TextField
+                      label={t('form.agricultural_identifier')}
+                      disabled={isPending}
+                    />
                   )}
                 />
               </div>
             ) : (
-                <div className="w-1/2 p-2" aria-hidden="true" />
+              <div className="w-1/2 p-2" aria-hidden="true" />
             )}
             <div className="w-1/2 p-2">
               <form.AppField
                 name="password"
                 children={field => (
-                  <field.TextField type="password" label={t('form.password')} disabled={isPending} />
+                  <field.TextField
+                    type="password"
+                    label={t('form.password')}
+                    disabled={isPending}
+                  />
                 )}
               />
             </div>
@@ -154,16 +202,16 @@ export function SignupForm() : React.ComponentProps<'div'> {
               />
             </div>
             {isError && error?.errors?.length > 0 && (
-                <div className="flex w-full p-2 justify-center text-sm text-red-600">
+              <div className="flex w-full justify-center p-2 text-sm text-red-600">
+                <ul className="list-disc">
                   {error.errors.map((err, idx) => (
-                      <div key={idx}>
-                        {err.field
-                            ? `${err.field} : ${err.message}`
-                            : err.message
-                        }
-                      </div>
+                    <li key={idx} className="mb-1">
+                      {err.field ? `${t('errors.fields.' + err.field)}: ` : ''}
+                      {t('errors.' + err.code)}
+                    </li>
                   ))}
-                </div>
+                </ul>
+              </div>
             )}
             <div className="flex w-full items-center justify-center gap-4 p-2">
               <form.AppForm>

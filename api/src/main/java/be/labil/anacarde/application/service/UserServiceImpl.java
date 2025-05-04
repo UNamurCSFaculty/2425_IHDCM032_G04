@@ -49,13 +49,16 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
 		boolean emailExist = userRepository.findByEmail(dto.getEmail()).isPresent();
 		boolean phoneExist = userRepository.findByPhone(dto.getPhone()).isPresent();
+		// TODO: vérifier l'identificateur ID pour un producteur.
 		if (emailExist || phoneExist) {
 			List<ErrorDetail> errors = new ArrayList<>();
 			if (emailExist) {
-				errors.add(new ErrorDetail("email", "email.exists", "L'email est déjà utilisé"));
+				errors.add(new ErrorDetail("email", ApiErrorCode.CONFLICT_EMAIL_EXISTS.code(),
+						"L'email est déjà utilisé"));
 			}
 			if (phoneExist) {
-				errors.add(new ErrorDetail("phone", "phone.exists", "Le numéro de téléphone est déjà utilisé"));
+				errors.add(new ErrorDetail("phone", ApiErrorCode.CONFLICT_PHONE_EXISTS.code(),
+						"Le numéro de téléphone est déjà utilisé"));
 			}
 			throw new ApiErrorException(HttpStatus.CONFLICT, ApiErrorCode.BAD_REQUEST.code(), errors);
 		}

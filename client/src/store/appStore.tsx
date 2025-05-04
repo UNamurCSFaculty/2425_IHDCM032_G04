@@ -1,12 +1,20 @@
 import { create } from 'zustand'
-import {type LanguageDtoReadable} from '@/api/generated/types.gen'
+import { type ApplicationDataDtoReadable } from '@/api/generated/types.gen'
 
-interface AppState {
-    languages: LanguageDtoReadable[] | null
-    setLanguages: (languages: LanguageDtoReadable[]) => void
+interface AppDatatate {
+  appData: ApplicationDataDtoReadable | null
+  setAppData: (appData: ApplicationDataDtoReadable) => void
 }
 
-export const useAppStore = create<AppState>((set) => ({
-    languages: null,
-    setLanguages: (languages) => set({ languages: languages }),
+export const useAppStore = create<AppDatatate>(set => ({
+  appData: null,
+  setAppData: appData => set({ appData }),
 }))
+
+export function useAppData(): ApplicationDataDtoReadable {
+  const appData = useAppStore(s => s.appData)
+  if (appData === null) {
+    throw new Error('App data should have been loaded by now!')
+  }
+  return appData
+}
