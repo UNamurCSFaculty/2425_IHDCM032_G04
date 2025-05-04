@@ -23,6 +23,6 @@ public class ContactRequestDto {
 
 	@Schema(description = "Message du contact", example = "Bonjour, j'ai une question...", requiredMode = Schema.RequiredMode.REQUIRED)
 	@NotBlank(message = "Le message est obligatoire")
-	@Size(max = 2000, message = "Le message ne doit pas dépasser {max} caractères")
+	@Size(max = 500, message = "Le message ne doit pas dépasser {max} caractères")
 	private String message;
 }
