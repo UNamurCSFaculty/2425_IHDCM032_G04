@@ -7,10 +7,8 @@ import be.labil.anacarde.domain.dto.AuctionDto;
 import be.labil.anacarde.domain.dto.AuctionStrategyDto;
 import be.labil.anacarde.domain.dto.HarvestProductDto;
 import be.labil.anacarde.domain.dto.ProductDto;
-import be.labil.anacarde.domain.dto.user.TraderDetailDto;
 import be.labil.anacarde.domain.dto.user.TransformerDetailDto;
 import be.labil.anacarde.domain.model.*;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;

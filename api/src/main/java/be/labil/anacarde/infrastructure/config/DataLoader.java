@@ -80,22 +80,26 @@ public class DataLoader implements CommandLineRunner {
 		auctionStrategy = auctionStrategyService.createAuctionStrategy(auctionStrategy);
 
 		// Création d'enchères (pour l'utilisateur producer)
-		AuctionDto auction1 = createAuction(product, (TraderDetailDto) producer, BigDecimal.valueOf(500), 10, LocalDateTime.now(), auctionStrategy);
-		AuctionDto auction2 = createAuction(product, (TraderDetailDto) producer, BigDecimal.valueOf(2500), 20, LocalDateTime.now().plusDays(5), auctionStrategy);
-		AuctionDto auction3 = createAuction(product, (TraderDetailDto) producer, BigDecimal.valueOf(3500), 50, LocalDateTime.now().plusDays(5), auctionStrategy);
+		AuctionDto auction1 = createAuction(product, (TraderDetailDto) producer, BigDecimal.valueOf(500), 10,
+				LocalDateTime.now(), auctionStrategy);
+		AuctionDto auction2 = createAuction(product, (TraderDetailDto) producer, BigDecimal.valueOf(2500), 20,
+				LocalDateTime.now().plusDays(5), auctionStrategy);
+		AuctionDto auction3 = createAuction(product, (TraderDetailDto) producer, BigDecimal.valueOf(3500), 50,
+				LocalDateTime.now().plusDays(5), auctionStrategy);
 		auction1 = auctionService.createAuction(auction1);
 		auction2 = auctionService.createAuction(auction2);
 		auction3 = auctionService.createAuction(auction3);
 
 		// Création d'enchères (pour l'utilisateur transformateur)
-		AuctionDto auction4 = createAuction(product, (TraderDetailDto) transformer, BigDecimal.valueOf(999), 100, LocalDateTime.now().plusDays(5), auctionStrategy);
+		AuctionDto auction4 = createAuction(product, (TraderDetailDto) transformer, BigDecimal.valueOf(999), 100,
+				LocalDateTime.now().plusDays(5), auctionStrategy);
 		auction4 = auctionService.createAuction(auction4);
 
 		// Création de status d'offres
 		BidStatusDto bidStatusEnCours = createBidStatus("En cours");
 		BidStatusDto bidStatusAccepte = createBidStatus("Accepté");
-		bidStatusEnCours = bidStatusService.createBidStatus(bidStatusEnCours);
 		bidStatusAccepte = bidStatusService.createBidStatus(bidStatusAccepte);
+		bidStatusEnCours = bidStatusService.createBidStatus(bidStatusEnCours);
 
 		// Création d'offres
 		BidDto bid1 = createBid(auction1, (TraderDetailDto) transformer, BigDecimal.valueOf(100), LocalDateTime.now(),
@@ -151,8 +155,8 @@ public class DataLoader implements CommandLineRunner {
 		return harvestProduct;
 	}
 
-	private AuctionDto createAuction(ProductDto product, TraderDetailDto trader, BigDecimal price, int quantity, LocalDateTime date,
-			AuctionStrategyDto strategy) {
+	private AuctionDto createAuction(ProductDto product, TraderDetailDto trader, BigDecimal price, int quantity,
+			LocalDateTime date, AuctionStrategyDto strategy) {
 		AuctionDto auction = new AuctionDto();
 		auction.setProduct(product);
 		auction.setPrice(price);

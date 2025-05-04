@@ -437,8 +437,11 @@ public abstract class AbstractIntegrationTest {
 				.strategy(testAuctionStrategy).trader((Trader) producer).build();
 		auctionRepository.save(auction4);
 
-		BidStatus bidStatus = BidStatus.builder().name("Accepté").build();
+		BidStatus bidStatus = BidStatus.builder().name("En cours").build();
 		testBidStatus = bidStatusRepository.save(bidStatus);
+
+		BidStatus bidStatusAccepted = BidStatus.builder().name("Accepté").build();
+		bidStatusRepository.save(bidStatusAccepted);
 
 		// A bid on an auction
 		Bid bid = Bid.builder().amount(new BigDecimal("10.0")).creationDate(LocalDateTime.now()).auction(auction)

@@ -35,8 +35,14 @@ public class BidApiController implements BidApi {
 	}
 
 	@Override
-	public ResponseEntity<BidDto> updateBid(Integer id, BidDto bidDto) {
-		BidDto updated = bidService.updateBid(id, bidDto);
+	public ResponseEntity<BidDto> updateBid(Integer auctionId, Integer bidId, BidDto bidDto) {
+		BidDto updated = bidService.updateBid(bidId, bidDto);
+		return ResponseEntity.ok(updated);
+	}
+
+	@Override
+	public ResponseEntity<BidDto> acceptBid(Integer auctionId, Integer bidId) {
+		BidDto updated = bidService.acceptBid(bidId);
 		return ResponseEntity.ok(updated);
 	}
 

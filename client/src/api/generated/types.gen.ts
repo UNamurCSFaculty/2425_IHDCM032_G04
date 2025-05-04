@@ -2727,6 +2727,10 @@ export type UpdateBidData = {
         /**
          * Identifiant de la ressource
          */
+        auctionId: number;
+        /**
+         * Identifiant de la ressource
+         */
         bidId: number;
     };
     query?: never;
@@ -2755,6 +2759,50 @@ export type UpdateBidErrors = {
 export type UpdateBidError = UpdateBidErrors[keyof UpdateBidErrors];
 
 export type UpdateBidResponses = {
+    /**
+     * Updated successfully
+     */
+    200: unknown;
+};
+
+export type AcceptBidData = {
+    body?: never;
+    path: {
+        /**
+         * Identifiant de la ressource
+         */
+        auctionId: number;
+        /**
+         * Identifiant de la ressource
+         */
+        bidId: number;
+    };
+    query?: never;
+    url: '/api/auctions/{auctionId}/bids/{bidId}/accept';
+};
+
+export type AcceptBidErrors = {
+    /**
+     * Bad Request
+     */
+    400: ApiError;
+    /**
+     * Unauthorized
+     */
+    401: ApiError;
+    /**
+     * Forbidden
+     */
+    403: ApiError;
+    /**
+     * Not Found
+     */
+    404: ApiError;
+};
+
+export type AcceptBidError = AcceptBidErrors[keyof AcceptBidErrors];
+
+export type AcceptBidResponses = {
     /**
      * Updated successfully
      */

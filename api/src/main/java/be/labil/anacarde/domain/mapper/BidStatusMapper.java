@@ -13,5 +13,5 @@ public abstract class BidStatusMapper {
 
 	@Mapping(source = "name", target = "name")
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-	public abstract BidStatus partialUpdate(BidStatusDto documentDto, @MappingTarget BidStatus entity);
+	public abstract BidStatus partialUpdate(BidStatusDto statusDto, @MappingTarget BidStatus entity);
 }

@@ -144,6 +144,19 @@ public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 	}
 
 	/**
+	 * Teste l'acceptation d'une offre.
+	 *
+	 */
+	@Test
+	public void testAcceptBid() throws Exception {
+		String jsonContent = "";
+
+		mockMvc.perform(put("/api/auctions/" + getTestAuction().getId() + "/bids/" + getTestBid().getId() + "/accept")
+				.contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwt())).andExpect(status().isOk())
+				.andExpect(jsonPath("$.amount").value("10.0")).andExpect(jsonPath("$.status.name").value("Accepté"));
+	}
+
+	/**
 	 * Teste la suppression d'une offre.
 	 * 
 	 */

@@ -4,7 +4,9 @@ import be.labil.anacarde.application.exception.ResourceNotFoundException;
 import be.labil.anacarde.domain.dto.BidDto;
 import be.labil.anacarde.domain.mapper.BidMapper;
 import be.labil.anacarde.domain.model.Bid;
+import be.labil.anacarde.domain.model.BidStatus;
 import be.labil.anacarde.infrastructure.persistence.BidRepository;
+import be.labil.anacarde.infrastructure.persistence.BidStatusRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @AllArgsConstructor
 public class BidServiceImpl implements BidService {
+	private final BidStatusRepository bidStatusRepository;
 	private final BidRepository bidRepository;
 	private final BidMapper bidMapper;
 
@@ -47,6 +50,22 @@ public class BidServiceImpl implements BidService {
 		Bid updatedBid = bidMapper.partialUpdate(bidDetailDto, existingBid);
 
 		Bid saved = bidRepository.save(updatedBid);
+		return bidMapper.toDto(saved);
+	}
+
+	@Override
+	public BidDto acceptBid(Integer id) {
+		BidStatus acceptedStatus = bidStatusRepository.findStatusAccepted();
+		if (acceptedStatus == null) {
+			throw new ResourceNotFoundException("Status non trouvé");
+		}
+
+		Bid existingBid = bidRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Offre non trouvée"));
+
+		existingBid.setStatus(acceptedStatus);
+
+		Bid saved = bidRepository.save(existingBid);
 		return bidMapper.toDto(saved);
 	}
 

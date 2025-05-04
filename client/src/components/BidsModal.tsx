@@ -3,8 +3,9 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
 import { Button } from '@/components/ui/button'
 import {useQuery } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import type { BidDtoReadable } from '@/api/generated';
-import { listBidsOptions } from '@/api/generated/@tanstack/react-query.gen'
+import { acceptBidMutation, listBidsOptions } from '@/api/generated/@tanstack/react-query.gen'
 import { formatDate } from '@/lib/utils';
 
 interface BidsModalProps {
@@ -20,6 +21,15 @@ const BidsModal: React.FC<BidsModalProps> = ({ isOpen, onClose, auctionId }) => 
       enabled: !!auctionId,
     }
   );
+
+  const { mutate: acceptBid } = useMutation(acceptBidMutation());
+
+  const handleAcceptBid = (bidId: number) => {
+    acceptBid({
+        path: { auctionId, bidId }
+      }
+    );
+  };
 
   return (
     <Dialog.Root open={isOpen} onOpenChange={onClose}>
@@ -55,7 +65,9 @@ const BidsModal: React.FC<BidsModalProps> = ({ isOpen, onClose, auctionId }) => 
                       </TableCell>
                       <TableCell>{bid.amount.toLocaleString()} CFA</TableCell>
                       <TableCell>
-                        <Button>Accepter</Button>
+                        <Button onClick={() => { handleAcceptBid(bid.id!); }}>
+                          Accepter
+                        </Button>
                       </TableCell>
                     </TableRow>
                   ))}

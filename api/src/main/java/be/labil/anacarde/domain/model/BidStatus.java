@@ -16,6 +16,6 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class BidStatus extends BaseEntity {
 
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String name;
 }
