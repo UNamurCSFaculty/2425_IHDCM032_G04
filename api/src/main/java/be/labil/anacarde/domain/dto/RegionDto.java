@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class RegionDto {
 
 	/** Identifiant unique de la région. */
-	@Schema(description = "Identifiant unique de la région", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
+	@Schema(description = "Identifiant unique de la région", example = "1", accessMode = Schema.AccessMode.READ_ONLY, requiredMode = Schema.RequiredMode.REQUIRED)
 	private Integer id;
 
 	/** Nom de la région. */

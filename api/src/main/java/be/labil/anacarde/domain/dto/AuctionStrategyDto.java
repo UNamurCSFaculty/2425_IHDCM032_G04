@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Schema(description = "Objet de transfert de données pour les stratégies d'enchère.")
 public class AuctionStrategyDto {
 
-	@Schema(description = "Identifiant unique de la stratégie d'enchère", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
+	@Schema(description = "Identifiant unique de la stratégie d'enchère", example = "1", accessMode = Schema.AccessMode.READ_ONLY, requiredMode = Schema.RequiredMode.REQUIRED)
 	private Integer id;
 
 	@NotBlank(message = "Le nom de la stratégie est requis")

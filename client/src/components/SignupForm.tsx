@@ -2,11 +2,43 @@ import { zUserRegistration } from '@/schemas/api-schemas'
 import { useNavigate } from '@tanstack/react-router'
 import { useAppForm } from '@/components/form'
 import { useStore } from '@tanstack/react-form'
+import { useMutation } from '@tanstack/react-query'
+import { createUserMutation } from '@/api/generated/@tanstack/react-query.gen.ts'
+import { useTranslation } from 'react-i18next'
+import type z from 'zod'
+import { useAppData } from '@/store/appStore'
 
-export function SignupForm() {
+export type UserRegistration = z.infer<typeof zUserRegistration>
+
+export function SignupForm(): React.ComponentProps<'div'> {
   const navigate = useNavigate()
+  const { t } = useTranslation()
+  const appData = useAppData()
 
-  const form = useAppForm({
+  const signinMutation = useMutation({
+    ...createUserMutation(),
+    onSuccess() {
+      navigate({ to: '/login' })
+    },
+    onError(error) {
+      console.error('Requête invalide :', error)
+    },
+  })
+
+  const { isPending, isError, error } = signinMutation
+
+  const form = useAppForm<
+    UserRegistration, // TFormData
+    undefined, // TOnMount
+    typeof zUserRegistration, // TOnChange
+    undefined, // TOnChangeAsync
+    undefined, // TOnBlur
+    undefined, // TOnBlurAsync
+    undefined, // TOnSubmit
+    undefined, // TOnSubmitAsync
+    undefined, // TOnServer
+    undefined // TSubmitMeta
+  >({
     validators: { onChange: zUserRegistration },
     defaultValues: {
       type: 'producer',
@@ -17,28 +49,27 @@ export function SignupForm() {
       address: '',
       password: '',
       passwordValidation: '',
-      language: { id: 1, name: 'Français' },
+      language: appData.languages[0],
       agriculturalIdentifier: '',
     },
-    onSubmit: async ({ value }) => {
-      // TODO: envoyer les données au serveur
-      console.log('Form submitted:', value)
-      navigate({ to: '/login' })
+    onSubmit({ value }) {
+      const validatedValue = zUserRegistration.parse(value)
+      signinMutation.mutate({ body: validatedValue })
     },
   })
 
   const type = useStore(form.store, state => state.values.type)
-  const canSubmit = useStore(form.store, state => state.canSubmit)
+  //const canSubmit = useStore(form.store, state => state.canSubmit)
 
   return (
     <section className="body-font relative text-gray-600">
       <div className="container mx-auto px-5 py-24">
         <div className="mb-12 flex w-full flex-col text-center">
           <h1 className="title-font mb-4 text-2xl font-medium text-gray-900 sm:text-3xl">
-            Contactez-nous
+            {t('app.signup.titre')}
           </h1>
           <p className="mx-auto text-base leading-relaxed lg:w-2/3">
-            N'hésitez pas à nous envoyer vos questions ou commentaires.
+            {t('app.signup.sous_titre')}
           </p>
         </div>
         <div className="mx-auto">
@@ -62,7 +93,7 @@ export function SignupForm() {
                       { value: 'transformer', label: 'Transformateur' },
                       { value: 'carrier', label: 'Transporteur' },
                     ]}
-                    label="Je suis"
+                    label={t('form.type')}
                   />
                 )}
               />
@@ -70,56 +101,91 @@ export function SignupForm() {
             <div className="w-1/2 p-2">
               <form.AppField
                 name="lastName"
-                children={field => <field.TextField label="Nom" />}
+                children={field => (
+                  <field.TextField
+                    label={t('form.last_name')}
+                    disabled={isPending}
+                  />
+                )}
               />
             </div>
             <div className="w-1/2 p-2">
               <form.AppField
                 name="firstName"
-                children={field => <field.TextField label="Prénom" />}
+                children={field => (
+                  <field.TextField
+                    label={t('form.first_name')}
+                    disabled={isPending}
+                  />
+                )}
               />
             </div>
             <div className="w-1/2 p-2">
               <form.AppField
                 name="language"
-                children={field => <field.SelectLanguageField />}
+                children={field => (
+                  <field.SelectLanguageField disabled={isPending} />
+                )}
               />
             </div>
             <div className="w-1/2 p-2">
               <form.AppField
                 name="email"
                 children={field => (
-                  <field.TextField type="email" label="Adresse mail" />
+                  <field.TextField
+                    type="email"
+                    label={t('form.mail')}
+                    disabled={isPending}
+                  />
                 )}
               />
             </div>
             <div className="w-1/2 p-2">
               <form.AppField
                 name="address"
-                children={field => <field.TextField label="Adresse" />}
+                children={field => (
+                  <field.TextField
+                    label={t('form.address')}
+                    disabled={isPending}
+                  />
+                )}
               />
             </div>
             <div className="w-1/2 p-2">
               <form.AppField
                 name="phone"
-                children={field => <field.TextField label="Téléphone" />}
+                children={field => (
+                  <field.TextField
+                    label={t('form.phone')}
+                    disabled={isPending}
+                  />
+                )}
               />
             </div>
-            {type === 'producer' && (
+            {type === 'producer' ? (
               <div className="w-1/2 p-2">
                 <form.AppField
                   name="agriculturalIdentifier"
                   children={field => (
-                    <field.TextField label="Identifiant agricole" />
+                    <field.TextField
+                      label={t('form.agricultural_identifier')}
+                      disabled={isPending}
+                    />
                   )}
                 />
               </div>
+            ) : (
+              <div className="w-1/2 p-2" aria-hidden="true" />
             )}
             <div className="w-1/2 p-2">
               <form.AppField
                 name="password"
                 children={field => (
-                  <field.TextField type="password" label="Mot de passe" />
+                  <field.TextField
+                    type="password"
+                    label={t('form.password')}
+                    disabled={isPending}
+                  />
                 )}
               />
             </div>
@@ -129,17 +195,30 @@ export function SignupForm() {
                 children={field => (
                   <field.TextField
                     type="password"
-                    label="Valider le mot de passe"
+                    label={t('form.confirm_password')}
+                    disabled={isPending}
                   />
                 )}
               />
             </div>
+            {isError && error?.errors?.length > 0 && (
+              <div className="flex w-full justify-center p-2 text-sm text-red-600">
+                <ul className="list-disc">
+                  {error.errors.map((err, idx) => (
+                    <li key={idx} className="mb-1">
+                      {err.field ? `${t('errors.fields.' + err.field)}: ` : ''}
+                      {t('errors.' + err.code)}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
             <div className="flex w-full items-center justify-center gap-4 p-2">
               <form.AppForm>
-                <form.SubmitButton disabled={!canSubmit}>
-                  Envoyer
+                <form.SubmitButton disabled={isPending}>
+                  {t('buttons.submit')}
                 </form.SubmitButton>
-                <form.ResetButton>Réinitialiser</form.ResetButton>
+                <form.ResetButton>{t('buttons.reinitialise')}</form.ResetButton>
               </form.AppForm>
             </div>
           </form>

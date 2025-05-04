@@ -5,8 +5,20 @@
       "title": "Welcome",
       "message": "Ready for your next auction?"
     },
+    "statut": {
+      "connection": "Connection...",
+      "log_in": "Log In"
+    },
     "loading": "Loading…",
-    "networkError": "Cannot reach server"
+    "networkError": "Cannot reach server",
+    "accueil": {
+      "titre": "Cashew Auctions & Marketplace",
+      "sous_titre": "Join the real-time auction platform for raw cashew nuts and their processed products in Benin. Watch, outbid, and support local producers with confidence."
+    },
+    "signup": {
+      "titre": "Contact us",
+      "sous_titre": "Do not hesitate to send your questions or comments."
+    }
   },
   "validation": {
     "minLength": "The field must have at least {{count}} character",
@@ -19,11 +31,34 @@
     "email": "Invalid email format",
     "phone": {
       "benin": "Invalid Benin phone number: expected +229XXXXXXXX or +22901XXXXXXXX"
+    },
+    "password": {
+      "does_not_natch": "Passwords doesn't match",
+      "too_weak": "The password must have at least one lowercase, one capital, one digit and one special character"
     }
+  },
+  "form": {
+    "type": "I am",
+    "last_name": "Last name",
+    "first_name": "First name",
+    "language": "Language",
+    "mail": "Mail address",
+    "address": "Address",
+    "phone": "Phone",
+    "agricultural_identifier": "Agricultural identifier",
+    "password": "Password",
+    "confirm_password": "Validate password"
   },
   "buttons": {
     "submit": "Submit",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "reinitialise": "Reinitialise",
+    "connection": "Get Started",
+    "subscribe": "Create an Account"
+  },
+  "languages": {
+    "fr": "French",
+    "en": "English"
   },
   "errors": {
     "validation.error": "Validation failed",
@@ -38,6 +73,14 @@
     "missing.request_param": "Missing request parameter",
     "access.unauthorized": "Authentication failed",
     "access.denied": "Access denied: you do not have sufficient permissions.",
-    "internal_error": "An internal error occurred. Contact support if the problem persists."
+    "internal_error": "An internal error occurred. Contact support if the problem persists.",
+    "email.exists": "This email is already in use",
+    "phone.exists": "This phone number is already in use",
+    "agriculture_id.exists": "This agricultural identifier is already in use",
+    "fields": {
+      "email": "Email",
+      "phone": "Phone",
+      "agriculturalIdentifier": "Agricultural identifier"
+    }
   }
 }

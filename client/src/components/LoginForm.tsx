@@ -11,21 +11,18 @@ import { Route as LoginRoute } from '@/routes/login'
 import { useUserStore } from '@/store/userStore'
 
 import { authenticateUserMutation } from '@/api/generated/@tanstack/react-query.gen'
-import type { LoginRequest } from '@/api/generated/index'
 import { useStore } from '@tanstack/react-form'
 import { useTranslation } from 'react-i18next'
+import i18n from '../i18n'
 
 const LoginSchema = z.object({
   username: z.email('Adresse e-mail invalide'),
   password: z
     .string()
-    .min(8, 'Le mot de passe doit faire au moins 8 caractères'),
+    .min(8, i18n.t("validation.minLength"))
 })
 
-export function LoginForm({
-  className,
-  ...props
-}: React.ComponentProps<'div'>) {
+export function LoginForm() {
   const navigate = useNavigate()
   const { t } = useTranslation()
   const router = useRouter()
@@ -48,7 +45,7 @@ export function LoginForm({
     defaultValues: { username: '', password: '' },
     validators: { onChange: LoginSchema },
     onSubmit({ value }) {
-      loginMutation.mutate({ body: value as LoginRequest })
+      loginMutation.mutate({ body: value})
     },
   })
   const canSubmit = useStore(form.store, state => state.canSubmit)
@@ -56,7 +53,7 @@ export function LoginForm({
   const isPending = loginMutation.isPending
 
   return (
-    <div className={cn('flex flex-col gap-6', className)} {...props}>
+    <div className={cn('flex flex-col gap-6')}>
       <Card className="overflow-hidden">
         <CardContent>
           <form
@@ -127,7 +124,7 @@ export function LoginForm({
                   className="w-full"
                   disabled={isPending || !canSubmit}
                 >
-                  {isPending ? 'Connexion…' : 'Se connecter'}
+                  {isPending ? i18n.t("app.statut.connection") : i18n.t("app.statut.log_in")}
                 </form.SubmitButton>
               </form.AppForm>
 

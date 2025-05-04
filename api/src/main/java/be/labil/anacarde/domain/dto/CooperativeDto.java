@@ -17,7 +17,7 @@ import lombok.Data;
 public class CooperativeDto {
 
 	/** Identifiant unique de la coopérative. */
-	@Schema(description = "Identifiant de la coopérative", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
+	@Schema(description = "Identifiant de la coopérative", example = "1", accessMode = Schema.AccessMode.READ_ONLY, requiredMode = Schema.RequiredMode.REQUIRED)
 	private Integer id;
 
 	/** Nom de la coopérative. */
@@ -34,7 +34,7 @@ public class CooperativeDto {
 	@Schema(description = "Date de création", example = "2023-06-15T00:00:00", requiredMode = Schema.RequiredMode.REQUIRED)
 	private LocalDateTime creationDate;
 
-	/** Président de la coopérative. */
+	/** Id du Président de la coopérative. */
 	@NotNull
 	@Schema(description = "Président de la coopérative", requiredMode = Schema.RequiredMode.REQUIRED)
 	private Integer presidentId;

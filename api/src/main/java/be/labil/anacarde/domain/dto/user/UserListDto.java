@@ -34,7 +34,7 @@ import lombok.Data;
 public abstract class UserListDto {
 
 	/** Unique identifier for the user. */
-	@Schema(description = "Identifiant de l'utilisateur", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
+	@Schema(description = "Identifiant de l'utilisateur", example = "1", accessMode = Schema.AccessMode.READ_ONLY, requiredMode = Schema.RequiredMode.REQUIRED)
 	private Integer id;
 
 	/** User's first name. */

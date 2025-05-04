@@ -58,7 +58,8 @@ public interface UserApi {
 	// true)
 	@ApiResponses({
 			@ApiResponse(responseCode = "201", description = "Utilisateur créé avec succès", content = @Content(schema = @Schema(implementation = UserDetailDto.class, discriminatorProperty = "type"))),
-			@ApiResponse(responseCode = "400", description = "Erreur de validation ou JSON invalide", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
+			@ApiResponse(responseCode = "400", description = "Erreur de validation ou JSON invalide", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
+			@ApiResponse(responseCode = "409", description = "Conflit avec un utilisateur existant", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
 	@PostMapping(consumes = "application/json")
 	ResponseEntity<? extends UserDetailDto> createUser(
 			@Validated({Default.class, ValidationGroups.Create.class}) @RequestBody UserDetailDto userDetailDto);

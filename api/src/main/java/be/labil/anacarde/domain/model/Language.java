@@ -13,6 +13,9 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class Language extends BaseEntity {
 
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String name;
+
+	@Column(nullable = false, unique = true)
+	private String code;
 }
