@@ -16,7 +16,7 @@ export const zRoleDto = z.object({
 });
 
 export const zLanguageDto = z.object({
-    id: z.number().int().readonly(),
+    id: z.number().int().optional(),
     code: z.string().min(1),
     name: z.string().min(1)
 });
@@ -272,6 +272,12 @@ export const zBidDto = z.object({
         zTransformerDetailDto
     ]),
     status: zBidStatusDto
+});
+
+export const zContactRequestDto = z.object({
+    name: z.string().min(1),
+    email: z.string().min(1),
+    message: z.string().min(0).max(2000)
 });
 
 export const zLoginRequest = z.object({

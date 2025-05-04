@@ -91,25 +91,8 @@ export type FieldDtoWritable = {
 /**
  * Objet de transfert de données pour une langue.
  */
-export type LanguageDtoReadable = {
-    /**
-     * Identifiant de la langue
-     */
-    readonly id: number;
-    /**
-     * Code de la langue
-     */
-    code: string;
-    /**
-     * Nom de la langue
-     */
-    name: string;
-};
-
-/**
- * Objet de transfert de données pour une langue.
- */
-export type LanguageDtoWritable = {
+export type LanguageDto = {
+    id?: number;
     /**
      * Code de la langue
      */
@@ -167,7 +150,7 @@ export type ProducerDetailDtoReadable = {
     /**
      * Identifiant de la langue préférée
      */
-    language: LanguageDtoReadable;
+    language: LanguageDto;
     /**
      * Identifiant agricole
      */
@@ -217,7 +200,7 @@ export type ProducerDetailDtoWritable = {
     /**
      * Identifiant de la langue préférée
      */
-    language: LanguageDtoWritable;
+    language: LanguageDto;
     /**
      * Identifiant agricole
      */
@@ -394,7 +377,7 @@ export type TransformerDetailDtoReadable = {
     /**
      * Identifiant de la langue préférée
      */
-    language: LanguageDtoReadable;
+    language: LanguageDto;
     /**
      * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
      */
@@ -436,7 +419,7 @@ export type TransformerDetailDtoWritable = {
     /**
      * Identifiant de la langue préférée
      */
-    language: LanguageDtoWritable;
+    language: LanguageDto;
     /**
      * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
      */
@@ -490,7 +473,7 @@ export type UserDetailDtoReadable = {
     /**
      * Identifiant de la langue préférée
      */
-    language: LanguageDtoReadable;
+    language: LanguageDto;
     /**
      * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
      */
@@ -532,7 +515,7 @@ export type UserDetailDtoWritable = {
     /**
      * Identifiant de la langue préférée
      */
-    language: LanguageDtoWritable;
+    language: LanguageDto;
     /**
      * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
      */
@@ -1228,6 +1211,24 @@ export type BidStatusDtoWritable = {
 };
 
 /**
+ * Payload du message de contact
+ */
+export type ContactRequestDto = {
+    /**
+     * Nom du contact
+     */
+    name: string;
+    /**
+     * Adresse email du contact
+     */
+    email: string;
+    /**
+     * Message du contact
+     */
+    message: string;
+};
+
+/**
  * Identifiants de connexion
  */
 export type LoginRequest = {
@@ -1426,21 +1427,11 @@ export type UserListDtoWritable = {
 /**
  * Données nécessaires pour l'application cliente.
  */
-export type ApplicationDataDtoReadable = {
+export type ApplicationDataDto = {
     /**
      * Liste des stratégies d'enchères disponibles.
      */
-    languages: Array<LanguageDtoReadable>;
-};
-
-/**
- * Données nécessaires pour l'application cliente.
- */
-export type ApplicationDataDtoWritable = {
-    /**
-     * Liste des stratégies d'enchères disponibles.
-     */
-    languages: Array<LanguageDtoWritable>;
+    languages: Array<LanguageDto>;
 };
 
 export type DeleteFieldData = {
@@ -2354,13 +2345,13 @@ export type GetLanguageResponses = {
     /**
      * Langue trouvée
      */
-    200: LanguageDtoReadable;
+    200: LanguageDto;
 };
 
 export type GetLanguageResponse = GetLanguageResponses[keyof GetLanguageResponses];
 
 export type UpdateLanguageData = {
-    body: LanguageDtoWritable;
+    body: LanguageDto;
     path: {
         /**
          * Identifiant de la langue
@@ -2388,7 +2379,7 @@ export type UpdateLanguageResponses = {
     /**
      * Langue mise à jour avec succès
      */
-    200: LanguageDtoReadable;
+    200: LanguageDto;
 };
 
 export type UpdateLanguageResponse = UpdateLanguageResponses[keyof UpdateLanguageResponses];
@@ -3554,13 +3545,13 @@ export type ListLanguagesResponses = {
     /**
      * Liste récupérée avec succès
      */
-    200: Array<LanguageDtoReadable>;
+    200: Array<LanguageDto>;
 };
 
 export type ListLanguagesResponse = ListLanguagesResponses[keyof ListLanguagesResponses];
 
 export type CreateLanguageData = {
-    body: LanguageDtoWritable;
+    body: LanguageDto;
     path?: never;
     query?: never;
     url: '/api/languages';
@@ -3579,7 +3570,7 @@ export type CreateLanguageResponses = {
     /**
      * Langue créée avec succès
      */
-    201: LanguageDtoReadable;
+    201: LanguageDto;
 };
 
 export type CreateLanguageResponse = CreateLanguageResponses[keyof CreateLanguageResponses];
@@ -3737,6 +3728,33 @@ export type CreateContractOfferResponses = {
      * Created
      */
     201: unknown;
+};
+
+export type SendContactMessageData = {
+    body: ContactRequestDto;
+    path?: never;
+    query?: never;
+    url: '/api/contact';
+};
+
+export type SendContactMessageErrors = {
+    /**
+     * Erreur de validation
+     */
+    400: ApiErrorResponse;
+    /**
+     * Erreur interne du serveur
+     */
+    500: ApiErrorResponse;
+};
+
+export type SendContactMessageError = SendContactMessageErrors[keyof SendContactMessageErrors];
+
+export type SendContactMessageResponses = {
+    /**
+     * Message envoyé avec succès
+     */
+    200: unknown;
 };
 
 export type LogoutData = {
@@ -4030,7 +4048,7 @@ export type GetApplicationDataResponses = {
     /**
      * OK
      */
-    200: ApplicationDataDtoReadable;
+    200: ApplicationDataDto;
 };
 
 export type GetApplicationDataResponse = GetApplicationDataResponses[keyof GetApplicationDataResponses];

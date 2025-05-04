@@ -31,6 +31,27 @@ services:
     volumes:
       - ./servers.json:/pgadmin4/servers.json
 
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: mailpit
+    restart: unless-stopped
+    volumes:
+      - mailpit-data:/data
+     # - ./data/mailpit:/data
+    ports:
+      - "1025:1025"   # SMTP pour Spring Boot
+      - "8025:8025"   # UI Web MailPit
+    environment:
+      MP_MAX_MESSAGES: 5000
+      MP_DATABASE: /data/mailpit.db
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8025 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
 volumes:
   anacarde-database:
+  mailpit-data:
