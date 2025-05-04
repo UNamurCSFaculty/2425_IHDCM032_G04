@@ -51,8 +51,9 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 		boolean emailExists = userRepository.findByEmail(dto.getEmail()).isPresent();
 		boolean phoneExists = userRepository.findByPhone(dto.getPhone()).isPresent();
 		boolean agriculturalIdentifierExists = false;
-		if(dto instanceof ProducerDetailDto producerDto) {
-			agriculturalIdentifierExists = producerRepository.findByAgriculturalIdentifier(producerDto.getAgriculturalIdentifier()).isPresent();
+		if (dto instanceof ProducerDetailDto producerDto) {
+			agriculturalIdentifierExists = producerRepository
+					.findByAgriculturalIdentifier(producerDto.getAgriculturalIdentifier()).isPresent();
 		}
 		if (emailExists || phoneExists || agriculturalIdentifierExists) {
 			List<ErrorDetail> errors = new ArrayList<>();
@@ -65,8 +66,9 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 						"Le numéro de téléphone est déjà utilisé"));
 			}
 			if (agriculturalIdentifierExists) {
-				errors.add(new ErrorDetail("agriculturalIdentifier", ApiErrorCode.CONFLICT_AGRICULTURAL_ID_EXISTS.code(),
-						"L'identifiant agricole est déjà utilisé"));
+				errors.add(
+						new ErrorDetail("agriculturalIdentifier", ApiErrorCode.CONFLICT_AGRICULTURAL_ID_EXISTS.code(),
+								"L'identifiant agricole est déjà utilisé"));
 			}
 			throw new ApiErrorException(HttpStatus.CONFLICT, ApiErrorCode.BAD_REQUEST.code(), errors);
 		}
