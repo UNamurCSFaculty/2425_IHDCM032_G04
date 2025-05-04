@@ -580,6 +580,10 @@ export type StoreDetailDtoReadable = {
      */
     readonly id?: number;
     /**
+     * Nom du store
+     */
+    name: string;
+    /**
      * Coordonnées géographiques du store (au format GeoJSON, WKT ou équivalent)
      */
     location: string;
@@ -593,6 +597,10 @@ export type StoreDetailDtoReadable = {
  * Objet de transfert de données pour un entrepôt (store).
  */
 export type StoreDetailDtoWritable = {
+    /**
+     * Nom du store
+     */
+    name: string;
     /**
      * Coordonnées géographiques du store (au format GeoJSON, WKT ou équivalent)
      */
@@ -649,6 +657,58 @@ export type QualityDtoWritable = {
      * Nom de la qualité
      */
     name: string;
+};
+
+/**
+ * Objet de transfert de données pour les entités Document.
+ */
+export type DocumentDtoReadable = {
+    /**
+     * Identifiant unique du document
+     */
+    readonly id?: number;
+    /**
+     * Type de document
+     */
+    documentType: string;
+    /**
+     * Format du document
+     */
+    format: string;
+    /**
+     * Chemin de stockage du document
+     */
+    storagePath: string;
+    /**
+     * Date et heure de l'envoi du document
+     */
+    readonly uploadDate?: string;
+    /**
+     * Identifiant de l'utilisateur associé au document
+     */
+    userId: number;
+};
+
+/**
+ * Objet de transfert de données pour les entités Document.
+ */
+export type DocumentDtoWritable = {
+    /**
+     * Type de document
+     */
+    documentType: string;
+    /**
+     * Format du document
+     */
+    format: string;
+    /**
+     * Chemin de stockage du document
+     */
+    storagePath: string;
+    /**
+     * Identifiant de l'utilisateur associé au document
+     */
+    userId: number;
 };
 
 /**
@@ -728,6 +788,94 @@ export type ProductDtoWritable = {
 };
 
 /**
+ * Objet de transfert de données pour le contrôle qualité.
+ */
+export type QualityControlDtoReadable = {
+    /**
+     * Identifiant unique du contrôle qualité
+     */
+    readonly id?: number;
+    /**
+     * Identifiant du contrôle qualité
+     */
+    identifier: string;
+    /**
+     * Date de contrôle qualité
+     */
+    controlDate: string;
+    /**
+     * Granularité mesurée
+     */
+    granularity: number;
+    /**
+     * Résultat du test KOR
+     */
+    korTest: number;
+    /**
+     * Taux d'humidité mesuré
+     */
+    humidity: number;
+    /**
+     * Inspecteur qualité associé
+     */
+    qualityInspector: QualityInspectorDetailDtoReadable;
+    /**
+     * Produit associé
+     */
+    product: HarvestProductDtoReadable | TransformedProductDtoReadable;
+    /**
+     * Qualité associée
+     */
+    quality: QualityDtoReadable;
+    /**
+     * Document associé au contrôle qualité
+     */
+    document: DocumentDtoReadable;
+};
+
+/**
+ * Objet de transfert de données pour le contrôle qualité.
+ */
+export type QualityControlDtoWritable = {
+    /**
+     * Identifiant du contrôle qualité
+     */
+    identifier: string;
+    /**
+     * Date de contrôle qualité
+     */
+    controlDate: string;
+    /**
+     * Granularité mesurée
+     */
+    granularity: number;
+    /**
+     * Résultat du test KOR
+     */
+    korTest: number;
+    /**
+     * Taux d'humidité mesuré
+     */
+    humidity: number;
+    /**
+     * Inspecteur qualité associé
+     */
+    qualityInspector: QualityInspectorDetailDtoWritable;
+    /**
+     * Produit associé
+     */
+    product: HarvestProductDtoWritable | TransformedProductDtoWritable;
+    /**
+     * Qualité associée
+     */
+    quality: QualityDtoWritable;
+    /**
+     * Document associé au contrôle qualité
+     */
+    document: DocumentDtoWritable;
+};
+
+/**
  * Objet de transfert de données pour les produits transformés.
  */
 export type TransformedProductDtoReadable = ProductDtoReadable & {
@@ -765,58 +913,6 @@ export type TransformedProductDtoWritable = ProductDtoWritable & {
      * Transformateur associé
      */
     transformer: TransformerDetailDtoWritable;
-};
-
-/**
- * Objet de transfert de données pour les entités Document.
- */
-export type DocumentDtoReadable = {
-    /**
-     * Identifiant unique du document
-     */
-    readonly id?: number;
-    /**
-     * Type de document
-     */
-    documentType: string;
-    /**
-     * Format du document
-     */
-    format: string;
-    /**
-     * Chemin de stockage du document
-     */
-    storagePath: string;
-    /**
-     * Date et heure de l'envoi du document
-     */
-    readonly uploadDate?: string;
-    /**
-     * Identifiant de l'utilisateur associé au document
-     */
-    userId: number;
-};
-
-/**
- * Objet de transfert de données pour les entités Document.
- */
-export type DocumentDtoWritable = {
-    /**
-     * Type de document
-     */
-    documentType: string;
-    /**
-     * Format du document
-     */
-    format: string;
-    /**
-     * Chemin de stockage du document
-     */
-    storagePath: string;
-    /**
-     * Identifiant de l'utilisateur associé au document
-     */
-    userId: number;
 };
 
 /**
@@ -1056,10 +1152,6 @@ export type BidDtoReadable = {
      */
     amount: number;
     /**
-     * Date de l'enchère
-     */
-    auctionDate: string;
-    /**
      * Date de création de l'offre
      */
     readonly creationDate?: string;
@@ -1085,10 +1177,6 @@ export type BidDtoWritable = {
      * Montant de l'offre
      */
     amount: number;
-    /**
-     * Date de l'enchère
-     */
-    auctionDate: string;
     /**
      * Enchère associée à l'offre
      */
@@ -1945,6 +2033,120 @@ export type UpdateQualityErrors = {
 export type UpdateQualityError = UpdateQualityErrors[keyof UpdateQualityErrors];
 
 export type UpdateQualityResponses = {
+    /**
+     * Updated successfully
+     */
+    200: unknown;
+};
+
+export type DeleteQualityControlData = {
+    body?: never;
+    path: {
+        /**
+         * Identifiant de la ressource
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/products/{productId}/quality-controls/{id}';
+};
+
+export type DeleteQualityControlErrors = {
+    /**
+     * Unauthorized
+     */
+    401: ApiError;
+    /**
+     * Forbidden
+     */
+    403: ApiError;
+    /**
+     * Not Found
+     */
+    404: ApiError;
+};
+
+export type DeleteQualityControlError = DeleteQualityControlErrors[keyof DeleteQualityControlErrors];
+
+export type DeleteQualityControlResponses = {
+    /**
+     * Deleted successfully
+     */
+    204: void;
+};
+
+export type DeleteQualityControlResponse = DeleteQualityControlResponses[keyof DeleteQualityControlResponses];
+
+export type GetQualityControlData = {
+    body?: never;
+    path: {
+        /**
+         * Identifiant de la ressource
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/products/{productId}/quality-controls/{id}';
+};
+
+export type GetQualityControlErrors = {
+    /**
+     * Unauthorized
+     */
+    401: ApiError;
+    /**
+     * Forbidden
+     */
+    403: ApiError;
+    /**
+     * Not Found
+     */
+    404: ApiError;
+};
+
+export type GetQualityControlError = GetQualityControlErrors[keyof GetQualityControlErrors];
+
+export type GetQualityControlResponses = {
+    /**
+     * Success
+     */
+    200: unknown;
+};
+
+export type UpdateQualityControlData = {
+    body: QualityControlDtoWritable;
+    path: {
+        /**
+         * Identifiant de la ressource
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/products/{productId}/quality-controls/{id}';
+};
+
+export type UpdateQualityControlErrors = {
+    /**
+     * Bad Request
+     */
+    400: ApiError;
+    /**
+     * Unauthorized
+     */
+    401: ApiError;
+    /**
+     * Forbidden
+     */
+    403: ApiError;
+    /**
+     * Not Found
+     */
+    404: ApiError;
+};
+
+export type UpdateQualityControlError = UpdateQualityControlErrors[keyof UpdateQualityControlErrors];
+
+export type UpdateQualityControlResponses = {
     /**
      * Updated successfully
      */
@@ -3141,6 +3343,70 @@ export type CreateProductErrors = {
 export type CreateProductError = CreateProductErrors[keyof CreateProductErrors];
 
 export type CreateProductResponses = {
+    /**
+     * Created
+     */
+    201: unknown;
+};
+
+export type ListQualityControlsData = {
+    body?: never;
+    path: {
+        productId: number;
+    };
+    query?: never;
+    url: '/api/products/{productId}/quality-controls';
+};
+
+export type ListQualityControlsErrors = {
+    /**
+     * Unauthorized
+     */
+    401: ApiError;
+    /**
+     * Forbidden
+     */
+    403: ApiError;
+    /**
+     * Not Found
+     */
+    404: ApiError;
+};
+
+export type ListQualityControlsError = ListQualityControlsErrors[keyof ListQualityControlsErrors];
+
+export type ListQualityControlsResponses = {
+    /**
+     * Success
+     */
+    200: unknown;
+};
+
+export type CreateQualityControlData = {
+    body: QualityControlDtoWritable;
+    path?: never;
+    query?: never;
+    url: '/api/products/{productId}/quality-controls';
+};
+
+export type CreateQualityControlErrors = {
+    /**
+     * Bad Request
+     */
+    400: ApiError;
+    /**
+     * Unauthorized
+     */
+    401: ApiError;
+    /**
+     * Forbidden
+     */
+    403: ApiError;
+};
+
+export type CreateQualityControlError = CreateQualityControlErrors[keyof CreateQualityControlErrors];
+
+export type CreateQualityControlResponses = {
     /**
      * Created
      */

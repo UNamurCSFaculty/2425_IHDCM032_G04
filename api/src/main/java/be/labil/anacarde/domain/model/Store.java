@@ -15,6 +15,8 @@ import org.locationtech.jts.geom.Point;
 @AllArgsConstructor
 @SuperBuilder
 public class Store extends BaseEntity {
+	@Column(nullable = false)
+	private String name;
 
 	@JdbcTypeCode(SqlTypes.GEOMETRY)
 	private Point location;

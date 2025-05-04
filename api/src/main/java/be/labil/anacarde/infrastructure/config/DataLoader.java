@@ -2,10 +2,7 @@ package be.labil.anacarde.infrastructure.config;
 
 import be.labil.anacarde.application.service.*;
 import be.labil.anacarde.domain.dto.*;
-import be.labil.anacarde.domain.dto.user.AdminDetailDto;
-import be.labil.anacarde.domain.dto.user.ExporterDetailDto;
-import be.labil.anacarde.domain.dto.user.ProducerDetailDto;
-import be.labil.anacarde.domain.dto.user.UserDetailDto;
+import be.labil.anacarde.domain.dto.user.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +21,8 @@ public class DataLoader implements CommandLineRunner {
 	private final ProductService productService;
 	private final UserService userService;
 	private final AuctionService auctionService;
+	private final BidStatusService bidStatusService;
+	private final BidService bidService;
 	private final DatabaseService databaseService;
 	private final LanguageService languageService;
 	private final CooperativeService cooperativeService;
@@ -33,60 +32,91 @@ public class DataLoader implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) {
-
-		if (!userService.listUsers().isEmpty()) {
-			log.info("Database already initialized");
-			return;
-		}
 		databaseService.dropDatabase();
 
-		// 1. Langue
+		// Langue
 		LanguageDto languageDto = new LanguageDto();
 		languageDto.setName("Français");
 		languageDto = languageService.create(languageDto);
 
-		// 2. Création du producteur (sans coopérative) et d'un champ
+		// Création du producteur (sans coopérative) et d'un champ
 		UserDetailDto producer = createProducer(languageDto);
 		producer = userService.createUser(producer);
 		FieldDto field = createField((ProducerDetailDto) producer);
 		field = fieldService.createField(field);
 
-		// 3. Création de la coopérative
+		// Création de la coopérative
 		CooperativeDto cooperativeDto = createCooperative((ProducerDetailDto) producer);
 		cooperativeDto = cooperativeService.createCooperative(cooperativeDto);
 
-		// 4. Ajout du producteur à la coopérative
+		// Ajout du producteur à la coopérative
 		((ProducerDetailDto) producer).setCooperative(cooperativeDto);
 		producer.setPassword(null); // on ne veut pas que le mot de passe soit mis à jour
 		producer = userService.updateUser(producer.getId(), producer);
 
-		// 5. Création de l'utilisateur admin
+		// Création de l'utilisateur admin
 		UserDetailDto admin = createAdmin(languageDto);
 		admin = userService.createUser(admin);
 
-		// 6. Création de l'utilisateur exportateur
+		// Création de l'utilisateur exportateur
 		UserDetailDto exporter = createExporter(languageDto);
 		exporter = userService.createUser(exporter);
 
-		// 7. Création d'un store
+		// Création de l'utilisateur transformateur
+		UserDetailDto transformer = createTransformer(languageDto);
+		transformer = userService.createUser(transformer);
+
+		// Création d'un store
 		StoreDetailDto store = createStore(admin);
 		store = storeService.createStore(store);
 
-		// 8. Création d'un produit
+		// Création d'un produit
 		ProductDto product = createHarvestProduct(store, producer, field, 1000);
 		product = productService.createProduct(product);
 
-		// 9. Création d'une stratégie d'enchère
+		// Création d'une stratégie d'enchère
 		AuctionStrategyDto auctionStrategy = new AuctionStrategyDto();
 		auctionStrategy.setName("Stratégie de test");
 		auctionStrategy = auctionStrategyService.createAuctionStrategy(auctionStrategy);
 
-		// 10. Création d'une enchère
+		// Création d'enchères
 		AuctionDto auction1 = createAuction(product, BigDecimal.valueOf(500), 10, LocalDateTime.now(), auctionStrategy);
 		AuctionDto auction2 = createAuction(product, BigDecimal.valueOf(2500), 10, LocalDateTime.now().plusDays(5),
 				auctionStrategy);
+		AuctionDto auction3 = createAuction(product, BigDecimal.valueOf(3500), 10, LocalDateTime.now().plusDays(5),
+				auctionStrategy);
 		auction1 = auctionService.createAuction(auction1);
 		auction2 = auctionService.createAuction(auction2);
+		auction3 = auctionService.createAuction(auction3);
+
+		// Création de status d'offres
+		BidStatusDto bidStatusEnCours = createBidStatus("En cours");
+		BidStatusDto bidStatusAccepte = createBidStatus("Accepté");
+		bidStatusEnCours = bidStatusService.createBidStatus(bidStatusEnCours);
+		bidStatusAccepte = bidStatusService.createBidStatus(bidStatusAccepte);
+
+		// Création d'offres
+		BidDto bid1 = createBid(auction1, (TraderDetailDto) transformer, BigDecimal.valueOf(100), LocalDateTime.now(),
+				bidStatusEnCours);
+		BidDto bid2 = createBid(auction1, (TraderDetailDto) transformer, BigDecimal.valueOf(200), LocalDateTime.now(),
+				bidStatusEnCours);
+		BidDto bid3 = createBid(auction1, (TraderDetailDto) transformer, BigDecimal.valueOf(300), LocalDateTime.now(),
+				bidStatusEnCours);
+		BidDto bid4 = createBid(auction1, (TraderDetailDto) transformer, BigDecimal.valueOf(500), LocalDateTime.now(),
+				bidStatusEnCours);
+		BidDto bid5 = createBid(auction1, (TraderDetailDto) transformer, BigDecimal.valueOf(600), LocalDateTime.now(),
+				bidStatusEnCours);
+		BidDto bid6 = createBid(auction2, (TraderDetailDto) transformer, BigDecimal.valueOf(10), LocalDateTime.now(),
+				bidStatusEnCours);
+		BidDto bid7 = createBid(auction2, (TraderDetailDto) transformer, BigDecimal.valueOf(20), LocalDateTime.now(),
+				bidStatusEnCours);
+		bidService.createBid(bid1);
+		bidService.createBid(bid2);
+		bidService.createBid(bid3);
+		bidService.createBid(bid4);
+		bidService.createBid(bid5);
+		bidService.createBid(bid6);
+		bidService.createBid(bid7);
 
 		System.out.println("🧪 Test data loaded (profile=dev)");
 	}
@@ -132,8 +162,26 @@ public class DataLoader implements CommandLineRunner {
 		return auction;
 	}
 
+	private BidStatusDto createBidStatus(String name) {
+		BidStatusDto status = new BidStatusDto();
+		status.setName(name);
+		return status;
+	}
+
+	private BidDto createBid(AuctionDto auction, TraderDetailDto trader, BigDecimal amount, LocalDateTime creationDate,
+			BidStatusDto status) {
+		BidDto bid = new BidDto();
+		bid.setAuction(auction);
+		bid.setTrader(trader);
+		bid.setAmount(amount);
+		bid.setCreationDate(creationDate);
+		bid.setStatus(status);
+		return bid;
+	}
+
 	private StoreDetailDto createStore(UserDetailDto manager) {
 		StoreDetailDto store = new StoreDetailDto();
+		store.setName("Nassara");
 		store.setLocation("POINT(2.3522 48.8566)");
 		store.setUserId(manager.getId());
 		return store;
@@ -184,5 +232,20 @@ public class DataLoader implements CommandLineRunner {
 		exporter.setPhone("+2290197000001");
 		exporter.setLanguage(languageDto);
 		return exporter;
+	}
+
+	private TransformerDetailDto createTransformer(LanguageDto languageDto) {
+		TransformerDetailDto transformer = new TransformerDetailDto();
+		transformer.setFirstName("Homer");
+		transformer.setLastName("Simpson");
+		transformer.setEmail("homer@gmail.com");
+		transformer.setPassword("azertyui");
+		transformer.setAddress("Springfield");
+		transformer.setEnabled(true);
+		transformer.setRegistrationDate(LocalDateTime.now());
+		transformer.setValidationDate(LocalDateTime.now());
+		transformer.setPhone("+22944223201");
+		transformer.setLanguage(languageDto);
+		return transformer;
 	}
 }

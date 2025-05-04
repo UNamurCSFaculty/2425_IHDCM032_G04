@@ -383,7 +383,7 @@ public abstract class AbstractIntegrationTest {
 		qualityInspector = userRepository.save(qualityInspector);
 
 		Point storeLocation = new GeometryFactory().createPoint(new Coordinate(2.3522, 48.8566));
-		Store store = Store.builder().location(storeLocation).user(mainTestUser).build();
+		Store store = Store.builder().name("Nassara").location(storeLocation).user(mainTestUser).build();
 		mainTestStore = storeRepository.save(store);
 
 		// Fields
@@ -429,15 +429,13 @@ public abstract class AbstractIntegrationTest {
 		testBidStatus = bidStatusRepository.save(bidStatus);
 
 		// A bid on an auction
-		Bid bid = Bid.builder().amount(new BigDecimal("10.0")).auctionDate(LocalDateTime.now())
-				.creationDate(LocalDateTime.now()).auction(auction).trader((Trader) producer).status(testBidStatus)
-				.build();
+		Bid bid = Bid.builder().amount(new BigDecimal("10.0")).creationDate(LocalDateTime.now()).auction(auction)
+				.trader((Trader) producer).status(testBidStatus).build();
 		testBid = bidRepository.save(bid);
 
 		// A bid on a different auction
-		Bid bid2 = Bid.builder().amount(new BigDecimal("500.0")).auctionDate(LocalDateTime.now())
-				.creationDate(LocalDateTime.now()).auction(auction2).trader((Trader) producer).status(testBidStatus)
-				.build();
+		Bid bid2 = Bid.builder().amount(new BigDecimal("500.0")).creationDate(LocalDateTime.now()).auction(auction2)
+				.trader((Trader) producer).status(testBidStatus).build();
 		bidRepository.save(bid2);
 
 		// A cooperative who has for president 'producer'

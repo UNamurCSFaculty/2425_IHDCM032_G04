@@ -58,6 +58,7 @@ public class StoreApiControllerIntegrationTest extends AbstractIntegrationTest {
 	@Test
 	public void testCreateStore() throws Exception {
 		StoreDetailDto newStore = new StoreDetailDto();
+		newStore.setName("Nassara");
 		newStore.setLocation("POINT(2.3522 48.8566)");
 		newStore.setUserId(getMainTestUser().getId());
 
@@ -66,6 +67,7 @@ public class StoreApiControllerIntegrationTest extends AbstractIntegrationTest {
 
 		mockMvc.perform(post("/api/stores").contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwt()))
 				.andExpect(status().isCreated()).andExpect(header().string("Location", containsString("/api/stores/")))
+				.andExpect(jsonPath("$.name").value("Nassara"))
 				.andExpect(jsonPath("$.location").value("POINT (2.3522 48.8566)"))
 				.andExpect(jsonPath("$.userId").value(getMainTestUser().getId()));
 
@@ -91,6 +93,7 @@ public class StoreApiControllerIntegrationTest extends AbstractIntegrationTest {
 	@Test
 	public void testUpdateStore() throws Exception {
 		StoreDetailDto updateStore = new StoreDetailDto();
+		updateStore.setName("Casimir");
 		updateStore.setLocation("POINT (1.111 2.222)");
 		updateStore.setUserId(getMainTestUser().getId());
 
@@ -99,6 +102,7 @@ public class StoreApiControllerIntegrationTest extends AbstractIntegrationTest {
 
 		mockMvc.perform(put("/api/stores/" + getMainTestStore().getId()).contentType(MediaType.APPLICATION_JSON)
 				.content(jsonContent).with(jwt())).andExpect(status().isOk())
+				.andExpect(jsonPath("$.name").value("Casimir"))
 				.andExpect(jsonPath("$.location").value("POINT (1.111 2.222)"));
 	}
 

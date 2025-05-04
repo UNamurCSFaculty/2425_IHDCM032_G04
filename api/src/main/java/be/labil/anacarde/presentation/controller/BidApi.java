@@ -38,6 +38,8 @@ public interface BidApi {
 
 	@Operation(summary = "Obtenir toutes les offres")
 	@ApiResponseGet
+	// @ApiResponse(responseCode = "200", description = "Liste des enchères", content = @Content(mediaType =
+	// "application/json", array = @ArraySchema(schema = @Schema(implementation = BidDto.class))))
 	@GetMapping
 	ResponseEntity<List<BidDto>> listBids(@ApiValidId @PathVariable("auctionId") Integer auctionId);
 

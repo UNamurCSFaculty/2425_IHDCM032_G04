@@ -22,9 +22,6 @@ public class Bid extends BaseEntity {
 	@Column(nullable = false)
 	private BigDecimal amount;
 
-	@Column(nullable = false)
-	private LocalDateTime auctionDate;
-
 	@Column(nullable = false, updatable = false)
 	@CreationTimestamp
 	private LocalDateTime creationDate;
@@ -33,7 +30,7 @@ public class Bid extends BaseEntity {
 	@JoinColumn(name = "auction_id", nullable = false)
 	private Auction auction;
 
-	@ManyToOne(optional = false, fetch = FetchType.LAZY)
+	@ManyToOne(optional = false)
 	@JoinColumn(name = "trader_id", nullable = false)
 	private Trader trader;
 

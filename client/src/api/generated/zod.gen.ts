@@ -137,6 +137,7 @@ export const zApiErrorResponse = z.object({
 
 export const zStoreDetailDto = z.object({
     id: z.number().int().readonly().optional(),
+    name: z.string(),
     location: z.string(),
     userId: z.number().int()
 });
@@ -149,6 +150,15 @@ export const zRegionDto = z.object({
 export const zQualityDto = z.object({
     id: z.number().int().readonly().optional(),
     name: z.string().min(1)
+});
+
+export const zDocumentDto = z.object({
+    id: z.number().int().readonly().optional(),
+    documentType: z.string().min(1),
+    format: z.string().min(1),
+    storagePath: z.string().min(1),
+    uploadDate: z.iso.datetime().readonly().optional(),
+    userId: z.number().int()
 });
 
 export const zProductDto = z.object({
@@ -178,13 +188,20 @@ export const zTransformedProductDto = zProductDto.and(z.object({
     transformer: zTransformerDetailDto
 }));
 
-export const zDocumentDto = z.object({
+export const zQualityControlDto = z.object({
     id: z.number().int().readonly().optional(),
-    documentType: z.string().min(1),
-    format: z.string().min(1),
-    storagePath: z.string().min(1),
-    uploadDate: z.iso.datetime().readonly().optional(),
-    userId: z.number().int()
+    identifier: z.string().min(1),
+    controlDate: z.iso.datetime(),
+    granularity: z.number(),
+    korTest: z.number(),
+    humidity: z.number(),
+    qualityInspector: zQualityInspectorDetailDto,
+    product: z.union([
+        zHarvestProductDto,
+        zTransformedProductDto
+    ]),
+    quality: zQualityDto,
+    document: zDocumentDto
 });
 
 export const zContractOfferDto = z.object({
@@ -245,7 +262,6 @@ export const zBidStatusDto = z.object({
 export const zBidDto = z.object({
     id: z.number().int().readonly().optional(),
     amount: z.number(),
-    auctionDate: z.iso.datetime(),
     creationDate: z.iso.datetime().readonly().optional(),
     auction: zAuctionDto,
     trader: z.union([
@@ -322,6 +338,8 @@ export const zDeleteStoreResponse = z.void();
 export const zDeleteRegionResponse = z.void();
 
 export const zDeleteQualityResponse = z.void();
+
+export const zDeleteQualityControlResponse = z.void();
 
 export const zDeleteProductResponse = z.void();
 

@@ -54,11 +54,12 @@ public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 				.accept(MediaType.APPLICATION_JSON).with(jwt())).andExpect(status().isOk())
 				.andExpect(jsonPath("$.amount").value("10.0"))
 				.andExpect(jsonPath("$.auction.id").value(getTestAuction().getId()))
-				.andExpect(jsonPath("$.auction.price").value(getTestAuction().getPrice()));
+				.andExpect(jsonPath("$.auction.price").value(getTestAuction().getPrice()))
+				.andExpect(jsonPath("$.trader.id").value(getProducerTestUser().getId()));
 	}
 
 	/**
-	 * Teste la création d'une nouvel offre.
+	 * Teste la création d'une nouvelle offre.
 	 * 
 	 */
 	@Test
@@ -83,7 +84,6 @@ public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 		newBid.setCreationDate(LocalDateTime.now());
 		newBid.setTrader(producer);
 		newBid.setAuction(auctionDto);
-		newBid.setAuctionDate(LocalDateTime.now());
 
 		ObjectNode node = objectMapper.valueToTree(newBid);
 		String jsonContent = node.toString();
@@ -134,7 +134,6 @@ public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 		updateBid.setCreationDate(LocalDateTime.now());
 		updateBid.setTrader(producer);
 		updateBid.setAuction(auctionDto);
-		updateBid.setAuctionDate(LocalDateTime.now());
 
 		ObjectNode node = objectMapper.valueToTree(updateBid);
 		String jsonContent = node.toString();

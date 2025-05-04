@@ -69,9 +69,9 @@ export function LoginForm({
             <div className="flex flex-col gap-6">
               {/* Header */}
               <div className="flex flex-col items-center text-center">
-                <img src={logo} alt="Logo e-Annacarde" className="h-20" />
+                <img src={logo} alt="Logo e-Anacarde" className="h-20" />
                 <p className="text-muted-foreground text-balance">
-                  Connectez-vous à votre compte e-Annacarde
+                  Connectez-vous à votre compte e-Anacarde
                 </p>
               </div>
 

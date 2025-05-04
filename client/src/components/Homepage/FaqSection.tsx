@@ -19,9 +19,9 @@ const FaqSection = ({
   heading = 'Questions fréquentes',
   items = [
     {
-      question: "Qu'est-ce qu'e-Annacarde ?",
+      question: "Qu'est-ce qu'e-Anacarde ?",
       answer:
-        "e-Annacarde est une plateforme d'enchères en ligne dédiée à la noix de cajou au Bénin, qui met en relation directe producteurs et acheteurs pour maximiser la transparence et la valeur des transactions.",
+        "e-Anacarde est une plateforme d'enchères en ligne dédiée à la noix de cajou au Bénin, qui met en relation directe producteurs et acheteurs pour maximiser la transparence et la valeur des transactions.",
     },
     {
       question: "Comment puis-je m'inscrire en tant que producteur ?",
@@ -38,7 +38,7 @@ const FaqSection = ({
     {
       question: 'Quels sont les frais de service ?',
       answer:
-        'e-Annacarde applique une commission de 2% sur le montant final de chaque enchère remportée, sans frais cachés pour les producteurs ou acheteurs.',
+        'e-Anacarde applique une commission de 2% sur le montant final de chaque enchère remportée, sans frais cachés pour les producteurs ou acheteurs.',
     },
     {
       question: 'Comment se fait le paiement et la livraison ?',

@@ -16,6 +16,7 @@ import { Route as LoginImport } from './routes/login'
 import { Route as ContactImport } from './routes/contact'
 import { Route as AuthenticatedImport } from './routes/_authenticated'
 import { Route as IndexImport } from './routes/index'
+import { Route as AuthenticatedVentesIndexImport } from './routes/_authenticated/ventes/index'
 import { Route as AuthenticatedEncheresIndexImport } from './routes/_authenticated/encheres/index'
 import { Route as AuthenticatedEncheresCajouImport } from './routes/_authenticated/encheres/cajou'
 import { Route as AuthenticatedEncheresAutresImport } from './routes/_authenticated/encheres/autres'
@@ -50,6 +51,12 @@ const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRoute,
+} as any)
+
+const AuthenticatedVentesIndexRoute = AuthenticatedVentesIndexImport.update({
+  id: '/ventes/',
+  path: '/ventes/',
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
 
 const AuthenticatedEncheresIndexRoute = AuthenticatedEncheresIndexImport.update(
@@ -142,6 +149,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedEncheresIndexImport
       parentRoute: typeof AuthenticatedImport
     }
+    '/_authenticated/ventes/': {
+      id: '/_authenticated/ventes/'
+      path: '/ventes'
+      fullPath: '/ventes'
+      preLoaderRoute: typeof AuthenticatedVentesIndexImport
+      parentRoute: typeof AuthenticatedImport
+    }
     '/_authenticated/encheres/detail/$id': {
       id: '/_authenticated/encheres/detail/$id'
       path: '/encheres/detail/$id'
@@ -158,6 +172,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedEncheresAutresRoute: typeof AuthenticatedEncheresAutresRoute
   AuthenticatedEncheresCajouRoute: typeof AuthenticatedEncheresCajouRoute
   AuthenticatedEncheresIndexRoute: typeof AuthenticatedEncheresIndexRoute
+  AuthenticatedVentesIndexRoute: typeof AuthenticatedVentesIndexRoute
   AuthenticatedEncheresDetailIdRoute: typeof AuthenticatedEncheresDetailIdRoute
 }
 
@@ -165,6 +180,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedEncheresAutresRoute: AuthenticatedEncheresAutresRoute,
   AuthenticatedEncheresCajouRoute: AuthenticatedEncheresCajouRoute,
   AuthenticatedEncheresIndexRoute: AuthenticatedEncheresIndexRoute,
+  AuthenticatedVentesIndexRoute: AuthenticatedVentesIndexRoute,
   AuthenticatedEncheresDetailIdRoute: AuthenticatedEncheresDetailIdRoute,
 }
 
@@ -181,6 +197,7 @@ export interface FileRoutesByFullPath {
   '/encheres/autres': typeof AuthenticatedEncheresAutresRoute
   '/encheres/cajou': typeof AuthenticatedEncheresCajouRoute
   '/encheres': typeof AuthenticatedEncheresIndexRoute
+  '/ventes': typeof AuthenticatedVentesIndexRoute
   '/encheres/detail/$id': typeof AuthenticatedEncheresDetailIdRoute
 }
 
@@ -193,6 +210,7 @@ export interface FileRoutesByTo {
   '/encheres/autres': typeof AuthenticatedEncheresAutresRoute
   '/encheres/cajou': typeof AuthenticatedEncheresCajouRoute
   '/encheres': typeof AuthenticatedEncheresIndexRoute
+  '/ventes': typeof AuthenticatedVentesIndexRoute
   '/encheres/detail/$id': typeof AuthenticatedEncheresDetailIdRoute
 }
 
@@ -206,6 +224,7 @@ export interface FileRoutesById {
   '/_authenticated/encheres/autres': typeof AuthenticatedEncheresAutresRoute
   '/_authenticated/encheres/cajou': typeof AuthenticatedEncheresCajouRoute
   '/_authenticated/encheres/': typeof AuthenticatedEncheresIndexRoute
+  '/_authenticated/ventes/': typeof AuthenticatedVentesIndexRoute
   '/_authenticated/encheres/detail/$id': typeof AuthenticatedEncheresDetailIdRoute
 }
 
@@ -220,6 +239,7 @@ export interface FileRouteTypes {
     | '/encheres/autres'
     | '/encheres/cajou'
     | '/encheres'
+    | '/ventes'
     | '/encheres/detail/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -231,6 +251,7 @@ export interface FileRouteTypes {
     | '/encheres/autres'
     | '/encheres/cajou'
     | '/encheres'
+    | '/ventes'
     | '/encheres/detail/$id'
   id:
     | '__root__'
@@ -242,6 +263,7 @@ export interface FileRouteTypes {
     | '/_authenticated/encheres/autres'
     | '/_authenticated/encheres/cajou'
     | '/_authenticated/encheres/'
+    | '/_authenticated/ventes/'
     | '/_authenticated/encheres/detail/$id'
   fileRoutesById: FileRoutesById
 }
@@ -288,6 +310,7 @@ export const routeTree = rootRoute
         "/_authenticated/encheres/autres",
         "/_authenticated/encheres/cajou",
         "/_authenticated/encheres/",
+        "/_authenticated/ventes/",
         "/_authenticated/encheres/detail/$id"
       ]
     },
@@ -310,6 +333,10 @@ export const routeTree = rootRoute
     },
     "/_authenticated/encheres/": {
       "filePath": "_authenticated/encheres/index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/ventes/": {
+      "filePath": "_authenticated/ventes/index.tsx",
       "parent": "/_authenticated"
     },
     "/_authenticated/encheres/detail/$id": {

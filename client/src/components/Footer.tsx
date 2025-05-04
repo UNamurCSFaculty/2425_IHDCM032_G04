@@ -68,7 +68,7 @@ const Footer = ({
       ],
     },
   ],
-  copyright = '© 2025 Groupe 4. Tous droits réservés.',
+  copyright = '© 2025 Groupe 4 - Laboratoire d’Ingénierie Logicielle, Université de Namur.',
   bottomLinks = [
     { text: 'Conditions générales', url: '#' },
     { text: 'Politique de confidentialité', url: '#' },

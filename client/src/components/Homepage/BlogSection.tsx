@@ -34,7 +34,7 @@ export function BlogSection() {
             </div>
             <h3 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
               <Link to="#">
-                Comment maîtriser les enchères de noix de cajou sur e-Annacarde
+                Comment maîtriser les enchères de noix de cajou sur e-Anacarde
               </Link>
             </h3>
             <p className="mb-5 font-light text-gray-500 dark:text-gray-400">
