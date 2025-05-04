@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 public class QualityControlDto {
 
 	/** Identifiant unique du contrôle qualité. */
-	@Schema(description = "Identifiant unique du contrôle qualité", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
+	@Schema(description = "Identifiant unique du contrôle qualité", example = "1", accessMode = Schema.AccessMode.READ_ONLY, requiredMode = Schema.RequiredMode.REQUIRED)
 	private Integer id;
 
 	/** Identifiant du contrôle qualité. */

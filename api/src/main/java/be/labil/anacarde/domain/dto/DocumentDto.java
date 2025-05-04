@@ -14,7 +14,7 @@ import lombok.Data;
 public class DocumentDto {
 
 	/** Identifiant unique du document. */
-	@Schema(description = "Identifiant unique du document", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
+	@Schema(description = "Identifiant unique du document", example = "1", accessMode = Schema.AccessMode.READ_ONLY, requiredMode = Schema.RequiredMode.REQUIRED)
 	private Integer id;
 
 	/** Type de document (par exemple, PDF, DOCX, etc.). */

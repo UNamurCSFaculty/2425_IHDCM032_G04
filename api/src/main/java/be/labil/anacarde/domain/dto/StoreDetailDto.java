@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class StoreDetailDto {
 
 	/** Identifiant unique du store. */
-	@Schema(description = "Identifiant du store", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
+	@Schema(description = "Identifiant du store", example = "1", accessMode = Schema.AccessMode.READ_ONLY, requiredMode = Schema.RequiredMode.REQUIRED)
 	private Integer id;
 
 	/** Position géographique (coordonnées GPS) du store. */

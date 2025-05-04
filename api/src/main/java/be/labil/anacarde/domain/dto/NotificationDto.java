@@ -14,7 +14,7 @@ import lombok.Data;
 public class NotificationDto {
 
 	/** Identifiant unique de la notification. */
-	@Schema(description = "Identifiant unique de la notification", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
+	@Schema(description = "Identifiant unique de la notification", example = "1", accessMode = Schema.AccessMode.READ_ONLY, requiredMode = Schema.RequiredMode.REQUIRED)
 	private Integer id;
 
 	/** Message de la notification. */

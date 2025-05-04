@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 public class ContractOfferDto {
 
 	/** Identifiant unique de l'offre de contrat. */
-	@Schema(description = "Identifiant unique de l'offre de contrat", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
+	@Schema(description = "Identifiant unique de l'offre de contrat", example = "1", accessMode = Schema.AccessMode.READ_ONLY, requiredMode = Schema.RequiredMode.REQUIRED)
 	private Integer id;
 
 	/** Statut de l'offre de contrat. */

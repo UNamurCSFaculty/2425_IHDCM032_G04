@@ -14,7 +14,7 @@ import lombok.Data;
 @Schema(description = "Objet de transfert de données pour les enchères.")
 public class AuctionDto {
 
-	@Schema(description = "Identifiant unique de l'enchère", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
+	@Schema(description = "Identifiant unique de l'enchère", example = "1", accessMode = Schema.AccessMode.READ_ONLY, requiredMode = Schema.RequiredMode.REQUIRED)
 	private Integer id;
 
 	@NotNull(message = "Le prix est requis")

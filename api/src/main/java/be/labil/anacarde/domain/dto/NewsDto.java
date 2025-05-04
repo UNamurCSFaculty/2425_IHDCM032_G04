@@ -14,7 +14,7 @@ import lombok.Data;
 public class NewsDto {
 
 	/** Identifiant unique de l'article. */
-	@Schema(description = "Identifiant unique de l'article", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
+	@Schema(description = "Identifiant unique de l'article", example = "1", accessMode = Schema.AccessMode.READ_ONLY, requiredMode = Schema.RequiredMode.REQUIRED)
 	private Integer id;
 
 	/** Titre de l'article. */

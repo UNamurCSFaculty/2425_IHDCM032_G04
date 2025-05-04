@@ -14,7 +14,7 @@ import lombok.Data;
 public class RoleDto {
 
 	/** Identifiant unique du rôle. */
-	@Schema(description = "Identifiant unique du rôle", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
+	@Schema(description = "Identifiant unique du rôle", example = "1", accessMode = Schema.AccessMode.READ_ONLY, requiredMode = Schema.RequiredMode.REQUIRED)
 	private Integer id;
 
 	/** Nom du rôle. */

@@ -12,7 +12,7 @@ import lombok.Data;
 public class NewsCategoryDto {
 
 	/** Identifiant unique de la catégorie. */
-	@Schema(description = "Identifiant unique de la catégorie", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
+	@Schema(description = "Identifiant unique de la catégorie", example = "1", accessMode = Schema.AccessMode.READ_ONLY, requiredMode = Schema.RequiredMode.REQUIRED)
 	private Integer id;
 
 	/** Nom de la catégorie. */

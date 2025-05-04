@@ -12,7 +12,7 @@ import lombok.Data;
 public class TranslationDto {
 
 	/** Identifiant unique de la traduction. */
-	@Schema(description = "Identifiant de la traduction", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
+	@Schema(description = "Identifiant de la traduction", example = "1", accessMode = Schema.AccessMode.READ_ONLY, requiredMode = Schema.RequiredMode.REQUIRED)
 	private Integer id;
 
 	/** Clé unique identifiant la ressource à traduire. */

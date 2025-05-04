@@ -22,7 +22,7 @@ import lombok.Data;
 public abstract class ProductDto {
 
 	/** Identifiant unique du produit. */
-	@Schema(description = "Identifiant unique du produit", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
+	@Schema(description = "Identifiant unique du produit", example = "1", accessMode = Schema.AccessMode.READ_ONLY, requiredMode = Schema.RequiredMode.REQUIRED)
 	private Integer id;
 
 	@Column(nullable = false)
