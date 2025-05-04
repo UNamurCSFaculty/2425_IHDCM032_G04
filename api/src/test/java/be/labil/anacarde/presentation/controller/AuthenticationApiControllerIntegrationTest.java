@@ -87,7 +87,7 @@ public class AuthenticationApiControllerIntegrationTest {
 				.andExpect(jsonPath("$.enabled").value(true)).andExpect(jsonPath("$.address").isEmpty())
 				.andExpect(jsonPath("$.phone").value("+2290197020000")).andExpect(jsonPath("$.roles").isArray())
 				.andExpect(jsonPath("$.roles", hasSize(0))).andExpect(jsonPath("$.language.id").value(lang.getId()))
-				.andExpect(jsonPath("$.language.name").value("fr"));
+				.andExpect(jsonPath("$.language.name").value("Français"));
 	}
 
 	/**
@@ -145,7 +145,7 @@ public class AuthenticationApiControllerIntegrationTest {
 				.andExpect(status().isOk()).andReturn();
 
 		Cookie jwt = result.getResponse().getCookie("jwt");
-		Language lang = languageRepository.findAll().get(0);
+		Language lang = languageRepository.findAll().getFirst();
 
 		// 2) Appeler /me avec le cookie
 		mockMvc.perform(get("/api/auth/me").cookie(jwt)).andExpect(status().isOk())
