@@ -5,6 +5,7 @@ import { Footer } from '@/components/Footer'
 import { FooterCta } from '@/components/FooterCta'
 import type { QueryClient } from '@tanstack/react-query'
 import type { UserDetailDtoReadable } from '@/api/generated'
+import { ContentSkeleton } from '@/components/Skeleton/ContentSkeleton'
 
 export interface MyRouterContext {
   user: UserDetailDtoReadable | null
@@ -23,5 +24,5 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
     </>
   ),
   errorComponent: () => <div>Erreur de chargement</div>,
-  pendingComponent: () => <div>Chargement...</div>,
+  pendingComponent: () => <ContentSkeleton />,
 })

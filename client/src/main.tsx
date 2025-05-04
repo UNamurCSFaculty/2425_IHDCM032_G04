@@ -21,15 +21,14 @@ import NotFound from './components/NotFound.tsx'
 import { ErrorBoundary } from './components/ErrorBoundary.tsx'
 
 import { useUserStore } from './store/userStore.tsx'
-import { GlobalSkeleton } from './components/GlobalSkeleton.tsx'
-import { useAppStore } from "@/store/appStore.tsx";
+import { AppSkeleton } from './components/Skeleton/AppSkeleton.tsx'
+import { useAppStore } from '@/store/appStore.tsx'
 
 import { client } from '@/api/generated/client.gen.ts'
 import {
   getCurrentUserOptions,
   getApplicationDataOptions,
 } from './api/generated/@tanstack/react-query.gen.ts'
-import { useAppStore } from './store/appStore.tsx'
 
 client.setConfig({
   credentials: 'include', // pour les cookies (HTTP Only)
@@ -48,7 +47,7 @@ const router = createRouter({
   defaultStructuralSharing: true,
   defaultPreloadStaleTime: 0,
   defaultNotFoundComponent: NotFound,
-  defaultPendingComponent: GlobalSkeleton,
+  defaultPendingComponent: AppSkeleton,
 })
 
 function AppWithProvider() {
@@ -81,7 +80,7 @@ function AppWithProvider() {
   }, [appData, setAppData])
 
   if (isLoadingUser || isLoadingApp) {
-    return <GlobalSkeleton />
+    return <AppSkeleton />
   }
 
   return (
