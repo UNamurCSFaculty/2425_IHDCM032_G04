@@ -35,8 +35,12 @@ public class AuctionServiceImpl implements AuctionService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<AuctionDto> listAuctions() {
-		return auctionRepository.findAll().stream().map(auctionMapper::toDto).collect(Collectors.toList());
+	public List<AuctionDto> listAuctions(Integer traderId) {
+		if (traderId != null) {
+			return auctionRepository.findByTraderIdAndActiveTrue(traderId).stream().map(auctionMapper::toDto)
+					.collect(Collectors.toList());
+		}
+		return auctionRepository.findByActiveTrue().stream().map(auctionMapper::toDto).collect(Collectors.toList());
 	}
 
 	@Override
@@ -52,9 +56,11 @@ public class AuctionServiceImpl implements AuctionService {
 
 	@Override
 	public void deleteAuction(Integer id) {
-		if (!auctionRepository.existsById(id)) {
-			throw new ResourceNotFoundException("Enchère non trouvée");
-		}
-		auctionRepository.deleteById(id);
+		Auction existingAuction = auctionRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Enchère non trouvée"));
+
+		AuctionDto dto = new AuctionDto();
+		dto.setActive(false);
+		updateAuction(id, dto);
 	}
 }

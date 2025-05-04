@@ -1,5 +1,6 @@
 package be.labil.anacarde.domain.dto;
 
+import be.labil.anacarde.domain.dto.user.TraderDetailDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -46,4 +47,8 @@ public class AuctionDto {
 
 	@Schema(description = "Valeurs d'option associées à l'enchère")
 	private Set<AuctionOptionValueDto> auctionOptionValues;
+
+	@NotNull(message = "Le trader est requis")
+	@Schema(description = "Trader ayant créé l'enchère", requiredMode = Schema.RequiredMode.REQUIRED)
+	private TraderDetailDto trader;
 }

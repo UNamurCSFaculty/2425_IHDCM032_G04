@@ -8,6 +8,7 @@ import be.labil.anacarde.domain.dto.AuctionDto;
 import be.labil.anacarde.domain.dto.AuctionStrategyDto;
 import be.labil.anacarde.domain.dto.HarvestProductDto;
 import be.labil.anacarde.domain.dto.ProductDto;
+import be.labil.anacarde.domain.dto.user.ProducerDetailDto;
 import be.labil.anacarde.domain.model.Auction;
 import be.labil.anacarde.infrastructure.persistence.AuctionRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -67,6 +68,9 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		AuctionStrategyDto strategyDto = new AuctionStrategyDto();
 		strategyDto.setId(getTestAuctionStrategy().getId());
 
+		ProducerDetailDto producer = new ProducerDetailDto();
+		producer.setId(getProducerTestUser().getId());
+
 		ProductDto productDto = new HarvestProductDto();
 		productDto.setId(getTestHarvestProduct().getId());
 
@@ -78,6 +82,7 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		newAuction.setExpirationDate(LocalDateTime.now());
 		newAuction.setStrategy(strategyDto);
 		newAuction.setProduct(productDto);
+		newAuction.setTrader(producer);
 
 		ObjectNode node = objectMapper.valueToTree(newAuction);
 		String jsonContent = node.toString();
@@ -87,7 +92,8 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 				.andExpect(header().string("Location", containsString("/api/auctions/")))
 				.andExpect(jsonPath("$.price").value("111.11")).andExpect(jsonPath("$.productQuantity").value("11"))
 				.andExpect(jsonPath("$.active").value("true"))
-				.andExpect(jsonPath("$.strategy.id").value(getTestAuctionStrategy().getId()));
+				.andExpect(jsonPath("$.strategy.id").value(getTestAuctionStrategy().getId()))
+				.andExpect(jsonPath("$.trader.id").value(getProducerTestUser().getId()));
 
 		Auction createdAuction = auctionRepository.findAll().stream()
 				.filter(auction -> auction.getPrice().equals(new BigDecimal("111.11"))).findFirst()
@@ -95,13 +101,24 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 	}
 
 	/**
-	 * Teste la récupération de la liste de tous les enchères.
+	 * Teste la récupération de la liste de toutes les enchères.
 	 * 
 	 */
 	@Test
 	public void testListAuctions() throws Exception {
 		mockMvc.perform(get("/api/auctions").accept(MediaType.APPLICATION_JSON).with(jwt())).andExpect(status().isOk())
-				.andExpect(jsonPath("$").isArray());
+				.andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(3));
+	}
+
+	/**
+	 * Teste la récupération de la liste des enchères d'un utilisateur.
+	 *
+	 */
+	@Test
+	public void testListAuctionsByTraderId() throws Exception {
+		mockMvc.perform(get("/api/auctions?traderId=" + getProducerTestUser().getId()).accept(MediaType.APPLICATION_JSON).with(jwt()))
+				.andExpect(status().isOk()).andExpect(jsonPath("$").isArray())
+				.andExpect(jsonPath("$.length()").value(2));
 	}
 
 	/**
@@ -112,6 +129,9 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 	public void testUpdateAuction() throws Exception {
 		AuctionStrategyDto strategyDto = new AuctionStrategyDto();
 		strategyDto.setId(getTestAuctionStrategy().getId());
+
+		ProducerDetailDto producer = new ProducerDetailDto();
+		producer.setId(getProducerTestUser().getId());
 
 		ProductDto productDto = new HarvestProductDto();
 		productDto.setId(getTestHarvestProduct().getId());
@@ -124,6 +144,7 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		updateAuction.setExpirationDate(LocalDateTime.now());
 		updateAuction.setStrategy(strategyDto);
 		updateAuction.setProduct(productDto);
+		updateAuction.setTrader(producer);
 
 		ObjectNode node = objectMapper.valueToTree(updateAuction);
 		String jsonContent = node.toString();
@@ -139,11 +160,10 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 	 */
 	@Test
 	public void testDeleteAuction() throws Exception {
-		// TODO delete
-		// mockMvc.perform(delete("/api/auctions/" + getTestAuction().getId()).with(jwt()))
-		// .andExpect(status().isNoContent());
-		//
-		// mockMvc.perform(get("/api/auctions/" +
-		// getTestAuction().getId()).with(jwt())).andExpect(status().isNotFound());
+		mockMvc.perform(delete("/api/auctions/" + getTestAuction().getId()).with(jwt()))
+				.andExpect(status().isNoContent());
+
+		mockMvc.perform(get("/api/auctions/" + getTestAuction().getId()).accept(MediaType.APPLICATION_JSON).with(jwt()))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.active").value(false));
 	}
 }

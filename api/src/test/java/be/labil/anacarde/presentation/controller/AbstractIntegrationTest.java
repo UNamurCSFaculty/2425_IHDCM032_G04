@@ -416,14 +416,26 @@ public abstract class AbstractIntegrationTest {
 		// An auction with a harvest product
 		Auction auction = Auction.builder().price(new BigDecimal("500.0")).productQuantity(10).active(true)
 				.creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now()).product(productHarvest)
-				.strategy(testAuctionStrategy).build();
+				.strategy(testAuctionStrategy).trader((Trader) producer).build();
 		testAuction = auctionRepository.save(auction);
 
 		// An auction with a transformed product
 		Auction auction2 = Auction.builder().price(new BigDecimal("10000.0")).productQuantity(1000).active(true)
 				.creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now()).product(productTransform)
-				.strategy(testAuctionStrategy).build();
+				.strategy(testAuctionStrategy).trader((Trader) producer).build();
 		auctionRepository.save(auction2);
+
+		// An auction from another user
+		Auction auction3 = Auction.builder().price(new BigDecimal("777.0")).productQuantity(777).active(true)
+				.creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now()).product(productTransform)
+				.strategy(testAuctionStrategy).trader((Trader) transformer).build();
+		auctionRepository.save(auction3);
+
+		// A "deleted" auction (= inactive)
+		Auction auction4 = Auction.builder().price(new BigDecimal("999.0")).productQuantity(999).active(false)
+				.creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now()).product(productTransform)
+				.strategy(testAuctionStrategy).trader((Trader) producer).build();
+		auctionRepository.save(auction4);
 
 		BidStatus bidStatus = BidStatus.builder().name("Accepté").build();
 		testBidStatus = bidStatusRepository.save(bidStatus);

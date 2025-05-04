@@ -20,7 +20,7 @@ export const zLanguageDto = z.object({
     name: z.string().min(1)
 });
 
-export const zProducerDetailDto = z.object({
+export const zTraderDetailDto = z.object({
     id: z.number().int().readonly().optional(),
     firstName: z.string().min(1),
     lastName: z.string().min(1),
@@ -33,8 +33,6 @@ export const zProducerDetailDto = z.object({
     password: z.string().optional(),
     roles: z.array(zRoleDto).readonly().optional(),
     language: zLanguageDto,
-    agriculturalIdentifier: z.string().min(1),
-    cooperative: zCooperativeDto.optional(),
     type: z.enum([
         'admin',
         'producer',
@@ -44,6 +42,11 @@ export const zProducerDetailDto = z.object({
         'carrier'
     ])
 });
+
+export const zProducerDetailDto = zTraderDetailDto.and(z.object({
+    agriculturalIdentifier: z.string().min(1),
+    cooperative: zCooperativeDto.optional()
+}));
 
 export const zFieldDto = z.object({
     id: z.number().int().readonly().optional(),
@@ -93,34 +96,11 @@ export const zCarrierDetailDto = zUserDetailDto.and(z.object({
     regionIds: z.array(z.number().int())
 }));
 
-export const zTraderDetailDto = zUserDetailDto;
-
 export const zExporterDetailDto = zTraderDetailDto;
 
 export const zQualityInspectorDetailDto = zUserDetailDto;
 
-export const zTransformerDetailDto = z.object({
-    id: z.number().int().readonly().optional(),
-    firstName: z.string().min(1),
-    lastName: z.string().min(1),
-    email: z.string().min(1),
-    registrationDate: z.iso.datetime().readonly().optional(),
-    validationDate: z.iso.datetime().readonly().optional(),
-    enabled: z.boolean().optional(),
-    address: z.string().optional(),
-    phone: z.string().regex(/^(?:\+229)?(?:01[2-9]\d{7}|[2-9]\d{7})$/).optional(),
-    password: z.string().optional(),
-    roles: z.array(zRoleDto).readonly().optional(),
-    language: zLanguageDto,
-    type: z.enum([
-        'admin',
-        'producer',
-        'transformer',
-        'quality_inspector',
-        'exporter',
-        'carrier'
-    ])
-});
+export const zTransformerDetailDto = zTraderDetailDto;
 
 export const zErrorDetail = z.object({
     field: z.string().optional(),
@@ -251,7 +231,12 @@ export const zAuctionDto = z.object({
         zHarvestProductDto,
         zTransformedProductDto
     ]),
-    auctionOptionValues: z.array(zAuctionOptionValueDto).optional()
+    auctionOptionValues: z.array(zAuctionOptionValueDto).optional(),
+    trader: z.union([
+        zExporterDetailDto,
+        zProducerDetailDto,
+        zTransformerDetailDto
+    ])
 });
 
 export const zBidStatusDto = z.object({

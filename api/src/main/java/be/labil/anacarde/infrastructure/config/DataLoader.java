@@ -79,15 +79,17 @@ public class DataLoader implements CommandLineRunner {
 		auctionStrategy.setName("Stratégie de test");
 		auctionStrategy = auctionStrategyService.createAuctionStrategy(auctionStrategy);
 
-		// Création d'enchères
-		AuctionDto auction1 = createAuction(product, BigDecimal.valueOf(500), 10, LocalDateTime.now(), auctionStrategy);
-		AuctionDto auction2 = createAuction(product, BigDecimal.valueOf(2500), 10, LocalDateTime.now().plusDays(5),
-				auctionStrategy);
-		AuctionDto auction3 = createAuction(product, BigDecimal.valueOf(3500), 10, LocalDateTime.now().plusDays(5),
-				auctionStrategy);
+		// Création d'enchères (pour l'utilisateur producer)
+		AuctionDto auction1 = createAuction(product, (TraderDetailDto) producer, BigDecimal.valueOf(500), 10, LocalDateTime.now(), auctionStrategy);
+		AuctionDto auction2 = createAuction(product, (TraderDetailDto) producer, BigDecimal.valueOf(2500), 20, LocalDateTime.now().plusDays(5), auctionStrategy);
+		AuctionDto auction3 = createAuction(product, (TraderDetailDto) producer, BigDecimal.valueOf(3500), 50, LocalDateTime.now().plusDays(5), auctionStrategy);
 		auction1 = auctionService.createAuction(auction1);
 		auction2 = auctionService.createAuction(auction2);
 		auction3 = auctionService.createAuction(auction3);
+
+		// Création d'enchères (pour l'utilisateur transformateur)
+		AuctionDto auction4 = createAuction(product, (TraderDetailDto) transformer, BigDecimal.valueOf(999), 100, LocalDateTime.now().plusDays(5), auctionStrategy);
+		auction4 = auctionService.createAuction(auction4);
 
 		// Création de status d'offres
 		BidStatusDto bidStatusEnCours = createBidStatus("En cours");
@@ -149,7 +151,7 @@ public class DataLoader implements CommandLineRunner {
 		return harvestProduct;
 	}
 
-	private AuctionDto createAuction(ProductDto product, BigDecimal price, int quantity, LocalDateTime date,
+	private AuctionDto createAuction(ProductDto product, TraderDetailDto trader, BigDecimal price, int quantity, LocalDateTime date,
 			AuctionStrategyDto strategy) {
 		AuctionDto auction = new AuctionDto();
 		auction.setProduct(product);
@@ -159,6 +161,7 @@ public class DataLoader implements CommandLineRunner {
 		auction.setExpirationDate(date.plusDays(20));
 		auction.setProductQuantity(quantity);
 		auction.setStrategy(strategy);
+		auction.setTrader(trader);
 		return auction;
 	}
 
@@ -206,7 +209,7 @@ public class DataLoader implements CommandLineRunner {
 	private ProducerDetailDto createProducer(LanguageDto languageDto) {
 		ProducerDetailDto producer = new ProducerDetailDto();
 		producer.setFirstName("Fabrice");
-		producer.setLastName("Cipolla");
+		producer.setLastName("Producer");
 		producer.setEmail("fabricecipolla@gmail.com");
 		producer.setPassword("azertyui");
 		producer.setEnabled(true);
@@ -221,8 +224,8 @@ public class DataLoader implements CommandLineRunner {
 
 	private ExporterDetailDto createExporter(LanguageDto languageDto) {
 		ExporterDetailDto exporter = new ExporterDetailDto();
-		exporter.setFirstName("Stephane");
-		exporter.setLastName("Glibert");
+		exporter.setFirstName("Stéphane");
+		exporter.setLastName("Exporter");
 		exporter.setEmail("stephaneglibert@gmail.com");
 		exporter.setPassword("azertyui");
 		exporter.setAddress("Rue du Commerce");
@@ -237,7 +240,7 @@ public class DataLoader implements CommandLineRunner {
 	private TransformerDetailDto createTransformer(LanguageDto languageDto) {
 		TransformerDetailDto transformer = new TransformerDetailDto();
 		transformer.setFirstName("Homer");
-		transformer.setLastName("Simpson");
+		transformer.setLastName("Transformer");
 		transformer.setEmail("homer@gmail.com");
 		transformer.setPassword("azertyui");
 		transformer.setAddress("Springfield");

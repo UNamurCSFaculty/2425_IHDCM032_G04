@@ -115,51 +115,7 @@ export type LanguageDtoWritable = {
 /**
  * Objet de transfert de données pour les producteurs.
  */
-export type ProducerDetailDtoReadable = {
-    /**
-     * Identifiant de l'utilisateur
-     */
-    readonly id?: number;
-    /**
-     * Prénom de l'utilisateur
-     */
-    firstName: string;
-    /**
-     * Nom de famille de l'utilisateur
-     */
-    lastName: string;
-    /**
-     * Adresse email de l'utilisateur
-     */
-    email: string;
-    /**
-     * Date d'enregistrement
-     */
-    readonly registrationDate?: string;
-    /**
-     * Date de validation
-     */
-    readonly validationDate?: string;
-    /**
-     * Compte activé
-     */
-    enabled?: boolean;
-    /**
-     * Adresse postale de l'utilisateur
-     */
-    address?: string;
-    /**
-     * Numéro de téléphone (Bénin, ancien et nouveau formats)
-     */
-    phone?: string;
-    /**
-     * Liste des rôles de l'utilisateur
-     */
-    readonly roles?: Array<RoleDtoReadable>;
-    /**
-     * Identifiant de la langue préférée
-     */
-    language: LanguageDtoReadable;
+export type ProducerDetailDtoReadable = TraderDetailDtoReadable & {
     /**
      * Identifiant agricole
      */
@@ -168,48 +124,12 @@ export type ProducerDetailDtoReadable = {
      * id de la coopérative du producteur
      */
     cooperative?: CooperativeDtoReadable;
-    /**
-     * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
-     */
-    type: 'admin' | 'producer' | 'transformer' | 'quality_inspector' | 'exporter' | 'carrier';
 };
 
 /**
  * Objet de transfert de données pour les producteurs.
  */
-export type ProducerDetailDtoWritable = {
-    /**
-     * Prénom de l'utilisateur
-     */
-    firstName: string;
-    /**
-     * Nom de famille de l'utilisateur
-     */
-    lastName: string;
-    /**
-     * Adresse email de l'utilisateur
-     */
-    email: string;
-    /**
-     * Compte activé
-     */
-    enabled?: boolean;
-    /**
-     * Adresse postale de l'utilisateur
-     */
-    address?: string;
-    /**
-     * Numéro de téléphone (Bénin, ancien et nouveau formats)
-     */
-    phone?: string;
-    /**
-     * Mot de passe de l'utilisateur
-     */
-    password?: string;
-    /**
-     * Identifiant de la langue préférée
-     */
-    language: LanguageDtoWritable;
+export type ProducerDetailDtoWritable = TraderDetailDtoWritable & {
     /**
      * Identifiant agricole
      */
@@ -218,10 +138,6 @@ export type ProducerDetailDtoWritable = {
      * id de la coopérative du producteur
      */
     cooperative?: CooperativeDtoWritable;
-    /**
-     * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
-     */
-    type: 'admin' | 'producer' | 'transformer' | 'quality_inspector' | 'exporter' | 'carrier';
 };
 
 /**
@@ -332,17 +248,7 @@ export type QualityInspectorDetailDtoWritable = UserDetailDtoWritable;
 /**
  * Objet de transfert de données pour les traders.
  */
-export type TraderDetailDtoReadable = UserDetailDtoReadable;
-
-/**
- * Objet de transfert de données pour les traders.
- */
-export type TraderDetailDtoWritable = UserDetailDtoWritable;
-
-/**
- * Objet de transfert de données pour les transformateurs.
- */
-export type TransformerDetailDtoReadable = {
+export type TraderDetailDtoReadable = {
     /**
      * Identifiant de l'utilisateur
      */
@@ -394,9 +300,9 @@ export type TransformerDetailDtoReadable = {
 };
 
 /**
- * Objet de transfert de données pour les transformateurs.
+ * Objet de transfert de données pour les traders.
  */
-export type TransformerDetailDtoWritable = {
+export type TraderDetailDtoWritable = {
     /**
      * Prénom de l'utilisateur
      */
@@ -434,6 +340,16 @@ export type TransformerDetailDtoWritable = {
      */
     type: 'admin' | 'producer' | 'transformer' | 'quality_inspector' | 'exporter' | 'carrier';
 };
+
+/**
+ * Objet de transfert de données pour les transformateurs.
+ */
+export type TransformerDetailDtoReadable = TraderDetailDtoReadable;
+
+/**
+ * Objet de transfert de données pour les transformateurs.
+ */
+export type TransformerDetailDtoWritable = TraderDetailDtoWritable;
 
 /**
  * Data Transfer Object pour un utilisateur avec toutes les informations
@@ -1023,6 +939,10 @@ export type AuctionDtoReadable = {
      * Valeurs d'option associées à l'enchère
      */
     auctionOptionValues?: Array<AuctionOptionValueDtoReadable>;
+    /**
+     * Trader ayant créé l'enchère
+     */
+    trader: ExporterDetailDtoReadable | ProducerDetailDtoReadable | TransformerDetailDtoReadable;
 };
 
 /**
@@ -1057,6 +977,10 @@ export type AuctionDtoWritable = {
      * Valeurs d'option associées à l'enchère
      */
     auctionOptionValues?: Array<AuctionOptionValueDtoWritable>;
+    /**
+     * Trader ayant créé l'enchère
+     */
+    trader: ExporterDetailDtoWritable | ProducerDetailDtoWritable | TransformerDetailDtoWritable;
 };
 
 /**
@@ -3614,7 +3538,12 @@ export type AuthenticateUserResponse = AuthenticateUserResponses[keyof Authentic
 export type ListAuctionsData = {
     body?: never;
     path?: never;
-    query?: never;
+    query?: {
+        /**
+         * ID du trader pour filtrer les enchères
+         */
+        traderId?: number;
+    };
     url: '/api/auctions';
 };
 

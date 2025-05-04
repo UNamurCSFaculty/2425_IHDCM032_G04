@@ -4,6 +4,7 @@ import be.labil.anacarde.domain.dto.AuctionDto;
 import be.labil.anacarde.domain.dto.ValidationGroups;
 import be.labil.anacarde.presentation.controller.annotations.*;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -43,7 +44,8 @@ public interface AuctionApi {
 	@Operation(summary = "Obtenir toutes les enchères")
 	@ApiResponse(responseCode = "200", description = "Liste des enchères", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = AuctionDto.class))))
 	@GetMapping
-	ResponseEntity<List<AuctionDto>> listAuctions();
+	ResponseEntity<List<AuctionDto>> listAuctions(
+			@Parameter(description = "ID du trader pour filtrer les enchères", required = false) @RequestParam(value = "traderId", required = false) Integer traderId);
 
 	@Operation(summary = "Supprimer une enchère")
 	@ApiResponseDelete

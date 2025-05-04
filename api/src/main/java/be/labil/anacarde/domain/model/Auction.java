@@ -44,4 +44,8 @@ public class Auction extends BaseEntity {
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "auction_id")
 	private Set<AuctionOptionValue> auctionOptionValues;
+
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "trader_id", nullable = false)
+	private Trader trader;
 }

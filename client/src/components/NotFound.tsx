@@ -19,7 +19,9 @@ export default function NotFound() {
             </Button>
           </Link>
           <Link to="/contact" className="text-sm font-semibold text-gray-900">
-            Contacter le support <span aria-hidden="true">&rarr;</span>
+            <Button size="lg" className="px-8">
+              Contacter le support
+            </Button>
           </Link>
         </div>
       </div>
