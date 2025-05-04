@@ -1,6 +1,8 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useUserStore } from '@/store/userStore'
 import { LoginForm } from '@/components/LoginForm'
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 import z from 'zod'
 
 export const Route = createFileRoute('/login')({
@@ -23,22 +25,24 @@ function RouteComponent() {
   // Si l'utilisateur est connecté, on affiche un message et le bouton de déconnexion
   if (user) {
     return (
-      <div className="bg-base-200 flex min-h-screen items-center justify-center">
-        <div className="card w-full max-w-sm shadow-xl">
-          <div className="card-body text-center">
-            <h2 className="card-title mx-auto">
-              Vous êtes connecté en tant que{' '}
-              <span className="font-semibold">{user.email}</span>
-            </h2>
-            <button
-              onClick={handleLogout}
-              className="btn btn-error mt-6 w-full"
-            >
-              Déconnexion
-            </button>
-          </div>
+        <div className="flex min-h-screen items-center justify-center bg-neutral-300">
+          <Card className="w-full max-w-sm shadow-xl">
+            <CardHeader />
+            <CardContent className="text-center">
+              <CardTitle>
+                Vous êtes connecté en tant que&nbsp;
+                <span className="font-semibold">{user.email}</span>
+              </CardTitle>
+              <Button
+                  variant="destructive"
+                  onClick={handleLogout}
+                  className="mt-6 w-full"
+              >
+                Déconnexion
+              </Button>
+            </CardContent>
+          </Card>
         </div>
-      </div>
     )
   }
 

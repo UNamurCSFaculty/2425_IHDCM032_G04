@@ -1,34 +1,29 @@
-import { StrictMode, useEffect } from 'react'
-import ReactDOM from 'react-dom/client'
-import { Observer } from 'tailwindcss-intersect'
-import { RouterProvider, createRouter } from '@tanstack/react-router'
+import {
+  getApplicationDataOptions,
+  getCurrentUserOptions,
+} from './api/generated/@tanstack/react-query.gen.ts'
+import { ErrorBoundary } from './components/ErrorBoundary.tsx'
+import NotFound from './components/NotFound.tsx'
+import { AppSkeleton } from './components/Skeleton/AppSkeleton.tsx'
+// initialisation i18n
+import './i18n'
+import reportWebVitals from './reportWebVitals.ts'
+import { routeTree } from './routeTree.gen'
+import { useUserStore } from './store/userStore.tsx'
+import './styles.css'
+import { client } from '@/api/generated/client.gen.ts'
+import { useAppStore } from '@/store/appStore.tsx'
+import '@/utils/zod-config.ts'
 import {
   QueryClient,
   QueryClientProvider,
   useQueries,
 } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-
-// initialisation i18n
-import './i18n'
-import '@/utils/zod-config.ts'
-
-import { routeTree } from './routeTree.gen'
-
-import './styles.css'
-import reportWebVitals from './reportWebVitals.ts'
-import NotFound from './components/NotFound.tsx'
-import { ErrorBoundary } from './components/ErrorBoundary.tsx'
-
-import { useUserStore } from './store/userStore.tsx'
-import { AppSkeleton } from './components/Skeleton/AppSkeleton.tsx'
-import { useAppStore } from '@/store/appStore.tsx'
-
-import { client } from '@/api/generated/client.gen.ts'
-import {
-  getCurrentUserOptions,
-  getApplicationDataOptions,
-} from './api/generated/@tanstack/react-query.gen.ts'
+import { RouterProvider, createRouter } from '@tanstack/react-router'
+import { StrictMode, useEffect } from 'react'
+import ReactDOM from 'react-dom/client'
+import { Observer } from 'tailwindcss-intersect'
 
 client.setConfig({
   credentials: 'include', // pour les cookies (HTTP Only)

@@ -1,5 +1,5 @@
-import { z } from 'zod'
 import i18n from '../i18n'
+import { z } from 'zod'
 
 /**
  * Propriétés des utilisateurs : Role et Langage
@@ -35,8 +35,13 @@ export const zUser = z.object({
   validationDate: z.iso.datetime().readonly().optional(),
   enabled: z.boolean().optional(),
   address: z.string().min(1, i18n.t('validation.required')),
-  phone: z.string().regex(/^(?:\+229)?(?:01[2-9]\d{7}|[2-9]\d{7})$/),
-  password: z.string().min(8, i18n.t('validation.minLength')),
+  phone: z
+    .string()
+    .regex(
+      /^(?:\+229)?(?:01[2-9]\d{7}|[2-9]\d{7})$/,
+      i18n.t('errors.phone.exists')
+    ),
+  password: z.string().min(8, i18n.t('validation.minLength', { count: 8 })),
   language: zLanguage,
 })
 

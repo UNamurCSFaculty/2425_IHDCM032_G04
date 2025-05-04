@@ -6,9 +6,14 @@ import { FieldErrors } from './field-errors'
 type CheckboxFieldProps = {
   label: string
   description?: string
+  required?: boolean
 }
 
-export const CheckboxField = ({ label, description }: CheckboxFieldProps) => {
+export const CheckboxField = ({
+  label,
+  description,
+  required = true,
+}: CheckboxFieldProps) => {
   const field = useFieldContext<boolean>()
 
   return (
@@ -25,6 +30,7 @@ export const CheckboxField = ({ label, description }: CheckboxFieldProps) => {
         <div className="grid gap-1.5 leading-none">
           <Label htmlFor={field.name} className="cursor-pointer">
             {label}
+            {required && <span className="text-red-500">*</span>}
           </Label>
           {description && (
             <p className="text-muted-foreground text-sm">{description}</p>

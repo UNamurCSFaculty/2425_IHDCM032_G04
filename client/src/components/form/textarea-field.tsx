@@ -1,17 +1,19 @@
-import React from 'react'
 import { useFieldContext } from '.'
 import { Label } from '../ui/label'
-import { FieldErrors } from './field-errors'
 import { Textarea } from '../ui/textarea'
+import { FieldErrors } from './field-errors'
 import { cn } from '@/lib/utils'
+import React from 'react'
 
 type TextAreaProps = {
   label: string
+  required?: boolean
 } & React.TextareaHTMLAttributes<HTMLTextAreaElement>
 
 export const TextAreaField = ({
   label,
   className,
+  required = true,
   ...restProps
 }: TextAreaProps) => {
   const field = useFieldContext<string>()
@@ -22,7 +24,10 @@ export const TextAreaField = ({
   return (
     <div className="space-y-2">
       <div className="space-y-1">
-        <Label htmlFor={field.name}>{label}</Label>
+        <Label htmlFor={field.name}>
+          {label}
+          {required && <span className="text-red-500">*</span>}
+        </Label>
         <Textarea
           id={field.name}
           name={field.name}

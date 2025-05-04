@@ -15,7 +15,7 @@ import lombok.experimental.SuperBuilder;
 @PrimaryKeyJoinColumn(name = "id")
 public class Producer extends Trader {
 
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String agriculturalIdentifier;
 
 	@ManyToOne(fetch = FetchType.LAZY)

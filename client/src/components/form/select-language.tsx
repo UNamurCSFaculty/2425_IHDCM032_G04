@@ -1,5 +1,4 @@
-import { useAppData } from '@/store/appStore'
-
+import { useFieldContext } from '.'
 import { Label } from '../ui/label'
 import {
   Select,
@@ -9,16 +8,20 @@ import {
   SelectValue,
 } from '../ui/select'
 import { FieldErrors } from './field-errors'
-import React from 'react'
-import { useFieldContext } from '.'
 import type { LanguageDtoReadable } from '@/api/generated'
+import { useAppData } from '@/store/appStore'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 
 type SelectLanguageFieldProps = {
   disabled: boolean
+  required?: boolean
 } & React.InputHTMLAttributes<HTMLInputElement>
 
-export function SelectLanguageField({ disabled }: SelectLanguageFieldProps) {
+export function SelectLanguageField({
+  disabled,
+  required = true,
+}: SelectLanguageFieldProps) {
   const field = useFieldContext<LanguageDtoReadable>()
   const appData = useAppData()
   const { t } = useTranslation()
@@ -26,7 +29,10 @@ export function SelectLanguageField({ disabled }: SelectLanguageFieldProps) {
 
   return (
     <div className="space-y-1">
-      <Label htmlFor={field.name}>{t('language')}</Label>
+      <Label htmlFor={field.name}>
+        {t('language')}
+        {required && <span className="text-red-500">*</span>}
+      </Label>
       <Select
         value={currentId}
         onValueChange={val => {

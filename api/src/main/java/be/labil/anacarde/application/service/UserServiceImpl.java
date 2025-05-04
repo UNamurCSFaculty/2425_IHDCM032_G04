@@ -9,6 +9,7 @@ import be.labil.anacarde.domain.mapper.UserListMapper;
 import be.labil.anacarde.domain.model.Role;
 import be.labil.anacarde.domain.model.User;
 import be.labil.anacarde.infrastructure.persistence.RoleRepository;
+import be.labil.anacarde.infrastructure.persistence.user.ProducerRepository;
 import be.labil.anacarde.infrastructure.persistence.user.UserRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserServiceImpl implements UserDetailsService, UserService {
 
 	private final RoleRepository roleRepository;
-
+	private final ProducerRepository producerRepository;
 	private final UserRepository userRepository;
 	private final UserDetailMapper userDetailMapper;
 
@@ -47,18 +48,25 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	public UserDetailDto createUser(UserDetailDto dto) throws BadRequestException {
 		dto.setPassword(bCryptPasswordEncoder.encode(dto.getPassword()));
 
-		boolean emailExist = userRepository.findByEmail(dto.getEmail()).isPresent();
-		boolean phoneExist = userRepository.findByPhone(dto.getPhone()).isPresent();
-		// TODO: vérifier l'identificateur ID pour un producteur.
-		if (emailExist || phoneExist) {
+		boolean emailExists = userRepository.findByEmail(dto.getEmail()).isPresent();
+		boolean phoneExists = userRepository.findByPhone(dto.getPhone()).isPresent();
+		boolean agriculturalIdentifierExists = false;
+		if(dto instanceof ProducerDetailDto producerDto) {
+			agriculturalIdentifierExists = producerRepository.findByAgriculturalIdentifier(producerDto.getAgriculturalIdentifier()).isPresent();
+		}
+		if (emailExists || phoneExists || agriculturalIdentifierExists) {
 			List<ErrorDetail> errors = new ArrayList<>();
-			if (emailExist) {
+			if (emailExists) {
 				errors.add(new ErrorDetail("email", ApiErrorCode.CONFLICT_EMAIL_EXISTS.code(),
 						"L'email est déjà utilisé"));
 			}
-			if (phoneExist) {
+			if (phoneExists) {
 				errors.add(new ErrorDetail("phone", ApiErrorCode.CONFLICT_PHONE_EXISTS.code(),
 						"Le numéro de téléphone est déjà utilisé"));
+			}
+			if (agriculturalIdentifierExists) {
+				errors.add(new ErrorDetail("agriculturalIdentifier", ApiErrorCode.CONFLICT_AGRICULTURAL_ID_EXISTS.code(),
+						"L'identifiant agricole est déjà utilisé"));
 			}
 			throw new ApiErrorException(HttpStatus.CONFLICT, ApiErrorCode.BAD_REQUEST.code(), errors);
 		}

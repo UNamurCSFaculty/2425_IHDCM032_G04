@@ -104,11 +104,11 @@
     "internal_error": "Une erreur interne s’est produite. Contactez le support si le problème persiste.",
     "email.exists": "Cet email est déjà utilisé",
     "phone.exists": "Ce numéro de téléphone est déjà utilisé",
-    "agricultural_identifier.exists": "Cet identifiant agricole est déjà utilisé",
+    "agriculture_id.exists": "Cet identifiant agricole est déjà utilisé",
     "fields": {
       "email": "Email",
       "phone": "Téléphone",
-      "agricultural_identifier": "Identifiant agricole"
+      "agriculturalIdentifier": "Identifiant agricole"
     }
   }
 }
