@@ -17,7 +17,7 @@ class LanguageMapperTest {
 
 	@Test
 	void testToDto() {
-		Language language = Language.builder().id(1).name("Français").build();
+		Language language = Language.builder().id(1).name("Français").code("fr").build();
 
 		LanguageDto dto = languageMapper.toDto(language);
 
@@ -28,14 +28,12 @@ class LanguageMapperTest {
 
 	@Test
 	void testToEntity() {
-		LanguageDto dto = new LanguageDto();
-		dto.setId(2);
-		dto.setName("Anglais");
-
+		LanguageDto dto = LanguageDto.builder().id(2).code("en").name("Anglais").build();
 		Language entity = languageMapper.toEntity(dto);
 
 		assertNotNull(entity);
 		assertEquals(dto.getId(), entity.getId());
 		assertEquals(dto.getName(), entity.getName());
+		assertEquals(dto.getCode(), entity.getCode());
 	}
 }

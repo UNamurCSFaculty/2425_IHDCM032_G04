@@ -24,8 +24,7 @@ class CarrierDetailMapperTest {
 
 	@Test
 	void shouldMapCarrierDetailDtoToCarrierEntity() {
-		LanguageDto languageDto = new LanguageDto();
-		languageDto.setId(1);
+		LanguageDto languageDto = LanguageDto.builder().id(1).code("fr").name("Français").build();
 
 		RoleDto roleDto = new RoleDto(10, "CARRIER_ROLE");
 

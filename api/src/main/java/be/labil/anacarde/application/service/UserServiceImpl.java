@@ -1,7 +1,6 @@
 package be.labil.anacarde.application.service;
 
-import be.labil.anacarde.application.exception.BadRequestException;
-import be.labil.anacarde.application.exception.ResourceNotFoundException;
+import be.labil.anacarde.application.exception.*;
 import be.labil.anacarde.domain.dto.user.ProducerDetailDto;
 import be.labil.anacarde.domain.dto.user.UserDetailDto;
 import be.labil.anacarde.domain.dto.user.UserListDto;
@@ -12,10 +11,12 @@ import be.labil.anacarde.domain.model.User;
 import be.labil.anacarde.infrastructure.persistence.RoleRepository;
 import be.labil.anacarde.infrastructure.persistence.user.UserRepository;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -45,12 +46,20 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	@Override
 	public UserDetailDto createUser(UserDetailDto dto) throws BadRequestException {
 		dto.setPassword(bCryptPasswordEncoder.encode(dto.getPassword()));
-		if (userRepository.findByEmail(dto.getEmail()).isPresent()) {
-			throw new BadRequestException("Cet email est déjà utilisé.");
+
+		boolean emailExist = userRepository.findByEmail(dto.getEmail()).isPresent();
+		boolean phoneExist = userRepository.findByPhone(dto.getPhone()).isPresent();
+		if (emailExist || phoneExist) {
+			List<ErrorDetail> errors = new ArrayList<>();
+			if (emailExist) {
+				errors.add(new ErrorDetail("email", "email.exists", "L'email est déjà utilisé"));
+			}
+			if (phoneExist) {
+				errors.add(new ErrorDetail("phone", "phone.exists", "Le numéro de téléphone est déjà utilisé"));
+			}
+			throw new ApiErrorException(HttpStatus.CONFLICT, ApiErrorCode.BAD_REQUEST.code(), errors);
 		}
-		if (userRepository.findByPhone(dto.getPhone()).isPresent()) {
-			throw new BadRequestException("Ce numéro de téléphone est déjà utilisé.");
-		}
+
 		User user;
 		if (dto instanceof ProducerDetailDto producerDto) {
 			user = userDetailMapper.toEntity(producerDto);

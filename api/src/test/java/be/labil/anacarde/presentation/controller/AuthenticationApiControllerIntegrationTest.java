@@ -42,7 +42,7 @@ public class AuthenticationApiControllerIntegrationTest {
 	@BeforeEach
 	public void setUpDatabase() {
 		// Création de la langue
-		Language language = Language.builder().name("fr").build();
+		Language language = Language.builder().code("fr").name("Français").build();
 		language = languageRepository.save(language);
 
 		// Création de l'utilisateur admin

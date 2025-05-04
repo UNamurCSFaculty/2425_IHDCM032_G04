@@ -265,10 +265,11 @@ public class GlobalExceptionHandler {
 	/**
 	 * Retourne une réponse d'erreur avec le statut HTTP BAD_REQUEST lorsqu'un paramètre de chemin est manquant.
 	 *
-	 * @param request
-	 *            La requête HTTP contenant les détails de la requête.
 	 * @param ex
 	 *            L'exception MissingPathVariableException levée.
+	 * @param req
+	 *            La requête HTTP contenant les détails de la requête.
+	 * 
 	 * @return Une ResponseEntity contenant un objet ErrorResponse avec un message d'erreur et le statut HTTP
 	 *         BAD_REQUEST.
 	 */
@@ -283,10 +284,10 @@ public class GlobalExceptionHandler {
 	/**
 	 * Retourne une réponse d'erreur avec le statut HTTP BAD_REQUEST lorsqu'un paramètre de requête est manquant.
 	 *
-	 * @param request
-	 *            La requête HTTP contenant les détails de la requête.
 	 * @param ex
 	 *            L'exception MissingServletRequestParameterException levée.
+	 * @param req
+	 *            La requête HTTP contenant les détails de la requête.
 	 * @return Une ResponseEntity contenant un objet ErrorResponse avec un message d'erreur et le statut HTTP
 	 *         BAD_REQUEST.
 	 */
