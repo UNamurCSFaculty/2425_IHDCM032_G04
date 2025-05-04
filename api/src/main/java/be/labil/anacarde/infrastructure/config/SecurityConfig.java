@@ -99,6 +99,7 @@ public class SecurityConfig {
 	private void configureAuthorization(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.POST, "/api/users").permitAll()
 				.requestMatchers(HttpMethod.GET, "/api/app").permitAll()
+				.requestMatchers(HttpMethod.POST, "/api/contact").permitAll()
 				.requestMatchers("/api/auth/**", "/v3/api-docs.yaml", "/v3/api-docs/**", "/swagger-ui/**",
 						"/swagger-ui.html")
 				.permitAll()
