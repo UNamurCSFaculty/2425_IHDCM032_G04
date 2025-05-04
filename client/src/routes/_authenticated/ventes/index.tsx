@@ -1,27 +1,14 @@
 import { createFileRoute } from '@tanstack/react-router'
-import {useQueryClient, useQuery, useSuspenseQuery, useMutation  } from '@tanstack/react-query'
-import { listAuctionsOptions, listBidsOptions, deleteAuctionMutation, listAuctionsQueryKey } from '@/api/generated/@tanstack/react-query.gen'
-import type { AuctionDtoReadable, BidDtoReadable, HarvestProductDtoReadable, TransformedProductDtoReadable } from '@/api/generated'
+import {useQueryClient, useSuspenseQuery, useMutation  } from '@tanstack/react-query'
+import { listAuctionsOptions, deleteAuctionMutation, listAuctionsQueryKey } from '@/api/generated/@tanstack/react-query.gen'
+import type { AuctionDtoReadable, HarvestProductDtoReadable, TransformedProductDtoReadable } from '@/api/generated'
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 import { useUserStore } from '@/store/userStore'
-import { useAuctionStore } from '@/store/auctionStore'; 
+import { useAuctionStore } from '@/store/auctionStore'
 import { useState } from 'react';
-import * as Dialog from '@radix-ui/react-dialog';
-
-const formatDate = (dateString: string | undefined): string => {
-  if (!dateString) {
-    return "—";
-  }
-
-  return new Date(dateString).toLocaleString('fr-FR', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-};
+import { formatDate } from '@/lib/utils'
+import BidsModal from '@/components/BidsModal'
 
 const listAuctionsQueryOptions = (userId: number) => ({
   ...listAuctionsOptions({ query: { traderId: userId } }),
@@ -48,13 +35,6 @@ export function RouteComponent() {
 
   const { data: auctionsData } = useSuspenseQuery(
     listAuctionsQueryOptions(user!.id!),
-  );
-
-  const { data: bidsData, isLoading, isError } = useQuery(
-    {
-      ...listBidsOptions({ path: { auctionId: selectedAuctionId! } }),
-      enabled: !!selectedAuctionId,
-    }
   );
 
   const queryClient = useQueryClient();
@@ -129,43 +109,11 @@ export function RouteComponent() {
         </TableBody>
       </Table>
 
-      <Dialog.Root open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 backdrop-blur-xs" />
-        <Dialog.Content aria-describedby={undefined} className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg w-auto max-w-[90%]">
-          <Dialog.Title className="text-xl font-bold">Offres pour votre enchère</Dialog.Title>
-          <Dialog.Close asChild>
-            <button className="absolute top-2 right-2 text-gray-500 hover:text-gray-700">✕</button>
-          </Dialog.Close>
-          <div className="mt-4">
-            {isLoading && <p>Chargement des offres...</p>}
-            {isError && <p>Une erreur s'est produite lors du chargement des offres.</p>}
-            {bidsData as BidDtoReadable[] && (
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Enchérisseur</TableHead>
-                    <TableHead>Montant</TableHead>
-                    <TableHead></TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {(bidsData as BidDtoReadable[]).map((bid: BidDtoReadable) => (
-                    <TableRow key={bid.id}>
-                      <TableCell>{formatDate(bid.creationDate)}</TableCell>
-                      <TableCell>{bid.trader.firstName} {bid.trader.lastName}</TableCell>
-                      <TableCell>{bid.amount.toLocaleString()} CFA</TableCell>
-                      <TableCell><Button>Accepter</Button></TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            )}
-          </div>
-        </Dialog.Content>
-        </Dialog.Portal>
-      </Dialog.Root>
+      <BidsModal
+        isOpen={isDialogOpen}
+        onClose={setIsDialogOpen}
+        auctionId={selectedAuctionId!}
+      />
     </div>
   )
 }
