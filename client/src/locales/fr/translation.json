@@ -20,6 +20,18 @@
       "sous_titre": "N'hésitez pas à nous envoyer vos questions ou commentaires."
     }
   },
+  "breadcrumb": {
+    "home": "Accueil",
+    "contact": "Contact",
+    "about": "À propos",
+    "terms": "Conditions d’utilisation",
+    "privacy": "Politique de confidentialité",
+    "signup": "Inscription",
+    "login": "Connexion",
+    "profile": "Profil",
+    "settings": "Paramètres",
+    "auctions": "Enchères"
+  },
   "validation": {
     "minLength": "Le champ doit avoir au moins {{count}} caractère",
     "minLength_plural": "Le champ doit avoir au moins {{count}} caractères",

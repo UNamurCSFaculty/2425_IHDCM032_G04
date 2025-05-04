@@ -82,5 +82,17 @@
       "phone": "Phone",
       "agriculturalIdentifier": "Agricultural identifier"
     }
+  },
+  "breadcrumb": {
+    "home": "Home",
+    "contact": "Contact",
+    "about": "About",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "signup": "Sign up",
+    "login": "Log in",
+    "profile": "Profile",
+    "settings": "Settings",
+    "auctions": "Auctions"
   }
 }
