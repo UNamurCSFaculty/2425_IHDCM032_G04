@@ -93,14 +93,17 @@ public class DataLoader implements CommandLineRunner {
 				LocalDateTime.now().plusDays(5), auctionStrategy, tradeStatusOpen);
 		AuctionDto auction3 = createAuction(product, (TraderDetailDto) producer, BigDecimal.valueOf(3500), 50,
 				LocalDateTime.now().plusDays(5), auctionStrategy, tradeStatusOpen);
+		AuctionDto auction4 = createAuction(product, (TraderDetailDto) producer, BigDecimal.valueOf(777), 50,
+				LocalDateTime.now().plusDays(5), auctionStrategy, tradeStatusExpired);
 		auction1 = auctionService.createAuction(auction1);
 		auction2 = auctionService.createAuction(auction2);
 		auction3 = auctionService.createAuction(auction3);
+		auction4 = auctionService.createAuction(auction4);
 
 		// Création d'enchères (pour l'utilisateur transformateur)
-		AuctionDto auction4 = createAuction(product, (TraderDetailDto) transformer, BigDecimal.valueOf(999), 100,
+		AuctionDto auction5 = createAuction(product, (TraderDetailDto) transformer, BigDecimal.valueOf(999), 100,
 				LocalDateTime.now().plusDays(5), auctionStrategy, tradeStatusOpen);
-		auction4 = auctionService.createAuction(auction4);
+		auction5 = auctionService.createAuction(auction4);
 
 		// Création d'offres
 		BidDto bid1 = createBid(auction1, (TraderDetailDto) transformer, BigDecimal.valueOf(100), LocalDateTime.now(),

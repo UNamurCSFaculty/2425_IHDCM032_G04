@@ -103,7 +103,6 @@ export function RouteComponent() {
                     <TableCell>{auction.product.type === "harvest" ? "Récolte" : "Transformé"}</TableCell>
                     <TableCell>{auction.productQuantity} kg</TableCell>
                     <TableCell>{auction.product.qualityControlId ?? "N/A"}</TableCell>
-                    <TableCell>{auction.price.toLocaleString()} CFA</TableCell>
                     <TableCell>
                       { auction.product.type === "harvest" 
                         ? (auction.product as HarvestProductDtoReadable).store.name 
@@ -111,6 +110,7 @@ export function RouteComponent() {
                       }
                     </TableCell>
                     <TableCell>{formatDate(auction.product.deliveryDate)}</TableCell>
+                    <TableCell>{auction.price.toLocaleString()} CFA</TableCell>
                     <TableCell>
                       <Button
                         onClick={() => {
