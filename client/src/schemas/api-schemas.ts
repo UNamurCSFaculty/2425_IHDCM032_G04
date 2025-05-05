@@ -34,7 +34,7 @@ export const zUser = z.object({
   validationDate: z.iso.datetime().readonly().optional(),
   enabled: z.boolean().optional(),
   address: z.string().min(1),
-  phone: z.string().regex(/^(?:\+229)?(?:01[2-9]\d{7}|[2-9]\d{7})$/),
+  phone: z.string().regex(/^(?:\+229)?01\d{8}/),
   password: z
     .string()
     .min(8)
