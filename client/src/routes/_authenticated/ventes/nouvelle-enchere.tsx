@@ -36,10 +36,9 @@ function RouteComponent() {
   );
 
   const productsArray = data as ProductDtoReadable[];
-  console.log("productsData", productsArray);
 
   const form = useAppForm({
-    defaultValues: { expirationDate: '', product: '',  quantity: '', quality: '', store: '', deliveryDate: '', price: '' },
+    defaultValues: { expirationDate: '', product: '', productType: '', quantity: '', quality: '', store: '', deliveryDate: '', price: '' },
     // validators: { onChange: LoginSchema },
     // onSubmit({ value }) {
       // loginMutation.mutate({ body: value as LoginRequest })
@@ -71,18 +70,19 @@ function RouteComponent() {
 
               {/* Produit */}
               <div className="grid gap-2">
-              <form.AppField
-                name="product"
-                children={field => (
-                  <field.SelectField
-                    options={productsArray.map(product => ({
-                      value: product.id,
-                      label: product.type + " " + product.weightKg + " kg @ " + product.deliveryDate, // Utilisez une propriété descriptive comme `name` pour l'étiquette
-                    }))}
-                    label="Produit"
-                  />
-                )}
-              />
+                <form.AppField
+                  name="product"
+                  children={field => (
+                    <field.SelectField
+                      options={productsArray.map(product => ({
+                        value: String(product.id),
+                        label: product.type + " " + product.weightKg + " kg @ " + product.deliveryDate,
+                      }))}
+                      label="Produit"
+                      value={field.value}
+                    />
+                  )}
+                />
               </div>
 
               <div className="flex gap-4">
