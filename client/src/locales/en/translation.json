@@ -29,13 +29,9 @@
     "max": "The field must be at most {{count}}",
     "required": "This field is required",
     "email": "Invalid email format",
-    "phone": {
-      "benin": "Invalid Benin phone number: expected +229XXXXXXXX or +22901XXXXXXXX"
-    },
-    "password": {
-      "does_not_natch": "Passwords doesn't match",
-      "too_weak": "The password must have at least one lowercase, one capital, one digit and one special character"
-    }
+    "phone": "Invalid Benin phone number: expected +229XXXXXXXX or +22901XXXXXXXX",
+    "passwordValidation": "Passwords doesn't match",
+    "password": "The password must have at least one lowercase, one capital, one digit and one special character"
   },
   "form": {
     "type": "I am",
