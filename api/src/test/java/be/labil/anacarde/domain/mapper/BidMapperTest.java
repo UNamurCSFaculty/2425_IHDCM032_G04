@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import be.labil.anacarde.domain.dto.AuctionDto;
 import be.labil.anacarde.domain.dto.BidDto;
-import be.labil.anacarde.domain.dto.BidStatusDto;
 import be.labil.anacarde.domain.dto.HarvestProductDto;
+import be.labil.anacarde.domain.dto.TradeStatusDto;
 import be.labil.anacarde.domain.dto.user.TransformerDetailDto;
 import be.labil.anacarde.domain.model.*;
 import java.math.BigDecimal;
@@ -32,7 +32,7 @@ class BidMapperTest {
 		auction.setProduct(HarvestProduct.builder().id(1).build());
 		bid.setAuction(auction);
 		bid.setTrader(new Transformer());
-		bid.setStatus(new BidStatus());
+		bid.setStatus(new TradeStatus());
 
 		BidDto dto = bidMapper.toDto(bid);
 
@@ -56,7 +56,7 @@ class BidMapperTest {
 		auction.setProduct(new HarvestProductDto());
 		dto.setAuction(auction);
 		dto.setTrader(new TransformerDetailDto());
-		dto.setStatus(new BidStatusDto());
+		dto.setStatus(new TradeStatusDto());
 
 		Bid entity = bidMapper.toEntity(dto);
 
@@ -80,7 +80,7 @@ class BidMapperTest {
 		existing.setCreationDate(LocalDateTime.of(2025, 1, 1, 9, 0));
 		existing.setAuction(new Auction());
 		existing.setTrader(new Transformer());
-		existing.setStatus(new BidStatus());
+		existing.setStatus(new TradeStatus());
 
 		Bid updated = bidMapper.partialUpdate(dto, existing);
 

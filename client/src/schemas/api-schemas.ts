@@ -213,7 +213,7 @@ export const zAuction = z.object({
   auctionOptionValues: z.array(zAuctionOptionValue).optional(),
 })
 
-export const zBidStatus = z.object({
+export const zTradeStatus = z.object({
   id: z.number().int().readonly().optional(),
   name: z.string().min(1),
 })
@@ -225,7 +225,7 @@ export const zBid = z.object({
   creationDate: z.iso.datetime().readonly(),
   auction: zAuction,
   trader: zTrader,
-  status: zBidStatus,
+  status: zTradeStatus,
 })
 
 /**

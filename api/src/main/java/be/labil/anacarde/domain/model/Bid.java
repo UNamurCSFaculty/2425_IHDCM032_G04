@@ -36,5 +36,5 @@ public class Bid extends BaseEntity {
 
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "status_id", nullable = false)
-	private BidStatus status;
+	private TradeStatus status;
 }

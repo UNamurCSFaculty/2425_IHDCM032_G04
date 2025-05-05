@@ -4,6 +4,8 @@ import be.labil.anacarde.application.service.AuctionService;
 import be.labil.anacarde.domain.dto.AuctionDto;
 import java.net.URI;
 import java.util.List;
+
+import be.labil.anacarde.domain.dto.BidDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,6 +39,12 @@ public class AuctionApiController implements AuctionApi {
 	@Override
 	public ResponseEntity<AuctionDto> updateAuction(Integer id, AuctionDto auctionDetailDto) {
 		AuctionDto updated = auctionService.updateAuction(id, auctionDetailDto);
+		return ResponseEntity.ok(updated);
+	}
+
+	@Override
+	public ResponseEntity<AuctionDto> acceptAuction(Integer id) {
+		AuctionDto updated = auctionService.acceptAuction(id);
 		return ResponseEntity.ok(updated);
 	}
 

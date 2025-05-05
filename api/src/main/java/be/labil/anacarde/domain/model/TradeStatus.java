@@ -8,13 +8,13 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name = "bid_status")
+@Table(name = "trade_status")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class BidStatus extends BaseEntity {
+public class TradeStatus extends BaseEntity {
 
 	@Column(nullable = false, unique = true)
 	private String name;

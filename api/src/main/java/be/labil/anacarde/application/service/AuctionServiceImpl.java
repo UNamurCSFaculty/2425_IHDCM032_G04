@@ -4,7 +4,9 @@ import be.labil.anacarde.application.exception.ResourceNotFoundException;
 import be.labil.anacarde.domain.dto.AuctionDto;
 import be.labil.anacarde.domain.mapper.AuctionMapper;
 import be.labil.anacarde.domain.model.Auction;
+import be.labil.anacarde.domain.model.TradeStatus;
 import be.labil.anacarde.infrastructure.persistence.AuctionRepository;
+import be.labil.anacarde.infrastructure.persistence.TradeStatusRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @AllArgsConstructor
 public class AuctionServiceImpl implements AuctionService {
+	private final TradeStatusRepository tradeStatusRepository;
 	private final AuctionRepository auctionRepository;
 	private final AuctionMapper auctionMapper;
 
@@ -55,12 +58,29 @@ public class AuctionServiceImpl implements AuctionService {
 	}
 
 	@Override
-	public void deleteAuction(Integer id) {
+	public AuctionDto acceptAuction(Integer id) {
+		TradeStatus acceptedStatus = tradeStatusRepository.findStatusAccepted();
+		if (acceptedStatus == null) {
+			throw new ResourceNotFoundException("Status non trouvé");
+		}
+
 		Auction existingAuction = auctionRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Enchère non trouvée"));
 
-		AuctionDto dto = new AuctionDto();
-		dto.setActive(false);
-		updateAuction(id, dto);
+		existingAuction.setStatus(acceptedStatus);
+
+		Auction saved = auctionRepository.save(existingAuction);
+		return auctionMapper.toDto(saved);
+	}
+
+	@Override
+	public void deleteAuction(Integer id) {
+		if (auctionRepository.findById(id) != null) {
+			AuctionDto dto = new AuctionDto();
+			dto.setActive(false);
+			updateAuction(id, dto);
+		} else {
+			throw new ResourceNotFoundException("Enchère non trouvée");
+		}
 	}
 }

@@ -1,6 +1,7 @@
 package be.labil.anacarde.presentation.controller;
 
 import be.labil.anacarde.domain.dto.AuctionDto;
+import be.labil.anacarde.domain.dto.BidDto;
 import be.labil.anacarde.domain.dto.ValidationGroups;
 import be.labil.anacarde.presentation.controller.annotations.*;
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,6 +41,11 @@ public interface AuctionApi {
 	@PutMapping(value = "/{id}", consumes = "application/json")
 	ResponseEntity<AuctionDto> updateAuction(@ApiValidId @PathVariable("id") Integer id,
 			@Validated({Default.class, ValidationGroups.Update.class}) @RequestBody AuctionDto auctionDto);
+
+	@Operation(summary = "Accepter une enchère")
+	@ApiResponsePut
+	@PutMapping(value = "/{id}/accept")
+	ResponseEntity<AuctionDto> acceptAuction(@ApiValidId @PathVariable("id") Integer id);
 
 	@Operation(summary = "Obtenir toutes les enchères")
 	@ApiResponse(responseCode = "200", description = "Liste des enchères", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = AuctionDto.class))))

@@ -48,4 +48,8 @@ public class Auction extends BaseEntity {
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "trader_id", nullable = false)
 	private Trader trader;
+
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "status_id", nullable = false)
+	private TradeStatus status;
 }

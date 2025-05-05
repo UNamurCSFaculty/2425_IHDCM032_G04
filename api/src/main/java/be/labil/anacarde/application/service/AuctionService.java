@@ -49,6 +49,15 @@ public interface AuctionService {
 	AuctionDto updateAuction(Integer id, AuctionDto AuctionDto);
 
 	/**
+	 * Accepter l'enchère identifiée par l'ID donné.
+	 *
+	 * @param id
+	 *            L'identifiant unique de l'enchère à mettre à jour.
+	 * @return Un AuctionDto représentant l'enchère mis à jour.
+	 */
+	AuctionDto acceptAuction(Integer id);
+
+	/**
 	 * Supprime l'enchère identifiée par l'ID donné du système.
 	 *
 	 * @param id

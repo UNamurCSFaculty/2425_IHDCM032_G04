@@ -44,7 +44,7 @@ public abstract class AbstractIntegrationTest {
 	@Autowired
 	protected BidRepository bidRepository;
 	@Autowired
-	protected BidStatusRepository bidStatusRepository;
+	protected TradeStatusRepository TradeStatusRepository;
 	@Autowired
 	protected UserDetailsService userDetailsService;
 	@Autowired
@@ -79,7 +79,8 @@ public abstract class AbstractIntegrationTest {
 	private Auction testAuction;
 	private AuctionStrategy testAuctionStrategy;
 	private Bid testBid;
-	private BidStatus testBidStatus;
+	private TradeStatus testBidStatus;
+	private TradeStatus testAuctionStatus;
 	private Field mainTestField;
 	private Cooperative mainTestCooperative;
 	private Region mainTestRegion;
@@ -226,11 +227,18 @@ public abstract class AbstractIntegrationTest {
 		return testBid;
 	}
 
-	public BidStatus getTestBidStatus() {
+	public TradeStatus getTestBidStatus() {
 		if (testBidStatus == null) {
-			throw new IllegalStateException("Enchère de test non initialisée");
+			throw new IllegalStateException("Statut d'offre non initialisé");
 		}
 		return testBidStatus;
+	}
+
+	public TradeStatus getTestAuctionStatus() {
+		if (testAuctionStatus == null) {
+			throw new IllegalStateException("Statut d'enchère non initialisé");
+		}
+		return testAuctionStatus;
 	}
 
 	public AuctionStrategy getTestAuctionStrategy() {
@@ -413,35 +421,44 @@ public abstract class AbstractIntegrationTest {
 		AuctionStrategy strategy = AuctionStrategy.builder().name("Meilleure offre").build();
 		testAuctionStrategy = auctionStrategyRepository.save(strategy);
 
+		TradeStatus auctionStatusOpen = TradeStatus.builder().name("Ouvert").build();
+		testAuctionStatus = TradeStatusRepository.save(auctionStatusOpen);
+
+		TradeStatus auctionStatusConcluded = TradeStatus.builder().name("Conclu").build();
+		TradeStatusRepository.save(auctionStatusConcluded);
+
+		TradeStatus auctionStatusExpired = TradeStatus.builder().name("Expiré").build();
+		TradeStatusRepository.save(auctionStatusExpired);
+
 		// An auction with a harvest product
 		Auction auction = Auction.builder().price(new BigDecimal("500.0")).productQuantity(10).active(true)
 				.creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now()).product(productHarvest)
-				.strategy(testAuctionStrategy).trader((Trader) producer).build();
+				.strategy(testAuctionStrategy).trader((Trader) producer).status(auctionStatusOpen).build();
 		testAuction = auctionRepository.save(auction);
 
 		// An auction with a transformed product
 		Auction auction2 = Auction.builder().price(new BigDecimal("10000.0")).productQuantity(1000).active(true)
 				.creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now()).product(productTransform)
-				.strategy(testAuctionStrategy).trader((Trader) producer).build();
+				.strategy(testAuctionStrategy).trader((Trader) producer).status(auctionStatusOpen).build();
 		auctionRepository.save(auction2);
 
 		// An auction from another user
 		Auction auction3 = Auction.builder().price(new BigDecimal("777.0")).productQuantity(777).active(true)
 				.creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now()).product(productTransform)
-				.strategy(testAuctionStrategy).trader((Trader) transformer).build();
+				.strategy(testAuctionStrategy).trader((Trader) transformer).status(auctionStatusOpen).build();
 		auctionRepository.save(auction3);
 
 		// A "deleted" auction (= inactive)
 		Auction auction4 = Auction.builder().price(new BigDecimal("999.0")).productQuantity(999).active(false)
 				.creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now()).product(productTransform)
-				.strategy(testAuctionStrategy).trader((Trader) producer).build();
+				.strategy(testAuctionStrategy).trader((Trader) producer).status(auctionStatusOpen).build();
 		auctionRepository.save(auction4);
 
-		BidStatus bidStatus = BidStatus.builder().name("En cours").build();
-		testBidStatus = bidStatusRepository.save(bidStatus);
+		TradeStatus bidStatusPending = TradeStatus.builder().name("En cours").build();
+		testBidStatus = TradeStatusRepository.save(bidStatusPending);
 
-		BidStatus bidStatusAccepted = BidStatus.builder().name("Accepté").build();
-		bidStatusRepository.save(bidStatusAccepted);
+		TradeStatus bidStatusAccepted = TradeStatus.builder().name("Accepté").build();
+		TradeStatusRepository.save(bidStatusAccepted);
 
 		// A bid on an auction
 		Bid bid = Bid.builder().amount(new BigDecimal("10.0")).creationDate(LocalDateTime.now()).auction(auction)

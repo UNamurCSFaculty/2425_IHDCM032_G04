@@ -4,9 +4,9 @@ import be.labil.anacarde.application.exception.ResourceNotFoundException;
 import be.labil.anacarde.domain.dto.BidDto;
 import be.labil.anacarde.domain.mapper.BidMapper;
 import be.labil.anacarde.domain.model.Bid;
-import be.labil.anacarde.domain.model.BidStatus;
+import be.labil.anacarde.domain.model.TradeStatus;
 import be.labil.anacarde.infrastructure.persistence.BidRepository;
-import be.labil.anacarde.infrastructure.persistence.BidStatusRepository;
+import be.labil.anacarde.infrastructure.persistence.TradeStatusRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @AllArgsConstructor
 public class BidServiceImpl implements BidService {
-	private final BidStatusRepository bidStatusRepository;
+	private final TradeStatusRepository tradeStatusRepository;
 	private final BidRepository bidRepository;
 	private final BidMapper bidMapper;
 
@@ -55,7 +55,7 @@ public class BidServiceImpl implements BidService {
 
 	@Override
 	public BidDto acceptBid(Integer id) {
-		BidStatus acceptedStatus = bidStatusRepository.findStatusAccepted();
+		TradeStatus acceptedStatus = tradeStatusRepository.findStatusAccepted();
 		if (acceptedStatus == null) {
 			throw new ResourceNotFoundException("Status non trouvé");
 		}

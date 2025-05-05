@@ -943,6 +943,10 @@ export type AuctionDtoReadable = {
      * Trader ayant créé l'enchère
      */
     trader: ExporterDetailDtoReadable | ProducerDetailDtoReadable | TransformerDetailDtoReadable;
+    /**
+     * Statut de l'offre
+     */
+    status: TradeStatusDtoReadable;
 };
 
 /**
@@ -981,6 +985,10 @@ export type AuctionDtoWritable = {
      * Trader ayant créé l'enchère
      */
     trader: ExporterDetailDtoWritable | ProducerDetailDtoWritable | TransformerDetailDtoWritable;
+    /**
+     * Statut de l'offre
+     */
+    status: TradeStatusDtoWritable;
 };
 
 /**
@@ -1064,6 +1072,30 @@ export type AuctionStrategyDtoWritable = {
 };
 
 /**
+ * Objet de transfert de données pour le statut d'une offre d'achat.
+ */
+export type TradeStatusDtoReadable = {
+    /**
+     * Identifiant unique du statut
+     */
+    readonly id?: number;
+    /**
+     * Nom du statut
+     */
+    name: string;
+};
+
+/**
+ * Objet de transfert de données pour le statut d'une offre d'achat.
+ */
+export type TradeStatusDtoWritable = {
+    /**
+     * Nom du statut
+     */
+    name: string;
+};
+
+/**
  * Objet de transfert de données pour les offres d'achat (Bid).
  */
 export type BidDtoReadable = {
@@ -1090,7 +1122,7 @@ export type BidDtoReadable = {
     /**
      * Statut de l'offre
      */
-    status: BidStatusDtoReadable;
+    status: TradeStatusDtoReadable;
 };
 
 /**
@@ -1112,31 +1144,7 @@ export type BidDtoWritable = {
     /**
      * Statut de l'offre
      */
-    status: BidStatusDtoWritable;
-};
-
-/**
- * Objet de transfert de données pour le statut d'une offre d'achat.
- */
-export type BidStatusDtoReadable = {
-    /**
-     * Identifiant unique du statut
-     */
-    readonly id?: number;
-    /**
-     * Nom du statut
-     */
-    name: string;
-};
-
-/**
- * Objet de transfert de données pour le statut d'une offre d'achat.
- */
-export type BidStatusDtoWritable = {
-    /**
-     * Nom du statut
-     */
-    name: string;
+    status: TradeStatusDtoWritable;
 };
 
 /**
@@ -2641,6 +2649,46 @@ export type UpdateAuctionErrors = {
 export type UpdateAuctionError = UpdateAuctionErrors[keyof UpdateAuctionErrors];
 
 export type UpdateAuctionResponses = {
+    /**
+     * Updated successfully
+     */
+    200: unknown;
+};
+
+export type AcceptAuctionData = {
+    body?: never;
+    path: {
+        /**
+         * Identifiant de la ressource
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/auctions/{id}/accept';
+};
+
+export type AcceptAuctionErrors = {
+    /**
+     * Bad Request
+     */
+    400: ApiError;
+    /**
+     * Unauthorized
+     */
+    401: ApiError;
+    /**
+     * Forbidden
+     */
+    403: ApiError;
+    /**
+     * Not Found
+     */
+    404: ApiError;
+};
+
+export type AcceptAuctionError = AcceptAuctionErrors[keyof AcceptAuctionErrors];
+
+export type AcceptAuctionResponses = {
     /**
      * Updated successfully
      */

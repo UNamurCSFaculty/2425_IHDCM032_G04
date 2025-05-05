@@ -5,7 +5,7 @@ import be.labil.anacarde.domain.model.Bid;
 import org.mapstruct.*;
 
 @Mapper(componentModel = "spring", uses = {HibernateLazyCondition.class, AuctionMapper.class, TraderDetailMapper.class,
-		BidStatusMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+		TradeStatusMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class BidMapper {
 
 	@Mapping(source = "auction", target = "auction")

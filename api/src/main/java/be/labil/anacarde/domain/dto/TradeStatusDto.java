@@ -6,12 +6,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * DTO pour l'entité BidStatus.
+ * DTO pour l'entité TradeStatus.
  */
 @Data
 @NoArgsConstructor
 @Schema(description = "Objet de transfert de données pour le statut d'une offre d'achat.")
-public class BidStatusDto {
+public class TradeStatusDto {
 
 	/** Identifiant unique du statut. */
 	@Schema(description = "Identifiant unique du statut", example = "1", accessMode = Schema.AccessMode.READ_ONLY)

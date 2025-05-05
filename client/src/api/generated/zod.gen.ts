@@ -219,6 +219,11 @@ export const zAuctionOptionValueDto = z.object({
     optionValue: z.string().min(1)
 });
 
+export const zTradeStatusDto = z.object({
+    id: z.number().int().readonly().optional(),
+    name: z.string().min(1)
+});
+
 export const zAuctionDto = z.object({
     id: z.number().int().readonly().optional(),
     price: z.number(),
@@ -236,12 +241,8 @@ export const zAuctionDto = z.object({
         zExporterDetailDto,
         zProducerDetailDto,
         zTransformerDetailDto
-    ])
-});
-
-export const zBidStatusDto = z.object({
-    id: z.number().int().readonly().optional(),
-    name: z.string().min(1)
+    ]),
+    status: zTradeStatusDto
 });
 
 export const zBidDto = z.object({
@@ -254,7 +255,7 @@ export const zBidDto = z.object({
         zProducerDetailDto,
         zTransformerDetailDto
     ]),
-    status: zBidStatusDto
+    status: zTradeStatusDto
 });
 
 export const zLoginRequest = z.object({

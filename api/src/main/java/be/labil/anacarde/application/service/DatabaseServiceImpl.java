@@ -20,7 +20,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 	private final AuctionRepository auctionRepository;
 	private final AuctionStrategyRepository auctionStrategyRepository;
 	private final BidRepository bidRepository;
-	private final BidStatusRepository bidStatusRepository;
+	private final TradeStatusRepository tradeStatusRepository;
 	private final FieldRepository fieldRepository;
 	private final CooperativeRepository cooperativeRepository;
 	private final RegionRepository regionRepository;
@@ -46,8 +46,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 		qualityRepository.deleteAllInBatch();
 		documentRepository.deleteAllInBatch();
 		bidRepository.deleteAllInBatch();
-		bidStatusRepository.deleteAllInBatch();
 		auctionRepository.deleteAllInBatch();
+		tradeStatusRepository.deleteAllInBatch();
 		auctionStrategyRepository.deleteAllInBatch();
 		productRepository.deleteAllInBatch();
 		fieldRepository.deleteAllInBatch();

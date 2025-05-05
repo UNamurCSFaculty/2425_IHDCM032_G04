@@ -49,8 +49,12 @@ export function RouteComponent() {
     },
   });
 
-  const handleCancelAuction = (auctionId: number) => {
+  const handleDeleteAuction = (auctionId: number) => {
     deleteAuction.mutate({ path: { id: auctionId } });
+  };
+
+  const handleEditAuction = (auctionId: number) => {
+    console.log('Edit auction with ID:', auctionId);
   };
 
   return (
@@ -59,34 +63,40 @@ export function RouteComponent() {
       <Table>
         <TableHeader>
           <TableRow>
+            <TableHead>ID</TableHead>
+            <TableHead>Début de l'enchère</TableHead>
+            <TableHead>Fin de l'enchère</TableHead>
             <TableHead>Marchandise</TableHead>
             <TableHead>Quantité</TableHead>
             <TableHead>Qualité</TableHead>
-            <TableHead>Prix demandé</TableHead>
             <TableHead>Magasin</TableHead>
             <TableHead>Date de dépôt</TableHead>
-            <TableHead>Début de l'enchère</TableHead>
-            <TableHead>Fin de l'enchère</TableHead>
+            <TableHead>Prix demandé</TableHead>
+            <TableHead></TableHead>
             <TableHead></TableHead>
             <TableHead></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {(auctionsData as AuctionDtoReadable[]).map((auction: AuctionDtoReadable) => (
+          {(auctionsData as AuctionDtoReadable[])
+            .filter((auction: AuctionDtoReadable) => auction.status.name === "Ouvert")
+            .sort((a, b) => b.id! - a.id!)
+            .map((auction: AuctionDtoReadable) => (
             <TableRow key={auction.id}>
-              <TableCell>{auction.product.type == "harvest" ? "Récolte" : "Transformé"}</TableCell>
+              <TableCell>{auction.id}</TableCell>
+              <TableCell>{formatDate(auction.creationDate)}</TableCell>
+              <TableCell>{formatDate(auction.expirationDate)}</TableCell>
+              <TableCell>{auction.product.type === "harvest" ? "Récolte" : "Transformé"}</TableCell>
               <TableCell>{auction.productQuantity} kg</TableCell>
               <TableCell>{auction.product.qualityControlId ?? "N/A"}</TableCell>
               <TableCell>{auction.price.toLocaleString()} CFA</TableCell>
               <TableCell>
-                { auction.product.type == "harvest" 
+                { auction.product.type === "harvest" 
                   ? (auction.product as HarvestProductDtoReadable).store.name 
                   : (auction.product as TransformedProductDtoReadable).location
                 }
               </TableCell>
               <TableCell>{formatDate(auction.product.deliveryDate)}</TableCell>
-              <TableCell>{formatDate(auction.creationDate)}</TableCell>
-              <TableCell>{formatDate(auction.expirationDate)}</TableCell>
               <TableCell>
                 <Button
                   onClick={() => {
@@ -96,14 +106,8 @@ export function RouteComponent() {
                 > Voir les offres
                 </Button>
               </TableCell>
-              <TableCell>
-                  <Button
-                    onClick={() => {
-                      handleCancelAuction(auction.id!);
-                    }}
-                  >Annuler la vente
-                  </Button>
-              </TableCell>
+              <TableCell><Button onClick={() => { handleEditAuction(auction.id!); }}>Modifier</Button></TableCell>
+              <TableCell><Button onClick={() => { handleDeleteAuction(auction.id!); }}>Supprimer</Button></TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -111,7 +115,7 @@ export function RouteComponent() {
 
       <BidsModal
         isOpen={isDialogOpen}
-        onClose={setIsDialogOpen}
+        setIsOpen={setIsDialogOpen}
         auctionId={selectedAuctionId!}
       />
     </div>

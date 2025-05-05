@@ -5,16 +5,16 @@ import { Button } from '@/components/ui/button'
 import {useQuery } from '@tanstack/react-query'
 import { useMutation } from '@tanstack/react-query'
 import type { BidDtoReadable } from '@/api/generated';
-import { acceptBidMutation, listBidsOptions } from '@/api/generated/@tanstack/react-query.gen'
+import { acceptAuctionMutation, acceptBidMutation, listBidsOptions } from '@/api/generated/@tanstack/react-query.gen'
 import { formatDate } from '@/lib/utils';
 
 interface BidsModalProps {
   isOpen: boolean;
-  onClose: (open: boolean) => void;
+  setIsOpen: (open: boolean) => void;
   auctionId: number;
 }
 
-const BidsModal: React.FC<BidsModalProps> = ({ isOpen, onClose, auctionId }) => {
+const BidsModal: React.FC<BidsModalProps> = ({ isOpen, setIsOpen, auctionId }) => {
   const { data: bidsData, isLoading, isError } = useQuery(
     {
       ...listBidsOptions({ path: { auctionId: auctionId } }),
@@ -22,17 +22,17 @@ const BidsModal: React.FC<BidsModalProps> = ({ isOpen, onClose, auctionId }) => 
     }
   );
 
+  const { mutate: acceptAuction } = useMutation(acceptAuctionMutation());
   const { mutate: acceptBid } = useMutation(acceptBidMutation());
 
   const handleAcceptBid = (bidId: number) => {
-    acceptBid({
-        path: { auctionId, bidId }
-      }
-    );
+    acceptBid({ path: { auctionId, bidId }});
+    acceptAuction({ path: { id: auctionId }});
+    setIsOpen(false);
   };
 
   return (
-    <Dialog.Root open={isOpen} onOpenChange={onClose}>
+    <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 backdrop-blur-xs" />
         <Dialog.Content
@@ -65,9 +65,7 @@ const BidsModal: React.FC<BidsModalProps> = ({ isOpen, onClose, auctionId }) => 
                       </TableCell>
                       <TableCell>{bid.amount.toLocaleString()} CFA</TableCell>
                       <TableCell>
-                        <Button onClick={() => { handleAcceptBid(bid.id!); }}>
-                          Accepter
-                        </Button>
+                        <Button onClick={() => { handleAcceptBid(bid.id!); }}>Accepter</Button>
                       </TableCell>
                     </TableRow>
                   ))}

@@ -42,5 +42,5 @@ public class BidDto {
 	/** Statut de l'offre. */
 	@NotNull(message = "Le statut est requis")
 	@Schema(description = "Statut de l'offre", requiredMode = Schema.RequiredMode.REQUIRED)
-	private BidStatusDto status;
+	private TradeStatusDto status;
 }

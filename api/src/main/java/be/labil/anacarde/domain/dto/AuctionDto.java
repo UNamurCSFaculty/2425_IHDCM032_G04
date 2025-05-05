@@ -51,4 +51,8 @@ public class AuctionDto {
 	@NotNull(message = "Le trader est requis")
 	@Schema(description = "Trader ayant créé l'enchère", requiredMode = Schema.RequiredMode.REQUIRED)
 	private TraderDetailDto trader;
+
+	@NotNull(message = "Le statut est requis")
+	@Schema(description = "Statut de l'offre", requiredMode = Schema.RequiredMode.REQUIRED)
+	private TradeStatusDto status;
 }

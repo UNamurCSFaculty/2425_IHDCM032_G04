@@ -74,7 +74,7 @@ public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 		auctionDto.setId(getTestAuction().getId());
 		auctionDto.setProduct(productDto);
 
-		BidStatusDto statusDto = new BidStatusDto();
+		TradeStatusDto statusDto = new TradeStatusDto();
 		statusDto.setId(getTestBidStatus().getId());
 
 		BidDto newBid = new BidDto();
@@ -121,8 +121,8 @@ public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 		AuctionDto auctionDto = new AuctionDto();
 		auctionDto.setId(getTestAuction().getId());
 
-		BidStatusDto bidStatusDto = new BidStatusDto();
-		bidStatusDto.setId(getTestBidStatus().getId());
+		TradeStatusDto TradeStatusDto = new TradeStatusDto();
+		TradeStatusDto.setId(getTestBidStatus().getId());
 
 		ProducerDetailDto producer = new ProducerDetailDto();
 		producer.setId(getProducerTestUser().getId());
@@ -130,7 +130,7 @@ public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 		BidDto updateBid = new BidDto();
 		updateBid.setAmount(new BigDecimal("1234567.01"));
 		updateBid.setAuction(auctionDto);
-		updateBid.setStatus(bidStatusDto);
+		updateBid.setStatus(TradeStatusDto);
 		updateBid.setCreationDate(LocalDateTime.now());
 		updateBid.setTrader(producer);
 		updateBid.setAuction(auctionDto);
