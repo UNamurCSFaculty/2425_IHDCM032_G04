@@ -16,6 +16,10 @@
       "sous_titre": "Rejoignez la plateforme d’enchères en temps réel pour la noix de\n cajou et ses produits transformés au Bénin. Surveillez,\n surenchérissez et soutenez les producteurs locaux en toute\n confiance."
     },
     "signup": {
+      "titre": "Inscrivez-vous",
+      "sous_titre": "Your registration will be validated within 48 hours after sending the form."
+    },
+    "contact": {
       "titre": "Contactez-nous",
       "sous_titre": "N'hésitez pas à nous envoyer vos questions ou commentaires."
     }

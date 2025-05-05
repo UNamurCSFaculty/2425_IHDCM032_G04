@@ -1,5 +1,6 @@
 import { Alert, AlertDescription, AlertTitle } from './ui/alert'
 import { createUserMutation } from '@/api/generated/@tanstack/react-query.gen.ts'
+import { BreadcrumbSection } from '@/components/BreadcrumbSection.tsx'
 import { useAppForm } from '@/components/form'
 import { zUserRegistration } from '@/schemas/api-schemas'
 import { useAppData } from '@/store/appStore'
@@ -7,7 +8,7 @@ import { useStore } from '@tanstack/react-form'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { AlertCircle } from 'lucide-react'
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import type z from 'zod'
 
@@ -70,15 +71,12 @@ export function SignupForm(): React.ComponentProps<'div'> {
 
   return (
     <section className="body-font relative text-gray-600">
+      <BreadcrumbSection
+        titleKey="app.signup.titre"
+        subtitleKey="app.signup.sous_titre"
+        breadcrumbs={[{ labelKey: 'breadcrumb.signup' }]}
+      />
       <div className="container mx-auto px-5 py-24">
-        <div className="mb-12 flex w-full flex-col text-center">
-          <h1 className="title-font mb-4 text-2xl font-medium text-gray-900 sm:text-3xl">
-            {t('app.signup.titre')}
-          </h1>
-          <p className="mx-auto text-base leading-relaxed lg:w-2/3">
-            {t('app.signup.sous_titre')}
-          </p>
-        </div>
         <div className="mx-auto">
           <form
             onSubmit={e => {
