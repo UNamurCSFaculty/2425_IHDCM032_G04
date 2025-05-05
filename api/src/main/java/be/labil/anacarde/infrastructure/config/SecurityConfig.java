@@ -2,6 +2,7 @@ package be.labil.anacarde.infrastructure.config;
 
 import be.labil.anacarde.infrastructure.security.AuthEntryPointJwt;
 import be.labil.anacarde.infrastructure.security.AuthTokenFilter;
+import be.labil.anacarde.infrastructure.security.RestAccessDeniedHandler;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -32,6 +33,7 @@ public class SecurityConfig {
 
 	private final AuthEntryPointJwt unauthorizedHandler;
 	private final AuthTokenFilter authTokenFilter;
+	private final RestAccessDeniedHandler accessDeniedHandler;
 
 	/**
 	 * Retourne l'AuthenticationManager utilisé pour traiter les demandes d'authentification.
@@ -77,7 +79,8 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.cors(Customizer.withDefaults()).csrf(AbstractHttpConfigurer::disable)
-				.exceptionHandling(ex -> ex.authenticationEntryPoint(unauthorizedHandler))
+				.exceptionHandling(
+						ex -> ex.authenticationEntryPoint(unauthorizedHandler).accessDeniedHandler(accessDeniedHandler))
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
 		configureAuthorization(http);

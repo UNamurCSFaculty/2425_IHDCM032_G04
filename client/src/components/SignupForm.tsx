@@ -1,12 +1,15 @@
-import { zUserRegistration } from '@/schemas/api-schemas'
-import { useNavigate } from '@tanstack/react-router'
+import { Alert, AlertDescription, AlertTitle } from './ui/alert'
+import { createUserMutation } from '@/api/generated/@tanstack/react-query.gen.ts'
 import { useAppForm } from '@/components/form'
+import { zUserRegistration } from '@/schemas/api-schemas'
+import { useAppData } from '@/store/appStore'
 import { useStore } from '@tanstack/react-form'
 import { useMutation } from '@tanstack/react-query'
-import { createUserMutation } from '@/api/generated/@tanstack/react-query.gen.ts'
+import { useNavigate } from '@tanstack/react-router'
+import { AlertCircle } from 'lucide-react'
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import type z from 'zod'
-import { useAppData } from '@/store/appStore'
 
 export type UserRegistration = z.infer<typeof zUserRegistration>
 
@@ -206,16 +209,25 @@ export function SignupForm(): React.ComponentProps<'div'> {
               />
             </div>
             {isError && error?.errors?.length > 0 && (
-              <div className="flex w-full justify-center p-2 text-sm text-red-600">
-                <ul className="list-disc">
-                  {error.errors.map((err, idx) => (
-                    <li key={idx} className="mb-1">
-                      {err.field ? `${t('errors.fields.' + err.field)}: ` : ''}
-                      {t('errors.' + err.code)}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              <Alert
+                variant="destructive"
+                className="border-red-300 bg-red-50 mt-4 mb-4"
+              >
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>{t('common.error')}</AlertTitle>
+                <AlertDescription>
+                  <ul className="list-disc">
+                    {error.errors.map((err, idx) => (
+                      <li key={idx} className="mb-1">
+                        {err.field
+                          ? `${t('errors.fields.' + err.field)}: `
+                          : ''}
+                        {t('errors.' + err.code)}
+                      </li>
+                    ))}
+                  </ul>
+                </AlertDescription>
+              </Alert>
             )}
             <div className="flex w-full items-center justify-center gap-4 p-2">
               <form.AppForm>
