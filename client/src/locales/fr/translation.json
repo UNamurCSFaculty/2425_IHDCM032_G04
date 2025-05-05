@@ -55,7 +55,8 @@
     "phone": "Téléphone",
     "agricultural_identifier": "Identifiant agricole",
     "password": "Mot de passe",
-    "confirm_password": "Valider le mot de passe"
+    "confirm_password": "Valider le mot de passe",
+    "message": "Message"
   },
   "buttons": {
     "submit": "Envoyer",

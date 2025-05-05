@@ -43,7 +43,8 @@
     "phone": "Phone",
     "agricultural_identifier": "Agricultural identifier",
     "password": "Password",
-    "confirm_password": "Validate password"
+    "confirm_password": "Validate password",
+    "message": "Message"
   },
   "buttons": {
     "submit": "Submit",
