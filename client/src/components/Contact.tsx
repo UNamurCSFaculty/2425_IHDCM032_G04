@@ -13,7 +13,7 @@ import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
 export const ContactForm: React.FC = () => {
-  const { t, i18n } = useTranslation(['app', 'common', 'errors'])
+  const { t, i18n } = useTranslation()
   const navigate = useNavigate()
 
   const mutation = useMutation({
@@ -45,8 +45,8 @@ export const ContactForm: React.FC = () => {
   return (
     <section className="body-font relative text-gray-600">
       <BreadcrumbSection
-        titleKey="signup.titre"
-        subtitleKey="signup.sous_titre"
+        titleKey="app.signup.titre"
+        subtitleKey="app.signup.sous_titre"
         breadcrumbs={[{ labelKey: 'breadcrumb.contact' }]}
       />
 
