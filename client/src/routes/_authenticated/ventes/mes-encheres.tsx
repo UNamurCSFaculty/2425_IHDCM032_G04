@@ -16,7 +16,7 @@ const listAuctionsQueryOptions = (userId: number) => ({
   staleTime: 10_000,
 });
 
-export const Route = createFileRoute('/_authenticated/ventes/')({
+export const Route = createFileRoute('/_authenticated/ventes/mes-encheres')({
   component: RouteComponent,
   loader: async ({ context: { queryClient } }) => {
     const user = useUserStore.getState().user // cannot use hook here...

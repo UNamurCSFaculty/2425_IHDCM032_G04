@@ -148,7 +148,21 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 	@Test
 	public void testListProducts() throws Exception {
 		mockMvc.perform(get("/api/products").accept(MediaType.APPLICATION_JSON).with(jwt())).andExpect(status().isOk())
-				.andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(2));
+				.andExpect(jsonPath("$").isArray())
+				.andExpect(jsonPath("$.length()").value(2));
+	}
+
+	/**
+	 * Teste la récupération de la liste de tous les produits par utilisateur.
+	 *
+	 */
+	@Test
+	public void testListProductsByTrader() throws Exception {
+		mockMvc.perform(get("/api/products?traderId=" + getTransformerTestUser().getId())
+				.accept(MediaType.APPLICATION_JSON).with(jwt())).andExpect(status().isOk())
+				.andExpect(jsonPath("$").isArray())
+				.andExpect(jsonPath("$.length()").value(1))
+				.andExpect(jsonPath("$[0].type").value("transformed"));
 	}
 
 	/**

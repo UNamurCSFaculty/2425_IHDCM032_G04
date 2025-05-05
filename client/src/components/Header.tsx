@@ -2,7 +2,7 @@ import { useUserStore } from '@/store/userStore'
 import logo from '@/assets/logo.svg'
 import avatar from '@/assets/avatar.webp'
 import { Link, useNavigate } from '@tanstack/react-router'
-import { Menu, ShoppingCart, CircleDollarSign, History, ArrowLeftRight } from 'lucide-react'
+import { Menu, ShoppingCart, CircleDollarSign, History, ArrowLeftRight, Package, FileText } from 'lucide-react'
 import { logout as logoutApiCall } from '@/api/generated/sdk.gen'
 
 import {
@@ -71,13 +71,13 @@ export function Header() {
           title: 'Acheter un produit',
           description: 'Créer une nouvelle offre d\'achat',
           icon: <ShoppingCart className="size-5 shrink-0" />,
-          url: '/acheter',
+          url: '/achats/nouvelle-enchere',
         },
         {
           title: 'Mes achats',
           description: 'Consulter mes achats en cours',
           icon: <ArrowLeftRight className="size-5 shrink-0" />,
-          url: '/achats',
+          url: '/achats/mes-encheres',
         },
         {
           title: 'Mon historique',
@@ -95,13 +95,13 @@ export function Header() {
           title: 'Vendre un produit',
           description: 'Créer une nouvelle vente',
           icon: <CircleDollarSign className="size-5 shrink-0" />,
-          url: '/vendre',
+          url: '/ventes/nouvelle-enchere',
         },
         {
           title: 'Mes ventes',
           description: 'Consulter mes ventes en cours',
           icon: <ArrowLeftRight className="size-5 shrink-0" />,
-          url: '/ventes',
+          url: '/ventes/mes-encheres',
         },
         {
           title: 'Mon historique',
@@ -112,13 +112,31 @@ export function Header() {
       ],
     },
     {
+      title: 'Dépôts',
+      url: '#',
+      items: [
+        {
+          title: 'Déposer un produit',
+          description: 'Encoder un dépôt en magasin',
+          icon: <Package className="size-5 shrink-0" />,
+          url: '/depots/nouveau-produit',
+        },
+        {
+          title: 'Mon historique',
+          description: 'Détails de mes dépôts passés',
+          icon: <History className="size-5 shrink-0" />,
+          url: '/depots/mes-produits',
+        }
+      ],
+    },
+    {
       title: 'Contrats',
       url: '#',
       items: [
         {
           title: 'Créer un contrat',
-          description: 'Voir toutes les enchères',
-          icon: <ArrowLeftRight className="size-5 shrink-0" />,
+          description: 'Créer un nouveau contrat',
+          icon: <FileText className="size-5 shrink-0" />,
           url: '/contrats',
         },
         {

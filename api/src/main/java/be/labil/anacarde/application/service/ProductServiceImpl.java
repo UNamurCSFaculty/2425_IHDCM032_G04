@@ -3,10 +3,15 @@ package be.labil.anacarde.application.service;
 import be.labil.anacarde.application.exception.ResourceNotFoundException;
 import be.labil.anacarde.domain.dto.ProductDto;
 import be.labil.anacarde.domain.mapper.ProductMapper;
+import be.labil.anacarde.domain.model.HarvestProduct;
 import be.labil.anacarde.domain.model.Product;
+import be.labil.anacarde.domain.model.TransformedProduct;
+import be.labil.anacarde.infrastructure.persistence.HarvestProductRepository;
 import be.labil.anacarde.infrastructure.persistence.ProductRepository;
+import be.labil.anacarde.infrastructure.persistence.TransformedProductRepository;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @AllArgsConstructor
 public class ProductServiceImpl implements ProductService {
+	private final HarvestProductRepository harvestProductRepository;
+	private final TransformedProductRepository transformedRepository;
 	private final ProductRepository productRepository;
 	private final ProductMapper productMapper;
 	// private final QualityControlRepository qualityControlRepository;
@@ -46,11 +53,11 @@ public class ProductServiceImpl implements ProductService {
 	@Transactional(readOnly = true)
 	public List<ProductDto> listProducts(Integer traderId) {
 		if (traderId != null) {
-			return null;
-			// return productRepository.findByTraderId(traderId)
-			// .stream()
-			// .map(productMapper::toDto)
-			// .collect(Collectors.toList());
+			List<HarvestProduct> harvests = harvestProductRepository.findByProducerId(traderId);
+			List<TransformedProduct> transformed = transformedRepository.findByTransformerId(traderId);
+			return Stream
+					.concat(harvests.stream().map(productMapper::toDto), transformed.stream().map(productMapper::toDto))
+					.collect(Collectors.toList());
 		} else {
 			return productRepository.findAll().stream().map(productMapper::toDto).collect(Collectors.toList());
 		}

@@ -73,6 +73,11 @@ public class DataLoader implements CommandLineRunner {
 		ProductDto product = createHarvestProduct(store, producer, field, 1000);
 		product = productService.createProduct(product);
 
+		ProductDto product2 = createHarvestProduct(store, producer, field, 2000);
+		product2 = productService.createProduct(product2);
+
+//		ProductDto product3 = createTransformedProduct("tombouctou", transformer, field)
+
 		// Création d'une stratégie d'enchère
 		AuctionStrategyDto auctionStrategy = new AuctionStrategyDto();
 		auctionStrategy.setName("Stratégie de test");

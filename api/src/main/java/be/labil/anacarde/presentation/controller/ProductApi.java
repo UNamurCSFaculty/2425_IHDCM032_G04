@@ -21,11 +21,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/api/products", produces = "application/json")
 @Tag(name = "products", description = "Opérations relatives aux produits")
 public interface ProductApi {
-
 	@Operation(summary = "Obtenir un produit")
 	@GetMapping("/{id}")
 	@ApiResponseGet
 	ResponseEntity<? extends ProductDto> getProduct(@ApiValidId @PathVariable("id") Integer id);
+
 	@Operation(summary = "Obtenir tous les produits")
 	@ApiResponseGet
 	@GetMapping

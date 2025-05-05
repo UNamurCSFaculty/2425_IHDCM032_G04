@@ -19,7 +19,7 @@ const LoginSchema = z.object({
   username: z.email('Adresse e-mail invalide'),
   password: z
     .string()
-    .min(8, 'Le mot de passe doit faire au moins 8 caractères'),
+    .min(8, 'Le mot de passe doit contenir au moins 8 caractères'),
 })
 
 export function LoginForm({

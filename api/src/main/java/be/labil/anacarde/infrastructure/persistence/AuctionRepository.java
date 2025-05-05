@@ -8,13 +8,13 @@ import org.springframework.data.repository.query.Param;
 
 public interface AuctionRepository extends JpaRepository<Auction, Integer> {
 	/**
-	 * Recherche les enchères actives, selon des paramètres de filtrage. Une enchère est
-	 * active si l'entité n'a pas été supprimée de la base de données.
+	 * Recherche les enchères actives, selon des paramètres de filtrage. Une enchère est active si l'entité n'a pas été
+	 * supprimée de la base de données.
 	 *
 	 * @param traderId
 	 *            Identifiant du trader ayant créé l'enchère.
 	 * @param status
-	 * 			  Status de l'enchère.
+	 *            Status de l'enchère.
 	 *
 	 * @return Une liste d'enchères actives.
 	 */
