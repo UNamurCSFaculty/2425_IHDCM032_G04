@@ -12,7 +12,7 @@ export type UserRegistration = z.infer<typeof zUserRegistration>
 
 export function SignupForm(): React.ComponentProps<'div'> {
   const navigate = useNavigate()
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const appData = useAppData()
 
   const signinMutation = useMutation({
@@ -57,6 +57,10 @@ export function SignupForm(): React.ComponentProps<'div'> {
       signinMutation.mutate({ body: validatedValue })
     },
   })
+
+  useEffect(() => {
+    form.validate('change')
+  }, [i18n.language, form])
 
   const type = useStore(form.store, state => state.values.type)
   //const canSubmit = useStore(form.store, state => state.canSubmit)
