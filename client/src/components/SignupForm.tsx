@@ -49,7 +49,7 @@ export function SignupForm(): React.ComponentProps<'div'> {
       firstName: '',
       lastName: '',
       email: '',
-      phone: '',
+      phone: '+22901',
       address: '',
       password: '',
       passwordValidation: '',
@@ -163,6 +163,10 @@ export function SignupForm(): React.ComponentProps<'div'> {
                   <field.TextField
                     label={t('form.phone')}
                     disabled={isPending}
+                    value={field.state.value}
+                    onChange={e => {
+                      field.handleChange(e.target.value.replace(/\s+/g, ''))
+                    }}
                   />
                 )}
               />
