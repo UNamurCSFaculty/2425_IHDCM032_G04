@@ -9,18 +9,21 @@ import { acceptAuctionMutation, acceptBidMutation, listBidsOptions } from '@/api
 import { formatDate } from '@/lib/utils';
 
 interface BidsModalProps {
+  auctionId: number;
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
-  auctionId: number;
+  updateAuction: () => void;
 }
 
-const BidsModal: React.FC<BidsModalProps> = ({ isOpen, setIsOpen, auctionId }) => {
-  const { data: bidsData, isLoading, isError } = useQuery(
+const BidsModal: React.FC<BidsModalProps> = ({ auctionId, isOpen, setIsOpen, updateAuction }) => {
+  const { data, isLoading, isError } = useQuery(
     {
       ...listBidsOptions({ path: { auctionId: auctionId } }),
       enabled: !!auctionId,
     }
   );
+
+  const bidsData = data as BidDtoReadable[];
 
   const { mutate: acceptAuction } = useMutation(acceptAuctionMutation());
   const { mutate: acceptBid } = useMutation(acceptBidMutation());
@@ -29,6 +32,7 @@ const BidsModal: React.FC<BidsModalProps> = ({ isOpen, setIsOpen, auctionId }) =
     acceptBid({ path: { auctionId, bidId }});
     acceptAuction({ path: { id: auctionId }});
     setIsOpen(false);
+    updateAuction();
   };
 
   return (
@@ -46,32 +50,38 @@ const BidsModal: React.FC<BidsModalProps> = ({ isOpen, setIsOpen, auctionId }) =
           <div className="mt-4">
             {isLoading && <p>Chargement des offres...</p>}
             {isError && <p>Une erreur s'est produite lors du chargement des offres.</p>}
-            {(bidsData as BidDtoReadable[]) && (
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Enchérisseur</TableHead>
-                    <TableHead>Montant</TableHead>
-                    <TableHead></TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {(bidsData as BidDtoReadable[]).map((bid: BidDtoReadable) => (
-                    <TableRow key={bid.id}>
-                      <TableCell>{formatDate(bid.creationDate)}</TableCell>
-                      <TableCell>
-                        {bid.trader.firstName} {bid.trader.lastName}
-                      </TableCell>
-                      <TableCell>{bid.amount.toLocaleString()} CFA</TableCell>
-                      <TableCell>
-                        <Button onClick={() => { handleAcceptBid(bid.id!); }}>Accepter</Button>
-                      </TableCell>
+            {(!bidsData || bidsData.length == 0)
+              ? (
+                  <p>Aucune offre trouvée pour cette enchère.</p>
+                ) 
+              : (
+                  <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Date</TableHead>
+                      <TableHead>Enchérisseur</TableHead>
+                      <TableHead>Montant</TableHead>
+                      <TableHead></TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            )}
+                  </TableHeader>
+                  <TableBody>
+                    {bidsData.map((bid) => (
+                        <TableRow key={bid.id}>
+                          <TableCell>{formatDate(bid.creationDate)}</TableCell>
+                          <TableCell>
+                            {bid.trader.firstName} {bid.trader.lastName}
+                          </TableCell>
+                          <TableCell>{bid.amount.toLocaleString()} CFA</TableCell>
+                          <TableCell>
+                            <Button onClick={() => { handleAcceptBid(bid.id!); }}>Accepter</Button>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    }
+                  </TableBody>
+                </Table>
+              )
+            }
           </div>
         </Dialog.Content>
       </Dialog.Portal>
