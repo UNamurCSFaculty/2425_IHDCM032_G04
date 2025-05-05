@@ -1,24 +1,19 @@
 import i18n from '../i18n'
 import { useAppForm } from './form'
-import { Alert, AlertDescription, AlertTitle } from './ui/alert'
+import { Alert, AlertDescription } from './ui/alert'
 import { authenticateUserMutation } from '@/api/generated/@tanstack/react-query.gen'
 import logo from '@/assets/logo.svg'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import { Route as LoginRoute } from '@/routes/login'
+import { LoginSchema } from '@/schemas/login-schemas.ts'
 import { useUserStore } from '@/store/userStore'
 import { useStore } from '@tanstack/react-form'
 import { useMutation } from '@tanstack/react-query'
 import { Link, useNavigate, useRouter, useSearch } from '@tanstack/react-router'
 import { AlertCircle, LockIcon, UserIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { z } from 'zod'
-
-const LoginSchema = z.object({
-  username: z.email('Adresse e-mail invalide'),
-  password: z.string().min(8, i18n.t('validation.minLength')),
-})
 
 export function LoginForm() {
   const navigate = useNavigate()

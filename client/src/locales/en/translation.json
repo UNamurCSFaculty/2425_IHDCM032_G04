@@ -29,7 +29,7 @@
     "max": "The field must be at most {{count}}",
     "required": "This field is required",
     "email": "Invalid email format",
-    "phone": "Invalid Benin phone number: expected +229XXXXXXXX or +22901XXXXXXXX",
+    "phone": "Invalid Benin phone number: expected +22901XXXXXXXX",
     "passwordValidation": "Passwords doesn't match",
     "password": "The password must have at least one lowercase, one capital, one digit and one special character"
   },

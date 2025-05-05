@@ -41,7 +41,7 @@
     "max": "Le champ doit être au plus {{count}}",
     "required": "Ce champ est requis",
     "email": "Format d’email invalide",
-    "phone": "Numéro béninois invalide : +229XXXXXXXX ou +22901XXXXXXXX attendu",
+    "phone": "Numéro béninois invalide : +22901XXXXXXXX attendu",
     "passwordValidation": "Les mots de passe ne correspondent pas",
     "password": "Le mot de passe doit contenir au moins une minuscule, une majuscule, un chiffre et un caractère special"
   },
