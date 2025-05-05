@@ -10,6 +10,7 @@ import { useState } from 'react';
 import { formatDate } from '@/lib/utils'
 import { MapPin } from 'lucide-react'
 import BidsModal from '@/components/BidsModal'
+import { Card, CardContent } from '@/components/ui/card'
 
 const listAuctionsQueryOptions = (userId: number) => ({
   ...listAuctionsOptions({ query: { traderId: userId, status: "Ouvert" } }),
@@ -66,7 +67,9 @@ export function RouteComponent() {
   };
 
   return (
-    <div className="container m-20 mx-auto">
+    <div className="bg-muted flex flex-col p-6 md:p-10">
+    <Card className="overflow-hidden">
+      <CardContent>
       <h2 className="text-2xl font-bold mb-4">Mes ventes en cours</h2>
 
       {(!auctionsData || auctionsData.length == 0)
@@ -137,6 +140,8 @@ export function RouteComponent() {
           </>
           )
       }
+        </CardContent>
+      </Card>
     </div>
   )
 }

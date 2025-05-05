@@ -6,6 +6,7 @@ import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@
 import { useUserStore } from '@/store/userStore'
 import { formatDate } from '@/lib/utils'
 import { MapPin } from 'lucide-react'
+import { Card, CardContent } from '@/components/ui/card'
 
 export const Route = createFileRoute('/_authenticated/ventes/historique')({
   component: RouteComponent,
@@ -29,7 +30,9 @@ export function RouteComponent() {
   const { auctionsArray, bidsMap } = useAuctionsWithBids(user!.id!);
 
   return (
-    <div className="container m-20 mx-auto">
+    <div className="bg-muted flex flex-col p-6 md:p-10">
+    <Card className="overflow-hidden">
+      <CardContent>
       <h2 className="text-2xl font-bold mb-4">Mes ventes passées</h2>
 
       {(!auctionsArray || auctionsArray.filter((auction) => auction.status.name !== "Ouvert").length == 0)
@@ -95,6 +98,8 @@ export function RouteComponent() {
           </>
           )
       }
+        </CardContent>
+      </Card>
     </div>
   )
 }
