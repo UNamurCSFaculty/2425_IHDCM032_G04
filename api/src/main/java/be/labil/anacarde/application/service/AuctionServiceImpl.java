@@ -38,12 +38,10 @@ public class AuctionServiceImpl implements AuctionService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<AuctionDto> listAuctions(Integer traderId) {
-		if (traderId != null) {
-			return auctionRepository.findByTraderIdAndActiveTrue(traderId).stream().map(auctionMapper::toDto)
-					.collect(Collectors.toList());
-		}
-		return auctionRepository.findByActiveTrue().stream().map(auctionMapper::toDto).collect(Collectors.toList());
+	public List<AuctionDto> listAuctions(Integer traderId, String status) {
+		List<AuctionDto> d = auctionRepository.findByActiveTrueFiltered(traderId, status).stream()
+				.map(auctionMapper::toDto).collect(Collectors.toList());
+		return d;
 	}
 
 	@Override

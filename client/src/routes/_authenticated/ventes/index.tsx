@@ -12,7 +12,7 @@ import { MapPin } from 'lucide-react'
 import BidsModal from '@/components/BidsModal'
 
 const listAuctionsQueryOptions = (userId: number) => ({
-  ...listAuctionsOptions({ query: { traderId: userId } }),
+  ...listAuctionsOptions({ query: { traderId: userId, status: "Ouvert" } }),
   staleTime: 10_000,
 });
 
@@ -69,7 +69,7 @@ export function RouteComponent() {
     <div className="container m-20 mx-auto">
       <h2 className="text-2xl font-bold mb-4">Mes ventes en cours</h2>
 
-      {(!auctionsData || auctionsData.filter((auction) => auction.status.name === "Ouvert").length == 0)
+      {(!auctionsData || auctionsData.length == 0)
         ? (
             <p>Aucune vente aux enchères n'est actuellement ouverte.</p>
           ) 
@@ -94,10 +94,7 @@ export function RouteComponent() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {(auctionsData)
-                  .filter((auction) => auction.status.name === "Ouvert")
-                  .sort((a, b) => b.id! - a.id!)
-                  .map((auction) => (
+                { auctionsData.map((auction) => (
                   <TableRow key={auction.id}>
                     <TableCell>{auction.id}</TableCell>
                     <TableCell>{formatDate(auction.creationDate)}</TableCell>

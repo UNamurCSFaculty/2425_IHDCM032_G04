@@ -3553,6 +3553,10 @@ export type ListAuctionsData = {
          * ID du trader pour filtrer les enchères
          */
         traderId?: number;
+        /**
+         * Status pour filtrer les enchères
+         */
+        status?: string;
     };
     url: '/api/auctions';
 };
