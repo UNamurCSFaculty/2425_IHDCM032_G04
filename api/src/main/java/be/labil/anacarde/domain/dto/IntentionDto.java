@@ -17,7 +17,7 @@ import lombok.Data;
 public class IntentionDto {
 
 	/** Identifiant unique de l'intention. */
-	@Schema(description = "Identifiant de l'intention", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
+	@Schema(description = "Identifiant de l'intention", example = "1", accessMode = Schema.AccessMode.READ_ONLY, requiredMode = Schema.RequiredMode.REQUIRED)
 	private Integer id;
 
 	/** Prix proposé par le trader. */

@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class TradeStatusDto {
 
 	/** Identifiant unique du statut. */
-	@Schema(description = "Identifiant unique du statut", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
+	@Schema(description = "Identifiant unique du statut", example = "1", accessMode = Schema.AccessMode.READ_ONLY, requiredMode = Schema.RequiredMode.REQUIRED)
 	private Integer id;
 
 	/** Nom du statut. */

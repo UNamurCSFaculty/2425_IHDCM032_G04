@@ -36,7 +36,8 @@ public class DataLoader implements CommandLineRunner {
 		// Langue
 		LanguageDto languageDto = new LanguageDto();
 		languageDto.setName("Français");
-		languageDto = languageService.create(languageDto);
+		languageDto.setCode("fr");
+		languageDto = languageService.createLanguage(languageDto);
 
 		// Création du producteur (sans coopérative) et d'un champ
 		UserDetailDto producer = createProducer(languageDto);
@@ -76,7 +77,7 @@ public class DataLoader implements CommandLineRunner {
 		ProductDto product2 = createHarvestProduct(store, producer, field, 2000);
 		product2 = productService.createProduct(product2);
 
-//		ProductDto product3 = createTransformedProduct("tombouctou", transformer, field)
+		// ProductDto product3 = createTransformedProduct("tombouctou", transformer, field)
 
 		// Création d'une stratégie d'enchère
 		AuctionStrategyDto auctionStrategy = new AuctionStrategyDto();

@@ -14,4 +14,12 @@ public interface ValidationGroups {
 	/** Groupe de validation utilisé pour la mise à jour d'un utilisateur existant. */
 	interface Update {
 	}
+
+	/** Groupe de validation utilisé pour la lecture des informations d'un utilisateur. */
+	interface Read {
+	}
+
+	/** Groupe de validation utilisé pour la suppression d'un utilisateur. */
+	interface Delete {
+	}
 }

@@ -50,42 +50,83 @@ public class GlobalExceptionHandler {
 	}
 
 	/**
-	 * Retourne une réponse d'erreur avec le statut HTTP et un message d'erreur détaillé.
+	 * Construit une réponse d'erreur standardisée.
 	 *
-	 * @param request
-	 *            La requête HTTP contenant les détails de la requête.
+	 * @param status
+	 *            Le code de statut HTTP.
 	 * @param code
-	 *            Le code d'erreur à inclure dans la réponse.
+	 *            Le code d'erreur.
+	 * @param detailMessage
+	 *            Le message détaillé de l'erreur.
+	 * @param request
+	 *            La requête HTTP à partir de laquelle l'erreur a été générée.
+	 * @return La réponse d'erreur standardisée.
+	 */
+	private ResponseEntity<ApiErrorResponse> buildResponse(HttpStatus status, String code, String detailMessage,
+			HttpServletRequest request) {
+
+		ErrorDetail item = new ErrorDetail(null, code, detailMessage);
+		return buildResponse(status, code, List.of(item), request);
+	}
+
+	/**
+	 * Construit une réponse d'erreur standardisée avec une liste d'erreurs.
+	 *
+	 * @param status
+	 *            Le code de statut HTTP.
+	 * @param code
+	 *            Le code d'erreur.
 	 * @param errors
-	 *            La liste des erreurs détaillées à inclure dans la réponse.
-	 * @return Une ResponseEntity contenant un objet ErrorResponse avec le message d'erreur
+	 *            La liste des détails d'erreur.
+	 * @param request
+	 *            La requête HTTP à partir de laquelle l'erreur a été générée.
+	 * @return La réponse d'erreur standardisée.
 	 */
 	private ResponseEntity<ApiErrorResponse> buildResponse(HttpStatus status, String code, List<ErrorDetail> errors,
 			HttpServletRequest request) {
+
 		ApiErrorResponse body = new ApiErrorResponse(status.value(), LocalDateTime.now(), request.getRequestURI(), code,
 				errors);
 		return ResponseEntity.status(status).body(body);
 	}
 
 	/**
-	 * Récupère toutes les erreurs de validation contenues dans l'exception et les retourne sous forme d'un objet
-	 * ValidationErrorResponse.
+	 * Gère les exceptions ApiErrorException.
 	 *
 	 * @param ex
-	 *            L'exception MethodArgumentNotValidException contenant les erreurs de validation.
-	 * @return Une ResponseEntity contenant un objet ValidationErrorResponse détaillant les erreurs et le statut HTTP
-	 *         BAD_REQUEST.
+	 *            L'exception ApiErrorException à gérer.
+	 * @param req
+	 *            La requête HTTP à partir de laquelle l'erreur a été générée.
+	 * @return La réponse d'erreur standardisée.
+	 */
+	@ExceptionHandler(ApiErrorException.class)
+	public ResponseEntity<ApiErrorResponse> handleApiError(ApiErrorException ex, HttpServletRequest req) {
+		return buildResponse(ex.getStatus(), ex.getCode(), ex.getErrors(), req);
+	}
+
+	/*
+	 * Gère les exceptions de validation des arguments de méthode.
+	 *
+	 * @param ex L'exception MethodArgumentNotValidException à gérer.
+	 * 
+	 * @param req La requête HTTP à partir de laquelle l'erreur a été générée.
+	 * 
+	 * @return La réponse d'erreur standardisée.
 	 */
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<ApiErrorResponse> handleValidation(MethodArgumentNotValidException ex,
-			HttpServletRequest request) {
+			HttpServletRequest req) {
+
+		String code = ApiErrorCode.VALIDATION_ERROR.code();
 		List<ErrorDetail> details = ex.getBindingResult().getFieldErrors().stream()
-				.map(err -> new ErrorDetail(err.getField(), err.getDefaultMessage())).collect(Collectors.toList());
-		return buildResponse(HttpStatus.BAD_REQUEST, "validation.error", details, request);
+				.map(err -> new ErrorDetail(err.getField(), code, err.getDefaultMessage()))
+				.collect(Collectors.toList());
+
+		return buildResponse(HttpStatus.BAD_REQUEST, code, details, req);
 	}
 
 	/**
-	 * Retourne une réponse d'erreur avec le statut HTTP NOT_FOUND lorsqu'une ressource demandée est introuvable.
+	 * Retourne une réponse d'erreur avec le statut HTTP NOT_FOUND lorsqu'une ressource n'est pas trouvée.
 	 *
 	 * @param ex
 	 *            L'exception ResourceNotFoundException levée.
@@ -93,9 +134,9 @@ public class GlobalExceptionHandler {
 	 *         NOT_FOUND.
 	 */
 	@ExceptionHandler(ResourceNotFoundException.class)
-	public ResponseEntity<ApiErrorResponse> handleNotFound(ResourceNotFoundException ex, HttpServletRequest request) {
-		return buildResponse(HttpStatus.NOT_FOUND, "resource.not_found",
-				List.of(new ErrorDetail(null, ex.getMessage())), request);
+	public ResponseEntity<ApiErrorResponse> handleNotFound(ResourceNotFoundException ex, HttpServletRequest req) {
+
+		return buildResponse(HttpStatus.NOT_FOUND, ApiErrorCode.RESOURCE_NOT_FOUND.code(), ex.getMessage(), req);
 	}
 
 	/**
@@ -108,9 +149,9 @@ public class GlobalExceptionHandler {
 	 *         BAD_REQUEST.
 	 */
 	@ExceptionHandler(BadRequestException.class)
-	public ResponseEntity<ApiErrorResponse> handleBadRequest(BadRequestException ex, HttpServletRequest request) {
-		return buildResponse(HttpStatus.BAD_REQUEST, "bad_request", List.of(new ErrorDetail(null, ex.getMessage())),
-				request);
+	public ResponseEntity<ApiErrorResponse> handleBadRequest(BadRequestException ex, HttpServletRequest req) {
+
+		return buildResponse(HttpStatus.BAD_REQUEST, ApiErrorCode.BAD_REQUEST.code(), ex.getMessage(), req);
 	}
 
 	/**
@@ -123,30 +164,23 @@ public class GlobalExceptionHandler {
 	 *         CONFLICT.
 	 */
 	@ExceptionHandler(DataIntegrityViolationException.class)
-	public ResponseEntity<ApiErrorResponse> handleConflict(DataIntegrityViolationException ex,
-			HttpServletRequest request) {
-		String extractedCode = extractErrorCode(
-				Optional.ofNullable(ex.getRootCause()).map(Throwable::getMessage).orElse("default.error"));
-		String msg = messageSource.getMessage(extractedCode, null, "Erreur d'intégrité des données",
-				LocaleContextHolder.getLocale());
-		return buildResponse(HttpStatus.CONFLICT, extractedCode, List.of(new ErrorDetail(null, msg)), request);
-	}
+	public ResponseEntity<ApiErrorResponse> handleConflict(DataIntegrityViolationException ex, HttpServletRequest req) {
 
-	/**
-	 * Utilise une expression régulière pour extraire le nom de la contrainte ou le code d'erreur du message de la cause
-	 * racine.
-	 *
-	 * @param rootMessage
-	 *            Le message de la cause racine à analyser.
-	 * @return Le code d'erreur extrait, ou "default.error" si aucun code n'est trouvé.
-	 */
-	private String extractErrorCode(String rootMessage) {
-		Pattern pattern = Pattern.compile("\\[(.*?)\\]\\s*$");
-		Matcher matcher = pattern.matcher(rootMessage.toLowerCase());
-		if (matcher.find()) {
-			return matcher.group(1);
-		}
-		return "default.error";
+		/**
+		 * Utilise une expression régulière pour extraire le nom de la contrainte ou le code d'erreur du message de la
+		 * cause racine.
+		 *
+		 * @param rootMessage
+		 *            Le message de la cause racine à analyser.
+		 * @return Le code d'erreur extrait, ou "default.error" si aucun code n'est trouvé.
+		 */
+		String code = Optional.ofNullable(ex.getRootCause()).map(Throwable::getMessage).map(this::extractErrorCode)
+				.orElse(ApiErrorCode.DEFAULT_ERROR.code());
+
+		String msg = messageSource.getMessage(code, null, "Erreur d'intégrité des données",
+				LocaleContextHolder.getLocale());
+
+		return buildResponse(HttpStatus.CONFLICT, code, msg, req);
 	}
 
 	/**
@@ -159,31 +193,43 @@ public class GlobalExceptionHandler {
 	 */
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	public ResponseEntity<ApiErrorResponse> handleUnreadable(HttpMessageNotReadableException ex,
-			HttpServletRequest request) {
+			HttpServletRequest req) {
+
 		Throwable cause = ex.getCause();
-		String msg;
+		String detail;
 		if (cause instanceof JsonParseException jp) {
-			msg = "Syntaxe JSON invalide : " + jp.getOriginalMessage();
+			detail = "Syntaxe JSON invalide : " + jp.getOriginalMessage();
 		} else if (cause instanceof InvalidTypeIdException iti) {
-			msg = iti.getOriginalMessage().contains("missing type id property 'type'")
+			detail = iti.getOriginalMessage().contains("missing type id property 'type'")
 					? "Le champ discriminant 'type' est obligatoire."
 					: "Syntaxe JSON invalide : " + iti.getOriginalMessage();
 		} else {
-			msg = "Message HTTP illisible.";
+			detail = "Message HTTP illisible.";
 		}
-		return buildResponse(HttpStatus.BAD_REQUEST, "message.not_readable", List.of(new ErrorDetail(null, msg)),
-				request);
+
+		return buildResponse(HttpStatus.BAD_REQUEST, ApiErrorCode.MESSAGE_NOT_READABLE.code(), detail, req);
 	}
 
+	/**
+	 * Retourne une réponse d'erreur avec le statut HTTP METHOD_NOT_ALLOWED lorsqu'une méthode HTTP non autorisée est
+	 * utilisée.
+	 *
+	 * @param ex
+	 *            L'exception HttpRequestMethodNotSupportedException levée.
+	 * @return Une ResponseEntity contenant un objet ErrorResponse avec un message d'erreur et le statut HTTP
+	 *         METHOD_NOT_ALLOWED.
+	 */
 	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
 	public ResponseEntity<ApiErrorResponse> handleMethodNotAllowed(HttpRequestMethodNotSupportedException ex,
-			HttpServletRequest request) {
+			HttpServletRequest req) {
+
 		String allowed = ex.getSupportedHttpMethods() != null
 				? ex.getSupportedHttpMethods().stream().map(HttpMethod::name).collect(Collectors.joining(", "))
 				: "";
+
 		String msg = "La méthode " + ex.getMethod() + " n'est pas autorisée. Méthodes autorisées : " + allowed;
-		return buildResponse(HttpStatus.METHOD_NOT_ALLOWED, "method.not_allowed", List.of(new ErrorDetail(null, msg)),
-				request);
+
+		return buildResponse(HttpStatus.METHOD_NOT_ALLOWED, ApiErrorCode.METHOD_NOT_ALLOWED.code(), msg, req);
 	}
 
 	/**
@@ -196,10 +242,10 @@ public class GlobalExceptionHandler {
 	 *         CONFLICT.
 	 */
 	@ExceptionHandler(StaleObjectStateException.class)
-	public ResponseEntity<ApiErrorResponse> handleStale(StaleObjectStateException ex, HttpServletRequest request) {
-		return buildResponse(HttpStatus.CONFLICT, "stale.object", List
-				.of(new ErrorDetail(null, "La ressource a été modifiée par un autre utilisateur. Veuillez réessayer.")),
-				request);
+	public ResponseEntity<ApiErrorResponse> handleStale(StaleObjectStateException ex, HttpServletRequest req) {
+
+		return buildResponse(HttpStatus.CONFLICT, ApiErrorCode.STALE_OBJECT.code(),
+				"La ressource a été modifiée par un autre utilisateur. Veuillez réessayer.", req);
 	}
 
 	/**
@@ -210,46 +256,47 @@ public class GlobalExceptionHandler {
 	 * @return Une ResponseEntity contenant un objet ErrorResponse avec un message d'erreur et le statut HTTP NOT_FOUND.
 	 */
 	@ExceptionHandler(NoHandlerFoundException.class)
-	public ResponseEntity<ApiErrorResponse> handleNoHandlerFound(NoHandlerFoundException ex,
-			HttpServletRequest request) {
-		String msg = "Aucun endpoint ne correspond à l'URL " + ex.getRequestURL();
-		return buildResponse(HttpStatus.NOT_FOUND, "no_handler_found", List.of(new ErrorDetail(null, msg)), request);
+	public ResponseEntity<ApiErrorResponse> handleNoHandlerFound(NoHandlerFoundException ex, HttpServletRequest req) {
+
+		String detail = "Aucun endpoint ne correspond à l'URL " + ex.getRequestURL();
+		return buildResponse(HttpStatus.NOT_FOUND, ApiErrorCode.NO_HANDLER_FOUND.code(), detail, req);
 	}
 
 	/**
 	 * Retourne une réponse d'erreur avec le statut HTTP BAD_REQUEST lorsqu'un paramètre de chemin est manquant.
 	 *
-	 * @param request
-	 *            La requête HTTP contenant les détails de la requête.
 	 * @param ex
 	 *            L'exception MissingPathVariableException levée.
+	 * @param req
+	 *            La requête HTTP contenant les détails de la requête.
+	 * 
 	 * @return Une ResponseEntity contenant un objet ErrorResponse avec un message d'erreur et le statut HTTP
 	 *         BAD_REQUEST.
 	 */
 	@ExceptionHandler(MissingPathVariableException.class)
-	public ResponseEntity<ApiErrorResponse> handleMissingPathVariable(HttpServletRequest request,
-			MissingPathVariableException ex) {
-		String msg = "Le paramètre de chemin manquant : " + ex.getVariableName();
-		return buildResponse(HttpStatus.BAD_REQUEST, "missing.path_variable", List.of(new ErrorDetail(null, msg)),
-				request);
+	public ResponseEntity<ApiErrorResponse> handleMissingPathVariable(MissingPathVariableException ex,
+			HttpServletRequest req) {
+
+		String detail = "Le paramètre de chemin manquant : " + ex.getVariableName();
+		return buildResponse(HttpStatus.BAD_REQUEST, ApiErrorCode.MISSING_PATH_VARIABLE.code(), detail, req);
 	}
 
 	/**
 	 * Retourne une réponse d'erreur avec le statut HTTP BAD_REQUEST lorsqu'un paramètre de requête est manquant.
 	 *
-	 * @param request
-	 *            La requête HTTP contenant les détails de la requête.
 	 * @param ex
 	 *            L'exception MissingServletRequestParameterException levée.
+	 * @param req
+	 *            La requête HTTP contenant les détails de la requête.
 	 * @return Une ResponseEntity contenant un objet ErrorResponse avec un message d'erreur et le statut HTTP
 	 *         BAD_REQUEST.
 	 */
 	@ExceptionHandler(MissingServletRequestParameterException.class)
-	public ResponseEntity<ApiErrorResponse> handleMissingServletParam(HttpServletRequest request,
-			MissingServletRequestParameterException ex) {
-		String msg = "Le paramètre de requête manquant : " + ex.getParameterName();
-		return buildResponse(HttpStatus.BAD_REQUEST, "missing.request_param", List.of(new ErrorDetail(null, msg)),
-				request);
+	public ResponseEntity<ApiErrorResponse> handleMissingServletParam(MissingServletRequestParameterException ex,
+			HttpServletRequest req) {
+
+		String detail = "Le paramètre de requête manquant : " + ex.getParameterName();
+		return buildResponse(HttpStatus.BAD_REQUEST, ApiErrorCode.MISSING_REQUEST_PARAM.code(), detail, req);
 	}
 
 	/**
@@ -263,15 +310,17 @@ public class GlobalExceptionHandler {
 	 */
 	@ExceptionHandler(AuthenticationException.class)
 	public ResponseEntity<ApiErrorResponse> handleAuthenticationException(AuthenticationException ex,
-			HttpServletRequest request) {
-		return buildResponse(HttpStatus.UNAUTHORIZED, "access.unauthorized",
-				List.of(new ErrorDetail(null, "Échec de l'authentification : " + ex.getMessage())), request);
+			HttpServletRequest req) {
+
+		return buildResponse(HttpStatus.UNAUTHORIZED, ApiErrorCode.ACCESS_UNAUTHORIZED.code(),
+				"Échec de l'authentification : " + ex.getMessage(), req);
 	}
 
 	@ExceptionHandler(AccessDeniedException.class)
-	public ResponseEntity<ApiErrorResponse> handleAccessDenied(AccessDeniedException ex, HttpServletRequest request) {
-		return buildResponse(HttpStatus.FORBIDDEN, "access.denied",
-				List.of(new ErrorDetail(null, "Accès refusé : vous n’avez pas les droits suffisants.")), request);
+	public ResponseEntity<ApiErrorResponse> handleAccessDenied(AccessDeniedException ex, HttpServletRequest req) {
+
+		return buildResponse(HttpStatus.FORBIDDEN, ApiErrorCode.ACCESS_DENIED.code(),
+				"Accès refusé : vous n’avez pas les droits suffisants.", req);
 	}
 
 	/**
@@ -283,9 +332,16 @@ public class GlobalExceptionHandler {
 	 *         INTERNAL_SERVER_ERROR.
 	 */
 	@ExceptionHandler(Exception.class)
-	public ResponseEntity<ApiErrorResponse> handleGeneric(Exception ex, HttpServletRequest request) {
+	public ResponseEntity<ApiErrorResponse> handleGeneric(Exception ex, HttpServletRequest req) {
+
 		log.error("Erreur interne non gérée", ex);
-		return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "internal_error", List.of(new ErrorDetail(null,
-				"Une erreur interne s'est produite. Contactez le support si le problème persiste.")), request);
+		return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, ApiErrorCode.INTERNAL_ERROR.code(),
+				"Une erreur interne s'est produite. Contactez le support si le problème persiste.", req);
+	}
+
+	// extrait le code entre crochets [xxx]
+	private String extractErrorCode(String rootMessage) {
+		Matcher m = Pattern.compile("\\[(.*?)\\]\\s*$").matcher(rootMessage.toLowerCase());
+		return m.find() ? m.group(1) : ApiErrorCode.DEFAULT_ERROR.code();
 	}
 }

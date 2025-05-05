@@ -19,25 +19,34 @@ type SelectFieldProps = {
   options: SelectOption[]
   placeholder?: string
   className?: string
+  required?: boolean
 }
 
 export const SelectField = ({
   label,
   options,
   placeholder,
-  className="w-full"
+  className = 'w-full',
+  required = true,
 }: SelectFieldProps) => {
   const field = useFieldContext<string>()
 
   return (
     <div className="space-y-2">
       <div className="space-y-1">
-        <Label htmlFor={field.name}>{label}</Label>
+        <Label htmlFor={field.name}>
+          {label}
+          {required && <span className="text-red-500">*</span>}
+        </Label>
         <Select
           value={field.state.value}
           onValueChange={value => field.handleChange(value)}
         >
-          <SelectTrigger className={className} id={field.name} onBlur={field.handleBlur}>
+          <SelectTrigger
+            className={className}
+            id={field.name}
+            onBlur={field.handleBlur}
+          >
             <SelectValue placeholder={placeholder} />
           </SelectTrigger>
           <SelectContent>

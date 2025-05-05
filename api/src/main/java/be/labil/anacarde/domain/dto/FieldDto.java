@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Schema(description = "Objet de transfert de données pour les champs.")
 public class FieldDto {
 
-	@Schema(description = "Identifiant unique du champ.", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
+	@Schema(description = "Identifiant unique du champ.", example = "1", accessMode = Schema.AccessMode.READ_ONLY, requiredMode = Schema.RequiredMode.REQUIRED)
 	private Integer id;
 
 	@Schema(description = "Identifiant du champ (code unique)", example = "F123")

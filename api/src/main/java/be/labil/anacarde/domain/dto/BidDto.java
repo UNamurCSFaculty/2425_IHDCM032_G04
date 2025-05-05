@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 public class BidDto {
 
 	/** Identifiant unique de l'offre d'achat. */
-	@Schema(description = "Identifiant unique de l'offre d'achat", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
+	@Schema(description = "Identifiant unique de l'offre d'achat", example = "1", accessMode = Schema.AccessMode.READ_ONLY, requiredMode = Schema.RequiredMode.REQUIRED)
 	private Integer id;
 
 	/** Montant de l'offre. */

@@ -1,6 +1,6 @@
-import { Skeleton } from './ui/skeleton'
+import { Skeleton } from '../ui/skeleton'
 
-export function GlobalSkeleton() {
+export function ContentSkeleton() {
   return (
     <div className="mx-auto max-w-7xl space-y-6 p-4">
       {/* En-tête */}

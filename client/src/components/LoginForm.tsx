@@ -1,31 +1,21 @@
-import { z } from 'zod'
-import { useNavigate, Link, useRouter, useSearch } from '@tanstack/react-router'
-import { useMutation } from '@tanstack/react-query'
-import { cn } from '@/lib/utils'
+import i18n from '../i18n'
+import { useAppForm } from './form'
+import { Alert, AlertDescription } from './ui/alert'
+import { authenticateUserMutation } from '@/api/generated/@tanstack/react-query.gen'
+import logo from '@/assets/logo.svg'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { LockIcon, UserIcon } from 'lucide-react'
-import logo from '@/assets/logo.svg'
-import { useAppForm } from './form'
+import { cn } from '@/lib/utils'
 import { Route as LoginRoute } from '@/routes/login'
+import { LoginSchema } from '@/schemas/login-schemas.ts'
 import { useUserStore } from '@/store/userStore'
-
-import { authenticateUserMutation } from '@/api/generated/@tanstack/react-query.gen'
-import type { LoginRequest } from '@/api/generated/index'
 import { useStore } from '@tanstack/react-form'
+import { useMutation } from '@tanstack/react-query'
+import { Link, useNavigate, useRouter, useSearch } from '@tanstack/react-router'
+import { AlertCircle, LockIcon, UserIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-const LoginSchema = z.object({
-  username: z.email('Adresse e-mail invalide'),
-  password: z
-    .string()
-    .min(8, 'Le mot de passe doit contenir au moins 8 caractères'),
-})
-
-export function LoginForm({
-  className,
-  ...props
-}: React.ComponentProps<'div'>) {
+export function LoginForm() {
   const navigate = useNavigate()
   const { t } = useTranslation()
   const router = useRouter()
@@ -48,7 +38,7 @@ export function LoginForm({
     defaultValues: { username: '', password: '' },
     validators: { onChange: LoginSchema },
     onSubmit({ value }) {
-      loginMutation.mutate({ body: value as LoginRequest })
+      loginMutation.mutate({ body: value })
     },
   })
   const canSubmit = useStore(form.store, state => state.canSubmit)
@@ -56,7 +46,7 @@ export function LoginForm({
   const isPending = loginMutation.isPending
 
   return (
-    <div className={cn('flex flex-col gap-6', className)} {...props}>
+    <div className={cn('flex flex-col gap-6')}>
       <Card className="overflow-hidden">
         <CardContent>
           <form
@@ -69,9 +59,9 @@ export function LoginForm({
             <div className="flex flex-col gap-6">
               {/* Header */}
               <div className="flex flex-col items-center text-center">
-                <img src={logo} alt="Logo e-Anacarde" className="h-20" />
+                <img src={logo} alt="Logo e-Annacarde" className="h-20" />
                 <p className="text-muted-foreground text-balance">
-                  Connectez-vous à votre compte e-Anacarde
+                  Connectez-vous à votre compte e-Annacarde
                 </p>
               </div>
 
@@ -117,9 +107,15 @@ export function LoginForm({
 
               {/* Erreur */}
               {loginMutation.error && (
-                <p className="text-sm text-red-600">
-                  {t('errors.' + loginMutation.error.code)}
-                </p>
+                <Alert
+                  variant="destructive"
+                  className="border-red-300 bg-red-50 mt-4 mb-4"
+                >
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>
+                    {t('errors.' + loginMutation.error.code)}
+                  </AlertDescription>
+                </Alert>
               )}
               {/* Bouton submit */}
               <form.AppForm>
@@ -127,7 +123,9 @@ export function LoginForm({
                   className="w-full"
                   disabled={isPending || !canSubmit}
                 >
-                  {isPending ? 'Connexion…' : 'Se connecter'}
+                  {isPending
+                    ? i18n.t('app.statut.connection')
+                    : i18n.t('app.statut.log_in')}
                 </form.SubmitButton>
               </form.AppForm>
 

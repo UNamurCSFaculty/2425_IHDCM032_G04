@@ -1,6 +1,7 @@
 package be.labil.anacarde.presentation.controller;
 
 import be.labil.anacarde.application.service.DatabaseService;
+import be.labil.anacarde.domain.dto.LanguageDto;
 import be.labil.anacarde.domain.model.*;
 import be.labil.anacarde.infrastructure.persistence.*;
 import be.labil.anacarde.infrastructure.persistence.user.UserRepository;
@@ -184,6 +185,14 @@ public abstract class AbstractIntegrationTest {
 	}
 
 	/**
+	 * Renvoie la langue principale de test sous forme de DTO.
+	 */
+	public LanguageDto getMainLanguageDto() {
+		return LanguageDto.builder().id(getMainLanguage().getId()).code(getMainLanguage().getCode())
+				.name(getMainLanguage().getName()).build();
+	}
+
+	/**
 	 * Renvoie le magasin de test principal.
 	 */
 	public Store getMainTestStore() {
@@ -329,7 +338,7 @@ public abstract class AbstractIntegrationTest {
 		// userRepository.deleteAll();
 		// languageRepository.deleteAll();
 
-		Language language = Language.builder().name("fr").build();
+		Language language = Language.builder().name("Français").code("fr").build();
 		mainLanguage = languageRepository.save(language);
 
 		// A simple region

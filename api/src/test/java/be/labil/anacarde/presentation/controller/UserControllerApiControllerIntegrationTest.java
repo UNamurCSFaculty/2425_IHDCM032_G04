@@ -9,7 +9,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import be.labil.anacarde.domain.dto.CooperativeDto;
-import be.labil.anacarde.domain.dto.LanguageDto;
 import be.labil.anacarde.domain.dto.RoleDto;
 import be.labil.anacarde.domain.dto.user.AdminDetailDto;
 import be.labil.anacarde.domain.dto.user.ExporterDetailDto;
@@ -68,8 +67,6 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 	 */
 	@Test
 	public void testCreateUser() throws Exception {
-		LanguageDto languageDto = new LanguageDto();
-		languageDto.setId(getMainLanguage().getId());
 		CooperativeDto cooperativeDto = new CooperativeDto();
 		cooperativeDto.setId(getMainTestCooperative().getId());
 
@@ -78,7 +75,7 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 		newUser.setLastName("Smith");
 		newUser.setEmail("alice.smith@example.com");
 		newUser.setPassword("secret!!!");
-		newUser.setLanguage(languageDto);
+		newUser.setLanguage(getMainLanguageDto());
 		newUser.setPhone("+2290197005502");
 		newUser.setAgriculturalIdentifier("TS450124");
 		newUser.setCooperative(cooperativeDto);
@@ -105,15 +102,12 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 	 */
 	@Test
 	public void testCreateUserMissingTypeFails() throws Exception {
-		LanguageDto languageDto = new LanguageDto();
-		languageDto.setId(getMainLanguage().getId());
-
 		UserDetailDto newUser = new ExporterDetailDto();
 		newUser.setFirstName("Charlie");
 		newUser.setLastName("Brown");
 		newUser.setEmail("charlie.brown@example.com");
 		newUser.setPassword("secret");
-		newUser.setLanguage(languageDto);
+		newUser.setLanguage(getMainLanguageDto());
 
 		ObjectNode node = objectMapper.valueToTree(newUser);
 		node.put("password", newUser.getPassword());
@@ -144,17 +138,13 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 	 */
 	@Test
 	public void testUpdateUser() throws Exception {
-
-		LanguageDto languageDto = new LanguageDto();
-		languageDto.setId(getMainLanguage().getId());
-
 		UserDetailDto updateUser = new AdminDetailDto();
 		updateUser.setFirstName("John Updated");
 		updateUser.setLastName("Doe Updated");
 		updateUser.setEmail("email@updated.com");
 		updateUser.setPassword("newpassword");
 		updateUser.setRoles(Set.of(new RoleDto(null, getAdminTestRole().getName())));
-		updateUser.setLanguage(languageDto);
+		updateUser.setLanguage(getMainLanguageDto());
 
 		int userRoleSize = getMainTestUser().getRoles().size();
 

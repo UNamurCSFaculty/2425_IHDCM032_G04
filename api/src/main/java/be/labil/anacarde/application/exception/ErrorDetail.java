@@ -15,8 +15,11 @@ import lombok.Setter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ErrorDetail {
 
-	@Schema(description = "Nom du champ en erreur (absent pour erreurs globales)", example = "email", required = false)
+	@Schema(description = "Nom du champ en erreur (absent pour erreurs globales)", example = "email")
 	private String field;
+
+	@Schema(description = "Code d'erreur détaillé", example = "user.email.invalid_format", required = true)
+	private String code;
 
 	@Schema(description = "Message décrivant l'erreur", example = "Le format de l'email est invalide", required = true)
 	private String message;

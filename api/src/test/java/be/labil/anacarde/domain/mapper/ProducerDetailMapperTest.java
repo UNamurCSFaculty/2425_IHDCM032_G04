@@ -23,8 +23,7 @@ class ProducerDetailMapperTest {
 
 	@Test
 	void shouldMapProducerDetailDtoToProducerEntity() {
-		LanguageDto languageDto = new LanguageDto();
-		languageDto.setId(1);
+		LanguageDto languageDto = LanguageDto.builder().id(1).code("fr").name("Français").build();
 
 		RoleDto roleDto = new RoleDto(30, "Producer");
 

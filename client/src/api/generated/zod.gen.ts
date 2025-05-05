@@ -3,7 +3,7 @@
 import { z } from 'zod';
 
 export const zCooperativeDto = z.object({
-    id: z.number().int().readonly().optional(),
+    id: z.number().int().readonly(),
     name: z.string().min(1),
     address: z.string().min(1),
     creationDate: z.iso.datetime(),
@@ -11,17 +11,18 @@ export const zCooperativeDto = z.object({
 });
 
 export const zRoleDto = z.object({
-    id: z.number().int().readonly().optional(),
+    id: z.number().int().readonly(),
     name: z.string().min(1)
 });
 
 export const zLanguageDto = z.object({
-    id: z.number().int().readonly().optional(),
+    id: z.number().int().optional(),
+    code: z.string().min(1),
     name: z.string().min(1)
 });
 
 export const zUserDetailDto = z.object({
-    id: z.number().int().readonly().optional(),
+    id: z.number().int().readonly(),
     firstName: z.string().min(1),
     lastName: z.string().min(1),
     email: z.string().min(1),
@@ -51,7 +52,7 @@ export const zProducerDetailDto = zTraderDetailDto.and(z.object({
 }));
 
 export const zFieldDto = z.object({
-    id: z.number().int().readonly().optional(),
+    id: z.number().int().readonly(),
     identifier: z.string().optional(),
     location: z.string().optional(),
     producer: zProducerDetailDto.optional()
@@ -83,6 +84,7 @@ export const zTransformerDetailDto = zTraderDetailDto;
 
 export const zErrorDetail = z.object({
     field: z.string().optional(),
+    code: z.string(),
     message: z.string()
 });
 
@@ -95,24 +97,24 @@ export const zApiErrorResponse = z.object({
 });
 
 export const zStoreDetailDto = z.object({
-    id: z.number().int().readonly().optional(),
+    id: z.number().int().readonly(),
     name: z.string(),
     location: z.string(),
     userId: z.number().int()
 });
 
 export const zRegionDto = z.object({
-    id: z.number().int().readonly().optional(),
+    id: z.number().int().readonly(),
     name: z.string().min(1)
 });
 
 export const zQualityDto = z.object({
-    id: z.number().int().readonly().optional(),
+    id: z.number().int().readonly(),
     name: z.string().min(1)
 });
 
 export const zDocumentDto = z.object({
-    id: z.number().int().readonly().optional(),
+    id: z.number().int().readonly(),
     documentType: z.string().min(1),
     format: z.string().min(1),
     storagePath: z.string().min(1),
@@ -121,7 +123,7 @@ export const zDocumentDto = z.object({
 });
 
 export const zProductDto = z.object({
-    id: z.number().int().readonly().optional(),
+    id: z.number().int().readonly(),
     deliveryDate: z.iso.datetime().optional(),
     weightKg: z.number().optional(),
     qualityControlId: z.number().int().optional(),
@@ -148,7 +150,7 @@ export const zTransformedProductDto = zProductDto.and(z.object({
 }));
 
 export const zQualityControlDto = z.object({
-    id: z.number().int().readonly().optional(),
+    id: z.number().int().readonly(),
     identifier: z.string().min(1),
     controlDate: z.iso.datetime(),
     granularity: z.number(),
@@ -164,7 +166,7 @@ export const zQualityControlDto = z.object({
 });
 
 export const zContractOfferDto = z.object({
-    id: z.number().int().readonly().optional(),
+    id: z.number().int().readonly(),
     status: z.string().min(1),
     pricePerKg: z.number(),
     creationDate: z.iso.datetime().readonly(),
@@ -183,28 +185,28 @@ export const zContractOfferDto = z.object({
 });
 
 export const zAuctionStrategyDto = z.object({
-    id: z.number().int().readonly().optional(),
+    id: z.number().int().readonly(),
     name: z.string().min(1)
 });
 
 export const zAuctionOptionDto = z.object({
-    id: z.number().int().readonly().optional(),
+    id: z.number().int().readonly(),
     name: z.string().min(1)
 });
 
 export const zAuctionOptionValueDto = z.object({
-    id: z.number().int().readonly().optional(),
+    id: z.number().int().readonly(),
     auctionOption: zAuctionOptionDto,
     optionValue: z.string().min(1)
 });
 
 export const zTradeStatusDto = z.object({
-    id: z.number().int().readonly().optional(),
+    id: z.number().int().readonly(),
     name: z.string().min(1)
 });
 
 export const zAuctionDto = z.object({
-    id: z.number().int().readonly().optional(),
+    id: z.number().int().readonly(),
     price: z.number(),
     productQuantity: z.number().int(),
     expirationDate: z.iso.datetime(),
@@ -225,7 +227,7 @@ export const zAuctionDto = z.object({
 });
 
 export const zBidDto = z.object({
-    id: z.number().int().readonly().optional(),
+    id: z.number().int().readonly(),
     amount: z.number(),
     creationDate: z.iso.datetime().readonly().optional(),
     auction: zAuctionDto,
@@ -237,13 +239,19 @@ export const zBidDto = z.object({
     status: zTradeStatusDto
 });
 
+export const zContactRequestDto = z.object({
+    name: z.string().min(1),
+    email: z.string().min(1),
+    message: z.string().min(0).max(500)
+});
+
 export const zLoginRequest = z.object({
     username: z.string(),
     password: z.string()
 });
 
 export const zUserListDto = z.object({
-    id: z.number().int().readonly().optional(),
+    id: z.number().int().readonly(),
     firstName: z.string().min(1),
     lastName: z.string().min(1),
     email: z.string().min(1),
@@ -288,6 +296,10 @@ export const zQualityInspectorListDto = zUserListDto.and(z.object({
 
 export const zTransformerListDto = zTraderListDto;
 
+export const zApplicationDataDto = z.object({
+    languages: z.array(zLanguageDto)
+});
+
 export const zDeleteFieldResponse = z.void();
 
 export const zDeleteUserResponse = z.void();
@@ -308,6 +320,12 @@ export const zDeleteQualityControlResponse = z.void();
 
 export const zDeleteProductResponse = z.void();
 
+export const zDeleteLanguageResponse = z.void();
+
+export const zGetLanguageResponse = zLanguageDto;
+
+export const zUpdateLanguageResponse = zLanguageDto;
+
 export const zDeleteDocumentResponse = z.void();
 
 export const zDeleteCooperativeResponse = z.void();
@@ -326,6 +344,12 @@ export const zCreateUserResponse = zUserDetailDto;
 
 export const zAddRoleToUserResponse = zUserDetailDto;
 
+export const zListLanguagesResponse = z.array(zLanguageDto);
+
+export const zCreateLanguageResponse = zLanguageDto;
+
 export const zAuthenticateUserResponse = zUserDetailDto;
 
 export const zGetCurrentUserResponse = zUserDetailDto;
+
+export const zGetApplicationDataResponse = zApplicationDataDto;

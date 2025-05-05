@@ -19,6 +19,17 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	@Query("SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.email = :email")
 	Optional<User> findByEmail(String email);
 
+	/**
+	 * Recherche une entité User dont le numéro de téléphone correspond à celui fourni.
+	 *
+	 * @param phone
+	 *            Le numéro de téléphone de l'utilisateur à rechercher.
+	 * @return Un Optional contenant le User trouvé (avec ses rôles chargés), ou Optional.empty() si aucun utilisateur
+	 *         n'est trouvé.
+	 */
+	@Query("SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.phone = :phone")
+	Optional<User> findByPhone(String phone);
+
 	@Override
 	@Query("SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.id = :id")
 	Optional<User> findById(Integer id);

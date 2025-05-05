@@ -9,7 +9,8 @@ export const zRole = z.object({
 })
 
 export const zLanguage = z.object({
-  id: z.number().int().readonly(),
+  id: z.number().int().readonly().optional(),
+  code: z.string().min(1),
   name: z.string().min(1),
 })
 
@@ -18,17 +19,27 @@ export const zLanguage = z.object({
  */
 export const zUser = z.object({
   id: z.number().int().readonly().optional(),
+  type: z.enum([
+    'admin',
+    'producer',
+    'transformer',
+    'quality_inspector',
+    'exporter',
+    'carrier',
+  ]),
   firstName: z.string().min(1),
   lastName: z.string().min(1),
-  email: z.string().min(1),
+  email: z.email().min(1),
   registrationDate: z.iso.datetime().readonly().optional(),
   validationDate: z.iso.datetime().readonly().optional(),
   enabled: z.boolean().optional(),
   address: z.string().min(1),
-  phone: z.string().regex(/^(?:\+229)?(?:01[2-9]\d{7}|[2-9]\d{7})$/),
-  password: z.string().min(8),
+  phone: z.string().regex(/^(?:\+229)?01\d{8}/),
+  password: z
+    .string()
+    .min(8)
+    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/),
   language: zLanguage,
-  agriculturalIdentifier: z.string().min(1),
 })
 
 const zProducer = zUser.extend({
@@ -69,7 +80,6 @@ export const zUserRegistration = z
   )
   .refine(data => data.password === data.passwordValidation, {
     path: ['passwordValidation'],
-    message: 'Les mots de passe ne correspondent pas',
   })
 
 export const zTrader = z.discriminatedUnion('type', [
@@ -179,7 +189,6 @@ export const zContractOffer = z
   })
   .refine(data => data.seller.id !== data.buyer.id, {
     path: ['buyer'],
-    message: "Le vendeur et l'acheteur doivent être différents",
   })
 
 /**

@@ -10,6 +10,7 @@ type TextFieldProps = {
   startIcon?: LucideIcon
   endIcon?: LucideIcon
   label: string
+  required?: boolean
 } & React.InputHTMLAttributes<HTMLInputElement>
 
 export const TextField = ({
@@ -17,6 +18,7 @@ export const TextField = ({
   startIcon,
   endIcon,
   className,
+  required = true,
   ...restProps
 }: TextFieldProps) => {
   const field = useFieldContext<string>()
@@ -26,7 +28,10 @@ export const TextField = ({
   return (
     <div className="space-y-2">
       <div className="space-y-1">
-        <Label htmlFor={field.name}>{label}</Label>
+        <Label htmlFor={field.name}>
+          {label}
+          {required && <span className="text-red-500">*</span>}
+        </Label>
         <Input
           id={field.name}
           value={field.state.value}

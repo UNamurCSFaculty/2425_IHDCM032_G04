@@ -15,6 +15,6 @@ public abstract class CooperativeMapper {
 	public abstract CooperativeDto toDto(Cooperative entity);
 
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-	@Mapping(target = "president", ignore = true)
+	@Mapping(source = "presidentId", target = "president.id")
 	public abstract Cooperative partialUpdate(CooperativeDto dto, @MappingTarget Cooperative entity);
 }

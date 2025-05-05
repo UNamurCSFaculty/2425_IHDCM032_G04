@@ -7,7 +7,7 @@ export type CooperativeDtoReadable = {
     /**
      * Identifiant de la coopérative
      */
-    readonly id?: number;
+    readonly id: number;
     /**
      * Nom de la coopérative
      */
@@ -55,7 +55,7 @@ export type FieldDtoReadable = {
     /**
      * Identifiant unique du champ.
      */
-    readonly id?: number;
+    readonly id: number;
     /**
      * Identifiant du champ (code unique)
      */
@@ -91,21 +91,12 @@ export type FieldDtoWritable = {
 /**
  * Objet de transfert de données pour une langue.
  */
-export type LanguageDtoReadable = {
+export type LanguageDto = {
+    id?: number;
     /**
-     * Identifiant de la langue
+     * Code de la langue
      */
-    readonly id?: number;
-    /**
-     * Nom de la langue
-     */
-    name: string;
-};
-
-/**
- * Objet de transfert de données pour une langue.
- */
-export type LanguageDtoWritable = {
+    code: string;
     /**
      * Nom de la langue
      */
@@ -121,7 +112,7 @@ export type ProducerDetailDtoReadable = TraderDetailDtoReadable & {
      */
     agriculturalIdentifier: string;
     /**
-     * id de la coopérative du producteur
+     * Coopérative du producteur
      */
     cooperative?: CooperativeDtoReadable;
 };
@@ -135,7 +126,7 @@ export type ProducerDetailDtoWritable = TraderDetailDtoWritable & {
      */
     agriculturalIdentifier: string;
     /**
-     * id de la coopérative du producteur
+     * Coopérative du producteur
      */
     cooperative?: CooperativeDtoWritable;
 };
@@ -147,7 +138,7 @@ export type RoleDtoReadable = {
     /**
      * Identifiant unique du rôle
      */
-    readonly id?: number;
+    readonly id: number;
     /**
      * Nom du rôle
      */
@@ -272,7 +263,7 @@ export type UserDetailDtoReadable = {
     /**
      * Identifiant de l'utilisateur
      */
-    readonly id?: number;
+    readonly id: number;
     /**
      * Prénom de l'utilisateur
      */
@@ -312,7 +303,7 @@ export type UserDetailDtoReadable = {
     /**
      * Identifiant de la langue préférée
      */
-    language: LanguageDtoReadable;
+    language: LanguageDto;
     /**
      * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
      */
@@ -354,7 +345,7 @@ export type UserDetailDtoWritable = {
     /**
      * Identifiant de la langue préférée
      */
-    language: LanguageDtoWritable;
+    language: LanguageDto;
     /**
      * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
      */
@@ -378,7 +369,7 @@ export type ApiErrorResponse = {
      */
     path: string;
     /**
-     * Code interne d'erreur
+     * Code global d'erreur
      */
     code: string;
     /**
@@ -396,6 +387,10 @@ export type ErrorDetail = {
      */
     field?: string;
     /**
+     * Code d'erreur détaillé
+     */
+    code: string;
+    /**
      * Message décrivant l'erreur
      */
     message: string;
@@ -408,7 +403,7 @@ export type StoreDetailDtoReadable = {
     /**
      * Identifiant du store
      */
-    readonly id?: number;
+    readonly id: number;
     /**
      * Nom du store
      */
@@ -448,7 +443,7 @@ export type RegionDtoReadable = {
     /**
      * Identifiant unique de la région
      */
-    readonly id?: number;
+    readonly id: number;
     /**
      * Nom de la région
      */
@@ -472,7 +467,7 @@ export type QualityDtoReadable = {
     /**
      * Identifiant de la qualité
      */
-    readonly id?: number;
+    readonly id: number;
     /**
      * Nom de la qualité
      */
@@ -496,7 +491,7 @@ export type DocumentDtoReadable = {
     /**
      * Identifiant unique du document
      */
-    readonly id?: number;
+    readonly id: number;
     /**
      * Type de document
      */
@@ -588,7 +583,7 @@ export type ProductDtoReadable = {
     /**
      * Identifiant unique du produit
      */
-    readonly id?: number;
+    readonly id: number;
     deliveryDate?: string;
     /**
      * Poids en kg du produit
@@ -624,7 +619,7 @@ export type QualityControlDtoReadable = {
     /**
      * Identifiant unique du contrôle qualité
      */
-    readonly id?: number;
+    readonly id: number;
     /**
      * Identifiant du contrôle qualité
      */
@@ -752,7 +747,7 @@ export type ContractOfferDtoReadable = {
     /**
      * Identifiant unique de l'offre de contrat
      */
-    readonly id?: number;
+    readonly id: number;
     /**
      * Statut de l'offre de contrat
      */
@@ -820,7 +815,7 @@ export type AuctionDtoReadable = {
     /**
      * Identifiant unique de l'enchère
      */
-    readonly id?: number;
+    readonly id: number;
     /**
      * Prix de l'enchère
      */
@@ -912,7 +907,7 @@ export type AuctionOptionDtoReadable = {
     /**
      * Identifiant unique de l'option d'enchère
      */
-    readonly id?: number;
+    readonly id: number;
     /**
      * Nom de l'option d'enchère
      */
@@ -936,7 +931,7 @@ export type AuctionOptionValueDtoReadable = {
     /**
      * Identifiant unique de la valeur d'option d'enchère
      */
-    readonly id?: number;
+    readonly id: number;
     /**
      * Option d'enchère associée
      */
@@ -968,7 +963,7 @@ export type AuctionStrategyDtoReadable = {
     /**
      * Identifiant unique de la stratégie d'enchère
      */
-    readonly id?: number;
+    readonly id: number;
     /**
      * Nom de la stratégie d'enchère
      */
@@ -992,7 +987,7 @@ export type TradeStatusDtoReadable = {
     /**
      * Identifiant unique du statut
      */
-    readonly id?: number;
+    readonly id: number;
     /**
      * Nom du statut
      */
@@ -1016,7 +1011,7 @@ export type BidDtoReadable = {
     /**
      * Identifiant unique de l'offre d'achat
      */
-    readonly id?: number;
+    readonly id: number;
     /**
      * Montant de l'offre
      */
@@ -1059,6 +1054,24 @@ export type BidDtoWritable = {
      * Statut de l'offre
      */
     status: TradeStatusDtoWritable;
+};
+
+/**
+ * Payload du message de contact
+ */
+export type ContactRequestDto = {
+    /**
+     * Nom du contact
+     */
+    name: string;
+    /**
+     * Adresse email du contact
+     */
+    email: string;
+    /**
+     * Message du contact
+     */
+    message: string;
 };
 
 /**
@@ -1180,7 +1193,7 @@ export type UserListDtoReadable = {
     /**
      * Identifiant de l'utilisateur
      */
-    readonly id?: number;
+    readonly id: number;
     /**
      * Prénom de l'utilisateur
      */
@@ -1255,6 +1268,16 @@ export type UserListDtoWritable = {
      * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
      */
     type: 'admin' | 'producer' | 'transformer' | 'quality_inspector' | 'exporter' | 'carrier';
+};
+
+/**
+ * Données nécessaires pour l'application cliente.
+ */
+export type ApplicationDataDto = {
+    /**
+     * Liste des stratégies d'enchères disponibles.
+     */
+    languages: Array<LanguageDto>;
 };
 
 export type DeleteFieldData = {
@@ -2113,6 +2136,100 @@ export type UpdateProductResponses = {
     200: unknown;
 };
 
+export type DeleteLanguageData = {
+    body?: never;
+    path: {
+        /**
+         * Identifiant de la langue
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/languages/{id}';
+};
+
+export type DeleteLanguageErrors = {
+    /**
+     * Langue non trouvée
+     */
+    404: ApiErrorResponse;
+};
+
+export type DeleteLanguageError = DeleteLanguageErrors[keyof DeleteLanguageErrors];
+
+export type DeleteLanguageResponses = {
+    /**
+     * Langue supprimée avec succès
+     */
+    204: void;
+};
+
+export type DeleteLanguageResponse = DeleteLanguageResponses[keyof DeleteLanguageResponses];
+
+export type GetLanguageData = {
+    body?: never;
+    path: {
+        /**
+         * Identifiant de la langue
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/languages/{id}';
+};
+
+export type GetLanguageErrors = {
+    /**
+     * Langue non trouvée
+     */
+    404: ApiErrorResponse;
+};
+
+export type GetLanguageError = GetLanguageErrors[keyof GetLanguageErrors];
+
+export type GetLanguageResponses = {
+    /**
+     * Langue trouvée
+     */
+    200: LanguageDto;
+};
+
+export type GetLanguageResponse = GetLanguageResponses[keyof GetLanguageResponses];
+
+export type UpdateLanguageData = {
+    body: LanguageDto;
+    path: {
+        /**
+         * Identifiant de la langue
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/languages/{id}';
+};
+
+export type UpdateLanguageErrors = {
+    /**
+     * Erreur de validation ou JSON invalide
+     */
+    400: ApiErrorResponse;
+    /**
+     * Langue non trouvée
+     */
+    404: ApiErrorResponse;
+};
+
+export type UpdateLanguageError = UpdateLanguageErrors[keyof UpdateLanguageErrors];
+
+export type UpdateLanguageResponses = {
+    /**
+     * Langue mise à jour avec succès
+     */
+    200: LanguageDto;
+};
+
+export type UpdateLanguageResponse = UpdateLanguageResponses[keyof UpdateLanguageResponses];
+
 export type DeleteDocumentData = {
     body?: never;
     path: {
@@ -2913,6 +3030,10 @@ export type CreateUserErrors = {
      * Erreur de validation ou JSON invalide
      */
     400: ApiErrorResponse;
+    /**
+     * Conflit avec un utilisateur existant
+     */
+    409: ApiErrorResponse;
 };
 
 export type CreateUserError = CreateUserErrors[keyof CreateUserErrors];
@@ -3347,6 +3468,47 @@ export type CreateQualityControlResponses = {
     201: unknown;
 };
 
+export type ListLanguagesData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/languages';
+};
+
+export type ListLanguagesResponses = {
+    /**
+     * Liste récupérée avec succès
+     */
+    200: Array<LanguageDto>;
+};
+
+export type ListLanguagesResponse = ListLanguagesResponses[keyof ListLanguagesResponses];
+
+export type CreateLanguageData = {
+    body: LanguageDto;
+    path?: never;
+    query?: never;
+    url: '/api/languages';
+};
+
+export type CreateLanguageErrors = {
+    /**
+     * Erreur de validation ou JSON invalide
+     */
+    400: ApiErrorResponse;
+};
+
+export type CreateLanguageError = CreateLanguageErrors[keyof CreateLanguageErrors];
+
+export type CreateLanguageResponses = {
+    /**
+     * Langue créée avec succès
+     */
+    201: LanguageDto;
+};
+
+export type CreateLanguageResponse = CreateLanguageResponses[keyof CreateLanguageResponses];
+
 export type CreateDocumentData = {
     body: DocumentDtoWritable;
     path?: never;
@@ -3500,6 +3662,33 @@ export type CreateContractOfferResponses = {
      * Created
      */
     201: unknown;
+};
+
+export type SendContactMessageData = {
+    body: ContactRequestDto;
+    path?: never;
+    query?: never;
+    url: '/api/contact';
+};
+
+export type SendContactMessageErrors = {
+    /**
+     * Erreur de validation
+     */
+    400: ApiErrorResponse;
+    /**
+     * Erreur interne du serveur
+     */
+    500: ApiErrorResponse;
+};
+
+export type SendContactMessageError = SendContactMessageErrors[keyof SendContactMessageErrors];
+
+export type SendContactMessageResponses = {
+    /**
+     * Message envoyé avec succès
+     */
+    200: unknown;
 };
 
 export type LogoutData = {
@@ -3805,6 +3994,22 @@ export type GetCurrentUserResponses = {
 };
 
 export type GetCurrentUserResponse = GetCurrentUserResponses[keyof GetCurrentUserResponses];
+
+export type GetApplicationDataData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/app';
+};
+
+export type GetApplicationDataResponses = {
+    /**
+     * OK
+     */
+    200: ApplicationDataDto;
+};
+
+export type GetApplicationDataResponse = GetApplicationDataResponses[keyof GetApplicationDataResponses];
 
 export type ClientOptions = {
     baseUrl: 'http://localhost:8080' | (string & {});

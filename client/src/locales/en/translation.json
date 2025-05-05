@@ -5,8 +5,24 @@
       "title": "Welcome",
       "message": "Ready for your next auction?"
     },
+    "statut": {
+      "connection": "Connection...",
+      "log_in": "Log In"
+    },
     "loading": "Loading…",
-    "networkError": "Cannot reach server"
+    "networkError": "Cannot reach server",
+    "accueil": {
+      "titre": "Cashew Auctions & Marketplace",
+      "sous_titre": "Join the real-time auction platform for raw cashew nuts and their processed products in Benin. Watch, outbid, and support local producers with confidence."
+    },
+    "signup": {
+      "titre": "Subscribe",
+      "sous_titre": "Your registration will be validated within 48 hours after sending the form."
+    },
+    "contact": {
+      "titre": "Contact us",
+      "sous_titre": "Do not hesitate to send your questions or comments."
+    }
   },
   "validation": {
     "minLength": "The field must have at least {{count}} character",
@@ -17,13 +33,63 @@
     "max": "The field must be at most {{count}}",
     "required": "This field is required",
     "email": "Invalid email format",
-    "phone": {
-      "benin": "Invalid Benin phone number: expected +229XXXXXXXX or +22901XXXXXXXX"
-    }
+    "phone": "Invalid Benin phone number: expected +22901XXXXXXXX",
+    "passwordValidation": "Passwords doesn't match",
+    "password": "The password must have at least one lowercase, one capital, one digit and one special character"
+  },
+  "form": {
+    "type": "I am",
+    "last_name": "Last name",
+    "first_name": "First name",
+    "language": "Language",
+    "mail": "Mail address",
+    "address": "Address",
+    "phone": "Phone",
+    "agricultural_identifier": "Agricultural identifier",
+    "password": "Password",
+    "confirm_password": "Validate password",
+    "message": "Message"
   },
   "buttons": {
     "submit": "Submit",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "reinitialise": "Reinitialise",
+    "connection": "Get Started",
+    "subscribe": "Create an Account"
+  },
+  "languages": {
+    "fr": "French",
+    "en": "English"
+  },
+  "common": {
+    "error": "Error",
+    "success": "Success",
+    "info": "Info",
+    "warning": "Warning",
+    "loading": "Loading...",
+    "yes": "Yes",
+    "no": "No",
+    "ok": "OK",
+    "close": "Close",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "view": "View",
+    "search": "Search",
+    "select": "Select",
+    "clear": "Clear"
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page",
+    "of": "of",
+    "showing": "Showing",
+    "to": "to",
+    "all": "All",
+    "no_entries": "No entries found",
+    "entries": "entries"
   },
   "errors": {
     "validation.error": "Validation failed",
@@ -38,6 +104,26 @@
     "missing.request_param": "Missing request parameter",
     "access.unauthorized": "Authentication failed",
     "access.denied": "Access denied: you do not have sufficient permissions.",
-    "internal_error": "An internal error occurred. Contact support if the problem persists."
+    "internal_error": "An internal error occurred. Contact support if the problem persists.",
+    "email.exists": "This email is already in use",
+    "phone.exists": "This phone number is already in use",
+    "agriculture_id.exists": "This agricultural identifier is already in use",
+    "fields": {
+      "email": "Email",
+      "phone": "Phone",
+      "agriculturalIdentifier": "Agricultural identifier"
+    }
+  },
+  "breadcrumb": {
+    "home": "Home",
+    "contact": "Contact",
+    "about": "About",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "signup": "Sign up",
+    "login": "Log in",
+    "profile": "Profile",
+    "settings": "Settings",
+    "auctions": "Auctions"
   }
 }

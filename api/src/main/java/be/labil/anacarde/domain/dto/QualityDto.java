@@ -13,7 +13,7 @@ import lombok.Data;
 public class QualityDto {
 
 	/** Identifiant unique de la qualité. */
-	@Schema(description = "Identifiant de la qualité", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
+	@Schema(description = "Identifiant de la qualité", example = "1", accessMode = Schema.AccessMode.READ_ONLY, requiredMode = Schema.RequiredMode.REQUIRED)
 	private Integer id;
 
 	/** Nom de la qualité. */

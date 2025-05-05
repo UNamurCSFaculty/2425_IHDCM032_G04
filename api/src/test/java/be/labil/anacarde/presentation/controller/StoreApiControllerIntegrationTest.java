@@ -26,8 +26,7 @@ public class StoreApiControllerIntegrationTest extends AbstractIntegrationTest {
 
 	private @Autowired MockMvc mockMvc;
 	private @Autowired ObjectMapper objectMapper;
-	@Autowired
-	protected StoreRepository storeRepository;
+	private @Autowired StoreRepository storeRepository;
 
 	/**
 	 * RequestPostProcessor qui ajoute automatiquement le cookie JWT à chaque requête.

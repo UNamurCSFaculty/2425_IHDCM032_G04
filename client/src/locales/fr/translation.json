@@ -5,8 +5,36 @@
       "title": "Bienvenue",
       "message": "Prêt(e) pour vos prochaines enchères ?"
     },
+    "statut": {
+      "connection": "Connexion...",
+      "log_in": "Se Connecter"
+    },
     "loading": "Chargement…",
-    "networkError": "Impossible de joindre le serveur"
+    "networkError": "Impossible de joindre le serveur",
+    "accueil": {
+      "titre": "Enchères & Marché du Cajou",
+      "sous_titre": "Rejoignez la plateforme d’enchères en temps réel pour la noix de\n cajou et ses produits transformés au Bénin. Surveillez,\n surenchérissez et soutenez les producteurs locaux en toute\n confiance."
+    },
+    "signup": {
+      "titre": "Inscrivez-vous",
+      "sous_titre": "Votre inscription sera validée dans les 48 heures après l'envoi du formulaire."
+    },
+    "contact": {
+      "titre": "Contactez-nous",
+      "sous_titre": "N'hésitez pas à nous envoyer vos questions ou commentaires."
+    }
+  },
+  "breadcrumb": {
+    "home": "Accueil",
+    "contact": "Contact",
+    "about": "À propos",
+    "terms": "Conditions d’utilisation",
+    "privacy": "Politique de confidentialité",
+    "signup": "Inscription",
+    "login": "Connexion",
+    "profile": "Profil",
+    "settings": "Paramètres",
+    "auctions": "Enchères"
   },
   "validation": {
     "minLength": "Le champ doit avoir au moins {{count}} caractère",
@@ -17,13 +45,63 @@
     "max": "Le champ doit être au plus {{count}}",
     "required": "Ce champ est requis",
     "email": "Format d’email invalide",
-    "phone": {
-      "benin": "Numéro béninois invalide : +229XXXXXXXX ou +22901XXXXXXXX attendu"
-    }
+    "phone": "Numéro béninois invalide : +22901XXXXXXXX attendu",
+    "passwordValidation": "Les mots de passe ne correspondent pas",
+    "password": "Le mot de passe doit contenir au moins une minuscule, une majuscule, un chiffre et un caractère special"
+  },
+  "form": {
+    "type": "Je suis",
+    "last_name": "Nom",
+    "first_name": "Prénom",
+    "language": "Langue",
+    "mail": "Adresse mail",
+    "address": "adresse",
+    "phone": "Téléphone",
+    "agricultural_identifier": "Identifiant agricole",
+    "password": "Mot de passe",
+    "confirm_password": "Valider le mot de passe",
+    "message": "Message"
   },
   "buttons": {
     "submit": "Envoyer",
-    "cancel": "Annuler"
+    "cancel": "Annuler",
+    "reinitialise": "Réinitialiser",
+    "connection": "Démarrer maintenant",
+    "subscribe": "Créer un compte"
+  },
+  "languages": {
+    "fr": "Français",
+    "en": "Anglais"
+  },
+  "common": {
+    "error": "Erreur",
+    "success": "Succès",
+    "info": "Info",
+    "warning": "Avertissement",
+    "loading": "Chargement...",
+    "yes": "Oui",
+    "no": "Non",
+    "ok": "OK",
+    "close": "Fermer",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "add": "Ajouter",
+    "view": "Voir",
+    "search": "Rechercher",
+    "select": "Sélectionner",
+    "clear": "Effacer"
+  },
+  "pagination": {
+    "previous": "Précédent",
+    "next": "Suivant",
+    "page": "Page",
+    "of": "de",
+    "showing": "Affichage de",
+    "to": "à",
+    "all": "Tout",
+    "no_entries": "Aucune entrée trouvée",
+    "entries": "entrées"
   },
   "errors": {
     "unauthorized": "Vous n’êtes pas autorisé à accéder à cette ressource",
@@ -41,6 +119,14 @@
     "missing.request_param": "Paramètre de requête manquant",
     "access.unauthorized": "Échec de l’authentification",
     "access.denied": "Accès refusé : vous n’avez pas les droits suffisants.",
-    "internal_error": "Une erreur interne s’est produite. Contactez le support si le problème persiste."
+    "internal_error": "Une erreur interne s’est produite. Contactez le support si le problème persiste.",
+    "email.exists": "Cet email est déjà utilisé",
+    "phone.exists": "Ce numéro de téléphone est déjà utilisé",
+    "agriculture_id.exists": "Cet identifiant agricole est déjà utilisé",
+    "fields": {
+      "email": "Email",
+      "phone": "Téléphone",
+      "agriculturalIdentifier": "Identifiant agricole"
+    }
   }
 }

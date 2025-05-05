@@ -148,8 +148,7 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 	@Test
 	public void testListProducts() throws Exception {
 		mockMvc.perform(get("/api/products").accept(MediaType.APPLICATION_JSON).with(jwt())).andExpect(status().isOk())
-				.andExpect(jsonPath("$").isArray())
-				.andExpect(jsonPath("$.length()").value(2));
+				.andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(2));
 	}
 
 	/**
@@ -160,8 +159,7 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 	public void testListProductsByTrader() throws Exception {
 		mockMvc.perform(get("/api/products?traderId=" + getTransformerTestUser().getId())
 				.accept(MediaType.APPLICATION_JSON).with(jwt())).andExpect(status().isOk())
-				.andExpect(jsonPath("$").isArray())
-				.andExpect(jsonPath("$.length()").value(1))
+				.andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(1))
 				.andExpect(jsonPath("$[0].type").value("transformed"));
 	}
 

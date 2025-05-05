@@ -13,7 +13,7 @@ import lombok.Data;
 public class TranslationEntryDto {
 
 	/** Identifiant unique de l'entrée de traduction. */
-	@Schema(description = "Identifiant de l'entrée de traduction", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
+	@Schema(description = "Identifiant de l'entrée de traduction", example = "1", accessMode = Schema.AccessMode.READ_ONLY, requiredMode = Schema.RequiredMode.REQUIRED)
 	private Integer id;
 
 	/** Référence vers la traduction (généralement l'ensemble multilingue). */

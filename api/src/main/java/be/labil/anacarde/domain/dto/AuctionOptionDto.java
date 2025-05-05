@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Schema(description = "Objet de transfert de données pour les options d'enchère.")
 public class AuctionOptionDto {
 
-	@Schema(description = "Identifiant unique de l'option d'enchère", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
+	@Schema(description = "Identifiant unique de l'option d'enchère", example = "1", accessMode = Schema.AccessMode.READ_ONLY, requiredMode = Schema.RequiredMode.REQUIRED)
 	private Integer id;
 
 	@NotBlank(message = "Le nom de l'option d'enchère est requis")

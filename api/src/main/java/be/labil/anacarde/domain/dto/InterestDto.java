@@ -15,7 +15,7 @@ import lombok.Data;
 public class InterestDto {
 
 	/** Identifiant unique de l'intérêt. */
-	@Schema(description = "Identifiant de l'intérêt", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
+	@Schema(description = "Identifiant de l'intérêt", example = "1", accessMode = Schema.AccessMode.READ_ONLY, requiredMode = Schema.RequiredMode.REQUIRED)
 	private Integer id;
 
 	/** Prix proposé. */

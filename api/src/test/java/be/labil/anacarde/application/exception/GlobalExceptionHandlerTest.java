@@ -262,7 +262,7 @@ public class GlobalExceptionHandlerTest {
 		MissingPathVariableException ex = new MissingPathVariableException("id", param);
 		GlobalExceptionHandler handler = new GlobalExceptionHandler(null);
 
-		ResponseEntity<ApiErrorResponse> response = handler.handleMissingPathVariable(request, ex);
+		ResponseEntity<ApiErrorResponse> response = handler.handleMissingPathVariable(ex, request);
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 		ApiErrorResponse body = response.getBody();
 		assertNotNull(body);
@@ -275,12 +275,75 @@ public class GlobalExceptionHandlerTest {
 		MissingServletRequestParameterException ex = new MissingServletRequestParameterException("name", "String");
 		GlobalExceptionHandler handler = new GlobalExceptionHandler(null);
 
-		ResponseEntity<ApiErrorResponse> response = handler.handleMissingServletParam(request, ex);
+		ResponseEntity<ApiErrorResponse> response = handler.handleMissingServletParam(ex, request);
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 		ApiErrorResponse body = response.getBody();
 		assertNotNull(body);
 		ErrorDetail detail = body.getErrors().getFirst();
 		assertTrue(detail.getMessage().contains("name"));
+	}
+
+	@Test
+	public void testHandleApiError_singleDetail() {
+		// Préparer une requête factice avec URI
+		MockHttpServletRequest req = new MockHttpServletRequest("GET", "/api/test");
+		GlobalExceptionHandler handler = new GlobalExceptionHandler(null);
+
+		// Construire l'exception métier avec un seul détail
+		ApiErrorException ex = new ApiErrorException(HttpStatus.BAD_REQUEST, "custom.code", "fieldName",
+				"detail message");
+
+		// Appeler le handler
+		ResponseEntity<ApiErrorResponse> response = handler.handleApiError(ex, req);
+
+		// Vérifications
+		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+		ApiErrorResponse body = response.getBody();
+		assertNotNull(body);
+		assertEquals(400, body.getStatus());
+		assertEquals("/api/test", body.getPath());
+		assertEquals("custom.code", body.getCode());
+
+		List<ErrorDetail> errors = body.getErrors();
+		assertEquals(1, errors.size(), "Une seule erreur doit être présente");
+
+		ErrorDetail detail = errors.get(0);
+		assertEquals("fieldName", detail.getField());
+		assertEquals("custom.code", detail.getCode());
+		assertEquals("detail message", detail.getMessage());
+	}
+
+	@Test
+	public void testHandleApiError_multipleDetails() {
+		MockHttpServletRequest req = new MockHttpServletRequest("POST", "/api/multi");
+		GlobalExceptionHandler handler = new GlobalExceptionHandler(null);
+
+		// Construire plusieurs détails d'erreur
+		List<ErrorDetail> list = List.of(new ErrorDetail("f1", "code1", "message1"),
+				new ErrorDetail("f2", "code2", "message2"));
+		ApiErrorException ex = new ApiErrorException(HttpStatus.CONFLICT, "global.code", list);
+
+		ResponseEntity<ApiErrorResponse> response = handler.handleApiError(ex, req);
+
+		assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
+		ApiErrorResponse body = response.getBody();
+		assertNotNull(body);
+		assertEquals(409, body.getStatus());
+		assertEquals("/api/multi", body.getPath());
+		assertEquals("global.code", body.getCode());
+
+		List<ErrorDetail> errors = body.getErrors();
+		assertEquals(2, errors.size(), "Deux erreurs doivent être présentes");
+
+		ErrorDetail d1 = errors.get(0);
+		assertEquals("f1", d1.getField());
+		assertEquals("code1", d1.getCode());
+		assertEquals("message1", d1.getMessage());
+
+		ErrorDetail d2 = errors.get(1);
+		assertEquals("f2", d2.getField());
+		assertEquals("code2", d2.getCode());
+		assertEquals("message2", d2.getMessage());
 	}
 
 	// Helpers
