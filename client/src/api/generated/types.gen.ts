@@ -248,98 +248,12 @@ export type QualityInspectorDetailDtoWritable = UserDetailDtoWritable;
 /**
  * Objet de transfert de données pour les traders.
  */
-export type TraderDetailDtoReadable = {
-    /**
-     * Identifiant de l'utilisateur
-     */
-    readonly id?: number;
-    /**
-     * Prénom de l'utilisateur
-     */
-    firstName: string;
-    /**
-     * Nom de famille de l'utilisateur
-     */
-    lastName: string;
-    /**
-     * Adresse email de l'utilisateur
-     */
-    email: string;
-    /**
-     * Date d'enregistrement
-     */
-    readonly registrationDate?: string;
-    /**
-     * Date de validation
-     */
-    readonly validationDate?: string;
-    /**
-     * Compte activé
-     */
-    enabled?: boolean;
-    /**
-     * Adresse postale de l'utilisateur
-     */
-    address?: string;
-    /**
-     * Numéro de téléphone (Bénin, ancien et nouveau formats)
-     */
-    phone?: string;
-    /**
-     * Liste des rôles de l'utilisateur
-     */
-    readonly roles?: Array<RoleDtoReadable>;
-    /**
-     * Identifiant de la langue préférée
-     */
-    language: LanguageDtoReadable;
-    /**
-     * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
-     */
-    type: 'admin' | 'producer' | 'transformer' | 'quality_inspector' | 'exporter' | 'carrier';
-};
+export type TraderDetailDtoReadable = UserDetailDtoReadable;
 
 /**
  * Objet de transfert de données pour les traders.
  */
-export type TraderDetailDtoWritable = {
-    /**
-     * Prénom de l'utilisateur
-     */
-    firstName: string;
-    /**
-     * Nom de famille de l'utilisateur
-     */
-    lastName: string;
-    /**
-     * Adresse email de l'utilisateur
-     */
-    email: string;
-    /**
-     * Compte activé
-     */
-    enabled?: boolean;
-    /**
-     * Adresse postale de l'utilisateur
-     */
-    address?: string;
-    /**
-     * Numéro de téléphone (Bénin, ancien et nouveau formats)
-     */
-    phone?: string;
-    /**
-     * Mot de passe de l'utilisateur
-     */
-    password?: string;
-    /**
-     * Identifiant de la langue préférée
-     */
-    language: LanguageDtoWritable;
-    /**
-     * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
-     */
-    type: 'admin' | 'producer' | 'transformer' | 'quality_inspector' | 'exporter' | 'carrier';
-};
+export type TraderDetailDtoWritable = UserDetailDtoWritable;
 
 /**
  * Objet de transfert de données pour les transformateurs.
@@ -3643,14 +3557,29 @@ export type ListAuctionsData = {
     url: '/api/auctions';
 };
 
-export type ListAuctionsResponses = {
+export type ListAuctionsErrors = {
     /**
-     * Liste des enchères
+     * Unauthorized
      */
-    200: Array<AuctionDtoReadable>;
+    401: ApiError;
+    /**
+     * Forbidden
+     */
+    403: ApiError;
+    /**
+     * Not Found
+     */
+    404: ApiError;
 };
 
-export type ListAuctionsResponse = ListAuctionsResponses[keyof ListAuctionsResponses];
+export type ListAuctionsError = ListAuctionsErrors[keyof ListAuctionsErrors];
+
+export type ListAuctionsResponses = {
+    /**
+     * Success
+     */
+    200: unknown;
+};
 
 export type CreateAuctionData = {
     body: AuctionDtoWritable;

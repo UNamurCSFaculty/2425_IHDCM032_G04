@@ -8,6 +8,7 @@ import { useUserStore } from '@/store/userStore'
 import { useAuctionStore } from '@/store/auctionStore'
 import { useState } from 'react';
 import { formatDate } from '@/lib/utils'
+import { MapPin } from 'lucide-react'
 import BidsModal from '@/components/BidsModal'
 
 const listAuctionsQueryOptions = (userId: number) => ({
@@ -70,10 +71,11 @@ export function RouteComponent() {
 
       {(!auctionsData || auctionsData.filter((auction) => auction.status.name === "Ouvert").length == 0)
         ? (
-            <p>Aucune vente aux enchères n'est ouverte.</p>
+            <p>Aucune vente aux enchères n'est actuellement ouverte.</p>
           ) 
         : (
           <>
+            <p className="mb-4">La liste de vos ventes aux enchères ouvertes peut être consultée ci-dessous.</p>
             <Table>
               <TableHeader>
                 <TableRow>
@@ -104,10 +106,12 @@ export function RouteComponent() {
                     <TableCell>{auction.productQuantity} kg</TableCell>
                     <TableCell>{auction.product.qualityControlId ?? "N/A"}</TableCell>
                     <TableCell>
-                      { auction.product.type === "harvest" 
+                      <div className="flex items-center">
+                      <MapPin className="size-5 shrink-0" />{ auction.product.type === "harvest" 
                         ? (auction.product as HarvestProductDtoReadable).store.name 
                         : (auction.product as TransformedProductDtoReadable).location
                       }
+                      </div>
                     </TableCell>
                     <TableCell>{formatDate(auction.product.deliveryDate)}</TableCell>
                     <TableCell>{auction.price.toLocaleString()} CFA</TableCell>

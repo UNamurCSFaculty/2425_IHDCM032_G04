@@ -1,10 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useSuspenseQuery } from '@tanstack/react-query'
+import { useSuspenseQuery, useSuspenseQueries } from '@tanstack/react-query'
 import { listAuctionsOptions, listBidsOptions } from '@/api/generated/@tanstack/react-query.gen'
 import { type AuctionDtoReadable, type BidDtoReadable, type HarvestProductDtoReadable, type TransformedProductDtoReadable } from '@/api/generated'
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table'
 import { useUserStore } from '@/store/userStore'
 import { formatDate } from '@/lib/utils'
+import { MapPin } from 'lucide-react'
 
 export const Route = createFileRoute('/_authenticated/ventes/historique')({
   component: RouteComponent,
@@ -25,15 +26,7 @@ const listAuctionsQueryOptions = (userId: number) => ({
 export function RouteComponent() {
   const { user } = useUserStore();
 
-  const { data: auctionsData } = useSuspenseQuery(listAuctionsQueryOptions(user!.id!));
-  const auctionsArray = auctionsData as AuctionDtoReadable[];
-
-  const bidsMap = new Map<number, BidDtoReadable | null>();
-  auctionsArray.forEach((auction) => {
-    const { data: bidsData } = useSuspenseQuery(listBidsOptions({ path: { auctionId: auction.id! } }));
-    const acceptedBid = (bidsData as BidDtoReadable[]).find((bid) => bid.status.name === "Accepté") || null;
-    bidsMap.set(auction.id!, acceptedBid);
-  });
+  const { auctionsArray, bidsMap } = useAuctionsWithBids(user!.id!);
 
   return (
     <div className="container m-20 mx-auto">
@@ -41,10 +34,11 @@ export function RouteComponent() {
 
       {(!auctionsArray || auctionsArray.filter((auction) => auction.status.name !== "Ouvert").length == 0)
         ? (
-            <p>Aucune vente aux enchères trouvée.</p>
-          ) 
+            <p>Aucune vente aux enchères n'est répertoriée.</p>
+          )
         : (
           <>
+          <p className="mb-4">La liste de toutes vos ventes aux enchères passées peut être consultée ci-dessous.</p>
             <Table>
               <TableHeader>
                 <TableRow>
@@ -74,10 +68,12 @@ export function RouteComponent() {
                     <TableCell>{auction.productQuantity} kg</TableCell>
                     <TableCell>{auction.product.qualityControlId ?? "N/A"}</TableCell>
                     <TableCell>
-                      { auction.product.type === "harvest" 
+                      <div className="flex items-center">
+                      <MapPin className="size-5 shrink-0" />{ auction.product.type === "harvest" 
                         ? (auction.product as HarvestProductDtoReadable).store.name 
                         : (auction.product as TransformedProductDtoReadable).location
                       }
+                      </div>
                     </TableCell>
                     <TableCell>{formatDate(auction.product.deliveryDate)}</TableCell>
                     <TableCell>{auction.price.toLocaleString()} CFA</TableCell>
@@ -102,3 +98,26 @@ export function RouteComponent() {
     </div>
   )
 }
+
+// TODO: server should return the bids for each auction
+function useAuctionsWithBids(userId: number) {
+  const { data: auctionsData } = useSuspenseQuery(listAuctionsQueryOptions(userId));
+  const auctionsArray = auctionsData as AuctionDtoReadable[];
+
+  const bidsQueries = useSuspenseQueries({
+    queries: auctionsArray.map((auction) => ({
+      ...listBidsOptions({ path: { auctionId: auction.id! } }),
+    })),
+  });
+
+  const bidsMap = new Map<number, BidDtoReadable | null>();
+
+  auctionsArray.forEach((auction, index) => {
+    const bids = bidsQueries[index].data as BidDtoReadable[];
+    const acceptedBid = bids.find((bid) => bid.status.name === "Accepté") || null;
+    bidsMap.set(auction.id!, acceptedBid);
+  });
+
+  return { auctionsArray, bidsMap };
+}
+

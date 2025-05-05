@@ -167,8 +167,9 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		String jsonContent = "";
 
 		mockMvc.perform(put("/api/auctions/" + getTestAuction().getId() + "/accept")
-						.contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwt())).andExpect(status().isOk())
-				.andExpect(jsonPath("$.productQuantity").value("10")).andExpect(jsonPath("$.status.name").value("Accepté"));
+				.contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwt())).andExpect(status().isOk())
+				.andExpect(jsonPath("$.productQuantity").value("10"))
+				.andExpect(jsonPath("$.status.name").value("Accepté"));
 	}
 
 	/**

@@ -4,8 +4,6 @@ import be.labil.anacarde.application.service.AuctionService;
 import be.labil.anacarde.domain.dto.AuctionDto;
 import java.net.URI;
 import java.util.List;
-
-import be.labil.anacarde.domain.dto.BidDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
