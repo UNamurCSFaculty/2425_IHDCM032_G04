@@ -73,6 +73,11 @@
     "en": "Anglais"
   },
   "common": {
+    "error": "Erreur",
+    "success": "Succès",
+    "info": "Info",
+    "warning": "Avertissement",
+    "loading": "Chargement...",
     "yes": "Oui",
     "no": "Non",
     "ok": "OK",

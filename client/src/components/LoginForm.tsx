@@ -1,25 +1,23 @@
-import { z } from 'zod'
-import { useNavigate, Link, useRouter, useSearch } from '@tanstack/react-router'
-import { useMutation } from '@tanstack/react-query'
-import { cn } from '@/lib/utils'
+import i18n from '../i18n'
+import { useAppForm } from './form'
+import { Alert, AlertDescription, AlertTitle } from './ui/alert'
+import { authenticateUserMutation } from '@/api/generated/@tanstack/react-query.gen'
+import logo from '@/assets/logo.svg'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { LockIcon, UserIcon } from 'lucide-react'
-import logo from '@/assets/logo.svg'
-import { useAppForm } from './form'
+import { cn } from '@/lib/utils'
 import { Route as LoginRoute } from '@/routes/login'
 import { useUserStore } from '@/store/userStore'
-
-import { authenticateUserMutation } from '@/api/generated/@tanstack/react-query.gen'
 import { useStore } from '@tanstack/react-form'
+import { useMutation } from '@tanstack/react-query'
+import { Link, useNavigate, useRouter, useSearch } from '@tanstack/react-router'
+import { AlertCircle, LockIcon, UserIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import i18n from '../i18n'
+import { z } from 'zod'
 
 const LoginSchema = z.object({
   username: z.email('Adresse e-mail invalide'),
-  password: z
-    .string()
-    .min(8, i18n.t("validation.minLength"))
+  password: z.string().min(8, i18n.t('validation.minLength')),
 })
 
 export function LoginForm() {
@@ -45,7 +43,7 @@ export function LoginForm() {
     defaultValues: { username: '', password: '' },
     validators: { onChange: LoginSchema },
     onSubmit({ value }) {
-      loginMutation.mutate({ body: value})
+      loginMutation.mutate({ body: value })
     },
   })
   const canSubmit = useStore(form.store, state => state.canSubmit)
@@ -114,9 +112,15 @@ export function LoginForm() {
 
               {/* Erreur */}
               {loginMutation.error && (
-                <p className="text-sm text-red-600">
-                  {t('errors.' + loginMutation.error.code)}
-                </p>
+                <Alert
+                  variant="destructive"
+                  className="border-red-300 bg-red-50 mt-4 mb-4"
+                >
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>
+                    {t('errors.' + loginMutation.error.code)}
+                  </AlertDescription>
+                </Alert>
               )}
               {/* Bouton submit */}
               <form.AppForm>
@@ -124,7 +128,9 @@ export function LoginForm() {
                   className="w-full"
                   disabled={isPending || !canSubmit}
                 >
-                  {isPending ? i18n.t("app.statut.connection") : i18n.t("app.statut.log_in")}
+                  {isPending
+                    ? i18n.t('app.statut.connection')
+                    : i18n.t('app.statut.log_in')}
                 </form.SubmitButton>
               </form.AppForm>
 

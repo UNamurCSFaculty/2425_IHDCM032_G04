@@ -60,6 +60,36 @@
     "fr": "French",
     "en": "English"
   },
+  "common": {
+    "error": "Error",
+    "success": "Success",
+    "info": "Info",
+    "warning": "Warning",
+    "loading": "Loading...",
+    "yes": "Yes",
+    "no": "No",
+    "ok": "OK",
+    "close": "Close",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "view": "View",
+    "search": "Search",
+    "select": "Select",
+    "clear": "Clear"
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page",
+    "of": "of",
+    "showing": "Showing",
+    "to": "to",
+    "all": "All",
+    "no_entries": "No entries found",
+    "entries": "entries"
+  },
   "errors": {
     "validation.error": "Validation failed",
     "resource.not_found": "Resource not found",
