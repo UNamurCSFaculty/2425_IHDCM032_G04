@@ -7,11 +7,11 @@ import {
 } from '@/schemas/form-schemas'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
 export const ContactForm: React.FC = () => {
-  const { t } = useTranslation(['app', 'common', 'errors'])
+  const { t, i18n } = useTranslation(['app', 'common', 'errors'])
   const navigate = useNavigate()
 
   const mutation = useMutation({
@@ -32,6 +32,10 @@ export const ContactForm: React.FC = () => {
       mutation.mutate({ body: value })
     },
   })
+
+  useEffect(() => {
+    form.validate('change')
+  }, [i18n.language, form])
 
   // états d'affichage
   const { isPending, isError, error } = mutation
