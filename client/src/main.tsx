@@ -11,6 +11,7 @@ import reportWebVitals from './reportWebVitals.ts'
 import { routeTree } from './routeTree.gen'
 import { useUserStore } from './store/userStore.tsx'
 import './styles.css'
+import { getCookie } from './utils/cookies.ts'
 import { client } from '@/api/generated/client.gen.ts'
 import { useAppStore } from '@/store/appStore.tsx'
 import '@/utils/zod-config.ts'
@@ -27,6 +28,17 @@ import { Observer } from 'tailwindcss-intersect'
 
 client.setConfig({
   credentials: 'include', // pour les cookies (HTTP Only)
+})
+
+client.interceptors.request.use(request => {
+  const csrfToken = getCookie('XSRF-TOKEN')
+  if (csrfToken) {
+    // seules les requêtes non-GET ont besoin du CSRF
+    if (!/^GET$/i.test(request.method)) {
+      request.headers.set('X-XSRF-TOKEN', csrfToken)
+    }
+  }
+  return request
 })
 
 const queryClient = new QueryClient()
