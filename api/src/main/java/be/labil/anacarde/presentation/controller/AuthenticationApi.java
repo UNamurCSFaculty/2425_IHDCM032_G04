@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -54,16 +55,24 @@ public interface AuthenticationApi {
 			HttpServletResponse response);
 
 	/**
-	 * Renvoie les détails de l'utilisateur actuellement authentifié.
+	 * Renvoie les détails de l'utilisateur actuellement authentifié et génère un premier token csrf pour l'utilisateur.
+	 * 
+	 * @param currentUser
+	 *            L'utilisateur actuellement authentifié.
+	 * @param request
+	 *            La requête HTTP en cours.
+	 * @param response
+	 *            La réponse HTTP à laquelle le cookie JWT sera ajouté.
 	 *
 	 * @return Une ResponseEntity contenant un UserDetailDto si le client présente un cookie JWT valide, ou 401 sinon.
 	 */
-	@Operation(summary = "Récupérer l'utilisateur courant", description = "Renvoie les détails (UserDetailDto) de l'utilisateur authentifié via le cookie JWT")
+	@Operation(summary = "Récupérer l'utilisateur courant", description = "Renvoie les détails (UserDetailDto) de l'utilisateur authentifié via le cookie JWT, cette méthode génère aussi un premier token csrf pour l'utilisateur")
 	@ApiResponses({
 			@ApiResponse(responseCode = "200", description = "Utilisateur authentifié", content = @Content(schema = @Schema(implementation = UserDetailDto.class))),
 			@ApiResponse(responseCode = "401", description = "Utilisateur non authentifié", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
 	@GetMapping("/me")
-	ResponseEntity<UserDetailDto> getCurrentUser(User currentUser);
+	ResponseEntity<UserDetailDto> getCurrentUser(User currentUser, HttpServletRequest request,
+			HttpServletResponse response);
 
 	/**
 	 * Déconnecte l'utilisateur en supprimant le cookie JWT côté client.

@@ -1,132 +1,135 @@
 {
   "app": {
-    "title": "Mon super app",
-    "welcome": {
-      "title": "Bienvenue",
-      "message": "Prêt(e) pour vos prochaines enchères ?"
+    "accueil": {
+      "sous_titre": "Rejoignez la plateforme d’enchères en temps réel pour la noix de\n cajou et ses produits transformés au Bénin. Surveillez,\n surenchérissez et soutenez les producteurs locaux en toute\n confiance.",
+      "titre": "Enchères & Marché du Cajou"
+    },
+    "contact": {
+      "sous_titre": "N'hésitez pas à nous envoyer vos questions ou commentaires.",
+      "titre": "Contactez-nous"
+    },
+    "loading": "Chargement…",
+    "networkError": "Impossible de joindre le serveur",
+    "signup": {
+      "sous_titre": "Votre inscription sera validée dans les 48 heures après l'envoi du formulaire.",
+      "titre": "Inscrivez-vous"
     },
     "statut": {
       "connection": "Connexion...",
       "log_in": "Se Connecter"
     },
-    "loading": "Chargement…",
-    "networkError": "Impossible de joindre le serveur",
-    "accueil": {
-      "titre": "Enchères & Marché du Cajou",
-      "sous_titre": "Rejoignez la plateforme d’enchères en temps réel pour la noix de\n cajou et ses produits transformés au Bénin. Surveillez,\n surenchérissez et soutenez les producteurs locaux en toute\n confiance."
-    },
-    "signup": {
-      "titre": "Inscrivez-vous",
-      "sous_titre": "Votre inscription sera validée dans les 48 heures après l'envoi du formulaire."
-    },
-    "contact": {
-      "titre": "Contactez-nous",
-      "sous_titre": "N'hésitez pas à nous envoyer vos questions ou commentaires."
+    "title": "Mon super app",
+    "welcome": {
+      "message": "Prêt(e) pour vos prochaines enchères ?",
+      "title": "Bienvenue"
     }
   },
   "breadcrumb": {
-    "home": "Accueil",
-    "contact": "Contact",
     "about": "À propos",
-    "terms": "Conditions d’utilisation",
-    "privacy": "Politique de confidentialité",
-    "signup": "Inscription",
+    "auctions": "Enchères",
+    "contact": "Contact",
+    "home": "Accueil",
     "login": "Connexion",
+    "privacy": "Politique de confidentialité",
     "profile": "Profil",
     "settings": "Paramètres",
-    "auctions": "Enchères"
+    "signup": "Inscription",
+    "terms": "Conditions d’utilisation"
+  },
+  "buttons": {
+    "cancel": "Annuler",
+    "connection": "Démarrer maintenant",
+    "reinitialise": "Réinitialiser",
+    "submit": "Envoyer",
+    "subscribe": "Créer un compte"
+  },
+  "common": {
+    "add": "Ajouter",
+    "clear": "Effacer",
+    "close": "Fermer",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "error": "Erreur",
+    "info": "Info",
+    "loading": "Chargement...",
+    "no": "Non",
+    "ok": "OK",
+    "save": "Enregistrer",
+    "search": "Rechercher",
+    "select": "Sélectionner",
+    "success": "Succès",
+    "view": "Voir",
+    "warning": "Avertissement",
+    "yes": "Oui"
+  },
+  "errors": {
+    "access.denied": "Accès refusé : vous n’avez pas les droits suffisants.",
+    "access.forbidden": "Accès interdit",
+    "access.forbidden.csrf": "Le jeton CSRF ne correspond pas",
+    "access.forbidden.csrf.missing": "Jeton CSRF manquant",
+    "access.unauthorized": "Échec de l’authentification",
+    "agriculture_id.exists": "Cet identifiant agricole est déjà utilisé",
+    "bad_request": "Requête incorrecte",
+    "default.error": "Violation d’intégrité des données",
+    "email.exists": "Cet email est déjà utilisé",
+    "fields": {
+      "agriculturalIdentifier": "Identifiant agricole",
+      "email": "Email",
+      "phone": "Téléphone"
+    },
+    "internal_error": "Une erreur interne s’est produite. Contactez le support si le problème persiste.",
+    "message.not_readable": "Message HTTP illisible",
+    "method.not_allowed": "Méthode non autorisée",
+    "missing.path_variable": "Paramètre de chemin manquant",
+    "missing.request_param": "Paramètre de requête manquant",
+    "no_handler_found": "Aucun endpoint ne correspond à l’URL demandée",
+    "notFound": "Ressource introuvable",
+    "phone.exists": "Ce numéro de téléphone est déjà utilisé",
+    "resource.not_found": "Ressource introuvable",
+    "serverError": "Erreur interne du serveur",
+    "stale.object": "La ressource a été modifiée par un autre utilisateur. Veuillez réessayer.",
+    "unauthorized": "Vous n’êtes pas autorisé à accéder à cette ressource",
+    "validation.error": "Erreur de validation"
+  },
+  "form": {
+    "address": "adresse",
+    "agricultural_identifier": "Identifiant agricole",
+    "confirm_password": "Valider le mot de passe",
+    "first_name": "Prénom",
+    "language": "Langue",
+    "last_name": "Nom",
+    "mail": "Adresse mail",
+    "message": "Message",
+    "password": "Mot de passe",
+    "phone": "Téléphone",
+    "type": "Je suis"
+  },
+  "languages": {
+    "en": "Anglais",
+    "fr": "Français"
+  },
+  "pagination": {
+    "all": "Tout",
+    "entries": "entrées",
+    "next": "Suivant",
+    "no_entries": "Aucune entrée trouvée",
+    "of": "de",
+    "page": "Page",
+    "previous": "Précédent",
+    "showing": "Affichage de",
+    "to": "à"
   },
   "validation": {
-    "minLength": "Le champ doit avoir au moins {{count}} caractère",
-    "minLength_plural": "Le champ doit avoir au moins {{count}} caractères",
+    "email": "Format d’email invalide",
+    "max": "Le champ doit être au plus {{count}}",
     "maxLength": "Le champ doit avoir au plus {{count}} caractère",
     "maxLength_plural": "Le champ doit avoir au plus {{count}} caractères",
     "min": "Le champ doit être au moins {{count}}",
-    "max": "Le champ doit être au plus {{count}}",
-    "required": "Ce champ est requis",
-    "email": "Format d’email invalide",
-    "phone": "Numéro béninois invalide : +22901XXXXXXXX attendu",
+    "minLength": "Le champ doit avoir au moins {{count}} caractère",
+    "minLength_plural": "Le champ doit avoir au moins {{count}} caractères",
+    "password": "Le mot de passe doit contenir au moins une minuscule, une majuscule, un chiffre et un caractère special",
     "passwordValidation": "Les mots de passe ne correspondent pas",
-    "password": "Le mot de passe doit contenir au moins une minuscule, une majuscule, un chiffre et un caractère special"
-  },
-  "form": {
-    "type": "Je suis",
-    "last_name": "Nom",
-    "first_name": "Prénom",
-    "language": "Langue",
-    "mail": "Adresse mail",
-    "address": "adresse",
-    "phone": "Téléphone",
-    "agricultural_identifier": "Identifiant agricole",
-    "password": "Mot de passe",
-    "confirm_password": "Valider le mot de passe",
-    "message": "Message"
-  },
-  "buttons": {
-    "submit": "Envoyer",
-    "cancel": "Annuler",
-    "reinitialise": "Réinitialiser",
-    "connection": "Démarrer maintenant",
-    "subscribe": "Créer un compte"
-  },
-  "languages": {
-    "fr": "Français",
-    "en": "Anglais"
-  },
-  "common": {
-    "error": "Erreur",
-    "success": "Succès",
-    "info": "Info",
-    "warning": "Avertissement",
-    "loading": "Chargement...",
-    "yes": "Oui",
-    "no": "Non",
-    "ok": "OK",
-    "close": "Fermer",
-    "save": "Enregistrer",
-    "delete": "Supprimer",
-    "edit": "Modifier",
-    "add": "Ajouter",
-    "view": "Voir",
-    "search": "Rechercher",
-    "select": "Sélectionner",
-    "clear": "Effacer"
-  },
-  "pagination": {
-    "previous": "Précédent",
-    "next": "Suivant",
-    "page": "Page",
-    "of": "de",
-    "showing": "Affichage de",
-    "to": "à",
-    "all": "Tout",
-    "no_entries": "Aucune entrée trouvée",
-    "entries": "entrées"
-  },
-  "errors": {
-    "unauthorized": "Vous n’êtes pas autorisé à accéder à cette ressource",
-    "notFound": "Ressource introuvable",
-    "serverError": "Erreur interne du serveur",
-    "validation.error": "Erreur de validation",
-    "resource.not_found": "Ressource introuvable",
-    "bad_request": "Requête incorrecte",
-    "default.error": "Violation d’intégrité des données",
-    "message.not_readable": "Message HTTP illisible",
-    "method.not_allowed": "Méthode non autorisée",
-    "stale.object": "La ressource a été modifiée par un autre utilisateur. Veuillez réessayer.",
-    "no_handler_found": "Aucun endpoint ne correspond à l’URL demandée",
-    "missing.path_variable": "Paramètre de chemin manquant",
-    "missing.request_param": "Paramètre de requête manquant",
-    "access.unauthorized": "Échec de l’authentification",
-    "access.denied": "Accès refusé : vous n’avez pas les droits suffisants.",
-    "internal_error": "Une erreur interne s’est produite. Contactez le support si le problème persiste.",
-    "email.exists": "Cet email est déjà utilisé",
-    "phone.exists": "Ce numéro de téléphone est déjà utilisé",
-    "agriculture_id.exists": "Cet identifiant agricole est déjà utilisé",
-    "fields": {
-      "email": "Email",
-      "phone": "Téléphone",
-      "agriculturalIdentifier": "Identifiant agricole"
-    }
+    "phone": "Numéro béninois invalide : +22901XXXXXXXX attendu",
+    "required": "Ce champ est requis"
   }
 }

@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.csrf.InvalidCsrfTokenException;
+import org.springframework.security.web.csrf.MissingCsrfTokenException;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -25,7 +27,6 @@ import org.springframework.stereotype.Component;
  */
 public class RestAccessDeniedHandler implements AccessDeniedHandler {
 	private final ObjectMapper mapper;
-	@Override
 	/**
 	 * Cette méthode est invoquée lorsqu'un utilisateur tente d'accéder à une ressource protégée sans les autorisations
 	 * nécessaires. Elle envoie une réponse 403 Forbidden avec des détails sur l'erreur.
@@ -39,10 +40,26 @@ public class RestAccessDeniedHandler implements AccessDeniedHandler {
 	 * @throws IOException
 	 *             En cas d'erreur d'entrée/sortie lors de l'écriture de la réponse.
 	 */
+	@Override
 	public void handle(HttpServletRequest req, HttpServletResponse res, AccessDeniedException ex) throws IOException {
-		ApiErrorResponse body = new ApiErrorResponse(HttpStatus.FORBIDDEN.value(), LocalDateTime.now(),
-				req.getRequestURI(), ApiErrorCode.ACCESS_DENIED.code(), List.of(new ErrorDetail(null,
-						ApiErrorCode.ACCESS_DENIED.code(), "Accès refusé : vous n’avez pas les droits suffisants.")));
+		ApiErrorResponse body;
+
+		if (ex instanceof MissingCsrfTokenException) {
+			body = new ApiErrorResponse(HttpStatus.FORBIDDEN.value(), LocalDateTime.now(), req.getRequestURI(),
+					ApiErrorCode.ACCESS_FORBIDDEN_CSRF_MISSING.code(), List.of(new ErrorDetail(null,
+							ApiErrorCode.ACCESS_FORBIDDEN_CSRF_MISSING.code(), "Accès refusé: token CSRF manquant.")));
+
+		} else if (ex instanceof InvalidCsrfTokenException) {
+			body = new ApiErrorResponse(HttpStatus.FORBIDDEN.value(), LocalDateTime.now(), req.getRequestURI(),
+					ApiErrorCode.ACCESS_FORBIDDEN_CSRF.code(), List.of(new ErrorDetail(null,
+							ApiErrorCode.ACCESS_FORBIDDEN_CSRF.code(), "Accès refusé: token CSRF invalide.")));
+
+		} else {
+			body = new ApiErrorResponse(HttpStatus.FORBIDDEN.value(), LocalDateTime.now(), req.getRequestURI(),
+					ApiErrorCode.ACCESS_FORBIDDEN.code(), List.of(new ErrorDetail(null,
+							ApiErrorCode.ACCESS_FORBIDDEN.code(), "Accès refusé : " + ex.getMessage())));
+		}
+
 		res.setStatus(HttpStatus.FORBIDDEN.value());
 		res.setContentType(MediaType.APPLICATION_JSON_VALUE);
 		mapper.writeValue(res.getOutputStream(), body);
