@@ -12,28 +12,15 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.time.format.DateTimeFormatter;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
 
 /**
  * Tests d'intégration pour le contrôleur des documents.
  */
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
 public class DocumentApiControllerIntegrationTest extends AbstractIntegrationTest {
 
-	@Autowired
-	private MockMvc mockMvc;
-
-	@Autowired
-	private ObjectMapper objectMapper;
-
-	@Autowired
-	private DocumentRepository documentRepository;
+	private @Autowired ObjectMapper objectMapper;
+	private @Autowired DocumentRepository documentRepository;
 
 	/**
 	 * Teste la récupération d'un document existant via son ID.

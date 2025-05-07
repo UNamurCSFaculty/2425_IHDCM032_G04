@@ -11,25 +11,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
 /** Tests d'intégration pour le contrôleur des stratégies d'enchères. */
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
 public class AuctionStrategyApiControllerIntegrationTest extends AbstractIntegrationTest {
 
-	@Autowired
-	private MockMvc mockMvc;
-	@Autowired
-	private ObjectMapper objectMapper;
-	@Autowired
-	private AuctionStrategyRepository repository;
+	private @Autowired ObjectMapper objectMapper;
+	private @Autowired AuctionStrategyRepository repository;
 
 	private RequestPostProcessor jwt() {
 		return request -> {

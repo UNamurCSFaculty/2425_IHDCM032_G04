@@ -14,22 +14,13 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
 
 /** Tests d'intégration pour le contrôleur des offres. */
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
 public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 
-	private @Autowired MockMvc mockMvc;
 	private @Autowired ObjectMapper objectMapper;
-	@Autowired
-	protected BidRepository bidRepository;
+	private @Autowired BidRepository bidRepository;
 
 	/**
 	 * Teste la récupération d'une offre existant.
