@@ -853,9 +853,13 @@ export type AuctionDtoReadable = {
      */
     trader: ExporterDetailDtoReadable | ProducerDetailDtoReadable | TransformerDetailDtoReadable;
     /**
-     * Statut de l'offre
+     * Statut de l'enchère
      */
     status: TradeStatusDtoReadable;
+    /**
+     * Liste des offres posées sur l'enchère
+     */
+    bids?: Array<BidDtoReadable>;
 };
 
 /**
@@ -895,9 +899,13 @@ export type AuctionDtoWritable = {
      */
     trader: ExporterDetailDtoWritable | ProducerDetailDtoWritable | TransformerDetailDtoWritable;
     /**
-     * Statut de l'offre
+     * Statut de l'enchère
      */
     status: TradeStatusDtoWritable;
+    /**
+     * Liste des offres posées sur l'enchère
+     */
+    bids?: Array<BidDtoWritable>;
 };
 
 /**
@@ -981,6 +989,58 @@ export type AuctionStrategyDtoWritable = {
 };
 
 /**
+ * Objet de transfert de données pour les offres d'achat (Bid).
+ */
+export type BidDtoReadable = {
+    /**
+     * Identifiant unique de l'offre d'achat
+     */
+    readonly id: number;
+    /**
+     * Montant de l'offre
+     */
+    amount: number;
+    /**
+     * Date de création de l'offre
+     */
+    readonly creationDate?: string;
+    /**
+     * Identifiant de l'enchère associée à l'offre
+     */
+    auctionId: number;
+    /**
+     * Trader ayant passé l'offre
+     */
+    trader: ExporterDetailDtoReadable | ProducerDetailDtoReadable | TransformerDetailDtoReadable;
+    /**
+     * Statut de l'offre
+     */
+    status: TradeStatusDtoReadable;
+};
+
+/**
+ * Objet de transfert de données pour les offres d'achat (Bid).
+ */
+export type BidDtoWritable = {
+    /**
+     * Montant de l'offre
+     */
+    amount: number;
+    /**
+     * Identifiant de l'enchère associée à l'offre
+     */
+    auctionId: number;
+    /**
+     * Trader ayant passé l'offre
+     */
+    trader: ExporterDetailDtoWritable | ProducerDetailDtoWritable | TransformerDetailDtoWritable;
+    /**
+     * Statut de l'offre
+     */
+    status: TradeStatusDtoWritable;
+};
+
+/**
  * Objet de transfert de données pour le statut d'une offre d'achat.
  */
 export type TradeStatusDtoReadable = {
@@ -1002,58 +1062,6 @@ export type TradeStatusDtoWritable = {
      * Nom du statut
      */
     name: string;
-};
-
-/**
- * Objet de transfert de données pour les offres d'achat (Bid).
- */
-export type BidDtoReadable = {
-    /**
-     * Identifiant unique de l'offre d'achat
-     */
-    readonly id: number;
-    /**
-     * Montant de l'offre
-     */
-    amount: number;
-    /**
-     * Date de création de l'offre
-     */
-    readonly creationDate?: string;
-    /**
-     * Enchère associée à l'offre
-     */
-    auction: AuctionDtoReadable;
-    /**
-     * Trader ayant passé l'offre
-     */
-    trader: ExporterDetailDtoReadable | ProducerDetailDtoReadable | TransformerDetailDtoReadable;
-    /**
-     * Statut de l'offre
-     */
-    status: TradeStatusDtoReadable;
-};
-
-/**
- * Objet de transfert de données pour les offres d'achat (Bid).
- */
-export type BidDtoWritable = {
-    /**
-     * Montant de l'offre
-     */
-    amount: number;
-    /**
-     * Enchère associée à l'offre
-     */
-    auction: AuctionDtoWritable;
-    /**
-     * Trader ayant passé l'offre
-     */
-    trader: ExporterDetailDtoWritable | ProducerDetailDtoWritable | TransformerDetailDtoWritable;
-    /**
-     * Statut de l'offre
-     */
-    status: TradeStatusDtoWritable;
 };
 
 /**
