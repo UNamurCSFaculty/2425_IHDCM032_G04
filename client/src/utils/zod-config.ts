@@ -1,7 +1,8 @@
+import i18next from '../i18n'
+// votre init i18next
+import { customErrorMap } from './zod-map'
 import { z } from 'zod'
 import type {} from 'zod'
-import i18next from '../i18n' // votre init i18next
-import { customErrorMap } from './zod-map'
 
 // 1) Prépare la map “ancienne” qui renvoie une string
 const maps = {

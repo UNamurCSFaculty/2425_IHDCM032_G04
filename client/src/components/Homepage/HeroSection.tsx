@@ -1,7 +1,6 @@
-import { ArrowRight } from 'lucide-react'
 import logo from '@/assets/logo.svg'
-
 import { Button } from '@/components/ui/button'
+import { ArrowRight } from 'lucide-react'
 
 interface HeroSectionProps {
   badge?: string

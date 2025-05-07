@@ -4,4021 +4,3795 @@
  * Représente une coopérative.
  */
 export type CooperativeDtoReadable = {
-    /**
-     * Identifiant de la coopérative
-     */
-    readonly id: number;
-    /**
-     * Nom de la coopérative
-     */
-    name: string;
-    /**
-     * Adresse de la coopérative
-     */
-    address: string;
-    /**
-     * Date de création
-     */
-    creationDate: string;
-    /**
-     * Président de la coopérative
-     */
-    presidentId: number;
-};
+  /**
+   * Identifiant de la coopérative
+   */
+  readonly id: number
+  /**
+   * Nom de la coopérative
+   */
+  name: string
+  /**
+   * Adresse de la coopérative
+   */
+  address: string
+  /**
+   * Date de création
+   */
+  creationDate: string
+  /**
+   * Président de la coopérative
+   */
+  presidentId: number
+}
 
 /**
  * Représente une coopérative.
  */
 export type CooperativeDtoWritable = {
-    /**
-     * Nom de la coopérative
-     */
-    name: string;
-    /**
-     * Adresse de la coopérative
-     */
-    address: string;
-    /**
-     * Date de création
-     */
-    creationDate: string;
-    /**
-     * Président de la coopérative
-     */
-    presidentId: number;
-};
+  /**
+   * Nom de la coopérative
+   */
+  name: string
+  /**
+   * Adresse de la coopérative
+   */
+  address: string
+  /**
+   * Date de création
+   */
+  creationDate: string
+  /**
+   * Président de la coopérative
+   */
+  presidentId: number
+}
 
 /**
  * Objet de transfert de données pour les champs.
  */
 export type FieldDtoReadable = {
-    /**
-     * Identifiant unique du champ.
-     */
-    readonly id: number;
-    /**
-     * Identifiant du champ (code unique)
-     */
-    identifier?: string;
-    /**
-     * Emplacement géographique du champ (format WKT ou GeoJSON selon l'usage).
-     */
-    location?: string;
-    /**
-     * Producteur associé au champ.
-     */
-    producer?: ProducerDetailDtoReadable;
-};
+  /**
+   * Identifiant unique du champ.
+   */
+  readonly id: number
+  /**
+   * Identifiant du champ (code unique)
+   */
+  identifier?: string
+  /**
+   * Emplacement géographique du champ (format WKT ou GeoJSON selon l'usage).
+   */
+  location?: string
+  /**
+   * Producteur associé au champ.
+   */
+  producer?: ProducerDetailDtoReadable
+}
 
 /**
  * Objet de transfert de données pour les champs.
  */
 export type FieldDtoWritable = {
-    /**
-     * Identifiant du champ (code unique)
-     */
-    identifier?: string;
-    /**
-     * Emplacement géographique du champ (format WKT ou GeoJSON selon l'usage).
-     */
-    location?: string;
-    /**
-     * Producteur associé au champ.
-     */
-    producer?: ProducerDetailDtoWritable;
-};
+  /**
+   * Identifiant du champ (code unique)
+   */
+  identifier?: string
+  /**
+   * Emplacement géographique du champ (format WKT ou GeoJSON selon l'usage).
+   */
+  location?: string
+  /**
+   * Producteur associé au champ.
+   */
+  producer?: ProducerDetailDtoWritable
+}
 
 /**
  * Objet de transfert de données pour une langue.
  */
 export type LanguageDto = {
-    id?: number;
-    /**
-     * Code de la langue
-     */
-    code: string;
-    /**
-     * Nom de la langue
-     */
-    name: string;
-};
+  id?: number
+  /**
+   * Code de la langue
+   */
+  code: string
+  /**
+   * Nom de la langue
+   */
+  name: string
+}
 
 /**
  * Objet de transfert de données pour les producteurs.
  */
 export type ProducerDetailDtoReadable = TraderDetailDtoReadable & {
-    /**
-     * Identifiant agricole
-     */
-    agriculturalIdentifier: string;
-    /**
-     * Coopérative du producteur
-     */
-    cooperative?: CooperativeDtoReadable;
-};
+  /**
+   * Identifiant agricole
+   */
+  agriculturalIdentifier: string
+  /**
+   * Coopérative du producteur
+   */
+  cooperative?: CooperativeDtoReadable
+}
 
 /**
  * Objet de transfert de données pour les producteurs.
  */
 export type ProducerDetailDtoWritable = TraderDetailDtoWritable & {
-    /**
-     * Identifiant agricole
-     */
-    agriculturalIdentifier: string;
-    /**
-     * Coopérative du producteur
-     */
-    cooperative?: CooperativeDtoWritable;
-};
+  /**
+   * Identifiant agricole
+   */
+  agriculturalIdentifier: string
+  /**
+   * Coopérative du producteur
+   */
+  cooperative?: CooperativeDtoWritable
+}
 
 /**
  * Objet de transfert de données pour les rôles.
  */
 export type RoleDtoReadable = {
-    /**
-     * Identifiant unique du rôle
-     */
-    readonly id: number;
-    /**
-     * Nom du rôle
-     */
-    name: string;
-};
+  /**
+   * Identifiant unique du rôle
+   */
+  readonly id: number
+  /**
+   * Nom du rôle
+   */
+  name: string
+}
 
 /**
  * Objet de transfert de données pour les rôles.
  */
 export type RoleDtoWritable = {
-    /**
-     * Nom du rôle
-     */
-    name: string;
-};
-
-export type ApiError = {
-    /**
-     * human-readable error message
-     */
-    message?: string;
-    errors?: Array<ApiErrorErrors>;
-};
-
-export type ApiErrorErrors = {
-    /**
-     * For input validation errors, identifies where in the  JSON request body the error occurred.
-     */
-    path?: string;
-    /**
-     * Human-readable error message.
-     */
-    message?: string;
-    /**
-     * Code indicating error type.
-     */
-    errorCode?: string;
-};
-
-/**
- * Objet de transfert de données pour les administrateurs.
- */
-export type AdminDetailDtoReadable = UserDetailDtoReadable;
-
-/**
- * Objet de transfert de données pour les administrateurs.
- */
-export type AdminDetailDtoWritable = UserDetailDtoWritable;
-
-/**
- * Objet de transfert de données pour les transporteurs.
- */
-export type CarrierDetailDtoReadable = UserDetailDtoReadable & {
-    /**
-     * Prix par kilomètre facturé par le transporteur
-     */
-    pricePerKm: number;
-    /**
-     * Liste des identifiants des régions desservies par le transporteur
-     */
-    regionIds: Array<number>;
-};
-
-/**
- * Objet de transfert de données pour les transporteurs.
- */
-export type CarrierDetailDtoWritable = UserDetailDtoWritable & {
-    /**
-     * Prix par kilomètre facturé par le transporteur
-     */
-    pricePerKm: number;
-    /**
-     * Liste des identifiants des régions desservies par le transporteur
-     */
-    regionIds: Array<number>;
-};
-
-/**
- * Objet de transfert de données pour les exportateurs.
- */
-export type ExporterDetailDtoReadable = TraderDetailDtoReadable;
-
-/**
- * Objet de transfert de données pour les exportateurs.
- */
-export type ExporterDetailDtoWritable = TraderDetailDtoWritable;
-
-/**
- * Objet de transfert de données pour les inspecteurs qualité.
- */
-export type QualityInspectorDetailDtoReadable = UserDetailDtoReadable;
-
-/**
- * Objet de transfert de données pour les inspecteurs qualité.
- */
-export type QualityInspectorDetailDtoWritable = UserDetailDtoWritable;
-
-/**
- * Objet de transfert de données pour les traders.
- */
-export type TraderDetailDtoReadable = UserDetailDtoReadable;
-
-/**
- * Objet de transfert de données pour les traders.
- */
-export type TraderDetailDtoWritable = UserDetailDtoWritable;
-
-/**
- * Objet de transfert de données pour les transformateurs.
- */
-export type TransformerDetailDtoReadable = TraderDetailDtoReadable;
-
-/**
- * Objet de transfert de données pour les transformateurs.
- */
-export type TransformerDetailDtoWritable = TraderDetailDtoWritable;
-
-/**
- * Data Transfer Object pour un utilisateur avec toutes les informations
- */
-export type UserDetailDtoReadable = {
-    /**
-     * Identifiant de l'utilisateur
-     */
-    readonly id: number;
-    /**
-     * Prénom de l'utilisateur
-     */
-    firstName: string;
-    /**
-     * Nom de famille de l'utilisateur
-     */
-    lastName: string;
-    /**
-     * Adresse email de l'utilisateur
-     */
-    email: string;
-    /**
-     * Date d'enregistrement
-     */
-    readonly registrationDate?: string;
-    /**
-     * Date de validation
-     */
-    readonly validationDate?: string;
-    /**
-     * Compte activé
-     */
-    enabled?: boolean;
-    /**
-     * Adresse postale de l'utilisateur
-     */
-    address?: string;
-    /**
-     * Numéro de téléphone (Bénin, ancien et nouveau formats)
-     */
-    phone?: string;
-    /**
-     * Liste des rôles de l'utilisateur
-     */
-    readonly roles?: Array<RoleDtoReadable>;
-    /**
-     * Identifiant de la langue préférée
-     */
-    language: LanguageDto;
-    /**
-     * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
-     */
-    type: 'admin' | 'producer' | 'transformer' | 'quality_inspector' | 'exporter' | 'carrier';
-};
-
-/**
- * Data Transfer Object pour un utilisateur avec toutes les informations
- */
-export type UserDetailDtoWritable = {
-    /**
-     * Prénom de l'utilisateur
-     */
-    firstName: string;
-    /**
-     * Nom de famille de l'utilisateur
-     */
-    lastName: string;
-    /**
-     * Adresse email de l'utilisateur
-     */
-    email: string;
-    /**
-     * Compte activé
-     */
-    enabled?: boolean;
-    /**
-     * Adresse postale de l'utilisateur
-     */
-    address?: string;
-    /**
-     * Numéro de téléphone (Bénin, ancien et nouveau formats)
-     */
-    phone?: string;
-    /**
-     * Mot de passe de l'utilisateur
-     */
-    password?: string;
-    /**
-     * Identifiant de la langue préférée
-     */
-    language: LanguageDto;
-    /**
-     * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
-     */
-    type: 'admin' | 'producer' | 'transformer' | 'quality_inspector' | 'exporter' | 'carrier';
-};
+  /**
+   * Nom du rôle
+   */
+  name: string
+}
 
 /**
  * Réponse d'erreur standardisée
  */
 export type ApiErrorResponse = {
-    /**
-     * Code HTTP de la réponse
-     */
-    status: number;
-    /**
-     * Horodatage de l'erreur
-     */
-    timestamp: string;
-    /**
-     * Chemin de la requête ayant provoqué l'erreur
-     */
-    path: string;
-    /**
-     * Code global d'erreur
-     */
-    code: string;
-    /**
-     * Liste des erreurs détaillées
-     */
-    errors: Array<ErrorDetail>;
-};
+  /**
+   * Code HTTP de la réponse
+   */
+  status: number
+  /**
+   * Horodatage de l'erreur
+   */
+  timestamp: string
+  /**
+   * Chemin de la requête ayant provoqué l'erreur
+   */
+  path: string
+  /**
+   * Code global d'erreur
+   */
+  code: string
+  /**
+   * Liste des erreurs détaillées
+   */
+  errors: Array<ErrorDetail>
+}
 
 /**
  * Détail d'une erreur individuelle
  */
 export type ErrorDetail = {
-    /**
-     * Nom du champ en erreur (absent pour erreurs globales)
-     */
-    field?: string;
-    /**
-     * Code d'erreur détaillé
-     */
-    code: string;
-    /**
-     * Message décrivant l'erreur
-     */
-    message: string;
-};
+  /**
+   * Nom du champ en erreur (absent pour erreurs globales)
+   */
+  field?: string
+  /**
+   * Code d'erreur détaillé
+   */
+  code: string
+  /**
+   * Message décrivant l'erreur
+   */
+  message: string
+}
+
+/**
+ * Objet de transfert de données pour les administrateurs.
+ */
+export type AdminDetailDtoReadable = UserDetailDtoReadable
+
+/**
+ * Objet de transfert de données pour les administrateurs.
+ */
+export type AdminDetailDtoWritable = UserDetailDtoWritable
+
+/**
+ * Objet de transfert de données pour les transporteurs.
+ */
+export type CarrierDetailDtoReadable = UserDetailDtoReadable & {
+  /**
+   * Prix par kilomètre facturé par le transporteur
+   */
+  pricePerKm: number
+  /**
+   * Liste des identifiants des régions desservies par le transporteur
+   */
+  regionIds: Array<number>
+}
+
+/**
+ * Objet de transfert de données pour les transporteurs.
+ */
+export type CarrierDetailDtoWritable = UserDetailDtoWritable & {
+  /**
+   * Prix par kilomètre facturé par le transporteur
+   */
+  pricePerKm: number
+  /**
+   * Liste des identifiants des régions desservies par le transporteur
+   */
+  regionIds: Array<number>
+}
+
+/**
+ * Objet de transfert de données pour les exportateurs.
+ */
+export type ExporterDetailDtoReadable = TraderDetailDtoReadable
+
+/**
+ * Objet de transfert de données pour les exportateurs.
+ */
+export type ExporterDetailDtoWritable = TraderDetailDtoWritable
+
+/**
+ * Objet de transfert de données pour les inspecteurs qualité.
+ */
+export type QualityInspectorDetailDtoReadable = UserDetailDtoReadable
+
+/**
+ * Objet de transfert de données pour les inspecteurs qualité.
+ */
+export type QualityInspectorDetailDtoWritable = UserDetailDtoWritable
+
+/**
+ * Objet de transfert de données pour les traders.
+ */
+export type TraderDetailDtoReadable = {
+  /**
+   * Identifiant de l'utilisateur
+   */
+  readonly id: number
+  /**
+   * Prénom de l'utilisateur
+   */
+  firstName: string
+  /**
+   * Nom de famille de l'utilisateur
+   */
+  lastName: string
+  /**
+   * Adresse email de l'utilisateur
+   */
+  email: string
+  /**
+   * Date d'enregistrement
+   */
+  readonly registrationDate?: string
+  /**
+   * Date de validation
+   */
+  readonly validationDate?: string
+  /**
+   * Compte activé
+   */
+  enabled?: boolean
+  /**
+   * Adresse postale de l'utilisateur
+   */
+  address?: string
+  /**
+   * Numéro de téléphone (Bénin, ancien et nouveau formats)
+   */
+  phone?: string
+  /**
+   * Liste des rôles de l'utilisateur
+   */
+  readonly roles?: Array<RoleDtoReadable>
+  /**
+   * Identifiant de la langue préférée
+   */
+  language: LanguageDto
+  /**
+   * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
+   */
+  type:
+    | 'admin'
+    | 'producer'
+    | 'transformer'
+    | 'quality_inspector'
+    | 'exporter'
+    | 'carrier'
+}
+
+/**
+ * Objet de transfert de données pour les traders.
+ */
+export type TraderDetailDtoWritable = {
+  /**
+   * Prénom de l'utilisateur
+   */
+  firstName: string
+  /**
+   * Nom de famille de l'utilisateur
+   */
+  lastName: string
+  /**
+   * Adresse email de l'utilisateur
+   */
+  email: string
+  /**
+   * Compte activé
+   */
+  enabled?: boolean
+  /**
+   * Adresse postale de l'utilisateur
+   */
+  address?: string
+  /**
+   * Numéro de téléphone (Bénin, ancien et nouveau formats)
+   */
+  phone?: string
+  /**
+   * Mot de passe de l'utilisateur
+   */
+  password?: string
+  /**
+   * Identifiant de la langue préférée
+   */
+  language: LanguageDto
+  /**
+   * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
+   */
+  type:
+    | 'admin'
+    | 'producer'
+    | 'transformer'
+    | 'quality_inspector'
+    | 'exporter'
+    | 'carrier'
+}
+
+/**
+ * Objet de transfert de données pour les transformateurs.
+ */
+export type TransformerDetailDtoReadable = TraderDetailDtoReadable
+
+/**
+ * Objet de transfert de données pour les transformateurs.
+ */
+export type TransformerDetailDtoWritable = TraderDetailDtoWritable
+
+/**
+ * Data Transfer Object pour un utilisateur avec toutes les informations
+ */
+export type UserDetailDtoReadable = {
+  /**
+   * Identifiant de l'utilisateur
+   */
+  readonly id: number
+  /**
+   * Prénom de l'utilisateur
+   */
+  firstName: string
+  /**
+   * Nom de famille de l'utilisateur
+   */
+  lastName: string
+  /**
+   * Adresse email de l'utilisateur
+   */
+  email: string
+  /**
+   * Date d'enregistrement
+   */
+  readonly registrationDate?: string
+  /**
+   * Date de validation
+   */
+  readonly validationDate?: string
+  /**
+   * Compte activé
+   */
+  enabled?: boolean
+  /**
+   * Adresse postale de l'utilisateur
+   */
+  address?: string
+  /**
+   * Numéro de téléphone (Bénin, ancien et nouveau formats)
+   */
+  phone?: string
+  /**
+   * Liste des rôles de l'utilisateur
+   */
+  readonly roles?: Array<RoleDtoReadable>
+  /**
+   * Identifiant de la langue préférée
+   */
+  language: LanguageDto
+  /**
+   * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
+   */
+  type:
+    | 'admin'
+    | 'producer'
+    | 'transformer'
+    | 'quality_inspector'
+    | 'exporter'
+    | 'carrier'
+}
+
+/**
+ * Data Transfer Object pour un utilisateur avec toutes les informations
+ */
+export type UserDetailDtoWritable = {
+  /**
+   * Prénom de l'utilisateur
+   */
+  firstName: string
+  /**
+   * Nom de famille de l'utilisateur
+   */
+  lastName: string
+  /**
+   * Adresse email de l'utilisateur
+   */
+  email: string
+  /**
+   * Compte activé
+   */
+  enabled?: boolean
+  /**
+   * Adresse postale de l'utilisateur
+   */
+  address?: string
+  /**
+   * Numéro de téléphone (Bénin, ancien et nouveau formats)
+   */
+  phone?: string
+  /**
+   * Mot de passe de l'utilisateur
+   */
+  password?: string
+  /**
+   * Identifiant de la langue préférée
+   */
+  language: LanguageDto
+  /**
+   * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
+   */
+  type:
+    | 'admin'
+    | 'producer'
+    | 'transformer'
+    | 'quality_inspector'
+    | 'exporter'
+    | 'carrier'
+}
 
 /**
  * Objet de transfert de données pour un entrepôt (store).
  */
 export type StoreDetailDtoReadable = {
-    /**
-     * Identifiant du store
-     */
-    readonly id: number;
-    /**
-     * Nom du store
-     */
-    name: string;
-    /**
-     * Coordonnées géographiques du store (au format GeoJSON, WKT ou équivalent)
-     */
-    location: string;
-    /**
-     * Identifiant de l'utilisateur lié au store
-     */
-    userId: number;
-};
+  /**
+   * Identifiant du store
+   */
+  readonly id: number
+  /**
+   * Nom du store
+   */
+  name: string
+  /**
+   * Coordonnées géographiques du store (au format GeoJSON, WKT ou équivalent)
+   */
+  location: string
+  /**
+   * Identifiant de l'utilisateur lié au store
+   */
+  userId: number
+}
 
 /**
  * Objet de transfert de données pour un entrepôt (store).
  */
 export type StoreDetailDtoWritable = {
-    /**
-     * Nom du store
-     */
-    name: string;
-    /**
-     * Coordonnées géographiques du store (au format GeoJSON, WKT ou équivalent)
-     */
-    location: string;
-    /**
-     * Identifiant de l'utilisateur lié au store
-     */
-    userId: number;
-};
+  /**
+   * Nom du store
+   */
+  name: string
+  /**
+   * Coordonnées géographiques du store (au format GeoJSON, WKT ou équivalent)
+   */
+  location: string
+  /**
+   * Identifiant de l'utilisateur lié au store
+   */
+  userId: number
+}
 
 /**
  * Objet de transfert de données pour une région.
  */
 export type RegionDtoReadable = {
-    /**
-     * Identifiant unique de la région
-     */
-    readonly id: number;
-    /**
-     * Nom de la région
-     */
-    name: string;
-};
+  /**
+   * Identifiant unique de la région
+   */
+  readonly id: number
+  /**
+   * Nom de la région
+   */
+  name: string
+}
 
 /**
  * Objet de transfert de données pour une région.
  */
 export type RegionDtoWritable = {
-    /**
-     * Nom de la région
-     */
-    name: string;
-};
+  /**
+   * Nom de la région
+   */
+  name: string
+}
 
 /**
  * Représente une qualité de produit.
  */
 export type QualityDtoReadable = {
-    /**
-     * Identifiant de la qualité
-     */
-    readonly id: number;
-    /**
-     * Nom de la qualité
-     */
-    name: string;
-};
+  /**
+   * Identifiant de la qualité
+   */
+  readonly id: number
+  /**
+   * Nom de la qualité
+   */
+  name: string
+}
 
 /**
  * Représente une qualité de produit.
  */
 export type QualityDtoWritable = {
-    /**
-     * Nom de la qualité
-     */
-    name: string;
-};
+  /**
+   * Nom de la qualité
+   */
+  name: string
+}
+
+export type ApiError = {
+  /**
+   * human-readable error message
+   */
+  message?: string
+  errors?: Array<ApiErrorErrors>
+}
+
+export type ApiErrorErrors = {
+  /**
+   * For input validation errors, identifies where in the  JSON request body the error occurred.
+   */
+  path?: string
+  /**
+   * Human-readable error message.
+   */
+  message?: string
+  /**
+   * Code indicating error type.
+   */
+  errorCode?: string
+}
 
 /**
  * Objet de transfert de données pour les entités Document.
  */
 export type DocumentDtoReadable = {
-    /**
-     * Identifiant unique du document
-     */
-    readonly id: number;
-    /**
-     * Type de document
-     */
-    documentType: string;
-    /**
-     * Format du document
-     */
-    format: string;
-    /**
-     * Chemin de stockage du document
-     */
-    storagePath: string;
-    /**
-     * Date et heure de l'envoi du document
-     */
-    readonly uploadDate?: string;
-    /**
-     * Identifiant de l'utilisateur associé au document
-     */
-    userId: number;
-};
+  /**
+   * Identifiant unique du document
+   */
+  readonly id: number
+  /**
+   * Type de document
+   */
+  documentType: string
+  /**
+   * Format du document
+   */
+  format: string
+  /**
+   * Chemin de stockage du document
+   */
+  storagePath: string
+  /**
+   * Date et heure de l'envoi du document
+   */
+  readonly uploadDate?: string
+  /**
+   * Identifiant de l'utilisateur associé au document
+   */
+  userId: number
+}
 
 /**
  * Objet de transfert de données pour les entités Document.
  */
 export type DocumentDtoWritable = {
-    /**
-     * Type de document
-     */
-    documentType: string;
-    /**
-     * Format du document
-     */
-    format: string;
-    /**
-     * Chemin de stockage du document
-     */
-    storagePath: string;
-    /**
-     * Identifiant de l'utilisateur associé au document
-     */
-    userId: number;
-};
+  /**
+   * Type de document
+   */
+  documentType: string
+  /**
+   * Format du document
+   */
+  format: string
+  /**
+   * Chemin de stockage du document
+   */
+  storagePath: string
+  /**
+   * Identifiant de l'utilisateur associé au document
+   */
+  userId: number
+}
 
 /**
  * Objet de transfert de données pour les produits récoltés.
  */
 export type HarvestProductDtoReadable = ProductDtoReadable & {
-    type: 'harvest';
+  type: 'harvest'
 } & {
-    /**
-     * Magasin associé au produit récolté
-     */
-    store: StoreDetailDtoReadable;
-    /**
-     * Producteur associé au produit récolté
-     */
-    producer: ProducerDetailDtoReadable;
-    /**
-     * Champ associé au produit récolté
-     */
-    field: FieldDtoReadable;
-};
+  /**
+   * Producteur associé au produit récolté
+   */
+  producer: ProducerDetailDtoReadable
+  /**
+   * Champ associé au produit récolté
+   */
+  field: FieldDtoReadable
+}
 
 /**
  * Objet de transfert de données pour les produits récoltés.
  */
 export type HarvestProductDtoWritable = ProductDtoWritable & {
-    type: 'harvest';
+  type: 'harvest'
 } & {
-    /**
-     * Magasin associé au produit récolté
-     */
-    store: StoreDetailDtoWritable;
-    /**
-     * Producteur associé au produit récolté
-     */
-    producer: ProducerDetailDtoWritable;
-    /**
-     * Champ associé au produit récolté
-     */
-    field: FieldDtoWritable;
-};
+  /**
+   * Producteur associé au produit récolté
+   */
+  producer: ProducerDetailDtoWritable
+  /**
+   * Champ associé au produit récolté
+   */
+  field: FieldDtoWritable
+}
 
 /**
  * Data Transfer Object pour un produit
  */
 export type ProductDtoReadable = {
-    /**
-     * Identifiant unique du produit
-     */
-    readonly id: number;
-    deliveryDate?: string;
-    /**
-     * Poids en kg du produit
-     */
-    weightKg?: number;
-    qualityControlId?: number;
-    /**
-     * Type de produit.
-     */
-    type: 'harvest' | 'transformed';
-};
+  /**
+   * Identifiant unique du produit
+   */
+  readonly id: number
+  deliveryDate?: string
+  /**
+   * Magasin associé au produit récolté
+   */
+  store: StoreDetailDtoReadable
+  /**
+   * Poids en kg du produit
+   */
+  weightKg?: number
+  qualityControlId?: number
+  /**
+   * Type de produit.
+   */
+  type: 'harvest' | 'transformed'
+}
 
 /**
  * Data Transfer Object pour un produit
  */
 export type ProductDtoWritable = {
-    deliveryDate?: string;
-    /**
-     * Poids en kg du produit
-     */
-    weightKg?: number;
-    qualityControlId?: number;
-    /**
-     * Type de produit.
-     */
-    type: 'harvest' | 'transformed';
-};
+  deliveryDate?: string
+  /**
+   * Magasin associé au produit récolté
+   */
+  store: StoreDetailDtoWritable
+  /**
+   * Poids en kg du produit
+   */
+  weightKg?: number
+  qualityControlId?: number
+  /**
+   * Type de produit.
+   */
+  type: 'harvest' | 'transformed'
+}
 
 /**
  * Objet de transfert de données pour le contrôle qualité.
  */
 export type QualityControlDtoReadable = {
-    /**
-     * Identifiant unique du contrôle qualité
-     */
-    readonly id: number;
-    /**
-     * Identifiant du contrôle qualité
-     */
-    identifier: string;
-    /**
-     * Date de contrôle qualité
-     */
-    controlDate: string;
-    /**
-     * Granularité mesurée
-     */
-    granularity: number;
-    /**
-     * Résultat du test KOR
-     */
-    korTest: number;
-    /**
-     * Taux d'humidité mesuré
-     */
-    humidity: number;
-    /**
-     * Inspecteur qualité associé
-     */
-    qualityInspector: QualityInspectorDetailDtoReadable;
-    /**
-     * Produit associé
-     */
-    product: HarvestProductDtoReadable | TransformedProductDtoReadable;
-    /**
-     * Qualité associée
-     */
-    quality: QualityDtoReadable;
-    /**
-     * Document associé au contrôle qualité
-     */
-    document: DocumentDtoReadable;
-};
+  /**
+   * Identifiant unique du contrôle qualité
+   */
+  readonly id: number
+  /**
+   * Identifiant du contrôle qualité
+   */
+  identifier: string
+  /**
+   * Date de contrôle qualité
+   */
+  controlDate: string
+  /**
+   * Granularité mesurée
+   */
+  granularity: number
+  /**
+   * Résultat du test KOR
+   */
+  korTest: number
+  /**
+   * Taux d'humidité mesuré
+   */
+  humidity: number
+  /**
+   * Inspecteur qualité associé
+   */
+  qualityInspector: QualityInspectorDetailDtoReadable
+  /**
+   * Produit associé
+   */
+  product: HarvestProductDtoReadable | TransformedProductDtoReadable
+  /**
+   * Qualité associée
+   */
+  quality: QualityDtoReadable
+  /**
+   * Document associé au contrôle qualité
+   */
+  document: DocumentDtoReadable
+}
 
 /**
  * Objet de transfert de données pour le contrôle qualité.
  */
 export type QualityControlDtoWritable = {
-    /**
-     * Identifiant du contrôle qualité
-     */
-    identifier: string;
-    /**
-     * Date de contrôle qualité
-     */
-    controlDate: string;
-    /**
-     * Granularité mesurée
-     */
-    granularity: number;
-    /**
-     * Résultat du test KOR
-     */
-    korTest: number;
-    /**
-     * Taux d'humidité mesuré
-     */
-    humidity: number;
-    /**
-     * Inspecteur qualité associé
-     */
-    qualityInspector: QualityInspectorDetailDtoWritable;
-    /**
-     * Produit associé
-     */
-    product: HarvestProductDtoWritable | TransformedProductDtoWritable;
-    /**
-     * Qualité associée
-     */
-    quality: QualityDtoWritable;
-    /**
-     * Document associé au contrôle qualité
-     */
-    document: DocumentDtoWritable;
-};
+  /**
+   * Identifiant du contrôle qualité
+   */
+  identifier: string
+  /**
+   * Date de contrôle qualité
+   */
+  controlDate: string
+  /**
+   * Granularité mesurée
+   */
+  granularity: number
+  /**
+   * Résultat du test KOR
+   */
+  korTest: number
+  /**
+   * Taux d'humidité mesuré
+   */
+  humidity: number
+  /**
+   * Inspecteur qualité associé
+   */
+  qualityInspector: QualityInspectorDetailDtoWritable
+  /**
+   * Produit associé
+   */
+  product: HarvestProductDtoWritable | TransformedProductDtoWritable
+  /**
+   * Qualité associée
+   */
+  quality: QualityDtoWritable
+  /**
+   * Document associé au contrôle qualité
+   */
+  document: DocumentDtoWritable
+}
 
 /**
  * Objet de transfert de données pour les produits transformés.
  */
 export type TransformedProductDtoReadable = ProductDtoReadable & {
-    type: 'transformed';
+  type: 'transformed'
 } & {
-    /**
-     * Identifiant du produit transformé
-     */
-    identifier: string;
-    /**
-     * Emplacement du produit transformé
-     */
-    location: string;
-    /**
-     * Transformateur associé
-     */
-    transformer: TransformerDetailDtoReadable;
-};
+  /**
+   * Identifiant du produit transformé
+   */
+  identifier: string
+  /**
+   * Transformateur associé
+   */
+  transformer: TransformerDetailDtoReadable
+}
 
 /**
  * Objet de transfert de données pour les produits transformés.
  */
 export type TransformedProductDtoWritable = ProductDtoWritable & {
-    type: 'transformed';
+  type: 'transformed'
 } & {
-    /**
-     * Identifiant du produit transformé
-     */
-    identifier: string;
-    /**
-     * Emplacement du produit transformé
-     */
-    location: string;
-    /**
-     * Transformateur associé
-     */
-    transformer: TransformerDetailDtoWritable;
-};
+  /**
+   * Identifiant du produit transformé
+   */
+  identifier: string
+  /**
+   * Transformateur associé
+   */
+  transformer: TransformerDetailDtoWritable
+}
 
 /**
  * Objet de transfert de données pour les offres de contrat.
  */
 export type ContractOfferDtoReadable = {
-    /**
-     * Identifiant unique de l'offre de contrat
-     */
-    readonly id: number;
-    /**
-     * Statut de l'offre de contrat
-     */
-    status: string;
-    /**
-     * Prix par kilogramme proposé
-     */
-    pricePerKg: number;
-    /**
-     * Date de création de l'offre
-     */
-    readonly creationDate: string;
-    /**
-     * Date de terminaison de l'offre
-     */
-    endDate: string;
-    /**
-     * Vendeur associé à l'offre
-     */
-    seller: ExporterDetailDtoReadable | ProducerDetailDtoReadable | TransformerDetailDtoReadable;
-    /**
-     * Acheteur associé à l'offre
-     */
-    buyer: ExporterDetailDtoReadable | ProducerDetailDtoReadable | TransformerDetailDtoReadable;
-    /**
-     * Qualité associée à l'offre
-     */
-    quality: QualityDtoReadable;
-};
+  /**
+   * Identifiant unique de l'offre de contrat
+   */
+  readonly id: number
+  /**
+   * Statut de l'offre de contrat
+   */
+  status: string
+  /**
+   * Prix par kilogramme proposé
+   */
+  pricePerKg: number
+  /**
+   * Date de création de l'offre
+   */
+  readonly creationDate: string
+  /**
+   * Date de terminaison de l'offre
+   */
+  endDate: string
+  /**
+   * Vendeur associé à l'offre
+   */
+  seller:
+    | ExporterDetailDtoReadable
+    | ProducerDetailDtoReadable
+    | TransformerDetailDtoReadable
+  /**
+   * Acheteur associé à l'offre
+   */
+  buyer:
+    | ExporterDetailDtoReadable
+    | ProducerDetailDtoReadable
+    | TransformerDetailDtoReadable
+  /**
+   * Qualité associée à l'offre
+   */
+  quality: QualityDtoReadable
+}
 
 /**
  * Objet de transfert de données pour les offres de contrat.
  */
 export type ContractOfferDtoWritable = {
-    /**
-     * Statut de l'offre de contrat
-     */
-    status: string;
-    /**
-     * Prix par kilogramme proposé
-     */
-    pricePerKg: number;
-    /**
-     * Date de terminaison de l'offre
-     */
-    endDate: string;
-    /**
-     * Vendeur associé à l'offre
-     */
-    seller: ExporterDetailDtoWritable | ProducerDetailDtoWritable | TransformerDetailDtoWritable;
-    /**
-     * Acheteur associé à l'offre
-     */
-    buyer: ExporterDetailDtoWritable | ProducerDetailDtoWritable | TransformerDetailDtoWritable;
-    /**
-     * Qualité associée à l'offre
-     */
-    quality: QualityDtoWritable;
-};
+  /**
+   * Statut de l'offre de contrat
+   */
+  status: string
+  /**
+   * Prix par kilogramme proposé
+   */
+  pricePerKg: number
+  /**
+   * Date de terminaison de l'offre
+   */
+  endDate: string
+  /**
+   * Vendeur associé à l'offre
+   */
+  seller:
+    | ExporterDetailDtoWritable
+    | ProducerDetailDtoWritable
+    | TransformerDetailDtoWritable
+  /**
+   * Acheteur associé à l'offre
+   */
+  buyer:
+    | ExporterDetailDtoWritable
+    | ProducerDetailDtoWritable
+    | TransformerDetailDtoWritable
+  /**
+   * Qualité associée à l'offre
+   */
+  quality: QualityDtoWritable
+}
 
 /**
  * Objet de transfert de données pour les enchères.
  */
 export type AuctionDtoReadable = {
-    /**
-     * Identifiant unique de l'enchère
-     */
-    readonly id: number;
-    /**
-     * Prix de l'enchère
-     */
-    price: number;
-    /**
-     * Quantité de produit associée à l'enchère
-     */
-    productQuantity: number;
-    /**
-     * Date d'expiration de l'enchère
-     */
-    expirationDate: string;
-    /**
-     * Date de création de l'enchère
-     */
-    readonly creationDate?: string;
-    /**
-     * Statut actif de l'enchère
-     */
-    active: boolean;
-    /**
-     * Stratégie d'enchère associée
-     */
-    strategy: AuctionStrategyDtoReadable;
-    /**
-     * Produit associé à l'enchère
-     */
-    product: HarvestProductDtoReadable | TransformedProductDtoReadable;
-    /**
-     * Valeurs d'option associées à l'enchère
-     */
-    auctionOptionValues?: Array<AuctionOptionValueDtoReadable>;
-    /**
-     * Trader ayant créé l'enchère
-     */
-    trader: ExporterDetailDtoReadable | ProducerDetailDtoReadable | TransformerDetailDtoReadable;
-    /**
-     * Statut de l'enchère
-     */
-    status: TradeStatusDtoReadable;
-    /**
-     * Liste des offres posées sur l'enchère
-     */
-    bids?: Array<BidDtoReadable>;
-};
+  /**
+   * Identifiant unique de l'enchère
+   */
+  readonly id: number
+  /**
+   * Prix de l'enchère
+   */
+  price: number
+  /**
+   * Quantité de produit associée à l'enchère
+   */
+  productQuantity: number
+  /**
+   * Date d'expiration de l'enchère
+   */
+  expirationDate: string
+  /**
+   * Date de création de l'enchère
+   */
+  readonly creationDate?: string
+  /**
+   * Statut actif de l'enchère
+   */
+  active: boolean
+  /**
+   * Stratégie d'enchère associée
+   */
+  strategy: AuctionStrategyDtoReadable
+  /**
+   * Produit associé à l'enchère
+   */
+  product: HarvestProductDtoReadable | TransformedProductDtoReadable
+  /**
+   * Valeurs d'option associées à l'enchère
+   */
+  auctionOptionValues?: Array<AuctionOptionValueDtoReadable>
+  /**
+   * Trader ayant créé l'enchère
+   */
+  trader:
+    | ExporterDetailDtoReadable
+    | ProducerDetailDtoReadable
+    | TransformerDetailDtoReadable
+  /**
+   * Statut de l'enchère
+   */
+  status: TradeStatusDtoReadable
+  /**
+   * Liste des offres posées sur l'enchère
+   */
+  bids?: Array<BidDtoReadable>
+}
 
 /**
  * Objet de transfert de données pour les enchères.
  */
 export type AuctionDtoWritable = {
-    /**
-     * Prix de l'enchère
-     */
-    price: number;
-    /**
-     * Quantité de produit associée à l'enchère
-     */
-    productQuantity: number;
-    /**
-     * Date d'expiration de l'enchère
-     */
-    expirationDate: string;
-    /**
-     * Statut actif de l'enchère
-     */
-    active: boolean;
-    /**
-     * Stratégie d'enchère associée
-     */
-    strategy: AuctionStrategyDtoWritable;
-    /**
-     * Produit associé à l'enchère
-     */
-    product: HarvestProductDtoWritable | TransformedProductDtoWritable;
-    /**
-     * Valeurs d'option associées à l'enchère
-     */
-    auctionOptionValues?: Array<AuctionOptionValueDtoWritable>;
-    /**
-     * Trader ayant créé l'enchère
-     */
-    trader: ExporterDetailDtoWritable | ProducerDetailDtoWritable | TransformerDetailDtoWritable;
-    /**
-     * Statut de l'enchère
-     */
-    status: TradeStatusDtoWritable;
-    /**
-     * Liste des offres posées sur l'enchère
-     */
-    bids?: Array<BidDtoWritable>;
-};
+  /**
+   * Prix de l'enchère
+   */
+  price: number
+  /**
+   * Quantité de produit associée à l'enchère
+   */
+  productQuantity: number
+  /**
+   * Date d'expiration de l'enchère
+   */
+  expirationDate: string
+  /**
+   * Statut actif de l'enchère
+   */
+  active: boolean
+  /**
+   * Stratégie d'enchère associée
+   */
+  strategy: AuctionStrategyDtoWritable
+  /**
+   * Produit associé à l'enchère
+   */
+  product: HarvestProductDtoWritable | TransformedProductDtoWritable
+  /**
+   * Valeurs d'option associées à l'enchère
+   */
+  auctionOptionValues?: Array<AuctionOptionValueDtoWritable>
+  /**
+   * Trader ayant créé l'enchère
+   */
+  trader:
+    | ExporterDetailDtoWritable
+    | ProducerDetailDtoWritable
+    | TransformerDetailDtoWritable
+  /**
+   * Statut de l'enchère
+   */
+  status: TradeStatusDtoWritable
+  /**
+   * Liste des offres posées sur l'enchère
+   */
+  bids?: Array<BidDtoWritable>
+}
 
 /**
  * Objet de transfert de données pour les options d'enchère.
  */
 export type AuctionOptionDtoReadable = {
-    /**
-     * Identifiant unique de l'option d'enchère
-     */
-    readonly id: number;
-    /**
-     * Nom de l'option d'enchère
-     */
-    name: string;
-};
+  /**
+   * Identifiant unique de l'option d'enchère
+   */
+  readonly id: number
+  /**
+   * Nom de l'option d'enchère
+   */
+  name: string
+}
 
 /**
  * Objet de transfert de données pour les options d'enchère.
  */
 export type AuctionOptionDtoWritable = {
-    /**
-     * Nom de l'option d'enchère
-     */
-    name: string;
-};
+  /**
+   * Nom de l'option d'enchère
+   */
+  name: string
+}
 
 /**
  * Objet de transfert de données pour les valeurs d'option d'enchère.
  */
 export type AuctionOptionValueDtoReadable = {
-    /**
-     * Identifiant unique de la valeur d'option d'enchère
-     */
-    readonly id: number;
-    /**
-     * Option d'enchère associée
-     */
-    auctionOption: AuctionOptionDtoReadable;
-    /**
-     * Valeur de l'option
-     */
-    optionValue: string;
-};
+  /**
+   * Identifiant unique de la valeur d'option d'enchère
+   */
+  readonly id: number
+  /**
+   * Option d'enchère associée
+   */
+  auctionOption: AuctionOptionDtoReadable
+  /**
+   * Valeur de l'option
+   */
+  optionValue: string
+}
 
 /**
  * Objet de transfert de données pour les valeurs d'option d'enchère.
  */
 export type AuctionOptionValueDtoWritable = {
-    /**
-     * Option d'enchère associée
-     */
-    auctionOption: AuctionOptionDtoWritable;
-    /**
-     * Valeur de l'option
-     */
-    optionValue: string;
-};
+  /**
+   * Option d'enchère associée
+   */
+  auctionOption: AuctionOptionDtoWritable
+  /**
+   * Valeur de l'option
+   */
+  optionValue: string
+}
 
 /**
  * Objet de transfert de données pour les stratégies d'enchère.
  */
 export type AuctionStrategyDtoReadable = {
-    /**
-     * Identifiant unique de la stratégie d'enchère
-     */
-    readonly id: number;
-    /**
-     * Nom de la stratégie d'enchère
-     */
-    name: string;
-};
+  /**
+   * Identifiant unique de la stratégie d'enchère
+   */
+  readonly id: number
+  /**
+   * Nom de la stratégie d'enchère
+   */
+  name: string
+}
 
 /**
  * Objet de transfert de données pour les stratégies d'enchère.
  */
 export type AuctionStrategyDtoWritable = {
-    /**
-     * Nom de la stratégie d'enchère
-     */
-    name: string;
-};
+  /**
+   * Nom de la stratégie d'enchère
+   */
+  name: string
+}
 
 /**
  * Objet de transfert de données pour les offres d'achat (Bid).
  */
 export type BidDtoReadable = {
-    /**
-     * Identifiant unique de l'offre d'achat
-     */
-    readonly id: number;
-    /**
-     * Montant de l'offre
-     */
-    amount: number;
-    /**
-     * Date de création de l'offre
-     */
-    readonly creationDate?: string;
-    /**
-     * Identifiant de l'enchère associée à l'offre
-     */
-    auctionId: number;
-    /**
-     * Trader ayant passé l'offre
-     */
-    trader: ExporterDetailDtoReadable | ProducerDetailDtoReadable | TransformerDetailDtoReadable;
-    /**
-     * Statut de l'offre
-     */
-    status: TradeStatusDtoReadable;
-};
+  /**
+   * Identifiant unique de l'offre d'achat
+   */
+  readonly id: number
+  /**
+   * Montant de l'offre
+   */
+  amount: number
+  /**
+   * Date de création de l'offre
+   */
+  readonly creationDate?: string
+  /**
+   * Identifiant de l'enchère associée à l'offre
+   */
+  auctionId: number
+  /**
+   * Trader ayant passé l'offre
+   */
+  trader:
+    | ExporterDetailDtoReadable
+    | ProducerDetailDtoReadable
+    | TransformerDetailDtoReadable
+  /**
+   * Statut de l'offre
+   */
+  status: TradeStatusDtoReadable
+}
 
 /**
  * Objet de transfert de données pour les offres d'achat (Bid).
  */
 export type BidDtoWritable = {
-    /**
-     * Montant de l'offre
-     */
-    amount: number;
-    /**
-     * Identifiant de l'enchère associée à l'offre
-     */
-    auctionId: number;
-    /**
-     * Trader ayant passé l'offre
-     */
-    trader: ExporterDetailDtoWritable | ProducerDetailDtoWritable | TransformerDetailDtoWritable;
-    /**
-     * Statut de l'offre
-     */
-    status: TradeStatusDtoWritable;
-};
+  /**
+   * Montant de l'offre
+   */
+  amount: number
+  /**
+   * Identifiant de l'enchère associée à l'offre
+   */
+  auctionId: number
+  /**
+   * Trader ayant passé l'offre
+   */
+  trader:
+    | ExporterDetailDtoWritable
+    | ProducerDetailDtoWritable
+    | TransformerDetailDtoWritable
+  /**
+   * Statut de l'offre
+   */
+  status: TradeStatusDtoWritable
+}
 
 /**
  * Objet de transfert de données pour le statut d'une offre d'achat.
  */
 export type TradeStatusDtoReadable = {
-    /**
-     * Identifiant unique du statut
-     */
-    readonly id: number;
-    /**
-     * Nom du statut
-     */
-    name: string;
-};
+  /**
+   * Identifiant unique du statut
+   */
+  readonly id: number
+  /**
+   * Nom du statut
+   */
+  name: string
+}
 
 /**
  * Objet de transfert de données pour le statut d'une offre d'achat.
  */
 export type TradeStatusDtoWritable = {
-    /**
-     * Nom du statut
-     */
-    name: string;
-};
+  /**
+   * Nom du statut
+   */
+  name: string
+}
 
 /**
  * Payload du message de contact
  */
 export type ContactRequestDto = {
-    /**
-     * Nom du contact
-     */
-    name: string;
-    /**
-     * Adresse email du contact
-     */
-    email: string;
-    /**
-     * Message du contact
-     */
-    message: string;
-};
+  /**
+   * Nom du contact
+   */
+  name: string
+  /**
+   * Adresse email du contact
+   */
+  email: string
+  /**
+   * Message du contact
+   */
+  message: string
+}
 
 /**
  * Identifiants de connexion
  */
 export type LoginRequest = {
-    username: string;
-    password: string;
-};
-
-/**
- * Objet de transfert de données pour les administrateurs.
- */
-export type AdminListDtoReadable = UserListDtoReadable & {
-    type: 'AdminListDto';
-};
-
-/**
- * Objet de transfert de données pour les administrateurs.
- */
-export type AdminListDtoWritable = UserListDtoWritable & {
-    type: 'AdminListDto';
-};
-
-/**
- * Objet de transfert de données pour les transporteurs.
- */
-export type CarrierListDtoReadable = UserListDtoReadable & {
-    type: 'CarrierListDto';
-} & {
-    /**
-     * Prix par kilomètre facturé par le transporteur
-     */
-    pricePerKm: number;
-};
-
-/**
- * Objet de transfert de données pour les transporteurs.
- */
-export type CarrierListDtoWritable = UserListDtoWritable & {
-    type: 'CarrierListDto';
-} & {
-    /**
-     * Prix par kilomètre facturé par le transporteur
-     */
-    pricePerKm: number;
-};
-
-/**
- * Objet de transfert de données pour les producteurs.
- */
-export type ProducerListDtoReadable = TraderListDtoReadable & {
-    /**
-     * Identifiant agricole
-     */
-    agriculturalIdentifier: string;
-    /**
-     * Coopérative du producteur
-     */
-    cooperative: CooperativeDtoReadable;
-};
-
-/**
- * Objet de transfert de données pour les producteurs.
- */
-export type ProducerListDtoWritable = TraderListDtoWritable & {
-    /**
-     * Identifiant agricole
-     */
-    agriculturalIdentifier: string;
-    /**
-     * Coopérative du producteur
-     */
-    cooperative: CooperativeDtoWritable;
-};
-
-/**
- * Objet de transfert de données pour les inspecteurs qualité.
- */
-export type QualityInspectorListDtoReadable = UserListDtoReadable & {
-    type: 'QualityInspectorListDto';
-};
-
-/**
- * Objet de transfert de données pour les inspecteurs qualité.
- */
-export type QualityInspectorListDtoWritable = UserListDtoWritable & {
-    type: 'QualityInspectorListDto';
-};
-
-/**
- * Objet de transfert de données pour les traders.
- */
-export type TraderListDtoReadable = UserListDtoReadable & {
-    type: 'TraderListDto';
-};
-
-/**
- * Objet de transfert de données pour les traders.
- */
-export type TraderListDtoWritable = UserListDtoWritable & {
-    type: 'TraderListDto';
-};
-
-/**
- * Objet de transfert de données pour les transformateurs.
- */
-export type TransformerListDtoReadable = TraderListDtoReadable;
-
-/**
- * Objet de transfert de données pour les transformateurs.
- */
-export type TransformerListDtoWritable = TraderListDtoWritable;
+  username: string
+  password: string
+}
 
 /**
  * Data Transfer Object pour un utilisateur
  */
 export type UserListDtoReadable = {
-    /**
-     * Identifiant de l'utilisateur
-     */
-    readonly id: number;
-    /**
-     * Prénom de l'utilisateur
-     */
-    firstName: string;
-    /**
-     * Nom de famille de l'utilisateur
-     */
-    lastName: string;
-    /**
-     * Adresse email de l'utilisateur
-     */
-    email: string;
-    /**
-     * Date d'enregistrement
-     */
-    readonly registrationDate?: string;
-    /**
-     * Date de validation
-     */
-    readonly validationDate?: string;
-    /**
-     * Compte activé
-     */
-    enabled?: boolean;
-    /**
-     * Adresse postale de l'utilisateur
-     */
-    address?: string;
-    /**
-     * Numéro de téléphone (Bénin, ancien et nouveau formats)
-     */
-    phone?: string;
-    /**
-     * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
-     */
-    type: 'admin' | 'producer' | 'transformer' | 'quality_inspector' | 'exporter' | 'carrier';
-};
+  /**
+   * Identifiant de l'utilisateur
+   */
+  readonly id: number
+  /**
+   * Prénom de l'utilisateur
+   */
+  firstName: string
+  /**
+   * Nom de famille de l'utilisateur
+   */
+  lastName: string
+  /**
+   * Adresse email de l'utilisateur
+   */
+  email: string
+  /**
+   * Date d'enregistrement
+   */
+  readonly registrationDate?: string
+  /**
+   * Date de validation
+   */
+  readonly validationDate?: string
+  /**
+   * Compte activé
+   */
+  enabled?: boolean
+  /**
+   * Adresse postale de l'utilisateur
+   */
+  address?: string
+  /**
+   * Numéro de téléphone (Bénin, ancien et nouveau formats)
+   */
+  phone?: string
+  /**
+   * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
+   */
+  type:
+    | 'admin'
+    | 'producer'
+    | 'transformer'
+    | 'quality_inspector'
+    | 'exporter'
+    | 'carrier'
+}
 
 /**
  * Data Transfer Object pour un utilisateur
  */
 export type UserListDtoWritable = {
-    /**
-     * Prénom de l'utilisateur
-     */
-    firstName: string;
-    /**
-     * Nom de famille de l'utilisateur
-     */
-    lastName: string;
-    /**
-     * Adresse email de l'utilisateur
-     */
-    email: string;
-    /**
-     * Compte activé
-     */
-    enabled?: boolean;
-    /**
-     * Adresse postale de l'utilisateur
-     */
-    address?: string;
-    /**
-     * Numéro de téléphone (Bénin, ancien et nouveau formats)
-     */
-    phone?: string;
-    /**
-     * Mot de passe de l'utilisateur
-     */
-    password?: string;
-    /**
-     * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
-     */
-    type: 'admin' | 'producer' | 'transformer' | 'quality_inspector' | 'exporter' | 'carrier';
-};
+  /**
+   * Prénom de l'utilisateur
+   */
+  firstName: string
+  /**
+   * Nom de famille de l'utilisateur
+   */
+  lastName: string
+  /**
+   * Adresse email de l'utilisateur
+   */
+  email: string
+  /**
+   * Compte activé
+   */
+  enabled?: boolean
+  /**
+   * Adresse postale de l'utilisateur
+   */
+  address?: string
+  /**
+   * Numéro de téléphone (Bénin, ancien et nouveau formats)
+   */
+  phone?: string
+  /**
+   * Mot de passe de l'utilisateur
+   */
+  password?: string
+  /**
+   * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
+   */
+  type:
+    | 'admin'
+    | 'producer'
+    | 'transformer'
+    | 'quality_inspector'
+    | 'exporter'
+    | 'carrier'
+}
 
 /**
  * Données nécessaires pour l'application cliente.
  */
 export type ApplicationDataDto = {
-    /**
-     * Liste des stratégies d'enchères disponibles.
-     */
-    languages: Array<LanguageDto>;
-};
+  /**
+   * Liste des stratégies d'enchères disponibles.
+   */
+  languages: Array<LanguageDto>
+}
 
 export type DeleteFieldData = {
-    body?: never;
-    path: {
-        /**
-         * Identifiant de la ressource
-         */
-        id: number;
-    };
-    query?: never;
-    url: '/api/users/{userId}/fields/{id}';
-};
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/users/{userId}/fields/{id}'
+}
 
 export type DeleteFieldErrors = {
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
+  /**
+   * Unauthorized
+   */
+  401: ApiError
+  /**
+   * Forbidden
+   */
+  403: ApiError
+  /**
+   * Not Found
+   */
+  404: ApiError
+}
 
-export type DeleteFieldError = DeleteFieldErrors[keyof DeleteFieldErrors];
+export type DeleteFieldError = DeleteFieldErrors[keyof DeleteFieldErrors]
 
 export type DeleteFieldResponses = {
-    /**
-     * Deleted successfully
-     */
-    204: void;
-};
+  /**
+   * OK
+   */
+  200: unknown
+  /**
+   * Deleted successfully
+   */
+  204: void
+}
 
-export type DeleteFieldResponse = DeleteFieldResponses[keyof DeleteFieldResponses];
+export type DeleteFieldResponse =
+  DeleteFieldResponses[keyof DeleteFieldResponses]
 
 export type GetFieldData = {
-    body?: never;
-    path: {
-        /**
-         * Identifiant de la ressource
-         */
-        id: number;
-    };
-    query?: never;
-    url: '/api/users/{userId}/fields/{id}';
-};
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/users/{userId}/fields/{id}'
+}
 
 export type GetFieldErrors = {
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
+  /**
+   * Not Found
+   */
+  404: ApiErrorResponse
+}
 
-export type GetFieldError = GetFieldErrors[keyof GetFieldErrors];
+export type GetFieldError = GetFieldErrors[keyof GetFieldErrors]
 
 export type GetFieldResponses = {
-    /**
-     * Success
-     */
-    200: unknown;
-};
+  /**
+   * OK
+   */
+  200: FieldDtoReadable
+}
+
+export type GetFieldResponse = GetFieldResponses[keyof GetFieldResponses]
 
 export type UpdateFieldData = {
-    body: FieldDtoWritable;
-    path: {
-        /**
-         * Identifiant de la ressource
-         */
-        id: number;
-    };
-    query?: never;
-    url: '/api/users/{userId}/fields/{id}';
-};
+  body: FieldDtoWritable
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/users/{userId}/fields/{id}'
+}
 
 export type UpdateFieldErrors = {
-    /**
-     * Bad Request
-     */
-    400: ApiError;
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
+  /**
+   * Bad Request
+   */
+  400: ApiErrorResponse
+  /**
+   * Conflict
+   */
+  409: ApiErrorResponse
+}
 
-export type UpdateFieldError = UpdateFieldErrors[keyof UpdateFieldErrors];
+export type UpdateFieldError = UpdateFieldErrors[keyof UpdateFieldErrors]
 
 export type UpdateFieldResponses = {
-    /**
-     * Updated successfully
-     */
-    200: unknown;
-};
+  /**
+   * Created
+   */
+  201: FieldDtoReadable
+}
+
+export type UpdateFieldResponse =
+  UpdateFieldResponses[keyof UpdateFieldResponses]
 
 export type DeleteUserData = {
-    body?: never;
-    path: {
-        /**
-         * Identifiant de l'utilisateur
-         */
-        id: number;
-    };
-    query?: never;
-    url: '/api/users/{id}';
-};
+  body?: never
+  path: {
+    /**
+     * Identifiant de l'utilisateur
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/users/{id}'
+}
 
 export type DeleteUserErrors = {
-    /**
-     * Utilisateur non trouvé
-     */
-    404: ApiErrorResponse;
-};
+  /**
+   * Utilisateur non trouvé
+   */
+  404: ApiErrorResponse
+}
 
-export type DeleteUserError = DeleteUserErrors[keyof DeleteUserErrors];
+export type DeleteUserError = DeleteUserErrors[keyof DeleteUserErrors]
 
 export type DeleteUserResponses = {
-    /**
-     * Utilisateur supprimé avec succès
-     */
-    204: void;
-};
+  /**
+   * Utilisateur supprimé avec succès
+   */
+  204: void
+}
 
-export type DeleteUserResponse = DeleteUserResponses[keyof DeleteUserResponses];
+export type DeleteUserResponse = DeleteUserResponses[keyof DeleteUserResponses]
 
 export type GetUserData = {
-    body?: never;
-    path: {
-        /**
-         * Identifiant de l'utilisateur
-         */
-        id: number;
-    };
-    query?: never;
-    url: '/api/users/{id}';
-};
+  body?: never
+  path: {
+    /**
+     * Identifiant de l'utilisateur
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/users/{id}'
+}
 
 export type GetUserErrors = {
-    /**
-     * Utilisateur non trouvé
-     */
-    404: ApiErrorResponse;
-};
+  /**
+   * Utilisateur non trouvé
+   */
+  404: ApiErrorResponse
+}
 
-export type GetUserError = GetUserErrors[keyof GetUserErrors];
+export type GetUserError = GetUserErrors[keyof GetUserErrors]
 
 export type GetUserResponses = {
-    /**
-     * Utilisateur trouvé
-     */
-    200: UserDetailDtoReadable;
-};
+  /**
+   * Utilisateur trouvé
+   */
+  200: UserDetailDtoReadable
+}
 
-export type GetUserResponse = GetUserResponses[keyof GetUserResponses];
+export type GetUserResponse = GetUserResponses[keyof GetUserResponses]
 
 export type UpdateUserData = {
-    body: AdminDetailDtoWritable | CarrierDetailDtoWritable | QualityInspectorDetailDtoWritable | TraderDetailDtoWritable | ExporterDetailDtoWritable | ProducerDetailDtoWritable | TransformerDetailDtoWritable;
-    path: {
-        /**
-         * Identifiant de l'utilisateur
-         */
-        id: number;
-    };
-    query?: never;
-    url: '/api/users/{id}';
-};
+  body:
+    | AdminDetailDtoWritable
+    | CarrierDetailDtoWritable
+    | QualityInspectorDetailDtoWritable
+    | TraderDetailDtoWritable
+    | ExporterDetailDtoWritable
+    | ProducerDetailDtoWritable
+    | TransformerDetailDtoWritable
+  path: {
+    /**
+     * Identifiant de l'utilisateur
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/users/{id}'
+}
 
 export type UpdateUserErrors = {
-    /**
-     * Erreur de validation ou JSON invalide
-     */
-    400: ApiErrorResponse;
-    /**
-     * Utilisateur non trouvé
-     */
-    404: ApiErrorResponse;
-};
+  /**
+   * Erreur de validation ou JSON invalide
+   */
+  400: ApiErrorResponse
+  /**
+   * Utilisateur non trouvé
+   */
+  404: ApiErrorResponse
+}
 
-export type UpdateUserError = UpdateUserErrors[keyof UpdateUserErrors];
+export type UpdateUserError = UpdateUserErrors[keyof UpdateUserErrors]
 
 export type UpdateUserResponses = {
-    /**
-     * Utilisateur mis à jour avec succès
-     */
-    200: UserDetailDtoReadable;
-};
+  /**
+   * Utilisateur mis à jour avec succès
+   */
+  200: UserDetailDtoReadable
+}
 
-export type UpdateUserResponse = UpdateUserResponses[keyof UpdateUserResponses];
+export type UpdateUserResponse = UpdateUserResponses[keyof UpdateUserResponses]
 
 export type UpdateUserRolesData = {
-    body: Array<string>;
-    path: {
-        /**
-         * Identifiant de l'utilisateur
-         */
-        id: number;
-    };
-    query?: never;
-    url: '/api/users/{id}/roles';
-};
+  body: Array<string>
+  path: {
+    /**
+     * Identifiant de l'utilisateur
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/users/{id}/roles'
+}
 
 export type UpdateUserRolesErrors = {
-    /**
-     * Erreur de validation ou JSON invalide
-     */
-    400: ApiErrorResponse;
-    /**
-     * Utilisateur ou rôle non trouvé
-     */
-    404: ApiErrorResponse;
-};
+  /**
+   * Erreur de validation ou JSON invalide
+   */
+  400: ApiErrorResponse
+  /**
+   * Utilisateur ou rôle non trouvé
+   */
+  404: ApiErrorResponse
+}
 
-export type UpdateUserRolesError = UpdateUserRolesErrors[keyof UpdateUserRolesErrors];
+export type UpdateUserRolesError =
+  UpdateUserRolesErrors[keyof UpdateUserRolesErrors]
 
 export type UpdateUserRolesResponses = {
-    /**
-     * Rôles mis à jour avec succès
-     */
-    200: UserDetailDtoReadable;
-};
+  /**
+   * Rôles mis à jour avec succès
+   */
+  200: UserDetailDtoReadable
+}
 
-export type UpdateUserRolesResponse = UpdateUserRolesResponses[keyof UpdateUserRolesResponses];
+export type UpdateUserRolesResponse =
+  UpdateUserRolesResponses[keyof UpdateUserRolesResponses]
 
 export type DeleteStoreData = {
-    body?: never;
-    path: {
-        /**
-         * Identifiant de la ressource
-         */
-        id: number;
-    };
-    query?: never;
-    url: '/api/stores/{id}';
-};
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/stores/{id}'
+}
 
 export type DeleteStoreErrors = {
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
+  /**
+   * Not Found
+   */
+  404: ApiErrorResponse
+}
 
-export type DeleteStoreError = DeleteStoreErrors[keyof DeleteStoreErrors];
+export type DeleteStoreError = DeleteStoreErrors[keyof DeleteStoreErrors]
 
 export type DeleteStoreResponses = {
-    /**
-     * Deleted successfully
-     */
-    204: void;
-};
+  /**
+   * OK
+   */
+  200: unknown
+  /**
+   * No Content
+   */
+  204: void
+}
 
-export type DeleteStoreResponse = DeleteStoreResponses[keyof DeleteStoreResponses];
+export type DeleteStoreResponse =
+  DeleteStoreResponses[keyof DeleteStoreResponses]
 
 export type GetStoreData = {
-    body?: never;
-    path: {
-        /**
-         * Identifiant de la ressource
-         */
-        id: number;
-    };
-    query?: never;
-    url: '/api/stores/{id}';
-};
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/stores/{id}'
+}
 
 export type GetStoreErrors = {
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
+  /**
+   * Not Found
+   */
+  404: ApiErrorResponse
+}
 
-export type GetStoreError = GetStoreErrors[keyof GetStoreErrors];
+export type GetStoreError = GetStoreErrors[keyof GetStoreErrors]
 
 export type GetStoreResponses = {
-    /**
-     * Success
-     */
-    200: unknown;
-};
+  /**
+   * OK
+   */
+  200: StoreDetailDtoReadable
+}
+
+export type GetStoreResponse = GetStoreResponses[keyof GetStoreResponses]
 
 export type UpdateStoreData = {
-    body: StoreDetailDtoWritable;
-    path: {
-        /**
-         * Identifiant de la ressource
-         */
-        id: number;
-    };
-    query?: never;
-    url: '/api/stores/{id}';
-};
+  body: StoreDetailDtoWritable
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/stores/{id}'
+}
 
 export type UpdateStoreErrors = {
-    /**
-     * Bad Request
-     */
-    400: ApiError;
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
+  /**
+   * Bad Request
+   */
+  400: ApiErrorResponse
+  /**
+   * Conflict
+   */
+  409: ApiErrorResponse
+}
 
-export type UpdateStoreError = UpdateStoreErrors[keyof UpdateStoreErrors];
+export type UpdateStoreError = UpdateStoreErrors[keyof UpdateStoreErrors]
 
 export type UpdateStoreResponses = {
-    /**
-     * Updated successfully
-     */
-    200: unknown;
-};
+  /**
+   * Created
+   */
+  201: StoreDetailDtoReadable
+}
+
+export type UpdateStoreResponse =
+  UpdateStoreResponses[keyof UpdateStoreResponses]
 
 export type AddCarrierData = {
-    body?: never;
-    path: {
-        /**
-         * Identifiant de la ressource
-         */
-        carrierId: number;
-        /**
-         * Identifiant de la ressource
-         */
-        regionId: number;
-    };
-    query?: never;
-    url: '/api/regions/{regionId}/carriers/{carrierId}';
-};
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    carrierId: number
+    /**
+     * Identifiant de la ressource
+     */
+    regionId: number
+  }
+  query?: never
+  url: '/api/regions/{regionId}/carriers/{carrierId}'
+}
 
 export type AddCarrierErrors = {
-    /**
-     * Bad Request
-     */
-    400: ApiError;
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-};
+  /**
+   * Not Found
+   */
+  404: ApiErrorResponse
+}
 
-export type AddCarrierError = AddCarrierErrors[keyof AddCarrierErrors];
+export type AddCarrierError = AddCarrierErrors[keyof AddCarrierErrors]
 
 export type AddCarrierResponses = {
-    /**
-     * OK
-     */
-    200: unknown;
-    /**
-     * Created
-     */
-    201: unknown;
-};
+  /**
+   * OK
+   */
+  200: unknown
+}
 
 export type DeleteRegionData = {
-    body?: never;
-    path: {
-        /**
-         * Identifiant de la ressource
-         */
-        id: number;
-    };
-    query?: never;
-    url: '/api/regions/{id}';
-};
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/regions/{id}'
+}
 
 export type DeleteRegionErrors = {
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
+  /**
+   * Not Found
+   */
+  404: ApiErrorResponse
+}
 
-export type DeleteRegionError = DeleteRegionErrors[keyof DeleteRegionErrors];
+export type DeleteRegionError = DeleteRegionErrors[keyof DeleteRegionErrors]
 
 export type DeleteRegionResponses = {
-    /**
-     * Deleted successfully
-     */
-    204: void;
-};
+  /**
+   * OK
+   */
+  200: unknown
+  /**
+   * No Content
+   */
+  204: void
+}
 
-export type DeleteRegionResponse = DeleteRegionResponses[keyof DeleteRegionResponses];
+export type DeleteRegionResponse =
+  DeleteRegionResponses[keyof DeleteRegionResponses]
 
 export type GetRegionData = {
-    body?: never;
-    path: {
-        /**
-         * Identifiant de la ressource
-         */
-        id: number;
-    };
-    query?: never;
-    url: '/api/regions/{id}';
-};
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/regions/{id}'
+}
 
 export type GetRegionErrors = {
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
+  /**
+   * Not Found
+   */
+  404: ApiErrorResponse
+}
 
-export type GetRegionError = GetRegionErrors[keyof GetRegionErrors];
+export type GetRegionError = GetRegionErrors[keyof GetRegionErrors]
 
 export type GetRegionResponses = {
-    /**
-     * Success
-     */
-    200: unknown;
-};
+  /**
+   * OK
+   */
+  200: RegionDtoReadable
+}
+
+export type GetRegionResponse = GetRegionResponses[keyof GetRegionResponses]
 
 export type UpdateRegionData = {
-    body: RegionDtoWritable;
-    path: {
-        /**
-         * Identifiant de la ressource
-         */
-        id: number;
-    };
-    query?: never;
-    url: '/api/regions/{id}';
-};
+  body: RegionDtoWritable
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/regions/{id}'
+}
 
 export type UpdateRegionErrors = {
-    /**
-     * Bad Request
-     */
-    400: ApiError;
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
+  /**
+   * Bad Request
+   */
+  400: ApiErrorResponse
+  /**
+   * Conflict
+   */
+  409: ApiErrorResponse
+}
 
-export type UpdateRegionError = UpdateRegionErrors[keyof UpdateRegionErrors];
+export type UpdateRegionError = UpdateRegionErrors[keyof UpdateRegionErrors]
 
 export type UpdateRegionResponses = {
-    /**
-     * Updated successfully
-     */
-    200: unknown;
-};
+  /**
+   * Created
+   */
+  201: RegionDtoReadable
+}
+
+export type UpdateRegionResponse =
+  UpdateRegionResponses[keyof UpdateRegionResponses]
 
 export type DeleteQualityData = {
-    body?: never;
-    path: {
-        /**
-         * Identifiant de la ressource
-         */
-        id: number;
-    };
-    query?: never;
-    url: '/api/qualities/{id}';
-};
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/qualities/{id}'
+}
 
 export type DeleteQualityErrors = {
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
+  /**
+   * Not Found
+   */
+  404: ApiErrorResponse
+}
 
-export type DeleteQualityError = DeleteQualityErrors[keyof DeleteQualityErrors];
+export type DeleteQualityError = DeleteQualityErrors[keyof DeleteQualityErrors]
 
 export type DeleteQualityResponses = {
-    /**
-     * Deleted successfully
-     */
-    204: void;
-};
+  /**
+   * OK
+   */
+  200: unknown
+  /**
+   * No Content
+   */
+  204: void
+}
 
-export type DeleteQualityResponse = DeleteQualityResponses[keyof DeleteQualityResponses];
+export type DeleteQualityResponse =
+  DeleteQualityResponses[keyof DeleteQualityResponses]
 
 export type GetQualityData = {
-    body?: never;
-    path: {
-        /**
-         * Identifiant de la ressource
-         */
-        id: number;
-    };
-    query?: never;
-    url: '/api/qualities/{id}';
-};
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/qualities/{id}'
+}
 
 export type GetQualityErrors = {
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
+  /**
+   * Unauthorized
+   */
+  401: ApiError
+  /**
+   * Forbidden
+   */
+  403: ApiError
+  /**
+   * Not Found
+   */
+  404: ApiError
+}
 
-export type GetQualityError = GetQualityErrors[keyof GetQualityErrors];
+export type GetQualityError = GetQualityErrors[keyof GetQualityErrors]
 
 export type GetQualityResponses = {
-    /**
-     * Success
-     */
-    200: unknown;
-};
+  /**
+   * Success
+   */
+  200: unknown
+}
 
 export type UpdateQualityData = {
-    body: QualityDtoWritable;
-    path: {
-        /**
-         * Identifiant de la ressource
-         */
-        id: number;
-    };
-    query?: never;
-    url: '/api/qualities/{id}';
-};
+  body: QualityDtoWritable
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/qualities/{id}'
+}
 
 export type UpdateQualityErrors = {
-    /**
-     * Bad Request
-     */
-    400: ApiError;
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
+  /**
+   * Bad Request
+   */
+  400: ApiError
+  /**
+   * Unauthorized
+   */
+  401: ApiError
+  /**
+   * Forbidden
+   */
+  403: ApiError
+  /**
+   * Not Found
+   */
+  404: ApiError
+}
 
-export type UpdateQualityError = UpdateQualityErrors[keyof UpdateQualityErrors];
+export type UpdateQualityError = UpdateQualityErrors[keyof UpdateQualityErrors]
 
 export type UpdateQualityResponses = {
-    /**
-     * Updated successfully
-     */
-    200: unknown;
-};
+  /**
+   * Updated successfully
+   */
+  200: unknown
+}
 
 export type DeleteQualityControlData = {
-    body?: never;
-    path: {
-        /**
-         * Identifiant de la ressource
-         */
-        id: number;
-    };
-    query?: never;
-    url: '/api/products/{productId}/quality-controls/{id}';
-};
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/products/{productId}/quality-controls/{id}'
+}
 
 export type DeleteQualityControlErrors = {
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
+  /**
+   * Not Found
+   */
+  404: ApiErrorResponse
+}
 
-export type DeleteQualityControlError = DeleteQualityControlErrors[keyof DeleteQualityControlErrors];
+export type DeleteQualityControlError =
+  DeleteQualityControlErrors[keyof DeleteQualityControlErrors]
 
 export type DeleteQualityControlResponses = {
-    /**
-     * Deleted successfully
-     */
-    204: void;
-};
+  /**
+   * OK
+   */
+  200: unknown
+  /**
+   * No Content
+   */
+  204: void
+}
 
-export type DeleteQualityControlResponse = DeleteQualityControlResponses[keyof DeleteQualityControlResponses];
+export type DeleteQualityControlResponse =
+  DeleteQualityControlResponses[keyof DeleteQualityControlResponses]
 
 export type GetQualityControlData = {
-    body?: never;
-    path: {
-        /**
-         * Identifiant de la ressource
-         */
-        id: number;
-    };
-    query?: never;
-    url: '/api/products/{productId}/quality-controls/{id}';
-};
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/products/{productId}/quality-controls/{id}'
+}
 
 export type GetQualityControlErrors = {
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
+  /**
+   * Not Found
+   */
+  404: ApiErrorResponse
+}
 
-export type GetQualityControlError = GetQualityControlErrors[keyof GetQualityControlErrors];
+export type GetQualityControlError =
+  GetQualityControlErrors[keyof GetQualityControlErrors]
 
 export type GetQualityControlResponses = {
-    /**
-     * Success
-     */
-    200: unknown;
-};
+  /**
+   * OK
+   */
+  200: QualityControlDtoReadable
+}
+
+export type GetQualityControlResponse =
+  GetQualityControlResponses[keyof GetQualityControlResponses]
 
 export type UpdateQualityControlData = {
-    body: QualityControlDtoWritable;
-    path: {
-        /**
-         * Identifiant de la ressource
-         */
-        id: number;
-    };
-    query?: never;
-    url: '/api/products/{productId}/quality-controls/{id}';
-};
+  body: QualityControlDtoWritable
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/products/{productId}/quality-controls/{id}'
+}
 
 export type UpdateQualityControlErrors = {
-    /**
-     * Bad Request
-     */
-    400: ApiError;
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
+  /**
+   * Bad Request
+   */
+  400: ApiErrorResponse
+  /**
+   * Conflict
+   */
+  409: ApiErrorResponse
+}
 
-export type UpdateQualityControlError = UpdateQualityControlErrors[keyof UpdateQualityControlErrors];
+export type UpdateQualityControlError =
+  UpdateQualityControlErrors[keyof UpdateQualityControlErrors]
 
 export type UpdateQualityControlResponses = {
-    /**
-     * Updated successfully
-     */
-    200: unknown;
-};
+  /**
+   * Created
+   */
+  201: QualityControlDtoReadable
+}
+
+export type UpdateQualityControlResponse =
+  UpdateQualityControlResponses[keyof UpdateQualityControlResponses]
 
 export type DeleteProductData = {
-    body?: never;
-    path: {
-        /**
-         * Identifiant de la ressource
-         */
-        id: number;
-    };
-    query?: never;
-    url: '/api/products/{id}';
-};
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/products/{id}'
+}
 
 export type DeleteProductErrors = {
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
+  /**
+   * Not Found
+   */
+  404: ApiErrorResponse
+}
 
-export type DeleteProductError = DeleteProductErrors[keyof DeleteProductErrors];
+export type DeleteProductError = DeleteProductErrors[keyof DeleteProductErrors]
 
 export type DeleteProductResponses = {
-    /**
-     * Deleted successfully
-     */
-    204: void;
-};
+  /**
+   * OK
+   */
+  200: unknown
+  /**
+   * No Content
+   */
+  204: void
+}
 
-export type DeleteProductResponse = DeleteProductResponses[keyof DeleteProductResponses];
+export type DeleteProductResponse =
+  DeleteProductResponses[keyof DeleteProductResponses]
 
 export type GetProductData = {
-    body?: never;
-    path: {
-        /**
-         * Identifiant de la ressource
-         */
-        id: number;
-    };
-    query?: never;
-    url: '/api/products/{id}';
-};
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/products/{id}'
+}
 
 export type GetProductErrors = {
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
+  /**
+   * Not Found
+   */
+  404: ApiErrorResponse
+}
 
-export type GetProductError = GetProductErrors[keyof GetProductErrors];
+export type GetProductError = GetProductErrors[keyof GetProductErrors]
 
 export type GetProductResponses = {
-    /**
-     * Success
-     */
-    200: unknown;
-};
+  /**
+   * OK
+   */
+  200: ProductDtoReadable
+}
+
+export type GetProductResponse = GetProductResponses[keyof GetProductResponses]
 
 export type UpdateProductData = {
-    body: HarvestProductDtoWritable | TransformedProductDtoWritable;
-    path: {
-        /**
-         * Identifiant de la ressource
-         */
-        id: number;
-    };
-    query?: never;
-    url: '/api/products/{id}';
-};
+  body: HarvestProductDtoWritable | TransformedProductDtoWritable
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/products/{id}'
+}
 
 export type UpdateProductErrors = {
-    /**
-     * Bad Request
-     */
-    400: ApiError;
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
+  /**
+   * Bad Request
+   */
+  400: ApiErrorResponse
+  /**
+   * Conflict
+   */
+  409: ApiErrorResponse
+}
 
-export type UpdateProductError = UpdateProductErrors[keyof UpdateProductErrors];
+export type UpdateProductError = UpdateProductErrors[keyof UpdateProductErrors]
 
 export type UpdateProductResponses = {
-    /**
-     * Updated successfully
-     */
-    200: unknown;
-};
+  /**
+   * Created
+   */
+  201: ProductDtoReadable
+}
+
+export type UpdateProductResponse =
+  UpdateProductResponses[keyof UpdateProductResponses]
 
 export type DeleteLanguageData = {
-    body?: never;
-    path: {
-        /**
-         * Identifiant de la langue
-         */
-        id: number;
-    };
-    query?: never;
-    url: '/api/languages/{id}';
-};
+  body?: never
+  path: {
+    /**
+     * Identifiant de la langue
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/languages/{id}'
+}
 
 export type DeleteLanguageErrors = {
-    /**
-     * Langue non trouvée
-     */
-    404: ApiErrorResponse;
-};
+  /**
+   * Langue non trouvée
+   */
+  404: ApiErrorResponse
+}
 
-export type DeleteLanguageError = DeleteLanguageErrors[keyof DeleteLanguageErrors];
+export type DeleteLanguageError =
+  DeleteLanguageErrors[keyof DeleteLanguageErrors]
 
 export type DeleteLanguageResponses = {
-    /**
-     * Langue supprimée avec succès
-     */
-    204: void;
-};
+  /**
+   * Langue supprimée avec succès
+   */
+  204: void
+}
 
-export type DeleteLanguageResponse = DeleteLanguageResponses[keyof DeleteLanguageResponses];
+export type DeleteLanguageResponse =
+  DeleteLanguageResponses[keyof DeleteLanguageResponses]
 
 export type GetLanguageData = {
-    body?: never;
-    path: {
-        /**
-         * Identifiant de la langue
-         */
-        id: number;
-    };
-    query?: never;
-    url: '/api/languages/{id}';
-};
+  body?: never
+  path: {
+    /**
+     * Identifiant de la langue
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/languages/{id}'
+}
 
 export type GetLanguageErrors = {
-    /**
-     * Langue non trouvée
-     */
-    404: ApiErrorResponse;
-};
+  /**
+   * Langue non trouvée
+   */
+  404: ApiErrorResponse
+}
 
-export type GetLanguageError = GetLanguageErrors[keyof GetLanguageErrors];
+export type GetLanguageError = GetLanguageErrors[keyof GetLanguageErrors]
 
 export type GetLanguageResponses = {
-    /**
-     * Langue trouvée
-     */
-    200: LanguageDto;
-};
+  /**
+   * Langue trouvée
+   */
+  200: LanguageDto
+}
 
-export type GetLanguageResponse = GetLanguageResponses[keyof GetLanguageResponses];
+export type GetLanguageResponse =
+  GetLanguageResponses[keyof GetLanguageResponses]
 
 export type UpdateLanguageData = {
-    body: LanguageDto;
-    path: {
-        /**
-         * Identifiant de la langue
-         */
-        id: number;
-    };
-    query?: never;
-    url: '/api/languages/{id}';
-};
+  body: LanguageDto
+  path: {
+    /**
+     * Identifiant de la langue
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/languages/{id}'
+}
 
 export type UpdateLanguageErrors = {
-    /**
-     * Erreur de validation ou JSON invalide
-     */
-    400: ApiErrorResponse;
-    /**
-     * Langue non trouvée
-     */
-    404: ApiErrorResponse;
-};
+  /**
+   * Erreur de validation ou JSON invalide
+   */
+  400: ApiErrorResponse
+  /**
+   * Langue non trouvée
+   */
+  404: ApiErrorResponse
+}
 
-export type UpdateLanguageError = UpdateLanguageErrors[keyof UpdateLanguageErrors];
+export type UpdateLanguageError =
+  UpdateLanguageErrors[keyof UpdateLanguageErrors]
 
 export type UpdateLanguageResponses = {
-    /**
-     * Langue mise à jour avec succès
-     */
-    200: LanguageDto;
-};
+  /**
+   * Langue mise à jour avec succès
+   */
+  200: LanguageDto
+}
 
-export type UpdateLanguageResponse = UpdateLanguageResponses[keyof UpdateLanguageResponses];
+export type UpdateLanguageResponse =
+  UpdateLanguageResponses[keyof UpdateLanguageResponses]
 
 export type DeleteDocumentData = {
-    body?: never;
-    path: {
-        /**
-         * Identifiant de la ressource
-         */
-        id: number;
-    };
-    query?: never;
-    url: '/api/documents/{id}';
-};
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/documents/{id}'
+}
 
 export type DeleteDocumentErrors = {
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
+  /**
+   * Not Found
+   */
+  404: ApiErrorResponse
+}
 
-export type DeleteDocumentError = DeleteDocumentErrors[keyof DeleteDocumentErrors];
+export type DeleteDocumentError =
+  DeleteDocumentErrors[keyof DeleteDocumentErrors]
 
 export type DeleteDocumentResponses = {
-    /**
-     * Deleted successfully
-     */
-    204: void;
-};
+  /**
+   * OK
+   */
+  200: unknown
+  /**
+   * No Content
+   */
+  204: void
+}
 
-export type DeleteDocumentResponse = DeleteDocumentResponses[keyof DeleteDocumentResponses];
+export type DeleteDocumentResponse =
+  DeleteDocumentResponses[keyof DeleteDocumentResponses]
 
 export type GetDocumentData = {
-    body?: never;
-    path: {
-        /**
-         * Identifiant de la ressource
-         */
-        id: number;
-    };
-    query?: never;
-    url: '/api/documents/{id}';
-};
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/documents/{id}'
+}
 
 export type GetDocumentErrors = {
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
+  /**
+   * Not Found
+   */
+  404: ApiErrorResponse
+}
 
-export type GetDocumentError = GetDocumentErrors[keyof GetDocumentErrors];
+export type GetDocumentError = GetDocumentErrors[keyof GetDocumentErrors]
 
 export type GetDocumentResponses = {
-    /**
-     * Success
-     */
-    200: unknown;
-};
+  /**
+   * OK
+   */
+  200: DocumentDtoReadable
+}
+
+export type GetDocumentResponse =
+  GetDocumentResponses[keyof GetDocumentResponses]
 
 export type UpdateDocumentData = {
-    body: DocumentDtoWritable;
-    path: {
-        /**
-         * Identifiant de la ressource
-         */
-        id: number;
-    };
-    query?: never;
-    url: '/api/documents/{id}';
-};
+  body: DocumentDtoWritable
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/documents/{id}'
+}
 
 export type UpdateDocumentErrors = {
-    /**
-     * Bad Request
-     */
-    400: ApiError;
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
+  /**
+   * Bad Request
+   */
+  400: ApiErrorResponse
+  /**
+   * Conflict
+   */
+  409: ApiErrorResponse
+}
 
-export type UpdateDocumentError = UpdateDocumentErrors[keyof UpdateDocumentErrors];
+export type UpdateDocumentError =
+  UpdateDocumentErrors[keyof UpdateDocumentErrors]
 
 export type UpdateDocumentResponses = {
-    /**
-     * Updated successfully
-     */
-    200: unknown;
-};
+  /**
+   * Created
+   */
+  201: DocumentDtoReadable
+}
+
+export type UpdateDocumentResponse =
+  UpdateDocumentResponses[keyof UpdateDocumentResponses]
 
 export type DeleteCooperativeData = {
-    body?: never;
-    path: {
-        /**
-         * Identifiant de la ressource
-         */
-        id: number;
-    };
-    query?: never;
-    url: '/api/cooperatives/{id}';
-};
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/cooperatives/{id}'
+}
 
 export type DeleteCooperativeErrors = {
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
+  /**
+   * Not Found
+   */
+  404: ApiErrorResponse
+}
 
-export type DeleteCooperativeError = DeleteCooperativeErrors[keyof DeleteCooperativeErrors];
+export type DeleteCooperativeError =
+  DeleteCooperativeErrors[keyof DeleteCooperativeErrors]
 
 export type DeleteCooperativeResponses = {
-    /**
-     * Deleted successfully
-     */
-    204: void;
-};
+  /**
+   * OK
+   */
+  200: unknown
+  /**
+   * No Content
+   */
+  204: void
+}
 
-export type DeleteCooperativeResponse = DeleteCooperativeResponses[keyof DeleteCooperativeResponses];
+export type DeleteCooperativeResponse =
+  DeleteCooperativeResponses[keyof DeleteCooperativeResponses]
 
 export type GetCooperativeData = {
-    body?: never;
-    path: {
-        /**
-         * Identifiant de la ressource
-         */
-        id: number;
-    };
-    query?: never;
-    url: '/api/cooperatives/{id}';
-};
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/cooperatives/{id}'
+}
 
 export type GetCooperativeErrors = {
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
+  /**
+   * Not Found
+   */
+  404: ApiErrorResponse
+}
 
-export type GetCooperativeError = GetCooperativeErrors[keyof GetCooperativeErrors];
+export type GetCooperativeError =
+  GetCooperativeErrors[keyof GetCooperativeErrors]
 
 export type GetCooperativeResponses = {
-    /**
-     * Success
-     */
-    200: unknown;
-};
+  /**
+   * OK
+   */
+  200: CooperativeDtoReadable
+}
+
+export type GetCooperativeResponse =
+  GetCooperativeResponses[keyof GetCooperativeResponses]
 
 export type UpdateCooperativeData = {
-    body: CooperativeDtoWritable;
-    path: {
-        /**
-         * Identifiant de la ressource
-         */
-        id: number;
-    };
-    query?: never;
-    url: '/api/cooperatives/{id}';
-};
+  body: CooperativeDtoWritable
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/cooperatives/{id}'
+}
 
 export type UpdateCooperativeErrors = {
-    /**
-     * Bad Request
-     */
-    400: ApiError;
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
+  /**
+   * Bad Request
+   */
+  400: ApiErrorResponse
+  /**
+   * Conflict
+   */
+  409: ApiErrorResponse
+}
 
-export type UpdateCooperativeError = UpdateCooperativeErrors[keyof UpdateCooperativeErrors];
+export type UpdateCooperativeError =
+  UpdateCooperativeErrors[keyof UpdateCooperativeErrors]
 
 export type UpdateCooperativeResponses = {
-    /**
-     * Updated successfully
-     */
-    200: unknown;
-};
+  /**
+   * Created
+   */
+  201: CooperativeDtoReadable
+}
+
+export type UpdateCooperativeResponse =
+  UpdateCooperativeResponses[keyof UpdateCooperativeResponses]
 
 export type DeleteContractOfferData = {
-    body?: never;
-    path: {
-        /**
-         * Identifiant de la ressource
-         */
-        id: number;
-    };
-    query?: never;
-    url: '/api/contracts/{id}';
-};
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/contracts/{id}'
+}
 
 export type DeleteContractOfferErrors = {
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
+  /**
+   * Not Found
+   */
+  404: ApiErrorResponse
+}
 
-export type DeleteContractOfferError = DeleteContractOfferErrors[keyof DeleteContractOfferErrors];
+export type DeleteContractOfferError =
+  DeleteContractOfferErrors[keyof DeleteContractOfferErrors]
 
 export type DeleteContractOfferResponses = {
-    /**
-     * Deleted successfully
-     */
-    204: void;
-};
+  /**
+   * OK
+   */
+  200: unknown
+  /**
+   * No Content
+   */
+  204: void
+}
 
-export type DeleteContractOfferResponse = DeleteContractOfferResponses[keyof DeleteContractOfferResponses];
+export type DeleteContractOfferResponse =
+  DeleteContractOfferResponses[keyof DeleteContractOfferResponses]
 
 export type GetContractOfferData = {
-    body?: never;
-    path: {
-        /**
-         * Identifiant de la ressource
-         */
-        id: number;
-    };
-    query?: never;
-    url: '/api/contracts/{id}';
-};
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/contracts/{id}'
+}
 
 export type GetContractOfferErrors = {
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
+  /**
+   * Not Found
+   */
+  404: ApiErrorResponse
+}
 
-export type GetContractOfferError = GetContractOfferErrors[keyof GetContractOfferErrors];
+export type GetContractOfferError =
+  GetContractOfferErrors[keyof GetContractOfferErrors]
 
 export type GetContractOfferResponses = {
-    /**
-     * Success
-     */
-    200: unknown;
-};
+  /**
+   * OK
+   */
+  200: ContractOfferDtoReadable
+}
+
+export type GetContractOfferResponse =
+  GetContractOfferResponses[keyof GetContractOfferResponses]
 
 export type UpdateContractOfferData = {
-    body: ContractOfferDtoWritable;
-    path: {
-        /**
-         * Identifiant de la ressource
-         */
-        id: number;
-    };
-    query?: never;
-    url: '/api/contracts/{id}';
-};
+  body: ContractOfferDtoWritable
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/contracts/{id}'
+}
 
 export type UpdateContractOfferErrors = {
-    /**
-     * Bad Request
-     */
-    400: ApiError;
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
+  /**
+   * Bad Request
+   */
+  400: ApiErrorResponse
+  /**
+   * Conflict
+   */
+  409: ApiErrorResponse
+}
 
-export type UpdateContractOfferError = UpdateContractOfferErrors[keyof UpdateContractOfferErrors];
+export type UpdateContractOfferError =
+  UpdateContractOfferErrors[keyof UpdateContractOfferErrors]
 
 export type UpdateContractOfferResponses = {
-    /**
-     * Updated successfully
-     */
-    200: unknown;
-};
+  /**
+   * Created
+   */
+  201: ContractOfferDtoReadable
+}
+
+export type UpdateContractOfferResponse =
+  UpdateContractOfferResponses[keyof UpdateContractOfferResponses]
 
 export type DeleteAuctionData = {
-    body?: never;
-    path: {
-        /**
-         * Identifiant de la ressource
-         */
-        id: number;
-    };
-    query?: never;
-    url: '/api/auctions/{id}';
-};
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/auctions/{id}'
+}
 
 export type DeleteAuctionErrors = {
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
+  /**
+   * Not Found
+   */
+  404: ApiErrorResponse
+}
 
-export type DeleteAuctionError = DeleteAuctionErrors[keyof DeleteAuctionErrors];
+export type DeleteAuctionError = DeleteAuctionErrors[keyof DeleteAuctionErrors]
 
 export type DeleteAuctionResponses = {
-    /**
-     * Deleted successfully
-     */
-    204: void;
-};
+  /**
+   * OK
+   */
+  200: unknown
+  /**
+   * No Content
+   */
+  204: void
+}
 
-export type DeleteAuctionResponse = DeleteAuctionResponses[keyof DeleteAuctionResponses];
+export type DeleteAuctionResponse =
+  DeleteAuctionResponses[keyof DeleteAuctionResponses]
 
 export type GetAuctionData = {
-    body?: never;
-    path: {
-        /**
-         * Identifiant de la ressource
-         */
-        id: number;
-    };
-    query?: never;
-    url: '/api/auctions/{id}';
-};
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/auctions/{id}'
+}
 
 export type GetAuctionErrors = {
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
+  /**
+   * Not Found
+   */
+  404: ApiErrorResponse
+}
 
-export type GetAuctionError = GetAuctionErrors[keyof GetAuctionErrors];
+export type GetAuctionError = GetAuctionErrors[keyof GetAuctionErrors]
 
 export type GetAuctionResponses = {
-    /**
-     * Success
-     */
-    200: unknown;
-};
+  /**
+   * OK
+   */
+  200: AuctionDtoReadable
+}
+
+export type GetAuctionResponse = GetAuctionResponses[keyof GetAuctionResponses]
 
 export type UpdateAuctionData = {
-    body: AuctionDtoWritable;
-    path: {
-        /**
-         * Identifiant de la ressource
-         */
-        id: number;
-    };
-    query?: never;
-    url: '/api/auctions/{id}';
-};
+  body: AuctionDtoWritable
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/auctions/{id}'
+}
 
 export type UpdateAuctionErrors = {
-    /**
-     * Bad Request
-     */
-    400: ApiError;
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
+  /**
+   * Bad Request
+   */
+  400: ApiErrorResponse
+  /**
+   * Conflict
+   */
+  409: ApiErrorResponse
+}
 
-export type UpdateAuctionError = UpdateAuctionErrors[keyof UpdateAuctionErrors];
+export type UpdateAuctionError = UpdateAuctionErrors[keyof UpdateAuctionErrors]
 
 export type UpdateAuctionResponses = {
-    /**
-     * Updated successfully
-     */
-    200: unknown;
-};
+  /**
+   * Created
+   */
+  201: AuctionDtoReadable
+}
+
+export type UpdateAuctionResponse =
+  UpdateAuctionResponses[keyof UpdateAuctionResponses]
 
 export type AcceptAuctionData = {
-    body?: never;
-    path: {
-        /**
-         * Identifiant de la ressource
-         */
-        id: number;
-    };
-    query?: never;
-    url: '/api/auctions/{id}/accept';
-};
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/auctions/{id}/accept'
+}
 
 export type AcceptAuctionErrors = {
-    /**
-     * Bad Request
-     */
-    400: ApiError;
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
+  /**
+   * Not Found
+   */
+  404: ApiErrorResponse
+}
 
-export type AcceptAuctionError = AcceptAuctionErrors[keyof AcceptAuctionErrors];
+export type AcceptAuctionError = AcceptAuctionErrors[keyof AcceptAuctionErrors]
 
 export type AcceptAuctionResponses = {
-    /**
-     * Updated successfully
-     */
-    200: unknown;
-};
+  /**
+   * OK
+   */
+  200: AuctionDtoReadable
+}
+
+export type AcceptAuctionResponse =
+  AcceptAuctionResponses[keyof AcceptAuctionResponses]
 
 export type DeleteBidData = {
-    body?: never;
-    path: {
-        /**
-         * Identifiant de la ressource
-         */
-        bidId: number;
-    };
-    query?: never;
-    url: '/api/auctions/{auctionId}/bids/{bidId}';
-};
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    bidId: number
+  }
+  query?: never
+  url: '/api/auctions/{auctionId}/bids/{bidId}'
+}
 
 export type DeleteBidErrors = {
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
+  /**
+   * Not Found
+   */
+  404: ApiErrorResponse
+}
 
-export type DeleteBidError = DeleteBidErrors[keyof DeleteBidErrors];
+export type DeleteBidError = DeleteBidErrors[keyof DeleteBidErrors]
 
 export type DeleteBidResponses = {
-    /**
-     * Deleted successfully
-     */
-    204: void;
-};
+  /**
+   * OK
+   */
+  200: unknown
+  /**
+   * No Content
+   */
+  204: void
+}
 
-export type DeleteBidResponse = DeleteBidResponses[keyof DeleteBidResponses];
+export type DeleteBidResponse = DeleteBidResponses[keyof DeleteBidResponses]
 
 export type GetBidData = {
-    body?: never;
-    path: {
-        /**
-         * Identifiant de la ressource
-         */
-        bidId: number;
-    };
-    query?: never;
-    url: '/api/auctions/{auctionId}/bids/{bidId}';
-};
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    bidId: number
+  }
+  query?: never
+  url: '/api/auctions/{auctionId}/bids/{bidId}'
+}
 
 export type GetBidErrors = {
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
+  /**
+   * Not Found
+   */
+  404: ApiErrorResponse
+}
 
-export type GetBidError = GetBidErrors[keyof GetBidErrors];
+export type GetBidError = GetBidErrors[keyof GetBidErrors]
 
 export type GetBidResponses = {
-    /**
-     * Success
-     */
-    200: unknown;
-};
+  /**
+   * OK
+   */
+  200: BidDtoReadable
+}
+
+export type GetBidResponse = GetBidResponses[keyof GetBidResponses]
 
 export type UpdateBidData = {
-    body: BidDtoWritable;
-    path: {
-        /**
-         * Identifiant de la ressource
-         */
-        auctionId: number;
-        /**
-         * Identifiant de la ressource
-         */
-        bidId: number;
-    };
-    query?: never;
-    url: '/api/auctions/{auctionId}/bids/{bidId}';
-};
+  body: BidDtoWritable
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    auctionId: number
+    /**
+     * Identifiant de la ressource
+     */
+    bidId: number
+  }
+  query?: never
+  url: '/api/auctions/{auctionId}/bids/{bidId}'
+}
 
 export type UpdateBidErrors = {
-    /**
-     * Bad Request
-     */
-    400: ApiError;
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
+  /**
+   * Bad Request
+   */
+  400: ApiErrorResponse
+  /**
+   * Conflict
+   */
+  409: ApiErrorResponse
+}
 
-export type UpdateBidError = UpdateBidErrors[keyof UpdateBidErrors];
+export type UpdateBidError = UpdateBidErrors[keyof UpdateBidErrors]
 
 export type UpdateBidResponses = {
-    /**
-     * Updated successfully
-     */
-    200: unknown;
-};
+  /**
+   * Created
+   */
+  201: BidDtoReadable
+}
+
+export type UpdateBidResponse = UpdateBidResponses[keyof UpdateBidResponses]
 
 export type AcceptBidData = {
-    body?: never;
-    path: {
-        /**
-         * Identifiant de la ressource
-         */
-        auctionId: number;
-        /**
-         * Identifiant de la ressource
-         */
-        bidId: number;
-    };
-    query?: never;
-    url: '/api/auctions/{auctionId}/bids/{bidId}/accept';
-};
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    auctionId: number
+    /**
+     * Identifiant de la ressource
+     */
+    bidId: number
+  }
+  query?: never
+  url: '/api/auctions/{auctionId}/bids/{bidId}/accept'
+}
 
 export type AcceptBidErrors = {
-    /**
-     * Bad Request
-     */
-    400: ApiError;
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
+  /**
+   * Not Found
+   */
+  404: ApiErrorResponse
+}
 
-export type AcceptBidError = AcceptBidErrors[keyof AcceptBidErrors];
+export type AcceptBidError = AcceptBidErrors[keyof AcceptBidErrors]
 
 export type AcceptBidResponses = {
-    /**
-     * Updated successfully
-     */
-    200: unknown;
-};
+  /**
+   * OK
+   */
+  200: BidDtoReadable
+}
+
+export type AcceptBidResponse = AcceptBidResponses[keyof AcceptBidResponses]
 
 export type DeleteAuctionStrategyData = {
-    body?: never;
-    path: {
-        /**
-         * Identifiant de la ressource
-         */
-        id: number;
-    };
-    query?: never;
-    url: '/api/auctions/strategies/{id}';
-};
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/auctions/strategies/{id}'
+}
 
 export type DeleteAuctionStrategyErrors = {
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
+  /**
+   * Not Found
+   */
+  404: ApiErrorResponse
+}
 
-export type DeleteAuctionStrategyError = DeleteAuctionStrategyErrors[keyof DeleteAuctionStrategyErrors];
+export type DeleteAuctionStrategyError =
+  DeleteAuctionStrategyErrors[keyof DeleteAuctionStrategyErrors]
 
 export type DeleteAuctionStrategyResponses = {
-    /**
-     * Deleted successfully
-     */
-    204: void;
-};
+  /**
+   * OK
+   */
+  200: unknown
+  /**
+   * No Content
+   */
+  204: void
+}
 
-export type DeleteAuctionStrategyResponse = DeleteAuctionStrategyResponses[keyof DeleteAuctionStrategyResponses];
+export type DeleteAuctionStrategyResponse =
+  DeleteAuctionStrategyResponses[keyof DeleteAuctionStrategyResponses]
 
 export type GetAuctionStrategyData = {
-    body?: never;
-    path: {
-        /**
-         * Identifiant de la ressource
-         */
-        id: number;
-    };
-    query?: never;
-    url: '/api/auctions/strategies/{id}';
-};
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/auctions/strategies/{id}'
+}
 
 export type GetAuctionStrategyErrors = {
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
+  /**
+   * Unauthorized
+   */
+  401: ApiError
+  /**
+   * Forbidden
+   */
+  403: ApiError
+  /**
+   * Not Found
+   */
+  404: ApiError
+}
 
-export type GetAuctionStrategyError = GetAuctionStrategyErrors[keyof GetAuctionStrategyErrors];
+export type GetAuctionStrategyError =
+  GetAuctionStrategyErrors[keyof GetAuctionStrategyErrors]
 
 export type GetAuctionStrategyResponses = {
-    /**
-     * Success
-     */
-    200: unknown;
-};
+  /**
+   * Success
+   */
+  200: unknown
+}
 
 export type UpdateAuctionStrategyData = {
-    body: AuctionStrategyDtoWritable;
-    path: {
-        /**
-         * Identifiant de la ressource
-         */
-        id: number;
-    };
-    query?: never;
-    url: '/api/auctions/strategies/{id}';
-};
+  body: AuctionStrategyDtoWritable
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/auctions/strategies/{id}'
+}
 
 export type UpdateAuctionStrategyErrors = {
-    /**
-     * Bad Request
-     */
-    400: ApiError;
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
+  /**
+   * Bad Request
+   */
+  400: ApiError
+  /**
+   * Unauthorized
+   */
+  401: ApiError
+  /**
+   * Forbidden
+   */
+  403: ApiError
+  /**
+   * Not Found
+   */
+  404: ApiError
+}
 
-export type UpdateAuctionStrategyError = UpdateAuctionStrategyErrors[keyof UpdateAuctionStrategyErrors];
+export type UpdateAuctionStrategyError =
+  UpdateAuctionStrategyErrors[keyof UpdateAuctionStrategyErrors]
 
 export type UpdateAuctionStrategyResponses = {
-    /**
-     * Updated successfully
-     */
-    200: unknown;
-};
+  /**
+   * Updated successfully
+   */
+  200: unknown
+}
 
 export type ListUsersData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/api/users';
-};
+  body?: never
+  path?: never
+  query?: never
+  url: '/api/users'
+}
 
 export type ListUsersResponses = {
-    /**
-     * Liste récupérée avec succès
-     */
-    200: Array<AdminDetailDtoReadable | AdminListDtoReadable | CarrierDetailDtoReadable | CarrierListDtoReadable | ExporterDetailDtoReadable | ProducerDetailDtoReadable | QualityInspectorDetailDtoReadable | QualityInspectorListDtoReadable | TraderListDtoReadable | TransformerDetailDtoReadable | ProducerListDtoReadable | TransformerListDtoReadable>;
-};
+  /**
+   * Liste récupérée avec succès
+   */
+  200: Array<UserListDtoReadable>
+}
 
-export type ListUsersResponse = ListUsersResponses[keyof ListUsersResponses];
+export type ListUsersResponse = ListUsersResponses[keyof ListUsersResponses]
 
 export type CreateUserData = {
-    body: AdminDetailDtoWritable | CarrierDetailDtoWritable | QualityInspectorDetailDtoWritable | TraderDetailDtoWritable | ExporterDetailDtoWritable | ProducerDetailDtoWritable | TransformerDetailDtoWritable;
-    path?: never;
-    query?: never;
-    url: '/api/users';
-};
+  body:
+    | AdminDetailDtoWritable
+    | CarrierDetailDtoWritable
+    | QualityInspectorDetailDtoWritable
+    | TraderDetailDtoWritable
+    | ExporterDetailDtoWritable
+    | ProducerDetailDtoWritable
+    | TransformerDetailDtoWritable
+  path?: never
+  query?: never
+  url: '/api/users'
+}
 
 export type CreateUserErrors = {
-    /**
-     * Erreur de validation ou JSON invalide
-     */
-    400: ApiErrorResponse;
-    /**
-     * Conflit avec un utilisateur existant
-     */
-    409: ApiErrorResponse;
-};
+  /**
+   * Erreur de validation ou JSON invalide
+   */
+  400: ApiErrorResponse
+  /**
+   * Conflit avec un utilisateur existant
+   */
+  409: ApiErrorResponse
+}
 
-export type CreateUserError = CreateUserErrors[keyof CreateUserErrors];
+export type CreateUserError = CreateUserErrors[keyof CreateUserErrors]
 
 export type CreateUserResponses = {
-    /**
-     * Utilisateur créé avec succès
-     */
-    201: UserDetailDtoReadable;
-};
+  /**
+   * Utilisateur créé avec succès
+   */
+  201: UserDetailDtoReadable
+}
 
-export type CreateUserResponse = CreateUserResponses[keyof CreateUserResponses];
+export type CreateUserResponse = CreateUserResponses[keyof CreateUserResponses]
 
 export type ListFieldsData = {
-    body?: never;
-    path: {
-        userId: number;
-    };
-    query?: never;
-    url: '/api/users/{userId}/fields';
-};
-
-export type ListFieldsErrors = {
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
-
-export type ListFieldsError = ListFieldsErrors[keyof ListFieldsErrors];
+  body?: never
+  path: {
+    userId: number
+  }
+  query?: never
+  url: '/api/users/{userId}/fields'
+}
 
 export type ListFieldsResponses = {
-    /**
-     * Success
-     */
-    200: unknown;
-};
+  /**
+   * Liste récupérée avec succès
+   */
+  200: Array<FieldDtoReadable>
+}
+
+export type ListFieldsResponse = ListFieldsResponses[keyof ListFieldsResponses]
 
 export type CreateFieldData = {
-    body: FieldDtoWritable;
-    path?: never;
-    query?: never;
-    url: '/api/users/{userId}/fields';
-};
+  body: FieldDtoWritable
+  path?: never
+  query?: never
+  url: '/api/users/{userId}/fields'
+}
 
 export type CreateFieldErrors = {
-    /**
-     * Bad Request
-     */
-    400: ApiError;
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-};
+  /**
+   * Bad Request
+   */
+  400: ApiErrorResponse
+  /**
+   * Conflict
+   */
+  409: ApiErrorResponse
+}
 
-export type CreateFieldError = CreateFieldErrors[keyof CreateFieldErrors];
+export type CreateFieldError = CreateFieldErrors[keyof CreateFieldErrors]
 
 export type CreateFieldResponses = {
-    /**
-     * Created
-     */
-    201: unknown;
-};
+  /**
+   * Created
+   */
+  201: FieldDtoReadable
+}
+
+export type CreateFieldResponse =
+  CreateFieldResponses[keyof CreateFieldResponses]
 
 export type AddRoleToUserData = {
-    body?: never;
-    path: {
-        /**
-         * Identifiant de l'utilisateur
-         */
-        id: number;
-        /**
-         * Nom du rôle
-         */
-        roleName: string;
-    };
-    query?: never;
-    url: '/api/users/{id}/roles/{roleName}';
-};
+  body?: never
+  path: {
+    /**
+     * Identifiant de l'utilisateur
+     */
+    id: number
+    /**
+     * Nom du rôle
+     */
+    roleName: string
+  }
+  query?: never
+  url: '/api/users/{id}/roles/{roleName}'
+}
 
 export type AddRoleToUserErrors = {
-    /**
-     * Erreur de validation ou JSON invalide
-     */
-    400: ApiErrorResponse;
-    /**
-     * Utilisateur ou rôle non trouvé
-     */
-    404: ApiErrorResponse;
-};
+  /**
+   * Erreur de validation ou JSON invalide
+   */
+  400: ApiErrorResponse
+  /**
+   * Utilisateur ou rôle non trouvé
+   */
+  404: ApiErrorResponse
+}
 
-export type AddRoleToUserError = AddRoleToUserErrors[keyof AddRoleToUserErrors];
+export type AddRoleToUserError = AddRoleToUserErrors[keyof AddRoleToUserErrors]
 
 export type AddRoleToUserResponses = {
-    /**
-     * Rôle ajouté avec succès
-     */
-    200: UserDetailDtoReadable;
-};
+  /**
+   * Rôle ajouté avec succès
+   */
+  200: UserDetailDtoReadable
+}
 
-export type AddRoleToUserResponse = AddRoleToUserResponses[keyof AddRoleToUserResponses];
+export type AddRoleToUserResponse =
+  AddRoleToUserResponses[keyof AddRoleToUserResponses]
 
 export type ListStoresData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/api/stores';
-};
-
-export type ListStoresErrors = {
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
-
-export type ListStoresError = ListStoresErrors[keyof ListStoresErrors];
+  body?: never
+  path?: never
+  query?: never
+  url: '/api/stores'
+}
 
 export type ListStoresResponses = {
-    /**
-     * Success
-     */
-    200: unknown;
-};
+  /**
+   * Liste récupérée avec succès
+   */
+  200: Array<StoreDetailDtoReadable>
+}
+
+export type ListStoresResponse = ListStoresResponses[keyof ListStoresResponses]
 
 export type CreateStoreData = {
-    body: StoreDetailDtoWritable;
-    path?: never;
-    query?: never;
-    url: '/api/stores';
-};
+  body: StoreDetailDtoWritable
+  path?: never
+  query?: never
+  url: '/api/stores'
+}
 
 export type CreateStoreErrors = {
-    /**
-     * Bad Request
-     */
-    400: ApiError;
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-};
+  /**
+   * Bad Request
+   */
+  400: ApiErrorResponse
+  /**
+   * Conflict
+   */
+  409: ApiErrorResponse
+}
 
-export type CreateStoreError = CreateStoreErrors[keyof CreateStoreErrors];
+export type CreateStoreError = CreateStoreErrors[keyof CreateStoreErrors]
 
 export type CreateStoreResponses = {
-    /**
-     * Created
-     */
-    201: unknown;
-};
+  /**
+   * Created
+   */
+  201: StoreDetailDtoReadable
+}
+
+export type CreateStoreResponse =
+  CreateStoreResponses[keyof CreateStoreResponses]
 
 export type ListRegionsData = {
-    body?: never;
-    path?: never;
-    query?: {
-        carrierId?: number;
-    };
-    url: '/api/regions';
-};
-
-export type ListRegionsErrors = {
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
-
-export type ListRegionsError = ListRegionsErrors[keyof ListRegionsErrors];
+  body?: never
+  path?: never
+  query?: {
+    carrierId?: number
+  }
+  url: '/api/regions'
+}
 
 export type ListRegionsResponses = {
-    /**
-     * Success
-     */
-    200: unknown;
-};
+  /**
+   * Liste récupérée avec succès
+   */
+  200: Array<RegionDtoReadable>
+}
+
+export type ListRegionsResponse =
+  ListRegionsResponses[keyof ListRegionsResponses]
 
 export type CreateRegionData = {
-    body: RegionDtoWritable;
-    path?: never;
-    query?: never;
-    url: '/api/regions';
-};
+  body: RegionDtoWritable
+  path?: never
+  query?: never
+  url: '/api/regions'
+}
 
 export type CreateRegionErrors = {
-    /**
-     * Bad Request
-     */
-    400: ApiError;
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-};
+  /**
+   * Bad Request
+   */
+  400: ApiErrorResponse
+  /**
+   * Conflict
+   */
+  409: ApiErrorResponse
+}
 
-export type CreateRegionError = CreateRegionErrors[keyof CreateRegionErrors];
+export type CreateRegionError = CreateRegionErrors[keyof CreateRegionErrors]
 
 export type CreateRegionResponses = {
-    /**
-     * Created
-     */
-    201: unknown;
-};
+  /**
+   * Created
+   */
+  201: RegionDtoReadable
+}
+
+export type CreateRegionResponse =
+  CreateRegionResponses[keyof CreateRegionResponses]
 
 export type ListQualitiesData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/api/qualities';
-};
+  body?: never
+  path?: never
+  query?: never
+  url: '/api/qualities'
+}
 
 export type ListQualitiesErrors = {
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
+  /**
+   * Unauthorized
+   */
+  401: ApiError
+  /**
+   * Forbidden
+   */
+  403: ApiError
+  /**
+   * Not Found
+   */
+  404: ApiError
+}
 
-export type ListQualitiesError = ListQualitiesErrors[keyof ListQualitiesErrors];
+export type ListQualitiesError = ListQualitiesErrors[keyof ListQualitiesErrors]
 
 export type ListQualitiesResponses = {
-    /**
-     * Success
-     */
-    200: unknown;
-};
+  /**
+   * Success
+   */
+  200: unknown
+}
 
 export type CreateQualityData = {
-    body: QualityDtoWritable;
-    path?: never;
-    query?: never;
-    url: '/api/qualities';
-};
+  body: QualityDtoWritable
+  path?: never
+  query?: never
+  url: '/api/qualities'
+}
 
 export type CreateQualityErrors = {
-    /**
-     * Bad Request
-     */
-    400: ApiError;
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-};
+  /**
+   * Bad Request
+   */
+  400: ApiError
+  /**
+   * Unauthorized
+   */
+  401: ApiError
+  /**
+   * Forbidden
+   */
+  403: ApiError
+}
 
-export type CreateQualityError = CreateQualityErrors[keyof CreateQualityErrors];
+export type CreateQualityError = CreateQualityErrors[keyof CreateQualityErrors]
 
 export type CreateQualityResponses = {
-    /**
-     * Created
-     */
-    201: unknown;
-};
+  /**
+   * Created
+   */
+  201: unknown
+}
 
 export type ListProductsData = {
-    body?: never;
-    path?: never;
-    query?: {
-        /**
-         * ID du propriétaire des produits
-         */
-        traderId?: number;
-    };
-    url: '/api/products';
-};
-
-export type ListProductsErrors = {
+  body?: never
+  path?: never
+  query?: {
     /**
-     * Unauthorized
+     * ID du propriétaire des produits
      */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
-
-export type ListProductsError = ListProductsErrors[keyof ListProductsErrors];
+    traderId?: number
+  }
+  url: '/api/products'
+}
 
 export type ListProductsResponses = {
-    /**
-     * Success
-     */
-    200: unknown;
-};
+  /**
+   * Liste récupérée avec succès
+   */
+  200: Array<ProductDtoReadable>
+}
+
+export type ListProductsResponse =
+  ListProductsResponses[keyof ListProductsResponses]
 
 export type CreateProductData = {
-    body: HarvestProductDtoWritable | TransformedProductDtoWritable;
-    path?: never;
-    query?: never;
-    url: '/api/products';
-};
+  body: HarvestProductDtoWritable | TransformedProductDtoWritable
+  path?: never
+  query?: never
+  url: '/api/products'
+}
 
 export type CreateProductErrors = {
-    /**
-     * Bad Request
-     */
-    400: ApiError;
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-};
+  /**
+   * Bad Request
+   */
+  400: ApiErrorResponse
+  /**
+   * Conflict
+   */
+  409: ApiErrorResponse
+}
 
-export type CreateProductError = CreateProductErrors[keyof CreateProductErrors];
+export type CreateProductError = CreateProductErrors[keyof CreateProductErrors]
 
 export type CreateProductResponses = {
-    /**
-     * Created
-     */
-    201: unknown;
-};
+  /**
+   * Created
+   */
+  201: ProductDtoReadable
+}
+
+export type CreateProductResponse =
+  CreateProductResponses[keyof CreateProductResponses]
 
 export type ListQualityControlsData = {
-    body?: never;
-    path: {
-        productId: number;
-    };
-    query?: never;
-    url: '/api/products/{productId}/quality-controls';
-};
-
-export type ListQualityControlsErrors = {
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
-
-export type ListQualityControlsError = ListQualityControlsErrors[keyof ListQualityControlsErrors];
+  body?: never
+  path: {
+    productId: number
+  }
+  query?: never
+  url: '/api/products/{productId}/quality-controls'
+}
 
 export type ListQualityControlsResponses = {
-    /**
-     * Success
-     */
-    200: unknown;
-};
+  /**
+   * Liste récupérée avec succès
+   */
+  200: Array<QualityControlDtoReadable>
+}
+
+export type ListQualityControlsResponse =
+  ListQualityControlsResponses[keyof ListQualityControlsResponses]
 
 export type CreateQualityControlData = {
-    body: QualityControlDtoWritable;
-    path?: never;
-    query?: never;
-    url: '/api/products/{productId}/quality-controls';
-};
+  body: QualityControlDtoWritable
+  path?: never
+  query?: never
+  url: '/api/products/{productId}/quality-controls'
+}
 
 export type CreateQualityControlErrors = {
-    /**
-     * Bad Request
-     */
-    400: ApiError;
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-};
+  /**
+   * Bad Request
+   */
+  400: ApiErrorResponse
+  /**
+   * Conflict
+   */
+  409: ApiErrorResponse
+}
 
-export type CreateQualityControlError = CreateQualityControlErrors[keyof CreateQualityControlErrors];
+export type CreateQualityControlError =
+  CreateQualityControlErrors[keyof CreateQualityControlErrors]
 
 export type CreateQualityControlResponses = {
-    /**
-     * Created
-     */
-    201: unknown;
-};
+  /**
+   * Created
+   */
+  201: QualityControlDtoReadable
+}
+
+export type CreateQualityControlResponse =
+  CreateQualityControlResponses[keyof CreateQualityControlResponses]
 
 export type ListLanguagesData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/api/languages';
-};
+  body?: never
+  path?: never
+  query?: never
+  url: '/api/languages'
+}
 
 export type ListLanguagesResponses = {
-    /**
-     * Liste récupérée avec succès
-     */
-    200: Array<LanguageDto>;
-};
+  /**
+   * Liste récupérée avec succès
+   */
+  200: Array<LanguageDto>
+}
 
-export type ListLanguagesResponse = ListLanguagesResponses[keyof ListLanguagesResponses];
+export type ListLanguagesResponse =
+  ListLanguagesResponses[keyof ListLanguagesResponses]
 
 export type CreateLanguageData = {
-    body: LanguageDto;
-    path?: never;
-    query?: never;
-    url: '/api/languages';
-};
+  body: LanguageDto
+  path?: never
+  query?: never
+  url: '/api/languages'
+}
 
 export type CreateLanguageErrors = {
-    /**
-     * Erreur de validation ou JSON invalide
-     */
-    400: ApiErrorResponse;
-};
+  /**
+   * Erreur de validation ou JSON invalide
+   */
+  400: ApiErrorResponse
+}
 
-export type CreateLanguageError = CreateLanguageErrors[keyof CreateLanguageErrors];
+export type CreateLanguageError =
+  CreateLanguageErrors[keyof CreateLanguageErrors]
 
 export type CreateLanguageResponses = {
-    /**
-     * Langue créée avec succès
-     */
-    201: LanguageDto;
-};
+  /**
+   * Langue créée avec succès
+   */
+  201: LanguageDto
+}
 
-export type CreateLanguageResponse = CreateLanguageResponses[keyof CreateLanguageResponses];
+export type CreateLanguageResponse =
+  CreateLanguageResponses[keyof CreateLanguageResponses]
 
 export type CreateDocumentData = {
-    body: DocumentDtoWritable;
-    path?: never;
-    query?: never;
-    url: '/api/documents';
-};
+  body: DocumentDtoWritable
+  path?: never
+  query?: never
+  url: '/api/documents'
+}
 
 export type CreateDocumentErrors = {
-    /**
-     * Bad Request
-     */
-    400: ApiError;
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-};
+  /**
+   * Bad Request
+   */
+  400: ApiErrorResponse
+  /**
+   * Conflict
+   */
+  409: ApiErrorResponse
+}
 
-export type CreateDocumentError = CreateDocumentErrors[keyof CreateDocumentErrors];
+export type CreateDocumentError =
+  CreateDocumentErrors[keyof CreateDocumentErrors]
 
 export type CreateDocumentResponses = {
-    /**
-     * Created
-     */
-    201: unknown;
-};
+  /**
+   * Created
+   */
+  201: DocumentDtoReadable
+}
+
+export type CreateDocumentResponse =
+  CreateDocumentResponses[keyof CreateDocumentResponses]
 
 export type ListCooperativesData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/api/cooperatives';
-};
-
-export type ListCooperativesErrors = {
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
-
-export type ListCooperativesError = ListCooperativesErrors[keyof ListCooperativesErrors];
+  body?: never
+  path?: never
+  query?: never
+  url: '/api/cooperatives'
+}
 
 export type ListCooperativesResponses = {
-    /**
-     * Success
-     */
-    200: unknown;
-};
+  /**
+   * Liste récupérée avec succès
+   */
+  200: Array<CooperativeDtoReadable>
+}
+
+export type ListCooperativesResponse =
+  ListCooperativesResponses[keyof ListCooperativesResponses]
 
 export type CreateCooperativeData = {
-    body: CooperativeDtoWritable;
-    path?: never;
-    query?: never;
-    url: '/api/cooperatives';
-};
+  body: CooperativeDtoWritable
+  path?: never
+  query?: never
+  url: '/api/cooperatives'
+}
 
 export type CreateCooperativeErrors = {
-    /**
-     * Bad Request
-     */
-    400: ApiError;
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-};
+  /**
+   * Bad Request
+   */
+  400: ApiErrorResponse
+  /**
+   * Conflict
+   */
+  409: ApiErrorResponse
+}
 
-export type CreateCooperativeError = CreateCooperativeErrors[keyof CreateCooperativeErrors];
+export type CreateCooperativeError =
+  CreateCooperativeErrors[keyof CreateCooperativeErrors]
 
 export type CreateCooperativeResponses = {
-    /**
-     * Created
-     */
-    201: unknown;
-};
+  /**
+   * Created
+   */
+  201: CooperativeDtoReadable
+}
+
+export type CreateCooperativeResponse =
+  CreateCooperativeResponses[keyof CreateCooperativeResponses]
 
 export type ListContractOffersData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/api/contracts';
-};
-
-export type ListContractOffersErrors = {
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
-
-export type ListContractOffersError = ListContractOffersErrors[keyof ListContractOffersErrors];
+  body?: never
+  path?: never
+  query?: never
+  url: '/api/contracts'
+}
 
 export type ListContractOffersResponses = {
-    /**
-     * Success
-     */
-    200: unknown;
-};
+  /**
+   * Liste récupérée avec succès
+   */
+  200: Array<ContractOfferDtoReadable>
+}
+
+export type ListContractOffersResponse =
+  ListContractOffersResponses[keyof ListContractOffersResponses]
 
 export type CreateContractOfferData = {
-    body: ContractOfferDtoWritable;
-    path?: never;
-    query?: never;
-    url: '/api/contracts';
-};
+  body: ContractOfferDtoWritable
+  path?: never
+  query?: never
+  url: '/api/contracts'
+}
 
 export type CreateContractOfferErrors = {
-    /**
-     * Bad Request
-     */
-    400: ApiError;
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-};
+  /**
+   * Bad Request
+   */
+  400: ApiErrorResponse
+  /**
+   * Conflict
+   */
+  409: ApiErrorResponse
+}
 
-export type CreateContractOfferError = CreateContractOfferErrors[keyof CreateContractOfferErrors];
+export type CreateContractOfferError =
+  CreateContractOfferErrors[keyof CreateContractOfferErrors]
 
 export type CreateContractOfferResponses = {
-    /**
-     * Created
-     */
-    201: unknown;
-};
+  /**
+   * Created
+   */
+  201: ContractOfferDtoReadable
+}
+
+export type CreateContractOfferResponse =
+  CreateContractOfferResponses[keyof CreateContractOfferResponses]
 
 export type SendContactMessageData = {
-    body: ContactRequestDto;
-    path?: never;
-    query?: never;
-    url: '/api/contact';
-};
+  body: ContactRequestDto
+  path?: never
+  query?: never
+  url: '/api/contact'
+}
 
 export type SendContactMessageErrors = {
-    /**
-     * Erreur de validation
-     */
-    400: ApiErrorResponse;
-    /**
-     * Erreur interne du serveur
-     */
-    500: ApiErrorResponse;
-};
+  /**
+   * Erreur de validation
+   */
+  400: ApiErrorResponse
+  /**
+   * Erreur interne du serveur
+   */
+  500: ApiErrorResponse
+}
 
-export type SendContactMessageError = SendContactMessageErrors[keyof SendContactMessageErrors];
+export type SendContactMessageError =
+  SendContactMessageErrors[keyof SendContactMessageErrors]
 
 export type SendContactMessageResponses = {
-    /**
-     * Message envoyé avec succès
-     */
-    200: unknown;
-};
+  /**
+   * Message envoyé avec succès
+   */
+  200: unknown
+}
 
 export type LogoutData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/api/auth/signout';
-};
+  body?: never
+  path?: never
+  query?: never
+  url: '/api/auth/signout'
+}
 
 export type LogoutResponses = {
-    /**
-     * Utilisateur déconnecté avec succès
-     */
-    200: unknown;
-};
+  /**
+   * Utilisateur déconnecté avec succès
+   */
+  200: unknown
+}
 
 export type AuthenticateUserData = {
-    body: LoginRequest;
-    path?: never;
-    query?: never;
-    url: '/api/auth/signin';
-};
+  body: LoginRequest
+  path?: never
+  query?: never
+  url: '/api/auth/signin'
+}
 
 export type AuthenticateUserErrors = {
-    /**
-     * Requête mal formée (loginRequest invalide)
-     */
-    400: ApiErrorResponse;
-    /**
-     * Échec de l'authentification
-     */
-    401: ApiErrorResponse;
-};
+  /**
+   * Requête mal formée (loginRequest invalide)
+   */
+  400: ApiErrorResponse
+  /**
+   * Échec de l'authentification
+   */
+  401: ApiErrorResponse
+}
 
-export type AuthenticateUserError = AuthenticateUserErrors[keyof AuthenticateUserErrors];
+export type AuthenticateUserError =
+  AuthenticateUserErrors[keyof AuthenticateUserErrors]
 
 export type AuthenticateUserResponses = {
-    /**
-     * Utilisateur authentifié avec succès
-     */
-    200: UserDetailDtoReadable;
-};
+  /**
+   * Utilisateur authentifié avec succès
+   */
+  200: UserDetailDtoReadable
+}
 
-export type AuthenticateUserResponse = AuthenticateUserResponses[keyof AuthenticateUserResponses];
+export type AuthenticateUserResponse =
+  AuthenticateUserResponses[keyof AuthenticateUserResponses]
 
 export type ListAuctionsData = {
-    body?: never;
-    path?: never;
-    query?: {
-        /**
-         * ID du trader pour filtrer les enchères
-         */
-        traderId?: number;
-        /**
-         * Status pour filtrer les enchères
-         */
-        status?: string;
-    };
-    url: '/api/auctions';
-};
-
-export type ListAuctionsErrors = {
+  body?: never
+  path?: never
+  query?: {
     /**
-     * Unauthorized
+     * ID du trader pour filtrer les enchères
      */
-    401: ApiError;
+    traderId?: number
     /**
-     * Forbidden
+     * Status pour filtrer les enchères
      */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
-
-export type ListAuctionsError = ListAuctionsErrors[keyof ListAuctionsErrors];
+    status?: string
+  }
+  url: '/api/auctions'
+}
 
 export type ListAuctionsResponses = {
-    /**
-     * Success
-     */
-    200: unknown;
-};
+  /**
+   * Liste récupérée avec succès
+   */
+  200: Array<AuctionDtoReadable>
+}
+
+export type ListAuctionsResponse =
+  ListAuctionsResponses[keyof ListAuctionsResponses]
 
 export type CreateAuctionData = {
-    body: AuctionDtoWritable;
-    path?: never;
-    query?: never;
-    url: '/api/auctions';
-};
+  body: AuctionDtoWritable
+  path?: never
+  query?: never
+  url: '/api/auctions'
+}
 
 export type CreateAuctionErrors = {
-    /**
-     * Bad Request
-     */
-    400: ApiError;
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-};
+  /**
+   * Bad Request
+   */
+  400: ApiErrorResponse
+  /**
+   * Conflict
+   */
+  409: ApiErrorResponse
+}
 
-export type CreateAuctionError = CreateAuctionErrors[keyof CreateAuctionErrors];
+export type CreateAuctionError = CreateAuctionErrors[keyof CreateAuctionErrors]
 
 export type CreateAuctionResponses = {
-    /**
-     * Created
-     */
-    201: unknown;
-};
+  /**
+   * Created
+   */
+  201: AuctionDtoReadable
+}
+
+export type CreateAuctionResponse =
+  CreateAuctionResponses[keyof CreateAuctionResponses]
 
 export type ListBidsData = {
-    body?: never;
-    path: {
-        /**
-         * Identifiant de la ressource
-         */
-        auctionId: number;
-    };
-    query?: never;
-    url: '/api/auctions/{auctionId}/bids/';
-};
-
-export type ListBidsErrors = {
+  body?: never
+  path: {
     /**
-     * Unauthorized
+     * Identifiant de la ressource
      */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
-
-export type ListBidsError = ListBidsErrors[keyof ListBidsErrors];
+    auctionId: number
+  }
+  query?: never
+  url: '/api/auctions/{auctionId}/bids/'
+}
 
 export type ListBidsResponses = {
-    /**
-     * Success
-     */
-    200: unknown;
-};
+  /**
+   * Liste récupérée avec succès
+   */
+  200: Array<BidDtoReadable>
+}
+
+export type ListBidsResponse = ListBidsResponses[keyof ListBidsResponses]
 
 export type CreateBidData = {
-    body: BidDtoWritable;
-    path?: never;
-    query?: never;
-    url: '/api/auctions/{auctionId}/bids/';
-};
+  body: BidDtoWritable
+  path?: never
+  query?: never
+  url: '/api/auctions/{auctionId}/bids/'
+}
 
 export type CreateBidErrors = {
-    /**
-     * Bad Request
-     */
-    400: ApiError;
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-};
+  /**
+   * Bad Request
+   */
+  400: ApiErrorResponse
+  /**
+   * Conflict
+   */
+  409: ApiErrorResponse
+}
 
-export type CreateBidError = CreateBidErrors[keyof CreateBidErrors];
+export type CreateBidError = CreateBidErrors[keyof CreateBidErrors]
 
 export type CreateBidResponses = {
-    /**
-     * Created
-     */
-    201: unknown;
-};
+  /**
+   * Created
+   */
+  201: BidDtoReadable
+}
+
+export type CreateBidResponse = CreateBidResponses[keyof CreateBidResponses]
 
 export type ListAuctionStrategiesData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/api/auctions/strategies';
-};
+  body?: never
+  path?: never
+  query?: never
+  url: '/api/auctions/strategies'
+}
 
 export type ListAuctionStrategiesErrors = {
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
+  /**
+   * Unauthorized
+   */
+  401: ApiError
+  /**
+   * Forbidden
+   */
+  403: ApiError
+  /**
+   * Not Found
+   */
+  404: ApiError
+}
 
-export type ListAuctionStrategiesError = ListAuctionStrategiesErrors[keyof ListAuctionStrategiesErrors];
+export type ListAuctionStrategiesError =
+  ListAuctionStrategiesErrors[keyof ListAuctionStrategiesErrors]
 
 export type ListAuctionStrategiesResponses = {
-    /**
-     * Success
-     */
-    200: unknown;
-};
+  /**
+   * Success
+   */
+  200: unknown
+}
 
 export type CreateAuctionStrategyData = {
-    body: AuctionStrategyDtoWritable;
-    path?: never;
-    query?: never;
-    url: '/api/auctions/strategies';
-};
+  body: AuctionStrategyDtoWritable
+  path?: never
+  query?: never
+  url: '/api/auctions/strategies'
+}
 
 export type CreateAuctionStrategyErrors = {
-    /**
-     * Bad Request
-     */
-    400: ApiError;
-    /**
-     * Unauthorized
-     */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-};
+  /**
+   * Bad Request
+   */
+  400: ApiError
+  /**
+   * Unauthorized
+   */
+  401: ApiError
+  /**
+   * Forbidden
+   */
+  403: ApiError
+}
 
-export type CreateAuctionStrategyError = CreateAuctionStrategyErrors[keyof CreateAuctionStrategyErrors];
+export type CreateAuctionStrategyError =
+  CreateAuctionStrategyErrors[keyof CreateAuctionStrategyErrors]
 
 export type CreateAuctionStrategyResponses = {
-    /**
-     * Created
-     */
-    201: unknown;
-};
+  /**
+   * Created
+   */
+  201: unknown
+}
 
 export type ListDocumentsByUserData = {
-    body?: never;
-    path: {
-        /**
-         * Identifiant de la ressource
-         */
-        userId: number;
-    };
-    query?: never;
-    url: '/api/documents/users/{userId}';
-};
-
-export type ListDocumentsByUserErrors = {
+  body?: never
+  path: {
     /**
-     * Unauthorized
+     * Identifiant de la ressource
      */
-    401: ApiError;
-    /**
-     * Forbidden
-     */
-    403: ApiError;
-    /**
-     * Not Found
-     */
-    404: ApiError;
-};
-
-export type ListDocumentsByUserError = ListDocumentsByUserErrors[keyof ListDocumentsByUserErrors];
+    userId: number
+  }
+  query?: never
+  url: '/api/documents/users/{userId}'
+}
 
 export type ListDocumentsByUserResponses = {
-    /**
-     * Success
-     */
-    200: unknown;
-};
+  /**
+   * Liste récupérée avec succès
+   */
+  200: Array<DocumentDtoReadable>
+}
+
+export type ListDocumentsByUserResponse =
+  ListDocumentsByUserResponses[keyof ListDocumentsByUserResponses]
 
 export type GetCurrentUserData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/api/auth/me';
-};
+  body?: never
+  path?: never
+  query?: never
+  url: '/api/auth/me'
+}
 
 export type GetCurrentUserErrors = {
-    /**
-     * Utilisateur non authentifié
-     */
-    401: ApiErrorResponse;
-};
+  /**
+   * Utilisateur non authentifié
+   */
+  401: ApiErrorResponse
+}
 
-export type GetCurrentUserError = GetCurrentUserErrors[keyof GetCurrentUserErrors];
+export type GetCurrentUserError =
+  GetCurrentUserErrors[keyof GetCurrentUserErrors]
 
 export type GetCurrentUserResponses = {
-    /**
-     * Utilisateur authentifié
-     */
-    200: UserDetailDtoReadable;
-};
+  /**
+   * Utilisateur authentifié
+   */
+  200: UserDetailDtoReadable
+}
 
-export type GetCurrentUserResponse = GetCurrentUserResponses[keyof GetCurrentUserResponses];
+export type GetCurrentUserResponse =
+  GetCurrentUserResponses[keyof GetCurrentUserResponses]
 
 export type GetApplicationDataData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/api/app';
-};
+  body?: never
+  path?: never
+  query?: never
+  url: '/api/app'
+}
+
+export type GetApplicationDataErrors = {
+  /**
+   * Internal Server Error
+   */
+  500: ApiErrorResponse
+}
+
+export type GetApplicationDataError =
+  GetApplicationDataErrors[keyof GetApplicationDataErrors]
 
 export type GetApplicationDataResponses = {
-    /**
-     * OK
-     */
-    200: ApplicationDataDto;
-};
+  /**
+   * OK
+   */
+  200: ApplicationDataDto
+}
 
-export type GetApplicationDataResponse = GetApplicationDataResponses[keyof GetApplicationDataResponses];
+export type GetApplicationDataResponse =
+  GetApplicationDataResponses[keyof GetApplicationDataResponses]
 
 export type ClientOptions = {
-    baseUrl: 'http://localhost:8080' | (string & {});
-};
+  baseUrl: 'http://localhost:8080' | (string & {})
+}

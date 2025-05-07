@@ -6,6 +6,7 @@ import be.labil.anacarde.domain.dto.user.UserDetailDto;
 import be.labil.anacarde.domain.dto.user.UserListDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -70,7 +71,8 @@ public interface UserApi {
 	 * @return Une ResponseEntity contenant la liste de tous les utilisateurs.
 	 */
 	@Operation(summary = "Lister tous les utilisateurs", description = "Renvoie la liste de tous les utilisateurs présents dans le système.")
-	@ApiResponse(responseCode = "200", description = "Liste récupérée avec succès")
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "Liste récupérée avec succès", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UserListDto.class))))})
 	@GetMapping
 	ResponseEntity<List<? extends UserListDto>> listUsers();
 

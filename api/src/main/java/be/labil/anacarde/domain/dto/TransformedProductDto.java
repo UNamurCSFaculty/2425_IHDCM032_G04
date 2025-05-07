@@ -21,11 +21,6 @@ public class TransformedProductDto extends ProductDto {
 	@NotBlank(message = "L'identifiant est requis")
 	private String identifier;
 
-	/** Emplacement du produit transformé. */
-	@Schema(description = "Emplacement du produit transformé", example = "Zone A", requiredMode = Schema.RequiredMode.REQUIRED)
-	@NotBlank(message = "La localisation est requise")
-	private String location;
-
 	/** Transformateur associé au produit transformé. */
 	@Schema(description = "Transformateur associé", requiredMode = Schema.RequiredMode.REQUIRED)
 	private TransformerDetailDto transformer;

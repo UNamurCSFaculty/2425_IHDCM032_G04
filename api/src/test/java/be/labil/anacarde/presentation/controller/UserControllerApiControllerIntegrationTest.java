@@ -36,8 +36,7 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 	 */
 	@Test
 	public void testGetUser() throws Exception {
-		mockMvc.perform(
-				get("/api/users/" + getMainTestUser().getId()).accept(MediaType.APPLICATION_JSON).with(jwtAndCsrf()))
+		mockMvc.perform(get("/api/users/" + getMainTestUser().getId()).accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk()).andExpect(jsonPath("$.email").value(getMainTestUser().getEmail()));
 	}
 
@@ -96,8 +95,7 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 
 		String jsonContent = node.toString();
 
-		mockMvc.perform(
-				post("/api/users").contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwtAndCsrf()))
+		mockMvc.perform(post("/api/users").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
 				.andExpect(status().isBadRequest()).andExpect(jsonPath("$.errors[0].message",
 						containsString("Le champ discriminant 'type' est obligatoire.")))
 				.andDo(print());
@@ -109,8 +107,7 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 	 */
 	@Test
 	public void testListUsers() throws Exception {
-		mockMvc.perform(get("/api/users").accept(MediaType.APPLICATION_JSON).with(jwtAndCsrf()))
-				.andExpect(status().isOk())
+		mockMvc.perform(get("/api/users").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
 				// print
 				.andExpect(jsonPath("$").isArray());
 	}
@@ -136,7 +133,7 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 		String jsonContent = node.toString();
 
 		mockMvc.perform(put("/api/users/" + getMainTestUser().getId()).contentType(MediaType.APPLICATION_JSON)
-				.content(jsonContent).with(jwtAndCsrf())).andExpect(status().isOk())
+				.content(jsonContent)).andExpect(status().isOk())
 				.andExpect(jsonPath("$.firstName").value("John Updated"));
 
 		// Vérifie que le mot de passe est correctement haché après la mise à jour
@@ -157,11 +154,11 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 	@Test
 	public void testDeleteUser() throws Exception {
 		// TODO delete
-		// mockMvc.perform(delete("/api/users/" + getSecondTestUser().getId()).with(jwtAndCsrf()))
+		// mockMvc.perform(delete("/api/users/" + getSecondTestUser().getId()))
 		// .andExpect(status().isNoContent());
 		//
 		// mockMvc.perform(get("/api/users/" +
-		// getSecondTestUser().getId()).with(jwtAndCsrf())).andExpect(status().isNotFound());
+		// getSecondTestUser().getId())).andExpect(status().isNotFound());
 	}
 
 	/**
@@ -173,8 +170,7 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 		Integer userId = getMainTestUser().getId();
 
 		mockMvc.perform(post("/api/users/" + userId + "/roles/" + getAdminTestRole().getName())
-				.accept(MediaType.APPLICATION_JSON).with(jwtAndCsrf())).andExpect(status().isOk())
-				.andExpect(jsonPath("$.roles").isArray())
+				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andExpect(jsonPath("$.roles").isArray())
 				.andExpect(jsonPath("$.roles[?(@.name=='" + getAdminTestRole().getName() + "')]").exists());
 	}
 
@@ -189,7 +185,7 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 		String jsonContent = objectMapper.writeValueAsString(roleNames);
 
 		mockMvc.perform(put("/api/users/" + userId + "/roles").contentType(MediaType.APPLICATION_JSON)
-				.content(jsonContent).accept(MediaType.APPLICATION_JSON).with(jwtAndCsrf())).andExpect(status().isOk())
+				.content(jsonContent).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
 				.andExpect(jsonPath("$.roles").isArray())
 				.andExpect(jsonPath("$.roles[?(@.name=='ROLE_ADMIN')]").exists())
 				.andExpect(jsonPath("$.roles[?(@.name=='ROLE_USER')]").exists());
@@ -201,7 +197,7 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 	 */
 	@Test
 	public void testGetUserNotFound() throws Exception {
-		mockMvc.perform(get("/api/users/999999").with(jwtAndCsrf())).andExpect(status().isNotFound());
+		mockMvc.perform(get("/api/users/999999")).andExpect(status().isNotFound());
 	}
 
 	/**
@@ -232,8 +228,7 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 	@Test
 	public void testAddRoleToUserUserNotFound() throws Exception {
 		int nonExistentUserId = 999999;
-		mockMvc.perform(
-				post("/api/users/" + nonExistentUserId + "/roles/" + getUserTestRole().getName()).with(jwtAndCsrf()))
+		mockMvc.perform(post("/api/users/" + nonExistentUserId + "/roles/" + getUserTestRole().getName()))
 				.andExpect(status().isNotFound());
 	}
 
@@ -245,7 +240,7 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 	public void testAddRoleToUserRoleNotFound() throws Exception {
 		Integer userId = getMainTestUser().getId();
 		String nonExistentRoleName = "ROLE_NON_EXISTENT";
-		mockMvc.perform(post("/api/users/" + userId + "/roles/" + nonExistentRoleName).with(jwtAndCsrf()))
+		mockMvc.perform(post("/api/users/" + userId + "/roles/" + nonExistentRoleName))
 				.andExpect(status().isNotFound());
 	}
 
@@ -260,7 +255,7 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 		String jsonContent = objectMapper.writeValueAsString(roleNames);
 
 		mockMvc.perform(put("/api/users/" + nonExistentUserId + "/roles").contentType(MediaType.APPLICATION_JSON)
-				.content(jsonContent).with(jwtAndCsrf())).andExpect(status().isNotFound());
+				.content(jsonContent)).andExpect(status().isNotFound());
 	}
 
 	/**
@@ -273,7 +268,8 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 		List<String> roleNames = List.of("ROLE_NON_EXISTENT");
 		String jsonContent = objectMapper.writeValueAsString(roleNames);
 
-		mockMvc.perform(put("/api/users/" + userId + "/roles").contentType(MediaType.APPLICATION_JSON)
-				.content(jsonContent).with(jwtAndCsrf())).andExpect(status().isNotFound());
+		mockMvc.perform(
+				put("/api/users/" + userId + "/roles").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				.andExpect(status().isNotFound());
 	}
 }

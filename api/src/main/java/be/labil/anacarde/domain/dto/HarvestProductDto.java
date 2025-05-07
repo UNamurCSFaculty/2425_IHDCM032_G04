@@ -16,11 +16,6 @@ import lombok.NoArgsConstructor;
 @Schema(description = "Objet de transfert de données pour les produits récoltés.")
 public class HarvestProductDto extends ProductDto {
 
-	/** Magasin associé au produit récolté. */
-	@NotNull(message = "Le magasin est requis")
-	@Schema(description = "Magasin associé au produit récolté", requiredMode = Schema.RequiredMode.REQUIRED)
-	private StoreDetailDto store;
-
 	/** Producteur associé au produit récolté. */
 	@NotNull(message = "Le producteur est requis")
 	@Schema(description = "Producteur associé au produit récolté", requiredMode = Schema.RequiredMode.REQUIRED)

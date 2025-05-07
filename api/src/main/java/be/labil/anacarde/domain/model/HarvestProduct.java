@@ -15,10 +15,6 @@ import lombok.experimental.SuperBuilder;
 public class HarvestProduct extends Product {
 
 	@ManyToOne(optional = false)
-	@JoinColumn(name = "store_id", nullable = false)
-	private Store store;
-
-	@ManyToOne(optional = false)
 	@JoinColumn(name = "producer_id", nullable = false)
 	private Producer producer;
 

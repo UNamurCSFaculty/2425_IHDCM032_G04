@@ -1,5 +1,5 @@
-import {createFileRoute, redirect} from '@tanstack/react-router'
-import {SignupForm} from "@/components/SignupForm.tsx";
+import { SignupForm } from '@/components/SignupForm.tsx'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/signup')({
   component: RouteComponent,

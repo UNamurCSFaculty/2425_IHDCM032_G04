@@ -30,8 +30,8 @@ public class ContractOfferApiControllerIntegrationTest extends AbstractIntegrati
 	 */
 	@Test
 	public void testGetContractOffer() throws Exception {
-		mockMvc.perform(get("/api/contracts/" + getMainTestContractOffer().getId()).accept(MediaType.APPLICATION_JSON)
-				.with(jwtAndCsrf())).andExpect(status().isOk()).andExpect(jsonPath("$.status").value("Accepted"))
+		mockMvc.perform(get("/api/contracts/" + getMainTestContractOffer().getId()).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.status").value("Accepted"))
 				.andExpect(jsonPath("$.pricePerKg").value("20.0"))
 				.andExpect(jsonPath("$.seller.id").value(getProducerTestUser().getId()))
 				.andExpect(jsonPath("$.buyer.id").value(getTransformerTestUser().getId()));
@@ -64,8 +64,7 @@ public class ContractOfferApiControllerIntegrationTest extends AbstractIntegrati
 		ObjectNode node = objectMapper.valueToTree(newContractOffer);
 		String jsonContent = node.toString();
 
-		mockMvc.perform(
-				post("/api/contracts").contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwtAndCsrf()))
+		mockMvc.perform(post("/api/contracts").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
 				.andExpect(status().isCreated())
 				.andExpect(header().string("Location", containsString("/api/contracts/")))
 				.andExpect(jsonPath("$.pricePerKg").value("999.99")).andExpect(jsonPath("$.status").value("Waiting"))
@@ -84,8 +83,8 @@ public class ContractOfferApiControllerIntegrationTest extends AbstractIntegrati
 	 */
 	@Test
 	public void testListContractOffers() throws Exception {
-		mockMvc.perform(get("/api/contracts").accept(MediaType.APPLICATION_JSON).with(jwtAndCsrf()))
-				.andExpect(status().isOk()).andExpect(jsonPath("$").isArray());
+		mockMvc.perform(get("/api/contracts").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+				.andExpect(jsonPath("$").isArray());
 	}
 
 	/**
@@ -116,8 +115,8 @@ public class ContractOfferApiControllerIntegrationTest extends AbstractIntegrati
 		String jsonContent = node.toString();
 
 		mockMvc.perform(put("/api/contracts/" + getMainTestContractOffer().getId())
-				.contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwtAndCsrf()))
-				.andExpect(status().isOk()).andExpect(jsonPath("$.status").value("Refused"));
+				.contentType(MediaType.APPLICATION_JSON).content(jsonContent)).andExpect(status().isOk())
+				.andExpect(jsonPath("$.status").value("Refused"));
 	}
 
 	/**
@@ -126,10 +125,9 @@ public class ContractOfferApiControllerIntegrationTest extends AbstractIntegrati
 	 */
 	@Test
 	public void testDeleteContractOffer() throws Exception {
-		mockMvc.perform(delete("/api/contracts/" + getMainTestContractOffer().getId()).with(jwtAndCsrf()))
+		mockMvc.perform(delete("/api/contracts/" + getMainTestContractOffer().getId()))
 				.andExpect(status().isNoContent());
 
-		mockMvc.perform(get("/api/contracts/" + getMainTestContractOffer().getId()).with(jwtAndCsrf()))
-				.andExpect(status().isNotFound());
+		mockMvc.perform(get("/api/contracts/" + getMainTestContractOffer().getId())).andExpect(status().isNotFound());
 	}
 }

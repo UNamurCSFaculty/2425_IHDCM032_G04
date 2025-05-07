@@ -26,9 +26,8 @@ public class RegionApiControllerIntegrationTest extends AbstractIntegrationTest 
 	 */
 	@Test
 	public void testGetRegion() throws Exception {
-		mockMvc.perform(get("/api/regions/" + getMainTestRegion().getId()).accept(MediaType.APPLICATION_JSON)
-				.with(jwtAndCsrf())).andExpect(status().isOk())
-				.andExpect(jsonPath("$.name").value(getMainTestRegion().getName()));
+		mockMvc.perform(get("/api/regions/" + getMainTestRegion().getId()).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.name").value(getMainTestRegion().getName()));
 	}
 
 	/**
@@ -42,8 +41,7 @@ public class RegionApiControllerIntegrationTest extends AbstractIntegrationTest 
 		ObjectNode node = objectMapper.valueToTree(newRegionDto);
 		String jsonContent = node.toString();
 
-		mockMvc.perform(
-				post("/api/regions").contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwtAndCsrf()))
+		mockMvc.perform(post("/api/regions").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
 				.andExpect(status().isCreated()).andExpect(header().string("Location", containsString("/api/regions/")))
 				.andExpect(jsonPath("$.name").value("Nouvelle Région"));
 
@@ -56,8 +54,8 @@ public class RegionApiControllerIntegrationTest extends AbstractIntegrationTest 
 	 */
 	@Test
 	public void testListRegions() throws Exception {
-		mockMvc.perform(get("/api/regions").accept(MediaType.APPLICATION_JSON).with(jwtAndCsrf()))
-				.andExpect(status().isOk()).andExpect(jsonPath("$").isArray())
+		mockMvc.perform(get("/api/regions").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+				.andExpect(jsonPath("$").isArray())
 				.andExpect(jsonPath("$.length()").value(regionRepository.findAll().size()));
 	}
 
@@ -66,8 +64,9 @@ public class RegionApiControllerIntegrationTest extends AbstractIntegrationTest 
 	 */
 	@Test
 	public void testListRegionsByCarrier() throws Exception {
-		mockMvc.perform(get("/api/regions?carrierId=" + getMainTestCarrier().getId()).accept(MediaType.APPLICATION_JSON)
-				.with(jwtAndCsrf())).andExpect(status().isOk()).andExpect(jsonPath("$").isArray())
+		mockMvc.perform(
+				get("/api/regions?carrierId=" + getMainTestCarrier().getId()).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()).andExpect(jsonPath("$").isArray())
 				.andExpect(jsonPath("$.length()").value(1));
 	}
 
@@ -83,7 +82,7 @@ public class RegionApiControllerIntegrationTest extends AbstractIntegrationTest 
 		String jsonContent = node.toString();
 
 		mockMvc.perform(put("/api/regions/" + getMainTestRegion().getId()).contentType(MediaType.APPLICATION_JSON)
-				.content(jsonContent).with(jwtAndCsrf())).andExpect(status().isOk())
+				.content(jsonContent)).andExpect(status().isOk())
 				.andExpect(jsonPath("$.name").value("Région Modifiée"));
 	}
 
@@ -92,10 +91,10 @@ public class RegionApiControllerIntegrationTest extends AbstractIntegrationTest 
 	 */
 	@Test
 	public void testDeleteRegion() throws Exception {
-		// mockMvc.perform(delete("/api/regions/" + getMainTestRegion().getId()).with(jwtAndCsrf()))
+		// mockMvc.perform(delete("/api/regions/" + getMainTestRegion().getId()))
 		// .andExpect(status().isNoContent());
 		//
-		// mockMvc.perform(get("/api/regions/" + getMainTestRegion().getId()).with(jwtAndCsrf()))
+		// mockMvc.perform(get("/api/regions/" + getMainTestRegion().getId()))
 		// .andExpect(status().isNotFound());
 	}
 
@@ -107,8 +106,8 @@ public class RegionApiControllerIntegrationTest extends AbstractIntegrationTest 
 		Integer carrierId = getMainTestCarrier().getId();
 		Integer regionId = getMainTestRegion().getId();
 
-		mockMvc.perform(put("/api/regions/" + regionId + "/carriers/" + carrierId)
-				.contentType(MediaType.APPLICATION_JSON).with(jwtAndCsrf())).andExpect(status().isOk())
-				.andExpect(jsonPath("$").doesNotExist());
+		mockMvc.perform(
+				put("/api/regions/" + regionId + "/carriers/" + carrierId).contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()).andExpect(jsonPath("$").doesNotExist());
 	}
 }

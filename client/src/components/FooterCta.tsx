@@ -1,5 +1,5 @@
-import { Link } from '@tanstack/react-router'
 import { Button } from './ui/button'
+import { Link } from '@tanstack/react-router'
 
 export function FooterCta() {
   return (

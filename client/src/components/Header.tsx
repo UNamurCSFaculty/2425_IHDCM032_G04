@@ -1,17 +1,20 @@
-import { useUserStore } from '@/store/userStore'
-import logo from '@/assets/logo.svg'
-import avatar from '@/assets/avatar.webp'
-import { Link, useNavigate } from '@tanstack/react-router'
-import { Menu, ShoppingCart, CircleDollarSign, History, ArrowLeftRight, Package, FileText } from 'lucide-react'
 import { logout as logoutApiCall } from '@/api/generated/sdk.gen'
-
+import avatar from '@/assets/avatar.webp'
+import logo from '@/assets/logo.svg'
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -27,13 +30,17 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
+import { useUserStore } from '@/store/userStore'
+import { Link, useNavigate } from '@tanstack/react-router'
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+  ArrowLeftRight,
+  CircleDollarSign,
+  FileText,
+  History,
+  Menu,
+  Package,
+  ShoppingCart,
+} from 'lucide-react'
 
 interface MenuItem {
   title: string
@@ -69,7 +76,7 @@ export function Header() {
       items: [
         {
           title: 'Acheter un produit',
-          description: 'Créer une nouvelle offre d\'achat',
+          description: "Créer une nouvelle offre d'achat",
           icon: <ShoppingCart className="size-5 shrink-0" />,
           url: '/achats/nouvelle-enchere',
         },
@@ -126,7 +133,7 @@ export function Header() {
           description: 'Détails de mes dépôts passés',
           icon: <History className="size-5 shrink-0" />,
           url: '/depots/mes-produits',
-        }
+        },
       ],
     },
     {
@@ -185,10 +192,7 @@ export function Header() {
                 <DropdownMenuTrigger asChild>
                   <button className="flex items-center gap-2">
                     <Avatar>
-                      <AvatarImage
-                        src={user?.avatarUrl || avatar}
-                        alt="Avatar utilisateur"
-                      />
+                      <AvatarImage src={avatar} alt="Avatar utilisateur" />
                       <AvatarFallback>{user?.firstName?.[0]}</AvatarFallback>
                     </Avatar>
                     <span className="font-medium">{user?.firstName}</span>
@@ -259,14 +263,15 @@ export function Header() {
                             <Avatar>
                               <AvatarImage
                                 src={
-                                  user?.avatarUrl ||
                                   'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
                                 }
                                 alt="Avatar utilisateur"
                               />
-                              <AvatarFallback>{user?.name?.[0]}</AvatarFallback>
+                              <AvatarFallback>{user?.firstName}</AvatarFallback>
                             </Avatar>
-                            <span className="font-medium">{user?.name}</span>
+                            <span className="font-medium">
+                              {user?.lastName}
+                            </span>
                           </button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>

@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from '../ui/select'
 import { FieldErrors } from './field-errors'
-import type { LanguageDtoReadable } from '@/api/generated'
+import type { LanguageDto } from '@/api/generated'
 import { useAppData } from '@/store/appStore'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
@@ -22,7 +22,7 @@ export function SelectLanguageField({
   disabled,
   required = true,
 }: SelectLanguageFieldProps) {
-  const field = useFieldContext<LanguageDtoReadable>()
+  const field = useFieldContext<LanguageDto>()
   const appData = useAppData()
   const { t } = useTranslation()
   const currentId = field.state.value.id?.toString()

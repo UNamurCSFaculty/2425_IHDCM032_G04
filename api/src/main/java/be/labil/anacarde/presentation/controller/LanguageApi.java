@@ -4,6 +4,7 @@ import be.labil.anacarde.application.exception.ApiErrorResponse;
 import be.labil.anacarde.domain.dto.LanguageDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -53,7 +54,8 @@ public interface LanguageApi {
 	 * Renvoie la liste de toutes les langues présentes dans le système.
 	 */
 	@Operation(summary = "Lister toutes les langues", description = "Renvoie la liste de toutes les langues présentes dans le système.")
-	@ApiResponse(responseCode = "200", description = "Liste récupérée avec succès")
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "Liste récupérée avec succès", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LanguageDto.class))))})
 	@GetMapping
 	ResponseEntity<List<LanguageDto>> listLanguages();
 

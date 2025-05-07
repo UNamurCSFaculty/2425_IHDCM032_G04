@@ -1,9 +1,15 @@
 package be.labil.anacarde.presentation.controller;
 
+import be.labil.anacarde.application.exception.ApiErrorResponse;
 import be.labil.anacarde.domain.dto.CooperativeDto;
 import be.labil.anacarde.domain.dto.ValidationGroups;
-import be.labil.anacarde.presentation.controller.annotations.*;
+import be.labil.anacarde.presentation.controller.annotations.ApiValidId;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.groups.Default;
@@ -21,29 +27,39 @@ public interface CooperativeApi {
 
 	@Operation(summary = "Obtenir une coopérative")
 	@GetMapping("/{id}")
-	@ApiResponseGet
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "", content = @Content(schema = @Schema(implementation = CooperativeDto.class))),
+			@ApiResponse(responseCode = "404", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
 	ResponseEntity<CooperativeDto> getCooperative(@ApiValidId @PathVariable("id") Integer id);
 
 	@Operation(summary = "Créer une coopérative")
 	@PostMapping
-	@ApiResponsePost
+	@ApiResponses({
+			@ApiResponse(responseCode = "201", description = "", content = @Content(schema = @Schema(implementation = CooperativeDto.class))),
+			@ApiResponse(responseCode = "400", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
+			@ApiResponse(responseCode = "409", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
 	ResponseEntity<CooperativeDto> createCooperative(
 			@Validated({Default.class, ValidationGroups.Create.class}) @RequestBody CooperativeDto cooperativeDto);
 
 	@Operation(summary = "Mettre à jour une coopérative")
 	@PutMapping(value = "/{id}", consumes = "application/json")
-	@ApiResponsePut
+	@ApiResponses({
+			@ApiResponse(responseCode = "201", description = "", content = @Content(schema = @Schema(implementation = CooperativeDto.class))),
+			@ApiResponse(responseCode = "400", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
+			@ApiResponse(responseCode = "409", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
 	ResponseEntity<CooperativeDto> updateCooperative(@ApiValidId @PathVariable("id") Integer id,
 			@Validated({Default.class, ValidationGroups.Update.class}) @RequestBody CooperativeDto cooperativeDto);
 
 	@Operation(summary = "Lister toutes les coopératives")
 	@GetMapping
-	@ApiResponseGet
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "Liste récupérée avec succès", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CooperativeDto.class))))})
 	ResponseEntity<List<CooperativeDto>> listCooperatives();
 
 	@Operation(summary = "Supprimer une coopérative")
 	@DeleteMapping("/{id}")
-	@ApiResponseDelete
 	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@ApiResponses({@ApiResponse(responseCode = "200", description = "", content = @Content(schema = @Schema())),
+			@ApiResponse(responseCode = "404", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
 	ResponseEntity<Void> deleteCooperative(@ApiValidId @PathVariable("id") Integer id);
 }

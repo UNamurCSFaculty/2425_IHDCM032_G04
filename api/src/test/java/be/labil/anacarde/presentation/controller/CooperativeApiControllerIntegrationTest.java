@@ -39,7 +39,7 @@ public class CooperativeApiControllerIntegrationTest extends AbstractIntegration
 	public void testGetCooperative() throws Exception {
 		Cooperative coop = getMainTestCooperative();
 
-		mockMvc.perform(get("/api/cooperatives/" + coop.getId()).accept(MediaType.APPLICATION_JSON).with(jwtAndCsrf()))
+		mockMvc.perform(get("/api/cooperatives/" + coop.getId()).accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk()).andExpect(jsonPath("$.name").value(coop.getName()))
 				.andExpect(jsonPath("$.address").value(coop.getAddress()))
 				.andExpect(jsonPath("$.presidentId").value(coop.getPresident().getId()));
@@ -61,8 +61,8 @@ public class CooperativeApiControllerIntegrationTest extends AbstractIntegration
 
 		ObjectNode json = objectMapper.valueToTree(dto);
 
-		mockMvc.perform(post("/api/cooperatives").contentType(MediaType.APPLICATION_JSON).content(json.toString())
-				.with(jwtAndCsrf())).andExpect(status().isCreated())
+		mockMvc.perform(post("/api/cooperatives").contentType(MediaType.APPLICATION_JSON).content(json.toString()))
+				.andExpect(status().isCreated())
 				.andExpect(header().string("Location", containsString("/api/cooperatives/")))
 				.andExpect(jsonPath("$.name").value("Coopérative de Natitingou"))
 				.andExpect(jsonPath("$.address").value("Quartier Kpébié, Natitingou, Bénin"))
@@ -79,9 +79,8 @@ public class CooperativeApiControllerIntegrationTest extends AbstractIntegration
 	 */
 	@Test
 	public void testListCooperatives() throws Exception {
-		mockMvc.perform(get("/api/cooperatives").accept(MediaType.APPLICATION_JSON).with(jwtAndCsrf()))
-				.andExpect(status().isOk()).andExpect(jsonPath("$").isArray())
-				.andExpect(jsonPath("$.length()").value(1));
+		mockMvc.perform(get("/api/cooperatives").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+				.andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(1));
 	}
 
 	/**
@@ -104,8 +103,7 @@ public class CooperativeApiControllerIntegrationTest extends AbstractIntegration
 		ObjectNode json = objectMapper.valueToTree(dto);
 
 		mockMvc.perform(put("/api/cooperatives/" + cooperative.getId()).contentType(MediaType.APPLICATION_JSON)
-				.content(json.toString()).with(jwtAndCsrf())).andExpect(status().isOk())
-				.andExpect(jsonPath("$.name").value("Coop MAJ"))
+				.content(json.toString())).andExpect(status().isOk()).andExpect(jsonPath("$.name").value("Coop MAJ"))
 				.andExpect(jsonPath("$.address").value(cooperative.getAddress()))
 				.andExpect(jsonPath("$.creationDate").value("2020-05-20T00:00:00"))
 				.andExpect(jsonPath("$.presidentId").value(cooperative.getPresident().getId()));
@@ -118,10 +116,9 @@ public class CooperativeApiControllerIntegrationTest extends AbstractIntegration
 	 */
 	@Test
 	public void testDeleteCooperative() throws Exception {
-		mockMvc.perform(delete("/api/cooperatives/" + getMainTestCooperative().getId()).with(jwtAndCsrf()))
+		mockMvc.perform(delete("/api/cooperatives/" + getMainTestCooperative().getId()))
 				.andExpect(status().isNoContent());
 
-		mockMvc.perform(get("/api/cooperatives/" + getMainTestCooperative().getId()).with(jwtAndCsrf()))
-				.andExpect(status().isNotFound());
+		mockMvc.perform(get("/api/cooperatives/" + getMainTestCooperative().getId())).andExpect(status().isNotFound());
 	}
 }

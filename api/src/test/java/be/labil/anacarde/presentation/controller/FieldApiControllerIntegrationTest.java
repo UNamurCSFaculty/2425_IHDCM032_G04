@@ -27,7 +27,7 @@ public class FieldApiControllerIntegrationTest extends AbstractIntegrationTest {
 	@Test
 	public void testGetField() throws Exception {
 		mockMvc.perform(get("/api/users/" + getProducerTestUser().getId() + "/fields/" + getMainTestField().getId())
-				.accept(MediaType.APPLICATION_JSON).with(jwtAndCsrf())).andExpect(status().isOk())
+				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
 				.andExpect(jsonPath("$.location").value("POINT (2.3522 48.8566)"))
 				.andExpect(jsonPath("$.identifier").value(getMainTestField().getIdentifier()));
 	}
@@ -49,8 +49,8 @@ public class FieldApiControllerIntegrationTest extends AbstractIntegrationTest {
 		String jsonContent = node.toString();
 
 		mockMvc.perform(post("/api/users/" + getProducerTestUser().getId() + "/fields")
-				.contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwtAndCsrf()))
-				.andExpect(status().isCreated()).andExpect(header().string("Location", containsString("/api/users/")))
+				.contentType(MediaType.APPLICATION_JSON).content(jsonContent)).andExpect(status().isCreated())
+				.andExpect(header().string("Location", containsString("/api/users/")))
 				.andExpect(jsonPath("$.location").value("POINT (2.3522 48.8566)"))
 				.andExpect(jsonPath("$.identifier").value("FIELD-666"))
 				.andExpect(jsonPath("$.producer.id").value(getProducerTestUser().getId()));
@@ -66,9 +66,10 @@ public class FieldApiControllerIntegrationTest extends AbstractIntegrationTest {
 	 */
 	@Test
 	public void testListFields() throws Exception {
-		mockMvc.perform(get("/api/users/" + getProducerTestUser().getId() + "/fields")
-				.accept(MediaType.APPLICATION_JSON).with(jwtAndCsrf())).andExpect(status().isOk())
-				.andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(2));
+		mockMvc.perform(
+				get("/api/users/" + getProducerTestUser().getId() + "/fields").accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()).andExpect(jsonPath("$").isArray())
+				.andExpect(jsonPath("$.length()").value(2));
 	}
 
 	/**
@@ -88,8 +89,8 @@ public class FieldApiControllerIntegrationTest extends AbstractIntegrationTest {
 		String jsonContent = node.toString();
 
 		mockMvc.perform(put("/api/users/" + getProducerTestUser().getId() + "/fields/" + getMainTestField().getId())
-				.contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwtAndCsrf()))
-				.andExpect(status().isOk()).andExpect(jsonPath("$.location").value("POINT (1.111 2.222)"))
+				.contentType(MediaType.APPLICATION_JSON).content(jsonContent)).andExpect(status().isOk())
+				.andExpect(jsonPath("$.location").value("POINT (1.111 2.222)"))
 				.andExpect(jsonPath("$.identifier").value("FIELD-UPDATED"));
 	}
 
@@ -101,10 +102,10 @@ public class FieldApiControllerIntegrationTest extends AbstractIntegrationTest {
 	public void testDeleteField() throws Exception {
 		// //TODO: Décommenter quand le delete sera activé
 		// mockMvc.perform(delete("/api/users/"+ getProducerTestUser().getId() +"/fields/" +
-		// getMainTestField().getId()).with(jwtAndCsrf()))
+		// getMainTestField().getId()))
 		// .andExpect(status().isNoContent());
 		//
-		// mockMvc.perform(get("/api/fields/" + getMainTestField().getId()).with(jwtAndCsrf()))
+		// mockMvc.perform(get("/api/fields/" + getMainTestField().getId()))
 		// .andExpect(status().isNotFound());
 	}
 }
