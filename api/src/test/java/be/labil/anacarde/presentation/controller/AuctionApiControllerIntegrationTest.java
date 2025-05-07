@@ -19,7 +19,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
 /** Tests d'intégration pour le contrôleur des enchères. */
 @SpringBootTest
@@ -38,7 +37,8 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 	 */
 	@Test
 	public void testGetAuction() throws Exception {
-		mockMvc.perform(get("/api/auctions/" + getTestAuction().getId()).accept(MediaType.APPLICATION_JSON).with(jwtAndCsrf()))
+		mockMvc.perform(
+				get("/api/auctions/" + getTestAuction().getId()).accept(MediaType.APPLICATION_JSON).with(jwtAndCsrf()))
 				.andExpect(status().isOk()).andExpect(jsonPath("$.price").value("500.0"))
 				.andExpect(jsonPath("$.productQuantity").value("10")).andExpect(jsonPath("$.active").value("true"))
 				.andExpect(jsonPath("$.product.weightKg").value("2000.0")).andExpect(jsonPath("$.bids").isArray())
@@ -77,7 +77,8 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		ObjectNode node = objectMapper.valueToTree(newAuction);
 		String jsonContent = node.toString();
 
-		mockMvc.perform(post("/api/auctions").contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwtAndCsrf()))
+		mockMvc.perform(
+				post("/api/auctions").contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwtAndCsrf()))
 				.andExpect(status().isCreated())
 				.andExpect(header().string("Location", containsString("/api/auctions/")))
 				.andExpect(jsonPath("$.price").value("111.11")).andExpect(jsonPath("$.productQuantity").value("11"))
@@ -114,7 +115,8 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		ObjectNode node = objectMapper.valueToTree(newAuction);
 		String jsonContent = node.toString();
 
-		mockMvc.perform(post("/api/auctions").contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwtAndCsrf()))
+		mockMvc.perform(
+				post("/api/auctions").contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwtAndCsrf()))
 				.andExpect(status().isCreated())
 				.andExpect(header().string("Location", containsString("/api/auctions/")))
 				.andExpect(jsonPath("$.price").value("111.11")).andExpect(jsonPath("$.productQuantity").value("11"))
@@ -133,8 +135,9 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 	 */
 	@Test
 	public void testListAuctions() throws Exception {
-		mockMvc.perform(get("/api/auctions").accept(MediaType.APPLICATION_JSON).with(jwtAndCsrf())).andExpect(status().isOk())
-				.andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(3));
+		mockMvc.perform(get("/api/auctions").accept(MediaType.APPLICATION_JSON).with(jwtAndCsrf()))
+				.andExpect(status().isOk()).andExpect(jsonPath("$").isArray())
+				.andExpect(jsonPath("$.length()").value(3));
 	}
 
 	/**
@@ -193,8 +196,8 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		String jsonContent = "";
 
 		mockMvc.perform(put("/api/auctions/" + getTestAuction().getId() + "/accept")
-				.contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwtAndCsrf())).andExpect(status().isOk())
-				.andExpect(jsonPath("$.productQuantity").value("10"))
+				.contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwtAndCsrf()))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.productQuantity").value("10"))
 				.andExpect(jsonPath("$.status.name").value("Accepté"));
 	}
 
@@ -207,7 +210,8 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		mockMvc.perform(delete("/api/auctions/" + getTestAuction().getId()).with(jwtAndCsrf()))
 				.andExpect(status().isNoContent());
 
-		mockMvc.perform(get("/api/auctions/" + getTestAuction().getId()).accept(MediaType.APPLICATION_JSON).with(jwtAndCsrf()))
+		mockMvc.perform(
+				get("/api/auctions/" + getTestAuction().getId()).accept(MediaType.APPLICATION_JSON).with(jwtAndCsrf()))
 				.andExpect(status().isOk()).andExpect(jsonPath("$.active").value(false));
 	}
 }

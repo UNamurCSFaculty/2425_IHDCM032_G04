@@ -1,7 +1,6 @@
 package be.labil.anacarde.presentation.controller;
 
 import static org.hamcrest.Matchers.containsString;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -129,8 +128,9 @@ public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 		String jsonContent = "";
 
 		mockMvc.perform(put("/api/auctions/" + getTestAuction().getId() + "/bids/" + getTestBid().getId() + "/accept")
-				.contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwtAndCsrf())).andExpect(status().isOk())
-				.andExpect(jsonPath("$.amount").value("10.0")).andExpect(jsonPath("$.status.name").value("Accepté"));
+				.contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwtAndCsrf()))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.amount").value("10.0"))
+				.andExpect(jsonPath("$.status.name").value("Accepté"));
 	}
 
 	/**

@@ -64,7 +64,8 @@ public class StoreApiControllerIntegrationTest extends AbstractIntegrationTest {
 		ObjectNode node = objectMapper.valueToTree(newStore);
 		String jsonContent = node.toString();
 
-		mockMvc.perform(post("/api/stores").contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwtAndCsrf()))
+		mockMvc.perform(
+				post("/api/stores").contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwtAndCsrf()))
 				.andExpect(status().isCreated()).andExpect(header().string("Location", containsString("/api/stores/")))
 				.andExpect(jsonPath("$.name").value("Nassara"))
 				.andExpect(jsonPath("$.location").value("POINT (2.3522 48.8566)"))
