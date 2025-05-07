@@ -11,20 +11,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
 /** Tests d'intégration pour le contrôleur des magasins. */
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
 public class StoreApiControllerIntegrationTest extends AbstractIntegrationTest {
 
-	private @Autowired MockMvc mockMvc;
 	private @Autowired ObjectMapper objectMapper;
 	private @Autowired StoreRepository storeRepository;
 
@@ -46,7 +38,7 @@ public class StoreApiControllerIntegrationTest extends AbstractIntegrationTest {
 	 */
 	@Test
 	public void testGetStore() throws Exception {
-		mockMvc.perform(get("/api/stores/" + getMainTestStore().getId()).accept(MediaType.APPLICATION_JSON).with(jwt()))
+		mockMvc.perform(get("/api/stores/" + getMainTestStore().getId()).accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk()).andExpect(jsonPath("$.location").value("POINT (2.3522 48.8566)"));
 	}
 
@@ -64,8 +56,7 @@ public class StoreApiControllerIntegrationTest extends AbstractIntegrationTest {
 		ObjectNode node = objectMapper.valueToTree(newStore);
 		String jsonContent = node.toString();
 
-		mockMvc.perform(
-				post("/api/stores").contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwtAndCsrf()))
+		mockMvc.perform(post("/api/stores").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
 				.andExpect(status().isCreated()).andExpect(header().string("Location", containsString("/api/stores/")))
 				.andExpect(jsonPath("$.name").value("Nassara"))
 				.andExpect(jsonPath("$.location").value("POINT (2.3522 48.8566)"))
@@ -82,7 +73,7 @@ public class StoreApiControllerIntegrationTest extends AbstractIntegrationTest {
 	 */
 	@Test
 	public void testListStores() throws Exception {
-		mockMvc.perform(get("/api/stores").accept(MediaType.APPLICATION_JSON).with(jwt())).andExpect(status().isOk())
+		mockMvc.perform(get("/api/stores").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
 				.andExpect(jsonPath("$").isArray());
 	}
 
@@ -101,8 +92,7 @@ public class StoreApiControllerIntegrationTest extends AbstractIntegrationTest {
 		String jsonContent = node.toString();
 
 		mockMvc.perform(put("/api/stores/" + getMainTestStore().getId()).contentType(MediaType.APPLICATION_JSON)
-				.content(jsonContent).with(jwtAndCsrf())).andExpect(status().isOk())
-				.andExpect(jsonPath("$.name").value("Casimir"))
+				.content(jsonContent)).andExpect(status().isOk()).andExpect(jsonPath("$.name").value("Casimir"))
 				.andExpect(jsonPath("$.location").value("POINT (1.111 2.222)"));
 	}
 
@@ -113,10 +103,10 @@ public class StoreApiControllerIntegrationTest extends AbstractIntegrationTest {
 	@Test
 	public void testDeleteStore() throws Exception {
 		// TODO delete
-		// mockMvc.perform(delete("/api/stores/" + getMainTestStore().getId()).with(jwt()))
+		// mockMvc.perform(delete("/api/stores/" + getMainTestStore().getId()))
 		// .andExpect(status().isNoContent());
 		//
 		// mockMvc.perform(get("/api/stores/" +
-		// getMainTestStore().getId()).with(jwt())).andExpect(status().isNotFound());
+		// getMainTestStore().getId())).andExpect(status().isNotFound());
 	}
 }

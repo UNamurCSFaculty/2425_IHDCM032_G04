@@ -1,8 +1,8 @@
-import { create } from 'zustand'
 import { type UserDetailDtoReadable } from '@/api/generated/types.gen'
+import { create } from 'zustand'
 
 interface UserState {
-  user: UserDetailDtoReadable | null
+  user?: UserDetailDtoReadable
 
   setUser: (user: UserDetailDtoReadable) => void
   logout: () => void

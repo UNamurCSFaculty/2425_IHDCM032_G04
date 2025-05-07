@@ -1,11 +1,11 @@
-import { Outlet, createRootRouteWithContext } from '@tanstack/react-router'
-import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
-import { Header } from '@/components/Header'
+import type { UserDetailDtoReadable } from '@/api/generated'
 import { Footer } from '@/components/Footer'
 import { FooterCta } from '@/components/FooterCta'
-import type { QueryClient } from '@tanstack/react-query'
-import type { UserDetailDtoReadable } from '@/api/generated'
+import { Header } from '@/components/Header'
 import { ContentSkeleton } from '@/components/Skeleton/ContentSkeleton'
+import type { QueryClient } from '@tanstack/react-query'
+import { Outlet, createRootRouteWithContext } from '@tanstack/react-router'
+import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 
 export interface MyRouterContext {
   user?: UserDetailDtoReadable

@@ -1,10 +1,10 @@
 import NotFound from '@/components/NotFound'
 import { Button } from '@/components/ui/button'
 import {
-  createFileRoute,
   Link,
-  notFound,
   PathParamError,
+  createFileRoute,
+  notFound,
 } from '@tanstack/react-router'
 import { z } from 'zod'
 

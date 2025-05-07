@@ -17,9 +17,6 @@ public class TransformedProduct extends Product {
 	@Column(nullable = false)
 	private String identifier;
 
-	@Column(nullable = false)
-	private String location;
-
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "transformer_id", nullable = false)
 	private Transformer transformer;

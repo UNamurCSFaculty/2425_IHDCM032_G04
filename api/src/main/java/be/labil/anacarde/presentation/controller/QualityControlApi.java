@@ -1,9 +1,15 @@
 package be.labil.anacarde.presentation.controller;
 
+import be.labil.anacarde.application.exception.ApiErrorResponse;
 import be.labil.anacarde.domain.dto.QualityControlDto;
 import be.labil.anacarde.domain.dto.ValidationGroups;
-import be.labil.anacarde.presentation.controller.annotations.*;
+import be.labil.anacarde.presentation.controller.annotations.ApiValidId;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.groups.Default;
@@ -22,30 +28,40 @@ public interface QualityControlApi {
 
 	@Operation(summary = "Obtenir un contrôle qualité")
 	@GetMapping("/{id}")
-	@ApiResponseGet
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "", content = @Content(schema = @Schema(implementation = QualityControlDto.class))),
+			@ApiResponse(responseCode = "404", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
 	ResponseEntity<? extends QualityControlDto> getQualityControl(@ApiValidId @PathVariable("id") Integer id);
 
 	@Operation(summary = "Créer un contrôle qualité")
 	@PostMapping
-	@ApiResponsePost
+	@ApiResponses({
+			@ApiResponse(responseCode = "201", description = "", content = @Content(schema = @Schema(implementation = QualityControlDto.class))),
+			@ApiResponse(responseCode = "400", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
+			@ApiResponse(responseCode = "409", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
 	ResponseEntity<? extends QualityControlDto> createQualityControl(@Validated({Default.class,
 			ValidationGroups.Create.class}) @RequestBody QualityControlDto qualityControlDto);
 
 	@Operation(summary = "Mettre à jour un contrôle qualité")
 	@PutMapping("/{id}")
-	@ApiResponsePut
+	@ApiResponses({
+			@ApiResponse(responseCode = "201", description = "", content = @Content(schema = @Schema(implementation = QualityControlDto.class))),
+			@ApiResponse(responseCode = "400", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
+			@ApiResponse(responseCode = "409", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
 	ResponseEntity<? extends QualityControlDto> updateQualityControl(@ApiValidId @PathVariable("id") Integer id,
 			@Validated({Default.class,
 					ValidationGroups.Update.class}) @RequestBody QualityControlDto qualityControlDto);
 
 	@Operation(summary = "Lister tous les contrôles qualité d’un produit")
 	@GetMapping
-	@ApiResponseGet
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "Liste récupérée avec succès", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = QualityControlDto.class))))})
 	ResponseEntity<List<? extends QualityControlDto>> listQualityControls(@PathVariable("productId") Integer productId);
 
 	@Operation(summary = "Supprimer un contrôle qualité")
 	@DeleteMapping("/{id}")
-	@ApiResponseDelete
 	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@ApiResponses({@ApiResponse(responseCode = "200", description = "", content = @Content(schema = @Schema())),
+			@ApiResponse(responseCode = "404", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
 	ResponseEntity<Void> deleteQualityControl(@ApiValidId @PathVariable("id") Integer id);
 }

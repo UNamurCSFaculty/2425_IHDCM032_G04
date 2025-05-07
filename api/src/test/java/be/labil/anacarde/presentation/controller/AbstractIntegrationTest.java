@@ -383,7 +383,7 @@ public abstract class AbstractIntegrationTest {
 				.phone("+2290197000005").registrationDate(LocalDateTime.now()).language(mainLanguage).enabled(true)
 				.build();
 
-		Set regions = new HashSet<>();
+		Set regions = new HashSet<Region>();
 		regions.add(mainTestRegion);
 		User carrier = Carrier.builder().firstName("Pierre").lastName("Verse").email("pierre@verse.com")
 				.password("$2a$10$abcdefghijklmnopqrstuv1234567890AB").registrationDate(LocalDateTime.now())
@@ -435,7 +435,7 @@ public abstract class AbstractIntegrationTest {
 
 		// A transformed product
 		Product productTransform = TransformedProduct.builder().transformer((Transformer) transformerTestUser)
-				.deliveryDate(LocalDateTime.now()).identifier("XYZ").location("Zone B").weightKg(2000.0).build();
+				.store(mainTestStore).deliveryDate(LocalDateTime.now()).identifier("XYZ").weightKg(2000.0).build();
 		testTransformedProduct = productRepository.save(productTransform);
 
 		AuctionStrategy strategy = AuctionStrategy.builder().name("Meilleure offre").build();

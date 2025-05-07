@@ -30,9 +30,8 @@ public class QualityControlApiControllerIntegrationTest extends AbstractIntegrat
 	@Test
 	public void testGetQualityControl() throws Exception {
 		mockMvc.perform(get("/api/products/" + getMainTestQualityControl().getProduct().getId() + "/quality-controls/"
-				+ getMainTestQualityControl().getId()).accept(MediaType.APPLICATION_JSON).with(jwtAndCsrf()))
-				.andExpect(status().isOk()).andDo(print())
-				.andExpect(jsonPath("$.id").value(getMainTestQualityControl().getId()))
+				+ getMainTestQualityControl().getId()).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+				.andDo(print()).andExpect(jsonPath("$.id").value(getMainTestQualityControl().getId()))
 				.andExpect(jsonPath("$.identifier").value(getMainTestQualityControl().getIdentifier()))
 				.andExpect(jsonPath("$.controlDate")
 						.value(startsWith(getMainTestQualityControl().getControlDate().toString())))
@@ -78,8 +77,7 @@ public class QualityControlApiControllerIntegrationTest extends AbstractIntegrat
 		String content = json.toString();
 
 		mockMvc.perform(post("/api/products/" + getMainTestQualityControl().getProduct().getId() + "/quality-controls")
-				.contentType(MediaType.APPLICATION_JSON).content(content).with(jwtAndCsrf()))
-				.andExpect(status().isCreated())
+				.contentType(MediaType.APPLICATION_JSON).content(content)).andExpect(status().isCreated())
 				.andExpect(header().string("Location", containsString("/quality-controls")))
 				.andExpect(jsonPath("$.identifier").value("QC-002")).andExpect(jsonPath("$.granularity").value(0.5))
 				.andExpect(jsonPath("$.korTest").value(0.8)).andExpect(jsonPath("$.humidity").value(12.5))
@@ -96,7 +94,7 @@ public class QualityControlApiControllerIntegrationTest extends AbstractIntegrat
 	@Test
 	public void testListQualityControls() throws Exception {
 		mockMvc.perform(get("/api/products/" + getMainTestQualityControl().getProduct().getId() + "/quality-controls")
-				.accept(MediaType.APPLICATION_JSON).with(jwtAndCsrf())).andExpect(status().isOk()).andDo(print())
+				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andDo(print())
 				.andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(1));
 	}
 
@@ -132,9 +130,8 @@ public class QualityControlApiControllerIntegrationTest extends AbstractIntegrat
 		String content = json.toString();
 
 		mockMvc.perform(put("/api/products/" + getMainTestQualityControl().getProduct().getId() + "/quality-controls/"
-				+ getMainTestQualityControl().getId()).contentType(MediaType.APPLICATION_JSON).content(content)
-				.with(jwtAndCsrf())).andExpect(status().isOk())
-				.andExpect(jsonPath("$.identifier").value("QC-001-UPDATED"))
+				+ getMainTestQualityControl().getId()).contentType(MediaType.APPLICATION_JSON).content(content))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.identifier").value("QC-001-UPDATED"))
 				.andExpect(jsonPath("$.granularity").value(0.6)).andExpect(jsonPath("$.korTest").value(0.85))
 				.andExpect(jsonPath("$.humidity").value(13.0))
 				.andExpect(jsonPath("$.qualityInspector.id")
@@ -150,11 +147,11 @@ public class QualityControlApiControllerIntegrationTest extends AbstractIntegrat
 	@Test
 	public void testDeleteQualityControl() throws Exception {
 		// mockMvc.perform(delete("/api/products/" + getMainTestQualityControl().getProduct().getId()
-		// + "/quality-controls/" + getMainTestQualityControl().getId()).with(jwtAndCsrf()))
+		// + "/quality-controls/" + getMainTestQualityControl().getId()))
 		// .andExpect(status().isNoContent());
 		//
 		// mockMvc.perform(get("/api/products/" + getMainTestQualityControl().getProduct().getId() +
 		// "/quality-controls/"
-		// + getMainTestQualityControl().getId()).with(jwtAndCsrf())).andExpect(status().isNotFound());
+		// + getMainTestQualityControl().getId())).andExpect(status().isNotFound());
 	}
 }

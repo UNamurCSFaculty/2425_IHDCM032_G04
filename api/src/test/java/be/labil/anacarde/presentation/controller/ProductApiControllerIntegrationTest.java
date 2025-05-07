@@ -32,18 +32,17 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 	 */
 	@Test
 	public void testGetHarvestProduct() throws Exception {
-		mockMvc.perform(get("/api/products/" + getTestHarvestProduct().getId()).accept(MediaType.APPLICATION_JSON)
-				.with(jwtAndCsrf())).andExpect(status().isOk()).andExpect(jsonPath("$.type").value("harvest"))
+		mockMvc.perform(get("/api/products/" + getTestHarvestProduct().getId()).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.type").value("harvest"))
 				.andExpect(jsonPath("$.store.location").value("POINT (2.3522 48.8566)"))
 				.andExpect(jsonPath("$.weightKg").value("2000.0"));
 	}
 
 	@Test
 	public void testGetTransformedProduct() throws Exception {
-		mockMvc.perform(get("/api/products/" + getTestTransformedProduct().getId()).accept(MediaType.APPLICATION_JSON)
-				.with(jwtAndCsrf())).andExpect(status().isOk()).andExpect(jsonPath("$.type").value("transformed"))
-				.andExpect(jsonPath("$.identifier").value("XYZ")).andExpect(jsonPath("$.location").value("Zone B"))
-				.andExpect(jsonPath("$.weightKg").value("2000.0"));
+		mockMvc.perform(get("/api/products/" + getTestTransformedProduct().getId()).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.type").value("transformed"))
+				.andExpect(jsonPath("$.identifier").value("XYZ")).andExpect(jsonPath("$.weightKg").value("2000.0"));
 	}
 
 	/**
@@ -71,8 +70,7 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 		ObjectNode node = objectMapper.valueToTree(newProduct);
 		String jsonContent = node.toString();
 
-		mockMvc.perform(
-				post("/api/products").contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwtAndCsrf()))
+		mockMvc.perform(post("/api/products").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
 				.andExpect(status().isCreated())
 				.andExpect(header().string("Location", containsString("/api/products/")))
 				.andExpect(jsonPath("$.type").value("harvest")).andExpect(jsonPath("$.weightKg").value("200.0"))
@@ -97,16 +95,15 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 
 		TransformedProductDto newProduct = new TransformedProductDto();
 		newProduct.setTransformer(newTransformer);
-		newProduct.setLocation("Zone A"); // TODO coordonnees geopoint?
 		newProduct.setWeightKg(1234567.0);
 		newProduct.setIdentifier("TP001");
 		newProduct.setDeliveryDate(LocalDateTime.now().minusDays(1));
+		newProduct.setStore(newStore);
 
 		ObjectNode node = objectMapper.valueToTree(newProduct);
 		String jsonContent = node.toString();
 
-		mockMvc.perform(
-				post("/api/products").contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwtAndCsrf()))
+		mockMvc.perform(post("/api/products").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
 				.andExpect(status().isCreated())
 				.andExpect(header().string("Location", containsString("/api/products/")))
 				.andExpect(jsonPath("$.type").value("transformed")).andExpect(jsonPath("$.weightKg").value("1234567.0"))
@@ -123,9 +120,8 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 	 */
 	@Test
 	public void testListProducts() throws Exception {
-		mockMvc.perform(get("/api/products").accept(MediaType.APPLICATION_JSON).with(jwtAndCsrf()))
-				.andExpect(status().isOk()).andExpect(jsonPath("$").isArray())
-				.andExpect(jsonPath("$.length()").value(2));
+		mockMvc.perform(get("/api/products").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+				.andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(2));
 	}
 
 	/**
@@ -134,10 +130,10 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 	 */
 	@Test
 	public void testListProductsByTrader() throws Exception {
-		mockMvc.perform(get("/api/products?traderId=" + getTransformerTestUser().getId())
-				.accept(MediaType.APPLICATION_JSON).with(jwtAndCsrf())).andExpect(status().isOk())
-				.andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(1))
-				.andExpect(jsonPath("$[0].type").value("transformed"));
+		mockMvc.perform(
+				get("/api/products?traderId=" + getTransformerTestUser().getId()).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()).andExpect(jsonPath("$").isArray())
+				.andExpect(jsonPath("$.length()").value(1)).andExpect(jsonPath("$[0].type").value("transformed"));
 	}
 
 	/**
@@ -154,7 +150,7 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 		// String jsonContent = node.toString();
 		//
 		// mockMvc.perform(put("/api/products/" + getMainTestProduct().getId())
-		// .contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwtAndCsrf()))
+		// .contentType(MediaType.APPLICATION_JSON).content(jsonContent))
 		// .andExpect(status().isOk())
 		// .andExpect(jsonPath("$.location").value("POINT (1.111 2.222)"));
 	}
@@ -166,10 +162,10 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 	@Test
 	public void testDeleteHarvestProduct() throws Exception {
 		// TODO delete
-		// mockMvc.perform(delete("/api/products/" + getTestHarvestProduct().getId()).with(jwtAndCsrf()))
+		// mockMvc.perform(delete("/api/products/" + getTestHarvestProduct().getId()))
 		// .andExpect(status().isNoContent());
 		//
-		// mockMvc.perform(get("/api/products/" + getTestHarvestProduct().getId()).with(jwtAndCsrf()))
+		// mockMvc.perform(get("/api/products/" + getTestHarvestProduct().getId()))
 		// .andExpect(status().isNotFound());
 	}
 }

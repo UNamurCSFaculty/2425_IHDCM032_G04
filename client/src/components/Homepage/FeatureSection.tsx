@@ -1,7 +1,7 @@
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
-import { Link } from '@tanstack/react-router'
-import { Clock, Lock, Handshake } from 'lucide-react'
 import { Button } from '../ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Link } from '@tanstack/react-router'
+import { Clock, Handshake, Lock } from 'lucide-react'
 
 const features = [
   {
@@ -30,8 +30,7 @@ export function FeaturesSection() {
       <div className="container mx-auto px-6">
         <div className="mb-16 text-center">
           <h2 className="mb-4 text-4xl font-extrabold text-gray-900 sm:text-5xl">
-            Pourquoi choisir <span className="text-green-600">e‑Anacarde</span>
-            ?
+            Pourquoi choisir <span className="text-green-600">e‑Anacarde</span>?
           </h2>
           <p className="mx-auto max-w-2xl text-lg text-gray-700">
             Découvrez comment notre plateforme révolutionne les enchères de noix

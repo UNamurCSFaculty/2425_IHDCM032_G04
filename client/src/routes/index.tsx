@@ -1,12 +1,12 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
 import imgNoix from '@/assets/Noix de cajou bol.webp'
-import { useUserStore } from '@/store/userStore'
-import { Button } from '@/components/ui/button'
-import { ArrowUpRight, UserRound } from 'lucide-react'
-import { FeaturesSection } from '@/components/Homepage/FeatureSection'
 import { BlogSection } from '@/components/Homepage/BlogSection'
 import FaqSection from '@/components/Homepage/FaqSection'
+import { FeaturesSection } from '@/components/Homepage/FeatureSection'
 import { HeroSection } from '@/components/Homepage/HeroSection'
+import { Button } from '@/components/ui/button'
+import { useUserStore } from '@/store/userStore'
+import { Link, createFileRoute } from '@tanstack/react-router'
+import { ArrowUpRight, UserRound } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 export const Route = createFileRoute('/')({
@@ -50,7 +50,8 @@ function RouteComponent() {
                 <div className="flex flex-col justify-center sm:flex-row sm:gap-4 lg:justify-start">
                   <Link to="/login">
                     <Button size="lg">
-                      {t('buttons.connection')} <ArrowUpRight className="!h-5 !w-5" />
+                      {t('buttons.connection')}{' '}
+                      <ArrowUpRight className="!h-5 !w-5" />
                     </Button>
                   </Link>
                   <Link to="/signup">
@@ -59,7 +60,8 @@ function RouteComponent() {
                       size="lg"
                       className="mt-4 sm:mt-0"
                     >
-                      {t('buttons.subscribe')} <UserRound className="!h-5 !w-5" />
+                      {t('buttons.subscribe')}{' '}
+                      <UserRound className="!h-5 !w-5" />
                     </Button>
                   </Link>
                 </div>

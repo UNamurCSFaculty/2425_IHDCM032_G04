@@ -1,6 +1,6 @@
-import { Component, type ErrorInfo, type ReactNode } from 'react'
-import { Link } from '@tanstack/react-router'
 import { Button } from './ui/button'
+import { Link } from '@tanstack/react-router'
+import { Component, type ErrorInfo, type ReactNode } from 'react'
 
 export class ErrorBoundary extends Component<
   { children: ReactNode },

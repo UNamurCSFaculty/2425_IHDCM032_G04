@@ -1,14 +1,14 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { listAuctionsOptions } from '@/api/generated/@tanstack/react-query.gen'
 import {
   Table,
-  TableHeader,
-  TableRow,
-  TableHead,
   TableBody,
   TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from '@/components/ui/table'
-import { listAuctionsOptions } from '@/api/generated/@tanstack/react-query.gen'
 import { useSuspenseQuery } from '@tanstack/react-query'
+import { createFileRoute } from '@tanstack/react-router'
 
 const queryOptions = {
   ...listAuctionsOptions(),

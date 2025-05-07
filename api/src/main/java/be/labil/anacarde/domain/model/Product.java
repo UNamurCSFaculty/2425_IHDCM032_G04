@@ -23,6 +23,10 @@ public abstract class Product extends BaseEntity {
 	@CreationTimestamp
 	private LocalDateTime deliveryDate;
 
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "store_id", nullable = false)
+	private Store store;
+
 	@Column(nullable = false)
 	private Double weightKg;
 

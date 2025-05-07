@@ -14,7 +14,7 @@ import type z from 'zod'
 
 export type UserRegistration = z.infer<typeof zUserRegistration>
 
-export function SignupForm(): React.ComponentProps<'div'> {
+export const SignupForm: React.FC = () => {
   const navigate = useNavigate()
   const { t, i18n } = useTranslation()
   const appData = useAppData()
@@ -58,7 +58,7 @@ export function SignupForm(): React.ComponentProps<'div'> {
     },
     onSubmit({ value }) {
       const validatedValue = zUserRegistration.parse(value)
-      console.log("validatedValue")
+      console.log('validatedValue')
       console.log(validatedValue)
       signinMutation.mutate({ body: validatedValue })
     },

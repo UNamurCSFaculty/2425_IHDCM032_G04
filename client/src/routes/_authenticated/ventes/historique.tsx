@@ -1,33 +1,37 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { useQuery } from '@tanstack/react-query'
-import { listAuctionsOptions } from '@/api/generated/@tanstack/react-query.gen'
 import { type AuctionDtoReadable } from '@/api/generated'
-import { useUserStore } from '@/store/userStore'
+import { listAuctionsOptions } from '@/api/generated/@tanstack/react-query.gen'
 import AuctionsTable from '@/components/auctions/AuctionsTable'
+import { useUserStore } from '@/store/userStore'
+import { useQuery } from '@tanstack/react-query'
+import { createFileRoute } from '@tanstack/react-router'
 
 const listAuctionsQueryOptions = (userId: number) => ({
   ...listAuctionsOptions({ query: { traderId: userId } }),
   staleTime: 10_000,
-});
+})
 
 export const Route = createFileRoute('/_authenticated/ventes/historique')({
   component: RouteComponent,
   loader: async ({ context: { queryClient, user } }) => {
-    return queryClient.ensureQueryData(listAuctionsQueryOptions(user!.id));
+    return queryClient.ensureQueryData(listAuctionsQueryOptions(user!.id))
   },
-});
+})
 
 export function RouteComponent() {
-  const { user } = useUserStore();
+  const { user } = useUserStore()
 
-  const { data } = useQuery(listAuctionsQueryOptions(user!.id));
+  const { data } = useQuery(listAuctionsQueryOptions(user!.id))
 
-  const historyAuctions = (data as AuctionDtoReadable[]).filter((auction) => auction.status.name !== "Ouvert");
+  const historyAuctions = (data as AuctionDtoReadable[]).filter(
+    auction => auction.status.name !== 'Ouvert'
+  )
 
-  return <AuctionsTable 
-            tableTitle="Mes ventes passées" 
-            showColumnBidder={true}
-            showColumnBidderPrice={true}
-            auctions={historyAuctions} 
-          />
+  return (
+    <AuctionsTable
+      tableTitle="Mes ventes passées"
+      showColumnBidder={true}
+      showColumnBidderPrice={true}
+      auctions={historyAuctions}
+    />
+  )
 }

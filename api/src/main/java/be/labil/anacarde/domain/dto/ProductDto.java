@@ -1,9 +1,13 @@
 package be.labil.anacarde.domain.dto;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.swagger.v3.oas.annotations.media.DiscriminatorMapping;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import lombok.Data;
 
@@ -27,6 +31,11 @@ public abstract class ProductDto {
 
 	@Column(nullable = false)
 	private LocalDateTime deliveryDate;
+
+	/** Magasin associé au produit récolté. */
+	@NotNull(message = "Le magasin est requis")
+	@Schema(description = "Magasin associé au produit récolté", requiredMode = Schema.RequiredMode.REQUIRED)
+	private StoreDetailDto store;
 
 	@Schema(description = "Poids en kg du produit", example = "100.0")
 	private Double weightKg;
