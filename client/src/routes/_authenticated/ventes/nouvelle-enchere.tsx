@@ -13,7 +13,7 @@ function RouteComponent() {
   const { user } = useUserStore()
 
   const { data } = useSuspenseQuery({
-    ...listProductsOptions({ query: { traderId: user!.id! } }),
+    ...listProductsOptions({ query: { traderId: user!.id } }),
     staleTime: 10_000
   })
 

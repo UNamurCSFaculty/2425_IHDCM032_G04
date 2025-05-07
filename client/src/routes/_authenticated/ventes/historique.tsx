@@ -23,7 +23,7 @@ const listAuctionsQueryOptions = (userId: number) => ({
 export function RouteComponent() {
   const { user } = useUserStore();
 
-  const { auctionsArray, bidsMap } = useAuctionsWithBids(user!.id!);
+  const { auctionsArray, bidsMap } = useAuctionsWithBids(user!.id);
 
   return (
     <div className="bg-muted flex flex-col p-6 md:p-10">
@@ -57,7 +57,7 @@ export function RouteComponent() {
               <TableBody>
                 {(auctionsArray)
                   .filter((auction) => auction.status.name !== "Ouvert")
-                  .sort((a, b) => b.id! - a.id!)
+                  .sort((a, b) => b.id - a.id)
                   .map((auction) => (
                   <TableRow key={auction.id}>
                     <TableCell>{auction.id}</TableCell>
@@ -77,10 +77,10 @@ export function RouteComponent() {
                     <TableCell>{formatDate(auction.product.deliveryDate)}</TableCell>
                     <TableCell>{auction.price.toLocaleString()} CFA</TableCell>
                     {
-                      bidsMap.get(auction.id!) !== null
+                      bidsMap.get(auction.id) !== null
                       ? <>
-                          <TableCell>{bidsMap.get(auction.id!)?.amount.toLocaleString()} CFA</TableCell>
-                          <TableCell>{bidsMap.get(auction.id!)?.trader.firstName} {bidsMap.get(auction.id!)?.trader.lastName}</TableCell>
+                          <TableCell>{bidsMap.get(auction.id)?.amount.toLocaleString()} CFA</TableCell>
+                          <TableCell>{bidsMap.get(auction.id)?.trader.firstName} {bidsMap.get(auction.id)?.trader.lastName}</TableCell>
                         </>
                       : <>
                           <TableCell>—</TableCell>
@@ -107,7 +107,7 @@ function useAuctionsWithBids(userId: number) {
 
   const bidsQueries = useSuspenseQueries({
     queries: auctionsArray.map((auction) => ({
-      ...listBidsOptions({ path: { auctionId: auction.id! } }),
+      ...listBidsOptions({ path: { auctionId: auction.id } }),
     })),
   });
 
@@ -116,7 +116,7 @@ function useAuctionsWithBids(userId: number) {
   auctionsArray.forEach((auction, index) => {
     const bids = bidsQueries[index].data as BidDtoReadable[];
     const acceptedBid = bids.find((bid) => bid.status.name === "Accepté") || null;
-    bidsMap.set(auction.id!, acceptedBid);
+    bidsMap.set(auction.id, acceptedBid);
   });
 
   return { auctionsArray, bidsMap };

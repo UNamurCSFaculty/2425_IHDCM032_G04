@@ -20,7 +20,7 @@ const listAuctionsQueryOptions = (userId: number) => ({
 export const Route = createFileRoute('/_authenticated/ventes/mes-encheres')({
   component: RouteComponent,
   loader: async ({ context: { queryClient, user } }) => {
-    return queryClient.ensureQueryData(listAuctionsQueryOptions(user.id!))
+    return queryClient.ensureQueryData(listAuctionsQueryOptions(user!.id))
   },
 });
 
@@ -115,14 +115,14 @@ export function RouteComponent() {
                     <TableCell>
                       <Button
                         onClick={() => {
-                          setSelectedAuctionId(auction.id!);
+                          setSelectedAuctionId(auction.id);
                           setIsDialogOpen(true);
                         }}
                       > Voir les offres
                       </Button>
                     </TableCell>
-                    {/* <TableCell><Button onClick={() => { handleEditAuction(auction.id!); }}>Modifier</Button></TableCell> */}
-                    <TableCell><Button onClick={() => { handleDeleteAuction(auction.id!); }}>Supprimer</Button></TableCell>
+                    {/* <TableCell><Button onClick={() => { handleEditAuction(auction.id); }}>Modifier</Button></TableCell> */}
+                    <TableCell><Button onClick={() => { handleDeleteAuction(auction.id); }}>Supprimer</Button></TableCell>
                   </TableRow>
                 ))}
               </TableBody>
