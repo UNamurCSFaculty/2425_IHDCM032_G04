@@ -106,51 +106,7 @@ export type LanguageDto = {
 /**
  * Objet de transfert de données pour les producteurs.
  */
-export type ProducerDetailDtoReadable = {
-    /**
-     * Identifiant de l'utilisateur
-     */
-    readonly id: number;
-    /**
-     * Prénom de l'utilisateur
-     */
-    firstName: string;
-    /**
-     * Nom de famille de l'utilisateur
-     */
-    lastName: string;
-    /**
-     * Adresse email de l'utilisateur
-     */
-    email: string;
-    /**
-     * Date d'enregistrement
-     */
-    readonly registrationDate?: string;
-    /**
-     * Date de validation
-     */
-    readonly validationDate?: string;
-    /**
-     * Compte activé
-     */
-    enabled?: boolean;
-    /**
-     * Adresse postale de l'utilisateur
-     */
-    address?: string;
-    /**
-     * Numéro de téléphone (Bénin, ancien et nouveau formats)
-     */
-    phone?: string;
-    /**
-     * Liste des rôles de l'utilisateur
-     */
-    readonly roles?: Array<RoleDtoReadable>;
-    /**
-     * Identifiant de la langue préférée
-     */
-    language: LanguageDto;
+export type ProducerDetailDtoReadable = TraderDetailDtoReadable & {
     /**
      * Identifiant agricole
      */
@@ -159,48 +115,12 @@ export type ProducerDetailDtoReadable = {
      * Coopérative du producteur
      */
     cooperative?: CooperativeDtoReadable;
-    /**
-     * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
-     */
-    type: 'admin' | 'producer' | 'transformer' | 'quality_inspector' | 'exporter' | 'carrier';
 };
 
 /**
  * Objet de transfert de données pour les producteurs.
  */
-export type ProducerDetailDtoWritable = {
-    /**
-     * Prénom de l'utilisateur
-     */
-    firstName: string;
-    /**
-     * Nom de famille de l'utilisateur
-     */
-    lastName: string;
-    /**
-     * Adresse email de l'utilisateur
-     */
-    email: string;
-    /**
-     * Compte activé
-     */
-    enabled?: boolean;
-    /**
-     * Adresse postale de l'utilisateur
-     */
-    address?: string;
-    /**
-     * Numéro de téléphone (Bénin, ancien et nouveau formats)
-     */
-    phone?: string;
-    /**
-     * Mot de passe de l'utilisateur
-     */
-    password?: string;
-    /**
-     * Identifiant de la langue préférée
-     */
-    language: LanguageDto;
+export type ProducerDetailDtoWritable = TraderDetailDtoWritable & {
     /**
      * Identifiant agricole
      */
@@ -209,10 +129,6 @@ export type ProducerDetailDtoWritable = {
      * Coopérative du producteur
      */
     cooperative?: CooperativeDtoWritable;
-    /**
-     * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
-     */
-    type: 'admin' | 'producer' | 'transformer' | 'quality_inspector' | 'exporter' | 'carrier';
 };
 
 /**
@@ -333,98 +249,12 @@ export type TraderDetailDtoWritable = UserDetailDtoWritable;
 /**
  * Objet de transfert de données pour les transformateurs.
  */
-export type TransformerDetailDtoReadable = {
-    /**
-     * Identifiant de l'utilisateur
-     */
-    readonly id: number;
-    /**
-     * Prénom de l'utilisateur
-     */
-    firstName: string;
-    /**
-     * Nom de famille de l'utilisateur
-     */
-    lastName: string;
-    /**
-     * Adresse email de l'utilisateur
-     */
-    email: string;
-    /**
-     * Date d'enregistrement
-     */
-    readonly registrationDate?: string;
-    /**
-     * Date de validation
-     */
-    readonly validationDate?: string;
-    /**
-     * Compte activé
-     */
-    enabled?: boolean;
-    /**
-     * Adresse postale de l'utilisateur
-     */
-    address?: string;
-    /**
-     * Numéro de téléphone (Bénin, ancien et nouveau formats)
-     */
-    phone?: string;
-    /**
-     * Liste des rôles de l'utilisateur
-     */
-    readonly roles?: Array<RoleDtoReadable>;
-    /**
-     * Identifiant de la langue préférée
-     */
-    language: LanguageDto;
-    /**
-     * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
-     */
-    type: 'admin' | 'producer' | 'transformer' | 'quality_inspector' | 'exporter' | 'carrier';
-};
+export type TransformerDetailDtoReadable = TraderDetailDtoReadable;
 
 /**
  * Objet de transfert de données pour les transformateurs.
  */
-export type TransformerDetailDtoWritable = {
-    /**
-     * Prénom de l'utilisateur
-     */
-    firstName: string;
-    /**
-     * Nom de famille de l'utilisateur
-     */
-    lastName: string;
-    /**
-     * Adresse email de l'utilisateur
-     */
-    email: string;
-    /**
-     * Compte activé
-     */
-    enabled?: boolean;
-    /**
-     * Adresse postale de l'utilisateur
-     */
-    address?: string;
-    /**
-     * Numéro de téléphone (Bénin, ancien et nouveau formats)
-     */
-    phone?: string;
-    /**
-     * Mot de passe de l'utilisateur
-     */
-    password?: string;
-    /**
-     * Identifiant de la langue préférée
-     */
-    language: LanguageDto;
-    /**
-     * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
-     */
-    type: 'admin' | 'producer' | 'transformer' | 'quality_inspector' | 'exporter' | 'carrier';
-};
+export type TransformerDetailDtoWritable = TraderDetailDtoWritable;
 
 /**
  * Data Transfer Object pour un utilisateur avec toutes les informations
@@ -575,6 +405,10 @@ export type StoreDetailDtoReadable = {
      */
     readonly id: number;
     /**
+     * Nom du store
+     */
+    name: string;
+    /**
      * Coordonnées géographiques du store (au format GeoJSON, WKT ou équivalent)
      */
     location: string;
@@ -588,6 +422,10 @@ export type StoreDetailDtoReadable = {
  * Objet de transfert de données pour un entrepôt (store).
  */
 export type StoreDetailDtoWritable = {
+    /**
+     * Nom du store
+     */
+    name: string;
     /**
      * Coordonnées géographiques du store (au format GeoJSON, WKT ou équivalent)
      */
@@ -1010,6 +848,18 @@ export type AuctionDtoReadable = {
      * Valeurs d'option associées à l'enchère
      */
     auctionOptionValues?: Array<AuctionOptionValueDtoReadable>;
+    /**
+     * Trader ayant créé l'enchère
+     */
+    trader: ExporterDetailDtoReadable | ProducerDetailDtoReadable | TransformerDetailDtoReadable;
+    /**
+     * Statut de l'enchère
+     */
+    status: TradeStatusDtoReadable;
+    /**
+     * Liste des offres posées sur l'enchère
+     */
+    bids?: Array<BidDtoReadable>;
 };
 
 /**
@@ -1044,6 +894,18 @@ export type AuctionDtoWritable = {
      * Valeurs d'option associées à l'enchère
      */
     auctionOptionValues?: Array<AuctionOptionValueDtoWritable>;
+    /**
+     * Trader ayant créé l'enchère
+     */
+    trader: ExporterDetailDtoWritable | ProducerDetailDtoWritable | TransformerDetailDtoWritable;
+    /**
+     * Statut de l'enchère
+     */
+    status: TradeStatusDtoWritable;
+    /**
+     * Liste des offres posées sur l'enchère
+     */
+    bids?: Array<BidDtoWritable>;
 };
 
 /**
@@ -1139,17 +1001,13 @@ export type BidDtoReadable = {
      */
     amount: number;
     /**
-     * Date de l'enchère
-     */
-    auctionDate: string;
-    /**
      * Date de création de l'offre
      */
     readonly creationDate?: string;
     /**
-     * Enchère associée à l'offre
+     * Identifiant de l'enchère associée à l'offre
      */
-    auction: AuctionDtoReadable;
+    auctionId: number;
     /**
      * Trader ayant passé l'offre
      */
@@ -1157,7 +1015,7 @@ export type BidDtoReadable = {
     /**
      * Statut de l'offre
      */
-    status: BidStatusDtoReadable;
+    status: TradeStatusDtoReadable;
 };
 
 /**
@@ -1169,13 +1027,9 @@ export type BidDtoWritable = {
      */
     amount: number;
     /**
-     * Date de l'enchère
+     * Identifiant de l'enchère associée à l'offre
      */
-    auctionDate: string;
-    /**
-     * Enchère associée à l'offre
-     */
-    auction: AuctionDtoWritable;
+    auctionId: number;
     /**
      * Trader ayant passé l'offre
      */
@@ -1183,13 +1037,13 @@ export type BidDtoWritable = {
     /**
      * Statut de l'offre
      */
-    status: BidStatusDtoWritable;
+    status: TradeStatusDtoWritable;
 };
 
 /**
  * Objet de transfert de données pour le statut d'une offre d'achat.
  */
-export type BidStatusDtoReadable = {
+export type TradeStatusDtoReadable = {
     /**
      * Identifiant unique du statut
      */
@@ -1203,7 +1057,7 @@ export type BidStatusDtoReadable = {
 /**
  * Objet de transfert de données pour le statut d'une offre d'achat.
  */
-export type BidStatusDtoWritable = {
+export type TradeStatusDtoWritable = {
     /**
      * Nom du statut
      */
@@ -2840,6 +2694,46 @@ export type UpdateAuctionResponses = {
     200: unknown;
 };
 
+export type AcceptAuctionData = {
+    body?: never;
+    path: {
+        /**
+         * Identifiant de la ressource
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/auctions/{id}/accept';
+};
+
+export type AcceptAuctionErrors = {
+    /**
+     * Bad Request
+     */
+    400: ApiError;
+    /**
+     * Unauthorized
+     */
+    401: ApiError;
+    /**
+     * Forbidden
+     */
+    403: ApiError;
+    /**
+     * Not Found
+     */
+    404: ApiError;
+};
+
+export type AcceptAuctionError = AcceptAuctionErrors[keyof AcceptAuctionErrors];
+
+export type AcceptAuctionResponses = {
+    /**
+     * Updated successfully
+     */
+    200: unknown;
+};
+
 export type DeleteBidData = {
     body?: never;
     path: {
@@ -2920,6 +2814,10 @@ export type UpdateBidData = {
         /**
          * Identifiant de la ressource
          */
+        auctionId: number;
+        /**
+         * Identifiant de la ressource
+         */
         bidId: number;
     };
     query?: never;
@@ -2948,6 +2846,50 @@ export type UpdateBidErrors = {
 export type UpdateBidError = UpdateBidErrors[keyof UpdateBidErrors];
 
 export type UpdateBidResponses = {
+    /**
+     * Updated successfully
+     */
+    200: unknown;
+};
+
+export type AcceptBidData = {
+    body?: never;
+    path: {
+        /**
+         * Identifiant de la ressource
+         */
+        auctionId: number;
+        /**
+         * Identifiant de la ressource
+         */
+        bidId: number;
+    };
+    query?: never;
+    url: '/api/auctions/{auctionId}/bids/{bidId}/accept';
+};
+
+export type AcceptBidErrors = {
+    /**
+     * Bad Request
+     */
+    400: ApiError;
+    /**
+     * Unauthorized
+     */
+    401: ApiError;
+    /**
+     * Forbidden
+     */
+    403: ApiError;
+    /**
+     * Not Found
+     */
+    404: ApiError;
+};
+
+export type AcceptBidError = AcceptBidErrors[keyof AcceptBidErrors];
+
+export type AcceptBidResponses = {
     /**
      * Updated successfully
      */
@@ -3803,18 +3745,42 @@ export type AuthenticateUserResponse = AuthenticateUserResponses[keyof Authentic
 export type ListAuctionsData = {
     body?: never;
     path?: never;
-    query?: never;
+    query?: {
+        /**
+         * ID du trader pour filtrer les enchères
+         */
+        traderId?: number;
+        /**
+         * Status pour filtrer les enchères
+         */
+        status?: string;
+    };
     url: '/api/auctions';
 };
 
-export type ListAuctionsResponses = {
+export type ListAuctionsErrors = {
     /**
-     * Liste des enchères
+     * Unauthorized
      */
-    200: Array<AuctionDtoReadable>;
+    401: ApiError;
+    /**
+     * Forbidden
+     */
+    403: ApiError;
+    /**
+     * Not Found
+     */
+    404: ApiError;
 };
 
-export type ListAuctionsResponse = ListAuctionsResponses[keyof ListAuctionsResponses];
+export type ListAuctionsError = ListAuctionsErrors[keyof ListAuctionsErrors];
+
+export type ListAuctionsResponses = {
+    /**
+     * Success
+     */
+    200: unknown;
+};
 
 export type CreateAuctionData = {
     body: AuctionDtoWritable;

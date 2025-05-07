@@ -3,6 +3,7 @@ package be.labil.anacarde.domain.model;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -33,8 +34,8 @@ public class Auction extends BaseEntity {
 	@Column(nullable = false)
 	private Boolean active;
 
-	@ManyToOne(optional = false)
-	@JoinColumn(name = "strategy_id", nullable = false)
+	@ManyToOne(optional = true) // TODO: implement strategy
+	@JoinColumn(name = "strategy_id", nullable = true)
 	private AuctionStrategy strategy;
 
 	@ManyToOne(optional = false)
@@ -44,4 +45,15 @@ public class Auction extends BaseEntity {
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "auction_id")
 	private Set<AuctionOptionValue> auctionOptionValues;
+
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "trader_id", nullable = false)
+	private Trader trader;
+
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "status_id", nullable = false)
+	private TradeStatus status;
+
+	@OneToMany(mappedBy = "auctionId", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+	private List<Bid> bids;
 }

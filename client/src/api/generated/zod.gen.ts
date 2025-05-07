@@ -21,49 +21,6 @@ export const zLanguageDto = z.object({
     name: z.string().min(1)
 });
 
-export const zProducerDetailDto = z.object({
-    id: z.number().int().readonly(),
-    firstName: z.string().min(1),
-    lastName: z.string().min(1),
-    email: z.string().min(1),
-    registrationDate: z.iso.datetime().readonly().optional(),
-    validationDate: z.iso.datetime().readonly().optional(),
-    enabled: z.boolean().optional(),
-    address: z.string().optional(),
-    phone: z.string().regex(/^(?:\+229)?(?:01[2-9]\d{7}|[2-9]\d{7})$/).optional(),
-    password: z.string().optional(),
-    roles: z.array(zRoleDto).readonly().optional(),
-    language: zLanguageDto,
-    agriculturalIdentifier: z.string().min(1),
-    cooperative: zCooperativeDto.optional(),
-    type: z.enum([
-        'admin',
-        'producer',
-        'transformer',
-        'quality_inspector',
-        'exporter',
-        'carrier'
-    ])
-});
-
-export const zFieldDto = z.object({
-    id: z.number().int().readonly(),
-    identifier: z.string().optional(),
-    location: z.string().optional(),
-    producer: zProducerDetailDto.optional()
-});
-
-export const zApiErrorErrors = z.object({
-    path: z.string().optional(),
-    message: z.string().optional(),
-    errorCode: z.string().optional()
-});
-
-export const zApiError = z.object({
-    message: z.string().optional(),
-    errors: z.array(zApiErrorErrors).optional()
-});
-
 export const zUserDetailDto = z.object({
     id: z.number().int().readonly(),
     firstName: z.string().min(1),
@@ -87,6 +44,31 @@ export const zUserDetailDto = z.object({
     ])
 });
 
+export const zTraderDetailDto = zUserDetailDto;
+
+export const zProducerDetailDto = zTraderDetailDto.and(z.object({
+    agriculturalIdentifier: z.string().min(1),
+    cooperative: zCooperativeDto.optional()
+}));
+
+export const zFieldDto = z.object({
+    id: z.number().int().readonly(),
+    identifier: z.string().optional(),
+    location: z.string().optional(),
+    producer: zProducerDetailDto.optional()
+});
+
+export const zApiErrorErrors = z.object({
+    path: z.string().optional(),
+    message: z.string().optional(),
+    errorCode: z.string().optional()
+});
+
+export const zApiError = z.object({
+    message: z.string().optional(),
+    errors: z.array(zApiErrorErrors).optional()
+});
+
 export const zAdminDetailDto = zUserDetailDto;
 
 export const zCarrierDetailDto = zUserDetailDto.and(z.object({
@@ -94,34 +76,11 @@ export const zCarrierDetailDto = zUserDetailDto.and(z.object({
     regionIds: z.array(z.number().int())
 }));
 
-export const zTraderDetailDto = zUserDetailDto;
-
 export const zExporterDetailDto = zTraderDetailDto;
 
 export const zQualityInspectorDetailDto = zUserDetailDto;
 
-export const zTransformerDetailDto = z.object({
-    id: z.number().int().readonly(),
-    firstName: z.string().min(1),
-    lastName: z.string().min(1),
-    email: z.string().min(1),
-    registrationDate: z.iso.datetime().readonly().optional(),
-    validationDate: z.iso.datetime().readonly().optional(),
-    enabled: z.boolean().optional(),
-    address: z.string().optional(),
-    phone: z.string().regex(/^(?:\+229)?(?:01[2-9]\d{7}|[2-9]\d{7})$/).optional(),
-    password: z.string().optional(),
-    roles: z.array(zRoleDto).readonly().optional(),
-    language: zLanguageDto,
-    type: z.enum([
-        'admin',
-        'producer',
-        'transformer',
-        'quality_inspector',
-        'exporter',
-        'carrier'
-    ])
-});
+export const zTransformerDetailDto = zTraderDetailDto;
 
 export const zErrorDetail = z.object({
     field: z.string().optional(),
@@ -139,6 +98,7 @@ export const zApiErrorResponse = z.object({
 
 export const zStoreDetailDto = z.object({
     id: z.number().int().readonly(),
+    name: z.string(),
     location: z.string(),
     userId: z.number().int()
 });
@@ -240,6 +200,24 @@ export const zAuctionOptionValueDto = z.object({
     optionValue: z.string().min(1)
 });
 
+export const zTradeStatusDto = z.object({
+    id: z.number().int().readonly(),
+    name: z.string().min(1)
+});
+
+export const zBidDto = z.object({
+    id: z.number().int().readonly(),
+    amount: z.number(),
+    creationDate: z.iso.datetime().readonly().optional(),
+    auctionId: z.number().int(),
+    trader: z.union([
+        zExporterDetailDto,
+        zProducerDetailDto,
+        zTransformerDetailDto
+    ]),
+    status: zTradeStatusDto
+});
+
 export const zAuctionDto = z.object({
     id: z.number().int().readonly(),
     price: z.number(),
@@ -252,32 +230,20 @@ export const zAuctionDto = z.object({
         zHarvestProductDto,
         zTransformedProductDto
     ]),
-    auctionOptionValues: z.array(zAuctionOptionValueDto).optional()
-});
-
-export const zBidStatusDto = z.object({
-    id: z.number().int().readonly(),
-    name: z.string().min(1)
-});
-
-export const zBidDto = z.object({
-    id: z.number().int().readonly(),
-    amount: z.number(),
-    auctionDate: z.iso.datetime(),
-    creationDate: z.iso.datetime().readonly().optional(),
-    auction: zAuctionDto,
+    auctionOptionValues: z.array(zAuctionOptionValueDto).optional(),
     trader: z.union([
         zExporterDetailDto,
         zProducerDetailDto,
         zTransformerDetailDto
     ]),
-    status: zBidStatusDto
+    status: zTradeStatusDto,
+    bids: z.array(zBidDto).optional()
 });
 
 export const zContactRequestDto = z.object({
     name: z.string().min(1),
     email: z.string().min(1),
-    message: z.string().min(0).max(2000)
+    message: z.string().min(0).max(500)
 });
 
 export const zLoginRequest = z.object({
@@ -384,8 +350,6 @@ export const zListLanguagesResponse = z.array(zLanguageDto);
 export const zCreateLanguageResponse = zLanguageDto;
 
 export const zAuthenticateUserResponse = zUserDetailDto;
-
-export const zListAuctionsResponse = z.array(zAuctionDto);
 
 export const zGetCurrentUserResponse = zUserDetailDto;
 

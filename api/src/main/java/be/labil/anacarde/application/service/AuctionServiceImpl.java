@@ -4,7 +4,9 @@ import be.labil.anacarde.application.exception.ResourceNotFoundException;
 import be.labil.anacarde.domain.dto.AuctionDto;
 import be.labil.anacarde.domain.mapper.AuctionMapper;
 import be.labil.anacarde.domain.model.Auction;
+import be.labil.anacarde.domain.model.TradeStatus;
 import be.labil.anacarde.infrastructure.persistence.AuctionRepository;
+import be.labil.anacarde.infrastructure.persistence.TradeStatusRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -15,12 +17,22 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @AllArgsConstructor
 public class AuctionServiceImpl implements AuctionService {
+	private final TradeStatusRepository tradeStatusRepository;
 	private final AuctionRepository auctionRepository;
 	private final AuctionMapper auctionMapper;
 
 	@Override
 	public AuctionDto createAuction(AuctionDto dto) {
 		Auction auction = auctionMapper.toEntity(dto);
+
+		if (dto.getStatus() == null) {
+			TradeStatus pendingStatus = tradeStatusRepository.findStatusPending();
+			if (pendingStatus == null) {
+				throw new ResourceNotFoundException("Status non trouvé");
+			}
+			auction.setStatus(pendingStatus);
+		}
+
 		Auction saved = auctionRepository.save(auction);
 		return auctionMapper.toDto(saved);
 	}
@@ -35,8 +47,9 @@ public class AuctionServiceImpl implements AuctionService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<AuctionDto> listAuctions() {
-		return auctionRepository.findAll().stream().map(auctionMapper::toDto).collect(Collectors.toList());
+	public List<AuctionDto> listAuctions(Integer traderId, String status) {
+		return auctionRepository.findByActiveTrueFiltered(traderId, status).stream().map(auctionMapper::toDto)
+				.collect(Collectors.toList());
 	}
 
 	@Override
@@ -51,10 +64,29 @@ public class AuctionServiceImpl implements AuctionService {
 	}
 
 	@Override
+	public AuctionDto acceptAuction(Integer id) {
+		TradeStatus acceptedStatus = tradeStatusRepository.findStatusAccepted();
+		if (acceptedStatus == null) {
+			throw new ResourceNotFoundException("Status non trouvé");
+		}
+
+		Auction existingAuction = auctionRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Enchère non trouvée"));
+
+		existingAuction.setStatus(acceptedStatus);
+
+		Auction saved = auctionRepository.save(existingAuction);
+		return auctionMapper.toDto(saved);
+	}
+
+	@Override
 	public void deleteAuction(Integer id) {
-		if (!auctionRepository.existsById(id)) {
+		if (auctionRepository.findById(id) != null) {
+			AuctionDto dto = new AuctionDto();
+			dto.setActive(false);
+			updateAuction(id, dto);
+		} else {
 			throw new ResourceNotFoundException("Enchère non trouvée");
 		}
-		auctionRepository.deleteById(id);
 	}
 }

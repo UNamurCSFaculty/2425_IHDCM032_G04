@@ -3,14 +3,9 @@ package be.labil.anacarde.domain.mapper;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import be.labil.anacarde.domain.dto.AuctionDto;
-import be.labil.anacarde.domain.dto.AuctionStrategyDto;
-import be.labil.anacarde.domain.dto.HarvestProductDto;
-import be.labil.anacarde.domain.dto.ProductDto;
-import be.labil.anacarde.domain.model.Auction;
-import be.labil.anacarde.domain.model.AuctionStrategy;
-import be.labil.anacarde.domain.model.HarvestProduct;
-import be.labil.anacarde.domain.model.Product;
+import be.labil.anacarde.domain.dto.*;
+import be.labil.anacarde.domain.dto.user.TransformerDetailDto;
+import be.labil.anacarde.domain.model.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
@@ -31,6 +26,8 @@ public class AuctionMapperTest {
 		auction.setProductQuantity(10);
 		auction.setExpirationDate(LocalDateTime.of(2025, 12, 31, 23, 59, 59, 0));
 		auction.setCreationDate(LocalDateTime.of(2025, 1, 1, 0, 0, 0, 0));
+		auction.setTrader(new Transformer());
+		auction.setStatus(new TradeStatus());
 		auction.setActive(true);
 
 		AuctionStrategy strategy = new AuctionStrategy();
@@ -52,7 +49,8 @@ public class AuctionMapperTest {
 		assertEquals(auction.getActive(), auctionDto.getActive());
 		assertEquals(auction.getStrategy().getId(), auctionDto.getStrategy().getId());
 		assertEquals(auction.getProduct().getId(), auctionDto.getProduct().getId());
-
+		assertEquals(auction.getTrader().getId(), auctionDto.getTrader().getId());
+		assertEquals(auction.getStatus().getId(), auctionDto.getStatus().getId());
 	}
 
 	@Test
@@ -63,6 +61,8 @@ public class AuctionMapperTest {
 		auctionDto.setProductQuantity(10);
 		auctionDto.setExpirationDate(LocalDateTime.of(2025, 12, 31, 23, 59, 59, 0));
 		auctionDto.setCreationDate(LocalDateTime.of(2025, 1, 1, 0, 0, 0, 0));
+		auctionDto.setTrader(new TransformerDetailDto());
+		auctionDto.setStatus(new TradeStatusDto());
 		auctionDto.setActive(true);
 
 		AuctionStrategyDto strategyDto = new AuctionStrategyDto();
@@ -84,6 +84,7 @@ public class AuctionMapperTest {
 		assertEquals(auctionDto.getActive(), auction.getActive());
 		assertEquals(auctionDto.getStrategy().getId(), auction.getStrategy().getId());
 		assertEquals(auctionDto.getProduct().getId(), auction.getProduct().getId());
-
+		assertEquals(auctionDto.getTrader().getId(), auction.getTrader().getId());
+		assertEquals(auctionDto.getStatus().getId(), auction.getStatus().getId());
 	}
 }

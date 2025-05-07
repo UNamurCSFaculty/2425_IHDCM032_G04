@@ -1,5 +1,6 @@
 package be.labil.anacarde.presentation.controller;
 
+import be.labil.anacarde.application.service.AuctionService;
 import be.labil.anacarde.application.service.BidService;
 import be.labil.anacarde.domain.dto.BidDto;
 import java.net.URI;
@@ -13,6 +14,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RequiredArgsConstructor
 public class BidApiController implements BidApi {
 	private final BidService bidService;
+	private final AuctionService auctionService;
 
 	@Override
 	public ResponseEntity<BidDto> getBid(Integer bidId) {
@@ -35,8 +37,14 @@ public class BidApiController implements BidApi {
 	}
 
 	@Override
-	public ResponseEntity<BidDto> updateBid(Integer id, BidDto bidDto) {
-		BidDto updated = bidService.updateBid(id, bidDto);
+	public ResponseEntity<BidDto> updateBid(Integer auctionId, Integer bidId, BidDto bidDto) {
+		BidDto updated = bidService.updateBid(bidId, bidDto);
+		return ResponseEntity.ok(updated);
+	}
+
+	@Override
+	public ResponseEntity<BidDto> acceptBid(Integer auctionId, Integer bidId) {
+		BidDto updated = bidService.acceptBid(bidId);
 		return ResponseEntity.ok(updated);
 	}
 

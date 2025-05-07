@@ -47,7 +47,7 @@ public abstract class AbstractIntegrationTest {
 	protected @Autowired AuctionRepository auctionRepository;
 	protected @Autowired AuctionStrategyRepository auctionStrategyRepository;
 	protected @Autowired BidRepository bidRepository;
-	protected @Autowired BidStatusRepository bidStatusRepository;
+	protected @Autowired TradeStatusRepository tradeStatusRepository;
 	protected @Autowired UserDetailsService userDetailsService;
 	protected @Autowired FieldRepository fieldRepository;
 	protected @Autowired CooperativeRepository cooperativeRepository;
@@ -73,7 +73,8 @@ public abstract class AbstractIntegrationTest {
 	private Auction testAuction;
 	private AuctionStrategy testAuctionStrategy;
 	private Bid testBid;
-	private BidStatus testBidStatus;
+	private TradeStatus testBidStatus;
+	private TradeStatus testAuctionStatus;
 	private Field mainTestField;
 	private Cooperative mainTestCooperative;
 	private Region mainTestRegion;
@@ -246,11 +247,18 @@ public abstract class AbstractIntegrationTest {
 		return testBid;
 	}
 
-	public BidStatus getTestBidStatus() {
+	public TradeStatus getTestBidStatus() {
 		if (testBidStatus == null) {
-			throw new IllegalStateException("Enchère de test non initialisée");
+			throw new IllegalStateException("Statut d'offre non initialisé");
 		}
 		return testBidStatus;
+	}
+
+	public TradeStatus getTestAuctionStatus() {
+		if (testAuctionStatus == null) {
+			throw new IllegalStateException("Statut d'enchère non initialisé");
+		}
+		return testAuctionStatus;
 	}
 
 	public AuctionStrategy getTestAuctionStrategy() {
@@ -403,7 +411,7 @@ public abstract class AbstractIntegrationTest {
 		qualityInspector = userRepository.save(qualityInspector);
 
 		Point storeLocation = new GeometryFactory().createPoint(new Coordinate(2.3522, 48.8566));
-		Store store = Store.builder().location(storeLocation).user(mainTestUser).build();
+		Store store = Store.builder().name("Nassara").location(storeLocation).user(mainTestUser).build();
 		mainTestStore = storeRepository.save(store);
 
 		// Fields
@@ -433,31 +441,53 @@ public abstract class AbstractIntegrationTest {
 		AuctionStrategy strategy = AuctionStrategy.builder().name("Meilleure offre").build();
 		testAuctionStrategy = auctionStrategyRepository.save(strategy);
 
+		TradeStatus auctionStatusOpen = TradeStatus.builder().name("Ouvert").build();
+		testAuctionStatus = tradeStatusRepository.save(auctionStatusOpen);
+
+		TradeStatus auctionStatusConcluded = TradeStatus.builder().name("Conclu").build();
+		tradeStatusRepository.save(auctionStatusConcluded);
+
+		TradeStatus auctionStatusExpired = TradeStatus.builder().name("Expiré").build();
+		tradeStatusRepository.save(auctionStatusExpired);
+
 		// An auction with a harvest product
 		Auction auction = Auction.builder().price(new BigDecimal("500.0")).productQuantity(10).active(true)
 				.creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now()).product(productHarvest)
-				.strategy(testAuctionStrategy).build();
+				.strategy(testAuctionStrategy).trader((Trader) producer).status(auctionStatusOpen).build();
 		testAuction = auctionRepository.save(auction);
 
 		// An auction with a transformed product
 		Auction auction2 = Auction.builder().price(new BigDecimal("10000.0")).productQuantity(1000).active(true)
 				.creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now()).product(productTransform)
-				.strategy(testAuctionStrategy).build();
+				.strategy(testAuctionStrategy).trader((Trader) producer).status(auctionStatusOpen).build();
 		auctionRepository.save(auction2);
 
-		BidStatus bidStatus = BidStatus.builder().name("Accepté").build();
-		testBidStatus = bidStatusRepository.save(bidStatus);
+		// An auction from another user
+		Auction auction3 = Auction.builder().price(new BigDecimal("777.0")).productQuantity(777).active(true)
+				.creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now()).product(productTransform)
+				.strategy(testAuctionStrategy).trader((Trader) transformer).status(auctionStatusOpen).build();
+		auctionRepository.save(auction3);
+
+		// A "deleted" auction (= inactive)
+		Auction auction4 = Auction.builder().price(new BigDecimal("999.0")).productQuantity(999).active(false)
+				.creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now()).product(productTransform)
+				.strategy(testAuctionStrategy).trader((Trader) producer).status(auctionStatusOpen).build();
+		auctionRepository.save(auction4);
+
+		TradeStatus bidStatusPending = TradeStatus.builder().name("En cours").build();
+		testBidStatus = tradeStatusRepository.save(bidStatusPending);
+
+		TradeStatus bidStatusAccepted = TradeStatus.builder().name("Accepté").build();
+		tradeStatusRepository.save(bidStatusAccepted);
 
 		// A bid on an auction
-		Bid bid = Bid.builder().amount(new BigDecimal("10.0")).auctionDate(LocalDateTime.now())
-				.creationDate(LocalDateTime.now()).auction(auction).trader((Trader) producer).status(testBidStatus)
-				.build();
+		Bid bid = Bid.builder().amount(new BigDecimal("10.0")).creationDate(LocalDateTime.now())
+				.auctionId(testAuction.getId()).trader((Trader) producer).status(testBidStatus).build();
 		testBid = bidRepository.save(bid);
 
 		// A bid on a different auction
-		Bid bid2 = Bid.builder().amount(new BigDecimal("500.0")).auctionDate(LocalDateTime.now())
-				.creationDate(LocalDateTime.now()).auction(auction2).trader((Trader) producer).status(testBidStatus)
-				.build();
+		Bid bid2 = Bid.builder().amount(new BigDecimal("500.0")).creationDate(LocalDateTime.now())
+				.auctionId(auction2.getId()).trader((Trader) producer).status(testBidStatus).build();
 		bidRepository.save(bid2);
 
 		// A cooperative who has for president 'producer'

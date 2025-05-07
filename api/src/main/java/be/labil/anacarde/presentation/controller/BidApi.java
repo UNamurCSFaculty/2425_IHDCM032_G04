@@ -32,9 +32,16 @@ public interface BidApi {
 
 	@Operation(summary = "Mettre à jour une offre")
 	@ApiResponsePut
-	@PutMapping(value = "/{bidId}", consumes = "application/json")
-	ResponseEntity<BidDto> updateBid(@ApiValidId @PathVariable("bidId") Integer bidId,
+	@PutMapping(value = "/{bidId}")
+	ResponseEntity<BidDto> updateBid(@ApiValidId @PathVariable("auctionId") Integer auctionId,
+			@ApiValidId @PathVariable("bidId") Integer bidId,
 			@Validated({Default.class, ValidationGroups.Update.class}) @RequestBody BidDto bidDto);
+
+	@Operation(summary = "Accepter une offre")
+	@ApiResponsePut
+	@PutMapping(value = "/{bidId}/accept")
+	ResponseEntity<BidDto> acceptBid(@ApiValidId @PathVariable("auctionId") Integer auctionId,
+			@ApiValidId @PathVariable("bidId") Integer bidId);
 
 	@Operation(summary = "Obtenir toutes les offres")
 	@ApiResponseGet

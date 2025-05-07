@@ -30,9 +30,14 @@ public interface AuctionService {
 	/**
 	 * Récupère toutes les enchères du système.
 	 *
+	 * @param traderId
+	 *            L'identifiant unique du trader ayant créé l'enchère.
+	 * @param auctionStatus
+	 *            Le status de l'enchère.
+	 *
 	 * @return Une List de AuctionDto représentant toutes les enchères.
 	 */
-	List<AuctionDto> listAuctions();
+	List<AuctionDto> listAuctions(Integer traderId, String auctionStatus);
 
 	/**
 	 * Mise à jour de l'enchère identifiée par l'ID donné avec les informations fournies dans le AuctionDto.
@@ -44,6 +49,15 @@ public interface AuctionService {
 	 * @return Un AuctionDto représentant l'enchère mis à jour.
 	 */
 	AuctionDto updateAuction(Integer id, AuctionDto AuctionDto);
+
+	/**
+	 * Accepter l'enchère identifiée par l'ID donné.
+	 *
+	 * @param id
+	 *            L'identifiant unique de l'enchère à mettre à jour.
+	 * @return Un AuctionDto représentant l'enchère mis à jour.
+	 */
+	AuctionDto acceptAuction(Integer id);
 
 	/**
 	 * Supprime l'enchère identifiée par l'ID donné du système.

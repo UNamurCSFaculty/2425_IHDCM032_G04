@@ -2,7 +2,7 @@ import { useUserStore } from '@/store/userStore'
 import logo from '@/assets/logo.svg'
 import avatar from '@/assets/avatar.webp'
 import { Link, useNavigate } from '@tanstack/react-router'
-import { Menu, Trees, Zap, HandCoins } from 'lucide-react'
+import { Menu, ShoppingCart, CircleDollarSign, History, ArrowLeftRight, Package, FileText } from 'lucide-react'
 import { logout as logoutApiCall } from '@/api/generated/sdk.gen'
 
 import {
@@ -64,26 +64,86 @@ export function Header() {
   const menu: MenuItem[] = [
     { title: 'Accueil', url: '/' },
     {
-      title: 'Enchères',
+      title: 'Acheter',
       url: '#',
       items: [
         {
-          title: 'Toute les enchères',
-          description: 'Voir toutes les enchères en cours',
-          icon: <HandCoins className="size-5 shrink-0" />,
-          url: '/encheres',
+          title: 'Acheter un produit',
+          description: 'Créer une nouvelle offre d\'achat',
+          icon: <ShoppingCart className="size-5 shrink-0" />,
+          url: '/achats/nouvelle-enchere',
         },
         {
-          title: 'Noix de cajou',
-          description: 'Enchérissez sur la noix de cajou brute',
-          icon: <Trees className="size-5 shrink-0" />,
-          url: '/encheres/cajou',
+          title: 'Mes achats',
+          description: 'Consulter mes achats en cours',
+          icon: <ArrowLeftRight className="size-5 shrink-0" />,
+          url: '/achats/mes-encheres',
         },
         {
-          title: 'Autres matières',
-          description: 'Enchérissez sur les produits transformés',
-          icon: <Zap className="size-5 shrink-0" />,
-          url: '/encheres/autres',
+          title: 'Mon historique',
+          description: 'Détails de mes achats passés',
+          icon: <History className="size-5 shrink-0" />,
+          url: '/achats/historique',
+        },
+      ],
+    },
+    {
+      title: 'Vendre',
+      url: '#',
+      items: [
+        {
+          title: 'Vendre un produit',
+          description: 'Créer une nouvelle vente',
+          icon: <CircleDollarSign className="size-5 shrink-0" />,
+          url: '/ventes/nouvelle-enchere',
+        },
+        {
+          title: 'Mes ventes',
+          description: 'Consulter mes ventes en cours',
+          icon: <ArrowLeftRight className="size-5 shrink-0" />,
+          url: '/ventes/mes-encheres',
+        },
+        {
+          title: 'Mon historique',
+          description: 'Détails de mes ventes passées',
+          icon: <History className="size-5 shrink-0" />,
+          url: '/ventes/historique',
+        },
+      ],
+    },
+    {
+      title: 'Dépôts',
+      url: '#',
+      items: [
+        {
+          title: 'Déposer un produit',
+          description: 'Encoder un dépôt en magasin',
+          icon: <Package className="size-5 shrink-0" />,
+          url: '/depots/nouveau-produit',
+        },
+        {
+          title: 'Mon historique',
+          description: 'Détails de mes dépôts passés',
+          icon: <History className="size-5 shrink-0" />,
+          url: '/depots/mes-produits',
+        }
+      ],
+    },
+    {
+      title: 'Contrats',
+      url: '#',
+      items: [
+        {
+          title: 'Créer un contrat',
+          description: 'Créer un nouveau contrat',
+          icon: <FileText className="size-5 shrink-0" />,
+          url: '/contrats',
+        },
+        {
+          title: 'Historique',
+          description: 'Détail mes contrats',
+          icon: <History className="size-5 shrink-0" />,
+          url: '/contrats',
         },
       ],
     },
@@ -99,7 +159,7 @@ export function Header() {
           <div className="flex items-center gap-6">
             {/* Logo */}
             <Link to="/" className="flex items-center gap-2">
-              <img src={logo} alt="Logo e‑Annacarde" className="h-20" />
+              <img src={logo} alt="Logo e‑Anacarde" className="h-20" />
             </Link>
             <div className="flex items-center">
               <NavigationMenu delayDuration={0}>
@@ -155,7 +215,7 @@ export function Header() {
           <div className="flex items-center justify-between">
             {/* Logo */}
             <Link to="/" className="flex items-center gap-2">
-              <img src={logo} alt="Logo e‑Annacarde" className="h-20" />
+              <img src={logo} alt="Logo e‑Anacarde" className="h-20" />
             </Link>
 
             <Sheet>
@@ -168,7 +228,7 @@ export function Header() {
                 <SheetHeader>
                   <SheetTitle>
                     <Link to="/" className="flex justify-center gap-2">
-                      <img src={logo} alt="Logo e‑Annacarde" className="h-20" />
+                      <img src={logo} alt="Logo e‑Anacarde" className="h-20" />
                     </Link>
                   </SheetTitle>
                 </SheetHeader>

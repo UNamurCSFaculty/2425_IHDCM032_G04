@@ -1,9 +1,11 @@
 package be.labil.anacarde.domain.dto;
 
+import be.labil.anacarde.domain.dto.user.TraderDetailDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 import lombok.Data;
 
@@ -36,7 +38,6 @@ public class AuctionDto {
 	@Schema(description = "Statut actif de l'enchère", example = "true", requiredMode = Schema.RequiredMode.REQUIRED)
 	private Boolean active;
 
-	@NotNull(message = "La stratégie est requise")
 	@Schema(description = "Stratégie d'enchère associée", requiredMode = Schema.RequiredMode.REQUIRED)
 	private AuctionStrategyDto strategy;
 
@@ -46,4 +47,14 @@ public class AuctionDto {
 
 	@Schema(description = "Valeurs d'option associées à l'enchère")
 	private Set<AuctionOptionValueDto> auctionOptionValues;
+
+	@NotNull(message = "Le trader est requis")
+	@Schema(description = "Trader ayant créé l'enchère", requiredMode = Schema.RequiredMode.REQUIRED)
+	private TraderDetailDto trader;
+
+	@Schema(description = "Statut de l'enchère", requiredMode = Schema.RequiredMode.REQUIRED)
+	private TradeStatusDto status;
+
+	@Schema(description = "Liste des offres posées sur l'enchère")
+	private List<BidDto> bids;
 }

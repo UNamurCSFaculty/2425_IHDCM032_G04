@@ -17,6 +17,11 @@ public class StoreDetailDto {
 	@Schema(description = "Identifiant du store", example = "1", accessMode = Schema.AccessMode.READ_ONLY, requiredMode = Schema.RequiredMode.REQUIRED)
 	private Integer id;
 
+	/** Nom du store. */
+	@NotNull(message = "Le nom est requis")
+	@Schema(description = "Nom du store", example = "Nassara", requiredMode = Schema.RequiredMode.REQUIRED)
+	private String name;
+
 	/** Position géographique (coordonnées GPS) du store. */
 	@NotNull(message = "La position (location) est requise")
 	@Schema(description = "Coordonnées géographiques du store (au format GeoJSON, WKT ou équivalent)", example = "POINT(2.3522 48.8566)", requiredMode = Schema.RequiredMode.REQUIRED)
