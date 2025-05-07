@@ -60,14 +60,16 @@
     "agricultural_identifier": "Identifiant agricole",
     "password": "Mot de passe",
     "confirm_password": "Valider le mot de passe",
-    "message": "Message"
+    "message": "Message",
+    "noFile": "Aucun fichier sélectionné"
   },
   "buttons": {
     "submit": "Envoyer",
     "cancel": "Annuler",
     "reinitialise": "Réinitialiser",
     "connection": "Démarrer maintenant",
-    "subscribe": "Créer un compte"
+    "subscribe": "Créer un compte",
+    "parcourir": "Parcourir"
   },
   "languages": {
     "fr": "Français",

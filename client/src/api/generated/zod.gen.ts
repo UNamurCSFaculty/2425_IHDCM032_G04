@@ -277,7 +277,7 @@ export const zBidDto = z.object({
 export const zContactRequestDto = z.object({
     name: z.string().min(1),
     email: z.string().min(1),
-    message: z.string().min(0).max(2000)
+    message: z.string().min(0).max(500)
 });
 
 export const zLoginRequest = z.object({

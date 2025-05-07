@@ -48,14 +48,16 @@
     "agricultural_identifier": "Agricultural identifier",
     "password": "Password",
     "confirm_password": "Validate password",
-    "message": "Message"
+    "message": "Message",
+    "noFile": "No file selected"
   },
   "buttons": {
     "submit": "Submit",
     "cancel": "Cancel",
     "reinitialise": "Reinitialise",
     "connection": "Get Started",
-    "subscribe": "Create an Account"
+    "subscribe": "Create an Account",
+    "parcourir": "Browse"
   },
   "languages": {
     "fr": "French",

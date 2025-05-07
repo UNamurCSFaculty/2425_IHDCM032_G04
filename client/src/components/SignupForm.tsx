@@ -2,6 +2,7 @@ import { Alert, AlertDescription, AlertTitle } from './ui/alert'
 import { createUserMutation } from '@/api/generated/@tanstack/react-query.gen.ts'
 import { BreadcrumbSection } from '@/components/BreadcrumbSection.tsx'
 import { useAppForm } from '@/components/form'
+import { FileUploadButton } from '@/components/form/fileUpload-button.tsx'
 import { zUserRegistration } from '@/schemas/api-schemas'
 import { useAppData } from '@/store/appStore'
 import { useStore } from '@tanstack/react-form'
@@ -105,6 +106,18 @@ export function SignupForm(): React.ComponentProps<'div'> {
             </div>
             <div className="w-1/2 p-2">
               <form.AppField
+                name="avatar"
+                children={field => (
+                  <FileUploadButton
+                    disabled={isPending}
+                    onFileSelected={file => field.handleChange(file)}
+                    label="Avatar"
+                  />
+                )}
+              />
+            </div>
+            <div className="w-1/2 p-2">
+              <form.AppField
                 name="lastName"
                 children={field => (
                   <field.TextField
@@ -164,7 +177,7 @@ export function SignupForm(): React.ComponentProps<'div'> {
                     label={t('form.phone')}
                     disabled={isPending}
                     value={field.state.value}
-                    onChange={e => {
+                    onBlur={e => {
                       field.handleChange(e.target.value.replace(/\s+/g, ''))
                     }}
                   />
@@ -179,6 +192,22 @@ export function SignupForm(): React.ComponentProps<'div'> {
                     <field.TextField
                       label={t('form.agricultural_identifier')}
                       disabled={isPending}
+                    />
+                  )}
+                />
+              </div>
+            ) : (
+              <div className="w-1/2 p-2" aria-hidden="true" />
+            )}
+            {type === 'producer' ? (
+              <div className="w-1/2 p-2">
+                <form.AppField
+                  name="document"
+                  children={field => (
+                    <FileUploadButton
+                      disabled={isPending}
+                      onFileSelected={file => field.handleChange(file)}
+                      label="Document"
                     />
                   )}
                 />

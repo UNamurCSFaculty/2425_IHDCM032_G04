@@ -40,6 +40,8 @@ export const zUser = z.object({
     .min(8)
     .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/),
   language: zLanguage,
+  avatar: z.file().optional(),
+  document: z.file().optional(),
 })
 
 const zProducer = zUser.extend({

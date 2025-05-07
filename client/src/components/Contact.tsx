@@ -98,7 +98,6 @@ export const ContactForm: React.FC = () => {
             </div>
 
             {/* Erreurs serveur éventuelles */}
-
             {isError && error?.errors?.length > 0 && (
               <Alert
                 variant="destructive"
