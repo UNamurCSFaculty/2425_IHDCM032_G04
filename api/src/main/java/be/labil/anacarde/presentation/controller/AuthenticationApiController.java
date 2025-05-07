@@ -5,14 +5,17 @@ import be.labil.anacarde.domain.mapper.UserDetailMapper;
 import be.labil.anacarde.domain.model.User;
 import be.labil.anacarde.infrastructure.security.JwtUtil;
 import be.labil.anacarde.presentation.payload.LoginRequest;
-import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.time.Duration;
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -28,55 +31,44 @@ public class AuthenticationApiController implements AuthenticationApi {
 	private final Environment environment;
 	private final UserDetailMapper userDetailMapper;
 
-	@Value("${jwt.token.validity.hours}")
-	private int tokenValidityHours;
+	@Value("${jwt.token.validity.months}")
+	private int tokenValidityMonths;
 
 	@Override
 	public ResponseEntity<UserDetailDto> authenticateUser(LoginRequest loginRequest, HttpServletResponse response) {
-		Authentication authentication = authenticationManager.authenticate(
+		Authentication auth = authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
-		String jwt = jwtUtil.generateToken(
-				(org.springframework.security.core.userdetails.UserDetails) authentication.getPrincipal());
+		String jwt = jwtUtil
+				.generateToken((org.springframework.security.core.userdetails.UserDetails) auth.getPrincipal());
 
-		User user = (User) authentication.getPrincipal();
+		boolean isProd = Arrays.stream(environment.getActiveProfiles()).anyMatch(p -> p.equalsIgnoreCase("prod"));
 
-		Cookie jwtCookie = new Cookie("jwt", jwt);
-		jwtCookie.setHttpOnly(true);
-		boolean isProd = Arrays.stream(environment.getActiveProfiles())
-				.anyMatch(profile -> profile.equalsIgnoreCase("prod"));
-		jwtCookie.setSecure(isProd);
-		jwtCookie.setPath("/");
-		jwtCookie.setMaxAge(tokenValidityHours * 3600);
+		ResponseCookie jwtCookie = ResponseCookie.from("jwt", jwt).httpOnly(true).secure(isProd).path("/")
+				.maxAge(Duration.ofDays(tokenValidityMonths)).sameSite("Strict").build();
+		response.addHeader(HttpHeaders.SET_COOKIE, jwtCookie.toString());
 
-		response.addCookie(jwtCookie);
-
-		UserDetailDto dto = userDetailMapper.toDto(user);
-
+		UserDetailDto dto = userDetailMapper.toDto((User) auth.getPrincipal());
 		return ResponseEntity.ok(dto);
 	}
 
 	@Override
-	public ResponseEntity<UserDetailDto> getCurrentUser(@AuthenticationPrincipal User currentUser) {
-		// Si jamais on arrive ici sans user (extra safety), on renvoie 401
+	public ResponseEntity<UserDetailDto> getCurrentUser(@AuthenticationPrincipal User currentUser,
+			HttpServletRequest request, HttpServletResponse response) {
 		if (currentUser == null) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+			throw new AuthenticationCredentialsNotFoundException("Current user is null");
 		}
-
+		// Le cookie XSRF-TOKEN a déjà été émis par le filtre Spring CSRF
 		UserDetailDto dto = userDetailMapper.toDto(currentUser);
 		return ResponseEntity.ok(dto);
 	}
 
 	@Override
 	public ResponseEntity<Void> logout(HttpServletResponse response) {
-		Cookie cleanCookie = new Cookie("jwt", "");
-		cleanCookie.setHttpOnly(true);
-		boolean isProd = Arrays.stream(environment.getActiveProfiles()).anyMatch(p -> p.equalsIgnoreCase("prod"));
-		cleanCookie.setSecure(isProd);
-		cleanCookie.setPath("/");
-		cleanCookie.setMaxAge(0); // suppression immédiate
-		response.addCookie(cleanCookie);
-
+		ResponseCookie jwtClear = ResponseCookie.from("jwt", "").httpOnly(true)
+				.secure(Arrays.stream(environment.getActiveProfiles()).anyMatch(p -> p.equalsIgnoreCase("prod")))
+				.path("/").maxAge(0).sameSite("Strict").build();
+		response.addHeader(HttpHeaders.SET_COOKIE, jwtClear.toString());
 		return ResponseEntity.ok().build();
 	}
 }

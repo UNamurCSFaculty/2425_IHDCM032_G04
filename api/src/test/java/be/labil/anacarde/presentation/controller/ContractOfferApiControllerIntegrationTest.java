@@ -16,35 +16,13 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
 /** Tests d'intégration pour le contrôleur des contrats. */
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
 public class ContractOfferApiControllerIntegrationTest extends AbstractIntegrationTest {
 
-	private @Autowired MockMvc mockMvc;
 	private @Autowired ObjectMapper objectMapper;
-	@Autowired
-	protected ContractOfferRepository contractOfferRepository;
-
-	/**
-	 * RequestPostProcessor qui ajoute automatiquement le cookie JWT à chaque requête.
-	 *
-	 * @return le RequestPostProcessor configuré.
-	 */
-	private RequestPostProcessor jwt() {
-		return request -> {
-			request.setCookies(getJwtCookie());
-			return request;
-		};
-	}
+	private @Autowired ContractOfferRepository contractOfferRepository;
 
 	/**
 	 * Teste la récupération d'un contrat existant.
@@ -53,7 +31,7 @@ public class ContractOfferApiControllerIntegrationTest extends AbstractIntegrati
 	@Test
 	public void testGetContractOffer() throws Exception {
 		mockMvc.perform(get("/api/contracts/" + getMainTestContractOffer().getId()).accept(MediaType.APPLICATION_JSON)
-				.with(jwt())).andExpect(status().isOk()).andExpect(jsonPath("$.status").value("Accepted"))
+				.with(jwtAndCsrf())).andExpect(status().isOk()).andExpect(jsonPath("$.status").value("Accepted"))
 				.andExpect(jsonPath("$.pricePerKg").value("20.0"))
 				.andExpect(jsonPath("$.seller.id").value(getProducerTestUser().getId()))
 				.andExpect(jsonPath("$.buyer.id").value(getTransformerTestUser().getId()));
@@ -86,7 +64,8 @@ public class ContractOfferApiControllerIntegrationTest extends AbstractIntegrati
 		ObjectNode node = objectMapper.valueToTree(newContractOffer);
 		String jsonContent = node.toString();
 
-		mockMvc.perform(post("/api/contracts").contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwt()))
+		mockMvc.perform(
+				post("/api/contracts").contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwtAndCsrf()))
 				.andExpect(status().isCreated())
 				.andExpect(header().string("Location", containsString("/api/contracts/")))
 				.andExpect(jsonPath("$.pricePerKg").value("999.99")).andExpect(jsonPath("$.status").value("Waiting"))
@@ -105,8 +84,8 @@ public class ContractOfferApiControllerIntegrationTest extends AbstractIntegrati
 	 */
 	@Test
 	public void testListContractOffers() throws Exception {
-		mockMvc.perform(get("/api/contracts").accept(MediaType.APPLICATION_JSON).with(jwt())).andExpect(status().isOk())
-				.andExpect(jsonPath("$").isArray());
+		mockMvc.perform(get("/api/contracts").accept(MediaType.APPLICATION_JSON).with(jwtAndCsrf()))
+				.andExpect(status().isOk()).andExpect(jsonPath("$").isArray());
 	}
 
 	/**
@@ -137,8 +116,8 @@ public class ContractOfferApiControllerIntegrationTest extends AbstractIntegrati
 		String jsonContent = node.toString();
 
 		mockMvc.perform(put("/api/contracts/" + getMainTestContractOffer().getId())
-				.contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwt())).andExpect(status().isOk())
-				.andExpect(jsonPath("$.status").value("Refused"));
+				.contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwtAndCsrf()))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.status").value("Refused"));
 	}
 
 	/**
@@ -147,10 +126,10 @@ public class ContractOfferApiControllerIntegrationTest extends AbstractIntegrati
 	 */
 	@Test
 	public void testDeleteContractOffer() throws Exception {
-		mockMvc.perform(delete("/api/contracts/" + getMainTestContractOffer().getId()).with(jwt()))
+		mockMvc.perform(delete("/api/contracts/" + getMainTestContractOffer().getId()).with(jwtAndCsrf()))
 				.andExpect(status().isNoContent());
 
-		mockMvc.perform(get("/api/contracts/" + getMainTestContractOffer().getId()).with(jwt()))
+		mockMvc.perform(get("/api/contracts/" + getMainTestContractOffer().getId()).with(jwtAndCsrf()))
 				.andExpect(status().isNotFound());
 	}
 }

@@ -11,40 +11,24 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
+/*
+ * Tests d'intégration pour le contrôleur des régions.
+ */
 public class RegionApiControllerIntegrationTest extends AbstractIntegrationTest {
 
-	@Autowired
-	private MockMvc mockMvc;
-	@Autowired
-	private ObjectMapper objectMapper;
-	@Autowired
-	protected RegionRepository regionRepository;
-
-	private RequestPostProcessor jwt() {
-		return request -> {
-			request.setCookies(getJwtCookie());
-			return request;
-		};
-	}
+	private @Autowired ObjectMapper objectMapper;
+	private @Autowired RegionRepository regionRepository;
 
 	/**
 	 * Teste la récupération d'une région.
 	 */
 	@Test
 	public void testGetRegion() throws Exception {
-		mockMvc.perform(
-				get("/api/regions/" + getMainTestRegion().getId()).accept(MediaType.APPLICATION_JSON).with(jwt()))
-				.andExpect(status().isOk()).andExpect(jsonPath("$.name").value(getMainTestRegion().getName()));
+		mockMvc.perform(get("/api/regions/" + getMainTestRegion().getId()).accept(MediaType.APPLICATION_JSON)
+				.with(jwtAndCsrf())).andExpect(status().isOk())
+				.andExpect(jsonPath("$.name").value(getMainTestRegion().getName()));
 	}
 
 	/**
@@ -58,7 +42,8 @@ public class RegionApiControllerIntegrationTest extends AbstractIntegrationTest 
 		ObjectNode node = objectMapper.valueToTree(newRegionDto);
 		String jsonContent = node.toString();
 
-		mockMvc.perform(post("/api/regions").contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwt()))
+		mockMvc.perform(
+				post("/api/regions").contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwtAndCsrf()))
 				.andExpect(status().isCreated()).andExpect(header().string("Location", containsString("/api/regions/")))
 				.andExpect(jsonPath("$.name").value("Nouvelle Région"));
 
@@ -71,8 +56,8 @@ public class RegionApiControllerIntegrationTest extends AbstractIntegrationTest 
 	 */
 	@Test
 	public void testListRegions() throws Exception {
-		mockMvc.perform(get("/api/regions").accept(MediaType.APPLICATION_JSON).with(jwt())).andExpect(status().isOk())
-				.andExpect(jsonPath("$").isArray())
+		mockMvc.perform(get("/api/regions").accept(MediaType.APPLICATION_JSON).with(jwtAndCsrf()))
+				.andExpect(status().isOk()).andExpect(jsonPath("$").isArray())
 				.andExpect(jsonPath("$.length()").value(regionRepository.findAll().size()));
 	}
 
@@ -82,7 +67,7 @@ public class RegionApiControllerIntegrationTest extends AbstractIntegrationTest 
 	@Test
 	public void testListRegionsByCarrier() throws Exception {
 		mockMvc.perform(get("/api/regions?carrierId=" + getMainTestCarrier().getId()).accept(MediaType.APPLICATION_JSON)
-				.with(jwt())).andExpect(status().isOk()).andExpect(jsonPath("$").isArray())
+				.with(jwtAndCsrf())).andExpect(status().isOk()).andExpect(jsonPath("$").isArray())
 				.andExpect(jsonPath("$.length()").value(1));
 	}
 
@@ -98,7 +83,7 @@ public class RegionApiControllerIntegrationTest extends AbstractIntegrationTest 
 		String jsonContent = node.toString();
 
 		mockMvc.perform(put("/api/regions/" + getMainTestRegion().getId()).contentType(MediaType.APPLICATION_JSON)
-				.content(jsonContent).with(jwt())).andExpect(status().isOk())
+				.content(jsonContent).with(jwtAndCsrf())).andExpect(status().isOk())
 				.andExpect(jsonPath("$.name").value("Région Modifiée"));
 	}
 
@@ -107,10 +92,10 @@ public class RegionApiControllerIntegrationTest extends AbstractIntegrationTest 
 	 */
 	@Test
 	public void testDeleteRegion() throws Exception {
-		// mockMvc.perform(delete("/api/regions/" + getMainTestRegion().getId()).with(jwt()))
+		// mockMvc.perform(delete("/api/regions/" + getMainTestRegion().getId()).with(jwtAndCsrf()))
 		// .andExpect(status().isNoContent());
 		//
-		// mockMvc.perform(get("/api/regions/" + getMainTestRegion().getId()).with(jwt()))
+		// mockMvc.perform(get("/api/regions/" + getMainTestRegion().getId()).with(jwtAndCsrf()))
 		// .andExpect(status().isNotFound());
 	}
 
@@ -123,7 +108,7 @@ public class RegionApiControllerIntegrationTest extends AbstractIntegrationTest 
 		Integer regionId = getMainTestRegion().getId();
 
 		mockMvc.perform(put("/api/regions/" + regionId + "/carriers/" + carrierId)
-				.contentType(MediaType.APPLICATION_JSON).with(jwt())).andExpect(status().isOk())
+				.contentType(MediaType.APPLICATION_JSON).with(jwtAndCsrf())).andExpect(status().isOk())
 				.andExpect(jsonPath("$").doesNotExist());
 	}
 }

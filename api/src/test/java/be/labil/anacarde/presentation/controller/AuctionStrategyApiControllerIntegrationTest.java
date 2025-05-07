@@ -11,25 +11,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
 /** Tests d'intégration pour le contrôleur des stratégies d'enchères. */
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
 public class AuctionStrategyApiControllerIntegrationTest extends AbstractIntegrationTest {
 
-	@Autowired
-	private MockMvc mockMvc;
-	@Autowired
-	private ObjectMapper objectMapper;
-	@Autowired
-	private AuctionStrategyRepository repository;
+	private @Autowired ObjectMapper objectMapper;
+	private @Autowired AuctionStrategyRepository repository;
 
 	private RequestPostProcessor jwt() {
 		return request -> {
@@ -44,7 +33,7 @@ public class AuctionStrategyApiControllerIntegrationTest extends AbstractIntegra
 	@Test
 	public void testGetAuctionStrategy() throws Exception {
 		mockMvc.perform(get("/api/auctions/strategies/" + getTestAuctionStrategy().getId())
-				.accept(MediaType.APPLICATION_JSON).with(jwt())).andExpect(status().isOk())
+				.accept(MediaType.APPLICATION_JSON).with(jwtAndCsrf())).andExpect(status().isOk())
 				.andExpect(jsonPath("$.id").value(getTestAuctionStrategy().getId()))
 				.andExpect(jsonPath("$.name").value(getTestAuctionStrategy().getName()));
 	}
@@ -61,7 +50,7 @@ public class AuctionStrategyApiControllerIntegrationTest extends AbstractIntegra
 		String jsonContent = node.toString();
 
 		mockMvc.perform(post("/api/auctions/strategies").contentType(MediaType.APPLICATION_JSON).content(jsonContent)
-				.with(jwt())).andExpect(status().isCreated())
+				.with(jwtAndCsrf())).andExpect(status().isCreated())
 				.andExpect(header().string("Location", containsString("/api/auctions/strategies")))
 				.andExpect(jsonPath("$.name").value("Best Price Strategy"));
 
@@ -74,7 +63,7 @@ public class AuctionStrategyApiControllerIntegrationTest extends AbstractIntegra
 	 */
 	@Test
 	public void testListAuctionStrategies() throws Exception {
-		mockMvc.perform(get("/api/auctions/strategies").accept(MediaType.APPLICATION_JSON).with(jwt()))
+		mockMvc.perform(get("/api/auctions/strategies").accept(MediaType.APPLICATION_JSON).with(jwtAndCsrf()))
 				.andExpect(status().isOk()).andExpect(jsonPath("$").isArray())
 				.andExpect(jsonPath("$.length()").value(1));
 	}
@@ -91,8 +80,8 @@ public class AuctionStrategyApiControllerIntegrationTest extends AbstractIntegra
 		String jsonContent = node.toString();
 
 		mockMvc.perform(put("/api/auctions/strategies/" + getTestAuctionStrategy().getId())
-				.contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwt())).andExpect(status().isOk())
-				.andExpect(jsonPath("$.name").value("Updated Strategy"));
+				.contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwtAndCsrf()))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.name").value("Updated Strategy"));
 	}
 
 	/**
@@ -103,10 +92,10 @@ public class AuctionStrategyApiControllerIntegrationTest extends AbstractIntegra
 	@Test
 	public void testDeleteAuctionStrategy() throws Exception {
 
-		// mockMvc.perform(delete("/api/auctions/strategies/" + getTestAuctionStrategy().getId()).with(jwt()))
+		// mockMvc.perform(delete("/api/auctions/strategies/" + getTestAuctionStrategy().getId()).with(jwtAndCsrf()))
 		// .andExpect(status().isNoContent());
 		//
-		// mockMvc.perform(get("/api/auctions/strategies/" + getTestAuctionStrategy().getId()).with(jwt()))
+		// mockMvc.perform(get("/api/auctions/strategies/" + getTestAuctionStrategy().getId()).with(jwtAndCsrf()))
 		// .andExpect(status().isNotFound());
 	}
 }

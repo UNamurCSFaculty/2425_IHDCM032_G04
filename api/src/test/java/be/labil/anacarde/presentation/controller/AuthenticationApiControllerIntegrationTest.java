@@ -1,7 +1,8 @@
 package be.labil.anacarde.presentation.controller;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -75,7 +76,7 @@ public class AuthenticationApiControllerIntegrationTest {
 
 		String requestBody = "{\"username\": \"user@example.com\", \"password\": \"password\"}";
 
-		mockMvc.perform(post("/api/auth/signin").contentType("application/json").content(requestBody))
+		mockMvc.perform(post("/api/auth/signin").with(csrf()).contentType("application/json").content(requestBody))
 				.andExpect(status().isOk()).andExpect(cookie().exists("jwt"))
 				// le corps est un JSON
 				.andExpect(content().contentType("application/json"))
@@ -97,7 +98,7 @@ public class AuthenticationApiControllerIntegrationTest {
 	public void testAuthenticateUserIntegration_Failure() throws Exception {
 		String requestBody = "{\"username\": \"user@example.com\", \"password\": \"wrongpassword\"}";
 
-		mockMvc.perform(post("/api/auth/signin").contentType("application/json").content(requestBody))
+		mockMvc.perform(post("/api/auth/signin").with(csrf()).contentType("application/json").content(requestBody))
 				.andExpect(status().isUnauthorized());
 	}
 
@@ -108,7 +109,7 @@ public class AuthenticationApiControllerIntegrationTest {
 	public void testAuthenticateUserIntegration_NullRequestBody() throws Exception {
 		String requestBody = "";
 
-		mockMvc.perform(post("/api/auth/signin").contentType("application/json").content(requestBody))
+		mockMvc.perform(post("/api/auth/signin").with(csrf()).contentType("application/json").content(requestBody))
 				.andExpect(status().isBadRequest());
 	}
 
@@ -119,7 +120,7 @@ public class AuthenticationApiControllerIntegrationTest {
 	public void testAuthenticateUserIntegration_MissingPassword() throws Exception {
 		String requestBody = "{\"username\": \"user@example.com\"}";
 
-		mockMvc.perform(post("/api/auth/signin").contentType("application/json").content(requestBody))
+		mockMvc.perform(post("/api/auth/signin").with(csrf()).contentType("application/json").content(requestBody))
 				.andExpect(status().isBadRequest());
 	}
 
@@ -130,7 +131,7 @@ public class AuthenticationApiControllerIntegrationTest {
 	public void testAuthenticateUserIntegration_MissingUsername() throws Exception {
 		String requestBody = "{\"password\": \"password\"}";
 
-		mockMvc.perform(post("/api/auth/signin").contentType("application/json").content(requestBody))
+		mockMvc.perform(post("/api/auth/signin").with(csrf()).contentType("application/json").content(requestBody))
 				.andExpect(status().isBadRequest());
 	}
 
@@ -141,14 +142,15 @@ public class AuthenticationApiControllerIntegrationTest {
 	public void testGetCurrentUser_Success() throws Exception {
 		// 1) Authentifier pour récupérer le cookie
 		String loginBody = "{\"username\": \"user@example.com\", \"password\": \"password\"}";
-		MvcResult result = mockMvc.perform(post("/api/auth/signin").contentType("application/json").content(loginBody))
+		MvcResult result = mockMvc
+				.perform(post("/api/auth/signin").with(csrf()).contentType("application/json").content(loginBody))
 				.andExpect(status().isOk()).andReturn();
 
 		Cookie jwt = result.getResponse().getCookie("jwt");
 		Language lang = languageRepository.findAll().getFirst();
 
 		// 2) Appeler /me avec le cookie
-		mockMvc.perform(get("/api/auth/me").cookie(jwt)).andExpect(status().isOk())
+		mockMvc.perform(get("/api/auth/me").with(csrf()).cookie(jwt)).andExpect(status().isOk())
 				.andExpect(content().contentType("application/json")).andExpect(jsonPath("$.type").value("admin"))
 				.andExpect(jsonPath("$.email").value("user@example.com"))
 				.andExpect(jsonPath("$.firstName").value("John"))
@@ -160,7 +162,7 @@ public class AuthenticationApiControllerIntegrationTest {
 	 */
 	@Test
 	public void testGetCurrentUser_Unauthorized() throws Exception {
-		mockMvc.perform(get("/api/auth/me")).andExpect(status().isUnauthorized());
+		mockMvc.perform(get("/api/auth/me").with(csrf())).andExpect(status().isUnauthorized());
 	}
 
 	/**
@@ -171,14 +173,14 @@ public class AuthenticationApiControllerIntegrationTest {
 		// 1) Authentification pour obtenir le cookie JWT
 		String loginBody = "{\"username\": \"user@example.com\", \"password\": \"password\"}";
 		MvcResult loginResult = mockMvc
-				.perform(post("/api/auth/signin").contentType("application/json").content(loginBody))
+				.perform(post("/api/auth/signin").with(csrf()).contentType("application/json").content(loginBody))
 				.andExpect(status().isOk()).andReturn();
 
 		Cookie jwt = loginResult.getResponse().getCookie("jwt");
 		assertNotNull(jwt, "Le cookie jwt doit exister après signin");
 
 		// 2) Appel de /signout avec le cookie
-		mockMvc.perform(post("/api/auth/signout").cookie(jwt)).andExpect(status().isOk())
+		mockMvc.perform(post("/api/auth/signout").with(csrf()).cookie(jwt)).andExpect(status().isOk())
 				// on retrouve bien un cookie "jwt" expiré
 				.andExpect(cookie().exists("jwt")).andExpect(cookie().value("jwt", "")) // valeur vidée
 				.andExpect(cookie().maxAge("jwt", 0)); // expiring immediately

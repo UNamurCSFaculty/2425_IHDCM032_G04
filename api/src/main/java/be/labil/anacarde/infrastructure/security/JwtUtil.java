@@ -6,6 +6,8 @@ import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.Map;
 import java.util.function.Function;
@@ -24,9 +26,8 @@ public class JwtUtil {
 	@Value("${jwt.secret}")
 	private String secretKey;
 
-	@Value("${jwt.token.validity.hours}")
-	/** Durée de validité du token en heures. */
-	private long tokenValidityHours;
+	@Value("${jwt.token.validity.months}")
+	private long tokenValidityMonths;
 
 	/**
 	 * Convertit la clé secrète encodée en Base64 en un objet SecretKey.
@@ -119,12 +120,15 @@ public class JwtUtil {
 	 * @return Un token JWT signé sous forme de String.
 	 */
 	private String createToken(Map<String, Object> customClaims, String subject) {
-		Date now = new Date();
-		long validityInMillis = tokenValidityHours * 60 * 60 * 1000;
-		Date expiryDate = new Date(now.getTime() + validityInMillis);
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime expiry = now.plusMonths(tokenValidityMonths);
 
-		JwtBuilder builder = Jwts.builder().claims(customClaims).subject(subject).issuedAt(now).expiration(expiryDate)
-				.signWith(getSigningKey());
+		ZoneId zone = ZoneId.systemDefault();
+		Date issuedAt = Date.from(now.atZone(zone).toInstant());
+		Date expiration = Date.from(expiry.atZone(zone).toInstant());
+
+		JwtBuilder builder = Jwts.builder().claims(customClaims).subject(subject).issuedAt(issuedAt)
+				.expiration(expiration).signWith(getSigningKey());
 		return builder.compact();
 	}
 

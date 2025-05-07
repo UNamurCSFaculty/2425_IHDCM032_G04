@@ -2,20 +2,11 @@ package be.labil.anacarde.presentation.controller;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.startsWith;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import be.labil.anacarde.domain.dto.DocumentDto;
-import be.labil.anacarde.domain.dto.HarvestProductDto;
-import be.labil.anacarde.domain.dto.ProductDto;
-import be.labil.anacarde.domain.dto.QualityControlDto;
-import be.labil.anacarde.domain.dto.QualityDto;
-import be.labil.anacarde.domain.dto.TransformedProductDto;
+import be.labil.anacarde.domain.dto.*;
 import be.labil.anacarde.domain.dto.user.QualityInspectorDetailDto;
 import be.labil.anacarde.infrastructure.persistence.QualityControlRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,36 +14,15 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
 /**
  * Tests d'intégration pour le contrôleur des contrôles qualité.
  */
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
 public class QualityControlApiControllerIntegrationTest extends AbstractIntegrationTest {
 
-	@Autowired
-	private MockMvc mockMvc;
-
-	@Autowired
-	private ObjectMapper objectMapper;
-
-	@Autowired
-	private QualityControlRepository qualityControlRepository;
-
-	private RequestPostProcessor jwt() {
-		return request -> {
-			request.setCookies(getJwtCookie());
-			return request;
-		};
-	}
+	private @Autowired ObjectMapper objectMapper;
+	private @Autowired QualityControlRepository qualityControlRepository;
 
 	/**
 	 * Teste la création d’un nouveau contrôle qualité.
@@ -60,7 +30,7 @@ public class QualityControlApiControllerIntegrationTest extends AbstractIntegrat
 	@Test
 	public void testGetQualityControl() throws Exception {
 		mockMvc.perform(get("/api/products/" + getMainTestQualityControl().getProduct().getId() + "/quality-controls/"
-				+ getMainTestQualityControl().getId()).accept(MediaType.APPLICATION_JSON).with(jwt()))
+				+ getMainTestQualityControl().getId()).accept(MediaType.APPLICATION_JSON).with(jwtAndCsrf()))
 				.andExpect(status().isOk()).andDo(print())
 				.andExpect(jsonPath("$.id").value(getMainTestQualityControl().getId()))
 				.andExpect(jsonPath("$.identifier").value(getMainTestQualityControl().getIdentifier()))
@@ -108,7 +78,8 @@ public class QualityControlApiControllerIntegrationTest extends AbstractIntegrat
 		String content = json.toString();
 
 		mockMvc.perform(post("/api/products/" + getMainTestQualityControl().getProduct().getId() + "/quality-controls")
-				.contentType(MediaType.APPLICATION_JSON).content(content).with(jwt())).andExpect(status().isCreated())
+				.contentType(MediaType.APPLICATION_JSON).content(content).with(jwtAndCsrf()))
+				.andExpect(status().isCreated())
 				.andExpect(header().string("Location", containsString("/quality-controls")))
 				.andExpect(jsonPath("$.identifier").value("QC-002")).andExpect(jsonPath("$.granularity").value(0.5))
 				.andExpect(jsonPath("$.korTest").value(0.8)).andExpect(jsonPath("$.humidity").value(12.5))
@@ -125,7 +96,7 @@ public class QualityControlApiControllerIntegrationTest extends AbstractIntegrat
 	@Test
 	public void testListQualityControls() throws Exception {
 		mockMvc.perform(get("/api/products/" + getMainTestQualityControl().getProduct().getId() + "/quality-controls")
-				.accept(MediaType.APPLICATION_JSON).with(jwt())).andExpect(status().isOk()).andDo(print())
+				.accept(MediaType.APPLICATION_JSON).with(jwtAndCsrf())).andExpect(status().isOk()).andDo(print())
 				.andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(1));
 	}
 
@@ -162,7 +133,8 @@ public class QualityControlApiControllerIntegrationTest extends AbstractIntegrat
 
 		mockMvc.perform(put("/api/products/" + getMainTestQualityControl().getProduct().getId() + "/quality-controls/"
 				+ getMainTestQualityControl().getId()).contentType(MediaType.APPLICATION_JSON).content(content)
-				.with(jwt())).andExpect(status().isOk()).andExpect(jsonPath("$.identifier").value("QC-001-UPDATED"))
+				.with(jwtAndCsrf())).andExpect(status().isOk())
+				.andExpect(jsonPath("$.identifier").value("QC-001-UPDATED"))
 				.andExpect(jsonPath("$.granularity").value(0.6)).andExpect(jsonPath("$.korTest").value(0.85))
 				.andExpect(jsonPath("$.humidity").value(13.0))
 				.andExpect(jsonPath("$.qualityInspector.id")
@@ -178,11 +150,11 @@ public class QualityControlApiControllerIntegrationTest extends AbstractIntegrat
 	@Test
 	public void testDeleteQualityControl() throws Exception {
 		// mockMvc.perform(delete("/api/products/" + getMainTestQualityControl().getProduct().getId()
-		// + "/quality-controls/" + getMainTestQualityControl().getId()).with(jwt()))
+		// + "/quality-controls/" + getMainTestQualityControl().getId()).with(jwtAndCsrf()))
 		// .andExpect(status().isNoContent());
 		//
 		// mockMvc.perform(get("/api/products/" + getMainTestQualityControl().getProduct().getId() +
 		// "/quality-controls/"
-		// + getMainTestQualityControl().getId()).with(jwt())).andExpect(status().isNotFound());
+		// + getMainTestQualityControl().getId()).with(jwtAndCsrf())).andExpect(status().isNotFound());
 	}
 }

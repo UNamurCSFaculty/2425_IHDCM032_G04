@@ -1,10 +1,9 @@
 package be.labil.anacarde.infrastructure.config;
 
-import be.labil.anacarde.infrastructure.security.AuthEntryPointJwt;
-import be.labil.anacarde.infrastructure.security.AuthTokenFilter;
-import be.labil.anacarde.infrastructure.security.RestAccessDeniedHandler;
+import be.labil.anacarde.infrastructure.security.*;
 import java.util.List;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -13,16 +12,17 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
-@AllArgsConstructor
+@RequiredArgsConstructor
 @EnableMethodSecurity
 /**
  * Cette classe définit les beans pour les fournisseurs d'authentification, les gestionnaires d'authentification, et la
@@ -34,79 +34,72 @@ public class SecurityConfig {
 	private final AuthEntryPointJwt unauthorizedHandler;
 	private final AuthTokenFilter authTokenFilter;
 	private final RestAccessDeniedHandler accessDeniedHandler;
+	private final OriginFilter originFilter;
 
+	@Value("${app.trusted.origin}")
+	private String trustedOrigin;
+
+	@Bean
 	/**
-	 * Retourne l'AuthenticationManager utilisé pour traiter les demandes d'authentification.
+	 * Cette méthode crée un bean de gestionnaire d'authentification qui est utilisé pour gérer les authentifications
+	 * des utilisateurs.
 	 *
 	 * @param authConfig
-	 *            La configuration d'authentification contenant les détails nécessaires.
-	 * @return L'instance d'AuthenticationManager.
+	 *            La configuration d'authentification à utiliser pour créer le gestionnaire.
+	 * @return Le gestionnaire d'authentification configuré.
 	 * @throws Exception
-	 *             en cas d'erreur lors de la récupération de l'AuthenticationManager.
+	 *             En cas d'erreur lors de la création du gestionnaire d'authentification.
 	 */
-	@Bean
 	public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
 		return authConfig.getAuthenticationManager();
 	}
 
-	/**
-	 * Configure CORS (Cross-Origin Resource Sharing) pour permettre les requêtes entre origines différentes.
-	 *
-	 * @return La source de configuration CORS.
-	 */
 	@Bean
+	/**
+	 * Cette méthode crée un bean de gestionnaire de requêtes CSRF qui est utilisé pour gérer les tokens CSRF dans les
+	 * requêtes HTTP.
+	 *
+	 * @return Le gestionnaire de requêtes CSRF configuré.
+	 */
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration config = new CorsConfiguration();
-		config.setAllowedOrigins(List.of("http://localhost:3000"));
+		config.setAllowedOrigins(List.of(trustedOrigin));
 		config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 		config.setAllowedHeaders(List.of("*"));
 		config.setAllowCredentials(true);
 
-		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", config);
-		return source;
+		UrlBasedCorsConfigurationSource src = new UrlBasedCorsConfigurationSource();
+		src.registerCorsConfiguration("/**", config);
+		return src;
 	}
 
-	/**
-	 * Configure la chaîne de filtres de sécurité.
-	 *
-	 * @param http
-	 *            L'instance HttpSecurity à configurer.
-	 * @return La SecurityFilterChain configurée.
-	 * @throws Exception
-	 *             en cas d'erreur lors de la configuration.
-	 */
 	@Bean
+	/**
+	 * Cette méthode crée un bean de gestionnaire de requêtes CSRF qui est utilisé pour gérer les tokens CSRF dans les
+	 * requêtes HTTP.
+	 *
+	 * @return Le gestionnaire de requêtes CSRF configuré.
+	 */
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http.cors(Customizer.withDefaults()).csrf(AbstractHttpConfigurer::disable)
+		// On utilise CookieCsrfTokenRepository + SpaHandler
+		http.cors(Customizer.withDefaults())
+				.csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+						.csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler()))
 				.exceptionHandling(
 						ex -> ex.authenticationEntryPoint(unauthorizedHandler).accessDeniedHandler(accessDeniedHandler))
-				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+				.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-		configureAuthorization(http);
-
-		// Ajout du filtre JWT avant le filtre d'authentification standard
-		http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
-
-		return http.build();
-	}
-
-	/**
-	 * Configure l'autorisation des requêtes HTTP.
-	 *
-	 * @param http
-	 *            L'instance HttpSecurity à configurer.
-	 * @throws Exception
-	 *             en cas d'erreur lors de la configuration.
-	 */
-	private void configureAuthorization(HttpSecurity http) throws Exception {
+		// Autorisations
 		http.authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.POST, "/api/users").permitAll()
 				.requestMatchers(HttpMethod.GET, "/api/app").permitAll()
 				.requestMatchers(HttpMethod.POST, "/api/contact").permitAll()
-				.requestMatchers("/api/auth/**", "/v3/api-docs.yaml", "/v3/api-docs/**", "/swagger-ui/**",
-						"/swagger-ui.html")
-				.permitAll()
-				// tout le reste nécessite une authentification
-				.anyRequest().authenticated());
+				.requestMatchers("/api/auth/**", "/v3/api-docs**", "/swagger-ui/**").permitAll().anyRequest()
+				.authenticated());
+
+		// Filtres
+		http.addFilterBefore(originFilter, CsrfFilter.class);
+		http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
+
+		return http.build();
 	}
 }

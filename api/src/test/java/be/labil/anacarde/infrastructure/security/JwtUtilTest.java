@@ -20,7 +20,7 @@ public class JwtUtilTest {
 		jwtUtil = new JwtUtil();
 		// Injecte les valeurs de configuration pour les besoins des tests via ReflectionTestUtils
 		ReflectionTestUtils.setField(jwtUtil, "secretKey", "V2Vha1NlY3VyZUtleVNlY3VyZUtleVNlY3VyZUtleVNlY3VyZQ==");
-		ReflectionTestUtils.setField(jwtUtil, "tokenValidityHours", 1);
+		ReflectionTestUtils.setField(jwtUtil, "tokenValidityMonths", 1);
 	}
 
 	/**
@@ -62,7 +62,7 @@ public class JwtUtilTest {
 	public void testTokenExpiration() throws InterruptedException {
 		// Pour tester l'expiration, on définit la validité du token à 0 heure (expiration
 		// immédiate)
-		ReflectionTestUtils.setField(jwtUtil, "tokenValidityHours", 0L);
+		ReflectionTestUtils.setField(jwtUtil, "tokenValidityMonths", 0L);
 		User user = new Admin();
 		user.setEmail("myUser");
 		user.setPassword("password");

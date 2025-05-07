@@ -12,32 +12,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
 /** Tests d'intégration pour le contrôleur des champs. */
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
 public class FieldApiControllerIntegrationTest extends AbstractIntegrationTest {
 
-	@Autowired
-	private MockMvc mockMvc;
-	@Autowired
-	private ObjectMapper objectMapper;
-	@Autowired
-	protected FieldRepository fieldRepository;
-
-	private RequestPostProcessor jwt() {
-		return request -> {
-			request.setCookies(getJwtCookie());
-			return request;
-		};
-	}
+	private @Autowired ObjectMapper objectMapper;
+	private @Autowired FieldRepository fieldRepository;
 
 	/**
 	 * Teste la récupération d'un champ.
@@ -46,7 +27,7 @@ public class FieldApiControllerIntegrationTest extends AbstractIntegrationTest {
 	@Test
 	public void testGetField() throws Exception {
 		mockMvc.perform(get("/api/users/" + getProducerTestUser().getId() + "/fields/" + getMainTestField().getId())
-				.accept(MediaType.APPLICATION_JSON).with(jwt())).andExpect(status().isOk())
+				.accept(MediaType.APPLICATION_JSON).with(jwtAndCsrf())).andExpect(status().isOk())
 				.andExpect(jsonPath("$.location").value("POINT (2.3522 48.8566)"))
 				.andExpect(jsonPath("$.identifier").value(getMainTestField().getIdentifier()));
 	}
@@ -68,7 +49,7 @@ public class FieldApiControllerIntegrationTest extends AbstractIntegrationTest {
 		String jsonContent = node.toString();
 
 		mockMvc.perform(post("/api/users/" + getProducerTestUser().getId() + "/fields")
-				.contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwt()))
+				.contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwtAndCsrf()))
 				.andExpect(status().isCreated()).andExpect(header().string("Location", containsString("/api/users/")))
 				.andExpect(jsonPath("$.location").value("POINT (2.3522 48.8566)"))
 				.andExpect(jsonPath("$.identifier").value("FIELD-666"))
@@ -86,7 +67,7 @@ public class FieldApiControllerIntegrationTest extends AbstractIntegrationTest {
 	@Test
 	public void testListFields() throws Exception {
 		mockMvc.perform(get("/api/users/" + getProducerTestUser().getId() + "/fields")
-				.accept(MediaType.APPLICATION_JSON).with(jwt())).andExpect(status().isOk())
+				.accept(MediaType.APPLICATION_JSON).with(jwtAndCsrf())).andExpect(status().isOk())
 				.andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(2));
 	}
 
@@ -107,8 +88,8 @@ public class FieldApiControllerIntegrationTest extends AbstractIntegrationTest {
 		String jsonContent = node.toString();
 
 		mockMvc.perform(put("/api/users/" + getProducerTestUser().getId() + "/fields/" + getMainTestField().getId())
-				.contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwt())).andExpect(status().isOk())
-				.andExpect(jsonPath("$.location").value("POINT (1.111 2.222)"))
+				.contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwtAndCsrf()))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.location").value("POINT (1.111 2.222)"))
 				.andExpect(jsonPath("$.identifier").value("FIELD-UPDATED"));
 	}
 
@@ -120,10 +101,10 @@ public class FieldApiControllerIntegrationTest extends AbstractIntegrationTest {
 	public void testDeleteField() throws Exception {
 		// //TODO: Décommenter quand le delete sera activé
 		// mockMvc.perform(delete("/api/users/"+ getProducerTestUser().getId() +"/fields/" +
-		// getMainTestField().getId()).with(jwt()))
+		// getMainTestField().getId()).with(jwtAndCsrf()))
 		// .andExpect(status().isNoContent());
 		//
-		// mockMvc.perform(get("/api/fields/" + getMainTestField().getId()).with(jwt()))
+		// mockMvc.perform(get("/api/fields/" + getMainTestField().getId()).with(jwtAndCsrf()))
 		// .andExpect(status().isNotFound());
 	}
 }

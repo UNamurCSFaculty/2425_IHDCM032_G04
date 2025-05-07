@@ -1,6 +1,7 @@
 package be.labil.anacarde.presentation.controller;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -14,35 +15,13 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
 /** Tests d'intégration pour le contrôleur des offres. */
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
 public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 
-	private @Autowired MockMvc mockMvc;
 	private @Autowired ObjectMapper objectMapper;
-	@Autowired
-	protected BidRepository bidRepository;
-
-	/**
-	 * RequestPostProcessor qui ajoute automatiquement le cookie JWT à chaque requête.
-	 *
-	 * @return le RequestPostProcessor configuré.
-	 */
-	private RequestPostProcessor jwt() {
-		return request -> {
-			request.setCookies(getJwtCookie());
-			return request;
-		};
-	}
+	private @Autowired BidRepository bidRepository;
 
 	/**
 	 * Teste la récupération d'une offre existant.
@@ -51,7 +30,7 @@ public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 	@Test
 	public void testGetBid() throws Exception {
 		mockMvc.perform(get("/api/auctions/" + getTestAuction().getId() + "/bids/" + getTestBid().getId())
-				.accept(MediaType.APPLICATION_JSON).with(jwt())).andExpect(status().isOk())
+				.accept(MediaType.APPLICATION_JSON).with(jwtAndCsrf())).andExpect(status().isOk())
 				.andExpect(jsonPath("$.amount").value("10.0"))
 				.andExpect(jsonPath("$.auctionId").value(getTestAuction().getId()))
 				.andExpect(jsonPath("$.trader.id").value(getProducerTestUser().getId()));
@@ -87,7 +66,7 @@ public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 		String jsonContent = node.toString();
 
 		mockMvc.perform(post("/api/auctions/" + getTestAuction().getId() + "/bids/")
-				.contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwt()))
+				.contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwtAndCsrf()))
 				.andExpect(status().isCreated())
 				.andExpect(header().string("Location",
 						containsString("/api/auctions/" + getTestAuction().getId() + "/bids/")))
@@ -106,7 +85,7 @@ public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 	@Test
 	public void testListBids() throws Exception {
 		mockMvc.perform(get("/api/auctions/" + getTestAuction().getId() + "/bids/").accept(MediaType.APPLICATION_JSON)
-				.with(jwt())).andExpect(status().isOk()).andExpect(jsonPath("$").isArray())
+				.with(jwtAndCsrf())).andExpect(status().isOk()).andExpect(jsonPath("$").isArray())
 				.andExpect(jsonPath("$.length()").value(1));
 	}
 
@@ -137,8 +116,8 @@ public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 		String jsonContent = node.toString();
 
 		mockMvc.perform(put("/api/auctions/" + getTestAuction().getId() + "/bids/" + getTestBid().getId())
-				.contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwt())).andExpect(status().isOk())
-				.andExpect(jsonPath("$.amount").value("1234567.01"));
+				.contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwtAndCsrf()))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.amount").value("1234567.01"));
 	}
 
 	/**
@@ -150,7 +129,7 @@ public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 		String jsonContent = "";
 
 		mockMvc.perform(put("/api/auctions/" + getTestAuction().getId() + "/bids/" + getTestBid().getId() + "/accept")
-				.contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwt())).andExpect(status().isOk())
+				.contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwtAndCsrf())).andExpect(status().isOk())
 				.andExpect(jsonPath("$.amount").value("10.0")).andExpect(jsonPath("$.status.name").value("Accepté"));
 	}
 
@@ -160,11 +139,11 @@ public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 	 */
 	@Test
 	public void testDeleteBid() throws Exception {
-		mockMvc.perform(
-				delete("/api/auctions/" + getTestAuction().getId() + "/bids/" + getTestBid().getId()).with(jwt()))
-				.andExpect(status().isNoContent());
+		mockMvc.perform(delete("/api/auctions/" + getTestAuction().getId() + "/bids/" + getTestBid().getId())
+				.with(jwtAndCsrf())).andExpect(status().isNoContent());
 
-		mockMvc.perform(get("/api/auctions/" + getTestAuction().getId() + "/bids/" + getTestBid().getId()).with(jwt()))
+		mockMvc.perform(
+				get("/api/auctions/" + getTestAuction().getId() + "/bids/" + getTestBid().getId()).with(jwtAndCsrf()))
 				.andExpect(status().isNotFound());
 	}
 }
