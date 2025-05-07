@@ -1,6 +1,5 @@
 import type {
   AuctionDtoWritable,
-  HarvestProductDtoReadable,
   HarvestProductDtoWritable,
   ProducerDetailDtoWritable,
   ProductDtoReadable,

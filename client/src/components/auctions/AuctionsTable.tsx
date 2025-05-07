@@ -1,8 +1,4 @@
-import {
-  type AuctionDtoReadable,
-  type HarvestProductDtoReadable,
-  type TransformedProductDtoReadable,
-} from '@/api/generated'
+import { type AuctionDtoReadable } from '@/api/generated'
 import { Card, CardContent } from '@/components/ui/card'
 import {
   Table,
