@@ -74,6 +74,8 @@ export function AuctionForm({ products }: AuctionFormProps): React.ReactElement<
           active: true,
           product: productDto,
           trader: traderDto,
+          strategy: null,
+          status: null,
       };
 
       createAuctionRequest.mutate({ body: auctionDto })
@@ -157,7 +159,8 @@ export function AuctionForm({ products }: AuctionFormProps): React.ReactElement<
                     <field.TextField
                       label="Expiration de l'enchère"
                       type="expirationDate"
-                      placeholder="10/10/2025"
+                      placeholder="2023-10-05T14:48:00.000Z"
+                      // value="2023-10-05T14:48:00.000Z"
                     />
                   )}
                 />

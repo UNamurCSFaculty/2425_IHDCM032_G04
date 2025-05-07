@@ -51,16 +51,17 @@ export function RouteComponent() {
 
   const handleUpdateAuction = () => {
     // TODO doesn't work
-    queryClient.invalidateQueries({ queryKey: listAuctionsQueryKey() });
+    queryClient.refetchQueries({ queryKey: listAuctionsQueryKey() });
+    // queryClient.invalidateQueries({ queryKey: listAuctionsQueryKey() });
   };
 
   const handleDeleteAuction = (auctionId: number) => {
     deleteAuction.mutate({ path: { id: auctionId } });
   };
 
-  const handleEditAuction = (auctionId: number) => {
-    console.log('Edit auction with ID:', auctionId);
-  };
+  // const handleEditAuction = (auctionId: number) => {
+  //   console.log('Edit auction with ID:', auctionId);
+  // };
 
   return (
     <div className="bg-muted flex flex-col p-6 md:p-10">
@@ -89,7 +90,7 @@ export function RouteComponent() {
                   <TableHead>Prix demandé</TableHead>
                   <TableHead></TableHead>
                   <TableHead></TableHead>
-                  <TableHead></TableHead>
+                  {/* <TableHead></TableHead> */}
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -120,7 +121,7 @@ export function RouteComponent() {
                       > Voir les offres
                       </Button>
                     </TableCell>
-                    <TableCell><Button onClick={() => { handleEditAuction(auction.id!); }}>Modifier</Button></TableCell>
+                    {/* <TableCell><Button onClick={() => { handleEditAuction(auction.id!); }}>Modifier</Button></TableCell> */}
                     <TableCell><Button onClick={() => { handleDeleteAuction(auction.id!); }}>Supprimer</Button></TableCell>
                   </TableRow>
                 ))}

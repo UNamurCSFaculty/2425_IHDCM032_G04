@@ -34,13 +34,14 @@ public class DataLoader implements CommandLineRunner {
 		databaseService.dropDatabase();
 
 		// Langue
-		LanguageDto languageDto = new LanguageDto();
-		languageDto.setName("Français");
-		languageDto.setCode("fr");
-		languageDto = languageService.createLanguage(languageDto);
+		LanguageDto languageFr = LanguageDto.builder().name("Français").code("fr").build();
+		languageFr = languageService.createLanguage(languageFr);
+
+		LanguageDto languageEn = LanguageDto.builder().name("English").code("en").build();
+		languageEn = languageService.createLanguage(languageEn);
 
 		// Création du producteur (sans coopérative) et d'un champ
-		UserDetailDto producer = createProducer(languageDto);
+		UserDetailDto producer = createProducer(languageFr);
 		producer = userService.createUser(producer);
 		FieldDto field = createField((ProducerDetailDto) producer);
 		field = fieldService.createField(field);
@@ -55,15 +56,15 @@ public class DataLoader implements CommandLineRunner {
 		producer = userService.updateUser(producer.getId(), producer);
 
 		// Création de l'utilisateur admin
-		UserDetailDto admin = createAdmin(languageDto);
+		UserDetailDto admin = createAdmin(languageFr);
 		admin = userService.createUser(admin);
 
 		// Création de l'utilisateur exportateur
-		UserDetailDto exporter = createExporter(languageDto);
+		UserDetailDto exporter = createExporter(languageFr);
 		exporter = userService.createUser(exporter);
 
 		// Création de l'utilisateur transformateur
-		UserDetailDto transformer = createTransformer(languageDto);
+		UserDetailDto transformer = createTransformer(languageFr);
 		transformer = userService.createUser(transformer);
 
 		// Création d'un store
