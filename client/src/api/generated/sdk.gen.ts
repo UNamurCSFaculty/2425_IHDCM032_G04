@@ -939,7 +939,7 @@ export const listDocumentsByUser = <ThrowOnError extends boolean = false>(option
 
 /**
  * Récupérer l'utilisateur courant
- * Renvoie les détails (UserDetailDto) de l'utilisateur authentifié via le cookie JWT
+ * Renvoie les détails (UserDetailDto) de l'utilisateur authentifié via le cookie JWT, cette méthode génère aussi un premier token csrf pour l'utilisateur
  */
 export const getCurrentUser = <ThrowOnError extends boolean = false>(options?: Options<GetCurrentUserData, ThrowOnError>) => {
     return (options?.client ?? _heyApiClient).get<GetCurrentUserResponse, GetCurrentUserError, ThrowOnError>({
