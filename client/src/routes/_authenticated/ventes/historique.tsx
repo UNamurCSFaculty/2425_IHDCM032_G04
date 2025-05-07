@@ -10,12 +10,8 @@ import { Card, CardContent } from '@/components/ui/card'
 
 export const Route = createFileRoute('/_authenticated/ventes/historique')({
   component: RouteComponent,
-  loader: async ({ context: { queryClient } }) => {
-    const user = useUserStore.getState().user // cannot use hook here...
-    if (!user) {
-      throw new Error('L\'utilisateur n\'est pas connecté');
-    }
-    return queryClient.ensureQueryData(listAuctionsQueryOptions(user.id!));
+  loader: async ({ context: { queryClient, user } }) => {
+    return queryClient.ensureQueryData(listAuctionsQueryOptions(user!.id));
   },
 });
 

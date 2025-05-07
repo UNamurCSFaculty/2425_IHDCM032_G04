@@ -45,7 +45,7 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 	}
 
 	/**
-	 * Teste la récupération d'un enchère existant.
+	 * Teste la récupération d'une enchère existante.
 	 * 
 	 */
 	@Test
@@ -57,7 +57,7 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 	}
 
 	/**
-	 * Teste la création d'un nouvel enchère.
+	 * Teste la création d'une nouvelle enchère.
 	 * 
 	 */
 	@Test
@@ -102,6 +102,43 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 	}
 
 	/**
+	 * Teste la création d'une nouvelle enchère, avec un status par défaut.
+	 *
+	 */
+	@Test
+	public void testCreateAuctionWithDefaultStatus() throws Exception {
+		ProducerDetailDto producer = new ProducerDetailDto();
+		producer.setId(getProducerTestUser().getId());
+
+		ProductDto productDto = new HarvestProductDto();
+		productDto.setId(getTestHarvestProduct().getId());
+
+		AuctionDto newAuction = new AuctionDto();
+		newAuction.setPrice(new BigDecimal("111.11"));
+		newAuction.setProductQuantity(11);
+		newAuction.setActive(true);
+		newAuction.setCreationDate(LocalDateTime.now());
+		newAuction.setExpirationDate(LocalDateTime.now());
+		newAuction.setProduct(productDto);
+		newAuction.setTrader(producer);
+
+		ObjectNode node = objectMapper.valueToTree(newAuction);
+		String jsonContent = node.toString();
+
+		mockMvc.perform(post("/api/auctions").contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwt()))
+				.andExpect(status().isCreated())
+				.andExpect(header().string("Location", containsString("/api/auctions/")))
+				.andExpect(jsonPath("$.price").value("111.11")).andExpect(jsonPath("$.productQuantity").value("11"))
+				.andExpect(jsonPath("$.active").value("true"))
+				.andExpect(jsonPath("$.trader.id").value(getProducerTestUser().getId()))
+				.andExpect(jsonPath("$.status.name").value("Ouvert"));
+
+		Auction createdAuction = auctionRepository.findAll().stream()
+				.filter(auction -> auction.getPrice().equals(new BigDecimal("111.11"))).findFirst()
+				.orElseThrow(() -> new AssertionError("Enchère non trouvée"));
+	}
+
+	/**
 	 * Teste la récupération de la liste de toutes les enchères.
 	 * 
 	 */
@@ -123,7 +160,7 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 	}
 
 	/**
-	 * Teste la mise à jour d'un enchère.
+	 * Teste la mise à jour d'une enchère.
 	 * 
 	 */
 	@Test
@@ -173,7 +210,7 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 	}
 
 	/**
-	 * Teste la suppression d'un enchère.
+	 * Teste la suppression d'une enchère.
 	 * 
 	 */
 	@Test

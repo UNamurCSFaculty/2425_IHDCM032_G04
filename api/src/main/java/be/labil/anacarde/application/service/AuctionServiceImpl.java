@@ -24,6 +24,15 @@ public class AuctionServiceImpl implements AuctionService {
 	@Override
 	public AuctionDto createAuction(AuctionDto dto) {
 		Auction auction = auctionMapper.toEntity(dto);
+
+		if (dto.getStatus() == null) {
+			TradeStatus pendingStatus = tradeStatusRepository.findStatusPending();
+			if (pendingStatus == null) {
+				throw new ResourceNotFoundException("Status non trouvé");
+			}
+			auction.setStatus(pendingStatus);
+		}
+
 		Auction saved = auctionRepository.save(auction);
 		return auctionMapper.toDto(saved);
 	}
@@ -39,9 +48,8 @@ public class AuctionServiceImpl implements AuctionService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<AuctionDto> listAuctions(Integer traderId, String status) {
-		List<AuctionDto> d = auctionRepository.findByActiveTrueFiltered(traderId, status).stream()
-				.map(auctionMapper::toDto).collect(Collectors.toList());
-		return d;
+		return auctionRepository.findByActiveTrueFiltered(traderId, status).stream().map(auctionMapper::toDto)
+				.collect(Collectors.toList());
 	}
 
 	@Override

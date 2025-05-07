@@ -210,21 +210,20 @@ export const zAuctionOptionValue = z.object({
   optionValue: z.string().min(1),
 })
 
-export const zAuction = z.object({
-  id: z.number().int().readonly().optional(),
-  price: z.number(),
-  productQuantity: z.number().int(),
-  expirationDate: z.iso.datetime(),
-  creationDate: z.iso.datetime().readonly(),
-  active: z.boolean(),
-  strategy: zAuctionStrategy,
-  product: zProductDeposit,
-  auctionOptionValues: z.array(zAuctionOptionValue).optional(),
-})
-
 export const zTradeStatus = z.object({
   id: z.number().int().readonly().optional(),
   name: z.string().min(1),
+})
+
+export const zAuction = z.object({
+  id: z.number().int().readonly().optional(),
+  price: z.coerce.number().positive(),
+  productId: z.coerce.number().int(),
+  productQuantity: z.coerce.number().int().positive(),
+  expirationDate: z.iso.datetime(),
+  // TODO implement strategy
+  //auctionStrategy: zAuctionStrategy
+  //auctionOptionValues: z.array(zAuctionOptionValue).optional()
 })
 
 export const zBid = z.object({

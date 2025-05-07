@@ -8,7 +8,7 @@ import type { UserDetailDtoReadable } from '@/api/generated'
 import { ContentSkeleton } from '@/components/Skeleton/ContentSkeleton'
 
 export interface MyRouterContext {
-  user: UserDetailDtoReadable | null
+  user?: UserDetailDtoReadable
   queryClient: QueryClient
 }
 

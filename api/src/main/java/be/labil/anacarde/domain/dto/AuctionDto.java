@@ -37,7 +37,6 @@ public class AuctionDto {
 	@Schema(description = "Statut actif de l'enchère", example = "true", requiredMode = Schema.RequiredMode.REQUIRED)
 	private Boolean active;
 
-	@NotNull(message = "La stratégie est requise")
 	@Schema(description = "Stratégie d'enchère associée", requiredMode = Schema.RequiredMode.REQUIRED)
 	private AuctionStrategyDto strategy;
 
@@ -52,7 +51,6 @@ public class AuctionDto {
 	@Schema(description = "Trader ayant créé l'enchère", requiredMode = Schema.RequiredMode.REQUIRED)
 	private TraderDetailDto trader;
 
-	@NotNull(message = "Le statut est requis")
 	@Schema(description = "Statut de l'offre", requiredMode = Schema.RequiredMode.REQUIRED)
 	private TradeStatusDto status;
 }

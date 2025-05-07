@@ -9,7 +9,7 @@ public interface TradeStatusRepository extends JpaRepository<TradeStatus, Intege
 	/**
 	 * Retourne le status accepté.
 	 *
-	 * @return Un status correspondant à l'acceptation d'une offre.
+	 * @return Un status correspondant à l'acceptation d'un achat/vente.
 	 */
 	@Query("SELECT s FROM TradeStatus s WHERE s.name = 'Accepté'")
 	TradeStatus findStatusAccepted();
@@ -17,8 +17,8 @@ public interface TradeStatusRepository extends JpaRepository<TradeStatus, Intege
 	/**
 	 * Retourne le status en cours.
 	 *
-	 * @return Un status correspondant à l'évaluation d'une offre.
+	 * @return Un status correspondant à l'évaluation d'une achat/vente.
 	 */
-	@Query("SELECT s FROM TradeStatus s WHERE s.name = 'En cours'")
+	@Query("SELECT s FROM TradeStatus s WHERE s.name = 'Ouvert'")
 	TradeStatus findStatusPending();
 }

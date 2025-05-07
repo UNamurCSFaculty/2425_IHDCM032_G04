@@ -58,6 +58,8 @@ export function SignupForm(): React.ComponentProps<'div'> {
     },
     onSubmit({ value }) {
       const validatedValue = zUserRegistration.parse(value)
+      console.log("validatedValue")
+      console.log(validatedValue)
       signinMutation.mutate({ body: validatedValue })
     },
   })

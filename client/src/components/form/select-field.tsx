@@ -20,6 +20,7 @@ type SelectFieldProps = {
   placeholder?: string
   className?: string
   required?: boolean
+  onChange?(value: string): void;
 }
 
 export const SelectField = ({
@@ -28,6 +29,7 @@ export const SelectField = ({
   placeholder,
   className = 'w-full',
   required = true,
+  onChange,
 }: SelectFieldProps) => {
   const field = useFieldContext<string>()
 
@@ -40,7 +42,7 @@ export const SelectField = ({
         </Label>
         <Select
           value={field.state.value}
-          onValueChange={value => field.handleChange(value)}
+          onValueChange={value => {field.handleChange(value); if (onChange) onChange(value) } }
         >
           <SelectTrigger
             className={className}

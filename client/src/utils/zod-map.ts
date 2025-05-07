@@ -2,7 +2,7 @@ import i18n from '../i18n'
 import { type ZodErrorMap } from 'zod'
 
 export const customErrorMap: ZodErrorMap = issue => {
-  console.log(issue, issue.message, issue.code)
+  // console.log(issue, issue.message, issue.code)
   switch (issue.code) {
     case 'too_small': {
       const min = issue.minimum as number
@@ -23,6 +23,6 @@ export const customErrorMap: ZodErrorMap = issue => {
       return { message: i18n.t(`validation.${issue.path}`) }
     }
     default:
-      return { message: 'Error Occurred' }
+      return { message: 'An error occurred' }
   }
 }

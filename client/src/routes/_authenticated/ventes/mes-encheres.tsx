@@ -9,7 +9,7 @@ import { useAuctionStore } from '@/store/auctionStore'
 import { useState } from 'react';
 import { formatDate } from '@/lib/utils'
 import { MapPin } from 'lucide-react'
-import BidsModal from '@/components/BidsModal'
+import ViewBidsDialog from '@/components/auctions/ViewBidsDialog'
 import { Card, CardContent } from '@/components/ui/card'
 
 const listAuctionsQueryOptions = (userId: number) => ({
@@ -19,11 +19,7 @@ const listAuctionsQueryOptions = (userId: number) => ({
 
 export const Route = createFileRoute('/_authenticated/ventes/mes-encheres')({
   component: RouteComponent,
-  loader: async ({ context: { queryClient } }) => {
-    const user = useUserStore.getState().user // cannot use hook here...
-    if (!user) {
-      throw new Error('L\'utilisateur n\'est pas connecté');
-    }
+  loader: async ({ context: { queryClient, user } }) => {
     return queryClient.ensureQueryData(listAuctionsQueryOptions(user.id!))
   },
 });
@@ -82,13 +78,13 @@ export function RouteComponent() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>ID</TableHead>
                   <TableHead>Début de l'enchère</TableHead>
                   <TableHead>Fin de l'enchère</TableHead>
                   <TableHead>Marchandise</TableHead>
+                  <TableHead>Num. Lot</TableHead>
                   <TableHead>Quantité</TableHead>
                   <TableHead>Qualité</TableHead>
-                  <TableHead>Magasin</TableHead>
+                  <TableHead>Localisation</TableHead>
                   <TableHead>Date de dépôt</TableHead>
                   <TableHead>Prix demandé</TableHead>
                   <TableHead></TableHead>
@@ -99,10 +95,10 @@ export function RouteComponent() {
               <TableBody>
                 { auctionsData.map((auction) => (
                   <TableRow key={auction.id}>
-                    <TableCell>{auction.id}</TableCell>
                     <TableCell>{formatDate(auction.creationDate)}</TableCell>
                     <TableCell>{formatDate(auction.expirationDate)}</TableCell>
                     <TableCell>{auction.product.type === "harvest" ? "Récolte" : "Transformé"}</TableCell>
+                    <TableCell>{auction.product.id}</TableCell>
                     <TableCell>{auction.productQuantity} kg</TableCell>
                     <TableCell>{auction.product.qualityControlId ?? "N/A"}</TableCell>
                     <TableCell>
@@ -131,7 +127,7 @@ export function RouteComponent() {
               </TableBody>
             </Table>
     
-            <BidsModal
+            <ViewBidsDialog
               auctionId={selectedAuctionId!}
               isOpen={isDialogOpen}
               setIsOpen={setIsDialogOpen}

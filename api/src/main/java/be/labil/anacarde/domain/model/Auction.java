@@ -33,8 +33,8 @@ public class Auction extends BaseEntity {
 	@Column(nullable = false)
 	private Boolean active;
 
-	@ManyToOne(optional = false)
-	@JoinColumn(name = "strategy_id", nullable = false)
+	@ManyToOne(optional = true) // TODO: implement strategy
+	@JoinColumn(name = "strategy_id", nullable = true)
 	private AuctionStrategy strategy;
 
 	@ManyToOne(optional = false)
