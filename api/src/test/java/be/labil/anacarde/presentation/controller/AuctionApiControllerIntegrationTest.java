@@ -21,7 +21,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
 /** Tests d'intégration pour le contrôleur des enchères. */
 @SpringBootTest
@@ -31,20 +30,7 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 
 	private @Autowired MockMvc mockMvc;
 	private @Autowired ObjectMapper objectMapper;
-	@Autowired
-	protected AuctionRepository auctionRepository;
-
-	/**
-	 * RequestPostProcessor qui ajoute automatiquement le cookie JWT à chaque requête.
-	 *
-	 * @return le RequestPostProcessor configuré.
-	 */
-	private RequestPostProcessor jwt() {
-		return request -> {
-			request.setCookies(getJwtCookie());
-			return request;
-		};
-	}
+	private @Autowired AuctionRepository auctionRepository;
 
 	/**
 	 * Teste la récupération d'un enchère existant.
@@ -52,7 +38,8 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 	 */
 	@Test
 	public void testGetAuction() throws Exception {
-		mockMvc.perform(get("/api/auctions/" + getTestAuction().getId()).accept(MediaType.APPLICATION_JSON).with(jwt()))
+		mockMvc.perform(
+				get("/api/auctions/" + getTestAuction().getId()).accept(MediaType.APPLICATION_JSON).with(jwtAndCsrf()))
 				.andExpect(status().isOk()).andExpect(jsonPath("$.price").value("500.0"))
 				.andExpect(jsonPath("$.productQuantity").value("10")).andExpect(jsonPath("$.active").value("true"))
 				.andExpect(jsonPath("$.product.weightKg").value("2000.0"));
@@ -82,7 +69,8 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		ObjectNode node = objectMapper.valueToTree(newAuction);
 		String jsonContent = node.toString();
 
-		mockMvc.perform(post("/api/auctions").contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwt()))
+		mockMvc.perform(
+				post("/api/auctions").contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwtAndCsrf()))
 				.andExpect(status().isCreated())
 				.andExpect(header().string("Location", containsString("/api/auctions/")))
 				.andExpect(jsonPath("$.price").value("111.11")).andExpect(jsonPath("$.productQuantity").value("11"))
@@ -100,8 +88,8 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 	 */
 	@Test
 	public void testListAuctions() throws Exception {
-		mockMvc.perform(get("/api/auctions").accept(MediaType.APPLICATION_JSON).with(jwt())).andExpect(status().isOk())
-				.andExpect(jsonPath("$").isArray());
+		mockMvc.perform(get("/api/auctions").accept(MediaType.APPLICATION_JSON).with(jwtAndCsrf()))
+				.andExpect(status().isOk()).andExpect(jsonPath("$").isArray());
 	}
 
 	/**
@@ -129,7 +117,7 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		String jsonContent = node.toString();
 
 		mockMvc.perform(put("/api/auctions/" + getTestAuction().getId()).contentType(MediaType.APPLICATION_JSON)
-				.content(jsonContent).with(jwt())).andExpect(status().isOk())
+				.content(jsonContent).with(jwtAndCsrf())).andExpect(status().isOk())
 				.andExpect(jsonPath("$.productQuantity").value("99"));
 	}
 
@@ -140,10 +128,10 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 	@Test
 	public void testDeleteAuction() throws Exception {
 		// TODO delete
-		// mockMvc.perform(delete("/api/auctions/" + getTestAuction().getId()).with(jwt()))
+		// mockMvc.perform(delete("/api/auctions/" + getTestAuction().getId()).with(jwtAndCsrf()))
 		// .andExpect(status().isNoContent());
 		//
 		// mockMvc.perform(get("/api/auctions/" +
-		// getTestAuction().getId()).with(jwt())).andExpect(status().isNotFound());
+		// getTestAuction().getId()).with(jwtAndCsrf())).andExpect(status().isNotFound());
 	}
 }
