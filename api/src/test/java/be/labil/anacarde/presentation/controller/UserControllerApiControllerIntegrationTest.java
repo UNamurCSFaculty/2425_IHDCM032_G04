@@ -21,25 +21,17 @@ import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
 
 /** Tests d'intégration pour le contrôleur des utilisateurs. */
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
 public class UserControllerApiControllerIntegrationTest extends AbstractIntegrationTest {
 
-	private @Autowired MockMvc mockMvc;
 	private @Autowired ObjectMapper objectMapper;
 	private @Autowired BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	/**
-	 * Teste la récupération d'un utilisateur existant.
+	 * Teste la récupération d'un utilisa teur existant.
 	 * 
 	 */
 	@Test

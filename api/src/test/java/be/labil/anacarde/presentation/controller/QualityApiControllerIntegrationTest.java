@@ -11,22 +11,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
 
 /** Tests d'intégration pour le contrôleur des qualités. */
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
 public class QualityApiControllerIntegrationTest extends AbstractIntegrationTest {
 
-	private @Autowired MockMvc mockMvc;
 	private @Autowired ObjectMapper objectMapper;
-	@Autowired
-	protected QualityRepository qualityRepository;
+	private @Autowired QualityRepository qualityRepository;
 
 	/**
 	 * Teste la récupération d'une qualité existant.

@@ -2,20 +2,11 @@ package be.labil.anacarde.presentation.controller;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.startsWith;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import be.labil.anacarde.domain.dto.DocumentDto;
-import be.labil.anacarde.domain.dto.HarvestProductDto;
-import be.labil.anacarde.domain.dto.ProductDto;
-import be.labil.anacarde.domain.dto.QualityControlDto;
-import be.labil.anacarde.domain.dto.QualityDto;
-import be.labil.anacarde.domain.dto.TransformedProductDto;
+import be.labil.anacarde.domain.dto.*;
 import be.labil.anacarde.domain.dto.user.QualityInspectorDetailDto;
 import be.labil.anacarde.infrastructure.persistence.QualityControlRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,28 +14,15 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
 
 /**
  * Tests d'intégration pour le contrôleur des contrôles qualité.
  */
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
 public class QualityControlApiControllerIntegrationTest extends AbstractIntegrationTest {
 
-	@Autowired
-	private MockMvc mockMvc;
-
-	@Autowired
-	private ObjectMapper objectMapper;
-
-	@Autowired
-	private QualityControlRepository qualityControlRepository;
+	private @Autowired ObjectMapper objectMapper;
+	private @Autowired QualityControlRepository qualityControlRepository;
 
 	/**
 	 * Teste la création d’un nouveau contrôle qualité.

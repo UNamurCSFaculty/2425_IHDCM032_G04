@@ -1,6 +1,8 @@
 package be.labil.anacarde.presentation.controller;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 import be.labil.anacarde.application.service.DatabaseService;
 import be.labil.anacarde.domain.dto.LanguageDto;
@@ -20,53 +22,41 @@ import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 /**
  * Classe de base pour les tests d'intégration qui nécessitent des utilisateurs et des rôles de test en base de données.
  */
+@SpringBootTest
+@ActiveProfiles("test")
 public abstract class AbstractIntegrationTest {
 
-	@Autowired
-	protected JwtUtil jwtUtil;
-	@Autowired
-	protected UserRepository userRepository;
-	@Autowired
-	protected RoleRepository roleRepository;
-	@Autowired
-	protected LanguageRepository languageRepository;
-	@Autowired
-	protected StoreRepository storeRepository;
-	@Autowired
-	protected ProductRepository productRepository;
-	@Autowired
-	protected AuctionRepository auctionRepository;
-	@Autowired
-	protected AuctionStrategyRepository auctionStrategyRepository;
-	@Autowired
-	protected BidRepository bidRepository;
-	@Autowired
-	protected BidStatusRepository bidStatusRepository;
-	@Autowired
-	protected UserDetailsService userDetailsService;
-	@Autowired
-	protected FieldRepository fieldRepository;
-	@Autowired
-	protected CooperativeRepository cooperativeRepository;
-	@Autowired
-	protected RegionRepository regionRepository;
-	@Autowired
-	protected DocumentRepository documentRepository;
-	@Autowired
-	protected QualityRepository qualityRepository;
-	@Autowired
-	protected ContractOfferRepository contractOfferRepository;
-	@Autowired
-	protected QualityControlRepository qualityControlRepository;
-	@Autowired
-	protected DatabaseService databaseService;
+	protected @Autowired JwtUtil jwtUtil;
+	protected @Autowired UserRepository userRepository;
+	protected @Autowired RoleRepository roleRepository;
+	protected @Autowired LanguageRepository languageRepository;
+	protected @Autowired StoreRepository storeRepository;
+	protected @Autowired ProductRepository productRepository;
+	protected @Autowired AuctionRepository auctionRepository;
+	protected @Autowired AuctionStrategyRepository auctionStrategyRepository;
+	protected @Autowired BidRepository bidRepository;
+	protected @Autowired BidStatusRepository bidStatusRepository;
+	protected @Autowired UserDetailsService userDetailsService;
+	protected @Autowired FieldRepository fieldRepository;
+	protected @Autowired CooperativeRepository cooperativeRepository;
+	protected @Autowired RegionRepository regionRepository;
+	protected @Autowired DocumentRepository documentRepository;
+	protected @Autowired QualityRepository qualityRepository;
+	protected @Autowired ContractOfferRepository contractOfferRepository;
+	protected @Autowired QualityControlRepository qualityControlRepository;
+	protected @Autowired DatabaseService databaseService;
 
 	private Language mainLanguage;
 	private User mainTestUser;
@@ -95,10 +85,18 @@ public abstract class AbstractIntegrationTest {
 	@Getter
 	private Cookie jwtCookie;
 
+	protected @Autowired WebApplicationContext wac;
+
+	protected MockMvc mockMvc;
+
 	@BeforeEach
 	public void setUp() {
 		initUserDatabase();
 		initJwtCookie();
+
+		this.mockMvc = MockMvcBuilders.webAppContextSetup(wac).apply(springSecurity())
+				// on crée une "requête par défaut" qui porte jwt+csrf
+				.defaultRequest(get("/").cookie(getJwtCookie()).with(csrf())).build();
 	}
 
 	@AfterEach

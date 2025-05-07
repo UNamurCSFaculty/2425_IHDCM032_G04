@@ -11,7 +11,6 @@ import be.labil.anacarde.domain.dto.StoreDetailDto;
 import be.labil.anacarde.domain.dto.TransformedProductDto;
 import be.labil.anacarde.domain.dto.user.ProducerDetailDto;
 import be.labil.anacarde.domain.dto.user.TransformerDetailDto;
-import be.labil.anacarde.domain.mapper.ProductMapper;
 import be.labil.anacarde.domain.model.Product;
 import be.labil.anacarde.infrastructure.persistence.ProductRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,24 +18,13 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
 
 /** Tests d'intégration pour le contrôleur des produits. */
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
 public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest {
 
-	private @Autowired MockMvc mockMvc;
 	private @Autowired ObjectMapper objectMapper;
-	@Autowired
-	protected ProductRepository productRepository;
-	@Autowired
-	private ProductMapper productMapper;
+	private @Autowired ProductRepository productRepository;
 
 	/**
 	 * Teste la récupération d'un produit existant.
