@@ -16,7 +16,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
 /** Tests d'intégration pour le contrôleur des qualités. */
 @SpringBootTest
@@ -30,26 +29,13 @@ public class QualityApiControllerIntegrationTest extends AbstractIntegrationTest
 	protected QualityRepository qualityRepository;
 
 	/**
-	 * RequestPostProcessor qui ajoute automatiquement le cookie JWT à chaque requête.
-	 *
-	 * @return le RequestPostProcessor configuré.
-	 */
-	private RequestPostProcessor jwt() {
-		return request -> {
-			request.setCookies(getJwtCookie());
-			return request;
-		};
-	}
-
-	/**
 	 * Teste la récupération d'une qualité existant.
 	 * 
 	 */
 	@Test
 	public void testGetQuality() throws Exception {
-		mockMvc.perform(
-				get("/api/qualities/" + getMainTestQuality().getId()).accept(MediaType.APPLICATION_JSON).with(jwt()))
-				.andExpect(status().isOk()).andExpect(jsonPath("$.name").value("WW160"));
+		mockMvc.perform(get("/api/qualities/" + getMainTestQuality().getId()).accept(MediaType.APPLICATION_JSON)
+				.with(jwtAndCsrf())).andExpect(status().isOk()).andExpect(jsonPath("$.name").value("WW160"));
 	}
 
 	/**
@@ -64,7 +50,8 @@ public class QualityApiControllerIntegrationTest extends AbstractIntegrationTest
 		ObjectNode node = objectMapper.valueToTree(newQuality);
 		String jsonContent = node.toString();
 
-		mockMvc.perform(post("/api/qualities").contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwt()))
+		mockMvc.perform(
+				post("/api/qualities").contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwtAndCsrf()))
 				.andExpect(status().isCreated())
 				.andExpect(header().string("Location", containsString("/api/qualities/")))
 				.andExpect(jsonPath("$.name").value("ZZZ-000"));
@@ -80,8 +67,8 @@ public class QualityApiControllerIntegrationTest extends AbstractIntegrationTest
 	 */
 	@Test
 	public void testListQualities() throws Exception {
-		mockMvc.perform(get("/api/qualities").accept(MediaType.APPLICATION_JSON).with(jwt())).andExpect(status().isOk())
-				.andExpect(jsonPath("$").isArray());
+		mockMvc.perform(get("/api/qualities").accept(MediaType.APPLICATION_JSON).with(jwtAndCsrf()))
+				.andExpect(status().isOk()).andExpect(jsonPath("$").isArray());
 	}
 
 	/**
@@ -97,7 +84,7 @@ public class QualityApiControllerIntegrationTest extends AbstractIntegrationTest
 		String jsonContent = node.toString();
 
 		mockMvc.perform(put("/api/qualities/" + getMainTestQuality().getId()).contentType(MediaType.APPLICATION_JSON)
-				.content(jsonContent).with(jwt())).andExpect(status().isOk())
+				.content(jsonContent).with(jwtAndCsrf())).andExpect(status().isOk())
 				.andExpect(jsonPath("$.name").value("WW450"));
 	}
 
@@ -108,10 +95,10 @@ public class QualityApiControllerIntegrationTest extends AbstractIntegrationTest
 	@Test
 	public void testDeleteQuality() throws Exception {
 		// TODO delete
-		// mockMvc.perform(delete("/api/qualities/" + getMainTestQuality().getId()).with(jwt()))
+		// mockMvc.perform(delete("/api/qualities/" + getMainTestQuality().getId()).with(jwtAndCsrf()))
 		// .andExpect(status().isNoContent());
 		//
 		// mockMvc.perform(get("/api/qualities/" +
-		// getMainTestQuality().getId()).with(jwt())).andExpect(status().isNotFound());
+		// getMainTestQuality().getId()).with(jwtAndCsrf())).andExpect(status().isNotFound());
 	}
 }

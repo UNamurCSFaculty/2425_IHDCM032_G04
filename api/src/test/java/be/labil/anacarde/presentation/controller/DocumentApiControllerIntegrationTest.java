@@ -17,7 +17,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
 /**
  * Tests d'intégration pour le contrôleur des documents.
@@ -36,13 +35,6 @@ public class DocumentApiControllerIntegrationTest extends AbstractIntegrationTes
 	@Autowired
 	private DocumentRepository documentRepository;
 
-	private RequestPostProcessor jwt() {
-		return request -> {
-			request.setCookies(getJwtCookie());
-			return request;
-		};
-	}
-
 	/**
 	 * Teste la récupération d'un document existant via son ID.
 	 */
@@ -50,9 +42,9 @@ public class DocumentApiControllerIntegrationTest extends AbstractIntegrationTes
 	public void testGetDocument() throws Exception {
 		String expectedDate = getMainTestDocument().getUploadDate()
 				.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-		mockMvc.perform(
-				get("/api/documents/" + getMainTestDocument().getId()).accept(MediaType.APPLICATION_JSON).with(jwt()))
-				.andExpect(status().isOk()).andExpect(jsonPath("$.id").value(getMainTestDocument().getId()))
+		mockMvc.perform(get("/api/documents/" + getMainTestDocument().getId()).accept(MediaType.APPLICATION_JSON)
+				.with(jwtAndCsrf())).andExpect(status().isOk())
+				.andExpect(jsonPath("$.id").value(getMainTestDocument().getId()))
 				.andExpect(jsonPath("$.storagePath").value(getMainTestDocument().getStoragePath()))
 				.andExpect(jsonPath("$.userId").value(getMainTestDocument().getUser().getId()))
 				.andExpect(jsonPath("$.format").value(getMainTestDocument().getFormat()))
@@ -78,7 +70,8 @@ public class DocumentApiControllerIntegrationTest extends AbstractIntegrationTes
 		String expectedDate = getMainTestDocument().getUploadDate()
 				.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
 
-		mockMvc.perform(post("/api/documents").contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwt()))
+		mockMvc.perform(
+				post("/api/documents").contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwtAndCsrf()))
 				.andExpect(status().isCreated())
 				.andExpect(header().string("Location", containsString("/api/documents")))
 				.andExpect(jsonPath("$.storagePath").value("/test/path/created.pdf"))
@@ -106,7 +99,7 @@ public class DocumentApiControllerIntegrationTest extends AbstractIntegrationTes
 				.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
 
 		mockMvc.perform(put("/api/documents/" + getMainTestDocument().getId()).contentType(MediaType.APPLICATION_JSON)
-				.content(jsonContent).with(jwt())).andExpect(status().isOk())
+				.content(jsonContent).with(jwtAndCsrf())).andExpect(status().isOk())
 				.andExpect(jsonPath("$.id").value(getMainTestDocument().getId()))
 				.andExpect(jsonPath("$.storagePath").value("/updated/path/updated.pdf"))
 				.andExpect(jsonPath("$.userId").value(getProducerTestUser().getId()))
@@ -121,10 +114,10 @@ public class DocumentApiControllerIntegrationTest extends AbstractIntegrationTes
 	@Test
 	public void testDeleteDocument() throws Exception {
 		// TODO résoudre conflit
-		// mockMvc.perform(delete("/api/documents/" + getMainTestDocument().getId()).with(jwt()))
+		// mockMvc.perform(delete("/api/documents/" + getMainTestDocument().getId()).with(jwtAndCsrf()))
 		// .andExpect(status().isNoContent());
 		//
-		// mockMvc.perform(get("/api/documents/" + getMainTestDocument().getId()).with(jwt()))
+		// mockMvc.perform(get("/api/documents/" + getMainTestDocument().getId()).with(jwtAndCsrf()))
 		// .andExpect(status().isNotFound());
 	}
 
@@ -134,7 +127,7 @@ public class DocumentApiControllerIntegrationTest extends AbstractIntegrationTes
 	@Test
 	public void testListDocumentsForAUser() throws Exception {
 		mockMvc.perform(get("/api/documents/users/" + getMainTestDocument().getUser().getId())
-				.accept(MediaType.APPLICATION_JSON).with(jwt())).andExpect(status().isOk())
+				.accept(MediaType.APPLICATION_JSON).with(jwtAndCsrf())).andExpect(status().isOk())
 				.andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(1))
 				.andExpect(jsonPath("$[0].id").value(getMainTestDocument().getId()));
 	}

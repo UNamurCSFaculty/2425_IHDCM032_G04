@@ -1,5 +1,7 @@
 package be.labil.anacarde.presentation.controller;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+
 import be.labil.anacarde.application.service.DatabaseService;
 import be.labil.anacarde.domain.dto.LanguageDto;
 import be.labil.anacarde.domain.model.*;
@@ -20,6 +22,7 @@ import org.locationtech.jts.geom.Point;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
 /**
  * Classe de base pour les tests d'intégration qui nécessitent des utilisateurs et des rôles de test en base de données.
@@ -103,6 +106,16 @@ public abstract class AbstractIntegrationTest {
 		databaseService.dropDatabase();
 	}
 
+	/**
+	 * Ajoute automatiquement le cookie JWT et un token CSRF valide à la requête.
+	 */
+	protected RequestPostProcessor jwtAndCsrf() {
+		return request -> {
+			request.setCookies(getJwtCookie());
+			csrf().postProcessRequest(request);
+			return request;
+		};
+	}
 	/**
 	 * Renvoie l'utilisateur de test principal, utilisé pour les requêtes (cookie JWT).
 	 */
