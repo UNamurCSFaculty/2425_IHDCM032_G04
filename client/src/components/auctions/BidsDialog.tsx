@@ -8,14 +8,14 @@ import type { BidDtoReadable } from '@/api/generated';
 import { acceptAuctionMutation, acceptBidMutation, listBidsOptions } from '@/api/generated/@tanstack/react-query.gen'
 import { formatDate } from '@/lib/utils';
 
-interface ViewBidsDialogProps {
+interface BidsDialogProps {
   auctionId: number;
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
   updateAuction: () => void;
 }
 
-const ViewBidsDialog: React.FC<ViewBidsDialogProps> = ({ auctionId, isOpen, setIsOpen, updateAuction }) => {
+const BidsDialog: React.FC<BidsDialogProps> = ({ auctionId, isOpen, setIsOpen, updateAuction }) => {
   const { data, isLoading, isError } = useQuery(
     {
       ...listBidsOptions({ path: { auctionId: auctionId } }),
@@ -73,7 +73,7 @@ const ViewBidsDialog: React.FC<ViewBidsDialogProps> = ({ auctionId, isOpen, setI
                           </TableCell>
                           <TableCell>{bid.amount.toLocaleString()} CFA</TableCell>
                           <TableCell>
-                            <Button onClick={() => { handleAcceptBid(bid.id!); }}>Accepter</Button>
+                            <Button onClick={() => { handleAcceptBid(bid.id); }}>Accepter</Button>
                           </TableCell>
                         </TableRow>
                       ))
@@ -89,4 +89,4 @@ const ViewBidsDialog: React.FC<ViewBidsDialogProps> = ({ auctionId, isOpen, setI
   );
 };
 
-export default ViewBidsDialog;
+export default BidsDialog;

@@ -9,7 +9,7 @@ import { useAuctionStore } from '@/store/auctionStore'
 import { useState } from 'react';
 import { formatDate } from '@/lib/utils'
 import { MapPin } from 'lucide-react'
-import ViewBidsDialog from '@/components/auctions/ViewBidsDialog'
+import BidsDialog from '@/components/auctions/BidsDialog'
 import { Card, CardContent } from '@/components/ui/card'
 
 const listAuctionsQueryOptions = (userId: number) => ({
@@ -128,7 +128,7 @@ export function RouteComponent() {
               </TableBody>
             </Table>
     
-            <ViewBidsDialog
+            <BidsDialog
               auctionId={selectedAuctionId!}
               isOpen={isDialogOpen}
               setIsOpen={setIsDialogOpen}
