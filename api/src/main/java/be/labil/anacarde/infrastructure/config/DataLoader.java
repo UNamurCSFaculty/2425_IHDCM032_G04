@@ -190,7 +190,7 @@ public class DataLoader implements CommandLineRunner {
 	private BidDto createBid(AuctionDto auction, TraderDetailDto trader, BigDecimal amount, LocalDateTime creationDate,
 			TradeStatusDto status) {
 		BidDto bid = new BidDto();
-		bid.setAuction(auction);
+		bid.setAuctionId(auction.getId());
 		bid.setTrader(trader);
 		bid.setAmount(amount);
 		bid.setCreationDate(creationDate);

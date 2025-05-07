@@ -26,9 +26,8 @@ public class Bid extends BaseEntity {
 	@CreationTimestamp
 	private LocalDateTime creationDate;
 
-	@ManyToOne(optional = false)
-	@JoinColumn(name = "auction_id", nullable = false)
-	private Auction auction;
+	@Column(name = "auction_id", nullable = false)
+	private Integer auctionId;
 
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "trader_id", nullable = false)

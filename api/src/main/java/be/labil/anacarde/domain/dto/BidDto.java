@@ -30,9 +30,9 @@ public class BidDto {
 	private LocalDateTime creationDate;
 
 	/** Enchère associée à l'offre. */
-	@NotNull(message = "L'enchère associée est requise")
-	@Schema(description = "Enchère associée à l'offre", requiredMode = Schema.RequiredMode.REQUIRED)
-	private AuctionDto auction;
+	@NotNull(message = "L'identifiant de l'enchère associée est requise")
+	@Schema(description = "Identifiant de l'enchère associée à l'offre", requiredMode = Schema.RequiredMode.REQUIRED)
+	private Integer auctionId;
 
 	/** Trader ayant passé l'offre. */
 	@NotNull(message = "Le trader est requis")

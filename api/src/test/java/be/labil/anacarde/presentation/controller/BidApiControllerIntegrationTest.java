@@ -53,8 +53,7 @@ public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 		mockMvc.perform(get("/api/auctions/" + getTestAuction().getId() + "/bids/" + getTestBid().getId())
 				.accept(MediaType.APPLICATION_JSON).with(jwt())).andExpect(status().isOk())
 				.andExpect(jsonPath("$.amount").value("10.0"))
-				.andExpect(jsonPath("$.auction.id").value(getTestAuction().getId()))
-				.andExpect(jsonPath("$.auction.price").value(getTestAuction().getPrice()))
+				.andExpect(jsonPath("$.auctionId").value(getTestAuction().getId()))
 				.andExpect(jsonPath("$.trader.id").value(getProducerTestUser().getId()));
 	}
 
@@ -79,11 +78,10 @@ public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 
 		BidDto newBid = new BidDto();
 		newBid.setAmount(new BigDecimal("999.99"));
-		newBid.setAuction(auctionDto);
 		newBid.setStatus(statusDto);
 		newBid.setCreationDate(LocalDateTime.now());
 		newBid.setTrader(producer);
-		newBid.setAuction(auctionDto);
+		newBid.setAuctionId(auctionDto.getId());
 
 		ObjectNode node = objectMapper.valueToTree(newBid);
 		String jsonContent = node.toString();
@@ -129,11 +127,11 @@ public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 
 		BidDto updateBid = new BidDto();
 		updateBid.setAmount(new BigDecimal("1234567.01"));
-		updateBid.setAuction(auctionDto);
+		updateBid.setAuctionId(auctionDto.getId());
 		updateBid.setStatus(TradeStatusDto);
 		updateBid.setCreationDate(LocalDateTime.now());
 		updateBid.setTrader(producer);
-		updateBid.setAuction(auctionDto);
+		updateBid.setAuctionId(auctionDto.getId());
 
 		ObjectNode node = objectMapper.valueToTree(updateBid);
 		String jsonContent = node.toString();

@@ -470,13 +470,13 @@ public abstract class AbstractIntegrationTest {
 		TradeStatusRepository.save(bidStatusAccepted);
 
 		// A bid on an auction
-		Bid bid = Bid.builder().amount(new BigDecimal("10.0")).creationDate(LocalDateTime.now()).auction(auction)
-				.trader((Trader) producer).status(testBidStatus).build();
+		Bid bid = Bid.builder().amount(new BigDecimal("10.0")).creationDate(LocalDateTime.now())
+				.auctionId(testAuction.getId()).trader((Trader) producer).status(testBidStatus).build();
 		testBid = bidRepository.save(bid);
 
 		// A bid on a different auction
-		Bid bid2 = Bid.builder().amount(new BigDecimal("500.0")).creationDate(LocalDateTime.now()).auction(auction2)
-				.trader((Trader) producer).status(testBidStatus).build();
+		Bid bid2 = Bid.builder().amount(new BigDecimal("500.0")).creationDate(LocalDateTime.now())
+				.auctionId(auction2.getId()).trader((Trader) producer).status(testBidStatus).build();
 		bidRepository.save(bid2);
 
 		// A cooperative who has for president 'producer'

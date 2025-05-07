@@ -30,7 +30,7 @@ class BidMapperTest {
 		Auction auction = new Auction();
 		auction.setId(1);
 		auction.setProduct(HarvestProduct.builder().id(1).build());
-		bid.setAuction(auction);
+		bid.setAuctionId(auction.getId());
 		bid.setTrader(new Transformer());
 		bid.setStatus(new TradeStatus());
 
@@ -40,7 +40,7 @@ class BidMapperTest {
 		assertEquals(bid.getId(), dto.getId());
 		assertEquals(bid.getAmount(), dto.getAmount());
 		assertEquals(bid.getCreationDate(), dto.getCreationDate());
-		assertNotNull(dto.getAuction());
+		assertNotNull(dto.getAuctionId());
 		assertNotNull(dto.getTrader());
 		assertNotNull(dto.getStatus());
 	}
@@ -54,7 +54,7 @@ class BidMapperTest {
 		AuctionDto auction = new AuctionDto();
 		auction.setId(1);
 		auction.setProduct(new HarvestProductDto());
-		dto.setAuction(auction);
+		dto.setAuctionId(auction.getId());
 		dto.setTrader(new TransformerDetailDto());
 		dto.setStatus(new TradeStatusDto());
 
@@ -64,7 +64,7 @@ class BidMapperTest {
 		assertEquals(dto.getId(), entity.getId());
 		assertEquals(dto.getAmount(), entity.getAmount());
 		assertEquals(dto.getCreationDate(), entity.getCreationDate());
-		assertNotNull(entity.getAuction());
+		assertNotNull(entity.getAuctionId());
 		assertNotNull(entity.getTrader());
 		assertNotNull(entity.getStatus());
 	}
@@ -78,7 +78,7 @@ class BidMapperTest {
 		existing.setId(10);
 		existing.setAmount(new BigDecimal("100.00"));
 		existing.setCreationDate(LocalDateTime.of(2025, 1, 1, 9, 0));
-		existing.setAuction(new Auction());
+		existing.setAuctionId(1);
 		existing.setTrader(new Transformer());
 		existing.setStatus(new TradeStatus());
 
@@ -87,7 +87,7 @@ class BidMapperTest {
 		assertEquals(10, updated.getId());
 		assertEquals(new BigDecimal("300.00"), updated.getAmount());
 		assertEquals(LocalDateTime.of(2025, 1, 1, 9, 0), updated.getCreationDate());
-		assertNotNull(updated.getAuction());
+		assertEquals(1, updated.getAuctionId());
 		assertNotNull(updated.getTrader());
 		assertNotNull(updated.getStatus());
 	}

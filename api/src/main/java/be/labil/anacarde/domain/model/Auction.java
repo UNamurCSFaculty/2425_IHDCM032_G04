@@ -3,6 +3,7 @@ package be.labil.anacarde.domain.model;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -52,4 +53,7 @@ public class Auction extends BaseEntity {
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "status_id", nullable = false)
 	private TradeStatus status;
+
+	@OneToMany(mappedBy = "auctionId", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+	private List<Bid> bids;
 }

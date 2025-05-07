@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 import lombok.Data;
 
@@ -51,6 +52,9 @@ public class AuctionDto {
 	@Schema(description = "Trader ayant créé l'enchère", requiredMode = Schema.RequiredMode.REQUIRED)
 	private TraderDetailDto trader;
 
-	@Schema(description = "Statut de l'offre", requiredMode = Schema.RequiredMode.REQUIRED)
+	@Schema(description = "Statut de l'enchère", requiredMode = Schema.RequiredMode.REQUIRED)
 	private TradeStatusDto status;
+
+	@Schema(description = "Liste des offres posées sur l'enchère")
+	private List<BidDto> bids;
 }

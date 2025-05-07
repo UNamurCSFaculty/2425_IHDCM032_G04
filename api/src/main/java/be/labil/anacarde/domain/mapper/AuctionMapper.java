@@ -13,6 +13,7 @@ public abstract class AuctionMapper {
 	@Mapping(source = "trader", target = "trader")
 	@Mapping(source = "auctionOptionValues", target = "auctionOptionValues")
 	@Mapping(source = "status", target = "status")
+	@Mapping(source = "bids", target = "bids")
 	public abstract Auction toEntity(AuctionDto dto);
 
 	@Mapping(source = "strategy", target = "strategy")
@@ -20,6 +21,7 @@ public abstract class AuctionMapper {
 	@Mapping(source = "trader", target = "trader")
 	@Mapping(source = "auctionOptionValues", target = "auctionOptionValues")
 	@Mapping(source = "status", target = "status")
+	@Mapping(source = "bids", target = "bids")
 	public abstract AuctionDto toDto(Auction auction);
 
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
