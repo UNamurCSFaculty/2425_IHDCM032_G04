@@ -40,7 +40,7 @@ const AuctionsTable: React.FC<AuctionsTableProps> = ({
         {(auctions === null || auctions.length == 0) 
         ? <p>Aucune vente aux enchères n'est répertoriée.</p> 
         : <>
-          <p className="mb-4">La liste des ventes aux enchères peut être consultée ci-dessous.</p>
+          <p className="mb-4">La liste des transactions peut être consultée ci-dessous.</p>
               <Table>
                 <TableHeader>
                   <TableRow>
