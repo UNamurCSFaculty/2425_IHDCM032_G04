@@ -63,15 +63,16 @@ export function RouteComponent() {
             <AuctionsTable 
               tableTitle="Mes ventes en cours" 
               showColumnViewBids={true}
-              handleDeleteAuction={handleDeleteAuction}
               showColumnDeleteAuction={true}
               handleViewBids={handleViewBids}
+              handleDeleteAuction={handleDeleteAuction}
               auctions={auctionsData} 
             />
             <BidsDialog
               auctionId={selectedAuctionId!}
               isOpen={isDialogOpen}
               setIsOpen={setIsDialogOpen}
+              showColumnAcceptBid={true}
             />
           </>
       )

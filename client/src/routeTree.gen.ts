@@ -25,6 +25,7 @@ import { Route as AuthenticatedVentesHistoriqueImport } from './routes/_authenti
 import { Route as AuthenticatedEncheresCajouImport } from './routes/_authenticated/encheres/cajou'
 import { Route as AuthenticatedEncheresAutresImport } from './routes/_authenticated/encheres/autres'
 import { Route as AuthenticatedAdminUsersImport } from './routes/_authenticated/admin/users'
+import { Route as AuthenticatedAchatsNouvelleEnchereImport } from './routes/_authenticated/achats/nouvelle-enchere'
 import { Route as AuthenticatedEncheresDetailIdImport } from './routes/_authenticated/encheres/detail/$id'
 
 // Create/Update Routes
@@ -120,6 +121,13 @@ const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersImport.update({
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 
+const AuthenticatedAchatsNouvelleEnchereRoute =
+  AuthenticatedAchatsNouvelleEnchereImport.update({
+    id: '/achats/nouvelle-enchere',
+    path: '/achats/nouvelle-enchere',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+
 const AuthenticatedEncheresDetailIdRoute =
   AuthenticatedEncheresDetailIdImport.update({
     id: '/encheres/detail/$id',
@@ -179,6 +187,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/contact'
       preLoaderRoute: typeof ContactIndexImport
       parentRoute: typeof rootRoute
+    }
+    '/_authenticated/achats/nouvelle-enchere': {
+      id: '/_authenticated/achats/nouvelle-enchere'
+      path: '/achats/nouvelle-enchere'
+      fullPath: '/achats/nouvelle-enchere'
+      preLoaderRoute: typeof AuthenticatedAchatsNouvelleEnchereImport
+      parentRoute: typeof AuthenticatedImport
     }
     '/_authenticated/admin/users': {
       id: '/_authenticated/admin/users'
@@ -242,6 +257,7 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 interface AuthenticatedRouteChildren {
+  AuthenticatedAchatsNouvelleEnchereRoute: typeof AuthenticatedAchatsNouvelleEnchereRoute
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
   AuthenticatedEncheresAutresRoute: typeof AuthenticatedEncheresAutresRoute
   AuthenticatedEncheresCajouRoute: typeof AuthenticatedEncheresCajouRoute
@@ -253,6 +269,8 @@ interface AuthenticatedRouteChildren {
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedAchatsNouvelleEnchereRoute:
+    AuthenticatedAchatsNouvelleEnchereRoute,
   AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
   AuthenticatedEncheresAutresRoute: AuthenticatedEncheresAutresRoute,
   AuthenticatedEncheresCajouRoute: AuthenticatedEncheresCajouRoute,
@@ -276,6 +294,7 @@ export interface FileRoutesByFullPath {
   '/contact/merci': typeof ContactMerciRoute
   '/test/historique': typeof TestHistoriqueRoute
   '/contact': typeof ContactIndexRoute
+  '/achats/nouvelle-enchere': typeof AuthenticatedAchatsNouvelleEnchereRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/encheres/autres': typeof AuthenticatedEncheresAutresRoute
   '/encheres/cajou': typeof AuthenticatedEncheresCajouRoute
@@ -294,6 +313,7 @@ export interface FileRoutesByTo {
   '/contact/merci': typeof ContactMerciRoute
   '/test/historique': typeof TestHistoriqueRoute
   '/contact': typeof ContactIndexRoute
+  '/achats/nouvelle-enchere': typeof AuthenticatedAchatsNouvelleEnchereRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/encheres/autres': typeof AuthenticatedEncheresAutresRoute
   '/encheres/cajou': typeof AuthenticatedEncheresCajouRoute
@@ -313,6 +333,7 @@ export interface FileRoutesById {
   '/contact/merci': typeof ContactMerciRoute
   '/test/historique': typeof TestHistoriqueRoute
   '/contact/': typeof ContactIndexRoute
+  '/_authenticated/achats/nouvelle-enchere': typeof AuthenticatedAchatsNouvelleEnchereRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/encheres/autres': typeof AuthenticatedEncheresAutresRoute
   '/_authenticated/encheres/cajou': typeof AuthenticatedEncheresCajouRoute
@@ -333,6 +354,7 @@ export interface FileRouteTypes {
     | '/contact/merci'
     | '/test/historique'
     | '/contact'
+    | '/achats/nouvelle-enchere'
     | '/admin/users'
     | '/encheres/autres'
     | '/encheres/cajou'
@@ -350,6 +372,7 @@ export interface FileRouteTypes {
     | '/contact/merci'
     | '/test/historique'
     | '/contact'
+    | '/achats/nouvelle-enchere'
     | '/admin/users'
     | '/encheres/autres'
     | '/encheres/cajou'
@@ -367,6 +390,7 @@ export interface FileRouteTypes {
     | '/contact/merci'
     | '/test/historique'
     | '/contact/'
+    | '/_authenticated/achats/nouvelle-enchere'
     | '/_authenticated/admin/users'
     | '/_authenticated/encheres/autres'
     | '/_authenticated/encheres/cajou'
@@ -423,6 +447,7 @@ export const routeTree = rootRoute
     "/_authenticated": {
       "filePath": "_authenticated.tsx",
       "children": [
+        "/_authenticated/achats/nouvelle-enchere",
         "/_authenticated/admin/users",
         "/_authenticated/encheres/autres",
         "/_authenticated/encheres/cajou",
@@ -447,6 +472,10 @@ export const routeTree = rootRoute
     },
     "/contact/": {
       "filePath": "contact/index.tsx"
+    },
+    "/_authenticated/achats/nouvelle-enchere": {
+      "filePath": "_authenticated/achats/nouvelle-enchere.tsx",
+      "parent": "/_authenticated"
     },
     "/_authenticated/admin/users": {
       "filePath": "_authenticated/admin/users.tsx",

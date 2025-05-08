@@ -12,9 +12,11 @@ interface AuctionsTableProps{
   showColumnBidderPrice?: boolean;
   showColumnViewBids?: boolean;
   showColumnDeleteAuction?: boolean;
+  showColumnMakeBid?: boolean;
   handleViewBids?: (auctionId: number) => void;
   handleDeleteAuction?: (auctionId: number) => void;
   auctions: AuctionDto[];
+  handleMakeBid?: (auctionId: number) => void;
 }
 
 const AuctionsTable: React.FC<AuctionsTableProps> = ({ 
@@ -24,8 +26,10 @@ const AuctionsTable: React.FC<AuctionsTableProps> = ({
   showColumnBidderPrice, 
   showColumnViewBids, 
   showColumnDeleteAuction,
+  showColumnMakeBid,
   handleViewBids,
-  handleDeleteAuction
+  handleDeleteAuction,
+  handleMakeBid
   }) => {
 
     return (
@@ -36,7 +40,7 @@ const AuctionsTable: React.FC<AuctionsTableProps> = ({
         {(auctions === null || auctions.length == 0) 
         ? <p>Aucune vente aux enchères n'est répertoriée.</p> 
         : <>
-          <p className="mb-4">La liste de vos ventes aux enchères peut être consultée ci-dessous.</p>
+          <p className="mb-4">La liste des ventes aux enchères peut être consultée ci-dessous.</p>
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -54,17 +58,18 @@ const AuctionsTable: React.FC<AuctionsTableProps> = ({
                     { showColumnBidder && <TableHead>Acheteur</TableHead> }
                     { showColumnViewBids && <TableHead></TableHead> }
                     { showColumnDeleteAuction && <TableHead></TableHead> }
+                    { showColumnMakeBid && <TableHead></TableHead> }
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   { auctions.map((auction) => {
-                    const acceptedBid = auction.bids?.find((bid) => bid.status.name === "Accepté") || null;
+                    const acceptedBid = auction.bids?.find((bid) => bid.status!.name === "Accepté") || null;
                     
                     return (
                       <TableRow key={auction.id}>
                         <TableCell>{formatDate(auction.creationDate)}</TableCell>
                         <TableCell>{formatDate(auction.expirationDate)}</TableCell>
-                        <TableCell>{auction.status.name}</TableCell>
+                        <TableCell>{auction.status!.name}</TableCell>
                         <TableCell>{auction.product.type === "harvest" ? "Récolte" : "Transformé"}</TableCell>
                         <TableCell>{auction.product.id}</TableCell>
                         <TableCell>{auction.productQuantity} kg</TableCell>
@@ -87,14 +92,19 @@ const AuctionsTable: React.FC<AuctionsTableProps> = ({
                             </TableCell>
                           }
                           { showColumnViewBids && handleViewBids &&
-                            <TableHead>
+                            <TableCell>
                               <Button onClick={() => { handleViewBids(auction.id); }}> Voir les offres</Button>
-                            </TableHead> 
+                            </TableCell> 
                           }
                           { showColumnDeleteAuction && handleDeleteAuction &&
-                            <TableHead>
+                            <TableCell>
                               <Button onClick={() => { handleDeleteAuction(auction.id); }}>Supprimer</Button>
-                            </TableHead> 
+                            </TableCell> 
+                          }
+                          { showColumnMakeBid && handleMakeBid &&
+                            <TableCell>
+                              <Button onClick={() => { handleMakeBid(auction.id); }}>Faire une offre</Button>
+                            </TableCell> 
                           }
                       </TableRow>
                     );
