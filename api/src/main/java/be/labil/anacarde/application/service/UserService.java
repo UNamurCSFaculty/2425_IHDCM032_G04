@@ -1,6 +1,7 @@
 
 package be.labil.anacarde.application.service;
 
+import be.labil.anacarde.domain.dto.user.UserDataDto;
 import be.labil.anacarde.domain.dto.user.UserDetailDto;
 import be.labil.anacarde.domain.dto.user.UserListDto;
 import java.util.List;
@@ -28,6 +29,15 @@ public interface UserService {
 	 * @return Un UserDto représentant l'utilisateur avec l'ID spécifié.
 	 */
 	UserDetailDto getUserById(Integer id);
+
+	/**
+	 * Retourne les données minimales (id + registrationDate + type) de l'utilisateur.
+	 *
+	 * @param id
+	 *            L'identifiant unique de l'utilisateur.
+	 * @return Un UserDataDto contenant id, registrationDate et type.
+	 */
+	UserDataDto getUserDataById(Integer id);
 
 	/**
 	 * Récupère tous les utilisateurs du système.

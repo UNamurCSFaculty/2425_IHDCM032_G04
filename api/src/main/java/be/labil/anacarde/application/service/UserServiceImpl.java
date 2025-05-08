@@ -1,9 +1,8 @@
 package be.labil.anacarde.application.service;
 
 import be.labil.anacarde.application.exception.*;
-import be.labil.anacarde.domain.dto.user.ProducerDetailDto;
-import be.labil.anacarde.domain.dto.user.UserDetailDto;
-import be.labil.anacarde.domain.dto.user.UserListDto;
+import be.labil.anacarde.domain.dto.user.*;
+import be.labil.anacarde.domain.mapper.UserDataMapper;
 import be.labil.anacarde.domain.mapper.UserDetailMapper;
 import be.labil.anacarde.domain.mapper.UserListMapper;
 import be.labil.anacarde.domain.model.Role;
@@ -34,6 +33,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	private final ProducerRepository producerRepository;
 	private final UserRepository userRepository;
 	private final UserDetailMapper userDetailMapper;
+	private final UserDataMapper userDataMapper;
 
 	private final UserListMapper userListMapper;
 	private final PasswordEncoder bCryptPasswordEncoder;
@@ -90,6 +90,29 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 		User user = userRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé"));
 		return userDetailMapper.toDto(user);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public UserDataDto getUserDataById(Integer id) {
+		UserDetailDto userDetailDto = getUserById(id);
+		String type;
+		Integer cooperativeId = 0;
+		if (userDetailDto instanceof ProducerDetailDto) {
+			type = "producer";
+			cooperativeId = ((ProducerDetailDto) userDetailDto).getCooperative().getId();
+		} else if (userDetailDto instanceof TransformerDetailDto)
+			type = "transformer";
+		else if (userDetailDto instanceof ExporterDetailDto)
+			type = "exporter";
+		else if (userDetailDto instanceof AdminDetailDto)
+			type = "amdin";
+		else if (userDetailDto instanceof CarrierDetailDto)
+			type = "carrier";
+		else type = "unrecognised";
+
+		return UserDataDto.builder().id(id).registrationDate(userDetailDto.getRegistrationDate()).type(type)
+				.cooperative(cooperativeId).build();
 	}
 
 	@Override
