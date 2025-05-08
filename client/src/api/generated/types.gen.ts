@@ -839,7 +839,7 @@ export type AuctionDtoReadable = {
     /**
      * Stratégie d'enchère associée
      */
-    strategy: AuctionStrategyDtoReadable;
+    strategy?: AuctionStrategyDtoReadable;
     /**
      * Produit associé à l'enchère
      */
@@ -855,7 +855,7 @@ export type AuctionDtoReadable = {
     /**
      * Statut de l'enchère
      */
-    status: TradeStatusDtoReadable;
+    status?: TradeStatusDtoReadable;
     /**
      * Liste des offres posées sur l'enchère
      */
@@ -885,7 +885,7 @@ export type AuctionDtoWritable = {
     /**
      * Stratégie d'enchère associée
      */
-    strategy: AuctionStrategyDtoWritable;
+    strategy?: AuctionStrategyDtoWritable;
     /**
      * Produit associé à l'enchère
      */
@@ -901,7 +901,7 @@ export type AuctionDtoWritable = {
     /**
      * Statut de l'enchère
      */
-    status: TradeStatusDtoWritable;
+    status?: TradeStatusDtoWritable;
     /**
      * Liste des offres posées sur l'enchère
      */
@@ -1015,7 +1015,7 @@ export type BidDtoReadable = {
     /**
      * Statut de l'offre
      */
-    status: TradeStatusDtoReadable;
+    status?: TradeStatusDtoReadable;
 };
 
 /**
@@ -1037,7 +1037,7 @@ export type BidDtoWritable = {
     /**
      * Statut de l'offre
      */
-    status: TradeStatusDtoWritable;
+    status?: TradeStatusDtoWritable;
 };
 
 /**

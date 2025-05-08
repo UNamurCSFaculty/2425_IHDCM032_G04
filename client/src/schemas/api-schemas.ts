@@ -228,12 +228,7 @@ export const zAuction = z.object({
 
 export const zBid = z.object({
   id: z.number().int().readonly().optional(),
-  amount: z.number(),
-  auctionDate: z.iso.datetime(),
-  creationDate: z.iso.datetime().readonly(),
-  auction: zAuction,
-  trader: zTrader,
-  status: zTradeStatus,
+  amount: z.coerce.number().positive()
 })
 
 /**

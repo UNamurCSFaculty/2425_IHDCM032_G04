@@ -73,9 +73,7 @@ export function AuctionForm({ products }: AuctionFormProps): React.ReactElement<
           expirationDate: formData.expirationDate,
           active: true,
           product: productDto,
-          trader: traderDto,
-          strategy: null,
-          status: null,
+          trader: traderDto
       };
 
       createAuctionRequest.mutate({ body: auctionDto })

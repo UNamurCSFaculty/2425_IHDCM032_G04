@@ -215,7 +215,7 @@ export const zBidDto = z.object({
         zProducerDetailDto,
         zTransformerDetailDto
     ]),
-    status: zTradeStatusDto
+    status: zTradeStatusDto.optional()
 });
 
 export const zAuctionDto = z.object({
@@ -225,7 +225,7 @@ export const zAuctionDto = z.object({
     expirationDate: z.iso.datetime(),
     creationDate: z.iso.datetime().readonly().optional(),
     active: z.boolean(),
-    strategy: zAuctionStrategyDto,
+    strategy: zAuctionStrategyDto.optional(),
     product: z.union([
         zHarvestProductDto,
         zTransformedProductDto
@@ -236,7 +236,7 @@ export const zAuctionDto = z.object({
         zProducerDetailDto,
         zTransformerDetailDto
     ]),
-    status: zTradeStatusDto,
+    status: zTradeStatusDto.optional(),
     bids: z.array(zBidDto).optional()
 });
 
