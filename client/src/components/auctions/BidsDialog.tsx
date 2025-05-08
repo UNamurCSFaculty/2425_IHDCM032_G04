@@ -22,14 +22,12 @@ interface BidsDialogProps {
   auctionId: number
   isOpen: boolean
   setIsOpen: (open: boolean) => void
-  updateAuction: () => void
 }
 
 const BidsDialog: React.FC<BidsDialogProps> = ({
   auctionId,
   isOpen,
   setIsOpen,
-  updateAuction,
 }) => {
   const {
     data: bidsData,
@@ -47,7 +45,6 @@ const BidsDialog: React.FC<BidsDialogProps> = ({
     acceptBid({ path: { auctionId, bidId } })
     acceptAuction({ path: { id: auctionId } })
     setIsOpen(false)
-    updateAuction()
   }
 
   return (
