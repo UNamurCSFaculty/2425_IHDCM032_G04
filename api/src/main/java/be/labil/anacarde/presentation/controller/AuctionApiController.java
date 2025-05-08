@@ -21,8 +21,8 @@ public class AuctionApiController implements AuctionApi {
 	}
 
 	@Override
-	public ResponseEntity<List<AuctionDto>> listAuctions(Integer traderId, String auctionStatus) {
-		List<AuctionDto> auctions = auctionService.listAuctions(traderId, auctionStatus);
+	public ResponseEntity<List<AuctionDto>> listAuctions(Integer traderId, Integer buyerId, String auctionStatus) {
+		List<AuctionDto> auctions = auctionService.listAuctions(traderId, buyerId, auctionStatus);
 		return ResponseEntity.ok(auctions);
 	}
 

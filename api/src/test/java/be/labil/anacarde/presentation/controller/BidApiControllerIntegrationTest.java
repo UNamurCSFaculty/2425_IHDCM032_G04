@@ -6,7 +6,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import be.labil.anacarde.domain.dto.*;
 import be.labil.anacarde.domain.dto.user.ProducerDetailDto;
-import be.labil.anacarde.domain.model.Auction;
 import be.labil.anacarde.domain.model.Bid;
 import be.labil.anacarde.infrastructure.persistence.BidRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -104,7 +103,7 @@ public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 		String jsonContent = node.toString();
 
 		mockMvc.perform(post("/api/auctions/" + getTestAuction().getId() + "/bids/")
-						.contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwtAndCsrf()))
+				.contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwtAndCsrf()))
 				.andExpect(status().isCreated())
 				.andExpect(header().string("Location",
 						containsString("/api/auctions/" + getTestAuction().getId() + "/bids/")))
