@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import be.labil.anacarde.domain.dto.*;
 import be.labil.anacarde.domain.dto.user.ProducerDetailDto;
+import be.labil.anacarde.domain.model.Auction;
 import be.labil.anacarde.domain.model.Bid;
 import be.labil.anacarde.infrastructure.persistence.BidRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -74,6 +75,43 @@ public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 
 		Bid createdBid = bidRepository.findAll().stream()
 				.filter(bid -> bid.getAmount().equals(new BigDecimal("999.99"))).findFirst()
+				.orElseThrow(() -> new AssertionError("Offre non trouvée"));
+	}
+
+	/**
+	 * Teste la création d'une nouvelle enchère, avec un status par défaut.
+	 *
+	 */
+	@Test
+	public void testCreateBidWithDefaultStatus() throws Exception {
+		ProductDto productDto = new HarvestProductDto();
+		productDto.setId(getTestHarvestProduct().getId());
+
+		ProducerDetailDto producer = new ProducerDetailDto();
+		producer.setId(getProducerTestUser().getId());
+
+		AuctionDto auctionDto = new AuctionDto();
+		auctionDto.setId(getTestAuction().getId());
+		auctionDto.setProduct(productDto);
+
+		BidDto newBid = new BidDto();
+		newBid.setAmount(new BigDecimal("666.66"));
+		newBid.setCreationDate(LocalDateTime.now());
+		newBid.setTrader(producer);
+		newBid.setAuctionId(auctionDto.getId());
+
+		ObjectNode node = objectMapper.valueToTree(newBid);
+		String jsonContent = node.toString();
+
+		mockMvc.perform(post("/api/auctions/" + getTestAuction().getId() + "/bids/")
+						.contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwtAndCsrf()))
+				.andExpect(status().isCreated())
+				.andExpect(header().string("Location",
+						containsString("/api/auctions/" + getTestAuction().getId() + "/bids/")))
+				.andExpect(jsonPath("$.amount").value("666.66"));
+
+		Bid createdBid = bidRepository.findAll().stream()
+				.filter(bid -> bid.getAmount().equals(new BigDecimal("666.66"))).findFirst()
 				.orElseThrow(() -> new AssertionError("Offre non trouvée"));
 	}
 
