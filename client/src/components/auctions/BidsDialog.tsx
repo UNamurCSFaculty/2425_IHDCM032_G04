@@ -12,10 +12,9 @@ interface BidsDialogProps {
   auctionId: number;
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
-  updateAuction: () => void;
 }
 
-const BidsDialog: React.FC<BidsDialogProps> = ({ auctionId, isOpen, setIsOpen, updateAuction }) => {
+const BidsDialog: React.FC<BidsDialogProps> = ({ auctionId, isOpen, setIsOpen }) => {
   const { data, isLoading, isError } = useQuery(
     {
       ...listBidsOptions({ path: { auctionId: auctionId } }),
@@ -32,7 +31,6 @@ const BidsDialog: React.FC<BidsDialogProps> = ({ auctionId, isOpen, setIsOpen, u
     acceptBid({ path: { auctionId, bidId }});
     acceptAuction({ path: { id: auctionId }});
     setIsOpen(false);
-    updateAuction();
   };
 
   return (
