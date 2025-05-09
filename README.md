@@ -10,8 +10,12 @@
 
 ### Build & run
 
-```docker compose up````
+```
+docker compose up
+```
 
 ### Stop
 
-```docker compose down````
+```
+docker compose down
+```
