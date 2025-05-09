@@ -36,7 +36,8 @@ public class StoreServiceImpl implements StoreService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<StoreDetailDto> listStores() {
-		return storeRepository.findAll().stream().map(storeMapper::toDto).collect(Collectors.toList());
+		return storeRepository.findAll().stream().map(storeMapper::toDto)
+				.collect(Collectors.toList());
 	}
 
 	@Override

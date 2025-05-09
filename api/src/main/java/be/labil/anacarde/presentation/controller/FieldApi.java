@@ -41,7 +41,8 @@ public interface FieldApi {
 			@ApiResponse(responseCode = "400", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
 			@ApiResponse(responseCode = "409", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
 	ResponseEntity<FieldDto> createField(@ApiValidId @PathVariable("userId") Integer userid,
-			@Validated({Default.class, ValidationGroups.Create.class}) @RequestBody FieldDto fieldDto);
+			@Validated({Default.class,
+					ValidationGroups.Create.class}) @RequestBody FieldDto fieldDto);
 
 	@Operation(summary = "Mettre à jour un champ")
 	@PutMapping(value = "/{id}", consumes = "application/json")
@@ -50,8 +51,8 @@ public interface FieldApi {
 			@ApiResponse(responseCode = "400", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
 			@ApiResponse(responseCode = "409", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
 	ResponseEntity<FieldDto> updateField(@ApiValidId @PathVariable("userId") Integer userid,
-			@ApiValidId @PathVariable("id") Integer id,
-			@Validated({Default.class, ValidationGroups.Update.class}) @RequestBody FieldDto fieldDto);
+			@ApiValidId @PathVariable("id") Integer id, @Validated({Default.class,
+					ValidationGroups.Update.class}) @RequestBody FieldDto fieldDto);
 
 	@Operation(summary = "Obtenir tous les champs d’un utilisateur")
 	@GetMapping
@@ -63,7 +64,8 @@ public interface FieldApi {
 	@DeleteMapping("/{id}")
 	@ApiResponseDelete
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@ApiResponses({@ApiResponse(responseCode = "200", description = "", content = @Content(schema = @Schema())),
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "", content = @Content(schema = @Schema())),
 			@ApiResponse(responseCode = "404", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
 	ResponseEntity<Void> deleteField(@ApiValidId @PathVariable("userId") Integer userid,
 			@ApiValidId @PathVariable("id") Integer id);

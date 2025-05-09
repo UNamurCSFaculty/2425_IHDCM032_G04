@@ -38,8 +38,10 @@ public class StoreApiControllerIntegrationTest extends AbstractIntegrationTest {
 	 */
 	@Test
 	public void testGetStore() throws Exception {
-		mockMvc.perform(get("/api/stores/" + getMainTestStore().getId()).accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk()).andExpect(jsonPath("$.location").value("POINT (2.3522 48.8566)"));
+		mockMvc.perform(
+				get("/api/stores/" + getMainTestStore().getId()).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.location").value("POINT (2.3522 48.8566)"));
 	}
 
 	/**
@@ -56,15 +58,17 @@ public class StoreApiControllerIntegrationTest extends AbstractIntegrationTest {
 		ObjectNode node = objectMapper.valueToTree(newStore);
 		String jsonContent = node.toString();
 
-		mockMvc.perform(post("/api/stores").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
-				.andExpect(status().isCreated()).andExpect(header().string("Location", containsString("/api/stores/")))
+		mockMvc.perform(
+				post("/api/stores").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				.andExpect(status().isCreated())
+				.andExpect(header().string("Location", containsString("/api/stores/")))
 				.andExpect(jsonPath("$.name").value("Nassara"))
 				.andExpect(jsonPath("$.location").value("POINT (2.3522 48.8566)"))
 				.andExpect(jsonPath("$.userId").value(getMainTestUser().getId()));
 
 		Store createdStore = storeRepository.findAll().stream()
-				.filter(store -> store.getLocation().toText().equals("POINT (2.3522 48.8566)")).findFirst()
-				.orElseThrow(() -> new AssertionError("Store non trouvé"));
+				.filter(store -> store.getLocation().toText().equals("POINT (2.3522 48.8566)"))
+				.findFirst().orElseThrow(() -> new AssertionError("Store non trouvé"));
 	}
 
 	/**
@@ -73,8 +77,8 @@ public class StoreApiControllerIntegrationTest extends AbstractIntegrationTest {
 	 */
 	@Test
 	public void testListStores() throws Exception {
-		mockMvc.perform(get("/api/stores").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
-				.andExpect(jsonPath("$").isArray());
+		mockMvc.perform(get("/api/stores").accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()).andExpect(jsonPath("$").isArray());
 	}
 
 	/**
@@ -91,8 +95,9 @@ public class StoreApiControllerIntegrationTest extends AbstractIntegrationTest {
 		ObjectNode node = objectMapper.valueToTree(updateStore);
 		String jsonContent = node.toString();
 
-		mockMvc.perform(put("/api/stores/" + getMainTestStore().getId()).contentType(MediaType.APPLICATION_JSON)
-				.content(jsonContent)).andExpect(status().isOk()).andExpect(jsonPath("$.name").value("Casimir"))
+		mockMvc.perform(put("/api/stores/" + getMainTestStore().getId())
+				.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.name").value("Casimir"))
 				.andExpect(jsonPath("$.location").value("POINT (1.111 2.222)"));
 	}
 

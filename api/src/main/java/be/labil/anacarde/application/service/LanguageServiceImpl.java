@@ -29,21 +29,22 @@ public class LanguageServiceImpl implements LanguageService {
 	@Override
 	@Transactional(readOnly = true)
 	public LanguageDto getLanguageById(Integer id) {
-		Language language = languageRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Langue non trouvée pour l'id " + id));
+		Language language = languageRepository.findById(id).orElseThrow(
+				() -> new ResourceNotFoundException("Langue non trouvée pour l'id " + id));
 		return languageMapper.toDto(language);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public List<LanguageDto> listLanguages() {
-		return languageRepository.findAll().stream().map(languageMapper::toDto).collect(Collectors.toList());
+		return languageRepository.findAll().stream().map(languageMapper::toDto)
+				.collect(Collectors.toList());
 	}
 
 	@Override
 	public LanguageDto updateLanguage(Integer id, LanguageDto languageDto) {
-		Language existing = languageRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Langue non trouvée pour l'id " + id));
+		Language existing = languageRepository.findById(id).orElseThrow(
+				() -> new ResourceNotFoundException("Langue non trouvée pour l'id " + id));
 		// Met à jour les champs pertinents
 		existing.setName(languageDto.getName());
 		Language updated = languageRepository.save(existing);

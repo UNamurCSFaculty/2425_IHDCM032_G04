@@ -19,7 +19,8 @@ public class PointDeserializer extends StdDeserializer<Point> {
 	}
 
 	@Override
-	public Point deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+	public Point deserialize(JsonParser p, DeserializationContext ctxt)
+			throws IOException, JsonProcessingException {
 		JsonNode node = p.getCodec().readTree(p);
 		double x = node.get("x").asDouble();
 		double y = node.get("y").asDouble();

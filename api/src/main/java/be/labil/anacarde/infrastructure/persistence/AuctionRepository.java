@@ -8,8 +8,8 @@ import org.springframework.data.repository.query.Param;
 
 public interface AuctionRepository extends JpaRepository<Auction, Integer> {
 	/**
-	 * Recherche les enchères actives, selon des paramètres de filtrage. Une enchère est active si l'entité n'a pas été
-	 * supprimée de la base de données.
+	 * Recherche les enchères actives, selon des paramètres de filtrage. Une enchère est active si
+	 * l'entité n'a pas été supprimée de la base de données.
 	 *
 	 * @param traderId
 	 *            Identifiant du trader ayant créé l'enchère.
@@ -25,5 +25,6 @@ public interface AuctionRepository extends JpaRepository<Auction, Integer> {
 			      AND (:status IS NULL OR a.status.name = :status)
 			    ORDER BY a.id DESC
 			""")
-	List<Auction> findByActiveTrueFiltered(@Param("traderId") Integer traderId, @Param("status") String status);
+	List<Auction> findByActiveTrueFiltered(@Param("traderId") Integer traderId,
+			@Param("status") String status);
 }

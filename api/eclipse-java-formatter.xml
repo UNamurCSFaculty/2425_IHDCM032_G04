@@ -2,8 +2,8 @@
 <profiles version="12">
     <profile id="custom" name="Custom Formatter">
         <!-- Contrôle de la longueur de ligne et des commentaires -->
-        <setting id="org.eclipse.jdt.core.formatter.comment.line_length" value="120"/>
-        <setting id="org.eclipse.jdt.core.formatter.lineSplit" value="120"/>
+        <setting id="org.eclipse.jdt.core.formatter.comment.line_length" value="100"/>
+        <setting id="org.eclipse.jdt.core.formatter.lineSplit" value="100"/>
 
         <!-- Pour conserver les if simples et les else sur une seule ligne -->
         <setting id="org.eclipse.jdt.core.formatter.keep_imple_if_on_one_line" value="true"/>

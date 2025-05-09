@@ -48,8 +48,8 @@ public interface ProductApi {
 			@ApiResponse(responseCode = "201", description = "", content = @Content(schema = @Schema(implementation = ProductDto.class))),
 			@ApiResponse(responseCode = "400", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
 			@ApiResponse(responseCode = "409", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
-	ResponseEntity<? extends ProductDto> createProduct(
-			@Validated({Default.class, ValidationGroups.Create.class}) @RequestBody ProductUpdateDto productDto);
+	ResponseEntity<? extends ProductDto> createProduct(@Validated({Default.class,
+			ValidationGroups.Create.class}) @RequestBody ProductUpdateDto productDto);
 
 	@Operation(summary = "Mettre à jour un produit")
 	@PutMapping(value = "/{id}", consumes = "application/json")
@@ -58,12 +58,14 @@ public interface ProductApi {
 			@ApiResponse(responseCode = "400", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
 			@ApiResponse(responseCode = "409", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
 	ResponseEntity<? extends ProductDto> updateProduct(@ApiValidId @PathVariable("id") Integer id,
-			@Validated({Default.class, ValidationGroups.Update.class}) @RequestBody ProductUpdateDto productDto);
+			@Validated({Default.class,
+					ValidationGroups.Update.class}) @RequestBody ProductUpdateDto productDto);
 
 	@Operation(summary = "Supprimer un produit")
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@ApiResponses({@ApiResponse(responseCode = "200", description = "", content = @Content(schema = @Schema())),
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "", content = @Content(schema = @Schema())),
 			@ApiResponse(responseCode = "404", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
 	ResponseEntity<Void> deleteProduct(@ApiValidId @PathVariable("id") Integer id);
 }

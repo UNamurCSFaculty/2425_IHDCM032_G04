@@ -6,7 +6,8 @@ import be.labil.anacarde.domain.dto.write.BidUpdateDto;
 import java.util.List;
 
 /**
- * Ce service offre des méthodes permettant de créer, récupérer, mettre à jour et supprimer des informations d'offres.
+ * Ce service offre des méthodes permettant de créer, récupérer, mettre à jour et supprimer des
+ * informations d'offres.
  */
 public interface BidService {
 
@@ -36,7 +37,8 @@ public interface BidService {
 	List<BidDto> listBids(Integer auctionId);
 
 	/**
-	 * Mise à jour de l'offre identifiée par l'ID donné avec les informations fournies dans le BidDto.
+	 * Mise à jour de l'offre identifiée par l'ID donné avec les informations fournies dans le
+	 * BidDto.
 	 *
 	 * @param id
 	 *            L'identifiant unique de l'offre à mettre à jour.

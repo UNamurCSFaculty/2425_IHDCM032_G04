@@ -28,16 +28,20 @@ public class AuctionStrategyApiController implements AuctionStrategyApi {
 	}
 
 	@Override
-	public ResponseEntity<AuctionStrategyDto> createAuctionStrategy(AuctionStrategyDto auctionStrategyDto) {
-		AuctionStrategyDto created = auctionStrategyService.createAuctionStrategy(auctionStrategyDto);
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(created.getId())
-				.toUri();
+	public ResponseEntity<AuctionStrategyDto> createAuctionStrategy(
+			AuctionStrategyDto auctionStrategyDto) {
+		AuctionStrategyDto created = auctionStrategyService
+				.createAuctionStrategy(auctionStrategyDto);
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+				.buildAndExpand(created.getId()).toUri();
 		return ResponseEntity.created(location).body(created);
 	}
 
 	@Override
-	public ResponseEntity<AuctionStrategyDto> updateAuctionStrategy(Integer id, AuctionStrategyDto auctionStrategyDto) {
-		AuctionStrategyDto updated = auctionStrategyService.updateAuctionStrategy(id, auctionStrategyDto);
+	public ResponseEntity<AuctionStrategyDto> updateAuctionStrategy(Integer id,
+			AuctionStrategyDto auctionStrategyDto) {
+		AuctionStrategyDto updated = auctionStrategyService.updateAuctionStrategy(id,
+				auctionStrategyDto);
 		return ResponseEntity.ok(updated);
 	}
 

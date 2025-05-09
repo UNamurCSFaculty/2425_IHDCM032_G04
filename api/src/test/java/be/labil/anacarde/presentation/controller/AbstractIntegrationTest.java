@@ -32,7 +32,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 /**
- * Classe de base pour les tests d'intégration qui nécessitent des utilisateurs et des rôles de test en base de données.
+ * Classe de base pour les tests d'intégration qui nécessitent des utilisateurs et des rôles de test
+ * en base de données.
  */
 @SpringBootTest
 @ActiveProfiles("test")
@@ -343,7 +344,8 @@ public abstract class AbstractIntegrationTest {
 	}
 
 	/**
-	 * Initialise la base de données des utilisateurs avec deux utilisateurs de test et les rôles associés.
+	 * Initialise la base de données des utilisateurs avec deux utilisateurs de test et les rôles
+	 * associés.
 	 */
 	public void initUserDatabase() {
 		// userRepository.deleteAll();
@@ -357,37 +359,41 @@ public abstract class AbstractIntegrationTest {
 		mainTestRegion = regionRepository.save(region);
 
 		User user1 = Admin.builder().firstName("John").lastName("Doe").email("user@example.com")
-				.password("$2a$10$abcdefghijklmnopqrstuv1234567890AB").registrationDate(LocalDateTime.now())
-				.phone("+2290197000000").language(mainLanguage).enabled(true).build();
+				.password("$2a$10$abcdefghijklmnopqrstuv1234567890AB")
+				.registrationDate(LocalDateTime.now()).phone("+2290197000000")
+				.language(mainLanguage).enabled(true).build();
 
 		User user2 = Admin.builder().firstName("Foo").lastName("Bar").email("foo@bar.com")
-				.password("$2a$10$abcdefghijklmnopqrstuv1234567890AB").registrationDate(LocalDateTime.now())
-				.phone("+2290197000001").language(mainLanguage).enabled(true).build();
+				.password("$2a$10$abcdefghijklmnopqrstuv1234567890AB")
+				.registrationDate(LocalDateTime.now()).phone("+2290197000001")
+				.language(mainLanguage).enabled(true).build();
 
-		User producer = Producer.builder().firstName("Bruce").lastName("Banner").email("bruce@hulk.com")
-				.password("$2a$10$abcdefghijklmnopqrstuv1234567890AB").registrationDate(LocalDateTime.now())
-				.phone("+2290197000002").language(mainLanguage).enabled(true).agriculturalIdentifier("111-222-333")
-				.build();
+		User producer = Producer.builder().firstName("Bruce").lastName("Banner")
+				.email("bruce@hulk.com").password("$2a$10$abcdefghijklmnopqrstuv1234567890AB")
+				.registrationDate(LocalDateTime.now()).phone("+2290197000002")
+				.language(mainLanguage).enabled(true).agriculturalIdentifier("111-222-333").build();
 
-		User producer2 = Producer.builder().firstName("Steve").lastName("Rogers").email("steve@captain.com")
-				.password("$2a$10$abcdefghijklmnopqrstuv1234567890AB").registrationDate(LocalDateTime.now())
-				.phone("+2290197000003").language(mainLanguage).enabled(true).agriculturalIdentifier("000-111-222")
-				.build();
+		User producer2 = Producer.builder().firstName("Steve").lastName("Rogers")
+				.email("steve@captain.com").password("$2a$10$abcdefghijklmnopqrstuv1234567890AB")
+				.registrationDate(LocalDateTime.now()).phone("+2290197000003")
+				.language(mainLanguage).enabled(true).agriculturalIdentifier("000-111-222").build();
 
-		User transformer = Transformer.builder().firstName("Scott").lastName("Summers").email("scott@xmen.com")
-				.password("$2a$10$abcdefghijklmnopqrstuv1234567890AB").registrationDate(LocalDateTime.now())
-				.phone("+2290197000004").language(mainLanguage).enabled(true).build();
+		User transformer = Transformer.builder().firstName("Scott").lastName("Summers")
+				.email("scott@xmen.com").password("$2a$10$abcdefghijklmnopqrstuv1234567890AB")
+				.registrationDate(LocalDateTime.now()).phone("+2290197000004")
+				.language(mainLanguage).enabled(true).build();
 
 		User qualityInspector = QualityInspector.builder().firstName("Inspector").lastName("Best")
 				.email("inspector@best.com").password("$2a$10$abcdefghijklmnopqrstuv1234567890AB")
-				.phone("+2290197000005").registrationDate(LocalDateTime.now()).language(mainLanguage).enabled(true)
-				.build();
+				.phone("+2290197000005").registrationDate(LocalDateTime.now())
+				.language(mainLanguage).enabled(true).build();
 
 		Set regions = new HashSet<Region>();
 		regions.add(mainTestRegion);
-		User carrier = Carrier.builder().firstName("Pierre").lastName("Verse").email("pierre@verse.com")
-				.password("$2a$10$abcdefghijklmnopqrstuv1234567890AB").registrationDate(LocalDateTime.now())
-				.phone("+2290197000006").language(mainLanguage).enabled(true).regions(regions)
+		User carrier = Carrier.builder().firstName("Pierre").lastName("Verse")
+				.email("pierre@verse.com").password("$2a$10$abcdefghijklmnopqrstuv1234567890AB")
+				.registrationDate(LocalDateTime.now()).phone("+2290197000006")
+				.language(mainLanguage).enabled(true).regions(regions)
 				.pricePerKm(new BigDecimal(100)).build();
 
 		Role userRole = Role.builder().name("ROLE_USER").build();
@@ -411,14 +417,15 @@ public abstract class AbstractIntegrationTest {
 		qualityInspector = userRepository.save(qualityInspector);
 
 		Point storeLocation = new GeometryFactory().createPoint(new Coordinate(2.3522, 48.8566));
-		Store store = Store.builder().name("Nassara").location(storeLocation).user(mainTestUser).build();
+		Store store = Store.builder().name("Nassara").location(storeLocation).user(mainTestUser)
+				.build();
 		mainTestStore = storeRepository.save(store);
 
 		// Fields
 		// A field binded to main producer
 		Point pointField = new GeometryFactory().createPoint(new Coordinate(2.3522, 48.8566));
-		Field field = Field.builder().producer((Producer) producerTestUser).identifier("FIELD-001").location(pointField)
-				.build();
+		Field field = Field.builder().producer((Producer) producerTestUser).identifier("FIELD-001")
+				.location(pointField).build();
 
 		mainTestField = fieldRepository.save(field);
 
@@ -429,13 +436,15 @@ public abstract class AbstractIntegrationTest {
 		fieldRepository.save(field2);
 
 		// A harvest product
-		Product productHarvest = HarvestProduct.builder().producer((Producer) producerTestUser).store(mainTestStore)
-				.deliveryDate(LocalDateTime.now()).weightKg(2000.0).field(mainTestField).build();
+		Product productHarvest = HarvestProduct.builder().producer((Producer) producerTestUser)
+				.store(mainTestStore).deliveryDate(LocalDateTime.now()).weightKg(2000.0)
+				.field(mainTestField).build();
 		testHarvestProduct = productRepository.save(productHarvest);
 
 		// A transformed product
-		Product productTransform = TransformedProduct.builder().transformer((Transformer) transformerTestUser)
-				.store(mainTestStore).deliveryDate(LocalDateTime.now()).identifier("XYZ").weightKg(2000.0).build();
+		Product productTransform = TransformedProduct.builder()
+				.transformer((Transformer) transformerTestUser).store(mainTestStore)
+				.deliveryDate(LocalDateTime.now()).identifier("XYZ").weightKg(2000.0).build();
 		testTransformedProduct = productRepository.save(productTransform);
 
 		AuctionStrategy strategy = AuctionStrategy.builder().name("Meilleure offre").build();
@@ -451,27 +460,31 @@ public abstract class AbstractIntegrationTest {
 		tradeStatusRepository.save(auctionStatusExpired);
 
 		// An auction with a harvest product
-		Auction auction = Auction.builder().price(new BigDecimal("500.0")).productQuantity(10).active(true)
-				.creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now()).product(productHarvest)
-				.strategy(testAuctionStrategy).trader((Trader) producer).status(auctionStatusOpen).build();
+		Auction auction = Auction.builder().price(new BigDecimal("500.0")).productQuantity(10)
+				.active(true).creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now())
+				.product(productHarvest).strategy(testAuctionStrategy).trader((Trader) producer)
+				.status(auctionStatusOpen).build();
 		testAuction = auctionRepository.save(auction);
 
 		// An auction with a transformed product
-		Auction auction2 = Auction.builder().price(new BigDecimal("10000.0")).productQuantity(1000).active(true)
-				.creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now()).product(productTransform)
-				.strategy(testAuctionStrategy).trader((Trader) producer).status(auctionStatusOpen).build();
+		Auction auction2 = Auction.builder().price(new BigDecimal("10000.0")).productQuantity(1000)
+				.active(true).creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now())
+				.product(productTransform).strategy(testAuctionStrategy).trader((Trader) producer)
+				.status(auctionStatusOpen).build();
 		auctionRepository.save(auction2);
 
 		// An auction from another user
-		Auction auction3 = Auction.builder().price(new BigDecimal("777.0")).productQuantity(777).active(true)
-				.creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now()).product(productTransform)
-				.strategy(testAuctionStrategy).trader((Trader) transformer).status(auctionStatusOpen).build();
+		Auction auction3 = Auction.builder().price(new BigDecimal("777.0")).productQuantity(777)
+				.active(true).creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now())
+				.product(productTransform).strategy(testAuctionStrategy)
+				.trader((Trader) transformer).status(auctionStatusOpen).build();
 		auctionRepository.save(auction3);
 
 		// A "deleted" auction (= inactive)
-		Auction auction4 = Auction.builder().price(new BigDecimal("999.0")).productQuantity(999).active(false)
-				.creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now()).product(productTransform)
-				.strategy(testAuctionStrategy).trader((Trader) producer).status(auctionStatusOpen).build();
+		Auction auction4 = Auction.builder().price(new BigDecimal("999.0")).productQuantity(999)
+				.active(false).creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now())
+				.product(productTransform).strategy(testAuctionStrategy).trader((Trader) producer)
+				.status(auctionStatusOpen).build();
 		auctionRepository.save(auction4);
 
 		TradeStatus bidStatusPending = TradeStatus.builder().name("En cours").build();
@@ -482,12 +495,14 @@ public abstract class AbstractIntegrationTest {
 
 		// A bid on an auction
 		Bid bid = Bid.builder().amount(new BigDecimal("10.0")).creationDate(LocalDateTime.now())
-				.auctionId(testAuction.getId()).trader((Trader) producer).status(testBidStatus).build();
+				.auctionId(testAuction.getId()).trader((Trader) producer).status(testBidStatus)
+				.build();
 		testBid = bidRepository.save(bid);
 
 		// A bid on a different auction
 		Bid bid2 = Bid.builder().amount(new BigDecimal("500.0")).creationDate(LocalDateTime.now())
-				.auctionId(auction2.getId()).trader((Trader) producer).status(testBidStatus).build();
+				.auctionId(auction2.getId()).trader((Trader) producer).status(testBidStatus)
+				.build();
 		bidRepository.save(bid2);
 
 		// A cooperative who has for president 'producer'
@@ -510,15 +525,16 @@ public abstract class AbstractIntegrationTest {
 		mainTestQuality = qualityRepository.save(quality);
 
 		// A contract
-		ContractOffer contractOffer = ContractOffer.builder().status("Accepted").pricePerKg(new BigDecimal("20.0"))
-				.creationDate(LocalDateTime.now()).endDate(LocalDateTime.now()).seller((Trader) producer)
-				.buyer((Trader) transformer).quality(quality).build();
+		ContractOffer contractOffer = ContractOffer.builder().status("Accepted")
+				.pricePerKg(new BigDecimal("20.0")).creationDate(LocalDateTime.now())
+				.endDate(LocalDateTime.now()).seller((Trader) producer).buyer((Trader) transformer)
+				.quality(quality).build();
 		mainTestContractOffer = contractOfferRepository.save(contractOffer);
 
 		QualityControl qualityControl = QualityControl.builder().identifier("QC-001")
-				.controlDate(LocalDateTime.of(2025, 4, 7, 10, 0)).granularity(0.5f).korTest(0.8f).humidity(12.5f)
-				.qualityInspector((QualityInspector) qualityInspector).product(productTransform).quality(quality)
-				.document(document).build();
+				.controlDate(LocalDateTime.of(2025, 4, 7, 10, 0)).granularity(0.5f).korTest(0.8f)
+				.humidity(12.5f).qualityInspector((QualityInspector) qualityInspector)
+				.product(productTransform).quality(quality).document(document).build();
 
 		mainTestQualityControl = qualityControlRepository.save(qualityControl);
 
@@ -528,7 +544,8 @@ public abstract class AbstractIntegrationTest {
 	 * Génère un cookie JWT HTTP-only en utilisant les détails de l'utilisateur de test principal.
 	 */
 	protected void initJwtCookie() {
-		UserDetails userDetails = userDetailsService.loadUserByUsername(getMainTestUser().getEmail());
+		UserDetails userDetails = userDetailsService
+				.loadUserByUsername(getMainTestUser().getEmail());
 		String token = jwtUtil.generateToken(userDetails);
 		jwtCookie = new Cookie("jwt", token);
 		jwtCookie.setHttpOnly(true);

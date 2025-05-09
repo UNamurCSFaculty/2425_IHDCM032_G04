@@ -21,15 +21,17 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 /**
- * Ce composant gère les erreurs d'accès refusé (403 Forbidden) dans une application Spring Security. Lorsqu'un
- * utilisateur tente d'accéder à une ressource pour laquelle il n'a pas les autorisations nécessaires, cette classe
- * envoie une réponse JSON contenant des détails sur l'erreur.
+ * Ce composant gère les erreurs d'accès refusé (403 Forbidden) dans une application Spring
+ * Security. Lorsqu'un utilisateur tente d'accéder à une ressource pour laquelle il n'a pas les
+ * autorisations nécessaires, cette classe envoie une réponse JSON contenant des détails sur
+ * l'erreur.
  */
 public class RestAccessDeniedHandler implements AccessDeniedHandler {
 	private final ObjectMapper mapper;
 	/**
-	 * Cette méthode est invoquée lorsqu'un utilisateur tente d'accéder à une ressource protégée sans les autorisations
-	 * nécessaires. Elle envoie une réponse 403 Forbidden avec des détails sur l'erreur.
+	 * Cette méthode est invoquée lorsqu'un utilisateur tente d'accéder à une ressource protégée
+	 * sans les autorisations nécessaires. Elle envoie une réponse 403 Forbidden avec des détails
+	 * sur l'erreur.
 	 *
 	 * @param req
 	 *            La requête HTTP entrante.
@@ -41,23 +43,27 @@ public class RestAccessDeniedHandler implements AccessDeniedHandler {
 	 *             En cas d'erreur d'entrée/sortie lors de l'écriture de la réponse.
 	 */
 	@Override
-	public void handle(HttpServletRequest req, HttpServletResponse res, AccessDeniedException ex) throws IOException {
+	public void handle(HttpServletRequest req, HttpServletResponse res, AccessDeniedException ex)
+			throws IOException {
 		ApiErrorResponse body;
 
 		if (ex instanceof MissingCsrfTokenException) {
-			body = new ApiErrorResponse(HttpStatus.FORBIDDEN.value(), LocalDateTime.now(), req.getRequestURI(),
-					ApiErrorCode.ACCESS_FORBIDDEN_CSRF_MISSING.code(), List.of(new ErrorDetail(null,
-							ApiErrorCode.ACCESS_FORBIDDEN_CSRF_MISSING.code(), "Accès refusé: token CSRF manquant.")));
+			body = new ApiErrorResponse(HttpStatus.FORBIDDEN.value(), LocalDateTime.now(),
+					req.getRequestURI(), ApiErrorCode.ACCESS_FORBIDDEN_CSRF_MISSING.code(),
+					List.of(new ErrorDetail(null, ApiErrorCode.ACCESS_FORBIDDEN_CSRF_MISSING.code(),
+							"Accès refusé: token CSRF manquant.")));
 
 		} else if (ex instanceof InvalidCsrfTokenException) {
-			body = new ApiErrorResponse(HttpStatus.FORBIDDEN.value(), LocalDateTime.now(), req.getRequestURI(),
-					ApiErrorCode.ACCESS_FORBIDDEN_CSRF.code(), List.of(new ErrorDetail(null,
-							ApiErrorCode.ACCESS_FORBIDDEN_CSRF.code(), "Accès refusé: token CSRF invalide.")));
+			body = new ApiErrorResponse(HttpStatus.FORBIDDEN.value(), LocalDateTime.now(),
+					req.getRequestURI(), ApiErrorCode.ACCESS_FORBIDDEN_CSRF.code(),
+					List.of(new ErrorDetail(null, ApiErrorCode.ACCESS_FORBIDDEN_CSRF.code(),
+							"Accès refusé: token CSRF invalide.")));
 
 		} else {
-			body = new ApiErrorResponse(HttpStatus.FORBIDDEN.value(), LocalDateTime.now(), req.getRequestURI(),
-					ApiErrorCode.ACCESS_FORBIDDEN.code(), List.of(new ErrorDetail(null,
-							ApiErrorCode.ACCESS_FORBIDDEN.code(), "Accès refusé : " + ex.getMessage())));
+			body = new ApiErrorResponse(HttpStatus.FORBIDDEN.value(), LocalDateTime.now(),
+					req.getRequestURI(), ApiErrorCode.ACCESS_FORBIDDEN.code(),
+					List.of(new ErrorDetail(null, ApiErrorCode.ACCESS_FORBIDDEN.code(),
+							"Accès refusé : " + ex.getMessage())));
 		}
 
 		res.setStatus(HttpStatus.FORBIDDEN.value());

@@ -24,7 +24,8 @@ class TransformedProductMapperTest {
 		transformer.setId(1);
 		transformer.setFirstName("Transformer One");
 
-		TransformedProduct product = TransformedProduct.builder().identifier("TP001").transformer(transformer).build();
+		TransformedProduct product = TransformedProduct.builder().identifier("TP001")
+				.transformer(transformer).build();
 
 		TransformedProductDto dto = mapper.toDto(product);
 
@@ -56,8 +57,8 @@ class TransformedProductMapperTest {
 		transformer.setId(1);
 		transformer.setFirstName("Transformer One");
 
-		TransformedProduct existingProduct = TransformedProduct.builder().identifier("TP001").transformer(transformer)
-				.build();
+		TransformedProduct existingProduct = TransformedProduct.builder().identifier("TP001")
+				.transformer(transformer).build();
 
 		TransformedProductUpdateDto dto = new TransformedProductUpdateDto();
 		dto.setIdentifier("TP002");

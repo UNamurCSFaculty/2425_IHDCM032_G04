@@ -26,7 +26,8 @@
 // */
 // @Test
 // public void testGetField() throws Exception {
-// mockMvc.perform(get("/api/users/" + getProducerTestUser().getId() + "/fields/" + getMainTestField().getId())
+// mockMvc.perform(get("/api/users/" + getProducerTestUser().getId() + "/fields/" +
+// getMainTestField().getId())
 // .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
 // .andExpect(jsonPath("$.location").value("POINT (2.3522 48.8566)"))
 // .andExpect(jsonPath("$.identifier").value(getMainTestField().getIdentifier()));
@@ -67,7 +68,8 @@
 // @Test
 // public void testListFields() throws Exception {
 // mockMvc.perform(
-// get("/api/users/" + getProducerTestUser().getId() + "/fields").accept(MediaType.APPLICATION_JSON))
+// get("/api/users/" + getProducerTestUser().getId() +
+// "/fields").accept(MediaType.APPLICATION_JSON))
 // .andExpect(status().isOk()).andExpect(jsonPath("$").isArray())
 // .andExpect(jsonPath("$.length()").value(2));
 // }
@@ -88,7 +90,8 @@
 // ObjectNode node = objectMapper.valueToTree(updateField);
 // String jsonContent = node.toString();
 //
-// mockMvc.perform(put("/api/users/" + getProducerTestUser().getId() + "/fields/" + getMainTestField().getId())
+// mockMvc.perform(put("/api/users/" + getProducerTestUser().getId() + "/fields/" +
+// getMainTestField().getId())
 // .contentType(MediaType.APPLICATION_JSON).content(jsonContent)).andExpect(status().isOk())
 // .andExpect(jsonPath("$.location").value("POINT (1.111 2.222)"))
 // .andExpect(jsonPath("$.identifier").value("FIELD-UPDATED"));

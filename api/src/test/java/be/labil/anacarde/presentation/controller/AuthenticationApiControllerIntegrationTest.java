@@ -76,18 +76,22 @@ public class AuthenticationApiControllerIntegrationTest {
 
 		String requestBody = "{\"username\": \"user@example.com\", \"password\": \"password\"}";
 
-		mockMvc.perform(post("/api/auth/signin").with(csrf()).contentType("application/json").content(requestBody))
-				.andExpect(status().isOk()).andExpect(cookie().exists("jwt"))
+		mockMvc.perform(post("/api/auth/signin").with(csrf()).contentType("application/json")
+				.content(requestBody)).andExpect(status().isOk()).andExpect(cookie().exists("jwt"))
 				// le corps est un JSON
 				.andExpect(content().contentType("application/json"))
 				// vérification des champs du DTO
 				.andExpect(jsonPath("$.type").value("admin")).andExpect(jsonPath("$.id").isNumber())
-				.andExpect(jsonPath("$.firstName").value("John")).andExpect(jsonPath("$.lastName").value("Doe"))
+				.andExpect(jsonPath("$.firstName").value("John"))
+				.andExpect(jsonPath("$.lastName").value("Doe"))
 				.andExpect(jsonPath("$.email").value("user@example.com"))
-				.andExpect(jsonPath("$.registrationDate").exists()).andExpect(jsonPath("$.validationDate").isEmpty())
-				.andExpect(jsonPath("$.enabled").value(true)).andExpect(jsonPath("$.address").isEmpty())
-				.andExpect(jsonPath("$.phone").value("+2290197020000")).andExpect(jsonPath("$.roles").isArray())
-				.andExpect(jsonPath("$.roles", hasSize(0))).andExpect(jsonPath("$.language.id").value(lang.getId()))
+				.andExpect(jsonPath("$.registrationDate").exists())
+				.andExpect(jsonPath("$.validationDate").isEmpty())
+				.andExpect(jsonPath("$.enabled").value(true))
+				.andExpect(jsonPath("$.address").isEmpty())
+				.andExpect(jsonPath("$.phone").value("+2290197020000"))
+				.andExpect(jsonPath("$.roles").isArray()).andExpect(jsonPath("$.roles", hasSize(0)))
+				.andExpect(jsonPath("$.language.id").value(lang.getId()))
 				.andExpect(jsonPath("$.language.name").value("Français"));
 	}
 
@@ -98,8 +102,8 @@ public class AuthenticationApiControllerIntegrationTest {
 	public void testAuthenticateUserIntegration_Failure() throws Exception {
 		String requestBody = "{\"username\": \"user@example.com\", \"password\": \"wrongpassword\"}";
 
-		mockMvc.perform(post("/api/auth/signin").with(csrf()).contentType("application/json").content(requestBody))
-				.andExpect(status().isUnauthorized());
+		mockMvc.perform(post("/api/auth/signin").with(csrf()).contentType("application/json")
+				.content(requestBody)).andExpect(status().isUnauthorized());
 	}
 
 	/**
@@ -109,8 +113,8 @@ public class AuthenticationApiControllerIntegrationTest {
 	public void testAuthenticateUserIntegration_NullRequestBody() throws Exception {
 		String requestBody = "";
 
-		mockMvc.perform(post("/api/auth/signin").with(csrf()).contentType("application/json").content(requestBody))
-				.andExpect(status().isBadRequest());
+		mockMvc.perform(post("/api/auth/signin").with(csrf()).contentType("application/json")
+				.content(requestBody)).andExpect(status().isBadRequest());
 	}
 
 	/**
@@ -120,8 +124,8 @@ public class AuthenticationApiControllerIntegrationTest {
 	public void testAuthenticateUserIntegration_MissingPassword() throws Exception {
 		String requestBody = "{\"username\": \"user@example.com\"}";
 
-		mockMvc.perform(post("/api/auth/signin").with(csrf()).contentType("application/json").content(requestBody))
-				.andExpect(status().isBadRequest());
+		mockMvc.perform(post("/api/auth/signin").with(csrf()).contentType("application/json")
+				.content(requestBody)).andExpect(status().isBadRequest());
 	}
 
 	/**
@@ -131,8 +135,8 @@ public class AuthenticationApiControllerIntegrationTest {
 	public void testAuthenticateUserIntegration_MissingUsername() throws Exception {
 		String requestBody = "{\"password\": \"password\"}";
 
-		mockMvc.perform(post("/api/auth/signin").with(csrf()).contentType("application/json").content(requestBody))
-				.andExpect(status().isBadRequest());
+		mockMvc.perform(post("/api/auth/signin").with(csrf()).contentType("application/json")
+				.content(requestBody)).andExpect(status().isBadRequest());
 	}
 
 	/**
@@ -142,16 +146,17 @@ public class AuthenticationApiControllerIntegrationTest {
 	public void testGetCurrentUser_Success() throws Exception {
 		// 1) Authentifier pour récupérer le cookie
 		String loginBody = "{\"username\": \"user@example.com\", \"password\": \"password\"}";
-		MvcResult result = mockMvc
-				.perform(post("/api/auth/signin").with(csrf()).contentType("application/json").content(loginBody))
-				.andExpect(status().isOk()).andReturn();
+		MvcResult result = mockMvc.perform(post("/api/auth/signin").with(csrf())
+				.contentType("application/json").content(loginBody)).andExpect(status().isOk())
+				.andReturn();
 
 		Cookie jwt = result.getResponse().getCookie("jwt");
 		Language lang = languageRepository.findAll().getFirst();
 
 		// 2) Appeler /me avec le cookie
 		mockMvc.perform(get("/api/auth/me").with(csrf()).cookie(jwt)).andExpect(status().isOk())
-				.andExpect(content().contentType("application/json")).andExpect(jsonPath("$.type").value("admin"))
+				.andExpect(content().contentType("application/json"))
+				.andExpect(jsonPath("$.type").value("admin"))
 				.andExpect(jsonPath("$.email").value("user@example.com"))
 				.andExpect(jsonPath("$.firstName").value("John"))
 				.andExpect(jsonPath("$.language.id").value(lang.getId()));
@@ -172,17 +177,19 @@ public class AuthenticationApiControllerIntegrationTest {
 	public void testLogout_ClearsJwtCookie() throws Exception {
 		// 1) Authentification pour obtenir le cookie JWT
 		String loginBody = "{\"username\": \"user@example.com\", \"password\": \"password\"}";
-		MvcResult loginResult = mockMvc
-				.perform(post("/api/auth/signin").with(csrf()).contentType("application/json").content(loginBody))
-				.andExpect(status().isOk()).andReturn();
+		MvcResult loginResult = mockMvc.perform(post("/api/auth/signin").with(csrf())
+				.contentType("application/json").content(loginBody)).andExpect(status().isOk())
+				.andReturn();
 
 		Cookie jwt = loginResult.getResponse().getCookie("jwt");
 		assertNotNull(jwt, "Le cookie jwt doit exister après signin");
 
 		// 2) Appel de /signout avec le cookie
-		mockMvc.perform(post("/api/auth/signout").with(csrf()).cookie(jwt)).andExpect(status().isOk())
+		mockMvc.perform(post("/api/auth/signout").with(csrf()).cookie(jwt))
+				.andExpect(status().isOk())
 				// on retrouve bien un cookie "jwt" expiré
-				.andExpect(cookie().exists("jwt")).andExpect(cookie().value("jwt", "")) // valeur vidée
+				.andExpect(cookie().exists("jwt")).andExpect(cookie().value("jwt", "")) // valeur
+																						// vidée
 				.andExpect(cookie().maxAge("jwt", 0)); // expiring immediately
 	}
 }

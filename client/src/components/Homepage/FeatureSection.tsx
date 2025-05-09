@@ -65,7 +65,7 @@ export function FeaturesSection() {
 
         {/* Call to Action */}
         <div className="mt-12 text-center">
-          <Link to="/register">
+          <Link to="/signup">
             <Button size="lg" className="px-8">
               Créer un compte
             </Button>

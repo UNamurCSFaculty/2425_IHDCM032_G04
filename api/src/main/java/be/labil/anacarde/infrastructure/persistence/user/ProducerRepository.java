@@ -13,8 +13,8 @@ public interface ProducerRepository extends GenericUserRepository<Producer> {
 	 *
 	 * @param agriculturalIdentifier
 	 *            L’identifiant agricole du producteur à rechercher.
-	 * @return Un Optional contenant le User trouvé (avec ses rôles chargés), ou Optional.empty() si aucun utilisateur
-	 *         n’est trouvé.
+	 * @return Un Optional contenant le User trouvé (avec ses rôles chargés), ou Optional.empty() si
+	 *         aucun utilisateur n’est trouvé.
 	 */
 	@Query("SELECT p FROM Producer p LEFT JOIN FETCH p.cooperative WHERE p.agriculturalIdentifier = :agriculturalIdentifier")
 	Optional<User> findByAgriculturalIdentifier(String agriculturalIdentifier);

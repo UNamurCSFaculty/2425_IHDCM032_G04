@@ -29,8 +29,8 @@ public class AuctionStrategyServiceImpl implements AuctionStrategyService {
 	@Override
 	@Transactional(readOnly = true)
 	public AuctionStrategyDto getAuctionStrategyById(Integer id) {
-		AuctionStrategy entity = repository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Stratégie d'enchère non trouvée"));
+		AuctionStrategy entity = repository.findById(id).orElseThrow(
+				() -> new ResourceNotFoundException("Stratégie d'enchère non trouvée"));
 		return mapper.toDto(entity);
 	}
 
@@ -42,8 +42,8 @@ public class AuctionStrategyServiceImpl implements AuctionStrategyService {
 
 	@Override
 	public AuctionStrategyDto updateAuctionStrategy(Integer id, AuctionStrategyDto dto) {
-		AuctionStrategy existing = repository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Stratégie d'enchère non trouvée"));
+		AuctionStrategy existing = repository.findById(id).orElseThrow(
+				() -> new ResourceNotFoundException("Stratégie d'enchère non trouvée"));
 
 		AuctionStrategy updated = mapper.partialUpdate(dto, existing);
 		AuctionStrategy saved = repository.save(updated);

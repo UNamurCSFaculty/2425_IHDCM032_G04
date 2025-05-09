@@ -20,7 +20,8 @@ public abstract class TranslationEntryMapper {
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 	@Mapping(source = "translationId", target = "translation", qualifiedByName = "mapTranslationId")
 	@Mapping(source = "languageId", target = "language", qualifiedByName = "mapLanguageId")
-	public abstract TranslationEntry partialUpdate(TranslationEntryDto dto, @MappingTarget TranslationEntry entity);
+	public abstract TranslationEntry partialUpdate(TranslationEntryDto dto,
+			@MappingTarget TranslationEntry entity);
 
 	@Named("mapTranslationId")
 	public static Translation mapTranslationId(Integer id) {

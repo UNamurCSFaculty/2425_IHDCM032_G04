@@ -44,8 +44,9 @@ public abstract class ProductDto extends BaseDto {
 	private Integer qualityControlId;
 
 	/**
-	 * Propriété virtuelle pour Swagger. Ce getter n'est pas utilisé par Jackson car il est ignoré, mais permet
-	 * d'afficher dans le schéma OpenAPI une propriété "type" avec un exemple et des valeurs autorisées.
+	 * Propriété virtuelle pour Swagger. Ce getter n'est pas utilisé par Jackson car il est ignoré,
+	 * mais permet d'afficher dans le schéma OpenAPI une propriété "type" avec un exemple et des
+	 * valeurs autorisées.
 	 */
 	@Schema(name = "type", description = "Type de produit.", requiredMode = Schema.RequiredMode.REQUIRED, example = "harvest", allowableValues = {
 			"harvest", "transformed"})

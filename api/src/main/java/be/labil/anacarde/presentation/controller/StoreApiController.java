@@ -29,8 +29,8 @@ public class StoreApiController implements StoreApi {
 	@Override
 	public ResponseEntity<StoreDetailDto> createStore(StoreDetailDto storeDetailDto) {
 		StoreDetailDto created = storeService.createStore(storeDetailDto);
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(created.getId())
-				.toUri();
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+				.buildAndExpand(created.getId()).toUri();
 		return ResponseEntity.created(location).body(created);
 	}
 

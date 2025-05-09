@@ -25,8 +25,9 @@ public class QualityApiControllerIntegrationTest extends AbstractIntegrationTest
 	 */
 	@Test
 	public void testGetQuality() throws Exception {
-		mockMvc.perform(get("/api/qualities/" + getMainTestQuality().getId()).accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk()).andExpect(jsonPath("$.name").value("WW160"));
+		mockMvc.perform(get("/api/qualities/" + getMainTestQuality().getId())
+				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+				.andExpect(jsonPath("$.name").value("WW160"));
 	}
 
 	/**
@@ -41,7 +42,8 @@ public class QualityApiControllerIntegrationTest extends AbstractIntegrationTest
 		ObjectNode node = objectMapper.valueToTree(newQuality);
 		String jsonContent = node.toString();
 
-		mockMvc.perform(post("/api/qualities").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+		mockMvc.perform(
+				post("/api/qualities").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
 				.andExpect(status().isCreated())
 				.andExpect(header().string("Location", containsString("/api/qualities/")))
 				.andExpect(jsonPath("$.name").value("ZZZ-000"));
@@ -57,8 +59,8 @@ public class QualityApiControllerIntegrationTest extends AbstractIntegrationTest
 	 */
 	@Test
 	public void testListQualities() throws Exception {
-		mockMvc.perform(get("/api/qualities").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
-				.andExpect(jsonPath("$").isArray());
+		mockMvc.perform(get("/api/qualities").accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()).andExpect(jsonPath("$").isArray());
 	}
 
 	/**
@@ -73,8 +75,9 @@ public class QualityApiControllerIntegrationTest extends AbstractIntegrationTest
 		ObjectNode node = objectMapper.valueToTree(updateQuality);
 		String jsonContent = node.toString();
 
-		mockMvc.perform(put("/api/qualities/" + getMainTestQuality().getId()).contentType(MediaType.APPLICATION_JSON)
-				.content(jsonContent)).andExpect(status().isOk()).andExpect(jsonPath("$.name").value("WW450"));
+		mockMvc.perform(put("/api/qualities/" + getMainTestQuality().getId())
+				.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.name").value("WW450"));
 	}
 
 	/**

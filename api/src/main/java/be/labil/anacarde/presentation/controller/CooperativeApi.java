@@ -48,8 +48,9 @@ public interface CooperativeApi {
 			@ApiResponse(responseCode = "201", description = "", content = @Content(schema = @Schema(implementation = CooperativeDto.class))),
 			@ApiResponse(responseCode = "400", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
 			@ApiResponse(responseCode = "409", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
-	ResponseEntity<CooperativeDto> updateCooperative(@ApiValidId @PathVariable("id") Integer id, @Validated({
-			Default.class, ValidationGroups.Update.class}) @RequestBody CooperativeUpdateDto cooperativeDto);
+	ResponseEntity<CooperativeDto> updateCooperative(@ApiValidId @PathVariable("id") Integer id,
+			@Validated({Default.class,
+					ValidationGroups.Update.class}) @RequestBody CooperativeUpdateDto cooperativeDto);
 
 	@Operation(summary = "Lister toutes les coopératives")
 	@GetMapping
@@ -60,7 +61,8 @@ public interface CooperativeApi {
 	@Operation(summary = "Supprimer une coopérative")
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@ApiResponses({@ApiResponse(responseCode = "200", description = "", content = @Content(schema = @Schema())),
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "", content = @Content(schema = @Schema())),
 			@ApiResponse(responseCode = "404", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
 	ResponseEntity<Void> deleteCooperative(@ApiValidId @PathVariable("id") Integer id);
 }

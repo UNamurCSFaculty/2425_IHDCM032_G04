@@ -4,8 +4,8 @@ import be.labil.anacarde.domain.dto.db.DocumentDto;
 import java.util.List;
 
 /**
- * Ce service offre des méthodes permettant de créer, récupérer, mettre à jour, supprimer et lister des documents selon
- * différents critères.
+ * Ce service offre des méthodes permettant de créer, récupérer, mettre à jour, supprimer et lister
+ * des documents selon différents critères.
  */
 public interface DocumentService {
 
@@ -28,7 +28,8 @@ public interface DocumentService {
 	DocumentDto getDocumentById(Integer id);
 
 	/**
-	 * Met à jour le document identifié par l'ID donné avec les informations fournies dans le DocumentDto.
+	 * Met à jour le document identifié par l'ID donné avec les informations fournies dans le
+	 * DocumentDto.
 	 *
 	 * @param id
 	 *            L'identifiant unique du document à mettre à jour.

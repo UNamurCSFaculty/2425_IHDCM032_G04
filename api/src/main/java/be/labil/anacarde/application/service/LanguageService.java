@@ -4,7 +4,8 @@ import be.labil.anacarde.domain.dto.db.LanguageDto;
 import java.util.List;
 
 /**
- * Ce service offre des méthodes permettant de créer, récupérer, mettre à jour et supprimer des langues.
+ * Ce service offre des méthodes permettant de créer, récupérer, mettre à jour et supprimer des
+ * langues.
  */
 public interface LanguageService {
 
@@ -34,7 +35,8 @@ public interface LanguageService {
 	List<LanguageDto> listLanguages();
 
 	/**
-	 * Met à jour la langue identifiée par l'ID donné avec les informations fournies dans le LanguageDto.
+	 * Met à jour la langue identifiée par l'ID donné avec les informations fournies dans le
+	 * LanguageDto.
 	 *
 	 * @param id
 	 *            L'identifiant unique de la langue à mettre à jour.

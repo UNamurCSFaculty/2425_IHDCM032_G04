@@ -33,6 +33,7 @@ public abstract class UserListMapper {
 	public static User toEntity(UserListDto dto) {
 		// Si le mapping depuis le DTO vers l'entité n'est pas nécessaire pour une liste,
 		// vous pouvez lever une exception ou retourner null.
-		throw new UnsupportedOperationException("Mapping from UserListDto to User is not supported.");
+		throw new UnsupportedOperationException(
+				"Mapping from UserListDto to User is not supported.");
 	}
 }

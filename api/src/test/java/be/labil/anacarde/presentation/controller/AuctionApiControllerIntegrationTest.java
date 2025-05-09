@@ -2,7 +2,6 @@ package be.labil.anacarde.presentation.controller;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import be.labil.anacarde.domain.dto.db.AuctionStrategyDto;
@@ -33,10 +32,13 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 	 */
 	@Test
 	public void testGetAuction() throws Exception {
-		mockMvc.perform(get("/api/auctions/" + getTestAuction().getId()).accept(MediaType.APPLICATION_JSON))
+		mockMvc.perform(
+				get("/api/auctions/" + getTestAuction().getId()).accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk()).andExpect(jsonPath("$.price").value("500.0"))
-				.andExpect(jsonPath("$.productQuantity").value("10")).andExpect(jsonPath("$.active").value("true"))
-				.andExpect(jsonPath("$.product.weightKg").value("2000.0")).andExpect(jsonPath("$.bids").isArray())
+				.andExpect(jsonPath("$.productQuantity").value("10"))
+				.andExpect(jsonPath("$.active").value("true"))
+				.andExpect(jsonPath("$.product.weightKg").value("2000.0"))
+				.andExpect(jsonPath("$.bids").isArray())
 				.andExpect(jsonPath("$.bids.length()").value(1));
 	}
 
@@ -72,10 +74,12 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		ObjectNode node = objectMapper.valueToTree(newAuction);
 		String jsonContent = node.toString();
 
-		mockMvc.perform(post("/api/auctions").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
-				.andDo(print()).andExpect(status().isCreated())
+		mockMvc.perform(
+				post("/api/auctions").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				.andExpect(status().isCreated())
 				.andExpect(header().string("Location", containsString("/api/auctions/")))
-				.andExpect(jsonPath("$.price").value("111.11")).andExpect(jsonPath("$.productQuantity").value("11"))
+				.andExpect(jsonPath("$.price").value("111.11"))
+				.andExpect(jsonPath("$.productQuantity").value("11"))
 				.andExpect(jsonPath("$.active").value("true"))
 				.andExpect(jsonPath("$.strategy.id").value(getTestAuctionStrategy().getId()))
 				.andExpect(jsonPath("$.trader.id").value(getProducerTestUser().getId()));
@@ -109,10 +113,12 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		ObjectNode node = objectMapper.valueToTree(newAuction);
 		String jsonContent = node.toString();
 
-		mockMvc.perform(post("/api/auctions").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+		mockMvc.perform(
+				post("/api/auctions").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
 				.andExpect(status().isCreated())
 				.andExpect(header().string("Location", containsString("/api/auctions/")))
-				.andExpect(jsonPath("$.price").value("111.11")).andExpect(jsonPath("$.productQuantity").value("11"))
+				.andExpect(jsonPath("$.price").value("111.11"))
+				.andExpect(jsonPath("$.productQuantity").value("11"))
 				.andExpect(jsonPath("$.active").value("true"))
 				.andExpect(jsonPath("$.trader.id").value(getProducerTestUser().getId()))
 				.andExpect(jsonPath("$.status.name").value("Ouvert"));
@@ -128,8 +134,9 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 	 */
 	@Test
 	public void testListAuctions() throws Exception {
-		mockMvc.perform(get("/api/auctions").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
-				.andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(3));
+		mockMvc.perform(get("/api/auctions").accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()).andExpect(jsonPath("$").isArray())
+				.andExpect(jsonPath("$.length()").value(3));
 	}
 
 	/**
@@ -138,10 +145,9 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 	 */
 	@Test
 	public void testListAuctionsByTraderId() throws Exception {
-		mockMvc.perform(
-				get("/api/auctions?traderId=" + getProducerTestUser().getId()).accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk()).andExpect(jsonPath("$").isArray())
-				.andExpect(jsonPath("$.length()").value(2));
+		mockMvc.perform(get("/api/auctions?traderId=" + getProducerTestUser().getId())
+				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+				.andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(2));
 	}
 
 	/**
@@ -176,8 +182,9 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		ObjectNode node = objectMapper.valueToTree(updateAuction);
 		String jsonContent = node.toString();
 
-		mockMvc.perform(put("/api/auctions/" + getTestAuction().getId()).contentType(MediaType.APPLICATION_JSON)
-				.content(jsonContent)).andExpect(status().isOk()).andExpect(jsonPath("$.productQuantity").value("99"));
+		mockMvc.perform(put("/api/auctions/" + getTestAuction().getId())
+				.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.productQuantity").value("99"));
 	}
 
 	/**
@@ -188,8 +195,8 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		String jsonContent = "";
 
 		mockMvc.perform(put("/api/auctions/" + getTestAuction().getId() + "/accept")
-				.contentType(MediaType.APPLICATION_JSON).content(jsonContent)).andExpect(status().isOk())
-				.andExpect(jsonPath("$.productQuantity").value("10"))
+				.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.productQuantity").value("10"))
 				.andExpect(jsonPath("$.status.name").value("Accepté"));
 	}
 
@@ -199,9 +206,11 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 	 */
 	@Test
 	public void testDeleteAuction() throws Exception {
-		mockMvc.perform(delete("/api/auctions/" + getTestAuction().getId())).andExpect(status().isNoContent());
+		mockMvc.perform(delete("/api/auctions/" + getTestAuction().getId()))
+				.andExpect(status().isNoContent());
 
-		mockMvc.perform(get("/api/auctions/" + getTestAuction().getId()).accept(MediaType.APPLICATION_JSON))
+		mockMvc.perform(
+				get("/api/auctions/" + getTestAuction().getId()).accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk()).andExpect(jsonPath("$.active").value(false));
 	}
 }

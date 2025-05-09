@@ -30,8 +30,8 @@ public class RegionApiController implements RegionApi {
 	@Override
 	public ResponseEntity<RegionDto> createRegion(RegionDto regionDto) {
 		RegionDto created = regionService.createRegion(regionDto);
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(created.getId())
-				.toUri();
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+				.buildAndExpand(created.getId()).toUri();
 		return ResponseEntity.created(location).body(created);
 	}
 

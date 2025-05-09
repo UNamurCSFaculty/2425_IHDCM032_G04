@@ -8,11 +8,13 @@ import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * Mapper pour convertir les DTOs UserDetailDto (hors Producer) en leurs entités correspondantes. Les Producteurs sont
- * mappés dans un mapper dédié (ProducerDetailMapper) pour éviter les ambiguïtés.
+ * Mapper pour convertir les DTOs UserDetailDto (hors Producer) en leurs entités correspondantes.
+ * Les Producteurs sont mappés dans un mapper dédié (ProducerDetailMapper) pour éviter les
+ * ambiguïtés.
  */
-@Mapper(componentModel = "spring", uses = {MapperHelpers.class, MapperHelpers.class, RoleMapper.class,
-		LanguageMapper.class, CooperativeMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring", uses = {MapperHelpers.class, MapperHelpers.class,
+		RoleMapper.class, LanguageMapper.class,
+		CooperativeMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class UserDetailMapper {
 
 	@Autowired
@@ -61,7 +63,8 @@ public abstract class UserDetailMapper {
 		}
 		if (dto instanceof ProducerUpdateDto producer) {
 			if (producer.getCooperativeId() != null) {
-				((Producer) user).setCooperative(em.getReference(Cooperative.class, producer.getCooperativeId()));
+				((Producer) user).setCooperative(
+						em.getReference(Cooperative.class, producer.getCooperativeId()));
 			}
 		}
 	}
@@ -157,7 +160,8 @@ public abstract class UserDetailMapper {
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 	@Mapping(target = "roles", ignore = true)
 	@Mapping(target = "id", ignore = true)
-	public abstract void partialUpdate(QualityInspectorUpdateDto dto, @MappingTarget QualityInspector entity);
+	public abstract void partialUpdate(QualityInspectorUpdateDto dto,
+			@MappingTarget QualityInspector entity);
 
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 	@Mapping(target = "roles", ignore = true)
@@ -187,7 +191,8 @@ public abstract class UserDetailMapper {
 		} else if (dto instanceof ProducerUpdateDto && entity instanceof Producer) {
 			partialUpdate((ProducerUpdateDto) dto, (Producer) entity);
 		} else {
-			throw new IllegalArgumentException("Type incompatible pour partialUpdate: " + dto.getClass());
+			throw new IllegalArgumentException(
+					"Type incompatible pour partialUpdate: " + dto.getClass());
 		}
 		return entity;
 	}

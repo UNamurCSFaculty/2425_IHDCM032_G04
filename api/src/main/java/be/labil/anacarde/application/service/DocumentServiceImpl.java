@@ -55,6 +55,7 @@ public class DocumentServiceImpl implements DocumentService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<DocumentDto> listDocumentsByUser(Integer userId) {
-		return documentRepository.findByUserId(userId).stream().map(documentMapper::toDto).collect(Collectors.toList());
+		return documentRepository.findByUserId(userId).stream().map(documentMapper::toDto)
+				.collect(Collectors.toList());
 	}
 }

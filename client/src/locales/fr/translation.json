@@ -1,18 +1,18 @@
 {
   "app": {
     "accueil": {
-      "sous_titre": "Rejoignez la plateforme d’enchères en temps réel pour la noix de\n cajou et ses produits transformés au Bénin. Surveillez,\n surenchérissez et soutenez les producteurs locaux en toute\n confiance.",
-      "titre": "Enchères & Marché du Cajou"
+      "subtitle": "Rejoignez la plateforme d’enchères en temps réel pour la noix de\n cajou et ses produits transformés au Bénin. Surveillez,\n surenchérissez et soutenez les producteurs locaux en toute\n confiance.",
+      "title": "Enchères & Marché du Cajou"
     },
     "contact": {
-      "sous_titre": "N'hésitez pas à nous envoyer vos questions ou commentaires.",
-      "titre": "Contactez-nous"
+      "subtitle": "N'hésitez pas à nous envoyer vos questions ou commentaires.",
+      "title": "Contactez-nous"
     },
     "loading": "Chargement…",
     "networkError": "Impossible de joindre le serveur",
     "signup": {
-      "sous_titre": "Votre inscription sera validée dans les 48 heures après l'envoi du formulaire.",
-      "titre": "Inscrivez-vous"
+      "subtitle": "Votre inscription sera validée dans les 48 heures après l'envoi du formulaire.",
+      "title": "Inscrivez-vous"
     },
     "statut": {
       "connection": "Connexion...",

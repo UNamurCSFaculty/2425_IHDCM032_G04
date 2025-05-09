@@ -13,5 +13,6 @@ public abstract class TradeStatusMapper {
 
 	@Mapping(source = "name", target = "name")
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-	public abstract TradeStatus partialUpdate(TradeStatusDto statusDto, @MappingTarget TradeStatus entity);
+	public abstract TradeStatus partialUpdate(TradeStatusDto statusDto,
+			@MappingTarget TradeStatus entity);
 }

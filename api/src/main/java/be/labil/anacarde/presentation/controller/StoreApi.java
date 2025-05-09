@@ -38,8 +38,8 @@ public interface StoreApi {
 			@ApiResponse(responseCode = "201", description = "", content = @Content(schema = @Schema(implementation = StoreDetailDto.class))),
 			@ApiResponse(responseCode = "400", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
 			@ApiResponse(responseCode = "409", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
-	ResponseEntity<StoreDetailDto> createStore(
-			@Validated({Default.class, ValidationGroups.Create.class}) @RequestBody StoreDetailDto storeDetailDto);
+	ResponseEntity<StoreDetailDto> createStore(@Validated({Default.class,
+			ValidationGroups.Create.class}) @RequestBody StoreDetailDto storeDetailDto);
 
 	@Operation(summary = "Mettre à jour un magasin")
 	@PutMapping(value = "/{id}", consumes = "application/json")
@@ -48,7 +48,8 @@ public interface StoreApi {
 			@ApiResponse(responseCode = "400", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
 			@ApiResponse(responseCode = "409", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
 	ResponseEntity<StoreDetailDto> updateStore(@ApiValidId @PathVariable("id") Integer id,
-			@Validated({Default.class, ValidationGroups.Update.class}) @RequestBody StoreDetailDto storeDetailDto);
+			@Validated({Default.class,
+					ValidationGroups.Update.class}) @RequestBody StoreDetailDto storeDetailDto);
 
 	@Operation(summary = "Obtenir tous les magasins")
 	@GetMapping
@@ -59,7 +60,8 @@ public interface StoreApi {
 	@Operation(summary = "Supprimer un magasin")
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@ApiResponses({@ApiResponse(responseCode = "200", description = "", content = @Content(schema = @Schema())),
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "", content = @Content(schema = @Schema())),
 			@ApiResponse(responseCode = "404", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
 	ResponseEntity<Void> deleteStore(@ApiValidId @PathVariable("id") Integer id);
 }

@@ -14,8 +14,8 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Schema(description = "Data Transfer Object pour un utilisateur avec toutes les informations", requiredProperties = {
-		"type"}, subTypes = {TraderDetailDto.class, CarrierDetailDto.class, QualityInspectorDetailDto.class,
-				AdminDetailDto.class})
+		"type"}, subTypes = {TraderDetailDto.class, CarrierDetailDto.class,
+				QualityInspectorDetailDto.class, AdminDetailDto.class})
 public abstract class UserDetailDto extends UserListDto {
 
 	/** Rôles de l'utilisateur. */

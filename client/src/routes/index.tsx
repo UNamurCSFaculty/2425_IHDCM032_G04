@@ -44,7 +44,7 @@ function RouteComponent() {
                 {t('app.accueil.titre')}
               </h1>
               <p className="mb-8 text-xl text-white/90">
-                {t('app.accueil.sous_titre')}
+                {t('app.accueil.subtitle')}
               </p>
               {!user && (
                 <div className="flex flex-col justify-center sm:flex-row sm:gap-4 lg:justify-start">

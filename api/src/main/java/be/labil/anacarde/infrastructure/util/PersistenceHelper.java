@@ -29,13 +29,14 @@ public class PersistenceHelper {
 	 * @param idExtractor
 	 *            fonction pour extraire l’ID de l’entité sauvée
 	 */
-	public <T, ID> T saveAndReload(JpaRepository<T, ID> repo, T entity, Function<T, ID> idExtractor) {
+	public <T, ID> T saveAndReload(JpaRepository<T, ID> repo, T entity,
+			Function<T, ID> idExtractor) {
 
 		T saved = repo.save(entity);
 		em.flush();
 		em.clear();
 		ID id = idExtractor.apply(saved);
-		return repo.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Impossible de recharger l’entité id=" + id));
+		return repo.findById(id).orElseThrow(
+				() -> new ResourceNotFoundException("Impossible de recharger l’entité id=" + id));
 	}
 }

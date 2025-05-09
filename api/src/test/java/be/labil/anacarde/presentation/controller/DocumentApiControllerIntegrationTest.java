@@ -29,8 +29,9 @@ public class DocumentApiControllerIntegrationTest extends AbstractIntegrationTes
 	public void testGetDocument() throws Exception {
 		String expectedDate = getMainTestDocument().getUploadDate()
 				.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-		mockMvc.perform(get("/api/documents/" + getMainTestDocument().getId()).accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk()).andExpect(jsonPath("$.id").value(getMainTestDocument().getId()))
+		mockMvc.perform(get("/api/documents/" + getMainTestDocument().getId())
+				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+				.andExpect(jsonPath("$.id").value(getMainTestDocument().getId()))
 				.andExpect(jsonPath("$.storagePath").value(getMainTestDocument().getStoragePath()))
 				.andExpect(jsonPath("$.userId").value(getMainTestDocument().getUser().getId()))
 				.andExpect(jsonPath("$.format").value(getMainTestDocument().getFormat()))
@@ -56,13 +57,15 @@ public class DocumentApiControllerIntegrationTest extends AbstractIntegrationTes
 		String expectedDate = getMainTestDocument().getUploadDate()
 				.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
 
-		mockMvc.perform(post("/api/documents").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+		mockMvc.perform(
+				post("/api/documents").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
 				.andExpect(status().isCreated())
 				.andExpect(header().string("Location", containsString("/api/documents")))
 				.andExpect(jsonPath("$.storagePath").value("/test/path/created.pdf"))
 				.andExpect(jsonPath("$.userId").value(getProducerTestUser().getId()))
 				.andExpect(jsonPath("$.uploadDate").value(startsWith(expectedDate)))
-				.andExpect(jsonPath("$.format").value("PDF")).andExpect(jsonPath("$.documentType").value("SOME_TYPE"));
+				.andExpect(jsonPath("$.format").value("PDF"))
+				.andExpect(jsonPath("$.documentType").value("SOME_TYPE"));
 	}
 
 	/**
@@ -83,8 +86,9 @@ public class DocumentApiControllerIntegrationTest extends AbstractIntegrationTes
 		String expectedDate = getMainTestDocument().getUploadDate()
 				.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
 
-		mockMvc.perform(put("/api/documents/" + getMainTestDocument().getId()).contentType(MediaType.APPLICATION_JSON)
-				.content(jsonContent)).andExpect(status().isOk())
+		mockMvc.perform(put("/api/documents/" + getMainTestDocument().getId())
+				.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.id").value(getMainTestDocument().getId()))
 				.andExpect(jsonPath("$.storagePath").value("/updated/path/updated.pdf"))
 				.andExpect(jsonPath("$.userId").value(getProducerTestUser().getId()))
@@ -112,8 +116,8 @@ public class DocumentApiControllerIntegrationTest extends AbstractIntegrationTes
 	@Test
 	public void testListDocumentsForAUser() throws Exception {
 		mockMvc.perform(get("/api/documents/users/" + getMainTestDocument().getUser().getId())
-				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andExpect(jsonPath("$").isArray())
-				.andExpect(jsonPath("$.length()").value(1))
+				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+				.andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(1))
 				.andExpect(jsonPath("$[0].id").value(getMainTestDocument().getId()));
 	}
 }

@@ -34,8 +34,9 @@ import lombok.NoArgsConstructor;
 				@DiscriminatorMapping(value = "exporter", schema = ExporterUpdateDto.class),
 				@DiscriminatorMapping(value = "carrier", schema = CarrierUpdateDto.class),
 				@DiscriminatorMapping(value = "trader", schema = TraderUpdateDto.class)}, subTypes = {
-						TraderUpdateDto.class, CarrierUpdateDto.class, QualityInspectorUpdateDto.class,
-						AdminUpdateDto.class, ExporterUpdateDto.class, TransformerUpdateDto.class,
+						TraderUpdateDto.class, CarrierUpdateDto.class,
+						QualityInspectorUpdateDto.class, AdminUpdateDto.class,
+						ExporterUpdateDto.class, TransformerUpdateDto.class,
 						ProducerUpdateDto.class})
 public abstract class UserUpdateDto {
 
@@ -72,8 +73,8 @@ public abstract class UserUpdateDto {
 	private String address;
 
 	/** Numéro de téléphone de l'utilisateur. */
-	@Pattern(regexp = "^(?:\\+229)?(?:01[2-9]\\d{7}|[2-9]\\d{7})$", message = "Numéro invalide – doit être +229XXXXXXXX ou +22901XXXXXXXX")
-	@Schema(description = "Numéro de téléphone (Bénin, ancien et nouveau formats)", example = "+2290197123456", pattern = "^(?:\\+229)?(?:01[2-9]\\d{7}|[2-9]\\d{7})$")
+	@Pattern(regexp = "^(?:\\+229)?01\\d{8}$", message = "Numéro invalide – doit être +229XXXXXXXX ou +22901XXXXXXXX")
+	@Schema(description = "Numéro de téléphone (Bénin, format local à 10 chiffres débutant par 01, ou +229...)", example = "+2290178123456", pattern = "^(?:\\+229)?01\\d{8}$")
 	private String phone;
 
 	/**

@@ -53,20 +53,11 @@ export function AuctionForm({
       productId: 0,
       productQuantity: 0,
       expirationDate: '',
+      active: true,
+      traderId: user.id,
     },
     onSubmit({ value }) {
-      const formData = zAuctionUpdateDto.parse(value)
-
-      const auctionUpdateDto = {
-        price: formData.price,
-        productQuantity: formData.productQuantity,
-        expirationDate: formData.expirationDate,
-        active: true,
-        productId: formData.productId,
-        traderId: user.id,
-      }
-
-      createAuctionRequest.mutate({ body: auctionUpdateDto })
+      createAuctionRequest.mutate({ body: value })
     },
   })
 
