@@ -4,6 +4,7 @@ import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@
 import { Button } from '@/components/ui/button'
 import {useQuery } from '@tanstack/react-query'
 import { useMutation } from '@tanstack/react-query'
+import type { BidDtoReadable } from '@/api/generated';
 import { acceptAuctionMutation, acceptBidMutation, listBidsOptions } from '@/api/generated/@tanstack/react-query.gen'
 import { formatDate } from '@/lib/utils';
 import { BidForm } from './BidForm';
@@ -11,18 +12,20 @@ import { BidForm } from './BidForm';
 interface BidsDialogProps {
   auctionId: number;
   isOpen: boolean;
-  setIsOpen: (open: boolean) => void;
+  openChange: (open: boolean) => void;
   showColumnAcceptBid?: boolean;
   showBidForm?: boolean;
 }
 
-const BidsDialog: React.FC<BidsDialogProps> = ({ auctionId, isOpen, setIsOpen, showColumnAcceptBid, showBidForm }) => {
-  const { data : bidsData, isLoading, isError } = useQuery(
+const BidsDialog: React.FC<BidsDialogProps> = ({ auctionId, isOpen, openChange, showColumnAcceptBid, showBidForm }) => {
+  const { data, isLoading, isError } = useQuery(
     {
       ...listBidsOptions({ path: { auctionId: auctionId } }),
       enabled: !!auctionId,
     }
   );
+
+  const bidsData = data as BidDtoReadable[];
 
   const { mutate: acceptAuction } = useMutation(acceptAuctionMutation());
   const { mutate: acceptBid } = useMutation(acceptBidMutation());
@@ -30,11 +33,11 @@ const BidsDialog: React.FC<BidsDialogProps> = ({ auctionId, isOpen, setIsOpen, s
   const handleAcceptBid = (bidId: number) => {
     acceptBid({ path: { auctionId, bidId }});
     acceptAuction({ path: { id: auctionId }});
-    setIsOpen(false);
+    openChange(false);
   };
 
   return (
-    <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog.Root open={isOpen} onOpenChange={openChange}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 backdrop-blur-xs" />
         <Dialog.Content
@@ -86,7 +89,7 @@ const BidsDialog: React.FC<BidsDialogProps> = ({ auctionId, isOpen, setIsOpen, s
             </div>
 
             {
-              showBidForm && <BidForm auctionId={auctionId} />
+              showBidForm && <BidForm auctionId={auctionId} onMakeBid={() => openChange(false) } />
             }
         </Dialog.Content>
       </Dialog.Portal>

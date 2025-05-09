@@ -80,12 +80,12 @@ export function Header() {
           icon: <ShoppingCart className="size-5 shrink-0" />,
           url: '/achats/nouvelle-enchere',
         },
-        {
-          title: 'Mes achats',
-          description: 'Consulter mes achats en cours',
-          icon: <ArrowLeftRight className="size-5 shrink-0" />,
-          url: '/achats/mes-encheres',
-        },
+        // {
+        //   title: 'Mes achats',
+        //   description: 'Consulter mes achats en cours',
+        //   icon: <ArrowLeftRight className="size-5 shrink-0" />,
+        //   url: '/achats/mes-encheres',
+        // },
         {
           title: 'Mon historique',
           description: 'Détails de mes achats passés',

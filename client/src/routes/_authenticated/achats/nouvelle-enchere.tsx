@@ -33,6 +33,10 @@ export function RouteComponent() {
     setIsDialogOpen(true);
   };
 
+  const isDialogOpenChanged = (isOpen: boolean) => {
+    setIsDialogOpen(isOpen);
+  }
+
   return (
           <>
             <AuctionsTable 
@@ -44,7 +48,7 @@ export function RouteComponent() {
             <BidsDialog
               auctionId={selectedAuctionId!}
               isOpen={isDialogOpen}
-              setIsOpen={setIsDialogOpen}
+              openChange={isDialogOpenChanged}
               showBidForm={true}
             />
           </>

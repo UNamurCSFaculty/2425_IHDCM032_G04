@@ -1,15 +1,14 @@
 import { createFileRoute } from '@tanstack/react-router'
 import {useQueryClient, useSuspenseQuery, useMutation  } from '@tanstack/react-query'
-import { listAuctionsOptions, deleteAuctionMutation, listAuctionsQueryKey } from '@/api/generated/@tanstack/react-query.gen'
+import { listAuctionsOptions, deleteAuctionMutation } from '@/api/generated/@tanstack/react-query.gen'
 import { useAuthUser } from '@/store/userStore'
 import { useAuctionStore } from '@/store/auctionStore'
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import BidsDialog from '@/components/auctions/BidsDialog'
 import AuctionsTable from '@/components/auctions/AuctionsTable'
 
 const listAuctionsQueryOptions = (userId: number) => ({
-  ...listAuctionsOptions({ query: { traderId: userId, status: "Ouvert" } }),
-  // staleTime: 10_000,
+  ...listAuctionsOptions({ query: { traderId: userId, status: "Ouvert" } })
 });
 
 export const Route = createFileRoute('/_authenticated/ventes/mes-encheres')({
@@ -26,16 +25,16 @@ export function RouteComponent() {
 
   const user = useAuthUser();
 
+  const queryClient = useQueryClient();
+
   const { data: auctionsData } = useSuspenseQuery(
     listAuctionsQueryOptions(user!.id!),
   );
 
-  const queryClient = useQueryClient();
-
   const deleteAuction = useMutation({
     ...deleteAuctionMutation(),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: listAuctionsQueryKey() });
+      queryClient.invalidateQueries();
     },
     onError: (error) => {
       console.error('Erreur :', error);
@@ -51,12 +50,12 @@ export function RouteComponent() {
     setIsDialogOpen(true);
   };
 
-  useEffect(() => {
-    if (!isDialogOpen) {
-      queryClient.invalidateQueries({ queryKey: listAuctionsQueryKey() });
-      // queryClient.refetchQueries({ queryKey: listAuctionsQueryKey() });
+  const isDialogOpenChanged = (isOpen: boolean) => {
+    setIsDialogOpen(isOpen);
+    if (!isOpen) {
+      queryClient.invalidateQueries();
     }
-  }, [queryClient, isDialogOpen]);
+  }
 
   return (
           <>
@@ -71,7 +70,7 @@ export function RouteComponent() {
             <BidsDialog
               auctionId={selectedAuctionId!}
               isOpen={isDialogOpen}
-              setIsOpen={setIsDialogOpen}
+              openChange={isDialogOpenChanged}
               showColumnAcceptBid={true}
             />
           </>

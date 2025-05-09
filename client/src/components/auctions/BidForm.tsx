@@ -10,9 +10,10 @@ import { useAuthUser } from '@/store/userStore'
 
 interface BidFormProps {
   auctionId: number;
+  onMakeBid?: () => void;
 }
 
-export function BidForm({ auctionId }: BidFormProps): React.ReactElement<'div'> {
+export function BidForm({ auctionId, onMakeBid }: BidFormProps): React.ReactElement<'div'> {
   const user = useAuthUser()
   const navigate = useNavigate()
   const { i18n } = useTranslation()
@@ -20,7 +21,10 @@ export function BidForm({ auctionId }: BidFormProps): React.ReactElement<'div'> 
   const createBidRequest = useMutation({
     ...createBidMutation(),
     onSuccess() {
-      navigate({ to: '/achats/mes-encheres' })
+      if (onMakeBid) {
+        onMakeBid();
+      }
+      navigate({ to: '/achats/nouvelle-enchere' })
     },
     onError(error) {
       console.error('Requête invalide : ', error)
