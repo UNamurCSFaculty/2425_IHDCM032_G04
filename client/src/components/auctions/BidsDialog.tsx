@@ -12,12 +12,12 @@ import { BidForm } from './BidForm';
 interface BidsDialogProps {
   auctionId: number;
   isOpen: boolean;
-  setIsOpen: (open: boolean) => void;
+  openChange: (open: boolean) => void;
   showColumnAcceptBid?: boolean;
   showBidForm?: boolean;
 }
 
-const BidsDialog: React.FC<BidsDialogProps> = ({ auctionId, isOpen, setIsOpen, showColumnAcceptBid, showBidForm }) => {
+const BidsDialog: React.FC<BidsDialogProps> = ({ auctionId, isOpen, openChange, showColumnAcceptBid, showBidForm }) => {
   const { data, isLoading, isError } = useQuery(
     {
       ...listBidsOptions({ path: { auctionId: auctionId } }),
@@ -33,11 +33,11 @@ const BidsDialog: React.FC<BidsDialogProps> = ({ auctionId, isOpen, setIsOpen, s
   const handleAcceptBid = (bidId: number) => {
     acceptBid({ path: { auctionId, bidId }});
     acceptAuction({ path: { id: auctionId }});
-    setIsOpen(false);
+    openChange(false);
   };
 
   return (
-    <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog.Root open={isOpen} onOpenChange={openChange}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 backdrop-blur-xs" />
         <Dialog.Content
@@ -89,7 +89,7 @@ const BidsDialog: React.FC<BidsDialogProps> = ({ auctionId, isOpen, setIsOpen, s
             </div>
 
             {
-              showBidForm && <BidForm auctionId={auctionId} />
+              showBidForm && <BidForm auctionId={auctionId} onMakeBid={() => openChange(false) } />
             }
         </Dialog.Content>
       </Dialog.Portal>
