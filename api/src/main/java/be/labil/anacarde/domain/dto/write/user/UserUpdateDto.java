@@ -34,8 +34,9 @@ import lombok.NoArgsConstructor;
 				@DiscriminatorMapping(value = "exporter", schema = ExporterUpdateDto.class),
 				@DiscriminatorMapping(value = "carrier", schema = CarrierUpdateDto.class),
 				@DiscriminatorMapping(value = "trader", schema = TraderUpdateDto.class)}, subTypes = {
-						TraderUpdateDto.class, CarrierUpdateDto.class, QualityInspectorUpdateDto.class,
-						AdminUpdateDto.class, ExporterUpdateDto.class, TransformerUpdateDto.class,
+						TraderUpdateDto.class, CarrierUpdateDto.class,
+						QualityInspectorUpdateDto.class, AdminUpdateDto.class,
+						ExporterUpdateDto.class, TransformerUpdateDto.class,
 						ProducerUpdateDto.class})
 public abstract class UserUpdateDto {
 

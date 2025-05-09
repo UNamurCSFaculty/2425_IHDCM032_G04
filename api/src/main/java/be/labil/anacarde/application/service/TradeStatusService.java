@@ -5,8 +5,8 @@ import be.labil.anacarde.domain.dto.db.TradeStatusDto;
 import java.util.List;
 
 /**
- * Ce service offre des méthodes permettant de créer, récupérer, mettre à jour et supprimer des informations de status
- * d'offres.
+ * Ce service offre des méthodes permettant de créer, récupérer, mettre à jour et supprimer des
+ * informations de status d'offres.
  */
 public interface TradeStatusService {
 
@@ -36,7 +36,8 @@ public interface TradeStatusService {
 	List<TradeStatusDto> listTradeStatus();
 
 	/**
-	 * Mise à jour du status identifié par l'ID donné avec les informations fournies dans le TradeStatusDto.
+	 * Mise à jour du status identifié par l'ID donné avec les informations fournies dans le
+	 * TradeStatusDto.
 	 *
 	 * @param id
 	 *            L'identifiant unique du status à mettre à jour.

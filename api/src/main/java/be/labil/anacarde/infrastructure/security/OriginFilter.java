@@ -18,8 +18,8 @@ public class OriginFilter extends OncePerRequestFilter {
 	private String trustedOrigin;
 
 	@Override
-	protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
-			throws ServletException, IOException {
+	protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res,
+			FilterChain chain) throws ServletException, IOException {
 		String origin = req.getHeader("Origin");
 		if (origin != null && !origin.equals(trustedOrigin)) {
 			res.sendError(HttpStatus.FORBIDDEN.value(), "Invalid Origin");

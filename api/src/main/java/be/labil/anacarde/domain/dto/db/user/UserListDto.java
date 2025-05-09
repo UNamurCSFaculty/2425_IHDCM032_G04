@@ -30,7 +30,8 @@ import lombok.EqualsAndHashCode;
 				@DiscriminatorMapping(value = "quality_inspector", schema = QualityInspectorDetailDto.class),
 				@DiscriminatorMapping(value = "exporter", schema = ExporterDetailDto.class),
 				@DiscriminatorMapping(value = "carrier", schema = CarrierDetailDto.class)}, subTypes = {
-						TraderListDto.class, CarrierListDto.class, QualityInspectorListDto.class, AdminListDto.class})
+						TraderListDto.class, CarrierListDto.class, QualityInspectorListDto.class,
+						AdminListDto.class})
 public abstract class UserListDto extends BaseDto {
 
 	/** User's first name. */
@@ -71,8 +72,9 @@ public abstract class UserListDto extends BaseDto {
 	private String phone;
 
 	/**
-	 * Propriété virtuelle pour Swagger. Ce getter n'est pas utilisé par Jackson car il est ignoré, mais permet
-	 * d'afficher dans le schéma OpenAPI une propriété "type" avec un exemple et des valeurs autorisées.
+	 * Propriété virtuelle pour Swagger. Ce getter n'est pas utilisé par Jackson car il est ignoré,
+	 * mais permet d'afficher dans le schéma OpenAPI une propriété "type" avec un exemple et des
+	 * valeurs autorisées.
 	 */
 	@Schema(name = "type", description = "Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier", requiredMode = Schema.RequiredMode.REQUIRED, example = "admin", allowableValues = {
 			"admin", "producer", "transformer", "quality_inspector", "exporter", "carrier"})

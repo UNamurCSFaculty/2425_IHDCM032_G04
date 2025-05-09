@@ -63,7 +63,8 @@ public abstract class User extends BaseEntity implements UserDetails {
 	private Language language;
 
 	/**
-	 * Ajoute un rôle à cet utilisateur et met à jour le côté inverse (le rôle) pour maintenir la cohérence.
+	 * Ajoute un rôle à cet utilisateur et met à jour le côté inverse (le rôle) pour maintenir la
+	 * cohérence.
 	 *
 	 * @param role
 	 *            Le rôle à ajouter.
@@ -78,8 +79,8 @@ public abstract class User extends BaseEntity implements UserDetails {
 	}
 
 	/**
-	 * Convertit les rôles assignés à l'utilisateur en une collection d'objets GrantedAuthority. Si aucun rôle n'est
-	 * assigné, une liste vide est retournée.
+	 * Convertit les rôles assignés à l'utilisateur en une collection d'objets GrantedAuthority. Si
+	 * aucun rôle n'est assigné, une liste vide est retournée.
 	 *
 	 * @return Une Collection de GrantedAuthority représentant les rôles de l'utilisateur.
 	 */
@@ -89,7 +90,8 @@ public abstract class User extends BaseEntity implements UserDetails {
 		if (roles == null) {
 			return new ArrayList<>();
 		}
-		return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
+		return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName()))
+				.collect(Collectors.toList());
 	}
 
 	/**
@@ -115,7 +117,8 @@ public abstract class User extends BaseEntity implements UserDetails {
 	}
 
 	/**
-	 * Récupère le nom d'utilisateur de l'utilisateur, qui dans cette implémentation correspond à l'adresse e-mail.
+	 * Récupère le nom d'utilisateur de l'utilisateur, qui dans cette implémentation correspond à
+	 * l'adresse e-mail.
 	 *
 	 * @return L'adresse e-mail de l'utilisateur sous forme de String.
 	 */

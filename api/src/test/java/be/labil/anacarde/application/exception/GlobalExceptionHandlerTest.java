@@ -40,7 +40,8 @@ public class GlobalExceptionHandlerTest {
 	@Test
 	public void testExtractErrorCode() throws Exception {
 		GlobalExceptionHandler handler = new GlobalExceptionHandler(null);
-		Method method = GlobalExceptionHandler.class.getDeclaredMethod("extractErrorCode", String.class);
+		Method method = GlobalExceptionHandler.class.getDeclaredMethod("extractErrorCode",
+				String.class);
 		method.setAccessible(true);
 
 		String errorMsg1 = "La valeur de clé en double viole la contrainte d'unicité [matricule]";
@@ -56,7 +57,8 @@ public class GlobalExceptionHandlerTest {
 
 	@Test
 	public void testHandleValidation() {
-		MethodArgumentNotValidException ex = createTestValidationException("username", "doit être non nul");
+		MethodArgumentNotValidException ex = createTestValidationException("username",
+				"doit être non nul");
 		GlobalExceptionHandler handler = new GlobalExceptionHandler(null);
 
 		ResponseEntity<ApiErrorResponse> response = handler.handleValidation(ex, request);
@@ -67,7 +69,8 @@ public class GlobalExceptionHandlerTest {
 		assertEquals(1, body.getErrors().size(), "Une seule erreur doit être présente");
 		ErrorDetail detail = body.getErrors().get(0);
 		assertEquals("username", detail.getField(), "Le champ doit être 'username'");
-		assertEquals("doit être non nul", detail.getMessage(), "Le message d'erreur doit correspondre");
+		assertEquals("doit être non nul", detail.getMessage(),
+				"Le message d'erreur doit correspondre");
 	}
 
 	@Test
@@ -85,7 +88,8 @@ public class GlobalExceptionHandlerTest {
 
 	@Test
 	public void testHandleBadRequestException() {
-		BadRequestException ex = new BadRequestException("Le rôle est déjà attribué à l'utilisateur");
+		BadRequestException ex = new BadRequestException(
+				"Le rôle est déjà attribué à l'utilisateur");
 		GlobalExceptionHandler handler = new GlobalExceptionHandler(null);
 
 		ResponseEntity<ApiErrorResponse> response = handler.handleBadRequest(ex, request);
@@ -105,7 +109,8 @@ public class GlobalExceptionHandlerTest {
 
 		GlobalExceptionHandler handler = new GlobalExceptionHandler(messageSource);
 		Exception rootCause = new Exception("Violation de contrainte [password]");
-		DataIntegrityViolationException ex = new DataIntegrityViolationException("Erreur", rootCause);
+		DataIntegrityViolationException ex = new DataIntegrityViolationException("Erreur",
+				rootCause);
 
 		ResponseEntity<ApiErrorResponse> response = handler.handleConflict(ex, request);
 		assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
@@ -122,7 +127,8 @@ public class GlobalExceptionHandlerTest {
 
 		GlobalExceptionHandler handler = new GlobalExceptionHandler(messageSource);
 		Exception rootCause = new Exception("Une autre erreur sans contrainte");
-		DataIntegrityViolationException ex = new DataIntegrityViolationException("Erreur", rootCause);
+		DataIntegrityViolationException ex = new DataIntegrityViolationException("Erreur",
+				rootCause);
 
 		ResponseEntity<ApiErrorResponse> response = handler.handleConflict(ex, request);
 		assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
@@ -142,12 +148,14 @@ public class GlobalExceptionHandlerTest {
 		ApiErrorResponse body = response.getBody();
 		assertNotNull(body);
 		ErrorDetail detail = body.getErrors().get(0);
-		assertTrue(detail.getMessage().contains("Syntaxe JSON invalide"), "Doit indiquer une syntaxe JSON invalide");
+		assertTrue(detail.getMessage().contains("Syntaxe JSON invalide"),
+				"Doit indiquer une syntaxe JSON invalide");
 	}
 
 	@Test
 	public void testHandleHttpMessageNotReadable_InvalidTypeIdException() {
-		InvalidTypeIdException iti = new InvalidTypeIdException(null, "missing type id property 'type'", null, "type");
+		InvalidTypeIdException iti = new InvalidTypeIdException(null,
+				"missing type id property 'type'", null, "type");
 		HttpMessageNotReadableException ex = new HttpMessageNotReadableException("Erreur", iti,
 				createDummyHttpInputMessage());
 		GlobalExceptionHandler handler = new GlobalExceptionHandler(null);
@@ -176,8 +184,8 @@ public class GlobalExceptionHandlerTest {
 
 	@Test
 	public void testHandleMethodNotAllowed() {
-		HttpRequestMethodNotSupportedException ex = new HttpRequestMethodNotSupportedException("PUT",
-				List.of("GET", "POST"));
+		HttpRequestMethodNotSupportedException ex = new HttpRequestMethodNotSupportedException(
+				"PUT", List.of("GET", "POST"));
 		GlobalExceptionHandler handler = new GlobalExceptionHandler(null);
 
 		ResponseEntity<ApiErrorResponse> response = handler.handleMethodNotAllowed(ex, request);
@@ -195,7 +203,8 @@ public class GlobalExceptionHandlerTest {
 		};
 		GlobalExceptionHandler handler = new GlobalExceptionHandler(null);
 
-		ResponseEntity<ApiErrorResponse> response = handler.handleAuthenticationException(ex, request);
+		ResponseEntity<ApiErrorResponse> response = handler.handleAuthenticationException(ex,
+				request);
 		assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
 		ApiErrorResponse body = response.getBody();
 		assertNotNull(body);
@@ -272,7 +281,8 @@ public class GlobalExceptionHandlerTest {
 
 	@Test
 	public void testHandleMissingServletRequestParameterException() {
-		MissingServletRequestParameterException ex = new MissingServletRequestParameterException("name", "String");
+		MissingServletRequestParameterException ex = new MissingServletRequestParameterException(
+				"name", "String");
 		GlobalExceptionHandler handler = new GlobalExceptionHandler(null);
 
 		ResponseEntity<ApiErrorResponse> response = handler.handleMissingServletParam(ex, request);
@@ -290,8 +300,8 @@ public class GlobalExceptionHandlerTest {
 		GlobalExceptionHandler handler = new GlobalExceptionHandler(null);
 
 		// Construire l'exception métier avec un seul détail
-		ApiErrorException ex = new ApiErrorException(HttpStatus.BAD_REQUEST, "custom.code", "fieldName",
-				"detail message");
+		ApiErrorException ex = new ApiErrorException(HttpStatus.BAD_REQUEST, "custom.code",
+				"fieldName", "detail message");
 
 		// Appeler le handler
 		ResponseEntity<ApiErrorResponse> response = handler.handleApiError(ex, req);
@@ -367,7 +377,8 @@ public class GlobalExceptionHandlerTest {
 		return new HttpMessageNotReadableException("Erreur", jpe, createDummyHttpInputMessage());
 	}
 
-	private MethodArgumentNotValidException createTestValidationException(String field, String errorMessage) {
+	private MethodArgumentNotValidException createTestValidationException(String field,
+			String errorMessage) {
 		Object target = new Object();
 		BindingResult bindingResult = new BeanPropertyBindingResult(target, "target");
 		bindingResult.addError(new FieldError("target", field, errorMessage));

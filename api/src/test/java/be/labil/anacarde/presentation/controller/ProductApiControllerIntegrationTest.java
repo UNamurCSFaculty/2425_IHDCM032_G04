@@ -28,17 +28,20 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 	 */
 	@Test
 	public void testGetHarvestProduct() throws Exception {
-		mockMvc.perform(get("/api/products/" + getTestHarvestProduct().getId()).accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk()).andExpect(jsonPath("$.type").value("harvest"))
+		mockMvc.perform(get("/api/products/" + getTestHarvestProduct().getId())
+				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+				.andExpect(jsonPath("$.type").value("harvest"))
 				.andExpect(jsonPath("$.store.location").value("POINT (2.3522 48.8566)"))
 				.andExpect(jsonPath("$.weightKg").value("2000.0"));
 	}
 
 	@Test
 	public void testGetTransformedProduct() throws Exception {
-		mockMvc.perform(get("/api/products/" + getTestTransformedProduct().getId()).accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk()).andExpect(jsonPath("$.type").value("transformed"))
-				.andExpect(jsonPath("$.identifier").value("XYZ")).andExpect(jsonPath("$.weightKg").value("2000.0"));
+		mockMvc.perform(get("/api/products/" + getTestTransformedProduct().getId())
+				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+				.andExpect(jsonPath("$.type").value("transformed"))
+				.andExpect(jsonPath("$.identifier").value("XYZ"))
+				.andExpect(jsonPath("$.weightKg").value("2000.0"));
 	}
 
 	/**
@@ -62,10 +65,12 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 		ObjectNode node = objectMapper.valueToTree(newProduct);
 		String jsonContent = node.toString();
 
-		mockMvc.perform(post("/api/products").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+		mockMvc.perform(
+				post("/api/products").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
 				.andExpect(status().isCreated())
 				.andExpect(header().string("Location", containsString("/api/products/")))
-				.andExpect(jsonPath("$.type").value("harvest")).andExpect(jsonPath("$.weightKg").value("200.0"))
+				.andExpect(jsonPath("$.type").value("harvest"))
+				.andExpect(jsonPath("$.weightKg").value("200.0"))
 				.andExpect(jsonPath("$.producer.id").value(producerId));
 
 		Product createdProduct = productRepository.findAll().stream()
@@ -92,10 +97,12 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 		ObjectNode node = objectMapper.valueToTree(newProduct);
 		String jsonContent = node.toString();
 
-		mockMvc.perform(post("/api/products").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+		mockMvc.perform(
+				post("/api/products").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
 				.andExpect(status().isCreated())
 				.andExpect(header().string("Location", containsString("/api/products/")))
-				.andExpect(jsonPath("$.type").value("transformed")).andExpect(jsonPath("$.weightKg").value("1234567.0"))
+				.andExpect(jsonPath("$.type").value("transformed"))
+				.andExpect(jsonPath("$.weightKg").value("1234567.0"))
 				.andExpect(jsonPath("$.transformer.id").value(transformerId));
 
 		Product createdProduct = productRepository.findAll().stream()
@@ -109,8 +116,9 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 	 */
 	@Test
 	public void testListProducts() throws Exception {
-		mockMvc.perform(get("/api/products").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
-				.andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(2));
+		mockMvc.perform(get("/api/products").accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()).andExpect(jsonPath("$").isArray())
+				.andExpect(jsonPath("$.length()").value(2));
 	}
 
 	/**
@@ -119,10 +127,10 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 	 */
 	@Test
 	public void testListProductsByTrader() throws Exception {
-		mockMvc.perform(
-				get("/api/products?traderId=" + getTransformerTestUser().getId()).accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk()).andExpect(jsonPath("$").isArray())
-				.andExpect(jsonPath("$.length()").value(1)).andExpect(jsonPath("$[0].type").value("transformed"));
+		mockMvc.perform(get("/api/products?traderId=" + getTransformerTestUser().getId())
+				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+				.andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(1))
+				.andExpect(jsonPath("$[0].type").value("transformed"));
 	}
 
 	/**

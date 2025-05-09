@@ -2,7 +2,6 @@ package be.labil.anacarde.presentation.controller;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import be.labil.anacarde.domain.dto.write.BidUpdateDto;
@@ -28,9 +27,10 @@ public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 	 */
 	@Test
 	public void testGetBid() throws Exception {
-		mockMvc.perform(get("/api/auctions/" + getTestAuction().getId() + "/bids/" + getTestBid().getId())
-				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
-				.andExpect(jsonPath("$.amount").value("10.0"))
+		mockMvc.perform(
+				get("/api/auctions/" + getTestAuction().getId() + "/bids/" + getTestBid().getId())
+						.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.amount").value("10.0"))
 				.andExpect(jsonPath("$.auctionId").value(getTestAuction().getId()))
 				.andExpect(jsonPath("$.trader.id").value(getProducerTestUser().getId()));
 	}
@@ -53,11 +53,13 @@ public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 		String jsonContent = node.toString();
 
 		mockMvc.perform(post("/api/auctions/" + getTestAuction().getId() + "/bids/")
-				.contentType(MediaType.APPLICATION_JSON).content(jsonContent)).andExpect(status().isCreated())
-				.andDo(print())
+				.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				.andExpect(status().isCreated())
+
 				.andExpect(header().string("Location",
 						containsString("/api/auctions/" + getTestAuction().getId() + "/bids/")))
-				.andExpect(jsonPath("$.amount").value("999.99")).andExpect(jsonPath("$.amount").value("999.99"))
+				.andExpect(jsonPath("$.amount").value("999.99"))
+				.andExpect(jsonPath("$.amount").value("999.99"))
 				.andExpect(jsonPath("$.status.id").value(getTestBidStatus().getId()));
 
 		Bid createdBid = bidRepository.findAll().stream()
@@ -71,9 +73,9 @@ public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 	 */
 	@Test
 	public void testListBids() throws Exception {
-		mockMvc.perform(get("/api/auctions/" + getTestAuction().getId() + "/bids/").accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk()).andExpect(jsonPath("$").isArray())
-				.andExpect(jsonPath("$.length()").value(1));
+		mockMvc.perform(get("/api/auctions/" + getTestAuction().getId() + "/bids/")
+				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+				.andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(1));
 	}
 
 	/**
@@ -93,9 +95,10 @@ public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 		ObjectNode node = objectMapper.valueToTree(updateBid);
 		String jsonContent = node.toString();
 
-		mockMvc.perform(put("/api/auctions/" + getTestAuction().getId() + "/bids/" + getTestBid().getId())
-				.contentType(MediaType.APPLICATION_JSON).content(jsonContent)).andExpect(status().isOk())
-				.andExpect(jsonPath("$.amount").value("1234567.01"));
+		mockMvc.perform(
+				put("/api/auctions/" + getTestAuction().getId() + "/bids/" + getTestBid().getId())
+						.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.amount").value("1234567.01"));
 	}
 
 	/**
@@ -106,9 +109,11 @@ public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 	public void testAcceptBid() throws Exception {
 		String jsonContent = "";
 
-		mockMvc.perform(put("/api/auctions/" + getTestAuction().getId() + "/bids/" + getTestBid().getId() + "/accept")
-				.contentType(MediaType.APPLICATION_JSON).content(jsonContent)).andExpect(status().isOk())
-				.andExpect(jsonPath("$.amount").value("10.0")).andExpect(jsonPath("$.status.name").value("Accepté"));
+		mockMvc.perform(
+				put("/api/auctions/" + getTestAuction().getId() + "/bids/" + getTestBid().getId()
+						+ "/accept").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.amount").value("10.0"))
+				.andExpect(jsonPath("$.status.name").value("Accepté"));
 	}
 
 	/**
@@ -117,10 +122,12 @@ public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 	 */
 	@Test
 	public void testDeleteBid() throws Exception {
-		mockMvc.perform(delete("/api/auctions/" + getTestAuction().getId() + "/bids/" + getTestBid().getId()))
+		mockMvc.perform(delete(
+				"/api/auctions/" + getTestAuction().getId() + "/bids/" + getTestBid().getId()))
 				.andExpect(status().isNoContent());
 
-		mockMvc.perform(get("/api/auctions/" + getTestAuction().getId() + "/bids/" + getTestBid().getId()))
+		mockMvc.perform(
+				get("/api/auctions/" + getTestAuction().getId() + "/bids/" + getTestBid().getId()))
 				.andExpect(status().isNotFound());
 	}
 }

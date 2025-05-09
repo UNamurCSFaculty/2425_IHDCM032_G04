@@ -6,7 +6,8 @@ import be.labil.anacarde.domain.dto.write.ContractOfferUpdateDto;
 import java.util.List;
 
 /**
- * Ce service offre des méthodes permettant de créer, récupérer, mettre à jour et supprimer des informations de contrat.
+ * Ce service offre des méthodes permettant de créer, récupérer, mettre à jour et supprimer des
+ * informations de contrat.
  */
 public interface ContractOfferService {
 
@@ -36,7 +37,8 @@ public interface ContractOfferService {
 	List<ContractOfferDto> listContractOffers();
 
 	/**
-	 * Met à jour du contrat identifié par l'ID donné avec les informations fournies dans le ContractOfferDto.
+	 * Met à jour du contrat identifié par l'ID donné avec les informations fournies dans le
+	 * ContractOfferDto.
 	 *
 	 * @param id
 	 *            L'identifiant unique du contrat à mettre à jour.

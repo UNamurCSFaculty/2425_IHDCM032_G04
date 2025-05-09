@@ -51,8 +51,8 @@ public class AuctionServiceImpl implements AuctionService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<AuctionDto> listAuctions(Integer traderId, String status) {
-		return auctionRepository.findByActiveTrueFiltered(traderId, status).stream().map(auctionMapper::toDto)
-				.collect(Collectors.toList());
+		return auctionRepository.findByActiveTrueFiltered(traderId, status).stream()
+				.map(auctionMapper::toDto).collect(Collectors.toList());
 	}
 
 	@Override
@@ -62,7 +62,8 @@ public class AuctionServiceImpl implements AuctionService {
 
 		Auction updatedAuction = auctionMapper.partialUpdate(auctionDetailDto, existingAuction);
 
-		Auction full = persistenceHelper.saveAndReload(auctionRepository, updatedAuction, Auction::getId);
+		Auction full = persistenceHelper.saveAndReload(auctionRepository, updatedAuction,
+				Auction::getId);
 		return auctionMapper.toDto(full);
 	}
 

@@ -29,8 +29,8 @@ public class QualityApiController implements QualityApi {
 	@Override
 	public ResponseEntity<QualityDto> createQuality(QualityDto qualityDetailDto) {
 		QualityDto created = qualityService.createQuality(qualityDetailDto);
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(created.getId())
-				.toUri();
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+				.buildAndExpand(created.getId()).toUri();
 		return ResponseEntity.created(location).body(created);
 	}
 

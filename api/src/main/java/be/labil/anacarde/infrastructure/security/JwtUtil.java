@@ -18,8 +18,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 /**
- * Cette classe fournit des méthodes pour générer, analyser et valider des JSON Web Tokens (JWT) destinés à
- * l'authentification des utilisateurs.
+ * Cette classe fournit des méthodes pour générer, analyser et valider des JSON Web Tokens (JWT)
+ * destinés à l'authentification des utilisateurs.
  */
 public class JwtUtil {
 
@@ -47,7 +47,8 @@ public class JwtUtil {
 	 * @return L'objet Claims contenant toutes les informations du token.
 	 */
 	public Claims extractAllClaims(String token) {
-		return Jwts.parser().verifyWith(getSigningKey()).build().parseSignedClaims(token).getPayload();
+		return Jwts.parser().verifyWith(getSigningKey()).build().parseSignedClaims(token)
+				.getPayload();
 	}
 
 	/**
@@ -139,7 +140,8 @@ public class JwtUtil {
 	 *            Le token JWT à valider.
 	 * @param userDetails
 	 *            L'objet UserDetails avec lequel valider le token.
-	 * @return true si le token est valide et correspond aux informations de l'utilisateur, false sinon.
+	 * @return true si le token est valide et correspond aux informations de l'utilisateur, false
+	 *         sinon.
 	 */
 	public Boolean validateToken(String token, UserDetails userDetails) {
 		try {

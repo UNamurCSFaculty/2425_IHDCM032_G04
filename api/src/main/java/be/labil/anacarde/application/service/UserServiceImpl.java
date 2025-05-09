@@ -42,8 +42,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-		return userRepository.findByEmail(email)
-				.orElseThrow(() -> new UsernameNotFoundException("Utilisateur non trouvé avec l'email : " + email));
+		return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(
+				"Utilisateur non trouvé avec l'email : " + email));
 	}
 
 	@Override
@@ -55,7 +55,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 		boolean agriculturalIdentifierExists = false;
 		if (dto instanceof ProducerUpdateDto producerDto) {
 			agriculturalIdentifierExists = producerRepository
-					.findByAgriculturalIdentifier(producerDto.getAgriculturalIdentifier()).isPresent();
+					.findByAgriculturalIdentifier(producerDto.getAgriculturalIdentifier())
+					.isPresent();
 		}
 		if (emailExists || phoneExists || agriculturalIdentifierExists) {
 			List<ErrorDetail> errors = new ArrayList<>();
@@ -68,11 +69,12 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 						"Le numéro de téléphone est déjà utilisé"));
 			}
 			if (agriculturalIdentifierExists) {
-				errors.add(
-						new ErrorDetail("agriculturalIdentifier", ApiErrorCode.CONFLICT_AGRICULTURAL_ID_EXISTS.code(),
-								"L'identifiant agricole est déjà utilisé"));
+				errors.add(new ErrorDetail("agriculturalIdentifier",
+						ApiErrorCode.CONFLICT_AGRICULTURAL_ID_EXISTS.code(),
+						"L'identifiant agricole est déjà utilisé"));
 			}
-			throw new ApiErrorException(HttpStatus.CONFLICT, ApiErrorCode.BAD_REQUEST.code(), errors);
+			throw new ApiErrorException(HttpStatus.CONFLICT, ApiErrorCode.BAD_REQUEST.code(),
+					errors);
 		}
 
 		User user = userDetailMapper.toEntity(dto);
@@ -91,7 +93,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<UserListDto> listUsers() {
-		return userRepository.findAll().stream().map(userListMapper::toDto).collect(Collectors.toList());
+		return userRepository.findAll().stream().map(userListMapper::toDto)
+				.collect(Collectors.toList());
 	}
 
 	@Override
@@ -139,8 +142,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 				.orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé"));
 
 		Set<Role> newRoles = roleNames.stream()
-				.map(roleName -> roleRepository.findByName(roleName)
-						.orElseThrow(() -> new ResourceNotFoundException("Rôle non trouvé: " + roleName)))
+				.map(roleName -> roleRepository.findByName(roleName).orElseThrow(
+						() -> new ResourceNotFoundException("Rôle non trouvé: " + roleName)))
 				.collect(Collectors.toSet());
 
 		user.setRoles(newRoles);

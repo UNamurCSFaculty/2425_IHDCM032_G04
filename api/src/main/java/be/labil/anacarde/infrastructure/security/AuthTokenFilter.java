@@ -20,9 +20,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Component
 @AllArgsConstructor
 /**
- * Ce filtre intercepte les requêtes HTTP entrantes afin d'extraire et de valider les tokens JWT présents dans les
- * cookies. En cas de validation réussie, il définit l'authentification dans le SecurityContext pour considérer
- * l'utilisateur comme authentifié durant la requête en cours.
+ * Ce filtre intercepte les requêtes HTTP entrantes afin d'extraire et de valider les tokens JWT
+ * présents dans les cookies. En cas de validation réussie, il définit l'authentification dans le
+ * SecurityContext pour considérer l'utilisateur comme authentifié durant la requête en cours.
  */
 public class AuthTokenFilter extends OncePerRequestFilter {
 
@@ -30,8 +30,9 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 	private final UserDetailsService userDetailsService;
 
 	/**
-	 * Cette méthode extrait le token JWT depuis la requête, le valide, et, s'il est valide, définit l'authentification
-	 * dans le SecurityContext afin que l'utilisateur soit reconnu comme authentifié pour la requête actuelle.
+	 * Cette méthode extrait le token JWT depuis la requête, le valide, et, s'il est valide, définit
+	 * l'authentification dans le SecurityContext afin que l'utilisateur soit reconnu comme
+	 * authentifié pour la requête actuelle.
 	 *
 	 * @param request
 	 *            La HttpServletRequest en cours de traitement.
@@ -45,8 +46,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 	 *             en cas d'erreur d'entrée/sortie pendant le traitement.
 	 */
 	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-			throws ServletException, IOException {
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+			FilterChain filterChain) throws ServletException, IOException {
 		try {
 			String jwt = parseJwt(request);
 			if (jwt != null) {
@@ -57,7 +58,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 				}
 				UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
 						userDetails, null, userDetails.getAuthorities());
-				authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+				authentication
+						.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 				SecurityContextHolder.getContext().setAuthentication(authentication);
 
 			}
@@ -71,8 +73,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 	}
 
 	/**
-	 * Parcourt les cookies de la requête et retourne la valeur du cookie nommé "jwt". Si aucun cookie de ce nom n'est
-	 * trouvé, retourne null.
+	 * Parcourt les cookies de la requête et retourne la valeur du cookie nommé "jwt". Si aucun
+	 * cookie de ce nom n'est trouvé, retourne null.
 	 *
 	 * @param request
 	 *            La HttpServletRequest depuis laquelle extraire le token JWT.

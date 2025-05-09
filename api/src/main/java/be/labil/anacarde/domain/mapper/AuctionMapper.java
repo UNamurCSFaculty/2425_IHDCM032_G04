@@ -7,8 +7,8 @@ import jakarta.persistence.EntityManager;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@Mapper(componentModel = "spring", uses = {MapperHelpers.class, AuctionStrategyMapper.class, ProductMapper.class,
-		TraderDetailMapper.class})
+@Mapper(componentModel = "spring", uses = {MapperHelpers.class, AuctionStrategyMapper.class,
+		ProductMapper.class, TraderDetailMapper.class})
 public abstract class AuctionMapper {
 
 	@Autowired

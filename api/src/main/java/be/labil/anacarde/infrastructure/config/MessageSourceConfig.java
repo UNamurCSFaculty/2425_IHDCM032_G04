@@ -10,16 +10,17 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 @Configuration
 /**
- * Cette classe fournit les définitions de beans pour la résolution des messages et la gestion de la langue. Elle
- * configure un MessageSource pour l'internationalisation en chargeant les fichiers de ressources (par exemple,
- * messages.properties, messages_fr.properties, etc.) et un LocaleResolver pour définir la langue par défaut de
- * l'application.
+ * Cette classe fournit les définitions de beans pour la résolution des messages et la gestion de la
+ * langue. Elle configure un MessageSource pour l'internationalisation en chargeant les fichiers de
+ * ressources (par exemple, messages.properties, messages_fr.properties, etc.) et un LocaleResolver
+ * pour définir la langue par défaut de l'application.
  */
 public class MessageSourceConfig {
 
 	/**
-	 * Instancie un ResourceBundleMessageSource, définit son basename à "messages" (correspondant aux fichiers
-	 * messages.properties, messages_fr.properties, etc.) et fixe l'encodage par défaut à UTF-8.
+	 * Instancie un ResourceBundleMessageSource, définit son basename à "messages" (correspondant
+	 * aux fichiers messages.properties, messages_fr.properties, etc.) et fixe l'encodage par défaut
+	 * à UTF-8.
 	 *
 	 * @return Une instance de MessageSource correctement configurée.
 	 */
@@ -32,8 +33,8 @@ public class MessageSourceConfig {
 	}
 
 	/**
-	 * Instancie un SessionLocaleResolver et définit sa langue par défaut sur le français. Le LocaleResolver détermine
-	 * la langue de l'application en fonction de la session utilisateur.
+	 * Instancie un SessionLocaleResolver et définit sa langue par défaut sur le français. Le
+	 * LocaleResolver détermine la langue de l'application en fonction de la session utilisateur.
 	 *
 	 * @return Une instance de LocaleResolver correctement configurée.
 	 */

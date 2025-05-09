@@ -27,8 +27,8 @@ public class UserControllerApiController implements UserApi {
 	public ResponseEntity<UserDetailDto> createUser(UserUpdateDto userUpdateDto) {
 		// userUpdateDto.setId(null);
 		UserDetailDto created = userService.createUser(userUpdateDto);
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(created.getId())
-				.toUri();
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+				.buildAndExpand(created.getId()).toUri();
 		return ResponseEntity.created(location).body(created);
 	}
 
@@ -57,7 +57,8 @@ public class UserControllerApiController implements UserApi {
 	}
 
 	@Override
-	public ResponseEntity<? extends UserDetailDto> updateUserRoles(Integer id, List<String> roleNames) {
+	public ResponseEntity<? extends UserDetailDto> updateUserRoles(Integer id,
+			List<String> roleNames) {
 		UserDetailDto updated = userService.updateUserRoles(id, roleNames);
 		return ResponseEntity.ok(updated);
 	}

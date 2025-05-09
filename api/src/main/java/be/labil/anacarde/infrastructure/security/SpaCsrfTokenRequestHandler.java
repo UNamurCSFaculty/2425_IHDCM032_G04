@@ -10,9 +10,9 @@ import org.springframework.security.web.csrf.XorCsrfTokenRequestAttributeHandler
 import org.springframework.util.StringUtils;
 
 /**
- * Gère le token CSRF pour SPA : - applique le masque XOR (BREACH protection) pour le rendu dans la réponse - force le
- * chargement du token pour réémettre le cookie si nécessaire - résout la valeur soit via header (plain) soit via masque
- * XOR (form)
+ * Gère le token CSRF pour SPA : - applique le masque XOR (BREACH protection) pour le rendu dans la
+ * réponse - force le chargement du token pour réémettre le cookie si nécessaire - résout la valeur
+ * soit via header (plain) soit via masque XOR (form)
  */
 public class SpaCsrfTokenRequestHandler implements CsrfTokenRequestHandler {
 
@@ -20,7 +20,8 @@ public class SpaCsrfTokenRequestHandler implements CsrfTokenRequestHandler {
 	private final CsrfTokenRequestHandler xor = new XorCsrfTokenRequestAttributeHandler();
 
 	@Override
-	public void handle(HttpServletRequest request, HttpServletResponse response, Supplier<CsrfToken> csrfToken) {
+	public void handle(HttpServletRequest request, HttpServletResponse response,
+			Supplier<CsrfToken> csrfToken) {
 		// 1) masque BREACH
 		xor.handle(request, response, csrfToken);
 		// 2) force le chargement pour (ré)émission du cookie

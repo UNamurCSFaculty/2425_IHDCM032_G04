@@ -4,7 +4,8 @@ import be.labil.anacarde.domain.dto.db.AuctionStrategyDto;
 import java.util.List;
 
 /**
- * Ce service offre des méthodes permettant de créer, récupérer, mettre à jour et supprimer des stratégies d'enchère.
+ * Ce service offre des méthodes permettant de créer, récupérer, mettre à jour et supprimer des
+ * stratégies d'enchère.
  */
 public interface AuctionStrategyService {
 

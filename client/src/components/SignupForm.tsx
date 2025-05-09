@@ -67,10 +67,7 @@ export const SignupForm: React.FC = () => {
       agriculturalIdentifier: '',
     },
     onSubmit({ value }) {
-      const validatedFormData = zUserRegistration.parse(value)
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { passwordValidation, ...apiPayloadBase } = validatedFormData
-      signinMutation.mutate({ body: apiPayloadBase })
+      signinMutation.mutate({ body: value })
     },
   })
 
@@ -79,13 +76,12 @@ export const SignupForm: React.FC = () => {
   }, [i18n.language, form])
 
   const type = useStore(form.store, state => state.values.type)
-  //const canSubmit = useStore(form.store, state => state.canSubmit)
 
   return (
     <section className="body-font relative text-gray-600">
       <BreadcrumbSection
-        titleKey="app.signup.titre"
-        subtitleKey="app.signup.sous_titre"
+        titleKey="app.signup.title"
+        subtitleKey="app.signup.subtitle"
         breadcrumbs={[{ labelKey: 'breadcrumb.signup' }]}
       />
       <div className="container mx-auto px-5 py-24">

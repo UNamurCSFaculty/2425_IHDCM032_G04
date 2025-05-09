@@ -27,7 +27,8 @@ public class QualityControlServiceImpl implements QualityControlService {
 	public QualityControlDto createQualityControl(QualityControlUpdateDto dto) {
 		QualityControl entity = qualityControlMapper.toEntity(dto);
 
-		QualityControl full = persistenceHelper.saveAndReload(qualityControlRepository, entity, QualityControl::getId);
+		QualityControl full = persistenceHelper.saveAndReload(qualityControlRepository, entity,
+				QualityControl::getId);
 		return qualityControlMapper.toDto(full);
 	}
 
@@ -66,7 +67,8 @@ public class QualityControlServiceImpl implements QualityControlService {
 
 		QualityControl updated = qualityControlMapper.partialUpdate(dto, existing);
 
-		QualityControl full = persistenceHelper.saveAndReload(qualityControlRepository, updated, QualityControl::getId);
+		QualityControl full = persistenceHelper.saveAndReload(qualityControlRepository, updated,
+				QualityControl::getId);
 		return qualityControlMapper.toDto(full);
 	}
 

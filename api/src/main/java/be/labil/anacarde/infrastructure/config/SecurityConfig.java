@@ -28,9 +28,10 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableMethodSecurity
 @SecurityScheme(name = "jwt", type = SecuritySchemeType.HTTP, scheme = "bearer", bearerFormat = "JWT")
 /**
- * Cette classe définit les beans pour les fournisseurs d'authentification, les gestionnaires d'authentification, et la
- * chaîne de filtres de sécurité. Elle configure également les politiques de sécurité HTTP en désactivant CORS et CSRF,
- * en définissant la gestion de session en mode "stateless", et en configurant l'autorisation des requêtes.
+ * Cette classe définit les beans pour les fournisseurs d'authentification, les gestionnaires
+ * d'authentification, et la chaîne de filtres de sécurité. Elle configure également les politiques
+ * de sécurité HTTP en désactivant CORS et CSRF, en définissant la gestion de session en mode
+ * "stateless", et en configurant l'autorisation des requêtes.
  */
 public class SecurityConfig {
 
@@ -44,8 +45,8 @@ public class SecurityConfig {
 
 	@Bean
 	/**
-	 * Cette méthode crée un bean de gestionnaire d'authentification qui est utilisé pour gérer les authentifications
-	 * des utilisateurs.
+	 * Cette méthode crée un bean de gestionnaire d'authentification qui est utilisé pour gérer les
+	 * authentifications des utilisateurs.
 	 *
 	 * @param authConfig
 	 *            La configuration d'authentification à utiliser pour créer le gestionnaire.
@@ -53,14 +54,15 @@ public class SecurityConfig {
 	 * @throws Exception
 	 *             En cas d'erreur lors de la création du gestionnaire d'authentification.
 	 */
-	public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig)
+			throws Exception {
 		return authConfig.getAuthenticationManager();
 	}
 
 	@Bean
 	/**
-	 * Cette méthode crée un bean de gestionnaire de requêtes CSRF qui est utilisé pour gérer les tokens CSRF dans les
-	 * requêtes HTTP.
+	 * Cette méthode crée un bean de gestionnaire de requêtes CSRF qui est utilisé pour gérer les
+	 * tokens CSRF dans les requêtes HTTP.
 	 *
 	 * @return Le gestionnaire de requêtes CSRF configuré.
 	 */
@@ -78,26 +80,27 @@ public class SecurityConfig {
 
 	@Bean
 	/**
-	 * Cette méthode crée un bean de gestionnaire de requêtes CSRF qui est utilisé pour gérer les tokens CSRF dans les
-	 * requêtes HTTP.
+	 * Cette méthode crée un bean de gestionnaire de requêtes CSRF qui est utilisé pour gérer les
+	 * tokens CSRF dans les requêtes HTTP.
 	 *
 	 * @return Le gestionnaire de requêtes CSRF configuré.
 	 */
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		// On utilise CookieCsrfTokenRepository + SpaHandler
 		http.cors(Customizer.withDefaults())
-				.csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+				.csrf(csrf -> csrf
+						.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 						.csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler()))
-				.exceptionHandling(
-						ex -> ex.authenticationEntryPoint(unauthorizedHandler).accessDeniedHandler(accessDeniedHandler))
+				.exceptionHandling(ex -> ex.authenticationEntryPoint(unauthorizedHandler)
+						.accessDeniedHandler(accessDeniedHandler))
 				.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
 		// Autorisations
-		http.authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.POST, "/api/users").permitAll()
-				.requestMatchers(HttpMethod.GET, "/api/app").permitAll()
+		http.authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.POST, "/api/users")
+				.permitAll().requestMatchers(HttpMethod.GET, "/api/app").permitAll()
 				.requestMatchers(HttpMethod.POST, "/api/contact").permitAll()
-				.requestMatchers("/api/auth/**", "/v3/api-docs**", "/swagger-ui/**").permitAll().anyRequest()
-				.authenticated());
+				.requestMatchers("/api/auth/**", "/v3/api-docs**", "/swagger-ui/**").permitAll()
+				.anyRequest().authenticated());
 
 		// Filtres
 		http.addFilterBefore(originFilter, CsrfFilter.class);

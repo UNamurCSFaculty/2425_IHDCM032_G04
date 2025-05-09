@@ -48,12 +48,15 @@ public class ProductServiceImpl implements ProductService {
 	public List<ProductDto> listProducts(Integer traderId) {
 		if (traderId != null) {
 			List<HarvestProduct> harvests = harvestProductRepository.findByProducerId(traderId);
-			List<TransformedProduct> transformed = transformedRepository.findByTransformerId(traderId);
+			List<TransformedProduct> transformed = transformedRepository
+					.findByTransformerId(traderId);
 			return Stream
-					.concat(harvests.stream().map(productMapper::toDto), transformed.stream().map(productMapper::toDto))
+					.concat(harvests.stream().map(productMapper::toDto),
+							transformed.stream().map(productMapper::toDto))
 					.collect(Collectors.toList());
 		} else {
-			return productRepository.findAll().stream().map(productMapper::toDto).collect(Collectors.toList());
+			return productRepository.findAll().stream().map(productMapper::toDto)
+					.collect(Collectors.toList());
 		}
 	}
 
@@ -64,7 +67,8 @@ public class ProductServiceImpl implements ProductService {
 
 		Product updatedProduct = productMapper.partialUpdate(productDto, existingProduct);
 
-		Product full = persistenceHelper.saveAndReload(productRepository, updatedProduct, Product::getId);
+		Product full = persistenceHelper.saveAndReload(productRepository, updatedProduct,
+				Product::getId);
 		return productMapper.toDto(full);
 	}
 

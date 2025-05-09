@@ -29,7 +29,8 @@ public class FieldServiceImpl implements FieldService {
 	@Override
 	@Transactional(readOnly = true)
 	public FieldDto getFieldById(Integer id) {
-		Field field = fieldRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Champ non trouvé"));
+		Field field = fieldRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Champ non trouvé"));
 		return fieldMapper.toDto(field);
 	}
 

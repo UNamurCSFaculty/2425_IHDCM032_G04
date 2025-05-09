@@ -28,7 +28,8 @@ public class CooperativeServiceImpl implements CooperativeService {
 	@Override
 	public CooperativeDto createCooperative(CooperativeUpdateDto dto) {
 		Cooperative cooperative = cooperativeMapper.toEntity(dto);
-		Cooperative full = persistenceHelper.saveAndReload(cooperativeRepository, cooperative, Cooperative::getId);
+		Cooperative full = persistenceHelper.saveAndReload(cooperativeRepository, cooperative,
+				Cooperative::getId);
 		return cooperativeMapper.toDto(full);
 	}
 
@@ -54,13 +55,16 @@ public class CooperativeServiceImpl implements CooperativeService {
 
 		Cooperative updated = cooperativeMapper.partialUpdate(dto, existing);
 
-		Cooperative full = persistenceHelper.saveAndReload(cooperativeRepository, updated, Cooperative::getId);
+		Cooperative full = persistenceHelper.saveAndReload(cooperativeRepository, updated,
+				Cooperative::getId);
 		return cooperativeMapper.toDto(full);
 	}
 
 	/**
-	 * @Override public void deleteCooperative(Integer id) { if (!cooperativeRepository.existsById(id)) { throw new
-	 *           ResourceNotFoundException("Coopérative non trouvée"); } cooperativeRepository.deleteById(id); }
+	 * @Override public void deleteCooperative(Integer id) { if
+	 *           (!cooperativeRepository.existsById(id)) { throw new
+	 *           ResourceNotFoundException("Coopérative non trouvée"); }
+	 *           cooperativeRepository.deleteById(id); }
 	 */
 
 	@Override

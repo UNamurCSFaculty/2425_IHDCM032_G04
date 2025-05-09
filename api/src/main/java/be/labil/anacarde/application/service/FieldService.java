@@ -4,7 +4,8 @@ import be.labil.anacarde.domain.dto.db.FieldDto;
 import java.util.List;
 
 /**
- * Ce service offre des méthodes permettant de créer, récupérer, mettre à jour et supprimer des informations de champ.
+ * Ce service offre des méthodes permettant de créer, récupérer, mettre à jour et supprimer des
+ * informations de champ.
  */
 public interface FieldService {
 
@@ -36,7 +37,8 @@ public interface FieldService {
 	List<FieldDto> listFields(Integer userId);
 
 	/**
-	 * Met à jour le champ identifié par l'ID donné avec les informations fournies dans le FieldDetailDto.
+	 * Met à jour le champ identifié par l'ID donné avec les informations fournies dans le
+	 * FieldDetailDto.
 	 *
 	 * @param id
 	 *            L'identifiant unique du champ à mettre à jour.

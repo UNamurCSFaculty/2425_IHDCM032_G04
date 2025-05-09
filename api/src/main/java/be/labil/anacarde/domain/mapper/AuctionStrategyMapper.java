@@ -15,5 +15,6 @@ public abstract class AuctionStrategyMapper {
 	public abstract AuctionStrategyDto toDto(AuctionStrategy entity);
 
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-	public abstract AuctionStrategy partialUpdate(AuctionStrategyDto dto, @MappingTarget AuctionStrategy entity);
+	public abstract AuctionStrategy partialUpdate(AuctionStrategyDto dto,
+			@MappingTarget AuctionStrategy entity);
 }

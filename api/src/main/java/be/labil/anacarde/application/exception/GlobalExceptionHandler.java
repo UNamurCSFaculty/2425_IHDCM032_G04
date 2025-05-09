@@ -31,9 +31,10 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 @Slf4j
 @RestControllerAdvice
 /**
- * Cette classe gère les exceptions levées dans l'application et les traduit en réponses HTTP significatives. Elle prend
- * en charge les erreurs de validation, les exceptions de ressource non trouvée, les violations d'intégrité des données,
- * les erreurs de lecture des messages HTTP, les conflits d'accès concurrent, ainsi que les exceptions génériques.
+ * Cette classe gère les exceptions levées dans l'application et les traduit en réponses HTTP
+ * significatives. Elle prend en charge les erreurs de validation, les exceptions de ressource non
+ * trouvée, les violations d'intégrité des données, les erreurs de lecture des messages HTTP, les
+ * conflits d'accès concurrent, ainsi que les exceptions génériques.
  */
 public class GlobalExceptionHandler {
 
@@ -62,8 +63,8 @@ public class GlobalExceptionHandler {
 	 *            La requête HTTP à partir de laquelle l'erreur a été générée.
 	 * @return La réponse d'erreur standardisée.
 	 */
-	private ResponseEntity<ApiErrorResponse> buildResponse(HttpStatus status, String code, String detailMessage,
-			HttpServletRequest request) {
+	private ResponseEntity<ApiErrorResponse> buildResponse(HttpStatus status, String code,
+			String detailMessage, HttpServletRequest request) {
 
 		ErrorDetail item = new ErrorDetail(null, code, detailMessage);
 		return buildResponse(status, code, List.of(item), request);
@@ -82,11 +83,11 @@ public class GlobalExceptionHandler {
 	 *            La requête HTTP à partir de laquelle l'erreur a été générée.
 	 * @return La réponse d'erreur standardisée.
 	 */
-	private ResponseEntity<ApiErrorResponse> buildResponse(HttpStatus status, String code, List<ErrorDetail> errors,
-			HttpServletRequest request) {
+	private ResponseEntity<ApiErrorResponse> buildResponse(HttpStatus status, String code,
+			List<ErrorDetail> errors, HttpServletRequest request) {
 
-		ApiErrorResponse body = new ApiErrorResponse(status.value(), LocalDateTime.now(), request.getRequestURI(), code,
-				errors);
+		ApiErrorResponse body = new ApiErrorResponse(status.value(), LocalDateTime.now(),
+				request.getRequestURI(), code, errors);
 		return ResponseEntity.status(status).body(body);
 	}
 
@@ -100,7 +101,8 @@ public class GlobalExceptionHandler {
 	 * @return La réponse d'erreur standardisée.
 	 */
 	@ExceptionHandler(ApiErrorException.class)
-	public ResponseEntity<ApiErrorResponse> handleApiError(ApiErrorException ex, HttpServletRequest req) {
+	public ResponseEntity<ApiErrorResponse> handleApiError(ApiErrorException ex,
+			HttpServletRequest req) {
 		return buildResponse(ex.getStatus(), ex.getCode(), ex.getErrors(), req);
 	}
 
@@ -126,56 +128,63 @@ public class GlobalExceptionHandler {
 	}
 
 	/**
-	 * Retourne une réponse d'erreur avec le statut HTTP NOT_FOUND lorsqu'une ressource n'est pas trouvée.
+	 * Retourne une réponse d'erreur avec le statut HTTP NOT_FOUND lorsqu'une ressource n'est pas
+	 * trouvée.
 	 *
 	 * @param ex
 	 *            L'exception ResourceNotFoundException levée.
-	 * @return Une ResponseEntity contenant un objet ErrorResponse avec le message de l'exception et le statut HTTP
-	 *         NOT_FOUND.
+	 * @return Une ResponseEntity contenant un objet ErrorResponse avec le message de l'exception et
+	 *         le statut HTTP NOT_FOUND.
 	 */
 	@ExceptionHandler(ResourceNotFoundException.class)
-	public ResponseEntity<ApiErrorResponse> handleNotFound(ResourceNotFoundException ex, HttpServletRequest req) {
+	public ResponseEntity<ApiErrorResponse> handleNotFound(ResourceNotFoundException ex,
+			HttpServletRequest req) {
 
-		return buildResponse(HttpStatus.NOT_FOUND, ApiErrorCode.RESOURCE_NOT_FOUND.code(), ex.getMessage(), req);
+		return buildResponse(HttpStatus.NOT_FOUND, ApiErrorCode.RESOURCE_NOT_FOUND.code(),
+				ex.getMessage(), req);
 	}
 
 	/**
-	 * Retourne une réponse d'erreur avec le statut HTTP BAD_REQUEST lorsqu'une exception BadRequestException est levée.
-	 * Cela peut être dû à des paramètres manquants ou invalides dans la requête.
+	 * Retourne une réponse d'erreur avec le statut HTTP BAD_REQUEST lorsqu'une exception
+	 * BadRequestException est levée. Cela peut être dû à des paramètres manquants ou invalides dans
+	 * la requête.
 	 *
 	 * @param ex
 	 *            L'exception BadRequestException levée.
-	 * @return Une ResponseEntity contenant un objet ErrorResponse avec le message de l'exception et le statut HTTP
-	 *         BAD_REQUEST.
+	 * @return Une ResponseEntity contenant un objet ErrorResponse avec le message de l'exception et
+	 *         le statut HTTP BAD_REQUEST.
 	 */
 	@ExceptionHandler(BadRequestException.class)
-	public ResponseEntity<ApiErrorResponse> handleBadRequest(BadRequestException ex, HttpServletRequest req) {
+	public ResponseEntity<ApiErrorResponse> handleBadRequest(BadRequestException ex,
+			HttpServletRequest req) {
 
-		return buildResponse(HttpStatus.BAD_REQUEST, ApiErrorCode.BAD_REQUEST.code(), ex.getMessage(), req);
+		return buildResponse(HttpStatus.BAD_REQUEST, ApiErrorCode.BAD_REQUEST.code(),
+				ex.getMessage(), req);
 	}
 
 	/**
-	 * Extrait un code d'erreur à partir de la cause racine de l'exception, récupère un message localisé et retourne une
-	 * réponse d'erreur avec le statut HTTP CONFLICT.
+	 * Extrait un code d'erreur à partir de la cause racine de l'exception, récupère un message
+	 * localisé et retourne une réponse d'erreur avec le statut HTTP CONFLICT.
 	 *
 	 * @param ex
 	 *            L'exception DataIntegrityViolationException levée.
-	 * @return Une ResponseEntity contenant un objet ErrorResponse avec un message d'erreur localisé et le statut HTTP
-	 *         CONFLICT.
+	 * @return Une ResponseEntity contenant un objet ErrorResponse avec un message d'erreur localisé
+	 *         et le statut HTTP CONFLICT.
 	 */
 	@ExceptionHandler(DataIntegrityViolationException.class)
-	public ResponseEntity<ApiErrorResponse> handleConflict(DataIntegrityViolationException ex, HttpServletRequest req) {
+	public ResponseEntity<ApiErrorResponse> handleConflict(DataIntegrityViolationException ex,
+			HttpServletRequest req) {
 
 		/**
-		 * Utilise une expression régulière pour extraire le nom de la contrainte ou le code d'erreur du message de la
-		 * cause racine.
+		 * Utilise une expression régulière pour extraire le nom de la contrainte ou le code
+		 * d'erreur du message de la cause racine.
 		 *
 		 * @param rootMessage
 		 *            Le message de la cause racine à analyser.
 		 * @return Le code d'erreur extrait, ou "default.error" si aucun code n'est trouvé.
 		 */
-		String code = Optional.ofNullable(ex.getRootCause()).map(Throwable::getMessage).map(this::extractErrorCode)
-				.orElse(ApiErrorCode.DEFAULT_ERROR.code());
+		String code = Optional.ofNullable(ex.getRootCause()).map(Throwable::getMessage)
+				.map(this::extractErrorCode).orElse(ApiErrorCode.DEFAULT_ERROR.code());
 
 		String msg = messageSource.getMessage(code, null, "Erreur d'intégrité des données",
 				LocaleContextHolder.getLocale());
@@ -184,12 +193,13 @@ public class GlobalExceptionHandler {
 	}
 
 	/**
-	 * Vérifie si la cause racine est une erreur d'analyse JSON et retourne un message d'erreur approprié.
+	 * Vérifie si la cause racine est une erreur d'analyse JSON et retourne un message d'erreur
+	 * approprié.
 	 *
 	 * @param ex
 	 *            L'exception HttpMessageNotReadableException levée.
-	 * @return Une ResponseEntity contenant un objet ErrorResponse avec le message d'erreur et le statut HTTP
-	 *         BAD_REQUEST.
+	 * @return Une ResponseEntity contenant un objet ErrorResponse avec le message d'erreur et le
+	 *         statut HTTP BAD_REQUEST.
 	 */
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	public ResponseEntity<ApiErrorResponse> handleUnreadable(HttpMessageNotReadableException ex,
@@ -207,136 +217,152 @@ public class GlobalExceptionHandler {
 			detail = "Message HTTP illisible.";
 		}
 
-		return buildResponse(HttpStatus.BAD_REQUEST, ApiErrorCode.MESSAGE_NOT_READABLE.code(), detail, req);
+		return buildResponse(HttpStatus.BAD_REQUEST, ApiErrorCode.MESSAGE_NOT_READABLE.code(),
+				detail, req);
 	}
 
 	/**
-	 * Retourne une réponse d'erreur avec le statut HTTP METHOD_NOT_ALLOWED lorsqu'une méthode HTTP non autorisée est
-	 * utilisée.
+	 * Retourne une réponse d'erreur avec le statut HTTP METHOD_NOT_ALLOWED lorsqu'une méthode HTTP
+	 * non autorisée est utilisée.
 	 *
 	 * @param ex
 	 *            L'exception HttpRequestMethodNotSupportedException levée.
-	 * @return Une ResponseEntity contenant un objet ErrorResponse avec un message d'erreur et le statut HTTP
-	 *         METHOD_NOT_ALLOWED.
+	 * @return Une ResponseEntity contenant un objet ErrorResponse avec un message d'erreur et le
+	 *         statut HTTP METHOD_NOT_ALLOWED.
 	 */
 	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-	public ResponseEntity<ApiErrorResponse> handleMethodNotAllowed(HttpRequestMethodNotSupportedException ex,
-			HttpServletRequest req) {
+	public ResponseEntity<ApiErrorResponse> handleMethodNotAllowed(
+			HttpRequestMethodNotSupportedException ex, HttpServletRequest req) {
 
 		String allowed = ex.getSupportedHttpMethods() != null
-				? ex.getSupportedHttpMethods().stream().map(HttpMethod::name).collect(Collectors.joining(", "))
+				? ex.getSupportedHttpMethods().stream().map(HttpMethod::name)
+						.collect(Collectors.joining(", "))
 				: "";
 
-		String msg = "La méthode " + ex.getMethod() + " n'est pas autorisée. Méthodes autorisées : " + allowed;
+		String msg = "La méthode " + ex.getMethod() + " n'est pas autorisée. Méthodes autorisées : "
+				+ allowed;
 
-		return buildResponse(HttpStatus.METHOD_NOT_ALLOWED, ApiErrorCode.METHOD_NOT_ALLOWED.code(), msg, req);
+		return buildResponse(HttpStatus.METHOD_NOT_ALLOWED, ApiErrorCode.METHOD_NOT_ALLOWED.code(),
+				msg, req);
 	}
 
 	/**
-	 * Retourne une réponse d'erreur avec le statut HTTP CONFLICT lorsqu'une ressource a été modifiée par un autre
-	 * utilisateur.
+	 * Retourne une réponse d'erreur avec le statut HTTP CONFLICT lorsqu'une ressource a été
+	 * modifiée par un autre utilisateur.
 	 *
 	 * @param ex
 	 *            L'exception StaleObjectStateException levée.
-	 * @return Une ResponseEntity contenant un objet ErrorResponse avec un message de conflit et le statut HTTP
-	 *         CONFLICT.
+	 * @return Une ResponseEntity contenant un objet ErrorResponse avec un message de conflit et le
+	 *         statut HTTP CONFLICT.
 	 */
 	@ExceptionHandler(StaleObjectStateException.class)
-	public ResponseEntity<ApiErrorResponse> handleStale(StaleObjectStateException ex, HttpServletRequest req) {
+	public ResponseEntity<ApiErrorResponse> handleStale(StaleObjectStateException ex,
+			HttpServletRequest req) {
 
 		return buildResponse(HttpStatus.CONFLICT, ApiErrorCode.STALE_OBJECT.code(),
 				"La ressource a été modifiée par un autre utilisateur. Veuillez réessayer.", req);
 	}
 
 	/**
-	 * Retourne une réponse d'erreur avec le statut HTTP NOT_FOUND lorsqu'aucun endpoint ne correspond à l'URL demandée.
+	 * Retourne une réponse d'erreur avec le statut HTTP NOT_FOUND lorsqu'aucun endpoint ne
+	 * correspond à l'URL demandée.
 	 *
 	 * @param ex
 	 *            L'exception NoHandlerFoundException levée.
-	 * @return Une ResponseEntity contenant un objet ErrorResponse avec un message d'erreur et le statut HTTP NOT_FOUND.
+	 * @return Une ResponseEntity contenant un objet ErrorResponse avec un message d'erreur et le
+	 *         statut HTTP NOT_FOUND.
 	 */
 	@ExceptionHandler(NoHandlerFoundException.class)
-	public ResponseEntity<ApiErrorResponse> handleNoHandlerFound(NoHandlerFoundException ex, HttpServletRequest req) {
+	public ResponseEntity<ApiErrorResponse> handleNoHandlerFound(NoHandlerFoundException ex,
+			HttpServletRequest req) {
 
 		String detail = "Aucun endpoint ne correspond à l'URL " + ex.getRequestURL();
-		return buildResponse(HttpStatus.NOT_FOUND, ApiErrorCode.NO_HANDLER_FOUND.code(), detail, req);
+		return buildResponse(HttpStatus.NOT_FOUND, ApiErrorCode.NO_HANDLER_FOUND.code(), detail,
+				req);
 	}
 
 	/**
-	 * Retourne une réponse d'erreur avec le statut HTTP BAD_REQUEST lorsqu'un paramètre de chemin est manquant.
+	 * Retourne une réponse d'erreur avec le statut HTTP BAD_REQUEST lorsqu'un paramètre de chemin
+	 * est manquant.
 	 *
 	 * @param ex
 	 *            L'exception MissingPathVariableException levée.
 	 * @param req
 	 *            La requête HTTP contenant les détails de la requête.
 	 * 
-	 * @return Une ResponseEntity contenant un objet ErrorResponse avec un message d'erreur et le statut HTTP
-	 *         BAD_REQUEST.
+	 * @return Une ResponseEntity contenant un objet ErrorResponse avec un message d'erreur et le
+	 *         statut HTTP BAD_REQUEST.
 	 */
 	@ExceptionHandler(MissingPathVariableException.class)
-	public ResponseEntity<ApiErrorResponse> handleMissingPathVariable(MissingPathVariableException ex,
-			HttpServletRequest req) {
+	public ResponseEntity<ApiErrorResponse> handleMissingPathVariable(
+			MissingPathVariableException ex, HttpServletRequest req) {
 
 		String detail = "Le paramètre de chemin manquant : " + ex.getVariableName();
-		return buildResponse(HttpStatus.BAD_REQUEST, ApiErrorCode.MISSING_PATH_VARIABLE.code(), detail, req);
+		return buildResponse(HttpStatus.BAD_REQUEST, ApiErrorCode.MISSING_PATH_VARIABLE.code(),
+				detail, req);
 	}
 
 	/**
-	 * Retourne une réponse d'erreur avec le statut HTTP BAD_REQUEST lorsqu'un paramètre de requête est manquant.
+	 * Retourne une réponse d'erreur avec le statut HTTP BAD_REQUEST lorsqu'un paramètre de requête
+	 * est manquant.
 	 *
 	 * @param ex
 	 *            L'exception MissingServletRequestParameterException levée.
 	 * @param req
 	 *            La requête HTTP contenant les détails de la requête.
-	 * @return Une ResponseEntity contenant un objet ErrorResponse avec un message d'erreur et le statut HTTP
-	 *         BAD_REQUEST.
+	 * @return Une ResponseEntity contenant un objet ErrorResponse avec un message d'erreur et le
+	 *         statut HTTP BAD_REQUEST.
 	 */
 	@ExceptionHandler(MissingServletRequestParameterException.class)
-	public ResponseEntity<ApiErrorResponse> handleMissingServletParam(MissingServletRequestParameterException ex,
-			HttpServletRequest req) {
+	public ResponseEntity<ApiErrorResponse> handleMissingServletParam(
+			MissingServletRequestParameterException ex, HttpServletRequest req) {
 
 		String detail = "Le paramètre de requête manquant : " + ex.getParameterName();
-		return buildResponse(HttpStatus.BAD_REQUEST, ApiErrorCode.MISSING_REQUEST_PARAM.code(), detail, req);
+		return buildResponse(HttpStatus.BAD_REQUEST, ApiErrorCode.MISSING_REQUEST_PARAM.code(),
+				detail, req);
 	}
 
 	/**
-	 * Retourne une réponse d'erreur avec le statut HTTP UNAUTHORIZED lorsqu'une exception AuthenticationException est
-	 * levée.
+	 * Retourne une réponse d'erreur avec le statut HTTP UNAUTHORIZED lorsqu'une exception
+	 * AuthenticationException est levée.
 	 *
 	 * @param ex
 	 *            L'exception AuthenticationException levée.
-	 * @return Une ResponseEntity contenant un objet ErrorResponse avec un message d'erreur et le statut HTTP
-	 *         UNAUTHORIZED.
+	 * @return Une ResponseEntity contenant un objet ErrorResponse avec un message d'erreur et le
+	 *         statut HTTP UNAUTHORIZED.
 	 */
 	@ExceptionHandler(AuthenticationException.class)
-	public ResponseEntity<ApiErrorResponse> handleAuthenticationException(AuthenticationException ex,
-			HttpServletRequest req) {
+	public ResponseEntity<ApiErrorResponse> handleAuthenticationException(
+			AuthenticationException ex, HttpServletRequest req) {
 
 		return buildResponse(HttpStatus.UNAUTHORIZED, ApiErrorCode.ACCESS_UNAUTHORIZED.code(),
 				"Échec de l'authentification : " + ex.getMessage(), req);
 	}
 
 	@ExceptionHandler(AccessDeniedException.class)
-	public ResponseEntity<ApiErrorResponse> handleAccessDenied(AccessDeniedException ex, HttpServletRequest req) {
+	public ResponseEntity<ApiErrorResponse> handleAccessDenied(AccessDeniedException ex,
+			HttpServletRequest req) {
 
 		return buildResponse(HttpStatus.FORBIDDEN, ApiErrorCode.ACCESS_DENIED.code(),
 				"Accès refusé : vous n’avez pas les droits suffisants.", req);
 	}
 
 	/**
-	 * Journalise l'exception non gérée et retourne une réponse d'erreur avec le statut HTTP INTERNAL_SERVER_ERROR.
+	 * Journalise l'exception non gérée et retourne une réponse d'erreur avec le statut HTTP
+	 * INTERNAL_SERVER_ERROR.
 	 *
 	 * @param ex
 	 *            L'exception générique levée.
-	 * @return Une ResponseEntity contenant un objet ErrorResponse avec un message d'erreur générique et le statut HTTP
-	 *         INTERNAL_SERVER_ERROR.
+	 * @return Une ResponseEntity contenant un objet ErrorResponse avec un message d'erreur
+	 *         générique et le statut HTTP INTERNAL_SERVER_ERROR.
 	 */
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ApiErrorResponse> handleGeneric(Exception ex, HttpServletRequest req) {
 
 		log.error("Erreur interne non gérée", ex);
 		return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, ApiErrorCode.INTERNAL_ERROR.code(),
-				"Une erreur interne s'est produite. Contactez le support si le problème persiste.", req);
+				"Une erreur interne s'est produite. Contactez le support si le problème persiste.",
+				req);
 	}
 
 	// extrait le code entre crochets [xxx]

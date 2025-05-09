@@ -38,8 +38,8 @@ public interface DocumentApi {
 			@ApiResponse(responseCode = "201", description = "", content = @Content(schema = @Schema(implementation = DocumentDto.class))),
 			@ApiResponse(responseCode = "400", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
 			@ApiResponse(responseCode = "409", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
-	ResponseEntity<DocumentDto> createDocument(
-			@Validated({Default.class, ValidationGroups.Create.class}) @RequestBody DocumentDto documentDto);
+	ResponseEntity<DocumentDto> createDocument(@Validated({Default.class,
+			ValidationGroups.Create.class}) @RequestBody DocumentDto documentDto);
 
 	@Operation(summary = "Mettre à jour un document")
 	@PutMapping("/{id}")
@@ -48,12 +48,14 @@ public interface DocumentApi {
 			@ApiResponse(responseCode = "400", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
 			@ApiResponse(responseCode = "409", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
 	ResponseEntity<DocumentDto> updateDocument(@ApiValidId @PathVariable("id") Integer id,
-			@Validated({Default.class, ValidationGroups.Update.class}) @RequestBody DocumentDto documentDto);
+			@Validated({Default.class,
+					ValidationGroups.Update.class}) @RequestBody DocumentDto documentDto);
 
 	@Operation(summary = "Supprimer un document")
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@ApiResponses({@ApiResponse(responseCode = "200", description = "", content = @Content(schema = @Schema())),
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "", content = @Content(schema = @Schema())),
 			@ApiResponse(responseCode = "404", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
 	ResponseEntity<Void> deleteDocument(@ApiValidId @PathVariable("id") Integer id);
 

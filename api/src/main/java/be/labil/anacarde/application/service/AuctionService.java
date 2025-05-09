@@ -6,7 +6,8 @@ import be.labil.anacarde.domain.dto.write.AuctionUpdateDto;
 import java.util.List;
 
 /**
- * Ce service offre des méthodes permettant de créer, récupérer, mettre à jour et supprimer des informations d'enchères.
+ * Ce service offre des méthodes permettant de créer, récupérer, mettre à jour et supprimer des
+ * informations d'enchères.
  */
 public interface AuctionService {
 
@@ -41,7 +42,8 @@ public interface AuctionService {
 	List<AuctionDto> listAuctions(Integer traderId, String auctionStatus);
 
 	/**
-	 * Mise à jour de l'enchère identifiée par l'ID donné avec les informations fournies dans le AuctionDto.
+	 * Mise à jour de l'enchère identifiée par l'ID donné avec les informations fournies dans le
+	 * AuctionDto.
 	 *
 	 * @param id
 	 *            L'identifiant unique de l'enchère à mettre à jour.

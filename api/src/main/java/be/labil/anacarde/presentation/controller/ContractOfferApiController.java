@@ -28,17 +28,19 @@ public class ContractOfferApiController implements ContractOfferApi {
 	}
 
 	@Override
-	public ResponseEntity<ContractOfferDto> createContractOffer(ContractOfferUpdateDto contractOfferDetailDto) {
+	public ResponseEntity<ContractOfferDto> createContractOffer(
+			ContractOfferUpdateDto contractOfferDetailDto) {
 		ContractOfferDto created = contractOfferService.createContractOffer(contractOfferDetailDto);
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(created.getId())
-				.toUri();
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+				.buildAndExpand(created.getId()).toUri();
 		return ResponseEntity.created(location).body(created);
 	}
 
 	@Override
 	public ResponseEntity<ContractOfferDto> updateContractOffer(Integer id,
 			ContractOfferUpdateDto contractOfferDetailDto) {
-		ContractOfferDto updated = contractOfferService.updateContractOffer(id, contractOfferDetailDto);
+		ContractOfferDto updated = contractOfferService.updateContractOffer(id,
+				contractOfferDetailDto);
 		return ResponseEntity.ok(updated);
 	}
 

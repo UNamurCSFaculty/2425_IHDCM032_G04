@@ -30,9 +30,11 @@
 // */
 // @Test
 // public void testGetQualityControl() throws Exception {
-// mockMvc.perform(get("/api/products/" + getMainTestQualityControl().getProduct().getId() + "/quality-controls/"
-// + getMainTestQualityControl().getId()).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
-// .andDo(print()).andExpect(jsonPath("$.id").value(getMainTestQualityControl().getId()))
+// mockMvc.perform(get("/api/products/" + getMainTestQualityControl().getProduct().getId() +
+// "/quality-controls/"
+// +
+// getMainTestQualityControl().getId()).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+// .andExpect(jsonPath("$.id").value(getMainTestQualityControl().getId()))
 // .andExpect(jsonPath("$.identifier").value(getMainTestQualityControl().getIdentifier()))
 // .andExpect(jsonPath("$.controlDate")
 // .value(startsWith(getMainTestQualityControl().getControlDate().toString())))
@@ -71,9 +73,10 @@
 // ObjectNode json = objectMapper.valueToTree(dto);
 // String content = json.toString();
 //
-// mockMvc.perform(post("/api/products/" + getMainTestQualityControl().getProduct().getId() + "/quality-controls")
+// mockMvc.perform(post("/api/products/" + getMainTestQualityControl().getProduct().getId() +
+// "/quality-controls")
 // .contentType(MediaType.APPLICATION_JSON).content(content))
-// .andDo(print())
+//
 // .andExpect(status().isCreated())
 // .andExpect(header().string("Location", containsString("/quality-controls")))
 // .andExpect(jsonPath("$.identifier").value("QC-002")).andExpect(jsonPath("$.granularity").value(0.5))
@@ -82,7 +85,8 @@
 // .value(getMainTestQualityControl().getQualityInspector().getId()))
 // .andExpect(jsonPath("$.product.id").value(getTestHarvestProduct().getId()))
 // .andExpect(jsonPath("$.quality.id").value(getMainTestQualityControl().getQuality().getId()));
-// // .andExpect(jsonPath("$.document.id").value(getMainTestQualityControl().getDocument().getId()));
+// //
+// .andExpect(jsonPath("$.document.id").value(getMainTestQualityControl().getDocument().getId()));
 //
 // }
 //
@@ -91,8 +95,9 @@
 // */
 // @Test
 // public void testListQualityControls() throws Exception {
-// mockMvc.perform(get("/api/products/" + getMainTestQualityControl().getProduct().getId() + "/quality-controls")
-// .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andDo(print())
+// mockMvc.perform(get("/api/products/" + getMainTestQualityControl().getProduct().getId() +
+// "/quality-controls")
+// .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
 // .andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(1));
 // }
 //
@@ -127,7 +132,8 @@
 // ObjectNode json = objectMapper.valueToTree(updateDto);
 // String content = json.toString();
 //
-// mockMvc.perform(put("/api/products/" + getMainTestQualityControl().getProduct().getId() + "/quality-controls/"
+// mockMvc.perform(put("/api/products/" + getMainTestQualityControl().getProduct().getId() +
+// "/quality-controls/"
 // + getMainTestQualityControl().getId()).contentType(MediaType.APPLICATION_JSON).content(content))
 // .andExpect(status().isOk()).andExpect(jsonPath("$.identifier").value("QC-001-UPDATED"))
 // .andExpect(jsonPath("$.granularity").value(0.6)).andExpect(jsonPath("$.korTest").value(0.85))

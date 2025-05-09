@@ -14,7 +14,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	 *
 	 * @param email
 	 *            L'adresse e-mail de l'utilisateur à rechercher.
-	 * @return Un Optional contenant le User trouvé, ou Optional.empty() si aucun utilisateur n'est trouvé.
+	 * @return Un Optional contenant le User trouvé, ou Optional.empty() si aucun utilisateur n'est
+	 *         trouvé.
 	 */
 	@Query("SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.email = :email")
 	Optional<User> findByEmail(String email);
@@ -24,8 +25,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	 *
 	 * @param phone
 	 *            Le numéro de téléphone de l'utilisateur à rechercher.
-	 * @return Un Optional contenant le User trouvé (avec ses rôles chargés), ou Optional.empty() si aucun utilisateur
-	 *         n'est trouvé.
+	 * @return Un Optional contenant le User trouvé (avec ses rôles chargés), ou Optional.empty() si
+	 *         aucun utilisateur n'est trouvé.
 	 */
 	@Query("SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.phone = :phone")
 	Optional<User> findByPhone(String phone);

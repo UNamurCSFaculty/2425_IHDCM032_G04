@@ -12,5 +12,6 @@ public abstract class TranslationMapper {
 	public abstract TranslationDto toDto(Translation entity);
 
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-	public abstract Translation partialUpdate(TranslationDto dto, @MappingTarget Translation entity);
+	public abstract Translation partialUpdate(TranslationDto dto,
+			@MappingTarget Translation entity);
 }

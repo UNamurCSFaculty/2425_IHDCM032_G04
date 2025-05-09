@@ -146,39 +146,43 @@ public class DatabaseServiceImpl implements DatabaseService {
 		tradeStatusAccepted = tradeStatusService.createTradeStatus(tradeStatusAccepted);
 
 		// Création d'enchères (pour l'utilisateur producer)
-		AuctionUpdateDto createAuction1 = createAuction(product, (TraderDetailDto) producer, BigDecimal.valueOf(500),
-				10, LocalDateTime.now(), auctionStrategy, tradeStatusOpen);
-		AuctionUpdateDto createAuction2 = createAuction(product, (TraderDetailDto) producer, BigDecimal.valueOf(2500),
-				20, LocalDateTime.now().plusDays(5), auctionStrategy, tradeStatusOpen);
-		AuctionUpdateDto createuction3 = createAuction(product, (TraderDetailDto) producer, BigDecimal.valueOf(3500),
-				50, LocalDateTime.now().plusDays(5), auctionStrategy, tradeStatusOpen);
-		AuctionUpdateDto createuction4 = createAuction(product, (TraderDetailDto) producer, BigDecimal.valueOf(777), 50,
-				LocalDateTime.now().plusDays(5), auctionStrategy, tradeStatusExpired);
+		AuctionUpdateDto createAuction1 = createAuction(product, (TraderDetailDto) producer,
+				BigDecimal.valueOf(500), 10, LocalDateTime.now(), auctionStrategy, tradeStatusOpen);
+		AuctionUpdateDto createAuction2 = createAuction(product, (TraderDetailDto) producer,
+				BigDecimal.valueOf(2500), 20, LocalDateTime.now().plusDays(5), auctionStrategy,
+				tradeStatusOpen);
+		AuctionUpdateDto createuction3 = createAuction(product, (TraderDetailDto) producer,
+				BigDecimal.valueOf(3500), 50, LocalDateTime.now().plusDays(5), auctionStrategy,
+				tradeStatusOpen);
+		AuctionUpdateDto createuction4 = createAuction(product, (TraderDetailDto) producer,
+				BigDecimal.valueOf(777), 50, LocalDateTime.now().plusDays(5), auctionStrategy,
+				tradeStatusExpired);
 		AuctionDto auction1 = auctionService.createAuction(createAuction1);
 		AuctionDto auction2 = auctionService.createAuction(createAuction2);
 		AuctionDto auction3 = auctionService.createAuction(createuction3);
 		AuctionDto auction4 = auctionService.createAuction(createuction4);
 
 		// Création d'enchères (pour l'utilisateur transformateur)
-		AuctionUpdateDto createAuction5 = createAuction(product, (TraderDetailDto) transformer, BigDecimal.valueOf(999),
-				100, LocalDateTime.now().plusDays(5), auctionStrategy, tradeStatusOpen);
+		AuctionUpdateDto createAuction5 = createAuction(product, (TraderDetailDto) transformer,
+				BigDecimal.valueOf(999), 100, LocalDateTime.now().plusDays(5), auctionStrategy,
+				tradeStatusOpen);
 		AuctionDto auction5 = auctionService.createAuction(createAuction5);
 
 		// Création d'offres
-		BidUpdateDto bid1 = createBid(auction1, (TraderDetailDto) transformer, BigDecimal.valueOf(100),
-				LocalDateTime.now(), tradeStatusOpen);
-		BidUpdateDto bid2 = createBid(auction1, (TraderDetailDto) transformer, BigDecimal.valueOf(200),
-				LocalDateTime.now(), tradeStatusOpen);
-		BidUpdateDto bid3 = createBid(auction1, (TraderDetailDto) transformer, BigDecimal.valueOf(300),
-				LocalDateTime.now(), tradeStatusOpen);
-		BidUpdateDto bid4 = createBid(auction1, (TraderDetailDto) transformer, BigDecimal.valueOf(500),
-				LocalDateTime.now(), tradeStatusOpen);
-		BidUpdateDto bid5 = createBid(auction1, (TraderDetailDto) transformer, BigDecimal.valueOf(600),
-				LocalDateTime.now(), tradeStatusOpen);
-		BidUpdateDto bid6 = createBid(auction2, (TraderDetailDto) transformer, BigDecimal.valueOf(10),
-				LocalDateTime.now(), tradeStatusOpen);
-		BidUpdateDto bid7 = createBid(auction2, (TraderDetailDto) transformer, BigDecimal.valueOf(20),
-				LocalDateTime.now(), tradeStatusOpen);
+		BidUpdateDto bid1 = createBid(auction1, (TraderDetailDto) transformer,
+				BigDecimal.valueOf(100), LocalDateTime.now(), tradeStatusOpen);
+		BidUpdateDto bid2 = createBid(auction1, (TraderDetailDto) transformer,
+				BigDecimal.valueOf(200), LocalDateTime.now(), tradeStatusOpen);
+		BidUpdateDto bid3 = createBid(auction1, (TraderDetailDto) transformer,
+				BigDecimal.valueOf(300), LocalDateTime.now(), tradeStatusOpen);
+		BidUpdateDto bid4 = createBid(auction1, (TraderDetailDto) transformer,
+				BigDecimal.valueOf(500), LocalDateTime.now(), tradeStatusOpen);
+		BidUpdateDto bid5 = createBid(auction1, (TraderDetailDto) transformer,
+				BigDecimal.valueOf(600), LocalDateTime.now(), tradeStatusOpen);
+		BidUpdateDto bid6 = createBid(auction2, (TraderDetailDto) transformer,
+				BigDecimal.valueOf(10), LocalDateTime.now(), tradeStatusOpen);
+		BidUpdateDto bid7 = createBid(auction2, (TraderDetailDto) transformer,
+				BigDecimal.valueOf(20), LocalDateTime.now(), tradeStatusOpen);
 		bidService.createBid(bid1);
 		bidService.createBid(bid2);
 		bidService.createBid(bid3);
@@ -209,8 +213,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 		return fieldDto;
 	}
 
-	private HarvestProductUpdateDto createHarvestProduct(StoreDetailDto store, UserDetailDto producer, FieldDto field,
-			double weight) {
+	private HarvestProductUpdateDto createHarvestProduct(StoreDetailDto store,
+			UserDetailDto producer, FieldDto field, double weight) {
 		HarvestProductUpdateDto harvestProduct = new HarvestProductUpdateDto();
 		harvestProduct.setProducerId(producer.getId());
 		harvestProduct.setStoreId(store.getId());
@@ -220,8 +224,9 @@ public class DatabaseServiceImpl implements DatabaseService {
 		return harvestProduct;
 	}
 
-	private AuctionUpdateDto createAuction(ProductDto product, TraderDetailDto trader, BigDecimal price, int quantity,
-			LocalDateTime date, AuctionStrategyDto strategy, TradeStatusDto status) {
+	private AuctionUpdateDto createAuction(ProductDto product, TraderDetailDto trader,
+			BigDecimal price, int quantity, LocalDateTime date, AuctionStrategyDto strategy,
+			TradeStatusDto status) {
 		AuctionUpdateDto auction = new AuctionUpdateDto();
 		auction.setProductId(product.getId());
 		auction.setPrice(price);

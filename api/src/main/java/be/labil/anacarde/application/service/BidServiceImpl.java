@@ -34,7 +34,8 @@ public class BidServiceImpl implements BidService {
 	@Override
 	@Transactional(readOnly = true)
 	public BidDto getBidById(Integer id) {
-		Bid bid = bidRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Enchère non trouvée"));
+		Bid bid = bidRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Enchère non trouvée"));
 		return bidMapper.toDto(bid);
 	}
 

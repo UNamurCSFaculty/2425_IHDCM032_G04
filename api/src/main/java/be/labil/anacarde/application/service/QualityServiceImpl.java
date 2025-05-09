@@ -36,7 +36,8 @@ public class QualityServiceImpl implements QualityService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<QualityDto> listQualities() {
-		return qualityRepository.findAll().stream().map(qualityMapper::toDto).collect(Collectors.toList());
+		return qualityRepository.findAll().stream().map(qualityMapper::toDto)
+				.collect(Collectors.toList());
 	}
 
 	@Override

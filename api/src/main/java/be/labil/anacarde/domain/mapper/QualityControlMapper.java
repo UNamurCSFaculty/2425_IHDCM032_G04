@@ -10,8 +10,9 @@ import jakarta.persistence.EntityManager;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@Mapper(componentModel = "spring", uses = {MapperHelpers.class, UserDetailMapper.class, ProductMapper.class,
-		QualityMapper.class, DocumentMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring", uses = {MapperHelpers.class, UserDetailMapper.class,
+		ProductMapper.class, QualityMapper.class,
+		DocumentMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class QualityControlMapper {
 
 	@Autowired
@@ -34,12 +35,14 @@ public abstract class QualityControlMapper {
 	@Mapping(target = "product", ignore = true)
 	@Mapping(target = "quality", ignore = true)
 	@Mapping(source = "document", target = "document")
-	public abstract QualityControl partialUpdate(QualityControlUpdateDto dto, @MappingTarget QualityControl entity);
+	public abstract QualityControl partialUpdate(QualityControlUpdateDto dto,
+			@MappingTarget QualityControl entity);
 
 	@AfterMapping
 	protected void afterUpdateDto(QualityControlUpdateDto dto, @MappingTarget QualityControl c) {
 		if (dto.getQualityInspectorId() != null) {
-			c.setQualityInspector(em.getReference(QualityInspector.class, dto.getQualityInspectorId()));
+			c.setQualityInspector(
+					em.getReference(QualityInspector.class, dto.getQualityInspectorId()));
 		}
 		if (dto.getQualityId() != null) {
 			c.setQuality(em.getReference(Quality.class, dto.getQualityId()));

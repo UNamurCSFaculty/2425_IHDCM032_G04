@@ -41,7 +41,8 @@ public interface BidApi {
 			@ApiResponse(responseCode = "400", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
 			@ApiResponse(responseCode = "409", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
 	ResponseEntity<BidDto> createBid(@ApiValidId @PathVariable("auctionId") Integer auctionId,
-			@Validated({Default.class, ValidationGroups.Create.class}) @RequestBody BidUpdateDto bidDto);
+			@Validated({Default.class,
+					ValidationGroups.Create.class}) @RequestBody BidUpdateDto bidDto);
 
 	@Operation(summary = "Mettre à jour une offre")
 	@PutMapping(value = "/{bidId}")
@@ -50,8 +51,8 @@ public interface BidApi {
 			@ApiResponse(responseCode = "400", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
 			@ApiResponse(responseCode = "409", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
 	ResponseEntity<BidDto> updateBid(@ApiValidId @PathVariable("auctionId") Integer auctionId,
-			@ApiValidId @PathVariable("bidId") Integer bidId,
-			@Validated({Default.class, ValidationGroups.Update.class}) @RequestBody BidUpdateDto bidDto);
+			@ApiValidId @PathVariable("bidId") Integer bidId, @Validated({Default.class,
+					ValidationGroups.Update.class}) @RequestBody BidUpdateDto bidDto);
 
 	@Operation(summary = "Accepter une offre")
 	@PutMapping(value = "/{bidId}/accept")
@@ -70,7 +71,8 @@ public interface BidApi {
 	@Operation(summary = "Supprimer une offre")
 	@DeleteMapping("/{bidId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@ApiResponses({@ApiResponse(responseCode = "200", description = "", content = @Content(schema = @Schema())),
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "", content = @Content(schema = @Schema())),
 			@ApiResponse(responseCode = "404", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
 	ResponseEntity<Void> deleteBid(@ApiValidId @PathVariable("auctionId") Integer auctionId,
 			@ApiValidId @PathVariable("bidId") Integer bidId);

@@ -35,14 +35,15 @@ public interface QualityApi {
 	@Operation(summary = "Créer une qualité")
 	@PostMapping
 	@ApiResponsePost
-	ResponseEntity<QualityDto> createQuality(
-			@Validated({Default.class, ValidationGroups.Create.class}) @RequestBody QualityDto qualityDto);
+	ResponseEntity<QualityDto> createQuality(@Validated({Default.class,
+			ValidationGroups.Create.class}) @RequestBody QualityDto qualityDto);
 
 	@Operation(summary = "Mettre à jour une qualité")
 	@ApiResponsePut
 	@PutMapping(value = "/{id}", consumes = "application/json")
 	ResponseEntity<QualityDto> updateQuality(@ApiValidId @PathVariable("id") Integer id,
-			@Validated({Default.class, ValidationGroups.Update.class}) @RequestBody QualityDto qualityDto);
+			@Validated({Default.class,
+					ValidationGroups.Update.class}) @RequestBody QualityDto qualityDto);
 
 	@Operation(summary = "Obtenir toutes les qualités")
 	@ApiResponseGet
@@ -52,7 +53,8 @@ public interface QualityApi {
 	@Operation(summary = "Supprimer une qualité")
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@ApiResponses({@ApiResponse(responseCode = "200", description = "", content = @Content(schema = @Schema())),
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "", content = @Content(schema = @Schema())),
 			@ApiResponse(responseCode = "404", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
 	ResponseEntity<Void> deleteQuality(@ApiValidId @PathVariable("id") Integer id);
 }

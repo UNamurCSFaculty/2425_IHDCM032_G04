@@ -11,8 +11,8 @@ import jakarta.persistence.EntityManager;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@Mapper(componentModel = "spring", uses = {MapperHelpers.class, DocumentMapper.class, UserDetailMapper.class,
-		StoreMapper.class, FieldMapper.class})
+@Mapper(componentModel = "spring", uses = {MapperHelpers.class, DocumentMapper.class,
+		UserDetailMapper.class, StoreMapper.class, FieldMapper.class})
 public abstract class ProductMapper {
 
 	@Autowired
@@ -58,11 +58,13 @@ public abstract class ProductMapper {
 			}
 		} else if (dto instanceof TransformedProductUpdateDto transformed) {
 			if (transformed.getTransformerId() != null) {
-				Transformer transformer = em.getReference(Transformer.class, transformed.getTransformerId());
+				Transformer transformer = em.getReference(Transformer.class,
+						transformed.getTransformerId());
 				((TransformedProduct) product).setTransformer(transformer);
 			}
 		} else {
-			throw new IllegalArgumentException("Type de produit non supporté : " + dto.getClass().getName());
+			throw new IllegalArgumentException(
+					"Type de produit non supporté : " + dto.getClass().getName());
 		}
 	}
 
@@ -72,7 +74,8 @@ public abstract class ProductMapper {
 		} else if (dto instanceof TransformedProductUpdateDto transformed) {
 			return toEntity(transformed);
 		}
-		throw new IllegalArgumentException("Type de DTO non supporté : " + dto.getClass().getName());
+		throw new IllegalArgumentException(
+				"Type de DTO non supporté : " + dto.getClass().getName());
 	}
 
 	/*------------------------------------*/
@@ -99,7 +102,8 @@ public abstract class ProductMapper {
 		} else if (entity instanceof TransformedProduct transformed) {
 			return toDto(transformed);
 		}
-		throw new IllegalArgumentException("Type de Produit non supporté : " + entity.getClass().getName());
+		throw new IllegalArgumentException(
+				"Type de Produit non supporté : " + entity.getClass().getName());
 	}
 
 	/*------------------------------------------*/
@@ -112,7 +116,8 @@ public abstract class ProductMapper {
 	@Mapping(target = "field", ignore = true)
 	@Mapping(target = "qualityControl", ignore = true)
 	@Mapping(target = "id", ignore = true)
-	public abstract HarvestProduct partialUpdate(HarvestProductUpdateDto dto, @MappingTarget HarvestProduct entity);
+	public abstract HarvestProduct partialUpdate(HarvestProductUpdateDto dto,
+			@MappingTarget HarvestProduct entity);
 
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 	@Mapping(source = "identifier", target = "identifier")
@@ -126,9 +131,12 @@ public abstract class ProductMapper {
 	public Product partialUpdate(ProductUpdateDto dto, @MappingTarget Product entity) {
 		if (dto instanceof HarvestProductUpdateDto harvest && entity instanceof HarvestProduct) {
 			return partialUpdate(harvest, (HarvestProduct) entity);
-		} else if (dto instanceof TransformedProductUpdateDto transformed && entity instanceof TransformedProduct) {
-			return partialUpdate(transformed, (TransformedProduct) entity);
-		}
-		throw new IllegalArgumentException("Type de DTO non supporté : " + dto.getClass().getName());
+		} else
+			if (dto instanceof TransformedProductUpdateDto transformed
+					&& entity instanceof TransformedProduct) {
+						return partialUpdate(transformed, (TransformedProduct) entity);
+					}
+		throw new IllegalArgumentException(
+				"Type de DTO non supporté : " + dto.getClass().getName());
 	}
 }

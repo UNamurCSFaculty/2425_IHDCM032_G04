@@ -21,7 +21,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Cette API offre des points d'accès permettant de récupérer, créer, mettre à jour et supprimer des langues.
+ * Cette API offre des points d'accès permettant de récupérer, créer, mettre à jour et supprimer des
+ * langues.
  */
 @Validated
 @Tag(name = "Languages", description = "API de gestion des langues")
