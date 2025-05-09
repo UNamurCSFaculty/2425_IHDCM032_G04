@@ -1,8 +1,9 @@
 package be.labil.anacarde.presentation.controller;
 
 import be.labil.anacarde.application.exception.ApiErrorResponse;
-import be.labil.anacarde.domain.dto.ContractOfferDto;
-import be.labil.anacarde.domain.dto.ValidationGroups;
+import be.labil.anacarde.domain.dto.db.ContractOfferDto;
+import be.labil.anacarde.domain.dto.db.ValidationGroups;
+import be.labil.anacarde.domain.dto.write.ContractOfferUpdateDto;
 import be.labil.anacarde.presentation.controller.annotations.ApiValidId;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -38,8 +39,8 @@ public interface ContractOfferApi {
 			@ApiResponse(responseCode = "201", description = "", content = @Content(schema = @Schema(implementation = ContractOfferDto.class))),
 			@ApiResponse(responseCode = "400", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
 			@ApiResponse(responseCode = "409", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
-	ResponseEntity<ContractOfferDto> createContractOffer(
-			@Validated({Default.class, ValidationGroups.Create.class}) @RequestBody ContractOfferDto storeDetailDto);
+	ResponseEntity<ContractOfferDto> createContractOffer(@Validated({Default.class,
+			ValidationGroups.Create.class}) @RequestBody ContractOfferUpdateDto storeDetailDto);
 
 	@Operation(summary = "Mettre à jour un contrat")
 	@PutMapping(value = "/{id}", consumes = "application/json")
@@ -47,8 +48,8 @@ public interface ContractOfferApi {
 			@ApiResponse(responseCode = "201", description = "", content = @Content(schema = @Schema(implementation = ContractOfferDto.class))),
 			@ApiResponse(responseCode = "400", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
 			@ApiResponse(responseCode = "409", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
-	ResponseEntity<ContractOfferDto> updateContractOffer(@ApiValidId @PathVariable("id") Integer id,
-			@Validated({Default.class, ValidationGroups.Update.class}) @RequestBody ContractOfferDto storeDetailDto);
+	ResponseEntity<ContractOfferDto> updateContractOffer(@ApiValidId @PathVariable("id") Integer id, @Validated({
+			Default.class, ValidationGroups.Update.class}) @RequestBody ContractOfferUpdateDto storeDetailDto);
 
 	@Operation(summary = "Obtenir tous les contrats")
 	@GetMapping

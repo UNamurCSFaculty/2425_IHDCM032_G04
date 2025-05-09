@@ -1,8 +1,9 @@
 package be.labil.anacarde.presentation.controller;
 
 import be.labil.anacarde.application.exception.ApiErrorResponse;
-import be.labil.anacarde.domain.dto.BidDto;
-import be.labil.anacarde.domain.dto.ValidationGroups;
+import be.labil.anacarde.domain.dto.db.BidDto;
+import be.labil.anacarde.domain.dto.db.ValidationGroups;
+import be.labil.anacarde.domain.dto.write.BidUpdateDto;
 import be.labil.anacarde.presentation.controller.annotations.ApiValidId;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -30,7 +31,8 @@ public interface BidApi {
 	@ApiResponses({
 			@ApiResponse(responseCode = "200", description = "", content = @Content(schema = @Schema(implementation = BidDto.class))),
 			@ApiResponse(responseCode = "404", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
-	ResponseEntity<BidDto> getBid(@ApiValidId @PathVariable("bidId") Integer bidId);
+	ResponseEntity<BidDto> getBid(@ApiValidId @PathVariable("auctionId") Integer auctionId,
+			@ApiValidId @PathVariable("bidId") Integer bidId);
 
 	@Operation(summary = "Créer une offre")
 	@PostMapping
@@ -38,8 +40,8 @@ public interface BidApi {
 			@ApiResponse(responseCode = "201", description = "", content = @Content(schema = @Schema(implementation = BidDto.class))),
 			@ApiResponse(responseCode = "400", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
 			@ApiResponse(responseCode = "409", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
-	ResponseEntity<BidDto> createBid(
-			@Validated({Default.class, ValidationGroups.Create.class}) @RequestBody BidDto bidDto);
+	ResponseEntity<BidDto> createBid(@ApiValidId @PathVariable("auctionId") Integer auctionId,
+			@Validated({Default.class, ValidationGroups.Create.class}) @RequestBody BidUpdateDto bidDto);
 
 	@Operation(summary = "Mettre à jour une offre")
 	@PutMapping(value = "/{bidId}")
@@ -49,7 +51,7 @@ public interface BidApi {
 			@ApiResponse(responseCode = "409", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
 	ResponseEntity<BidDto> updateBid(@ApiValidId @PathVariable("auctionId") Integer auctionId,
 			@ApiValidId @PathVariable("bidId") Integer bidId,
-			@Validated({Default.class, ValidationGroups.Update.class}) @RequestBody BidDto bidDto);
+			@Validated({Default.class, ValidationGroups.Update.class}) @RequestBody BidUpdateDto bidDto);
 
 	@Operation(summary = "Accepter une offre")
 	@PutMapping(value = "/{bidId}/accept")
@@ -70,5 +72,6 @@ public interface BidApi {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@ApiResponses({@ApiResponse(responseCode = "200", description = "", content = @Content(schema = @Schema())),
 			@ApiResponse(responseCode = "404", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
-	ResponseEntity<Void> deleteBid(@ApiValidId @PathVariable("bidId") Integer bidId);
+	ResponseEntity<Void> deleteBid(@ApiValidId @PathVariable("auctionId") Integer auctionId,
+			@ApiValidId @PathVariable("bidId") Integer bidId);
 }

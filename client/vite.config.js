@@ -1,10 +1,10 @@
-import { defineConfig } from 'vite'
-import viteReact from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
-import eslint from 'vite-plugin-eslint'
-
 import { TanStackRouterVite } from '@tanstack/router-plugin/vite'
+import viteReact from '@vitejs/plugin-react'
 import { resolve } from 'node:path'
+import { defineConfig } from 'vite'
+import checker from 'vite-plugin-checker'
+import eslint from 'vite-plugin-eslint'
 
 const babelPlugins = [['babel-plugin-react-compiler', {}]]
 
@@ -23,15 +23,22 @@ export default defineConfig(({ command }) => ({
       },
     }),
     tailwindcss(),
-    eslint({
-      lintOnStart: true,
-      failOnError: false, // 🛑 ne bloque pas le build sur les erreurs :contentReference[oaicite:0]{index=0}
-      failOnWarning: false, // ne bloque pas non plus sur les warnings
-      emitWarning: true, // affiche les warnings
-      emitError: true, // affiche les erreurs (mais ne bloque plus)
-      fix: true, // correction automatique quand possible
-      include: ['src/**/*.{js,ts,jsx,tsx}'],
-      exclude: ['node_modules'],
+    {
+      // default settings on build (i.e. fail on error)
+      ...eslint(),
+      apply: 'build',
+    },
+    {
+      // do not fail on serve (i.e. local development)
+      ...eslint({
+        failOnWarning: false,
+        failOnError: false,
+      }),
+      apply: 'serve',
+      enforce: 'post',
+    },
+    checker({
+      typescript: true,
     }),
   ],
   test: {

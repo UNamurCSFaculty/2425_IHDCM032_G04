@@ -15,7 +15,7 @@ export default defineConfig({
     '@tanstack/react-query',
     {
       name: '@hey-api/typescript',
-      readOnlyWriteOnlyBehavior: 'off', // [!code ++]
+      readOnlyWriteOnlyBehavior: 'off',
     },
   ],
 })

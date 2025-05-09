@@ -1,6 +1,6 @@
 package be.labil.anacarde.application.service;
 
-import be.labil.anacarde.domain.dto.AuctionStrategyDto;
+import be.labil.anacarde.domain.dto.db.AuctionStrategyDto;
 import java.util.List;
 
 /**

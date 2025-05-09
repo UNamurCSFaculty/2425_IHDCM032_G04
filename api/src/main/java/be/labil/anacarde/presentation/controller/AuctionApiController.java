@@ -1,8 +1,8 @@
 package be.labil.anacarde.presentation.controller;
 
 import be.labil.anacarde.application.service.AuctionService;
-import be.labil.anacarde.domain.dto.AuctionDto;
-import be.labil.anacarde.domain.dto.AuctionUpdateDto;
+import be.labil.anacarde.domain.dto.db.AuctionDto;
+import be.labil.anacarde.domain.dto.write.AuctionUpdateDto;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

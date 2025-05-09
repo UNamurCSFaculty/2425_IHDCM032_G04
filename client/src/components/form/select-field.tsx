@@ -9,29 +9,46 @@ import {
 } from '../ui/select'
 import { FieldErrors } from './field-errors'
 
-type SelectOption = {
-  value: string
+type SelectOption<T> = {
+  value: T
   label: string
 }
 
-type SelectFieldProps = {
+type SelectFieldProps<T extends string | number> = {
   label: string
-  options: SelectOption[]
+  options: SelectOption<T>[]
   placeholder?: string
   className?: string
   required?: boolean
-  onChange?(value: string): void
+  disabled?: boolean
+  /**
+   * Comment transformer la string reçue du composant en T.
+   * Par défaut, identity pour string et Number(v) pour number.
+   */
+  parseValue?: (v: string) => T
+  onChange?: (value: T) => void
 }
 
-export const SelectField = ({
+export function SelectField<T extends string | number>({
   label,
   options,
   placeholder,
   className = 'w-full',
   required = true,
+  disabled = false,
+  parseValue,
   onChange,
-}: SelectFieldProps) => {
-  const field = useFieldContext<string>()
+}: SelectFieldProps<T>) {
+  const field = useFieldContext<T>()
+
+  // la fonction par défaut qui transforme "val" en T
+  const _parse =
+    parseValue ??
+    ((v: string) =>
+      // si on attend un number, transforme ; sinon renvoie la string
+      typeof options[0].value === 'number'
+        ? (Number(v) as unknown as T)
+        : (v as unknown as T))
 
   return (
     <div className="space-y-2">
@@ -41,10 +58,14 @@ export const SelectField = ({
           {required && <span className="text-red-500">*</span>}
         </Label>
         <Select
-          value={field.state.value}
-          onValueChange={value => {
-            field.handleChange(value)
-            if (onChange) onChange(value)
+          // on passe toujours une string au <Select>
+          disabled={disabled}
+          value={String(field.state.value ?? '')}
+          onValueChange={v => {
+            const newVal = _parse(v)
+            field.handleChange(newVal)
+            field.handleBlur()
+            onChange?.(newVal)
           }}
         >
           <SelectTrigger
@@ -55,9 +76,9 @@ export const SelectField = ({
             <SelectValue placeholder={placeholder} />
           </SelectTrigger>
           <SelectContent>
-            {options.map(option => (
-              <SelectItem key={option.value} value={option.value}>
-                {option.label}
+            {options.map(opt => (
+              <SelectItem key={String(opt.value)} value={String(opt.value)}>
+                {opt.label}
               </SelectItem>
             ))}
           </SelectContent>

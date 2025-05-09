@@ -1,10 +1,10 @@
 package be.labil.anacarde.domain.mapper;
 
-import be.labil.anacarde.domain.dto.StoreDetailDto;
+import be.labil.anacarde.domain.dto.db.StoreDetailDto;
 import be.labil.anacarde.domain.model.Store;
 import org.mapstruct.*;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = HibernateLazyCondition.class)
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = MapperHelpers.class)
 public abstract class StoreMapper {
 
 	@Mapping(source = "name", target = "name")

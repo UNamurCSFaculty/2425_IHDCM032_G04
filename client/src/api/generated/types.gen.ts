@@ -5,7 +5,7 @@
  */
 export type CooperativeDto = {
   /**
-   * Identifiant de la coopérative
+   * Identifiant unique
    */
   readonly id: number
   /**
@@ -31,7 +31,7 @@ export type CooperativeDto = {
  */
 export type FieldDto = {
   /**
-   * Identifiant unique du champ.
+   * Identifiant unique
    */
   readonly id: number
   /**
@@ -53,7 +53,7 @@ export type FieldDto = {
  */
 export type LanguageDto = {
   /**
-   * Identifiant de la langue
+   * Identifiant unique
    */
   readonly id: number
   /**
@@ -85,7 +85,7 @@ export type ProducerDetailDto = TraderDetailDto & {
  */
 export type RoleDto = {
   /**
-   * Identifiant unique du rôle
+   * Identifiant unique
    */
   readonly id: number
   /**
@@ -141,6 +141,175 @@ export type ErrorDetail = {
 /**
  * Objet de transfert de données pour les administrateurs.
  */
+export type AdminUpdateDto = UserUpdateDto & {
+  type: 'admin'
+} & {
+  /**
+   * Mot de passe de l'utilisateur
+   */
+  password?: string
+}
+
+/**
+ * Objet de transfert de données pour les transporteurs.
+ */
+export type CarrierUpdateDto = UserUpdateDto & {
+  type: 'carrier'
+} & {
+  /**
+   * Prix par kilomètre facturé par le transporteur
+   */
+  pricePerKm: number
+  /**
+   * Liste des identifiants des régions desservies par le transporteur
+   */
+  regionIds: Array<number>
+} & {
+  /**
+   * Mot de passe de l'utilisateur
+   */
+  password?: string
+  /**
+   * Prix par kilomètre facturé par le transporteur
+   */
+  pricePerKm: number
+  /**
+   * Liste des identifiants des régions desservies par le transporteur
+   */
+  regionIds: Array<number>
+}
+
+/**
+ * Objet de transfert de données pour les exportateurs.
+ */
+export type ExporterUpdateDto = UserUpdateDto & {
+  type: 'exporter'
+} & {
+  /**
+   * Mot de passe de l'utilisateur
+   */
+  password?: string
+}
+
+/**
+ * Objet de transfert de données pour les producteurs.
+ */
+export type ProducerUpdateDto = UserUpdateDto & {
+  type: 'producer'
+} & {
+  /**
+   * Identifiant agricole
+   */
+  agriculturalIdentifier: string
+  /**
+   * Coopérative du producteur
+   */
+  cooperativeId?: number
+} & {
+  /**
+   * Mot de passe de l'utilisateur
+   */
+  password?: string
+  /**
+   * Identifiant agricole
+   */
+  agriculturalIdentifier: string
+  /**
+   * Coopérative du producteur
+   */
+  cooperativeId?: number
+}
+
+/**
+ * Objet de transfert de données pour les inspecteurs qualité.
+ */
+export type QualityInspectorUpdateDto = UserUpdateDto & {
+  type: 'quality_inspector'
+} & {
+  /**
+   * Mot de passe de l'utilisateur
+   */
+  password?: string
+}
+
+/**
+ * Objet de transfert de données pour les traders.
+ */
+export type TraderUpdateDto = UserUpdateDto & {
+  type: 'trader'
+} & {
+  /**
+   * Mot de passe de l'utilisateur
+   */
+  password?: string
+}
+
+/**
+ * Objet de transfert de données pour les transformateurs.
+ */
+export type TransformerUpdateDto = UserUpdateDto & {
+  type: 'transformer'
+} & {
+  /**
+   * Mot de passe de l'utilisateur
+   */
+  password?: string
+}
+
+/**
+ * Objet de transfert pour créer ou mettre à jour un utilisateur.
+ */
+export type UserUpdateDto = {
+  /**
+   * Prénom de l'utilisateur
+   */
+  firstName: string
+  /**
+   * Nom de famille de l'utilisateur
+   */
+  lastName: string
+  /**
+   * Adresse email de l'utilisateur
+   */
+  email: string
+  /**
+   * Date d'enregistrement
+   */
+  readonly registrationDate?: string
+  /**
+   * Date de validation
+   */
+  readonly validationDate?: string
+  /**
+   * Compte activé
+   */
+  enabled?: boolean
+  /**
+   * Adresse postale de l'utilisateur
+   */
+  address?: string
+  /**
+   * Numéro de téléphone (Bénin, ancien et nouveau formats)
+   */
+  phone?: string
+  /**
+   * Mot de passe de l'utilisateur
+   */
+  password?: string
+  /**
+   * Liste des rôles de l'utilisateur
+   */
+  roles?: Array<RoleDto>
+  /**
+   * Identifiant de la langue préférée
+   */
+  languageId: number
+  type: string
+}
+
+/**
+ * Objet de transfert de données pour les administrateurs.
+ */
 export type AdminDetailDto = UserDetailDto
 
 /**
@@ -172,7 +341,7 @@ export type QualityInspectorDetailDto = UserDetailDto
  */
 export type TraderDetailDto = {
   /**
-   * Identifiant de l'utilisateur
+   * Identifiant unique
    */
   readonly id: number
   /**
@@ -207,10 +376,6 @@ export type TraderDetailDto = {
    * Numéro de téléphone (Bénin, ancien et nouveau formats)
    */
   phone?: string
-  /**
-   * Mot de passe de l'utilisateur
-   */
-  password?: string
   /**
    * Liste des rôles de l'utilisateur
    */
@@ -241,7 +406,7 @@ export type TransformerDetailDto = TraderDetailDto
  */
 export type UserDetailDto = {
   /**
-   * Identifiant de l'utilisateur
+   * Identifiant unique
    */
   readonly id: number
   /**
@@ -277,10 +442,6 @@ export type UserDetailDto = {
    */
   phone?: string
   /**
-   * Mot de passe de l'utilisateur
-   */
-  password?: string
-  /**
    * Liste des rôles de l'utilisateur
    */
   readonly roles?: Array<RoleDto>
@@ -305,7 +466,7 @@ export type UserDetailDto = {
  */
 export type StoreDetailDto = {
   /**
-   * Identifiant du store
+   * Identifiant unique
    */
   readonly id: number
   /**
@@ -327,7 +488,7 @@ export type StoreDetailDto = {
  */
 export type RegionDto = {
   /**
-   * Identifiant unique de la région
+   * Identifiant unique
    */
   readonly id: number
   /**
@@ -341,7 +502,7 @@ export type RegionDto = {
  */
 export type QualityDto = {
   /**
-   * Identifiant de la qualité
+   * Identifiant unique
    */
   readonly id: number
   /**
@@ -374,11 +535,79 @@ export type ApiErrorErrors = {
 }
 
 /**
+ * Objet de transfert pour créer ou mettre à jour un document.
+ */
+export type DocumentUpdateDto = {
+  /**
+   * Type de document
+   */
+  documentType: string
+  /**
+   * Format du document
+   */
+  format: string
+  /**
+   * Chemin de stockage du document
+   */
+  storagePath: string
+  /**
+   * Date et heure de l'envoi du document
+   */
+  readonly uploadDate?: string
+  /**
+   * Identifiant de l'utilisateur associé au document
+   */
+  userId: number
+}
+
+/**
+ * Objet de transfert pour créer ou mettre à jour un contrôle qualité.
+ */
+export type QualityControlUpdateDto = {
+  /**
+   * Identifiant du contrôle qualité
+   */
+  identifier: string
+  /**
+   * Date de contrôle qualité
+   */
+  controlDate: string
+  /**
+   * Granularité mesurée
+   */
+  granularity: number
+  /**
+   * Résultat du test KOR
+   */
+  korTest: number
+  /**
+   * Taux d'humidité mesuré
+   */
+  humidity: number
+  /**
+   * Inspecteur qualité associé
+   */
+  qualityInspectorId: number
+  /**
+   * Produit associé
+   */
+  productId: number
+  /**
+   * Qualité associée
+   */
+  qualityId: number
+  /**
+   * Document associé au contrôle qualité
+   */
+  document?: DocumentUpdateDto
+}
+
+/**
  * Objet de transfert de données pour les entités Document.
  */
 export type DocumentDto = {
   /**
-   * Identifiant unique du document
+   * Identifiant unique
    */
   readonly id: number
   /**
@@ -424,7 +653,7 @@ export type HarvestProductDto = ProductDto & {
  */
 export type ProductDto = {
   /**
-   * Identifiant unique du produit
+   * Identifiant unique
    */
   readonly id: number
   deliveryDate?: string
@@ -448,7 +677,7 @@ export type ProductDto = {
  */
 export type QualityControlDto = {
   /**
-   * Identifiant unique du contrôle qualité
+   * Identifiant unique
    */
   readonly id: number
   /**
@@ -506,11 +735,120 @@ export type TransformedProductDto = ProductDto & {
 }
 
 /**
+ * Objet de transfert de données pour les produits récoltés.
+ */
+export type HarvestProductUpdateDto = ProductUpdateDto & {
+  type: 'harvest'
+} & {
+  /**
+   * Producteur associé au produit récolté
+   */
+  producerId: number
+  /**
+   * Champ associé au produit récolté
+   */
+  fieldId: number
+}
+
+/**
+ * Objet de transfert pour créer ou mettre à jour un produit.
+ */
+export type ProductUpdateDto = {
+  /**
+   * Identifiant unique
+   */
+  readonly id: number
+  deliveryDate?: string
+  /**
+   * Magasin associé au produit récolté
+   */
+  storeId: number
+  /**
+   * Poids en kg du produit
+   */
+  weightKg?: number
+  qualityControlId?: number
+  type: string
+}
+
+/**
+ * Objet de transfert de données pour les produits transformés.
+ */
+export type TransformedProductUpdateDto = ProductUpdateDto & {
+  type: 'transformed'
+} & {
+  /**
+   * Identifiant du produit transformé
+   */
+  identifier: string
+  /**
+   * Transformateur associé
+   */
+  transformerId: number
+}
+
+/**
+ * Objet de transfert pour créer ou mettre à jour une coopérative.
+ */
+export type CooperativeUpdateDto = {
+  /**
+   * Nom de la coopérative
+   */
+  name: string
+  /**
+   * Adresse de la coopérative
+   */
+  address: string
+  /**
+   * Date de création
+   */
+  creationDate: string
+  /**
+   * Président de la coopérative
+   */
+  presidentId: number
+}
+
+/**
+ * Objet de transfert pour créer ou mettre à jour une enchère.
+ */
+export type ContractOfferUpdateDto = {
+  /**
+   * Statut de l'offre de contrat
+   */
+  status: string
+  /**
+   * Prix par kilogramme proposé
+   */
+  pricePerKg: number
+  /**
+   * Date de création de l'offre
+   */
+  readonly creationDate: string
+  /**
+   * Date de terminaison de l'offre
+   */
+  endDate: string
+  /**
+   * Vendeur associé à l'offre
+   */
+  sellerId: number
+  /**
+   * Acheteur associé à l'offre
+   */
+  buyerId: number
+  /**
+   * Qualité associée à l'offre
+   */
+  qualityId: number
+}
+
+/**
  * Objet de transfert de données pour les offres de contrat.
  */
 export type ContractOfferDto = {
   /**
-   * Identifiant unique de l'offre de contrat
+   * Identifiant unique
    */
   readonly id: number
   /**
@@ -544,7 +882,7 @@ export type ContractOfferDto = {
 }
 
 /**
- * Objet de transfert de données pour les enchères.
+ * Objet de transfert pour créer ou mettre à jour une enchère.
  */
 export type AuctionUpdateDto = {
   /**
@@ -590,7 +928,7 @@ export type AuctionUpdateDto = {
  */
 export type AuctionDto = {
   /**
-   * Identifiant unique de l'enchère
+   * Identifiant unique
    */
   readonly id: number
   /**
@@ -640,7 +978,7 @@ export type AuctionDto = {
  */
 export type AuctionStrategyDto = {
   /**
-   * Identifiant unique de la stratégie d'enchère
+   * Identifiant unique
    */
   readonly id: number
   /**
@@ -654,7 +992,7 @@ export type AuctionStrategyDto = {
  */
 export type BidDto = {
   /**
-   * Identifiant unique de l'offre d'achat
+   * Identifiant unique
    */
   readonly id: number
   /**
@@ -684,13 +1022,39 @@ export type BidDto = {
  */
 export type TradeStatusDto = {
   /**
-   * Identifiant unique du statut
+   * Identifiant unique
    */
   readonly id: number
   /**
    * Nom du statut
    */
   name: string
+}
+
+/**
+ * Objet de transfert pour créer ou mettre à jour une offres.
+ */
+export type BidUpdateDto = {
+  /**
+   * Montant de l'offre
+   */
+  amount: number
+  /**
+   * Date de création de l'offre
+   */
+  readonly creationDate?: string
+  /**
+   * Identifiant de l'enchère associée à l'offre
+   */
+  auctionId: number
+  /**
+   * Trader ayant passé l'offre
+   */
+  traderId: number
+  /**
+   * Statut de l'offre
+   */
+  statusId: number
 }
 
 /**
@@ -724,7 +1088,7 @@ export type LoginRequest = {
  */
 export type UserListDto = {
   /**
-   * Identifiant de l'utilisateur
+   * Identifiant unique
    */
   readonly id: number
   /**
@@ -760,10 +1124,6 @@ export type UserListDto = {
    */
   phone?: string
   /**
-   * Mot de passe de l'utilisateur
-   */
-  password?: string
-  /**
    * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
    */
   type:
@@ -788,6 +1148,10 @@ export type ApplicationDataDto = {
 export type DeleteFieldData = {
   body?: never
   path: {
+    /**
+     * Identifiant de la ressource
+     */
+    userId: number
     /**
      * Identifiant de la ressource
      */
@@ -834,6 +1198,10 @@ export type GetFieldData = {
     /**
      * Identifiant de la ressource
      */
+    userId: number
+    /**
+     * Identifiant de la ressource
+     */
     id: number
   }
   query?: never
@@ -861,6 +1229,10 @@ export type GetFieldResponse = GetFieldResponses[keyof GetFieldResponses]
 export type UpdateFieldData = {
   body: FieldDto
   path: {
+    /**
+     * Identifiant de la ressource
+     */
+    userId: number
     /**
      * Identifiant de la ressource
      */
@@ -955,13 +1327,13 @@ export type GetUserResponse = GetUserResponses[keyof GetUserResponses]
 
 export type UpdateUserData = {
   body:
-    | AdminDetailDto
-    | CarrierDetailDto
-    | QualityInspectorDetailDto
-    | TraderDetailDto
-    | ExporterDetailDto
-    | ProducerDetailDto
-    | TransformerDetailDto
+    | AdminUpdateDto
+    | CarrierUpdateDto
+    | ExporterUpdateDto
+    | ProducerUpdateDto
+    | QualityInspectorUpdateDto
+    | TraderUpdateDto
+    | TransformerUpdateDto
   path: {
     /**
      * Identifiant de l'utilisateur
@@ -1379,6 +1751,10 @@ export type DeleteQualityControlData = {
     /**
      * Identifiant de la ressource
      */
+    productId: number
+    /**
+     * Identifiant de la ressource
+     */
     id: number
   }
   query?: never
@@ -1415,6 +1791,10 @@ export type GetQualityControlData = {
     /**
      * Identifiant de la ressource
      */
+    productId: number
+    /**
+     * Identifiant de la ressource
+     */
     id: number
   }
   query?: never
@@ -1442,8 +1822,12 @@ export type GetQualityControlResponse =
   GetQualityControlResponses[keyof GetQualityControlResponses]
 
 export type UpdateQualityControlData = {
-  body: QualityControlDto
+  body: QualityControlUpdateDto
   path: {
+    /**
+     * Identifiant de la ressource
+     */
+    productId: number
     /**
      * Identifiant de la ressource
      */
@@ -1543,7 +1927,7 @@ export type GetProductResponses = {
 export type GetProductResponse = GetProductResponses[keyof GetProductResponses]
 
 export type UpdateProductData = {
-  body: HarvestProductDto | TransformedProductDto
+  body: HarvestProductUpdateDto | TransformedProductUpdateDto
   path: {
     /**
      * Identifiant de la ressource
@@ -1848,7 +2232,7 @@ export type GetCooperativeResponse =
   GetCooperativeResponses[keyof GetCooperativeResponses]
 
 export type UpdateCooperativeData = {
-  body: CooperativeDto
+  body: CooperativeUpdateDto
   path: {
     /**
      * Identifiant de la ressource
@@ -1952,7 +2336,7 @@ export type GetContractOfferResponse =
   GetContractOfferResponses[keyof GetContractOfferResponses]
 
 export type UpdateContractOfferData = {
-  body: ContractOfferDto
+  body: ContractOfferUpdateDto
   path: {
     /**
      * Identifiant de la ressource
@@ -2124,6 +2508,10 @@ export type DeleteBidData = {
     /**
      * Identifiant de la ressource
      */
+    auctionId: number
+    /**
+     * Identifiant de la ressource
+     */
     bidId: number
   }
   query?: never
@@ -2158,6 +2546,10 @@ export type GetBidData = {
     /**
      * Identifiant de la ressource
      */
+    auctionId: number
+    /**
+     * Identifiant de la ressource
+     */
     bidId: number
   }
   query?: never
@@ -2183,7 +2575,7 @@ export type GetBidResponses = {
 export type GetBidResponse = GetBidResponses[keyof GetBidResponses]
 
 export type UpdateBidData = {
-  body: BidDto
+  body: BidUpdateDto
   path: {
     /**
      * Identifiant de la ressource
@@ -2386,13 +2778,13 @@ export type ListUsersResponse = ListUsersResponses[keyof ListUsersResponses]
 
 export type CreateUserData = {
   body:
-    | AdminDetailDto
-    | CarrierDetailDto
-    | QualityInspectorDetailDto
-    | TraderDetailDto
-    | ExporterDetailDto
-    | ProducerDetailDto
-    | TransformerDetailDto
+    | AdminUpdateDto
+    | CarrierUpdateDto
+    | ExporterUpdateDto
+    | ProducerUpdateDto
+    | QualityInspectorUpdateDto
+    | TraderUpdateDto
+    | TransformerUpdateDto
   path?: never
   query?: never
   url: '/api/users'
@@ -2440,7 +2832,12 @@ export type ListFieldsResponse = ListFieldsResponses[keyof ListFieldsResponses]
 
 export type CreateFieldData = {
   body: FieldDto
-  path?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    userId: number
+  }
   query?: never
   url: '/api/users/{userId}/fields'
 }
@@ -2687,7 +3084,7 @@ export type ListProductsResponse =
   ListProductsResponses[keyof ListProductsResponses]
 
 export type CreateProductData = {
-  body: HarvestProductDto | TransformedProductDto
+  body: HarvestProductUpdateDto | TransformedProductUpdateDto
   path?: never
   query?: never
   url: '/api/products'
@@ -2736,8 +3133,13 @@ export type ListQualityControlsResponse =
   ListQualityControlsResponses[keyof ListQualityControlsResponses]
 
 export type CreateQualityControlData = {
-  body: QualityControlDto
-  path?: never
+  body: QualityControlUpdateDto
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    productId: number
+  }
   query?: never
   url: '/api/products/{productId}/quality-controls'
 }
@@ -2859,7 +3261,7 @@ export type ListCooperativesResponse =
   ListCooperativesResponses[keyof ListCooperativesResponses]
 
 export type CreateCooperativeData = {
-  body: CooperativeDto
+  body: CooperativeUpdateDto
   path?: never
   query?: never
   url: '/api/cooperatives'
@@ -2907,7 +3309,7 @@ export type ListContractOffersResponse =
   ListContractOffersResponses[keyof ListContractOffersResponses]
 
 export type CreateContractOfferData = {
-  body: ContractOfferDto
+  body: ContractOfferUpdateDto
   path?: never
   query?: never
   url: '/api/contracts'
@@ -3088,8 +3490,13 @@ export type ListBidsResponses = {
 export type ListBidsResponse = ListBidsResponses[keyof ListBidsResponses]
 
 export type CreateBidData = {
-  body: BidDto
-  path?: never
+  body: BidUpdateDto
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    auctionId: number
+  }
   query?: never
   url: '/api/auctions/{auctionId}/bids/'
 }
@@ -3179,22 +3586,6 @@ export type CreateAuctionStrategyResponses = {
    */
   201: unknown
 }
-
-export type TestData = {
-  body?: never
-  path?: never
-  query?: never
-  url: '/test'
-}
-
-export type TestResponses = {
-  /**
-   * OK
-   */
-  200: string
-}
-
-export type TestResponse = TestResponses[keyof TestResponses]
 
 export type ListDocumentsByUserData = {
   body?: never

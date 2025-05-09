@@ -1,7 +1,8 @@
 
 package be.labil.anacarde.application.service;
 
-import be.labil.anacarde.domain.dto.BidDto;
+import be.labil.anacarde.domain.dto.db.BidDto;
+import be.labil.anacarde.domain.dto.write.BidUpdateDto;
 import java.util.List;
 
 /**
@@ -16,7 +17,7 @@ public interface BidService {
 	 *            Le BidDto contenant les informations de la nouvelle offre.
 	 * @return Un BidDto représentant l'offre créée.
 	 */
-	BidDto createBid(BidDto BidDto);
+	BidDto createBid(BidUpdateDto BidDto);
 
 	/**
 	 * Retourne l'offre correspondant à l'ID fourni.
@@ -43,7 +44,7 @@ public interface BidService {
 	 *            Le BidDto contenant les informations mises à jour.
 	 * @return Un BidDto représentant l'offre mis à jour.
 	 */
-	BidDto updateBid(Integer id, BidDto bidDto);
+	BidDto updateBid(Integer id, BidUpdateDto bidDto);
 
 	/**
 	 * Accepter l'offre identifiée par l'ID donné.

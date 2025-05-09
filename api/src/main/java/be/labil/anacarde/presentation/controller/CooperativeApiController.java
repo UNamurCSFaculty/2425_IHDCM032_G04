@@ -1,7 +1,8 @@
 package be.labil.anacarde.presentation.controller;
 
 import be.labil.anacarde.application.service.CooperativeService;
-import be.labil.anacarde.domain.dto.CooperativeDto;
+import be.labil.anacarde.domain.dto.db.CooperativeDto;
+import be.labil.anacarde.domain.dto.write.CooperativeUpdateDto;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,7 @@ public class CooperativeApiController implements CooperativeApi {
 	}
 
 	@Override
-	public ResponseEntity<CooperativeDto> createCooperative(CooperativeDto cooperativeDto) {
+	public ResponseEntity<CooperativeDto> createCooperative(CooperativeUpdateDto cooperativeDto) {
 		CooperativeDto created = cooperativeService.createCooperative(cooperativeDto);
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(created.getId())
 				.toUri();
@@ -36,7 +37,7 @@ public class CooperativeApiController implements CooperativeApi {
 	}
 
 	@Override
-	public ResponseEntity<CooperativeDto> updateCooperative(Integer id, CooperativeDto cooperativeDto) {
+	public ResponseEntity<CooperativeDto> updateCooperative(Integer id, CooperativeUpdateDto cooperativeDto) {
 		CooperativeDto updated = cooperativeService.updateCooperative(id, cooperativeDto);
 		return ResponseEntity.ok(updated);
 	}

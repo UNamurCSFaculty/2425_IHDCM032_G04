@@ -2,7 +2,7 @@ package be.labil.anacarde.domain.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import be.labil.anacarde.domain.dto.RegionDto;
+import be.labil.anacarde.domain.dto.db.RegionDto;
 import be.labil.anacarde.domain.model.Region;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

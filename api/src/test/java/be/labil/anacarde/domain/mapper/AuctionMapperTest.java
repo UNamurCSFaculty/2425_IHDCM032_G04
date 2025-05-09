@@ -3,8 +3,8 @@ package be.labil.anacarde.domain.mapper;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import be.labil.anacarde.domain.dto.*;
-import be.labil.anacarde.domain.dto.user.TransformerDetailDto;
+import be.labil.anacarde.domain.dto.db.AuctionDto;
+import be.labil.anacarde.domain.dto.write.AuctionUpdateDto;
 import be.labil.anacarde.domain.model.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -55,36 +55,59 @@ public class AuctionMapperTest {
 
 	@Test
 	public void testToEntity() {
-		AuctionDto auctionDto = new AuctionDto();
-		auctionDto.setId(1);
+		AuctionUpdateDto auctionDto = new AuctionUpdateDto();
 		auctionDto.setPrice(BigDecimal.valueOf(100.50));
 		auctionDto.setProductQuantity(10);
 		auctionDto.setExpirationDate(LocalDateTime.of(2025, 12, 31, 23, 59, 59, 0));
 		auctionDto.setCreationDate(LocalDateTime.of(2025, 1, 1, 0, 0, 0, 0));
-		auctionDto.setTrader(new TransformerDetailDto());
-		auctionDto.setStatus(new TradeStatusDto());
+		auctionDto.setTraderId(1);
+		auctionDto.setStatusId(2);
 		auctionDto.setActive(true);
-
-		AuctionStrategyDto strategyDto = new AuctionStrategyDto();
-		strategyDto.setId(1);
-		ProductDto productDto = new HarvestProductDto();
-		strategyDto.setId(2);
-
-		auctionDto.setStrategy(strategyDto);
-		auctionDto.setProduct(productDto);
+		auctionDto.setStrategyId(3);
+		auctionDto.setProductId(4);
 
 		Auction auction = auctionMapper.toEntity(auctionDto);
 
 		assertNotNull(auction);
-		assertEquals(auctionDto.getId(), auction.getId());
 		assertEquals(auctionDto.getPrice(), auction.getPrice());
 		assertEquals(auctionDto.getProductQuantity(), auction.getProductQuantity());
 		assertEquals(auctionDto.getExpirationDate(), auction.getExpirationDate());
 		assertEquals(auctionDto.getCreationDate(), auction.getCreationDate());
 		assertEquals(auctionDto.getActive(), auction.getActive());
-		assertEquals(auctionDto.getStrategy().getId(), auction.getStrategy().getId());
-		assertEquals(auctionDto.getProduct().getId(), auction.getProduct().getId());
-		assertEquals(auctionDto.getTrader().getId(), auction.getTrader().getId());
-		assertEquals(auctionDto.getStatus().getId(), auction.getStatus().getId());
+		assertEquals(auctionDto.getStrategyId(), auction.getStrategy().getId());
+		assertEquals(auctionDto.getProductId(), auction.getProduct().getId());
+		assertEquals(auctionDto.getTraderId(), auction.getTrader().getId());
+		assertEquals(auctionDto.getStatusId(), auction.getStatus().getId());
+	}
+
+	@Test
+	public void testUpdateToEntity() {
+		AuctionUpdateDto auctionDto = new AuctionUpdateDto();
+		auctionDto.setPrice(BigDecimal.valueOf(100.50));
+		auctionDto.setProductQuantity(10);
+		auctionDto.setExpirationDate(LocalDateTime.of(2025, 12, 31, 23, 59, 59, 0));
+		auctionDto.setCreationDate(LocalDateTime.of(2025, 1, 1, 0, 0, 0, 0));
+		auctionDto.setTraderId(1);
+		auctionDto.setStatusId(2);
+		auctionDto.setStrategyId(3);
+		auctionDto.setProductId(4);
+		auctionDto.setActive(true);
+
+		Auction existingAuction = new Auction();
+		existingAuction.setProductQuantity(20);
+		existingAuction.setPrice(BigDecimal.valueOf(50));
+
+		Auction auction = auctionMapper.partialUpdate(auctionDto, existingAuction);
+
+		assertNotNull(auction);
+		assertEquals(auctionDto.getPrice(), auction.getPrice());
+		assertEquals(auctionDto.getProductQuantity(), auction.getProductQuantity());
+		assertEquals(auctionDto.getExpirationDate(), auction.getExpirationDate());
+		assertEquals(auctionDto.getCreationDate(), auction.getCreationDate());
+		assertEquals(auctionDto.getActive(), auction.getActive());
+		assertEquals(auctionDto.getStrategyId(), auction.getStrategy().getId());
+		assertEquals(auctionDto.getProductId(), auction.getProduct().getId());
+		assertEquals(auctionDto.getTraderId(), auction.getTrader().getId());
+		assertEquals(auctionDto.getStatusId(), auction.getStatus().getId());
 	}
 }

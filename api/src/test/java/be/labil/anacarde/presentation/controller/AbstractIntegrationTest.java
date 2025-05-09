@@ -5,7 +5,7 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 import be.labil.anacarde.application.service.DatabaseService;
-import be.labil.anacarde.domain.dto.LanguageDto;
+import be.labil.anacarde.domain.dto.db.LanguageDto;
 import be.labil.anacarde.domain.model.*;
 import be.labil.anacarde.infrastructure.persistence.*;
 import be.labil.anacarde.infrastructure.persistence.user.UserRepository;

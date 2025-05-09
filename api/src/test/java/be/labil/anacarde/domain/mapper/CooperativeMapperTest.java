@@ -2,8 +2,9 @@ package be.labil.anacarde.domain.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import be.labil.anacarde.domain.dto.CooperativeDto;
-import be.labil.anacarde.domain.dto.user.ProducerDetailDto;
+import be.labil.anacarde.domain.dto.db.CooperativeDto;
+import be.labil.anacarde.domain.dto.db.user.ProducerDetailDto;
+import be.labil.anacarde.domain.dto.write.CooperativeUpdateDto;
 import be.labil.anacarde.domain.model.Cooperative;
 import be.labil.anacarde.domain.model.Producer;
 import java.time.LocalDateTime;
@@ -49,8 +50,7 @@ class CooperativeMapperTest {
 		presidentDto.setFirstName("Awa");
 		presidentDto.setLastName("Sanogo");
 
-		CooperativeDto dto = new CooperativeDto();
-		dto.setId(200);
+		CooperativeUpdateDto dto = new CooperativeUpdateDto();
 		dto.setName("Coopérative du Sud");
 		dto.setAddress("Yopougon, Abidjan");
 		dto.setCreationDate(LocalDateTime.of(2024, 1, 1, 12, 0));
@@ -59,7 +59,6 @@ class CooperativeMapperTest {
 		Cooperative entity = mapper.toEntity(dto);
 
 		assertThat(entity).isNotNull();
-		assertThat(entity.getId()).isEqualTo(200);
 		assertThat(entity.getName()).isEqualTo("Coopérative du Sud");
 		assertThat(entity.getAddress()).isEqualTo("Yopougon, Abidjan");
 		assertThat(entity.getCreationDate()).isEqualTo(LocalDateTime.of(2024, 1, 1, 12, 0));

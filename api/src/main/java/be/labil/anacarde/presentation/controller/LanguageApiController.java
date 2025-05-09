@@ -1,7 +1,7 @@
 package be.labil.anacarde.presentation.controller;
 
 import be.labil.anacarde.application.service.LanguageService;
-import be.labil.anacarde.domain.dto.LanguageDto;
+import be.labil.anacarde.domain.dto.db.LanguageDto;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

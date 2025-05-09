@@ -1,7 +1,7 @@
 package be.labil.anacarde.application.service;
 
 import be.labil.anacarde.application.exception.ResourceNotFoundException;
-import be.labil.anacarde.domain.dto.AuctionStrategyDto;
+import be.labil.anacarde.domain.dto.db.AuctionStrategyDto;
 import be.labil.anacarde.domain.mapper.AuctionStrategyMapper;
 import be.labil.anacarde.domain.model.AuctionStrategy;
 import be.labil.anacarde.infrastructure.persistence.AuctionStrategyRepository;

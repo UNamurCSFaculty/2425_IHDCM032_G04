@@ -1,9 +1,9 @@
 package be.labil.anacarde.presentation.controller;
 
 import be.labil.anacarde.application.exception.ApiErrorResponse;
-import be.labil.anacarde.domain.dto.AuctionDto;
-import be.labil.anacarde.domain.dto.AuctionUpdateDto;
-import be.labil.anacarde.domain.dto.ValidationGroups;
+import be.labil.anacarde.domain.dto.db.AuctionDto;
+import be.labil.anacarde.domain.dto.db.ValidationGroups;
+import be.labil.anacarde.domain.dto.write.AuctionUpdateDto;
 import be.labil.anacarde.presentation.controller.annotations.ApiValidId;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

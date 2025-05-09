@@ -2,7 +2,7 @@ package be.labil.anacarde.domain.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import be.labil.anacarde.domain.dto.NotificationDto;
+import be.labil.anacarde.domain.dto.db.NotificationDto;
 import be.labil.anacarde.domain.model.Carrier;
 import be.labil.anacarde.domain.model.Notification;
 import java.time.LocalDateTime;

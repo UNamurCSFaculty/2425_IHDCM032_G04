@@ -1,8 +1,9 @@
 package be.labil.anacarde.presentation.controller;
 
 import be.labil.anacarde.application.exception.ApiErrorResponse;
-import be.labil.anacarde.domain.dto.CooperativeDto;
-import be.labil.anacarde.domain.dto.ValidationGroups;
+import be.labil.anacarde.domain.dto.db.CooperativeDto;
+import be.labil.anacarde.domain.dto.db.ValidationGroups;
+import be.labil.anacarde.domain.dto.write.CooperativeUpdateDto;
 import be.labil.anacarde.presentation.controller.annotations.ApiValidId;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -38,8 +39,8 @@ public interface CooperativeApi {
 			@ApiResponse(responseCode = "201", description = "", content = @Content(schema = @Schema(implementation = CooperativeDto.class))),
 			@ApiResponse(responseCode = "400", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
 			@ApiResponse(responseCode = "409", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
-	ResponseEntity<CooperativeDto> createCooperative(
-			@Validated({Default.class, ValidationGroups.Create.class}) @RequestBody CooperativeDto cooperativeDto);
+	ResponseEntity<CooperativeDto> createCooperative(@Validated({Default.class,
+			ValidationGroups.Create.class}) @RequestBody CooperativeUpdateDto cooperativeDto);
 
 	@Operation(summary = "Mettre à jour une coopérative")
 	@PutMapping(value = "/{id}", consumes = "application/json")
@@ -47,8 +48,8 @@ public interface CooperativeApi {
 			@ApiResponse(responseCode = "201", description = "", content = @Content(schema = @Schema(implementation = CooperativeDto.class))),
 			@ApiResponse(responseCode = "400", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
 			@ApiResponse(responseCode = "409", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
-	ResponseEntity<CooperativeDto> updateCooperative(@ApiValidId @PathVariable("id") Integer id,
-			@Validated({Default.class, ValidationGroups.Update.class}) @RequestBody CooperativeDto cooperativeDto);
+	ResponseEntity<CooperativeDto> updateCooperative(@ApiValidId @PathVariable("id") Integer id, @Validated({
+			Default.class, ValidationGroups.Update.class}) @RequestBody CooperativeUpdateDto cooperativeDto);
 
 	@Operation(summary = "Lister toutes les coopératives")
 	@GetMapping

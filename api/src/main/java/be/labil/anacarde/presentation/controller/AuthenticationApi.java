@@ -1,7 +1,7 @@
 package be.labil.anacarde.presentation.controller;
 
 import be.labil.anacarde.application.exception.ApiErrorResponse;
-import be.labil.anacarde.domain.dto.user.UserDetailDto;
+import be.labil.anacarde.domain.dto.db.user.UserDetailDto;
 import be.labil.anacarde.domain.model.User;
 import be.labil.anacarde.presentation.payload.LoginRequest;
 import io.swagger.v3.oas.annotations.Operation;

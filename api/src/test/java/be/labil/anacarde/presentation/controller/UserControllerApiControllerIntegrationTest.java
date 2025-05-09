@@ -8,12 +8,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import be.labil.anacarde.domain.dto.CooperativeDto;
-import be.labil.anacarde.domain.dto.RoleDto;
-import be.labil.anacarde.domain.dto.user.AdminDetailDto;
-import be.labil.anacarde.domain.dto.user.ExporterDetailDto;
-import be.labil.anacarde.domain.dto.user.ProducerDetailDto;
-import be.labil.anacarde.domain.dto.user.UserDetailDto;
+import be.labil.anacarde.domain.dto.db.RoleDto;
+import be.labil.anacarde.domain.dto.write.user.AdminUpdateDto;
+import be.labil.anacarde.domain.dto.write.user.ExporterUpdateDto;
+import be.labil.anacarde.domain.dto.write.user.ProducerUpdateDto;
+import be.labil.anacarde.domain.dto.write.user.UserUpdateDto;
 import be.labil.anacarde.domain.model.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -46,26 +45,23 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 	 */
 	@Test
 	public void testCreateUser() throws Exception {
-		CooperativeDto cooperativeDto = new CooperativeDto();
-		cooperativeDto.setId(getMainTestCooperative().getId());
 
-		ProducerDetailDto newUser = new ProducerDetailDto();
+		ProducerUpdateDto newUser = new ProducerUpdateDto();
 		newUser.setFirstName("Alice");
 		newUser.setLastName("Smith");
 		newUser.setEmail("alice.smith@example.com");
 		newUser.setPassword("secret!!!");
-		newUser.setLanguage(getMainLanguageDto());
+		newUser.setLanguageId(getMainLanguageDto().getId());
 		newUser.setPhone("+2290197005502");
 		newUser.setAgriculturalIdentifier("TS450124");
-		newUser.setCooperative(cooperativeDto);
+		newUser.setCooperativeId(getMainTestCooperative().getId());
 
 		ObjectNode node = objectMapper.valueToTree(newUser);
-		node.put("password", newUser.getPassword()); // Ajout manuel car le mot de passe n'est pas sérialisé
 		String jsonContent = node.toString();
 
 		mockMvc.perform(
 				post("/api/users").with(jwtAndCsrf()).contentType(MediaType.APPLICATION_JSON).content(jsonContent))
-				.andExpect(status().isCreated())
+				.andDo(print()).andExpect(status().isCreated())
 				// Vérifie que l'en-tête "Location" contient l'ID du nouvel utilisateur
 				// .andExpect(header().string("Location", containsString("/api/users/")))
 				.andExpect(jsonPath("$.email").value("alice.smith@example.com"))
@@ -82,12 +78,12 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 	 */
 	@Test
 	public void testCreateUserMissingTypeFails() throws Exception {
-		UserDetailDto newUser = new ExporterDetailDto();
+		UserUpdateDto newUser = new ExporterUpdateDto();
 		newUser.setFirstName("Charlie");
 		newUser.setLastName("Brown");
 		newUser.setEmail("charlie.brown@example.com");
 		newUser.setPassword("secret");
-		newUser.setLanguage(getMainLanguageDto());
+		newUser.setLanguageId(getMainLanguageDto().getId());
 
 		ObjectNode node = objectMapper.valueToTree(newUser);
 		node.put("password", newUser.getPassword());
@@ -118,13 +114,13 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 	 */
 	@Test
 	public void testUpdateUser() throws Exception {
-		UserDetailDto updateUser = new AdminDetailDto();
+		UserUpdateDto updateUser = new AdminUpdateDto();
 		updateUser.setFirstName("John Updated");
 		updateUser.setLastName("Doe Updated");
 		updateUser.setEmail("email@updated.com");
 		updateUser.setPassword("newpassword");
-		updateUser.setRoles(Set.of(new RoleDto(null, getAdminTestRole().getName())));
-		updateUser.setLanguage(getMainLanguageDto());
+		updateUser.setRoles(Set.of(RoleDto.builder().name(getAdminTestRole().getName()).build()));
+		updateUser.setLanguageId(getMainLanguageDto().getId());
 
 		int userRoleSize = getMainTestUser().getRoles().size();
 
@@ -206,7 +202,7 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 	 */
 	@Test
 	public void testCreateUserMissingEmail() throws Exception {
-		UserDetailDto newUser = new AdminDetailDto();
+		UserUpdateDto newUser = new AdminUpdateDto();
 		newUser.setFirstName("Bob");
 		newUser.setLastName("Smith");
 		newUser.setPassword("secret");

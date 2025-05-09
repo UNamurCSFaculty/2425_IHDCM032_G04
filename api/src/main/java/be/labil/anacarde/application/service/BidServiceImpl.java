@@ -1,12 +1,14 @@
 package be.labil.anacarde.application.service;
 
 import be.labil.anacarde.application.exception.ResourceNotFoundException;
-import be.labil.anacarde.domain.dto.BidDto;
+import be.labil.anacarde.domain.dto.db.BidDto;
+import be.labil.anacarde.domain.dto.write.BidUpdateDto;
 import be.labil.anacarde.domain.mapper.BidMapper;
 import be.labil.anacarde.domain.model.Bid;
 import be.labil.anacarde.domain.model.TradeStatus;
 import be.labil.anacarde.infrastructure.persistence.BidRepository;
 import be.labil.anacarde.infrastructure.persistence.TradeStatusRepository;
+import be.labil.anacarde.infrastructure.util.PersistenceHelper;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -20,12 +22,13 @@ public class BidServiceImpl implements BidService {
 	private final TradeStatusRepository tradeStatusRepository;
 	private final BidRepository bidRepository;
 	private final BidMapper bidMapper;
+	private final PersistenceHelper persistenceHelper;
 
 	@Override
-	public BidDto createBid(BidDto dto) {
+	public BidDto createBid(BidUpdateDto dto) {
 		Bid bid = bidMapper.toEntity(dto);
-		Bid saved = bidRepository.save(bid);
-		return bidMapper.toDto(saved);
+		Bid full = persistenceHelper.saveAndReload(bidRepository, bid, Bid::getId);
+		return bidMapper.toDto(full);
 	}
 
 	@Override
@@ -43,14 +46,14 @@ public class BidServiceImpl implements BidService {
 	}
 
 	@Override
-	public BidDto updateBid(Integer id, BidDto bidDetailDto) {
+	public BidDto updateBid(Integer id, BidUpdateDto bidDetailDto) {
 		Bid existingBid = bidRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Offre non trouvée"));
 
 		Bid updatedBid = bidMapper.partialUpdate(bidDetailDto, existingBid);
 
-		Bid saved = bidRepository.save(updatedBid);
-		return bidMapper.toDto(saved);
+		Bid full = persistenceHelper.saveAndReload(bidRepository, updatedBid, Bid::getId);
+		return bidMapper.toDto(full);
 	}
 
 	@Override

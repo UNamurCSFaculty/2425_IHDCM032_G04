@@ -1,7 +1,7 @@
 package be.labil.anacarde.application.service;
 
 import be.labil.anacarde.application.exception.ResourceNotFoundException;
-import be.labil.anacarde.domain.dto.RegionDto;
+import be.labil.anacarde.domain.dto.db.RegionDto;
 import be.labil.anacarde.domain.mapper.RegionMapper;
 import be.labil.anacarde.domain.model.Carrier;
 import be.labil.anacarde.domain.model.Region;

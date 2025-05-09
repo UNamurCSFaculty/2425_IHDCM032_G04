@@ -1,7 +1,7 @@
 package be.labil.anacarde.presentation.controller;
 
 import be.labil.anacarde.application.service.DocumentService;
-import be.labil.anacarde.domain.dto.DocumentDto;
+import be.labil.anacarde.domain.dto.db.DocumentDto;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

@@ -1,10 +1,12 @@
 package be.labil.anacarde.application.service;
 
 import be.labil.anacarde.application.exception.ResourceNotFoundException;
-import be.labil.anacarde.domain.dto.ContractOfferDto;
+import be.labil.anacarde.domain.dto.db.ContractOfferDto;
+import be.labil.anacarde.domain.dto.write.ContractOfferUpdateDto;
 import be.labil.anacarde.domain.mapper.ContractOfferMapper;
 import be.labil.anacarde.domain.model.ContractOffer;
 import be.labil.anacarde.infrastructure.persistence.ContractOfferRepository;
+import be.labil.anacarde.infrastructure.util.PersistenceHelper;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -17,12 +19,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class ContractOfferServiceImpl implements ContractOfferService {
 	private final ContractOfferRepository contractOfferRepository;
 	private final ContractOfferMapper contractOfferMapper;
+	private final PersistenceHelper persistenceHelper;
 
 	@Override
-	public ContractOfferDto createContractOffer(ContractOfferDto dto) {
-		ContractOffer ContractOffer = contractOfferMapper.toEntity(dto);
-		ContractOffer saved = contractOfferRepository.save(ContractOffer);
-		return contractOfferMapper.toDto(saved);
+	public ContractOfferDto createContractOffer(ContractOfferUpdateDto dto) {
+		ContractOffer contractOffer = contractOfferMapper.toEntity(dto);
+		ContractOffer full = persistenceHelper.saveAndReload(contractOfferRepository, contractOffer,
+				ContractOffer::getId);
+		return contractOfferMapper.toDto(full);
 	}
 
 	@Override
@@ -40,15 +44,16 @@ public class ContractOfferServiceImpl implements ContractOfferService {
 	}
 
 	@Override
-	public ContractOfferDto updateContractOffer(Integer id, ContractOfferDto contractOfferDetailDto) {
+	public ContractOfferDto updateContractOffer(Integer id, ContractOfferUpdateDto contractOfferDetailDto) {
 		ContractOffer existingContractOffer = contractOfferRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Contrat non trouvé"));
 
 		ContractOffer updatedContractOffer = contractOfferMapper.partialUpdate(contractOfferDetailDto,
 				existingContractOffer);
 
-		ContractOffer saved = contractOfferRepository.save(updatedContractOffer);
-		return contractOfferMapper.toDto(saved);
+		ContractOffer full = persistenceHelper.saveAndReload(contractOfferRepository, updatedContractOffer,
+				ContractOffer::getId);
+		return contractOfferMapper.toDto(full);
 	}
 
 	@Override

@@ -5,12 +5,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import be.labil.anacarde.domain.dto.FieldDto;
-import be.labil.anacarde.domain.dto.HarvestProductDto;
-import be.labil.anacarde.domain.dto.StoreDetailDto;
-import be.labil.anacarde.domain.dto.TransformedProductDto;
-import be.labil.anacarde.domain.dto.user.ProducerDetailDto;
-import be.labil.anacarde.domain.dto.user.TransformerDetailDto;
+import be.labil.anacarde.domain.dto.write.product.HarvestProductUpdateDto;
+import be.labil.anacarde.domain.dto.write.product.TransformedProductUpdateDto;
 import be.labil.anacarde.domain.model.Product;
 import be.labil.anacarde.infrastructure.persistence.ProductRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -51,21 +47,17 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 	 */
 	@Test
 	public void testCreateHarvestProduct() throws Exception {
-		ProducerDetailDto producer = new ProducerDetailDto();
-		producer.setId(getProducerTestUser().getId());
 
-		StoreDetailDto store = new StoreDetailDto();
-		store.setId(getMainTestStore().getId());
+		Integer producerId = getProducerTestUser().getId();
+		Integer fieldId = getMainTestField().getId();
+		Integer storeId = getMainTestStore().getId();
 
-		FieldDto field = new FieldDto();
-		field.setId(getMainTestField().getId());
-
-		HarvestProductDto newProduct = new HarvestProductDto();
-		newProduct.setProducer(producer);
-		newProduct.setStore(store);
+		HarvestProductUpdateDto newProduct = new HarvestProductUpdateDto();
+		newProduct.setProducerId(producerId);
+		newProduct.setStoreId(storeId);
 		newProduct.setWeightKg(200.0);
 		newProduct.setDeliveryDate(LocalDateTime.now().plusMonths(1));
-		newProduct.setField(field);
+		newProduct.setFieldId(fieldId);
 
 		ObjectNode node = objectMapper.valueToTree(newProduct);
 		String jsonContent = node.toString();
@@ -74,7 +66,7 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 				.andExpect(status().isCreated())
 				.andExpect(header().string("Location", containsString("/api/products/")))
 				.andExpect(jsonPath("$.type").value("harvest")).andExpect(jsonPath("$.weightKg").value("200.0"))
-				.andExpect(jsonPath("$.producer.id").value(getProducerTestUser().getId()));
+				.andExpect(jsonPath("$.producer.id").value(producerId));
 
 		Product createdProduct = productRepository.findAll().stream()
 				.filter(product -> product.getWeightKg().equals(200.0)).findFirst()
@@ -87,18 +79,15 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 	 */
 	@Test
 	public void testCreateTransformedProduct() throws Exception {
-		TransformerDetailDto newTransformer = new TransformerDetailDto();
-		newTransformer.setId(getTransformerTestUser().getId());
+		Integer storeId = getMainTestStore().getId();
+		Integer transformerId = getTransformerTestUser().getId();
 
-		StoreDetailDto newStore = new StoreDetailDto();
-		newStore.setId(getMainTestStore().getId());
-
-		TransformedProductDto newProduct = new TransformedProductDto();
-		newProduct.setTransformer(newTransformer);
+		TransformedProductUpdateDto newProduct = new TransformedProductUpdateDto();
+		newProduct.setTransformerId(transformerId);
 		newProduct.setWeightKg(1234567.0);
 		newProduct.setIdentifier("TP001");
 		newProduct.setDeliveryDate(LocalDateTime.now().minusDays(1));
-		newProduct.setStore(newStore);
+		newProduct.setStoreId(storeId);
 
 		ObjectNode node = objectMapper.valueToTree(newProduct);
 		String jsonContent = node.toString();
@@ -107,7 +96,7 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 				.andExpect(status().isCreated())
 				.andExpect(header().string("Location", containsString("/api/products/")))
 				.andExpect(jsonPath("$.type").value("transformed")).andExpect(jsonPath("$.weightKg").value("1234567.0"))
-				.andExpect(jsonPath("$.transformer.id").value(getTransformerTestUser().getId()));
+				.andExpect(jsonPath("$.transformer.id").value(transformerId));
 
 		Product createdProduct = productRepository.findAll().stream()
 				.filter(product -> product.getWeightKg().equals(1234567.0)).findFirst()

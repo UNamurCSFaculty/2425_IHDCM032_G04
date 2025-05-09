@@ -5,8 +5,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import be.labil.anacarde.domain.dto.*;
-import be.labil.anacarde.domain.dto.user.ProducerDetailDto;
+import be.labil.anacarde.domain.dto.db.AuctionStrategyDto;
+import be.labil.anacarde.domain.dto.db.TradeStatusDto;
+import be.labil.anacarde.domain.dto.db.product.HarvestProductDto;
+import be.labil.anacarde.domain.dto.db.product.ProductDto;
+import be.labil.anacarde.domain.dto.db.user.ProducerDetailDto;
+import be.labil.anacarde.domain.dto.write.AuctionUpdateDto;
 import be.labil.anacarde.domain.model.Auction;
 import be.labil.anacarde.infrastructure.persistence.AuctionRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;

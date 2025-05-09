@@ -1,6 +1,6 @@
 package be.labil.anacarde.application.service;
 
-import be.labil.anacarde.domain.dto.ApplicationDataDto;
+import be.labil.anacarde.domain.dto.db.ApplicationDataDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

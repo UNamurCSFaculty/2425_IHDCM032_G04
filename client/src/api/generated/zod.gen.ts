@@ -5,7 +5,7 @@ export const zCooperativeDto = z.object({
   id: z.number().int().readonly(),
   name: z.string().min(1),
   address: z.string().min(1),
-  creationDate: z.iso.datetime(),
+  creationDate: z.string().datetime(),
   presidentId: z.number().int(),
 })
 
@@ -25,15 +25,14 @@ export const zTraderDetailDto = z.object({
   firstName: z.string().min(1),
   lastName: z.string().min(1),
   email: z.string().min(1),
-  registrationDate: z.iso.datetime().readonly().optional(),
-  validationDate: z.iso.datetime().readonly().optional(),
+  registrationDate: z.string().datetime().readonly().optional(),
+  validationDate: z.string().datetime().readonly().optional(),
   enabled: z.boolean().optional(),
   address: z.string().optional(),
   phone: z
     .string()
     .regex(/^(?:\+229)?(?:01[2-9]\d{7}|[2-9]\d{7})$/)
     .optional(),
-  password: z.string().optional(),
   roles: z.array(zRoleDto).readonly().optional(),
   language: zLanguageDto,
   type: z.enum([
@@ -68,19 +67,18 @@ export const zErrorDetail = z.object({
 
 export const zApiErrorResponse = z.object({
   status: z.number().int(),
-  timestamp: z.iso.datetime(),
+  timestamp: z.string().datetime(),
   path: z.string(),
   code: z.string(),
   errors: z.array(zErrorDetail),
 })
 
-export const zUserDetailDto = z.object({
-  id: z.number().int().readonly(),
+export const zUserUpdateDto = z.object({
   firstName: z.string().min(1),
   lastName: z.string().min(1),
   email: z.string().min(1),
-  registrationDate: z.iso.datetime().readonly().optional(),
-  validationDate: z.iso.datetime().readonly().optional(),
+  registrationDate: z.string().datetime().readonly().optional(),
+  validationDate: z.string().datetime().readonly().optional(),
   enabled: z.boolean().optional(),
   address: z.string().optional(),
   phone: z
@@ -88,6 +86,124 @@ export const zUserDetailDto = z.object({
     .regex(/^(?:\+229)?(?:01[2-9]\d{7}|[2-9]\d{7})$/)
     .optional(),
   password: z.string().optional(),
+  roles: z.array(zRoleDto).optional(),
+  languageId: z.number().int(),
+  type: z.string(),
+})
+
+export const zAdminUpdateDto = zUserUpdateDto
+  .and(
+    z.object({
+      type: z.literal('admin'),
+    })
+  )
+  .and(
+    z.object({
+      password: z.string().optional(),
+    })
+  )
+
+export const zCarrierUpdateDto = zUserUpdateDto
+  .and(
+    z.object({
+      type: z.literal('carrier'),
+    })
+  )
+  .and(
+    z.object({
+      pricePerKm: z.number(),
+      regionIds: z.array(z.number().int()),
+    })
+  )
+  .and(
+    z.object({
+      password: z.string().optional(),
+      pricePerKm: z.number(),
+      regionIds: z.array(z.number().int()),
+    })
+  )
+
+export const zExporterUpdateDto = zUserUpdateDto
+  .and(
+    z.object({
+      type: z.literal('exporter'),
+    })
+  )
+  .and(
+    z.object({
+      password: z.string().optional(),
+    })
+  )
+
+export const zProducerUpdateDto = zUserUpdateDto
+  .and(
+    z.object({
+      type: z.literal('producer'),
+    })
+  )
+  .and(
+    z.object({
+      agriculturalIdentifier: z.string().min(1),
+      cooperativeId: z.number().int().optional(),
+    })
+  )
+  .and(
+    z.object({
+      password: z.string().optional(),
+      agriculturalIdentifier: z.string().min(1),
+      cooperativeId: z.number().int().optional(),
+    })
+  )
+
+export const zQualityInspectorUpdateDto = zUserUpdateDto
+  .and(
+    z.object({
+      type: z.literal('quality_inspector'),
+    })
+  )
+  .and(
+    z.object({
+      password: z.string().optional(),
+    })
+  )
+
+export const zTraderUpdateDto = zUserUpdateDto
+  .and(
+    z.object({
+      type: z.literal('trader'),
+    })
+  )
+  .and(
+    z.object({
+      password: z.string().optional(),
+    })
+  )
+
+export const zTransformerUpdateDto = zUserUpdateDto
+  .and(
+    z.object({
+      type: z.literal('transformer'),
+    })
+  )
+  .and(
+    z.object({
+      password: z.string().optional(),
+    })
+  )
+
+export const zUserDetailDto = z.object({
+  id: z.number().int().readonly(),
+  firstName: z.string().min(1),
+  lastName: z.string().min(1),
+  email: z.string().min(1),
+  registrationDate: z.string().datetime().readonly().optional(),
+  validationDate: z.string().datetime().readonly().optional(),
+  enabled: z.boolean().optional(),
+  address: z.string().optional(),
+  phone: z
+    .string()
+    .regex(/^(?:\+229)?(?:01[2-9]\d{7}|[2-9]\d{7})$/)
+    .optional(),
   roles: z.array(zRoleDto).readonly().optional(),
   language: zLanguageDto,
   type: z.enum([
@@ -143,18 +259,38 @@ export const zApiError = z.object({
   errors: z.array(zApiErrorErrors).optional(),
 })
 
+export const zDocumentUpdateDto = z.object({
+  documentType: z.string().min(1),
+  format: z.string().min(1),
+  storagePath: z.string().min(1),
+  uploadDate: z.string().datetime().readonly().optional(),
+  userId: z.number().int(),
+})
+
+export const zQualityControlUpdateDto = z.object({
+  identifier: z.string().min(1),
+  controlDate: z.string().datetime(),
+  granularity: z.number(),
+  korTest: z.number(),
+  humidity: z.number(),
+  qualityInspectorId: z.number().int(),
+  productId: z.number().int(),
+  qualityId: z.number().int(),
+  document: zDocumentUpdateDto.optional(),
+})
+
 export const zDocumentDto = z.object({
   id: z.number().int().readonly(),
   documentType: z.string().min(1),
   format: z.string().min(1),
   storagePath: z.string().min(1),
-  uploadDate: z.iso.datetime().readonly().optional(),
+  uploadDate: z.string().datetime().readonly().optional(),
   userId: z.number().int(),
 })
 
 export const zProductDto = z.object({
   id: z.number().int().readonly(),
-  deliveryDate: z.iso.datetime().optional(),
+  deliveryDate: z.string().datetime().optional(),
   store: zStoreDetailDto,
   weightKg: z.number().optional(),
   qualityControlId: z.number().int().optional(),
@@ -190,7 +326,7 @@ export const zTransformedProductDto = zProductDto
 export const zQualityControlDto = z.object({
   id: z.number().int().readonly(),
   identifier: z.string().min(1),
-  controlDate: z.iso.datetime(),
+  controlDate: z.string().datetime(),
   granularity: z.number(),
   korTest: z.number(),
   humidity: z.number(),
@@ -200,12 +336,64 @@ export const zQualityControlDto = z.object({
   document: zDocumentDto,
 })
 
+export const zProductUpdateDto = z.object({
+  id: z.number().int().readonly(),
+  deliveryDate: z.string().datetime().optional(),
+  storeId: z.number().int(),
+  weightKg: z.number().optional(),
+  qualityControlId: z.number().int().optional(),
+  type: z.string(),
+})
+
+export const zHarvestProductUpdateDto = zProductUpdateDto
+  .and(
+    z.object({
+      type: z.literal('harvest'),
+    })
+  )
+  .and(
+    z.object({
+      producerId: z.number().int(),
+      fieldId: z.number().int(),
+    })
+  )
+
+export const zTransformedProductUpdateDto = zProductUpdateDto
+  .and(
+    z.object({
+      type: z.literal('transformed'),
+    })
+  )
+  .and(
+    z.object({
+      identifier: z.string().min(1),
+      transformerId: z.number().int(),
+    })
+  )
+
+export const zCooperativeUpdateDto = z.object({
+  name: z.string().min(1),
+  address: z.string().min(1),
+  creationDate: z.string().datetime(),
+  presidentId: z.number().int(),
+})
+
+export const zContractOfferUpdateDto = z.object({
+  status: z.string().min(1),
+  pricePerKg: z.number(),
+  creationDate: z.string().datetime().readonly(),
+  endDate: z.string().datetime(),
+  sellerId: z.number().int(),
+  buyerId: z.number().int(),
+  qualityId: z.number().int(),
+})
+
 export const zContractOfferDto = z.object({
   id: z.number().int().readonly(),
   status: z.string().min(1),
   pricePerKg: z.number(),
-  creationDate: z.iso.datetime().readonly(),
-  endDate: z.iso.datetime(),
+  creationDate: z.string().datetime().readonly(),
+  endDate: z.string().datetime(),
   seller: z.union([
     zExporterDetailDto,
     zProducerDetailDto,
@@ -222,8 +410,8 @@ export const zContractOfferDto = z.object({
 export const zAuctionUpdateDto = z.object({
   price: z.number(),
   productQuantity: z.number().int(),
-  expirationDate: z.iso.datetime(),
-  creationDate: z.iso.datetime().readonly().optional(),
+  expirationDate: z.string().datetime(),
+  creationDate: z.string().datetime().readonly().optional(),
   active: z.boolean(),
   productId: z.number().int(),
   traderId: z.number().int(),
@@ -244,7 +432,7 @@ export const zTradeStatusDto = z.object({
 export const zBidDto = z.object({
   id: z.number().int().readonly(),
   amount: z.number(),
-  creationDate: z.iso.datetime().readonly().optional(),
+  creationDate: z.string().datetime().readonly().optional(),
   auctionId: z.number().int(),
   trader: z.union([
     zExporterDetailDto,
@@ -258,8 +446,8 @@ export const zAuctionDto = z.object({
   id: z.number().int().readonly(),
   price: z.number(),
   productQuantity: z.number().int(),
-  expirationDate: z.iso.datetime(),
-  creationDate: z.iso.datetime().readonly().optional(),
+  expirationDate: z.string().datetime(),
+  creationDate: z.string().datetime().readonly().optional(),
   active: z.boolean(),
   strategy: zAuctionStrategyDto,
   product: z.union([zHarvestProductDto, zTransformedProductDto]),
@@ -270,6 +458,14 @@ export const zAuctionDto = z.object({
   ]),
   status: zTradeStatusDto,
   bids: z.array(zBidDto).optional(),
+})
+
+export const zBidUpdateDto = z.object({
+  amount: z.number(),
+  creationDate: z.string().datetime().readonly().optional(),
+  auctionId: z.number().int(),
+  traderId: z.number().int(),
+  statusId: z.number().int(),
 })
 
 export const zContactRequestDto = z.object({
@@ -288,15 +484,14 @@ export const zUserListDto = z.object({
   firstName: z.string().min(1),
   lastName: z.string().min(1),
   email: z.string().min(1),
-  registrationDate: z.iso.datetime().readonly().optional(),
-  validationDate: z.iso.datetime().readonly().optional(),
+  registrationDate: z.string().datetime().readonly().optional(),
+  validationDate: z.string().datetime().readonly().optional(),
   enabled: z.boolean().optional(),
   address: z.string().optional(),
   phone: z
     .string()
     .regex(/^(?:\+229)?(?:01[2-9]\d{7}|[2-9]\d{7})$/)
     .optional(),
-  password: z.string().optional(),
   type: z.enum([
     'admin',
     'producer',
@@ -442,8 +637,6 @@ export const zCreateAuctionResponse = zAuctionUpdateDto
 export const zListBidsResponse = z.array(zBidDto)
 
 export const zCreateBidResponse = zBidDto
-
-export const zTestResponse = z.string()
 
 export const zListDocumentsByUserResponse = z.array(zDocumentDto)
 

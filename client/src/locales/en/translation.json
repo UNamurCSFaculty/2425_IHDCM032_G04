@@ -124,6 +124,7 @@
     "min": "The field must be at least {{count}}",
     "minLength": "The field must have at least {{count}} character",
     "minLength_plural": "The field must have at least {{count}} characters",
+    "invalidType": "Invalid type",
     "password": "The password must have at least one lowercase, one capital, one digit and one special character",
     "passwordValidation": "Passwords doesn't match",
     "phone": "Invalid Benin phone number: expected +22901XXXXXXXX",

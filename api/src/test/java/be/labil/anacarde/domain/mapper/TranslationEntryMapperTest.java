@@ -3,7 +3,7 @@ package be.labil.anacarde.domain.mapper;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import be.labil.anacarde.domain.dto.TranslationEntryDto;
+import be.labil.anacarde.domain.dto.db.TranslationEntryDto;
 import be.labil.anacarde.domain.model.Language;
 import be.labil.anacarde.domain.model.Translation;
 import be.labil.anacarde.domain.model.TranslationEntry;

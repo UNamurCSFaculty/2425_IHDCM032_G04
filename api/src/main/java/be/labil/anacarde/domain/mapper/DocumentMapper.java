@@ -1,6 +1,7 @@
 package be.labil.anacarde.domain.mapper;
 
-import be.labil.anacarde.domain.dto.DocumentDto;
+import be.labil.anacarde.domain.dto.db.DocumentDto;
+import be.labil.anacarde.domain.dto.write.DocumentUpdateDto;
 import be.labil.anacarde.domain.model.Carrier;
 import be.labil.anacarde.domain.model.Document;
 import be.labil.anacarde.domain.model.User;
@@ -9,6 +10,19 @@ import org.mapstruct.*;
 /** Interface Mapper pour la conversion entre l'entité Document et DocumentDto. */
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class DocumentMapper {
+
+	/**
+	 * Convertit une entité DocumentUpdateDto en DocumentDto.
+	 */
+	@Mapping(target = "id", ignore = true)
+	public abstract DocumentDto toDocumentDto(DocumentUpdateDto document);
+
+	/**
+	 * Convertit un DocumentUpdateDto en entité Document.
+	 */
+	@Mapping(target = "id", ignore = true)
+	@Mapping(source = "userId", target = "user", qualifiedByName = "mapUserIdToUser")
+	public abstract Document fromDocumentUpdate(DocumentUpdateDto document);
 
 	/**
 	 * Convertit une entité Document en DocumentDto.
@@ -34,9 +48,10 @@ public abstract class DocumentMapper {
 	@Mapping(source = "documentType", target = "type")
 	public abstract Document toEntity(DocumentDto documentDto);
 
+	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 	@Mapping(source = "userId", target = "user", qualifiedByName = "mapUserIdToUser")
 	@Mapping(source = "documentType", target = "type")
-	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+	@Mapping(target = "id", ignore = true)
 	public abstract Document partialUpdate(DocumentDto documentDto, @MappingTarget Document entity);
 
 	@Named("mapUserIdToUser")

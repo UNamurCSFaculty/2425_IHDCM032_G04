@@ -1,25 +1,26 @@
 package be.labil.anacarde.domain.mapper;
 
-import be.labil.anacarde.domain.dto.AuctionDto;
-import be.labil.anacarde.domain.dto.AuctionUpdateDto;
+import be.labil.anacarde.domain.dto.db.AuctionDto;
+import be.labil.anacarde.domain.dto.write.AuctionUpdateDto;
 import be.labil.anacarde.domain.model.*;
 import jakarta.persistence.EntityManager;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@Mapper(componentModel = "spring", uses = {HibernateLazyCondition.class, AuctionStrategyMapper.class,
-		ProductMapper.class, TraderDetailMapper.class})
+@Mapper(componentModel = "spring", uses = {MapperHelpers.class, AuctionStrategyMapper.class, ProductMapper.class,
+		TraderDetailMapper.class})
 public abstract class AuctionMapper {
 
 	@Autowired
 	protected EntityManager em;
 
-	@Mapping(source = "strategy", target = "strategy")
-	@Mapping(source = "product", target = "product")
-	@Mapping(source = "trader", target = "trader")
-	@Mapping(source = "status", target = "status")
-	@Mapping(source = "bids", target = "bids")
-	public abstract Auction toEntity(AuctionDto dto);
+	@Mapping(target = "strategy", ignore = true)
+	@Mapping(target = "status", ignore = true)
+	@Mapping(target = "trader", ignore = true)
+	@Mapping(target = "product", ignore = true)
+	@Mapping(target = "bids", ignore = true)
+	@Mapping(target = "id", ignore = true)
+	public abstract Auction toEntity(AuctionUpdateDto dto);
 
 	@Mapping(source = "strategy", target = "strategy")
 	@Mapping(source = "product", target = "product")
@@ -29,24 +30,13 @@ public abstract class AuctionMapper {
 	public abstract AuctionDto toDto(Auction auction);
 
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-	public abstract Auction partialUpdate(AuctionDto dto, @MappingTarget Auction entity);
-
 	@Mapping(target = "strategy", ignore = true)
 	@Mapping(target = "status", ignore = true)
 	@Mapping(target = "trader", ignore = true)
 	@Mapping(target = "product", ignore = true)
 	@Mapping(target = "bids", ignore = true)
 	@Mapping(target = "id", ignore = true)
-	public abstract Auction fromUpdateDto(AuctionUpdateDto dto);
-
-	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-	@Mapping(target = "strategy", ignore = true)
-	@Mapping(target = "status", ignore = true)
-	@Mapping(target = "trader", ignore = true)
-	@Mapping(target = "product", ignore = true)
-	@Mapping(target = "bids", ignore = true)
-	@Mapping(target = "id", ignore = true)
-	public abstract Auction partialUpdateFromDto(AuctionUpdateDto dto, @MappingTarget Auction entity);
+	public abstract Auction partialUpdate(AuctionUpdateDto dto, @MappingTarget Auction entity);
 
 	@AfterMapping
 	protected void afterUpdateDto(AuctionUpdateDto dto, @MappingTarget Auction a) {

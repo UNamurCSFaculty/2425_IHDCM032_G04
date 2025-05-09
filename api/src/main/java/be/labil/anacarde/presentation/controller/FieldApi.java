@@ -1,8 +1,8 @@
 package be.labil.anacarde.presentation.controller;
 
 import be.labil.anacarde.application.exception.ApiErrorResponse;
-import be.labil.anacarde.domain.dto.FieldDto;
-import be.labil.anacarde.domain.dto.ValidationGroups;
+import be.labil.anacarde.domain.dto.db.FieldDto;
+import be.labil.anacarde.domain.dto.db.ValidationGroups;
 import be.labil.anacarde.presentation.controller.annotations.ApiResponseDelete;
 import be.labil.anacarde.presentation.controller.annotations.ApiValidId;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,7 +31,8 @@ public interface FieldApi {
 	@ApiResponses({
 			@ApiResponse(responseCode = "200", description = "", content = @Content(schema = @Schema(implementation = FieldDto.class))),
 			@ApiResponse(responseCode = "404", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
-	ResponseEntity<FieldDto> getField(@ApiValidId @PathVariable("id") Integer id);
+	ResponseEntity<FieldDto> getField(@ApiValidId @PathVariable("userId") Integer userid,
+			@ApiValidId @PathVariable("id") Integer id);
 
 	@Operation(summary = "Créer un champ")
 	@PostMapping
@@ -39,7 +40,7 @@ public interface FieldApi {
 			@ApiResponse(responseCode = "201", description = "", content = @Content(schema = @Schema(implementation = FieldDto.class))),
 			@ApiResponse(responseCode = "400", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
 			@ApiResponse(responseCode = "409", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
-	ResponseEntity<FieldDto> createField(
+	ResponseEntity<FieldDto> createField(@ApiValidId @PathVariable("userId") Integer userid,
 			@Validated({Default.class, ValidationGroups.Create.class}) @RequestBody FieldDto fieldDto);
 
 	@Operation(summary = "Mettre à jour un champ")
@@ -48,7 +49,8 @@ public interface FieldApi {
 			@ApiResponse(responseCode = "201", description = "", content = @Content(schema = @Schema(implementation = FieldDto.class))),
 			@ApiResponse(responseCode = "400", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
 			@ApiResponse(responseCode = "409", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
-	ResponseEntity<FieldDto> updateField(@ApiValidId @PathVariable("id") Integer id,
+	ResponseEntity<FieldDto> updateField(@ApiValidId @PathVariable("userId") Integer userid,
+			@ApiValidId @PathVariable("id") Integer id,
 			@Validated({Default.class, ValidationGroups.Update.class}) @RequestBody FieldDto fieldDto);
 
 	@Operation(summary = "Obtenir tous les champs d’un utilisateur")
@@ -63,5 +65,6 @@ public interface FieldApi {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@ApiResponses({@ApiResponse(responseCode = "200", description = "", content = @Content(schema = @Schema())),
 			@ApiResponse(responseCode = "404", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
-	ResponseEntity<Void> deleteField(@ApiValidId @PathVariable("id") Integer id);
+	ResponseEntity<Void> deleteField(@ApiValidId @PathVariable("userId") Integer userid,
+			@ApiValidId @PathVariable("id") Integer id);
 }

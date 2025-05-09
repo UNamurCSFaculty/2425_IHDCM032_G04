@@ -1,8 +1,9 @@
 package be.labil.anacarde.presentation.controller;
 
 import be.labil.anacarde.application.exception.ApiErrorResponse;
-import be.labil.anacarde.domain.dto.ProductDto;
-import be.labil.anacarde.domain.dto.ValidationGroups;
+import be.labil.anacarde.domain.dto.db.ValidationGroups;
+import be.labil.anacarde.domain.dto.db.product.ProductDto;
+import be.labil.anacarde.domain.dto.write.product.ProductUpdateDto;
 import be.labil.anacarde.presentation.controller.annotations.ApiValidId;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -48,7 +49,7 @@ public interface ProductApi {
 			@ApiResponse(responseCode = "400", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
 			@ApiResponse(responseCode = "409", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
 	ResponseEntity<? extends ProductDto> createProduct(
-			@Validated({Default.class, ValidationGroups.Create.class}) @RequestBody ProductDto productDto);
+			@Validated({Default.class, ValidationGroups.Create.class}) @RequestBody ProductUpdateDto productDto);
 
 	@Operation(summary = "Mettre à jour un produit")
 	@PutMapping(value = "/{id}", consumes = "application/json")
@@ -57,7 +58,7 @@ public interface ProductApi {
 			@ApiResponse(responseCode = "400", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
 			@ApiResponse(responseCode = "409", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
 	ResponseEntity<? extends ProductDto> updateProduct(@ApiValidId @PathVariable("id") Integer id,
-			@Validated({Default.class, ValidationGroups.Update.class}) @RequestBody ProductDto productDto);
+			@Validated({Default.class, ValidationGroups.Update.class}) @RequestBody ProductUpdateDto productDto);
 
 	@Operation(summary = "Supprimer un produit")
 	@DeleteMapping("/{id}")

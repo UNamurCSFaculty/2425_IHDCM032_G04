@@ -1,6 +1,6 @@
 package be.labil.anacarde.presentation.controller;
 
-import be.labil.anacarde.domain.dto.user.UserDetailDto;
+import be.labil.anacarde.domain.dto.db.user.UserDetailDto;
 import be.labil.anacarde.domain.mapper.UserDetailMapper;
 import be.labil.anacarde.domain.model.User;
 import be.labil.anacarde.infrastructure.security.JwtUtil;

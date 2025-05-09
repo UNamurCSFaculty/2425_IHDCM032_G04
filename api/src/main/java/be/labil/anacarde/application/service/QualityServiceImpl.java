@@ -1,7 +1,7 @@
 package be.labil.anacarde.application.service;
 
 import be.labil.anacarde.application.exception.ResourceNotFoundException;
-import be.labil.anacarde.domain.dto.QualityDto;
+import be.labil.anacarde.domain.dto.db.QualityDto;
 import be.labil.anacarde.domain.mapper.QualityMapper;
 import be.labil.anacarde.domain.model.Quality;
 import be.labil.anacarde.infrastructure.persistence.QualityRepository;

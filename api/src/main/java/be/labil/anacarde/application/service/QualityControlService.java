@@ -1,6 +1,7 @@
 package be.labil.anacarde.application.service;
 
-import be.labil.anacarde.domain.dto.QualityControlDto;
+import be.labil.anacarde.domain.dto.db.QualityControlDto;
+import be.labil.anacarde.domain.dto.write.QualityControlUpdateDto;
 import java.util.List;
 
 /**
@@ -15,7 +16,7 @@ public interface QualityControlService {
 	 *            Le DTO contenant les informations du contrôle qualité à créer.
 	 * @return Un QualityControlDto représentant le contrôle créé.
 	 */
-	QualityControlDto createQualityControl(QualityControlDto qualityControlDto);
+	QualityControlDto createQualityControl(QualityControlUpdateDto qualityControlDto);
 
 	/**
 	 * Récupère un contrôle qualité par son identifiant.
@@ -44,7 +45,7 @@ public interface QualityControlService {
 	 *            Le DTO contenant les nouvelles données.
 	 * @return Le QualityControlDto mis à jour.
 	 */
-	QualityControlDto updateQualityControl(Integer id, QualityControlDto qualityControlDto);
+	QualityControlDto updateQualityControl(Integer id, QualityControlUpdateDto qualityControlDto);
 
 	/**
 	 * Supprime un contrôle qualité existant.

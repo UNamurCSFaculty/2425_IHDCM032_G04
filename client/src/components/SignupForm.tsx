@@ -2,7 +2,7 @@ import { Alert, AlertDescription, AlertTitle } from './ui/alert'
 import { createUserMutation } from '@/api/generated/@tanstack/react-query.gen.ts'
 import { BreadcrumbSection } from '@/components/BreadcrumbSection.tsx'
 import { useAppForm } from '@/components/form'
-import { zUserRegistration } from '@/schemas/api-schemas'
+import { zUser } from '@/schemas/api-schemas'
 import { useAppData } from '@/store/appStore'
 import { useStore } from '@tanstack/react-form'
 import { useMutation } from '@tanstack/react-query'
@@ -10,7 +10,17 @@ import { useNavigate } from '@tanstack/react-router'
 import { AlertCircle } from 'lucide-react'
 import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import type z from 'zod'
+import z from 'zod'
+
+export const zUserRegistration = zUser
+  .and(
+    z.object({
+      passwordValidation: z.string(),
+    })
+  )
+  .refine(data => data.password === data.passwordValidation, {
+    path: ['passwordValidation'],
+  })
 
 export type UserRegistration = z.infer<typeof zUserRegistration>
 
@@ -45,7 +55,6 @@ export const SignupForm: React.FC = () => {
   >({
     validators: { onChange: zUserRegistration },
     defaultValues: {
-      id: 0,
       type: 'producer',
       firstName: '',
       lastName: '',
@@ -54,14 +63,14 @@ export const SignupForm: React.FC = () => {
       address: '',
       password: '',
       passwordValidation: '',
-      language: appData.languages[0],
+      languageId: appData.languages[0].id,
       agriculturalIdentifier: '',
     },
     onSubmit({ value }) {
-      const validatedValue = zUserRegistration.parse(value)
-      console.log('validatedValue')
-      console.log(validatedValue)
-      signinMutation.mutate({ body: validatedValue })
+      const validatedFormData = zUserRegistration.parse(value)
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { passwordValidation, ...apiPayloadBase } = validatedFormData
+      signinMutation.mutate({ body: apiPayloadBase })
     },
   })
 
@@ -101,6 +110,7 @@ export const SignupForm: React.FC = () => {
                       { value: 'transformer', label: 'Transformateur' },
                       { value: 'carrier', label: 'Transporteur' },
                     ]}
+                    disabled={isPending}
                     label={t('form.type')}
                   />
                 )}
@@ -130,9 +140,15 @@ export const SignupForm: React.FC = () => {
             </div>
             <div className="w-1/2 p-2">
               <form.AppField
-                name="language"
+                name="languageId"
                 children={field => (
-                  <field.SelectLanguageField disabled={isPending} />
+                  <field.SelectField
+                    options={appData.languages.map(lang => ({
+                      value: lang.id,
+                      label: t('languages.' + lang.code),
+                    }))}
+                    label={t('form.language')}
+                  />
                 )}
               />
             </div>

@@ -174,8 +174,6 @@ import type {
   LogoutData,
   SendContactMessageData,
   SendContactMessageError,
-  TestData,
-  TestResponse,
   UpdateAuctionData,
   UpdateAuctionError,
   UpdateAuctionResponse,
@@ -2055,19 +2053,6 @@ export const createAuctionStrategy = <ThrowOnError extends boolean = false>(
       'Content-Type': 'application/json',
       ...options?.headers,
     },
-  })
-}
-
-export const test = <ThrowOnError extends boolean = false>(
-  options?: Options<TestData, ThrowOnError>
-) => {
-  return (options?.client ?? _heyApiClient).get<
-    TestResponse,
-    unknown,
-    ThrowOnError
-  >({
-    url: '/test',
-    ...options,
   })
 }
 

@@ -1,7 +1,7 @@
 package be.labil.anacarde.application.service;
 
 import be.labil.anacarde.application.exception.ResourceNotFoundException;
-import be.labil.anacarde.domain.dto.FieldDto;
+import be.labil.anacarde.domain.dto.db.FieldDto;
 import be.labil.anacarde.domain.mapper.FieldMapper;
 import be.labil.anacarde.domain.model.Field;
 import be.labil.anacarde.infrastructure.persistence.FieldRepository;

@@ -1,10 +1,10 @@
 import type { ProductDto } from '@/api/generated'
 import { createAuctionMutation } from '@/api/generated/@tanstack/react-query.gen.ts'
+import { zAuctionUpdateDto } from '@/api/generated/zod.gen'
 import { useAppForm } from '@/components/form'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Card, CardContent } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
-import { zAuction } from '@/schemas/api-schemas'
 import { useAuthUser } from '@/store/userStore'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
@@ -47,24 +47,15 @@ export function AuctionForm({
   const { isError, error } = createAuctionRequest
 
   const form = useAppForm({
-    validators: { onChange: zAuction },
-
+    validators: { onChange: zAuctionUpdateDto },
     defaultValues: {
-      id: 0,
       price: 0,
       productId: 0,
       productQuantity: 0,
       expirationDate: '',
     },
-
-    /*id: z.number().int().readonly(),
-      price: z.coerce.number().positive(),
-      productId: z.coerce.number().int(),
-      productQuantity: z.coerce.number().int().positive(),
-      expirationDate: z.iso.datetime(),*/
-
     onSubmit({ value }) {
-      const formData = zAuction.parse(value)
+      const formData = zAuctionUpdateDto.parse(value)
 
       const auctionUpdateDto = {
         price: formData.price,

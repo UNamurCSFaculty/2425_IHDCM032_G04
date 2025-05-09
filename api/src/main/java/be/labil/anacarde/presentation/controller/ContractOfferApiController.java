@@ -1,7 +1,8 @@
 package be.labil.anacarde.presentation.controller;
 
 import be.labil.anacarde.application.service.ContractOfferService;
-import be.labil.anacarde.domain.dto.ContractOfferDto;
+import be.labil.anacarde.domain.dto.db.ContractOfferDto;
+import be.labil.anacarde.domain.dto.write.ContractOfferUpdateDto;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,7 @@ public class ContractOfferApiController implements ContractOfferApi {
 	}
 
 	@Override
-	public ResponseEntity<ContractOfferDto> createContractOffer(ContractOfferDto contractOfferDetailDto) {
+	public ResponseEntity<ContractOfferDto> createContractOffer(ContractOfferUpdateDto contractOfferDetailDto) {
 		ContractOfferDto created = contractOfferService.createContractOffer(contractOfferDetailDto);
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(created.getId())
 				.toUri();
@@ -35,7 +36,8 @@ public class ContractOfferApiController implements ContractOfferApi {
 	}
 
 	@Override
-	public ResponseEntity<ContractOfferDto> updateContractOffer(Integer id, ContractOfferDto contractOfferDetailDto) {
+	public ResponseEntity<ContractOfferDto> updateContractOffer(Integer id,
+			ContractOfferUpdateDto contractOfferDetailDto) {
 		ContractOfferDto updated = contractOfferService.updateContractOffer(id, contractOfferDetailDto);
 		return ResponseEntity.ok(updated);
 	}
