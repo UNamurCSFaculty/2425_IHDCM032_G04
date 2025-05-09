@@ -289,7 +289,7 @@ export type UserUpdateDto = {
    */
   address?: string
   /**
-   * Numéro de téléphone (Bénin, ancien et nouveau formats)
+   * Numéro de téléphone (Bénin, format local à 10 chiffres débutant par 01, ou +229...)
    */
   phone?: string
   /**
@@ -373,7 +373,7 @@ export type TraderDetailDto = {
    */
   address?: string
   /**
-   * Numéro de téléphone (Bénin, ancien et nouveau formats)
+   * Numéro de téléphone (Bénin, format local à 10 chiffres débutant par 01, ou +229...)
    */
   phone?: string
   /**
@@ -438,7 +438,7 @@ export type UserDetailDto = {
    */
   address?: string
   /**
-   * Numéro de téléphone (Bénin, ancien et nouveau formats)
+   * Numéro de téléphone (Bénin, format local à 10 chiffres débutant par 01, ou +229...)
    */
   phone?: string
   /**
@@ -1120,7 +1120,7 @@ export type UserListDto = {
    */
   address?: string
   /**
-   * Numéro de téléphone (Bénin, ancien et nouveau formats)
+   * Numéro de téléphone (Bénin, format local à 10 chiffres débutant par 01, ou +229...)
    */
   phone?: string
   /**

@@ -41,10 +41,10 @@ function RouteComponent() {
           <div className="container mx-auto px-6 py-24 lg:flex lg:items-center lg:justify-around">
             <div className="text-center lg:max-w-xl lg:text-left">
               <h1 className="mb-6 text-6xl leading-tight font-extrabold text-white drop-shadow-lg">
-                {t('app.accueil.title')}
+                {t('app.accueil.titre')}
               </h1>
               <p className="mb-8 text-xl text-white/90">
-                {t('app.accueil.sous_titre')}
+                {t('app.accueil.subtitle')}
               </p>
               {!user && (
                 <div className="flex flex-col justify-center sm:flex-row sm:gap-4 lg:justify-start">
