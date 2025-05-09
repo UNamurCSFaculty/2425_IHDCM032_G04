@@ -9,5 +9,13 @@ export default defineConfig({
   // - un client fetch
   // - des schémas Zod
   // - des hooks React Query
-  plugins: ['@hey-api/client-fetch', 'zod', '@tanstack/react-query'],
+  plugins: [
+    '@hey-api/client-fetch',
+    'zod',
+    '@tanstack/react-query',
+    {
+      name: '@hey-api/typescript',
+      readOnlyWriteOnlyBehavior: 'off',
+    },
+  ],
 })

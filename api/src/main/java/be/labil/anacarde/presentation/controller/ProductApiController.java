@@ -1,7 +1,8 @@
 package be.labil.anacarde.presentation.controller;
 
 import be.labil.anacarde.application.service.ProductService;
-import be.labil.anacarde.domain.dto.ProductDto;
+import be.labil.anacarde.domain.dto.db.product.ProductDto;
+import be.labil.anacarde.domain.dto.write.product.ProductUpdateDto;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,7 @@ public class ProductApiController implements ProductApi {
 	}
 
 	@Override
-	public ResponseEntity<ProductDto> createProduct(ProductDto productDto) {
+	public ResponseEntity<ProductDto> createProduct(ProductUpdateDto productDto) {
 		ProductDto created = productService.createProduct(productDto);
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(created.getId())
 				.toUri();
@@ -35,7 +36,7 @@ public class ProductApiController implements ProductApi {
 	}
 
 	@Override
-	public ResponseEntity<ProductDto> updateProduct(Integer id, ProductDto productDto) {
+	public ResponseEntity<ProductDto> updateProduct(Integer id, ProductUpdateDto productDto) {
 		ProductDto updated = productService.updateProduct(id, productDto);
 		return ResponseEntity.ok(updated);
 	}

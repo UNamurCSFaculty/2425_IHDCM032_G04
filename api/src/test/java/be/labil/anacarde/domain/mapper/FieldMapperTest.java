@@ -3,8 +3,8 @@ package be.labil.anacarde.domain.mapper;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import be.labil.anacarde.domain.dto.FieldDto;
-import be.labil.anacarde.domain.dto.user.ProducerDetailDto;
+import be.labil.anacarde.domain.dto.db.FieldDto;
+import be.labil.anacarde.domain.dto.db.user.ProducerDetailDto;
 import be.labil.anacarde.domain.model.Field;
 import be.labil.anacarde.domain.model.Producer;
 import org.junit.jupiter.api.Test;

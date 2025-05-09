@@ -1,8 +1,9 @@
 
 package be.labil.anacarde.application.service;
 
-import be.labil.anacarde.domain.dto.user.UserDetailDto;
-import be.labil.anacarde.domain.dto.user.UserListDto;
+import be.labil.anacarde.domain.dto.db.user.UserDetailDto;
+import be.labil.anacarde.domain.dto.db.user.UserListDto;
+import be.labil.anacarde.domain.dto.write.user.UserUpdateDto;
 import java.util.List;
 
 /**
@@ -18,7 +19,7 @@ public interface UserService {
 	 *            Le UserDto contenant les informations du nouvel utilisateur.
 	 * @return Un UserDto représentant l'utilisateur créé.
 	 */
-	UserDetailDto createUser(UserDetailDto userDetailDto);
+	UserDetailDto createUser(UserUpdateDto userDetailDto);
 
 	/**
 	 * Retourne l'utilisateur correspondant à l'ID fourni.
@@ -45,7 +46,7 @@ public interface UserService {
 	 *            Le UserDto contenant les informations mises à jour.
 	 * @return Un UserDto représentant l'utilisateur mis à jour.
 	 */
-	UserDetailDto updateUser(Integer id, UserDetailDto userDetailDto);
+	UserDetailDto updateUser(Integer id, UserUpdateDto userDetailDto);
 
 	/**
 	 * Supprime l'utilisateur identifié par l'ID donné du système.

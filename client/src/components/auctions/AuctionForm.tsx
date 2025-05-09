@@ -1,16 +1,11 @@
-import type {
-  AuctionDtoWritable,
-  HarvestProductDtoWritable,
-  ProducerDetailDtoWritable,
-  ProductDtoReadable,
-} from '@/api/generated'
+import type { ProductDto } from '@/api/generated'
 import { createAuctionMutation } from '@/api/generated/@tanstack/react-query.gen.ts'
+import { zAuctionUpdateDto } from '@/api/generated/zod.gen'
 import { useAppForm } from '@/components/form'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Card, CardContent } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
-import { zAuction } from '@/schemas/api-schemas'
-import { useUserStore } from '@/store/userStore'
+import { useAuthUser } from '@/store/userStore'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { AlertCircle } from 'lucide-react'
@@ -19,7 +14,7 @@ import { useTranslation } from 'react-i18next'
 
 interface AuctionFormProps {
   mode: 'create' | 'update'
-  products: ProductDtoReadable[]
+  products: ProductDto[]
 }
 
 const FormSectionTitle: React.FC<{ text: string }> = ({ text }) => {
@@ -35,7 +30,7 @@ const FormSectionTitle: React.FC<{ text: string }> = ({ text }) => {
 export function AuctionForm({
   products,
 }: AuctionFormProps): React.ReactElement<'div'> {
-  const { user } = useUserStore()
+  const user = useAuthUser()
   const navigate = useNavigate()
   const { t, i18n } = useTranslation()
 
@@ -52,40 +47,26 @@ export function AuctionForm({
   const { isError, error } = createAuctionRequest
 
   const form = useAppForm({
-    validators: { onChange: zAuction },
-
+    validators: { onChange: zAuctionUpdateDto },
     defaultValues: {
-      price: '',
-      productId: '',
-      productQuantity: '',
+      price: 0,
+      productId: 0,
+      productQuantity: 0,
       expirationDate: '',
     },
-
     onSubmit({ value }) {
-      const formData = zAuction.parse(value)
+      const formData = zAuctionUpdateDto.parse(value)
 
-      const productDto: HarvestProductDtoWritable = {
-        id: formData.productId,
-        type: 'harvest',
-      }
-
-      const traderDto: ProducerDetailDtoWritable = {
-        id: user!.id,
-        type: 'producer',
-      }
-
-      const auctionDto: AuctionDtoWritable = {
+      const auctionUpdateDto = {
         price: formData.price,
         productQuantity: formData.productQuantity,
         expirationDate: formData.expirationDate,
         active: true,
-        product: productDto,
-        trader: traderDto,
-        strategy: null,
-        status: null,
+        productId: formData.productId,
+        traderId: user.id,
       }
 
-      createAuctionRequest.mutate({ body: auctionDto })
+      createAuctionRequest.mutate({ body: auctionUpdateDto })
     },
   })
 
@@ -93,8 +74,9 @@ export function AuctionForm({
     form.validate('change')
   }, [i18n.language, form])
 
-  const [selectedProduct, setSelectedProduct] =
-    useState<ProductDtoReadable | null>(null)
+  const [selectedProduct, setSelectedProduct] = useState<ProductDto | null>(
+    null
+  )
 
   const handleProductChange = (productId: string) => {
     const product = products.find(p => p.id.toString() === productId)

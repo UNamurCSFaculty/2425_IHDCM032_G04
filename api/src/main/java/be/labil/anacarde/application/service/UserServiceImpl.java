@@ -1,9 +1,10 @@
 package be.labil.anacarde.application.service;
 
 import be.labil.anacarde.application.exception.*;
-import be.labil.anacarde.domain.dto.user.ProducerDetailDto;
-import be.labil.anacarde.domain.dto.user.UserDetailDto;
-import be.labil.anacarde.domain.dto.user.UserListDto;
+import be.labil.anacarde.domain.dto.db.user.UserDetailDto;
+import be.labil.anacarde.domain.dto.db.user.UserListDto;
+import be.labil.anacarde.domain.dto.write.user.ProducerUpdateDto;
+import be.labil.anacarde.domain.dto.write.user.UserUpdateDto;
 import be.labil.anacarde.domain.mapper.UserDetailMapper;
 import be.labil.anacarde.domain.mapper.UserListMapper;
 import be.labil.anacarde.domain.model.Role;
@@ -11,7 +12,7 @@ import be.labil.anacarde.domain.model.User;
 import be.labil.anacarde.infrastructure.persistence.RoleRepository;
 import be.labil.anacarde.infrastructure.persistence.user.ProducerRepository;
 import be.labil.anacarde.infrastructure.persistence.user.UserRepository;
-import java.time.LocalDateTime;
+import be.labil.anacarde.infrastructure.util.PersistenceHelper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -37,6 +38,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
 	private final UserListMapper userListMapper;
 	private final PasswordEncoder bCryptPasswordEncoder;
+	private final PersistenceHelper persistenceHelper;
 
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -45,13 +47,13 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	}
 
 	@Override
-	public UserDetailDto createUser(UserDetailDto dto) throws BadRequestException {
+	public UserDetailDto createUser(UserUpdateDto dto) throws BadRequestException {
 		dto.setPassword(bCryptPasswordEncoder.encode(dto.getPassword()));
 
 		boolean emailExists = userRepository.findByEmail(dto.getEmail()).isPresent();
 		boolean phoneExists = userRepository.findByPhone(dto.getPhone()).isPresent();
 		boolean agriculturalIdentifierExists = false;
-		if (dto instanceof ProducerDetailDto producerDto) {
+		if (dto instanceof ProducerUpdateDto producerDto) {
 			agriculturalIdentifierExists = producerRepository
 					.findByAgriculturalIdentifier(producerDto.getAgriculturalIdentifier()).isPresent();
 		}
@@ -73,15 +75,9 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 			throw new ApiErrorException(HttpStatus.CONFLICT, ApiErrorCode.BAD_REQUEST.code(), errors);
 		}
 
-		User user;
-		if (dto instanceof ProducerDetailDto producerDto) {
-			user = userDetailMapper.toEntity(producerDto);
-		} else {
-			user = userDetailMapper.toEntity(dto);
-		}
-		user.setRegistrationDate(LocalDateTime.now());
-		User saved = userRepository.save(user);
-		return userDetailMapper.toDto(saved);
+		User user = userDetailMapper.toEntity(dto);
+		User full = persistenceHelper.saveAndReload(userRepository, user, User::getId);
+		return userDetailMapper.toDto(full);
 	}
 
 	@Override
@@ -99,7 +95,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	}
 
 	@Override
-	public UserDetailDto updateUser(Integer id, UserDetailDto userDetailDto) {
+	public UserDetailDto updateUser(Integer id, UserUpdateDto userDetailDto) {
 		User existingUser = userRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé"));
 		// Mets uniquement à jour les champs non nuls du DTO
@@ -109,8 +105,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 			updatedUser.setPassword(bCryptPasswordEncoder.encode(userDetailDto.getPassword()));
 		}
 
-		User saved = userRepository.save(updatedUser);
-		return userDetailMapper.toDto(saved);
+		User full = persistenceHelper.saveAndReload(userRepository, updatedUser, User::getId);
+		return userDetailMapper.toDto(full);
 	}
 
 	@Override

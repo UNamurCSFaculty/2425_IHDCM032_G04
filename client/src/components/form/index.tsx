@@ -1,7 +1,6 @@
 import { CheckboxField } from './checkbox-field'
 import { ResetButton } from './reset-button'
 import { SelectField } from './select-field'
-import { SelectLanguageField } from './select-language'
 import { SubmitButton } from './submit-button'
 import { TextField } from './text-field'
 import { TextAreaField } from './textarea-field'
@@ -16,7 +15,6 @@ export const { useAppForm } = createFormHook({
     CheckboxField,
     SelectField,
     TextAreaField,
-    SelectLanguageField,
   },
   formComponents: {
     SubmitButton,

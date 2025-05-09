@@ -1,6 +1,6 @@
 package be.labil.anacarde.domain.mapper;
 
-import be.labil.anacarde.domain.dto.AuctionStrategyDto;
+import be.labil.anacarde.domain.dto.db.AuctionStrategyDto;
 import be.labil.anacarde.domain.model.AuctionStrategy;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;

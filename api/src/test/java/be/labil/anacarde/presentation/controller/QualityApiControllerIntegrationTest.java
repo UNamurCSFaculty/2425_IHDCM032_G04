@@ -4,7 +4,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import be.labil.anacarde.domain.dto.QualityDto;
+import be.labil.anacarde.domain.dto.db.QualityDto;
 import be.labil.anacarde.domain.model.Quality;
 import be.labil.anacarde.infrastructure.persistence.QualityRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;

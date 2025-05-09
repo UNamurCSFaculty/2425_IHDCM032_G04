@@ -1,8 +1,9 @@
 package be.labil.anacarde.presentation.controller;
 
 import be.labil.anacarde.application.service.UserService;
-import be.labil.anacarde.domain.dto.user.UserDetailDto;
-import be.labil.anacarde.domain.dto.user.UserListDto;
+import be.labil.anacarde.domain.dto.db.user.UserDetailDto;
+import be.labil.anacarde.domain.dto.db.user.UserListDto;
+import be.labil.anacarde.domain.dto.write.user.UserUpdateDto;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +24,9 @@ public class UserControllerApiController implements UserApi {
 	}
 
 	@Override
-	public ResponseEntity<UserDetailDto> createUser(UserDetailDto userDetailDto) {
-		UserDetailDto created = userService.createUser(userDetailDto);
+	public ResponseEntity<UserDetailDto> createUser(UserUpdateDto userUpdateDto) {
+		// userUpdateDto.setId(null);
+		UserDetailDto created = userService.createUser(userUpdateDto);
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(created.getId())
 				.toUri();
 		return ResponseEntity.created(location).body(created);
@@ -37,8 +39,8 @@ public class UserControllerApiController implements UserApi {
 	}
 
 	@Override
-	public ResponseEntity<UserDetailDto> updateUser(Integer id, UserDetailDto userDetailDto) {
-		UserDetailDto updated = userService.updateUser(id, userDetailDto);
+	public ResponseEntity<UserDetailDto> updateUser(Integer id, UserUpdateDto userUpdateDto) {
+		UserDetailDto updated = userService.updateUser(id, userUpdateDto);
 		return ResponseEntity.ok(updated);
 	}
 

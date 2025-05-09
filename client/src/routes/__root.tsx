@@ -1,4 +1,4 @@
-import type { UserDetailDtoReadable } from '@/api/generated'
+import type { UserDetailDto } from '@/api/generated'
 import { Footer } from '@/components/Footer'
 import { FooterCta } from '@/components/FooterCta'
 import { Header } from '@/components/Header'
@@ -8,7 +8,7 @@ import { Outlet, createRootRouteWithContext } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 
 export interface MyRouterContext {
-  user?: UserDetailDtoReadable
+  user?: UserDetailDto
   queryClient: QueryClient
 }
 

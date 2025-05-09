@@ -1,6 +1,6 @@
 package be.labil.anacarde.application.service;
 
-import be.labil.anacarde.domain.dto.DocumentDto;
+import be.labil.anacarde.domain.dto.db.DocumentDto;
 import java.util.List;
 
 /**

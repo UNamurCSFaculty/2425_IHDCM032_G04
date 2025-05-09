@@ -1,6 +1,6 @@
 package be.labil.anacarde.domain.mapper;
 
-import be.labil.anacarde.domain.dto.NotificationDto;
+import be.labil.anacarde.domain.dto.db.NotificationDto;
 import be.labil.anacarde.domain.model.Carrier;
 import be.labil.anacarde.domain.model.Notification;
 import be.labil.anacarde.domain.model.User;

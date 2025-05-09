@@ -1,7 +1,7 @@
 package be.labil.anacarde.presentation.controller;
 
 import be.labil.anacarde.application.service.QualityService;
-import be.labil.anacarde.domain.dto.QualityDto;
+import be.labil.anacarde.domain.dto.db.QualityDto;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

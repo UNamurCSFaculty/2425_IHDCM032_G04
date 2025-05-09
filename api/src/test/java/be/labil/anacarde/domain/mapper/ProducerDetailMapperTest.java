@@ -2,10 +2,11 @@ package be.labil.anacarde.domain.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import be.labil.anacarde.domain.dto.CooperativeDto;
-import be.labil.anacarde.domain.dto.LanguageDto;
-import be.labil.anacarde.domain.dto.RoleDto;
-import be.labil.anacarde.domain.dto.user.ProducerDetailDto;
+import be.labil.anacarde.domain.dto.db.CooperativeDto;
+import be.labil.anacarde.domain.dto.db.LanguageDto;
+import be.labil.anacarde.domain.dto.db.RoleDto;
+import be.labil.anacarde.domain.dto.db.user.ProducerDetailDto;
+import be.labil.anacarde.domain.dto.write.user.ProducerUpdateDto;
 import be.labil.anacarde.domain.model.Cooperative;
 import be.labil.anacarde.domain.model.Language;
 import be.labil.anacarde.domain.model.Producer;
@@ -25,20 +26,20 @@ class ProducerDetailMapperTest {
 	void shouldMapProducerDetailDtoToProducerEntity() {
 		LanguageDto languageDto = LanguageDto.builder().id(1).code("fr").name("Français").build();
 
-		RoleDto roleDto = new RoleDto(30, "Producer");
+		RoleDto roleDto = RoleDto.builder().id(30).name("Producer").build();
 
 		CooperativeDto coopDto = new CooperativeDto();
 		coopDto.setId(10);
 		coopDto.setName("COOP-A");
 
-		ProducerDetailDto dto = new ProducerDetailDto();
+		ProducerUpdateDto dto = new ProducerUpdateDto();
 		dto.setFirstName("Paul");
 		dto.setLastName("Farmer");
 		dto.setEmail("paul@farm.com");
 		dto.setPassword("farmsecure");
 		dto.setAgriculturalIdentifier("AGRI2025");
-		dto.setCooperative(coopDto);
-		dto.setLanguage(languageDto);
+		dto.setCooperativeId(coopDto.getId());
+		dto.setLanguageId(languageDto.getId());
 		dto.setRoles(Set.of(roleDto));
 		dto.setPhone("+2290197000002");
 
@@ -54,7 +55,6 @@ class ProducerDetailMapperTest {
 
 		assertThat(entity.getCooperative()).isNotNull();
 		assertThat(entity.getCooperative().getId()).isEqualTo(10);
-		assertThat(entity.getCooperative().getName()).isEqualTo("COOP-A");
 
 		assertThat(entity.getLanguage()).isNotNull();
 		assertThat(entity.getLanguage().getId()).isEqualTo(1);
@@ -94,7 +94,6 @@ class ProducerDetailMapperTest {
 		assertThat(dto.getFirstName()).isEqualTo("Marie");
 		assertThat(dto.getLastName()).isEqualTo("Harvest");
 		assertThat(dto.getEmail()).isEqualTo("marie@farm.com");
-		assertThat(dto.getPassword()).isEqualTo("hiddenpass");
 		assertThat(dto.getAgriculturalIdentifier()).isEqualTo("AGRI9988");
 		assertThat(dto.getPhone()).isEqualTo("+32444444444");
 

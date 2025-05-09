@@ -3,9 +3,9 @@
 /**
  * Représente une coopérative.
  */
-export type CooperativeDtoReadable = {
+export type CooperativeDto = {
   /**
-   * Identifiant de la coopérative
+   * Identifiant unique
    */
   readonly id: number
   /**
@@ -27,33 +27,11 @@ export type CooperativeDtoReadable = {
 }
 
 /**
- * Représente une coopérative.
- */
-export type CooperativeDtoWritable = {
-  /**
-   * Nom de la coopérative
-   */
-  name: string
-  /**
-   * Adresse de la coopérative
-   */
-  address: string
-  /**
-   * Date de création
-   */
-  creationDate: string
-  /**
-   * Président de la coopérative
-   */
-  presidentId: number
-}
-
-/**
  * Objet de transfert de données pour les champs.
  */
-export type FieldDtoReadable = {
+export type FieldDto = {
   /**
-   * Identifiant unique du champ.
+   * Identifiant unique
    */
   readonly id: number
   /**
@@ -67,32 +45,17 @@ export type FieldDtoReadable = {
   /**
    * Producteur associé au champ.
    */
-  producer?: ProducerDetailDtoReadable
-}
-
-/**
- * Objet de transfert de données pour les champs.
- */
-export type FieldDtoWritable = {
-  /**
-   * Identifiant du champ (code unique)
-   */
-  identifier?: string
-  /**
-   * Emplacement géographique du champ (format WKT ou GeoJSON selon l'usage).
-   */
-  location?: string
-  /**
-   * Producteur associé au champ.
-   */
-  producer?: ProducerDetailDtoWritable
+  producer?: ProducerDetailDto
 }
 
 /**
  * Objet de transfert de données pour une langue.
  */
 export type LanguageDto = {
-  id?: number
+  /**
+   * Identifiant unique
+   */
+  readonly id: number
   /**
    * Code de la langue
    */
@@ -106,7 +69,7 @@ export type LanguageDto = {
 /**
  * Objet de transfert de données pour les producteurs.
  */
-export type ProducerDetailDtoReadable = TraderDetailDtoReadable & {
+export type ProducerDetailDto = TraderDetailDto & {
   /**
    * Identifiant agricole
    */
@@ -114,41 +77,17 @@ export type ProducerDetailDtoReadable = TraderDetailDtoReadable & {
   /**
    * Coopérative du producteur
    */
-  cooperative?: CooperativeDtoReadable
-}
-
-/**
- * Objet de transfert de données pour les producteurs.
- */
-export type ProducerDetailDtoWritable = TraderDetailDtoWritable & {
-  /**
-   * Identifiant agricole
-   */
-  agriculturalIdentifier: string
-  /**
-   * Coopérative du producteur
-   */
-  cooperative?: CooperativeDtoWritable
+  cooperative?: CooperativeDto
 }
 
 /**
  * Objet de transfert de données pour les rôles.
  */
-export type RoleDtoReadable = {
+export type RoleDto = {
   /**
-   * Identifiant unique du rôle
+   * Identifiant unique
    */
   readonly id: number
-  /**
-   * Nom du rôle
-   */
-  name: string
-}
-
-/**
- * Objet de transfert de données pour les rôles.
- */
-export type RoleDtoWritable = {
   /**
    * Nom du rôle
    */
@@ -202,31 +141,181 @@ export type ErrorDetail = {
 /**
  * Objet de transfert de données pour les administrateurs.
  */
-export type AdminDetailDtoReadable = UserDetailDtoReadable
+export type AdminUpdateDto = UserUpdateDto & {
+  type: 'admin'
+} & {
+  /**
+   * Mot de passe de l'utilisateur
+   */
+  password?: string
+}
+
+/**
+ * Objet de transfert de données pour les transporteurs.
+ */
+export type CarrierUpdateDto = UserUpdateDto & {
+  type: 'carrier'
+} & {
+  /**
+   * Prix par kilomètre facturé par le transporteur
+   */
+  pricePerKm: number
+  /**
+   * Liste des identifiants des régions desservies par le transporteur
+   */
+  regionIds: Array<number>
+} & {
+  /**
+   * Mot de passe de l'utilisateur
+   */
+  password?: string
+  /**
+   * Prix par kilomètre facturé par le transporteur
+   */
+  pricePerKm: number
+  /**
+   * Liste des identifiants des régions desservies par le transporteur
+   */
+  regionIds: Array<number>
+}
+
+/**
+ * Objet de transfert de données pour les exportateurs.
+ */
+export type ExporterUpdateDto = UserUpdateDto & {
+  type: 'exporter'
+} & {
+  /**
+   * Mot de passe de l'utilisateur
+   */
+  password?: string
+}
+
+/**
+ * Objet de transfert de données pour les producteurs.
+ */
+export type ProducerUpdateDto = UserUpdateDto & {
+  type: 'producer'
+} & {
+  /**
+   * Identifiant agricole
+   */
+  agriculturalIdentifier: string
+  /**
+   * Coopérative du producteur
+   */
+  cooperativeId?: number
+} & {
+  /**
+   * Mot de passe de l'utilisateur
+   */
+  password?: string
+  /**
+   * Identifiant agricole
+   */
+  agriculturalIdentifier: string
+  /**
+   * Coopérative du producteur
+   */
+  cooperativeId?: number
+}
+
+/**
+ * Objet de transfert de données pour les inspecteurs qualité.
+ */
+export type QualityInspectorUpdateDto = UserUpdateDto & {
+  type: 'quality_inspector'
+} & {
+  /**
+   * Mot de passe de l'utilisateur
+   */
+  password?: string
+}
+
+/**
+ * Objet de transfert de données pour les traders.
+ */
+export type TraderUpdateDto = UserUpdateDto & {
+  type: 'trader'
+} & {
+  /**
+   * Mot de passe de l'utilisateur
+   */
+  password?: string
+}
+
+/**
+ * Objet de transfert de données pour les transformateurs.
+ */
+export type TransformerUpdateDto = UserUpdateDto & {
+  type: 'transformer'
+} & {
+  /**
+   * Mot de passe de l'utilisateur
+   */
+  password?: string
+}
+
+/**
+ * Objet de transfert pour créer ou mettre à jour un utilisateur.
+ */
+export type UserUpdateDto = {
+  /**
+   * Prénom de l'utilisateur
+   */
+  firstName: string
+  /**
+   * Nom de famille de l'utilisateur
+   */
+  lastName: string
+  /**
+   * Adresse email de l'utilisateur
+   */
+  email: string
+  /**
+   * Date d'enregistrement
+   */
+  readonly registrationDate?: string
+  /**
+   * Date de validation
+   */
+  readonly validationDate?: string
+  /**
+   * Compte activé
+   */
+  enabled?: boolean
+  /**
+   * Adresse postale de l'utilisateur
+   */
+  address?: string
+  /**
+   * Numéro de téléphone (Bénin, ancien et nouveau formats)
+   */
+  phone?: string
+  /**
+   * Mot de passe de l'utilisateur
+   */
+  password?: string
+  /**
+   * Liste des rôles de l'utilisateur
+   */
+  roles?: Array<RoleDto>
+  /**
+   * Identifiant de la langue préférée
+   */
+  languageId: number
+  type: string
+}
 
 /**
  * Objet de transfert de données pour les administrateurs.
  */
-export type AdminDetailDtoWritable = UserDetailDtoWritable
+export type AdminDetailDto = UserDetailDto
 
 /**
  * Objet de transfert de données pour les transporteurs.
  */
-export type CarrierDetailDtoReadable = UserDetailDtoReadable & {
-  /**
-   * Prix par kilomètre facturé par le transporteur
-   */
-  pricePerKm: number
-  /**
-   * Liste des identifiants des régions desservies par le transporteur
-   */
-  regionIds: Array<number>
-}
-
-/**
- * Objet de transfert de données pour les transporteurs.
- */
-export type CarrierDetailDtoWritable = UserDetailDtoWritable & {
+export type CarrierDetailDto = UserDetailDto & {
   /**
    * Prix par kilomètre facturé par le transporteur
    */
@@ -240,29 +329,19 @@ export type CarrierDetailDtoWritable = UserDetailDtoWritable & {
 /**
  * Objet de transfert de données pour les exportateurs.
  */
-export type ExporterDetailDtoReadable = TraderDetailDtoReadable
-
-/**
- * Objet de transfert de données pour les exportateurs.
- */
-export type ExporterDetailDtoWritable = TraderDetailDtoWritable
+export type ExporterDetailDto = TraderDetailDto
 
 /**
  * Objet de transfert de données pour les inspecteurs qualité.
  */
-export type QualityInspectorDetailDtoReadable = UserDetailDtoReadable
-
-/**
- * Objet de transfert de données pour les inspecteurs qualité.
- */
-export type QualityInspectorDetailDtoWritable = UserDetailDtoWritable
+export type QualityInspectorDetailDto = UserDetailDto
 
 /**
  * Objet de transfert de données pour les traders.
  */
-export type TraderDetailDtoReadable = {
+export type TraderDetailDto = {
   /**
-   * Identifiant de l'utilisateur
+   * Identifiant unique
    */
   readonly id: number
   /**
@@ -300,55 +379,7 @@ export type TraderDetailDtoReadable = {
   /**
    * Liste des rôles de l'utilisateur
    */
-  readonly roles?: Array<RoleDtoReadable>
-  /**
-   * Identifiant de la langue préférée
-   */
-  language: LanguageDto
-  /**
-   * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
-   */
-  type:
-    | 'admin'
-    | 'producer'
-    | 'transformer'
-    | 'quality_inspector'
-    | 'exporter'
-    | 'carrier'
-}
-
-/**
- * Objet de transfert de données pour les traders.
- */
-export type TraderDetailDtoWritable = {
-  /**
-   * Prénom de l'utilisateur
-   */
-  firstName: string
-  /**
-   * Nom de famille de l'utilisateur
-   */
-  lastName: string
-  /**
-   * Adresse email de l'utilisateur
-   */
-  email: string
-  /**
-   * Compte activé
-   */
-  enabled?: boolean
-  /**
-   * Adresse postale de l'utilisateur
-   */
-  address?: string
-  /**
-   * Numéro de téléphone (Bénin, ancien et nouveau formats)
-   */
-  phone?: string
-  /**
-   * Mot de passe de l'utilisateur
-   */
-  password?: string
+  readonly roles?: Array<RoleDto>
   /**
    * Identifiant de la langue préférée
    */
@@ -368,19 +399,14 @@ export type TraderDetailDtoWritable = {
 /**
  * Objet de transfert de données pour les transformateurs.
  */
-export type TransformerDetailDtoReadable = TraderDetailDtoReadable
-
-/**
- * Objet de transfert de données pour les transformateurs.
- */
-export type TransformerDetailDtoWritable = TraderDetailDtoWritable
+export type TransformerDetailDto = TraderDetailDto
 
 /**
  * Data Transfer Object pour un utilisateur avec toutes les informations
  */
-export type UserDetailDtoReadable = {
+export type UserDetailDto = {
   /**
-   * Identifiant de l'utilisateur
+   * Identifiant unique
    */
   readonly id: number
   /**
@@ -418,55 +444,7 @@ export type UserDetailDtoReadable = {
   /**
    * Liste des rôles de l'utilisateur
    */
-  readonly roles?: Array<RoleDtoReadable>
-  /**
-   * Identifiant de la langue préférée
-   */
-  language: LanguageDto
-  /**
-   * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
-   */
-  type:
-    | 'admin'
-    | 'producer'
-    | 'transformer'
-    | 'quality_inspector'
-    | 'exporter'
-    | 'carrier'
-}
-
-/**
- * Data Transfer Object pour un utilisateur avec toutes les informations
- */
-export type UserDetailDtoWritable = {
-  /**
-   * Prénom de l'utilisateur
-   */
-  firstName: string
-  /**
-   * Nom de famille de l'utilisateur
-   */
-  lastName: string
-  /**
-   * Adresse email de l'utilisateur
-   */
-  email: string
-  /**
-   * Compte activé
-   */
-  enabled?: boolean
-  /**
-   * Adresse postale de l'utilisateur
-   */
-  address?: string
-  /**
-   * Numéro de téléphone (Bénin, ancien et nouveau formats)
-   */
-  phone?: string
-  /**
-   * Mot de passe de l'utilisateur
-   */
-  password?: string
+  readonly roles?: Array<RoleDto>
   /**
    * Identifiant de la langue préférée
    */
@@ -486,9 +464,9 @@ export type UserDetailDtoWritable = {
 /**
  * Objet de transfert de données pour un entrepôt (store).
  */
-export type StoreDetailDtoReadable = {
+export type StoreDetailDto = {
   /**
-   * Identifiant du store
+   * Identifiant unique
    */
   readonly id: number
   /**
@@ -506,29 +484,11 @@ export type StoreDetailDtoReadable = {
 }
 
 /**
- * Objet de transfert de données pour un entrepôt (store).
- */
-export type StoreDetailDtoWritable = {
-  /**
-   * Nom du store
-   */
-  name: string
-  /**
-   * Coordonnées géographiques du store (au format GeoJSON, WKT ou équivalent)
-   */
-  location: string
-  /**
-   * Identifiant de l'utilisateur lié au store
-   */
-  userId: number
-}
-
-/**
  * Objet de transfert de données pour une région.
  */
-export type RegionDtoReadable = {
+export type RegionDto = {
   /**
-   * Identifiant unique de la région
+   * Identifiant unique
    */
   readonly id: number
   /**
@@ -538,33 +498,13 @@ export type RegionDtoReadable = {
 }
 
 /**
- * Objet de transfert de données pour une région.
- */
-export type RegionDtoWritable = {
-  /**
-   * Nom de la région
-   */
-  name: string
-}
-
-/**
  * Représente une qualité de produit.
  */
-export type QualityDtoReadable = {
+export type QualityDto = {
   /**
-   * Identifiant de la qualité
+   * Identifiant unique
    */
   readonly id: number
-  /**
-   * Nom de la qualité
-   */
-  name: string
-}
-
-/**
- * Représente une qualité de produit.
- */
-export type QualityDtoWritable = {
   /**
    * Nom de la qualité
    */
@@ -595,11 +535,79 @@ export type ApiErrorErrors = {
 }
 
 /**
+ * Objet de transfert pour créer ou mettre à jour un document.
+ */
+export type DocumentUpdateDto = {
+  /**
+   * Type de document
+   */
+  documentType: string
+  /**
+   * Format du document
+   */
+  format: string
+  /**
+   * Chemin de stockage du document
+   */
+  storagePath: string
+  /**
+   * Date et heure de l'envoi du document
+   */
+  readonly uploadDate?: string
+  /**
+   * Identifiant de l'utilisateur associé au document
+   */
+  userId: number
+}
+
+/**
+ * Objet de transfert pour créer ou mettre à jour un contrôle qualité.
+ */
+export type QualityControlUpdateDto = {
+  /**
+   * Identifiant du contrôle qualité
+   */
+  identifier: string
+  /**
+   * Date de contrôle qualité
+   */
+  controlDate: string
+  /**
+   * Granularité mesurée
+   */
+  granularity: number
+  /**
+   * Résultat du test KOR
+   */
+  korTest: number
+  /**
+   * Taux d'humidité mesuré
+   */
+  humidity: number
+  /**
+   * Inspecteur qualité associé
+   */
+  qualityInspectorId: number
+  /**
+   * Produit associé
+   */
+  productId: number
+  /**
+   * Qualité associée
+   */
+  qualityId: number
+  /**
+   * Document associé au contrôle qualité
+   */
+  document?: DocumentUpdateDto
+}
+
+/**
  * Objet de transfert de données pour les entités Document.
  */
-export type DocumentDtoReadable = {
+export type DocumentDto = {
   /**
-   * Identifiant unique du document
+   * Identifiant unique
    */
   readonly id: number
   /**
@@ -625,92 +633,34 @@ export type DocumentDtoReadable = {
 }
 
 /**
- * Objet de transfert de données pour les entités Document.
- */
-export type DocumentDtoWritable = {
-  /**
-   * Type de document
-   */
-  documentType: string
-  /**
-   * Format du document
-   */
-  format: string
-  /**
-   * Chemin de stockage du document
-   */
-  storagePath: string
-  /**
-   * Identifiant de l'utilisateur associé au document
-   */
-  userId: number
-}
-
-/**
  * Objet de transfert de données pour les produits récoltés.
  */
-export type HarvestProductDtoReadable = ProductDtoReadable & {
+export type HarvestProductDto = ProductDto & {
   type: 'harvest'
 } & {
   /**
    * Producteur associé au produit récolté
    */
-  producer: ProducerDetailDtoReadable
+  producer: ProducerDetailDto
   /**
    * Champ associé au produit récolté
    */
-  field: FieldDtoReadable
-}
-
-/**
- * Objet de transfert de données pour les produits récoltés.
- */
-export type HarvestProductDtoWritable = ProductDtoWritable & {
-  type: 'harvest'
-} & {
-  /**
-   * Producteur associé au produit récolté
-   */
-  producer: ProducerDetailDtoWritable
-  /**
-   * Champ associé au produit récolté
-   */
-  field: FieldDtoWritable
+  field: FieldDto
 }
 
 /**
  * Data Transfer Object pour un produit
  */
-export type ProductDtoReadable = {
+export type ProductDto = {
   /**
-   * Identifiant unique du produit
+   * Identifiant unique
    */
   readonly id: number
   deliveryDate?: string
   /**
    * Magasin associé au produit récolté
    */
-  store: StoreDetailDtoReadable
-  /**
-   * Poids en kg du produit
-   */
-  weightKg?: number
-  qualityControlId?: number
-  /**
-   * Type de produit.
-   */
-  type: 'harvest' | 'transformed'
-}
-
-/**
- * Data Transfer Object pour un produit
- */
-export type ProductDtoWritable = {
-  deliveryDate?: string
-  /**
-   * Magasin associé au produit récolté
-   */
-  store: StoreDetailDtoWritable
+  store: StoreDetailDto
   /**
    * Poids en kg du produit
    */
@@ -725,9 +675,9 @@ export type ProductDtoWritable = {
 /**
  * Objet de transfert de données pour le contrôle qualité.
  */
-export type QualityControlDtoReadable = {
+export type QualityControlDto = {
   /**
-   * Identifiant unique du contrôle qualité
+   * Identifiant unique
    */
   readonly id: number
   /**
@@ -753,67 +703,25 @@ export type QualityControlDtoReadable = {
   /**
    * Inspecteur qualité associé
    */
-  qualityInspector: QualityInspectorDetailDtoReadable
+  qualityInspector: QualityInspectorDetailDto
   /**
    * Produit associé
    */
-  product: HarvestProductDtoReadable | TransformedProductDtoReadable
+  product: HarvestProductDto | TransformedProductDto
   /**
    * Qualité associée
    */
-  quality: QualityDtoReadable
+  quality: QualityDto
   /**
    * Document associé au contrôle qualité
    */
-  document: DocumentDtoReadable
-}
-
-/**
- * Objet de transfert de données pour le contrôle qualité.
- */
-export type QualityControlDtoWritable = {
-  /**
-   * Identifiant du contrôle qualité
-   */
-  identifier: string
-  /**
-   * Date de contrôle qualité
-   */
-  controlDate: string
-  /**
-   * Granularité mesurée
-   */
-  granularity: number
-  /**
-   * Résultat du test KOR
-   */
-  korTest: number
-  /**
-   * Taux d'humidité mesuré
-   */
-  humidity: number
-  /**
-   * Inspecteur qualité associé
-   */
-  qualityInspector: QualityInspectorDetailDtoWritable
-  /**
-   * Produit associé
-   */
-  product: HarvestProductDtoWritable | TransformedProductDtoWritable
-  /**
-   * Qualité associée
-   */
-  quality: QualityDtoWritable
-  /**
-   * Document associé au contrôle qualité
-   */
-  document: DocumentDtoWritable
+  document: DocumentDto
 }
 
 /**
  * Objet de transfert de données pour les produits transformés.
  */
-export type TransformedProductDtoReadable = ProductDtoReadable & {
+export type TransformedProductDto = ProductDto & {
   type: 'transformed'
 } & {
   /**
@@ -823,13 +731,50 @@ export type TransformedProductDtoReadable = ProductDtoReadable & {
   /**
    * Transformateur associé
    */
-  transformer: TransformerDetailDtoReadable
+  transformer: TransformerDetailDto
+}
+
+/**
+ * Objet de transfert de données pour les produits récoltés.
+ */
+export type HarvestProductUpdateDto = ProductUpdateDto & {
+  type: 'harvest'
+} & {
+  /**
+   * Producteur associé au produit récolté
+   */
+  producerId: number
+  /**
+   * Champ associé au produit récolté
+   */
+  fieldId: number
+}
+
+/**
+ * Objet de transfert pour créer ou mettre à jour un produit.
+ */
+export type ProductUpdateDto = {
+  /**
+   * Identifiant unique
+   */
+  readonly id: number
+  deliveryDate?: string
+  /**
+   * Magasin associé au produit récolté
+   */
+  storeId: number
+  /**
+   * Poids en kg du produit
+   */
+  weightKg?: number
+  qualityControlId?: number
+  type: string
 }
 
 /**
  * Objet de transfert de données pour les produits transformés.
  */
-export type TransformedProductDtoWritable = ProductDtoWritable & {
+export type TransformedProductUpdateDto = ProductUpdateDto & {
   type: 'transformed'
 } & {
   /**
@@ -839,15 +784,71 @@ export type TransformedProductDtoWritable = ProductDtoWritable & {
   /**
    * Transformateur associé
    */
-  transformer: TransformerDetailDtoWritable
+  transformerId: number
+}
+
+/**
+ * Objet de transfert pour créer ou mettre à jour une coopérative.
+ */
+export type CooperativeUpdateDto = {
+  /**
+   * Nom de la coopérative
+   */
+  name: string
+  /**
+   * Adresse de la coopérative
+   */
+  address: string
+  /**
+   * Date de création
+   */
+  creationDate: string
+  /**
+   * Président de la coopérative
+   */
+  presidentId: number
+}
+
+/**
+ * Objet de transfert pour créer ou mettre à jour une enchère.
+ */
+export type ContractOfferUpdateDto = {
+  /**
+   * Statut de l'offre de contrat
+   */
+  status: string
+  /**
+   * Prix par kilogramme proposé
+   */
+  pricePerKg: number
+  /**
+   * Date de création de l'offre
+   */
+  readonly creationDate: string
+  /**
+   * Date de terminaison de l'offre
+   */
+  endDate: string
+  /**
+   * Vendeur associé à l'offre
+   */
+  sellerId: number
+  /**
+   * Acheteur associé à l'offre
+   */
+  buyerId: number
+  /**
+   * Qualité associée à l'offre
+   */
+  qualityId: number
 }
 
 /**
  * Objet de transfert de données pour les offres de contrat.
  */
-export type ContractOfferDtoReadable = {
+export type ContractOfferDto = {
   /**
-   * Identifiant unique de l'offre de contrat
+   * Identifiant unique
    */
   readonly id: number
   /**
@@ -869,65 +870,65 @@ export type ContractOfferDtoReadable = {
   /**
    * Vendeur associé à l'offre
    */
-  seller:
-    | ExporterDetailDtoReadable
-    | ProducerDetailDtoReadable
-    | TransformerDetailDtoReadable
+  seller: ExporterDetailDto | ProducerDetailDto | TransformerDetailDto
   /**
    * Acheteur associé à l'offre
    */
-  buyer:
-    | ExporterDetailDtoReadable
-    | ProducerDetailDtoReadable
-    | TransformerDetailDtoReadable
+  buyer: ExporterDetailDto | ProducerDetailDto | TransformerDetailDto
   /**
    * Qualité associée à l'offre
    */
-  quality: QualityDtoReadable
+  quality: QualityDto
 }
 
 /**
- * Objet de transfert de données pour les offres de contrat.
+ * Objet de transfert pour créer ou mettre à jour une enchère.
  */
-export type ContractOfferDtoWritable = {
+export type AuctionUpdateDto = {
   /**
-   * Statut de l'offre de contrat
+   * Prix de l'enchère
    */
-  status: string
+  price: number
   /**
-   * Prix par kilogramme proposé
+   * Quantité de produit associée à l'enchère
    */
-  pricePerKg: number
+  productQuantity: number
   /**
-   * Date de terminaison de l'offre
+   * Date d'expiration de l'enchère
    */
-  endDate: string
+  expirationDate: string
   /**
-   * Vendeur associé à l'offre
+   * Date de création de l'enchère
    */
-  seller:
-    | ExporterDetailDtoWritable
-    | ProducerDetailDtoWritable
-    | TransformerDetailDtoWritable
+  readonly creationDate?: string
   /**
-   * Acheteur associé à l'offre
+   * Statut actif de l'enchère
    */
-  buyer:
-    | ExporterDetailDtoWritable
-    | ProducerDetailDtoWritable
-    | TransformerDetailDtoWritable
+  active: boolean
   /**
-   * Qualité associée à l'offre
+   * Produit associé à l'enchère
    */
-  quality: QualityDtoWritable
+  productId: number
+  /**
+   * Trader ayant créé l'enchère
+   */
+  traderId: number
+  /**
+   * Stratégie d'enchère associée
+   */
+  strategyId?: number
+  /**
+   * Statut de l'enchère
+   */
+  statusId?: number
 }
 
 /**
  * Objet de transfert de données pour les enchères.
  */
-export type AuctionDtoReadable = {
+export type AuctionDto = {
   /**
-   * Identifiant unique de l'enchère
+   * Identifiant unique
    */
   readonly id: number
   /**
@@ -953,155 +954,33 @@ export type AuctionDtoReadable = {
   /**
    * Stratégie d'enchère associée
    */
-  strategy: AuctionStrategyDtoReadable
+  strategy: AuctionStrategyDto
   /**
    * Produit associé à l'enchère
    */
-  product: HarvestProductDtoReadable | TransformedProductDtoReadable
-  /**
-   * Valeurs d'option associées à l'enchère
-   */
-  auctionOptionValues?: Array<AuctionOptionValueDtoReadable>
+  product: HarvestProductDto | TransformedProductDto
   /**
    * Trader ayant créé l'enchère
    */
-  trader:
-    | ExporterDetailDtoReadable
-    | ProducerDetailDtoReadable
-    | TransformerDetailDtoReadable
+  trader: ExporterDetailDto | ProducerDetailDto | TransformerDetailDto
   /**
    * Statut de l'enchère
    */
-  status: TradeStatusDtoReadable
+  status: TradeStatusDto
   /**
    * Liste des offres posées sur l'enchère
    */
-  bids?: Array<BidDtoReadable>
-}
-
-/**
- * Objet de transfert de données pour les enchères.
- */
-export type AuctionDtoWritable = {
-  /**
-   * Prix de l'enchère
-   */
-  price: number
-  /**
-   * Quantité de produit associée à l'enchère
-   */
-  productQuantity: number
-  /**
-   * Date d'expiration de l'enchère
-   */
-  expirationDate: string
-  /**
-   * Statut actif de l'enchère
-   */
-  active: boolean
-  /**
-   * Stratégie d'enchère associée
-   */
-  strategy: AuctionStrategyDtoWritable
-  /**
-   * Produit associé à l'enchère
-   */
-  product: HarvestProductDtoWritable | TransformedProductDtoWritable
-  /**
-   * Valeurs d'option associées à l'enchère
-   */
-  auctionOptionValues?: Array<AuctionOptionValueDtoWritable>
-  /**
-   * Trader ayant créé l'enchère
-   */
-  trader:
-    | ExporterDetailDtoWritable
-    | ProducerDetailDtoWritable
-    | TransformerDetailDtoWritable
-  /**
-   * Statut de l'enchère
-   */
-  status: TradeStatusDtoWritable
-  /**
-   * Liste des offres posées sur l'enchère
-   */
-  bids?: Array<BidDtoWritable>
-}
-
-/**
- * Objet de transfert de données pour les options d'enchère.
- */
-export type AuctionOptionDtoReadable = {
-  /**
-   * Identifiant unique de l'option d'enchère
-   */
-  readonly id: number
-  /**
-   * Nom de l'option d'enchère
-   */
-  name: string
-}
-
-/**
- * Objet de transfert de données pour les options d'enchère.
- */
-export type AuctionOptionDtoWritable = {
-  /**
-   * Nom de l'option d'enchère
-   */
-  name: string
-}
-
-/**
- * Objet de transfert de données pour les valeurs d'option d'enchère.
- */
-export type AuctionOptionValueDtoReadable = {
-  /**
-   * Identifiant unique de la valeur d'option d'enchère
-   */
-  readonly id: number
-  /**
-   * Option d'enchère associée
-   */
-  auctionOption: AuctionOptionDtoReadable
-  /**
-   * Valeur de l'option
-   */
-  optionValue: string
-}
-
-/**
- * Objet de transfert de données pour les valeurs d'option d'enchère.
- */
-export type AuctionOptionValueDtoWritable = {
-  /**
-   * Option d'enchère associée
-   */
-  auctionOption: AuctionOptionDtoWritable
-  /**
-   * Valeur de l'option
-   */
-  optionValue: string
+  bids?: Array<BidDto>
 }
 
 /**
  * Objet de transfert de données pour les stratégies d'enchère.
  */
-export type AuctionStrategyDtoReadable = {
+export type AuctionStrategyDto = {
   /**
-   * Identifiant unique de la stratégie d'enchère
+   * Identifiant unique
    */
   readonly id: number
-  /**
-   * Nom de la stratégie d'enchère
-   */
-  name: string
-}
-
-/**
- * Objet de transfert de données pour les stratégies d'enchère.
- */
-export type AuctionStrategyDtoWritable = {
   /**
    * Nom de la stratégie d'enchère
    */
@@ -1111,9 +990,9 @@ export type AuctionStrategyDtoWritable = {
 /**
  * Objet de transfert de données pour les offres d'achat (Bid).
  */
-export type BidDtoReadable = {
+export type BidDto = {
   /**
-   * Identifiant unique de l'offre d'achat
+   * Identifiant unique
    */
   readonly id: number
   /**
@@ -1131,47 +1010,19 @@ export type BidDtoReadable = {
   /**
    * Trader ayant passé l'offre
    */
-  trader:
-    | ExporterDetailDtoReadable
-    | ProducerDetailDtoReadable
-    | TransformerDetailDtoReadable
+  trader: ExporterDetailDto | ProducerDetailDto | TransformerDetailDto
   /**
    * Statut de l'offre
    */
-  status: TradeStatusDtoReadable
-}
-
-/**
- * Objet de transfert de données pour les offres d'achat (Bid).
- */
-export type BidDtoWritable = {
-  /**
-   * Montant de l'offre
-   */
-  amount: number
-  /**
-   * Identifiant de l'enchère associée à l'offre
-   */
-  auctionId: number
-  /**
-   * Trader ayant passé l'offre
-   */
-  trader:
-    | ExporterDetailDtoWritable
-    | ProducerDetailDtoWritable
-    | TransformerDetailDtoWritable
-  /**
-   * Statut de l'offre
-   */
-  status: TradeStatusDtoWritable
+  status: TradeStatusDto
 }
 
 /**
  * Objet de transfert de données pour le statut d'une offre d'achat.
  */
-export type TradeStatusDtoReadable = {
+export type TradeStatusDto = {
   /**
-   * Identifiant unique du statut
+   * Identifiant unique
    */
   readonly id: number
   /**
@@ -1181,13 +1032,29 @@ export type TradeStatusDtoReadable = {
 }
 
 /**
- * Objet de transfert de données pour le statut d'une offre d'achat.
+ * Objet de transfert pour créer ou mettre à jour une offres.
  */
-export type TradeStatusDtoWritable = {
+export type BidUpdateDto = {
   /**
-   * Nom du statut
+   * Montant de l'offre
    */
-  name: string
+  amount: number
+  /**
+   * Date de création de l'offre
+   */
+  readonly creationDate?: string
+  /**
+   * Identifiant de l'enchère associée à l'offre
+   */
+  auctionId: number
+  /**
+   * Trader ayant passé l'offre
+   */
+  traderId: number
+  /**
+   * Statut de l'offre
+   */
+  statusId: number
 }
 
 /**
@@ -1219,9 +1086,9 @@ export type LoginRequest = {
 /**
  * Data Transfer Object pour un utilisateur
  */
-export type UserListDtoReadable = {
+export type UserListDto = {
   /**
-   * Identifiant de l'utilisateur
+   * Identifiant unique
    */
   readonly id: number
   /**
@@ -1269,50 +1136,6 @@ export type UserListDtoReadable = {
 }
 
 /**
- * Data Transfer Object pour un utilisateur
- */
-export type UserListDtoWritable = {
-  /**
-   * Prénom de l'utilisateur
-   */
-  firstName: string
-  /**
-   * Nom de famille de l'utilisateur
-   */
-  lastName: string
-  /**
-   * Adresse email de l'utilisateur
-   */
-  email: string
-  /**
-   * Compte activé
-   */
-  enabled?: boolean
-  /**
-   * Adresse postale de l'utilisateur
-   */
-  address?: string
-  /**
-   * Numéro de téléphone (Bénin, ancien et nouveau formats)
-   */
-  phone?: string
-  /**
-   * Mot de passe de l'utilisateur
-   */
-  password?: string
-  /**
-   * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
-   */
-  type:
-    | 'admin'
-    | 'producer'
-    | 'transformer'
-    | 'quality_inspector'
-    | 'exporter'
-    | 'carrier'
-}
-
-/**
  * Données nécessaires pour l'application cliente.
  */
 export type ApplicationDataDto = {
@@ -1325,6 +1148,10 @@ export type ApplicationDataDto = {
 export type DeleteFieldData = {
   body?: never
   path: {
+    /**
+     * Identifiant de la ressource
+     */
+    userId: number
     /**
      * Identifiant de la ressource
      */
@@ -1371,6 +1198,10 @@ export type GetFieldData = {
     /**
      * Identifiant de la ressource
      */
+    userId: number
+    /**
+     * Identifiant de la ressource
+     */
     id: number
   }
   query?: never
@@ -1390,14 +1221,18 @@ export type GetFieldResponses = {
   /**
    * OK
    */
-  200: FieldDtoReadable
+  200: FieldDto
 }
 
 export type GetFieldResponse = GetFieldResponses[keyof GetFieldResponses]
 
 export type UpdateFieldData = {
-  body: FieldDtoWritable
+  body: FieldDto
   path: {
+    /**
+     * Identifiant de la ressource
+     */
+    userId: number
     /**
      * Identifiant de la ressource
      */
@@ -1424,7 +1259,7 @@ export type UpdateFieldResponses = {
   /**
    * Created
    */
-  201: FieldDtoReadable
+  201: FieldDto
 }
 
 export type UpdateFieldResponse =
@@ -1485,20 +1320,20 @@ export type GetUserResponses = {
   /**
    * Utilisateur trouvé
    */
-  200: UserDetailDtoReadable
+  200: UserDetailDto
 }
 
 export type GetUserResponse = GetUserResponses[keyof GetUserResponses]
 
 export type UpdateUserData = {
   body:
-    | AdminDetailDtoWritable
-    | CarrierDetailDtoWritable
-    | QualityInspectorDetailDtoWritable
-    | TraderDetailDtoWritable
-    | ExporterDetailDtoWritable
-    | ProducerDetailDtoWritable
-    | TransformerDetailDtoWritable
+    | AdminUpdateDto
+    | CarrierUpdateDto
+    | ExporterUpdateDto
+    | ProducerUpdateDto
+    | QualityInspectorUpdateDto
+    | TraderUpdateDto
+    | TransformerUpdateDto
   path: {
     /**
      * Identifiant de l'utilisateur
@@ -1526,7 +1361,7 @@ export type UpdateUserResponses = {
   /**
    * Utilisateur mis à jour avec succès
    */
-  200: UserDetailDtoReadable
+  200: UserDetailDto
 }
 
 export type UpdateUserResponse = UpdateUserResponses[keyof UpdateUserResponses]
@@ -1561,7 +1396,7 @@ export type UpdateUserRolesResponses = {
   /**
    * Rôles mis à jour avec succès
    */
-  200: UserDetailDtoReadable
+  200: UserDetailDto
 }
 
 export type UpdateUserRolesResponse =
@@ -1627,13 +1462,13 @@ export type GetStoreResponses = {
   /**
    * OK
    */
-  200: StoreDetailDtoReadable
+  200: StoreDetailDto
 }
 
 export type GetStoreResponse = GetStoreResponses[keyof GetStoreResponses]
 
 export type UpdateStoreData = {
-  body: StoreDetailDtoWritable
+  body: StoreDetailDto
   path: {
     /**
      * Identifiant de la ressource
@@ -1661,7 +1496,7 @@ export type UpdateStoreResponses = {
   /**
    * Created
    */
-  201: StoreDetailDtoReadable
+  201: StoreDetailDto
 }
 
 export type UpdateStoreResponse =
@@ -1759,13 +1594,13 @@ export type GetRegionResponses = {
   /**
    * OK
    */
-  200: RegionDtoReadable
+  200: RegionDto
 }
 
 export type GetRegionResponse = GetRegionResponses[keyof GetRegionResponses]
 
 export type UpdateRegionData = {
-  body: RegionDtoWritable
+  body: RegionDto
   path: {
     /**
      * Identifiant de la ressource
@@ -1793,7 +1628,7 @@ export type UpdateRegionResponses = {
   /**
    * Created
    */
-  201: RegionDtoReadable
+  201: RegionDto
 }
 
 export type UpdateRegionResponse =
@@ -1871,7 +1706,7 @@ export type GetQualityResponses = {
 }
 
 export type UpdateQualityData = {
-  body: QualityDtoWritable
+  body: QualityDto
   path: {
     /**
      * Identifiant de la ressource
@@ -1916,6 +1751,10 @@ export type DeleteQualityControlData = {
     /**
      * Identifiant de la ressource
      */
+    productId: number
+    /**
+     * Identifiant de la ressource
+     */
     id: number
   }
   query?: never
@@ -1952,6 +1791,10 @@ export type GetQualityControlData = {
     /**
      * Identifiant de la ressource
      */
+    productId: number
+    /**
+     * Identifiant de la ressource
+     */
     id: number
   }
   query?: never
@@ -1972,15 +1815,19 @@ export type GetQualityControlResponses = {
   /**
    * OK
    */
-  200: QualityControlDtoReadable
+  200: QualityControlDto
 }
 
 export type GetQualityControlResponse =
   GetQualityControlResponses[keyof GetQualityControlResponses]
 
 export type UpdateQualityControlData = {
-  body: QualityControlDtoWritable
+  body: QualityControlUpdateDto
   path: {
+    /**
+     * Identifiant de la ressource
+     */
+    productId: number
     /**
      * Identifiant de la ressource
      */
@@ -2008,7 +1855,7 @@ export type UpdateQualityControlResponses = {
   /**
    * Created
    */
-  201: QualityControlDtoReadable
+  201: QualityControlDto
 }
 
 export type UpdateQualityControlResponse =
@@ -2074,13 +1921,13 @@ export type GetProductResponses = {
   /**
    * OK
    */
-  200: ProductDtoReadable
+  200: ProductDto
 }
 
 export type GetProductResponse = GetProductResponses[keyof GetProductResponses]
 
 export type UpdateProductData = {
-  body: HarvestProductDtoWritable | TransformedProductDtoWritable
+  body: HarvestProductUpdateDto | TransformedProductUpdateDto
   path: {
     /**
      * Identifiant de la ressource
@@ -2108,7 +1955,7 @@ export type UpdateProductResponses = {
   /**
    * Created
    */
-  201: ProductDtoReadable
+  201: ProductDto
 }
 
 export type UpdateProductResponse =
@@ -2274,14 +2121,14 @@ export type GetDocumentResponses = {
   /**
    * OK
    */
-  200: DocumentDtoReadable
+  200: DocumentDto
 }
 
 export type GetDocumentResponse =
   GetDocumentResponses[keyof GetDocumentResponses]
 
 export type UpdateDocumentData = {
-  body: DocumentDtoWritable
+  body: DocumentDto
   path: {
     /**
      * Identifiant de la ressource
@@ -2310,7 +2157,7 @@ export type UpdateDocumentResponses = {
   /**
    * Created
    */
-  201: DocumentDtoReadable
+  201: DocumentDto
 }
 
 export type UpdateDocumentResponse =
@@ -2378,14 +2225,14 @@ export type GetCooperativeResponses = {
   /**
    * OK
    */
-  200: CooperativeDtoReadable
+  200: CooperativeDto
 }
 
 export type GetCooperativeResponse =
   GetCooperativeResponses[keyof GetCooperativeResponses]
 
 export type UpdateCooperativeData = {
-  body: CooperativeDtoWritable
+  body: CooperativeUpdateDto
   path: {
     /**
      * Identifiant de la ressource
@@ -2414,7 +2261,7 @@ export type UpdateCooperativeResponses = {
   /**
    * Created
    */
-  201: CooperativeDtoReadable
+  201: CooperativeDto
 }
 
 export type UpdateCooperativeResponse =
@@ -2482,14 +2329,14 @@ export type GetContractOfferResponses = {
   /**
    * OK
    */
-  200: ContractOfferDtoReadable
+  200: ContractOfferDto
 }
 
 export type GetContractOfferResponse =
   GetContractOfferResponses[keyof GetContractOfferResponses]
 
 export type UpdateContractOfferData = {
-  body: ContractOfferDtoWritable
+  body: ContractOfferUpdateDto
   path: {
     /**
      * Identifiant de la ressource
@@ -2518,7 +2365,7 @@ export type UpdateContractOfferResponses = {
   /**
    * Created
    */
-  201: ContractOfferDtoReadable
+  201: ContractOfferDto
 }
 
 export type UpdateContractOfferResponse =
@@ -2584,13 +2431,13 @@ export type GetAuctionResponses = {
   /**
    * OK
    */
-  200: AuctionDtoReadable
+  200: AuctionDto
 }
 
 export type GetAuctionResponse = GetAuctionResponses[keyof GetAuctionResponses]
 
 export type UpdateAuctionData = {
-  body: AuctionDtoWritable
+  body: AuctionUpdateDto
   path: {
     /**
      * Identifiant de la ressource
@@ -2618,7 +2465,7 @@ export type UpdateAuctionResponses = {
   /**
    * Created
    */
-  201: AuctionDtoReadable
+  201: AuctionUpdateDto
 }
 
 export type UpdateAuctionResponse =
@@ -2649,7 +2496,7 @@ export type AcceptAuctionResponses = {
   /**
    * OK
    */
-  200: AuctionDtoReadable
+  200: AuctionDto
 }
 
 export type AcceptAuctionResponse =
@@ -2658,6 +2505,10 @@ export type AcceptAuctionResponse =
 export type DeleteBidData = {
   body?: never
   path: {
+    /**
+     * Identifiant de la ressource
+     */
+    auctionId: number
     /**
      * Identifiant de la ressource
      */
@@ -2695,6 +2546,10 @@ export type GetBidData = {
     /**
      * Identifiant de la ressource
      */
+    auctionId: number
+    /**
+     * Identifiant de la ressource
+     */
     bidId: number
   }
   query?: never
@@ -2714,13 +2569,13 @@ export type GetBidResponses = {
   /**
    * OK
    */
-  200: BidDtoReadable
+  200: BidDto
 }
 
 export type GetBidResponse = GetBidResponses[keyof GetBidResponses]
 
 export type UpdateBidData = {
-  body: BidDtoWritable
+  body: BidUpdateDto
   path: {
     /**
      * Identifiant de la ressource
@@ -2752,7 +2607,7 @@ export type UpdateBidResponses = {
   /**
    * Created
    */
-  201: BidDtoReadable
+  201: BidDto
 }
 
 export type UpdateBidResponse = UpdateBidResponses[keyof UpdateBidResponses]
@@ -2786,7 +2641,7 @@ export type AcceptBidResponses = {
   /**
    * OK
    */
-  200: BidDtoReadable
+  200: BidDto
 }
 
 export type AcceptBidResponse = AcceptBidResponses[keyof AcceptBidResponses]
@@ -2865,7 +2720,7 @@ export type GetAuctionStrategyResponses = {
 }
 
 export type UpdateAuctionStrategyData = {
-  body: AuctionStrategyDtoWritable
+  body: AuctionStrategyDto
   path: {
     /**
      * Identifiant de la ressource
@@ -2916,20 +2771,20 @@ export type ListUsersResponses = {
   /**
    * Liste récupérée avec succès
    */
-  200: Array<UserListDtoReadable>
+  200: Array<UserListDto>
 }
 
 export type ListUsersResponse = ListUsersResponses[keyof ListUsersResponses]
 
 export type CreateUserData = {
   body:
-    | AdminDetailDtoWritable
-    | CarrierDetailDtoWritable
-    | QualityInspectorDetailDtoWritable
-    | TraderDetailDtoWritable
-    | ExporterDetailDtoWritable
-    | ProducerDetailDtoWritable
-    | TransformerDetailDtoWritable
+    | AdminUpdateDto
+    | CarrierUpdateDto
+    | ExporterUpdateDto
+    | ProducerUpdateDto
+    | QualityInspectorUpdateDto
+    | TraderUpdateDto
+    | TransformerUpdateDto
   path?: never
   query?: never
   url: '/api/users'
@@ -2952,7 +2807,7 @@ export type CreateUserResponses = {
   /**
    * Utilisateur créé avec succès
    */
-  201: UserDetailDtoReadable
+  201: UserDetailDto
 }
 
 export type CreateUserResponse = CreateUserResponses[keyof CreateUserResponses]
@@ -2970,14 +2825,19 @@ export type ListFieldsResponses = {
   /**
    * Liste récupérée avec succès
    */
-  200: Array<FieldDtoReadable>
+  200: Array<FieldDto>
 }
 
 export type ListFieldsResponse = ListFieldsResponses[keyof ListFieldsResponses]
 
 export type CreateFieldData = {
-  body: FieldDtoWritable
-  path?: never
+  body: FieldDto
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    userId: number
+  }
   query?: never
   url: '/api/users/{userId}/fields'
 }
@@ -2999,7 +2859,7 @@ export type CreateFieldResponses = {
   /**
    * Created
    */
-  201: FieldDtoReadable
+  201: FieldDto
 }
 
 export type CreateFieldResponse =
@@ -3038,7 +2898,7 @@ export type AddRoleToUserResponses = {
   /**
    * Rôle ajouté avec succès
    */
-  200: UserDetailDtoReadable
+  200: UserDetailDto
 }
 
 export type AddRoleToUserResponse =
@@ -3055,13 +2915,13 @@ export type ListStoresResponses = {
   /**
    * Liste récupérée avec succès
    */
-  200: Array<StoreDetailDtoReadable>
+  200: Array<StoreDetailDto>
 }
 
 export type ListStoresResponse = ListStoresResponses[keyof ListStoresResponses]
 
 export type CreateStoreData = {
-  body: StoreDetailDtoWritable
+  body: StoreDetailDto
   path?: never
   query?: never
   url: '/api/stores'
@@ -3084,7 +2944,7 @@ export type CreateStoreResponses = {
   /**
    * Created
    */
-  201: StoreDetailDtoReadable
+  201: StoreDetailDto
 }
 
 export type CreateStoreResponse =
@@ -3103,14 +2963,14 @@ export type ListRegionsResponses = {
   /**
    * Liste récupérée avec succès
    */
-  200: Array<RegionDtoReadable>
+  200: Array<RegionDto>
 }
 
 export type ListRegionsResponse =
   ListRegionsResponses[keyof ListRegionsResponses]
 
 export type CreateRegionData = {
-  body: RegionDtoWritable
+  body: RegionDto
   path?: never
   query?: never
   url: '/api/regions'
@@ -3133,7 +2993,7 @@ export type CreateRegionResponses = {
   /**
    * Created
    */
-  201: RegionDtoReadable
+  201: RegionDto
 }
 
 export type CreateRegionResponse =
@@ -3171,7 +3031,7 @@ export type ListQualitiesResponses = {
 }
 
 export type CreateQualityData = {
-  body: QualityDtoWritable
+  body: QualityDto
   path?: never
   query?: never
   url: '/api/qualities'
@@ -3217,14 +3077,14 @@ export type ListProductsResponses = {
   /**
    * Liste récupérée avec succès
    */
-  200: Array<ProductDtoReadable>
+  200: Array<ProductDto>
 }
 
 export type ListProductsResponse =
   ListProductsResponses[keyof ListProductsResponses]
 
 export type CreateProductData = {
-  body: HarvestProductDtoWritable | TransformedProductDtoWritable
+  body: HarvestProductUpdateDto | TransformedProductUpdateDto
   path?: never
   query?: never
   url: '/api/products'
@@ -3247,7 +3107,7 @@ export type CreateProductResponses = {
   /**
    * Created
    */
-  201: ProductDtoReadable
+  201: ProductDto
 }
 
 export type CreateProductResponse =
@@ -3266,15 +3126,20 @@ export type ListQualityControlsResponses = {
   /**
    * Liste récupérée avec succès
    */
-  200: Array<QualityControlDtoReadable>
+  200: Array<QualityControlDto>
 }
 
 export type ListQualityControlsResponse =
   ListQualityControlsResponses[keyof ListQualityControlsResponses]
 
 export type CreateQualityControlData = {
-  body: QualityControlDtoWritable
-  path?: never
+  body: QualityControlUpdateDto
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    productId: number
+  }
   query?: never
   url: '/api/products/{productId}/quality-controls'
 }
@@ -3297,7 +3162,7 @@ export type CreateQualityControlResponses = {
   /**
    * Created
    */
-  201: QualityControlDtoReadable
+  201: QualityControlDto
 }
 
 export type CreateQualityControlResponse =
@@ -3348,7 +3213,7 @@ export type CreateLanguageResponse =
   CreateLanguageResponses[keyof CreateLanguageResponses]
 
 export type CreateDocumentData = {
-  body: DocumentDtoWritable
+  body: DocumentDto
   path?: never
   query?: never
   url: '/api/documents'
@@ -3372,7 +3237,7 @@ export type CreateDocumentResponses = {
   /**
    * Created
    */
-  201: DocumentDtoReadable
+  201: DocumentDto
 }
 
 export type CreateDocumentResponse =
@@ -3389,14 +3254,14 @@ export type ListCooperativesResponses = {
   /**
    * Liste récupérée avec succès
    */
-  200: Array<CooperativeDtoReadable>
+  200: Array<CooperativeDto>
 }
 
 export type ListCooperativesResponse =
   ListCooperativesResponses[keyof ListCooperativesResponses]
 
 export type CreateCooperativeData = {
-  body: CooperativeDtoWritable
+  body: CooperativeUpdateDto
   path?: never
   query?: never
   url: '/api/cooperatives'
@@ -3420,7 +3285,7 @@ export type CreateCooperativeResponses = {
   /**
    * Created
    */
-  201: CooperativeDtoReadable
+  201: CooperativeDto
 }
 
 export type CreateCooperativeResponse =
@@ -3437,14 +3302,14 @@ export type ListContractOffersResponses = {
   /**
    * Liste récupérée avec succès
    */
-  200: Array<ContractOfferDtoReadable>
+  200: Array<ContractOfferDto>
 }
 
 export type ListContractOffersResponse =
   ListContractOffersResponses[keyof ListContractOffersResponses]
 
 export type CreateContractOfferData = {
-  body: ContractOfferDtoWritable
+  body: ContractOfferUpdateDto
   path?: never
   query?: never
   url: '/api/contracts'
@@ -3468,7 +3333,7 @@ export type CreateContractOfferResponses = {
   /**
    * Created
    */
-  201: ContractOfferDtoReadable
+  201: ContractOfferDto
 }
 
 export type CreateContractOfferResponse =
@@ -3541,7 +3406,7 @@ export type AuthenticateUserResponses = {
   /**
    * Utilisateur authentifié avec succès
    */
-  200: UserDetailDtoReadable
+  200: UserDetailDto
 }
 
 export type AuthenticateUserResponse =
@@ -3567,14 +3432,14 @@ export type ListAuctionsResponses = {
   /**
    * Liste récupérée avec succès
    */
-  200: Array<AuctionDtoReadable>
+  200: Array<AuctionDto>
 }
 
 export type ListAuctionsResponse =
   ListAuctionsResponses[keyof ListAuctionsResponses]
 
 export type CreateAuctionData = {
-  body: AuctionDtoWritable
+  body: AuctionUpdateDto
   path?: never
   query?: never
   url: '/api/auctions'
@@ -3597,7 +3462,7 @@ export type CreateAuctionResponses = {
   /**
    * Created
    */
-  201: AuctionDtoReadable
+  201: AuctionUpdateDto
 }
 
 export type CreateAuctionResponse =
@@ -3619,14 +3484,19 @@ export type ListBidsResponses = {
   /**
    * Liste récupérée avec succès
    */
-  200: Array<BidDtoReadable>
+  200: Array<BidDto>
 }
 
 export type ListBidsResponse = ListBidsResponses[keyof ListBidsResponses]
 
 export type CreateBidData = {
-  body: BidDtoWritable
-  path?: never
+  body: BidUpdateDto
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    auctionId: number
+  }
   query?: never
   url: '/api/auctions/{auctionId}/bids/'
 }
@@ -3648,7 +3518,7 @@ export type CreateBidResponses = {
   /**
    * Created
    */
-  201: BidDtoReadable
+  201: BidDto
 }
 
 export type CreateBidResponse = CreateBidResponses[keyof CreateBidResponses]
@@ -3686,7 +3556,7 @@ export type ListAuctionStrategiesResponses = {
 }
 
 export type CreateAuctionStrategyData = {
-  body: AuctionStrategyDtoWritable
+  body: AuctionStrategyDto
   path?: never
   query?: never
   url: '/api/auctions/strategies'
@@ -3733,7 +3603,7 @@ export type ListDocumentsByUserResponses = {
   /**
    * Liste récupérée avec succès
    */
-  200: Array<DocumentDtoReadable>
+  200: Array<DocumentDto>
 }
 
 export type ListDocumentsByUserResponse =
@@ -3760,7 +3630,7 @@ export type GetCurrentUserResponses = {
   /**
    * Utilisateur authentifié
    */
-  200: UserDetailDtoReadable
+  200: UserDetailDto
 }
 
 export type GetCurrentUserResponse =

@@ -2,11 +2,9 @@ package be.labil.anacarde.domain.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import be.labil.anacarde.domain.dto.DocumentDto;
-import be.labil.anacarde.domain.dto.HarvestProductDto;
-import be.labil.anacarde.domain.dto.QualityControlDto;
-import be.labil.anacarde.domain.dto.QualityDto;
-import be.labil.anacarde.domain.dto.user.QualityInspectorDetailDto;
+import be.labil.anacarde.domain.dto.db.QualityControlDto;
+import be.labil.anacarde.domain.dto.write.DocumentUpdateDto;
+import be.labil.anacarde.domain.dto.write.QualityControlUpdateDto;
 import be.labil.anacarde.domain.model.*;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
@@ -62,37 +60,34 @@ class QualityControlMapperTest {
 
 	@Test
 	void shouldMapDtoToEntity() {
-		QualityControlDto dto = new QualityControlDto();
-		dto.setId(1);
+		QualityControlUpdateDto dto = new QualityControlUpdateDto();
 		dto.setIdentifier("QC-001");
 		dto.setControlDate(LocalDateTime.of(2025, 4, 7, 10, 0));
 		dto.setGranularity(0.5f);
 		dto.setKorTest(0.8f);
 		dto.setHumidity(12.5f);
-		dto.setQualityInspector(new QualityInspectorDetailDto());
-		dto.setProduct(new HarvestProductDto());
-		dto.setQuality(new QualityDto());
-		dto.setDocument(new DocumentDto());
+		dto.setQualityInspectorId(1);
+		dto.setProductId(2);
+		dto.setQualityId(3);
+		dto.setDocument(new DocumentUpdateDto());
 
 		QualityControl entity = qualityControlMapper.toEntity(dto);
 
 		assertThat(entity).isNotNull();
-		assertThat(entity.getId()).isEqualTo(dto.getId());
 		assertThat(entity.getIdentifier()).isEqualTo(dto.getIdentifier());
 		assertThat(entity.getControlDate()).isEqualTo(dto.getControlDate());
 		assertThat(entity.getGranularity()).isEqualTo(dto.getGranularity());
 		assertThat(entity.getKorTest()).isEqualTo(dto.getKorTest());
 		assertThat(entity.getHumidity()).isEqualTo(dto.getHumidity());
-		assertThat(entity.getQualityInspector()).isNotNull();
-		assertThat(entity.getProduct()).isNotNull();
-		assertThat(entity.getQuality()).isNotNull();
+		assertThat(entity.getQualityInspector().getId()).isEqualTo(1);
+		assertThat(entity.getProduct().getId()).isEqualTo(2);
+		assertThat(entity.getQuality().getId()).isEqualTo(3);
 		assertThat(entity.getDocument()).isNotNull();
 	}
 
 	@Test
 	void shouldPartialUpdateEntity() {
-		QualityControlDto dto = new QualityControlDto();
-		dto.setId(1);
+		QualityControlUpdateDto dto = new QualityControlUpdateDto();
 		dto.setIdentifier("QC-002"); // Change identifier only
 		dto.setControlDate(LocalDateTime.of(2025, 5, 1, 11, 0));
 

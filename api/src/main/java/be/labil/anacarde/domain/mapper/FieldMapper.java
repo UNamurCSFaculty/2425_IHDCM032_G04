@@ -1,10 +1,10 @@
 package be.labil.anacarde.domain.mapper;
 
-import be.labil.anacarde.domain.dto.FieldDto;
+import be.labil.anacarde.domain.dto.db.FieldDto;
 import be.labil.anacarde.domain.model.Field;
 import org.mapstruct.*;
 
-@Mapper(componentModel = "spring", uses = {HibernateLazyCondition.class,
+@Mapper(componentModel = "spring", uses = {MapperHelpers.class,
 		UserDetailMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class FieldMapper {
 

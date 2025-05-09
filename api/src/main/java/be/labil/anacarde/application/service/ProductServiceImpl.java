@@ -1,7 +1,8 @@
 package be.labil.anacarde.application.service;
 
 import be.labil.anacarde.application.exception.ResourceNotFoundException;
-import be.labil.anacarde.domain.dto.ProductDto;
+import be.labil.anacarde.domain.dto.db.product.ProductDto;
+import be.labil.anacarde.domain.dto.write.product.ProductUpdateDto;
 import be.labil.anacarde.domain.mapper.ProductMapper;
 import be.labil.anacarde.domain.model.HarvestProduct;
 import be.labil.anacarde.domain.model.Product;
@@ -9,6 +10,7 @@ import be.labil.anacarde.domain.model.TransformedProduct;
 import be.labil.anacarde.infrastructure.persistence.HarvestProductRepository;
 import be.labil.anacarde.infrastructure.persistence.ProductRepository;
 import be.labil.anacarde.infrastructure.persistence.TransformedProductRepository;
+import be.labil.anacarde.infrastructure.util.PersistenceHelper;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -24,21 +26,13 @@ public class ProductServiceImpl implements ProductService {
 	private final TransformedProductRepository transformedRepository;
 	private final ProductRepository productRepository;
 	private final ProductMapper productMapper;
-	// private final QualityControlRepository qualityControlRepository;
+	private final PersistenceHelper persistenceHelper;
 
 	@Override
-	public ProductDto createProduct(ProductDto dto) {
+	public ProductDto createProduct(ProductUpdateDto dto) {
 		Product product = productMapper.toEntity(dto);
-
-		/*
-		 * A ajouter une le repo qualityControl dispo if (dto.getQualityControlId() != null) { QualityControl qc =
-		 * qualityControlRepository.findById(dto.getQualityControlId()) .orElseThrow(() -> new
-		 * ResourceNotFoundException( "QualityControl non trouvé pour id " + dto.getQualityControlId()));
-		 * product.setQualityControl(qc); }
-		 */
-
-		Product saved = productRepository.save(product);
-		return productMapper.toDto(saved);
+		Product full = persistenceHelper.saveAndReload(productRepository, product, Product::getId);
+		return productMapper.toDto(full);
 	}
 
 	@Override
@@ -64,14 +58,14 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public ProductDto updateProduct(Integer id, ProductDto productDto) {
+	public ProductDto updateProduct(Integer id, ProductUpdateDto productDto) {
 		Product existingProduct = productRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Produit non trouvé"));
 
 		Product updatedProduct = productMapper.partialUpdate(productDto, existingProduct);
 
-		Product saved = productRepository.save(updatedProduct);
-		return productMapper.toDto(saved);
+		Product full = persistenceHelper.saveAndReload(productRepository, updatedProduct, Product::getId);
+		return productMapper.toDto(full);
 	}
 
 	@Override

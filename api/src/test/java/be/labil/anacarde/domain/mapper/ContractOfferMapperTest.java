@@ -3,11 +3,8 @@ package be.labil.anacarde.domain.mapper;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import be.labil.anacarde.domain.dto.ContractOfferDto;
-import be.labil.anacarde.domain.dto.QualityDto;
-import be.labil.anacarde.domain.dto.user.ProducerDetailDto;
-import be.labil.anacarde.domain.dto.user.TraderDetailDto;
-import be.labil.anacarde.domain.dto.user.TransformerDetailDto;
+import be.labil.anacarde.domain.dto.db.ContractOfferDto;
+import be.labil.anacarde.domain.dto.write.ContractOfferUpdateDto;
 import be.labil.anacarde.domain.model.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -61,39 +58,25 @@ class ContractOfferMapperTest {
 
 	@Test
 	void testToEntity() {
-		TraderDetailDto seller = new ProducerDetailDto();
-		seller.setId(1);
-		seller.setFirstName("Alice");
-
-		TraderDetailDto buyer = new TransformerDetailDto();
-		buyer.setId(2);
-		buyer.setFirstName("Bob");
-
-		QualityDto quality = new QualityDto();
-		quality.setId(1);
-		quality.setName("A");
-
-		ContractOfferDto dto = new ContractOfferDto();
-		dto.setId(10);
+		ContractOfferUpdateDto dto = new ContractOfferUpdateDto();
 		dto.setStatus("Accepté");
 		dto.setPricePerKg(new BigDecimal("3.00"));
 		dto.setCreationDate(LocalDateTime.of(2025, 4, 8, 15, 0));
 		dto.setEndDate(LocalDateTime.of(2025, 4, 8, 15, 0));
-		dto.setSeller(seller);
-		dto.setBuyer(buyer);
-		dto.setQuality(quality);
+		dto.setSellerId(1);
+		dto.setBuyerId(2);
+		dto.setQualityId(3);
 
 		ContractOffer entity = contractOfferMapper.toEntity(dto);
 
 		assertNotNull(entity);
-		assertEquals(dto.getId(), entity.getId());
 		assertEquals(dto.getStatus(), entity.getStatus());
 		assertEquals(dto.getPricePerKg(), entity.getPricePerKg());
 		assertEquals(dto.getCreationDate(), entity.getCreationDate());
 		assertEquals(dto.getEndDate(), entity.getEndDate());
 
-		assertEquals(dto.getSeller().getId(), entity.getSeller().getId());
-		assertEquals(dto.getBuyer().getId(), entity.getBuyer().getId());
-		assertEquals(dto.getQuality().getId(), entity.getQuality().getId());
+		assertEquals(dto.getSellerId(), entity.getSeller().getId());
+		assertEquals(dto.getBuyerId(), entity.getBuyer().getId());
+		assertEquals(dto.getQualityId(), entity.getQuality().getId());
 	}
 }

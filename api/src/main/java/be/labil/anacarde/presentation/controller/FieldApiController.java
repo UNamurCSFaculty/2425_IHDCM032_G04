@@ -1,7 +1,7 @@
 package be.labil.anacarde.presentation.controller;
 
 import be.labil.anacarde.application.service.FieldService;
-import be.labil.anacarde.domain.dto.FieldDto;
+import be.labil.anacarde.domain.dto.db.FieldDto;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ public class FieldApiController implements FieldApi {
 	private final FieldService fieldService;
 
 	@Override
-	public ResponseEntity<FieldDto> getField(Integer id) {
+	public ResponseEntity<FieldDto> getField(Integer userId, Integer id) {
 		FieldDto field = fieldService.getFieldById(id);
 		return ResponseEntity.ok(field);
 	}
@@ -28,7 +28,7 @@ public class FieldApiController implements FieldApi {
 	}
 
 	@Override
-	public ResponseEntity<FieldDto> createField(FieldDto fieldDto) {
+	public ResponseEntity<FieldDto> createField(Integer userId, FieldDto fieldDto) {
 		FieldDto created = fieldService.createField(fieldDto);
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(created.getId())
 				.toUri();
@@ -36,13 +36,13 @@ public class FieldApiController implements FieldApi {
 	}
 
 	@Override
-	public ResponseEntity<FieldDto> updateField(Integer id, FieldDto fieldDto) {
+	public ResponseEntity<FieldDto> updateField(Integer userId, Integer id, FieldDto fieldDto) {
 		FieldDto updated = fieldService.updateField(id, fieldDto);
 		return ResponseEntity.ok(updated);
 	}
 
 	@Override
-	public ResponseEntity<Void> deleteField(Integer id) {
+	public ResponseEntity<Void> deleteField(Integer userId, Integer id) {
 		fieldService.deleteField(id);
 		return ResponseEntity.noContent().build();
 	}

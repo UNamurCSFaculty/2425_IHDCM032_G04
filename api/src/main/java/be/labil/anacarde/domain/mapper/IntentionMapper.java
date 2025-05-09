@@ -1,10 +1,10 @@
 package be.labil.anacarde.domain.mapper;
 
-import be.labil.anacarde.domain.dto.IntentionDto;
+import be.labil.anacarde.domain.dto.db.IntentionDto;
 import be.labil.anacarde.domain.model.Intention;
 import org.mapstruct.*;
 
-@Mapper(componentModel = "spring", uses = {HibernateLazyCondition.class, QualityMapper.class,
+@Mapper(componentModel = "spring", uses = {MapperHelpers.class, QualityMapper.class,
 		TraderDetailMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class IntentionMapper {
 

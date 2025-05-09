@@ -1,7 +1,8 @@
 
 package be.labil.anacarde.application.service;
 
-import be.labil.anacarde.domain.dto.ContractOfferDto;
+import be.labil.anacarde.domain.dto.db.ContractOfferDto;
+import be.labil.anacarde.domain.dto.write.ContractOfferUpdateDto;
 import java.util.List;
 
 /**
@@ -12,11 +13,11 @@ public interface ContractOfferService {
 	/**
 	 * Crée un nouveau contrat dans le système en utilisant le ContractOfferDto fourni.
 	 *
-	 * @param ContractOfferDto
+	 * @param dto
 	 *            Le ContractOfferDto contenant les informations du nouveau contrat.
 	 * @return Un ContractOfferDto représentant le contrat créé.
 	 */
-	ContractOfferDto createContractOffer(ContractOfferDto ContractOfferDto);
+	ContractOfferDto createContractOffer(ContractOfferUpdateDto dto);
 
 	/**
 	 * Retourne le contrat correspondant à l'ID fourni.
@@ -39,11 +40,11 @@ public interface ContractOfferService {
 	 *
 	 * @param id
 	 *            L'identifiant unique du contrat à mettre à jour.
-	 * @param ContractOfferDto
+	 * @param dto
 	 *            Le ContractOfferDto contenant les informations mises à jour.
 	 * @return Un ContractOfferDto représentant le contrat mis à jour.
 	 */
-	ContractOfferDto updateContractOffer(Integer id, ContractOfferDto ContractOfferDto);
+	ContractOfferDto updateContractOffer(Integer id, ContractOfferUpdateDto dto);
 
 	/**
 	 * Supprime le contrat identifié par l'ID donné du système.

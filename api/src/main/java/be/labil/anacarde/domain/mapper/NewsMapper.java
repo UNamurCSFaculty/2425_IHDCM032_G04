@@ -1,10 +1,10 @@
 package be.labil.anacarde.domain.mapper;
 
-import be.labil.anacarde.domain.dto.NewsDto;
+import be.labil.anacarde.domain.dto.db.NewsDto;
 import be.labil.anacarde.domain.model.News;
 import org.mapstruct.*;
 
-@Mapper(componentModel = "spring", uses = {HibernateLazyCondition.class,
+@Mapper(componentModel = "spring", uses = {MapperHelpers.class,
 		NewsCategoryMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class NewsMapper {
 

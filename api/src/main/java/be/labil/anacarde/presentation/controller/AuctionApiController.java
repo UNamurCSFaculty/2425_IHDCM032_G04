@@ -1,7 +1,8 @@
 package be.labil.anacarde.presentation.controller;
 
 import be.labil.anacarde.application.service.AuctionService;
-import be.labil.anacarde.domain.dto.AuctionDto;
+import be.labil.anacarde.domain.dto.db.AuctionDto;
+import be.labil.anacarde.domain.dto.write.AuctionUpdateDto;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,7 @@ public class AuctionApiController implements AuctionApi {
 	}
 
 	@Override
-	public ResponseEntity<AuctionDto> createAuction(AuctionDto auctionDetailDto) {
+	public ResponseEntity<AuctionDto> createAuction(AuctionUpdateDto auctionDetailDto) {
 		AuctionDto created = auctionService.createAuction(auctionDetailDto);
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(created.getId())
 				.toUri();
@@ -35,7 +36,7 @@ public class AuctionApiController implements AuctionApi {
 	}
 
 	@Override
-	public ResponseEntity<AuctionDto> updateAuction(Integer id, AuctionDto auctionDetailDto) {
+	public ResponseEntity<AuctionDto> updateAuction(Integer id, AuctionUpdateDto auctionDetailDto) {
 		AuctionDto updated = auctionService.updateAuction(id, auctionDetailDto);
 		return ResponseEntity.ok(updated);
 	}

@@ -2,8 +2,8 @@ package be.labil.anacarde.domain.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import be.labil.anacarde.domain.dto.NewsCategoryDto;
-import be.labil.anacarde.domain.dto.NewsDto;
+import be.labil.anacarde.domain.dto.db.NewsCategoryDto;
+import be.labil.anacarde.domain.dto.db.NewsDto;
 import be.labil.anacarde.domain.model.News;
 import be.labil.anacarde.domain.model.NewsCategory;
 import java.time.LocalDateTime;

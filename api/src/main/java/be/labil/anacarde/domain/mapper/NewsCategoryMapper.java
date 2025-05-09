@@ -1,6 +1,6 @@
 package be.labil.anacarde.domain.mapper;
 
-import be.labil.anacarde.domain.dto.NewsCategoryDto;
+import be.labil.anacarde.domain.dto.db.NewsCategoryDto;
 import be.labil.anacarde.domain.model.NewsCategory;
 import org.mapstruct.*;
 

@@ -4,7 +4,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import be.labil.anacarde.domain.dto.StoreDetailDto;
+import be.labil.anacarde.domain.dto.db.StoreDetailDto;
 import be.labil.anacarde.domain.mapper.UserDetailMapper;
 import be.labil.anacarde.domain.model.Admin;
 import be.labil.anacarde.domain.model.Language;

@@ -1,8 +1,9 @@
 package be.labil.anacarde.presentation.controller;
 
 import be.labil.anacarde.application.exception.ApiErrorResponse;
-import be.labil.anacarde.domain.dto.AuctionDto;
-import be.labil.anacarde.domain.dto.ValidationGroups;
+import be.labil.anacarde.domain.dto.db.AuctionDto;
+import be.labil.anacarde.domain.dto.db.ValidationGroups;
+import be.labil.anacarde.domain.dto.write.AuctionUpdateDto;
 import be.labil.anacarde.presentation.controller.annotations.ApiValidId;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -36,20 +37,20 @@ public interface AuctionApi {
 	@Operation(summary = "Créer une enchère")
 	@PostMapping
 	@ApiResponses({
-			@ApiResponse(responseCode = "201", description = "", content = @Content(schema = @Schema(implementation = AuctionDto.class))),
+			@ApiResponse(responseCode = "201", description = "", content = @Content(schema = @Schema(implementation = AuctionUpdateDto.class))),
 			@ApiResponse(responseCode = "400", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
 			@ApiResponse(responseCode = "409", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
 	ResponseEntity<AuctionDto> createAuction(
-			@Validated({Default.class, ValidationGroups.Create.class}) @RequestBody AuctionDto auctionDto);
+			@Validated({Default.class, ValidationGroups.Create.class}) @RequestBody AuctionUpdateDto auctionDto);
 
 	@Operation(summary = "Mettre à jour une enchère")
 	@PutMapping(value = "/{id}", consumes = "application/json")
 	@ApiResponses({
-			@ApiResponse(responseCode = "201", description = "", content = @Content(schema = @Schema(implementation = AuctionDto.class))),
+			@ApiResponse(responseCode = "201", description = "", content = @Content(schema = @Schema(implementation = AuctionUpdateDto.class))),
 			@ApiResponse(responseCode = "400", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
 			@ApiResponse(responseCode = "409", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
 	ResponseEntity<AuctionDto> updateAuction(@ApiValidId @PathVariable("id") Integer id,
-			@Validated({Default.class, ValidationGroups.Update.class}) @RequestBody AuctionDto auctionDto);
+			@Validated({Default.class, ValidationGroups.Update.class}) @RequestBody AuctionUpdateDto auctionDto);
 
 	@Operation(summary = "Accepter une enchère")
 	@PutMapping(value = "/{id}/accept")

@@ -4,10 +4,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import be.labil.anacarde.domain.dto.ContractOfferDto;
-import be.labil.anacarde.domain.dto.QualityDto;
-import be.labil.anacarde.domain.dto.user.ProducerDetailDto;
-import be.labil.anacarde.domain.dto.user.TransformerDetailDto;
+import be.labil.anacarde.domain.dto.write.ContractOfferUpdateDto;
 import be.labil.anacarde.domain.model.ContractOffer;
 import be.labil.anacarde.infrastructure.persistence.ContractOfferRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -43,23 +40,19 @@ public class ContractOfferApiControllerIntegrationTest extends AbstractIntegrati
 	 */
 	@Test
 	public void testCreateContractOffer() throws Exception {
-		QualityDto quality = new QualityDto();
-		quality.setId(getMainTestQuality().getId());
 
-		ProducerDetailDto producer = new ProducerDetailDto();
-		producer.setId(getProducerTestUser().getId());
+		Integer qualityId = getMainTestQuality().getId();
+		Integer producerId = getProducerTestUser().getId();
+		Integer transformerId = getTransformerTestUser().getId();
 
-		TransformerDetailDto transformer = new TransformerDetailDto();
-		transformer.setId(getTransformerTestUser().getId());
-
-		ContractOfferDto newContractOffer = new ContractOfferDto();
+		ContractOfferUpdateDto newContractOffer = new ContractOfferUpdateDto();
 		newContractOffer.setStatus("Waiting");
 		newContractOffer.setPricePerKg(new BigDecimal("999.99"));
 		newContractOffer.setCreationDate(LocalDateTime.now());
 		newContractOffer.setEndDate(LocalDateTime.now());
-		newContractOffer.setQuality(quality);
-		newContractOffer.setBuyer(transformer);
-		newContractOffer.setSeller(producer);
+		newContractOffer.setQualityId(qualityId);
+		newContractOffer.setBuyerId(transformerId);
+		newContractOffer.setSellerId(producerId);
 
 		ObjectNode node = objectMapper.valueToTree(newContractOffer);
 		String jsonContent = node.toString();
@@ -68,9 +61,9 @@ public class ContractOfferApiControllerIntegrationTest extends AbstractIntegrati
 				.andExpect(status().isCreated())
 				.andExpect(header().string("Location", containsString("/api/contracts/")))
 				.andExpect(jsonPath("$.pricePerKg").value("999.99")).andExpect(jsonPath("$.status").value("Waiting"))
-				.andExpect(jsonPath("$.seller.id").value(producer.getId()))
-				.andExpect(jsonPath("$.buyer.id").value(transformer.getId()))
-				.andExpect(jsonPath("$.quality.id").value(quality.getId()));
+				.andExpect(jsonPath("$.seller.id").value(producerId))
+				.andExpect(jsonPath("$.buyer.id").value(transformerId))
+				.andExpect(jsonPath("$.quality.id").value(qualityId));
 
 		ContractOffer createdContractOffer = contractOfferRepository.findAll().stream()
 				.filter(contractOffer -> contractOffer.getPricePerKg().equals(new BigDecimal("999.99"))).findFirst()
@@ -93,19 +86,15 @@ public class ContractOfferApiControllerIntegrationTest extends AbstractIntegrati
 	 */
 	@Test
 	public void testUpdateContractOffer() throws Exception {
-		QualityDto quality = new QualityDto();
-		quality.setId(getMainTestQuality().getId());
 
-		ProducerDetailDto producer = new ProducerDetailDto();
-		producer.setId(getProducerTestUser().getId());
+		Integer qualityId = getMainTestQuality().getId();
+		Integer producerId = getProducerTestUser().getId();
+		Integer transformerId = getTransformerTestUser().getId();
 
-		TransformerDetailDto transformer = new TransformerDetailDto();
-		transformer.setId(getTransformerTestUser().getId());
-
-		ContractOfferDto updateContractOffer = new ContractOfferDto();
-		updateContractOffer.setSeller(producer);
-		updateContractOffer.setBuyer(transformer);
-		updateContractOffer.setQuality(quality);
+		ContractOfferUpdateDto updateContractOffer = new ContractOfferUpdateDto();
+		updateContractOffer.setSellerId(producerId);
+		updateContractOffer.setBuyerId(transformerId);
+		updateContractOffer.setQualityId(qualityId);
 		updateContractOffer.setStatus("Refused");
 		updateContractOffer.setPricePerKg(new BigDecimal("555.55"));
 		updateContractOffer.setCreationDate(LocalDateTime.now());

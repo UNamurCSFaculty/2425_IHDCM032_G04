@@ -1,6 +1,6 @@
 package be.labil.anacarde.domain.mapper;
 
-import be.labil.anacarde.domain.dto.QualityDto;
+import be.labil.anacarde.domain.dto.db.QualityDto;
 import be.labil.anacarde.domain.model.Quality;
 import org.mapstruct.*;
 

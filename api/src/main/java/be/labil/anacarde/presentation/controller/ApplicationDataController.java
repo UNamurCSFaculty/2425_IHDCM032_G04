@@ -1,7 +1,7 @@
 package be.labil.anacarde.presentation.controller;
 
 import be.labil.anacarde.application.service.ApplicationDataService;
-import be.labil.anacarde.domain.dto.ApplicationDataDto;
+import be.labil.anacarde.domain.dto.db.ApplicationDataDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 

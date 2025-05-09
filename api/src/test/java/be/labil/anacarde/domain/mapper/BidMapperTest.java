@@ -3,11 +3,10 @@ package be.labil.anacarde.domain.mapper;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import be.labil.anacarde.domain.dto.AuctionDto;
-import be.labil.anacarde.domain.dto.BidDto;
-import be.labil.anacarde.domain.dto.HarvestProductDto;
-import be.labil.anacarde.domain.dto.TradeStatusDto;
-import be.labil.anacarde.domain.dto.user.TransformerDetailDto;
+import be.labil.anacarde.domain.dto.db.AuctionDto;
+import be.labil.anacarde.domain.dto.db.BidDto;
+import be.labil.anacarde.domain.dto.db.product.HarvestProductDto;
+import be.labil.anacarde.domain.dto.write.BidUpdateDto;
 import be.labil.anacarde.domain.model.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -47,21 +46,41 @@ class BidMapperTest {
 
 	@Test
 	void testToEntity() {
-		BidDto dto = new BidDto();
-		dto.setId(2);
+		BidUpdateDto dto = new BidUpdateDto();
 		dto.setAmount(new BigDecimal("180.50"));
 		dto.setCreationDate(LocalDateTime.of(2025, 4, 8, 13, 0));
 		AuctionDto auction = new AuctionDto();
 		auction.setId(1);
 		auction.setProduct(new HarvestProductDto());
 		dto.setAuctionId(auction.getId());
-		dto.setTrader(new TransformerDetailDto());
-		dto.setStatus(new TradeStatusDto());
+		dto.setTraderId(1);
+		dto.setStatusId(2);
 
 		Bid entity = bidMapper.toEntity(dto);
 
 		assertNotNull(entity);
-		assertEquals(dto.getId(), entity.getId());
+		assertEquals(dto.getAmount(), entity.getAmount());
+		assertEquals(dto.getCreationDate(), entity.getCreationDate());
+		assertNotNull(entity.getAuctionId());
+		assertNotNull(entity.getTrader());
+		assertNotNull(entity.getStatus());
+	}
+
+	@Test
+	void testUpdateToEntity() {
+		BidUpdateDto dto = new BidUpdateDto();
+		dto.setAmount(new BigDecimal("180.50"));
+		dto.setCreationDate(LocalDateTime.of(2025, 4, 8, 13, 0));
+		AuctionDto auction = new AuctionDto();
+		auction.setId(1);
+		auction.setProduct(new HarvestProductDto());
+		dto.setAuctionId(auction.getId());
+		dto.setTraderId(2);
+		dto.setStatusId(2);
+
+		Bid entity = bidMapper.toEntity(dto);
+
+		assertNotNull(entity);
 		assertEquals(dto.getAmount(), entity.getAmount());
 		assertEquals(dto.getCreationDate(), entity.getCreationDate());
 		assertNotNull(entity.getAuctionId());
@@ -71,7 +90,7 @@ class BidMapperTest {
 
 	@Test
 	void testPartialUpdate() {
-		BidDto dto = new BidDto();
+		BidUpdateDto dto = new BidUpdateDto();
 		dto.setAmount(new BigDecimal("300.00"));
 
 		Bid existing = new Bid();

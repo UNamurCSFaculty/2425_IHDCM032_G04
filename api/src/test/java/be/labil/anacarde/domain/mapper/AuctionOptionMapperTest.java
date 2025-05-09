@@ -3,7 +3,7 @@ package be.labil.anacarde.domain.mapper;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import be.labil.anacarde.domain.dto.AuctionOptionDto;
+import be.labil.anacarde.domain.dto.db.AuctionOptionDto;
 import be.labil.anacarde.domain.model.AuctionOption;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

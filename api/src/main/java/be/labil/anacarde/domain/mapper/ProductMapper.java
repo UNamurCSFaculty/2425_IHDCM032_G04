@@ -1,50 +1,83 @@
 package be.labil.anacarde.domain.mapper;
 
-import be.labil.anacarde.domain.dto.HarvestProductDto;
-import be.labil.anacarde.domain.dto.ProductDto;
-import be.labil.anacarde.domain.dto.TransformedProductDto;
-import be.labil.anacarde.domain.model.HarvestProduct;
-import be.labil.anacarde.domain.model.Product;
-import be.labil.anacarde.domain.model.TransformedProduct;
+import be.labil.anacarde.domain.dto.db.product.HarvestProductDto;
+import be.labil.anacarde.domain.dto.db.product.ProductDto;
+import be.labil.anacarde.domain.dto.db.product.TransformedProductDto;
+import be.labil.anacarde.domain.dto.write.product.HarvestProductUpdateDto;
+import be.labil.anacarde.domain.dto.write.product.ProductUpdateDto;
+import be.labil.anacarde.domain.dto.write.product.TransformedProductUpdateDto;
+import be.labil.anacarde.domain.model.*;
+import jakarta.persistence.EntityManager;
 import org.mapstruct.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
-@Mapper(componentModel = "spring", uses = {HibernateLazyCondition.class, DocumentMapper.class, UserDetailMapper.class,
+@Mapper(componentModel = "spring", uses = {MapperHelpers.class, DocumentMapper.class, UserDetailMapper.class,
 		StoreMapper.class, FieldMapper.class})
 public abstract class ProductMapper {
 
-	public Product toEntity(ProductDto dto) {
-		if (dto instanceof HarvestProductDto) {
-			return toEntity((HarvestProductDto) dto);
-		} else if (dto instanceof TransformedProductDto) {
-			return toEntity((TransformedProductDto) dto);
-		}
-		throw new IllegalArgumentException("Type de ProductDto non supporté : " + dto.getClass().getName());
-	}
+	@Autowired
+	protected EntityManager em;
 
-	public ProductDto toDto(Product entity) {
-		if (entity instanceof HarvestProduct) {
-			return toDto((HarvestProduct) entity);
-		} else if (entity instanceof TransformedProduct) {
-			return toDto((TransformedProduct) entity);
-		}
-		throw new IllegalArgumentException("Type de Product non supporté : " + entity.getClass().getName());
-	}
-
-	public Product partialUpdate(ProductDto dto, Product entity) {
-		if (dto instanceof HarvestProductDto && entity instanceof HarvestProduct) {
-			return partialUpdate((HarvestProductDto) dto, (HarvestProduct) entity);
-		} else if (dto instanceof TransformedProductDto && entity instanceof TransformedProduct) {
-			return partialUpdate((TransformedProductDto) dto, (TransformedProduct) entity);
-		}
-		throw new IllegalArgumentException("Type de Product non supporté : " + entity.getClass().getName());
-	}
+	/*------------------------------------*/
+	/* Conversion DTO -> Entité par type */
+	/*------------------------------------*/
 
 	// Mapping vers l'entité
-	@Mapping(source = "store", target = "store")
-	@Mapping(source = "producer", target = "producer")
-	@Mapping(source = "field", target = "field")
+	@Mapping(target = "store", ignore = true)
 	@Mapping(target = "qualityControl", ignore = true)
-	public abstract HarvestProduct toEntity(HarvestProductDto dto);
+	@Mapping(target = "producer", ignore = true)
+	@Mapping(target = "field", ignore = true)
+	@Mapping(target = "id", ignore = true)
+	public abstract HarvestProduct toEntity(HarvestProductUpdateDto dto);
+
+	// Mapping vers l'entité
+	@Mapping(source = "identifier", target = "identifier")
+	@Mapping(target = "store", ignore = true)
+	@Mapping(target = "qualityControl", ignore = true)
+	@Mapping(target = "transformer", ignore = true)
+	@Mapping(target = "id", ignore = true)
+	public abstract TransformedProduct toEntity(TransformedProductUpdateDto dto);
+
+	@AfterMapping
+	protected void afterUpdateDto(ProductUpdateDto dto, @MappingTarget Product product) {
+		if (dto.getStoreId() != null) {
+			product.setStore(em.getReference(Store.class, dto.getStoreId()));
+		}
+		if (dto.getQualityControlId() != null) {
+			QualityControl qc = em.getReference(QualityControl.class, dto.getQualityControlId());
+			product.setQualityControl(qc);
+		}
+		if (dto instanceof HarvestProductUpdateDto harvest) {
+			if (harvest.getProducerId() != null) {
+				Producer producer = em.getReference(Producer.class, harvest.getProducerId());
+				((HarvestProduct) product).setProducer(producer);
+			}
+			if (harvest.getFieldId() != null) {
+				Field field = em.getReference(Field.class, harvest.getFieldId());
+				((HarvestProduct) product).setField(field);
+			}
+		} else if (dto instanceof TransformedProductUpdateDto transformed) {
+			if (transformed.getTransformerId() != null) {
+				Transformer transformer = em.getReference(Transformer.class, transformed.getTransformerId());
+				((TransformedProduct) product).setTransformer(transformer);
+			}
+		} else {
+			throw new IllegalArgumentException("Type de produit non supporté : " + dto.getClass().getName());
+		}
+	}
+
+	public Product toEntity(ProductUpdateDto dto) {
+		if (dto instanceof HarvestProductUpdateDto harvest) {
+			return toEntity(harvest);
+		} else if (dto instanceof TransformedProductUpdateDto transformed) {
+			return toEntity(transformed);
+		}
+		throw new IllegalArgumentException("Type de DTO non supporté : " + dto.getClass().getName());
+	}
+
+	/*------------------------------------*/
+	/* Conversion Entité -> DTO par type */
+	/*------------------------------------*/
 
 	// Mapping inverse vers le DTO
 	@Mapping(source = "store", target = "store")
@@ -53,13 +86,6 @@ public abstract class ProductMapper {
 	@Mapping(target = "qualityControlId", ignore = true)
 	public abstract HarvestProductDto toDto(HarvestProduct entity);
 
-	// Mapping vers l'entité
-	@Mapping(source = "store", target = "store")
-	@Mapping(source = "identifier", target = "identifier")
-	@Mapping(source = "transformer", target = "transformer")
-	@Mapping(target = "qualityControl", ignore = true)
-	public abstract TransformedProduct toEntity(TransformedProductDto dto);
-
 	// Mapping inverse vers le DTO
 	@Mapping(source = "store", target = "store")
 	@Mapping(source = "identifier", target = "identifier")
@@ -67,18 +93,42 @@ public abstract class ProductMapper {
 	@Mapping(target = "qualityControlId", ignore = true)
 	public abstract TransformedProductDto toDto(TransformedProduct entity);
 
-	@Mapping(source = "store", target = "store")
-	@Mapping(source = "identifier", target = "identifier")
-	@Mapping(source = "transformer", target = "transformer")
-	@Mapping(target = "qualityControl", ignore = true)
+	public ProductDto toDto(Product entity) {
+		if (entity instanceof HarvestProduct harvest) {
+			return toDto(harvest);
+		} else if (entity instanceof TransformedProduct transformed) {
+			return toDto(transformed);
+		}
+		throw new IllegalArgumentException("Type de Produit non supporté : " + entity.getClass().getName());
+	}
+
+	/*------------------------------------------*/
+	/* 3) Mise à jour partielle (partialUpdate) */
+	/*------------------------------------------*/
+
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-	public abstract TransformedProduct partialUpdate(TransformedProductDto dto,
+	@Mapping(target = "store", ignore = true)
+	@Mapping(target = "producer", ignore = true)
+	@Mapping(target = "field", ignore = true)
+	@Mapping(target = "qualityControl", ignore = true)
+	@Mapping(target = "id", ignore = true)
+	public abstract HarvestProduct partialUpdate(HarvestProductUpdateDto dto, @MappingTarget HarvestProduct entity);
+
+	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+	@Mapping(source = "identifier", target = "identifier")
+	@Mapping(target = "store", ignore = true)
+	@Mapping(target = "qualityControl", ignore = true)
+	@Mapping(target = "transformer", ignore = true)
+	@Mapping(target = "id", ignore = true)
+	public abstract TransformedProduct partialUpdate(TransformedProductUpdateDto dto,
 			@MappingTarget TransformedProduct entity);
 
-	@Mapping(source = "store", target = "store")
-	@Mapping(source = "producer", target = "producer")
-	@Mapping(source = "field", target = "field")
-	@Mapping(target = "qualityControl", ignore = true)
-	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-	public abstract HarvestProduct partialUpdate(HarvestProductDto dto, @MappingTarget HarvestProduct entity);
+	public Product partialUpdate(ProductUpdateDto dto, @MappingTarget Product entity) {
+		if (dto instanceof HarvestProductUpdateDto harvest && entity instanceof HarvestProduct) {
+			return partialUpdate(harvest, (HarvestProduct) entity);
+		} else if (dto instanceof TransformedProductUpdateDto transformed && entity instanceof TransformedProduct) {
+			return partialUpdate(transformed, (TransformedProduct) entity);
+		}
+		throw new IllegalArgumentException("Type de DTO non supporté : " + dto.getClass().getName());
+	}
 }

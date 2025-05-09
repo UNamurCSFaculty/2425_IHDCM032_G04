@@ -1,7 +1,7 @@
 package be.labil.anacarde.presentation.controller;
 
 import be.labil.anacarde.application.service.RegionService;
-import be.labil.anacarde.domain.dto.RegionDto;
+import be.labil.anacarde.domain.dto.db.RegionDto;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

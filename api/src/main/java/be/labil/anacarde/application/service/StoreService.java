@@ -1,7 +1,7 @@
 
 package be.labil.anacarde.application.service;
 
-import be.labil.anacarde.domain.dto.StoreDetailDto;
+import be.labil.anacarde.domain.dto.db.StoreDetailDto;
 import java.util.List;
 
 /**

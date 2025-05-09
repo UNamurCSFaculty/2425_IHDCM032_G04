@@ -4,7 +4,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import be.labil.anacarde.domain.dto.AuctionStrategyDto;
+import be.labil.anacarde.domain.dto.db.AuctionStrategyDto;
 import be.labil.anacarde.domain.model.AuctionStrategy;
 import be.labil.anacarde.infrastructure.persistence.AuctionStrategyRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;

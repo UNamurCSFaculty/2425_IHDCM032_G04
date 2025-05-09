@@ -2,7 +2,7 @@ package be.labil.anacarde.domain.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import be.labil.anacarde.domain.dto.RoleDto;
+import be.labil.anacarde.domain.dto.db.RoleDto;
 import be.labil.anacarde.domain.model.Role;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ class RoleMapperTest {
 
 	@Test
 	void shouldMapDtoToEntity() {
-		RoleDto dto = new RoleDto(1, "ROLE_USER");
+		RoleDto dto = RoleDto.builder().id(1).name("ROLE_USER").build();
 
 		Role entity = roleMapper.toEntity(dto);
 
@@ -40,7 +40,7 @@ class RoleMapperTest {
 
 	@Test
 	void shouldHandleNullValuesInDto() {
-		RoleDto dto = new RoleDto(null, null);
+		RoleDto dto = new RoleDto();
 
 		Role entity = roleMapper.toEntity(dto);
 

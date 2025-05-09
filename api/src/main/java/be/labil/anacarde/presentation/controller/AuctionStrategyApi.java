@@ -1,8 +1,8 @@
 package be.labil.anacarde.presentation.controller;
 
 import be.labil.anacarde.application.exception.ApiErrorResponse;
-import be.labil.anacarde.domain.dto.AuctionStrategyDto;
-import be.labil.anacarde.domain.dto.ValidationGroups;
+import be.labil.anacarde.domain.dto.db.AuctionStrategyDto;
+import be.labil.anacarde.domain.dto.db.ValidationGroups;
 import be.labil.anacarde.presentation.controller.annotations.ApiResponseGet;
 import be.labil.anacarde.presentation.controller.annotations.ApiResponsePost;
 import be.labil.anacarde.presentation.controller.annotations.ApiResponsePut;

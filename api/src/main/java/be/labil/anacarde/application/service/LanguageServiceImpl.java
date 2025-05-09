@@ -1,7 +1,7 @@
 package be.labil.anacarde.application.service;
 
 import be.labil.anacarde.application.exception.ResourceNotFoundException;
-import be.labil.anacarde.domain.dto.LanguageDto;
+import be.labil.anacarde.domain.dto.db.LanguageDto;
 import be.labil.anacarde.domain.mapper.LanguageMapper;
 import be.labil.anacarde.domain.model.Language;
 import be.labil.anacarde.infrastructure.persistence.LanguageRepository;

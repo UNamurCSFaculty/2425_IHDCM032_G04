@@ -1,6 +1,6 @@
 package be.labil.anacarde.domain.mapper;
 
-import be.labil.anacarde.domain.dto.TranslationEntryDto;
+import be.labil.anacarde.domain.dto.db.TranslationEntryDto;
 import be.labil.anacarde.domain.model.Language;
 import be.labil.anacarde.domain.model.Translation;
 import be.labil.anacarde.domain.model.TranslationEntry;

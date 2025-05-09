@@ -1,12 +1,14 @@
 package be.labil.anacarde.application.service;
 
 import be.labil.anacarde.application.exception.ResourceNotFoundException;
-import be.labil.anacarde.domain.dto.AuctionDto;
+import be.labil.anacarde.domain.dto.db.AuctionDto;
+import be.labil.anacarde.domain.dto.write.AuctionUpdateDto;
 import be.labil.anacarde.domain.mapper.AuctionMapper;
 import be.labil.anacarde.domain.model.Auction;
 import be.labil.anacarde.domain.model.TradeStatus;
 import be.labil.anacarde.infrastructure.persistence.AuctionRepository;
 import be.labil.anacarde.infrastructure.persistence.TradeStatusRepository;
+import be.labil.anacarde.infrastructure.util.PersistenceHelper;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -20,12 +22,13 @@ public class AuctionServiceImpl implements AuctionService {
 	private final TradeStatusRepository tradeStatusRepository;
 	private final AuctionRepository auctionRepository;
 	private final AuctionMapper auctionMapper;
+	private final PersistenceHelper persistenceHelper;
 
 	@Override
-	public AuctionDto createAuction(AuctionDto dto) {
+	public AuctionDto createAuction(AuctionUpdateDto dto) {
 		Auction auction = auctionMapper.toEntity(dto);
 
-		if (dto.getStatus() == null) {
+		if (dto.getStatusId() == null) {
 			TradeStatus pendingStatus = tradeStatusRepository.findStatusPending();
 			if (pendingStatus == null) {
 				throw new ResourceNotFoundException("Status non trouvé");
@@ -33,8 +36,8 @@ public class AuctionServiceImpl implements AuctionService {
 			auction.setStatus(pendingStatus);
 		}
 
-		Auction saved = auctionRepository.save(auction);
-		return auctionMapper.toDto(saved);
+		Auction full = persistenceHelper.saveAndReload(auctionRepository, auction, Auction::getId);
+		return auctionMapper.toDto(full);
 	}
 
 	@Override
@@ -53,14 +56,14 @@ public class AuctionServiceImpl implements AuctionService {
 	}
 
 	@Override
-	public AuctionDto updateAuction(Integer id, AuctionDto auctionDetailDto) {
+	public AuctionDto updateAuction(Integer id, AuctionUpdateDto auctionDetailDto) {
 		Auction existingAuction = auctionRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Enchère non trouvée"));
 
 		Auction updatedAuction = auctionMapper.partialUpdate(auctionDetailDto, existingAuction);
 
-		Auction saved = auctionRepository.save(updatedAuction);
-		return auctionMapper.toDto(saved);
+		Auction full = persistenceHelper.saveAndReload(auctionRepository, updatedAuction, Auction::getId);
+		return auctionMapper.toDto(full);
 	}
 
 	@Override
@@ -81,8 +84,8 @@ public class AuctionServiceImpl implements AuctionService {
 
 	@Override
 	public void deleteAuction(Integer id) {
-		if (auctionRepository.findById(id) != null) {
-			AuctionDto dto = new AuctionDto();
+		if (auctionRepository.findById(id).isPresent()) {
+			AuctionUpdateDto dto = new AuctionUpdateDto();
 			dto.setActive(false);
 			updateAuction(id, dto);
 		} else {

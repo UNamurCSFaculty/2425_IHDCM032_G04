@@ -1,7 +1,7 @@
 package be.labil.anacarde.application.service;
 
 import be.labil.anacarde.application.exception.ResourceNotFoundException;
-import be.labil.anacarde.domain.dto.StoreDetailDto;
+import be.labil.anacarde.domain.dto.db.StoreDetailDto;
 import be.labil.anacarde.domain.mapper.StoreMapper;
 import be.labil.anacarde.domain.model.Store;
 import be.labil.anacarde.infrastructure.persistence.StoreRepository;

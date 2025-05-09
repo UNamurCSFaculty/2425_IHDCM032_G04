@@ -1,6 +1,7 @@
 package be.labil.anacarde.application.service;
 
-import be.labil.anacarde.domain.dto.CooperativeDto;
+import be.labil.anacarde.domain.dto.db.CooperativeDto;
+import be.labil.anacarde.domain.dto.write.CooperativeUpdateDto;
 import java.util.List;
 
 /**
@@ -15,7 +16,7 @@ public interface CooperativeService {
 	 *            Le CooperativeDto contenant les informations de la nouvelle coopérative.
 	 * @return Un CooperativeDto représentant la coopérative créée.
 	 */
-	CooperativeDto createCooperative(CooperativeDto cooperativeDto);
+	CooperativeDto createCooperative(CooperativeUpdateDto cooperativeDto);
 
 	/**
 	 * Retourne la coopérative correspondant à l'ID fourni.
@@ -42,7 +43,7 @@ public interface CooperativeService {
 	 *            Le CooperativeDto contenant les informations mises à jour.
 	 * @return Un CooperativeDto représentant la coopérative mise à jour.
 	 */
-	CooperativeDto updateCooperative(Integer id, CooperativeDto cooperativeDto);
+	CooperativeDto updateCooperative(Integer id, CooperativeUpdateDto cooperativeDto);
 
 	/**
 	 * Supprime la coopérative identifiée par l'ID donné du système.

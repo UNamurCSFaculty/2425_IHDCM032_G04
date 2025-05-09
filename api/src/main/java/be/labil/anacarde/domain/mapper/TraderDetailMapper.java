@@ -1,8 +1,8 @@
 package be.labil.anacarde.domain.mapper;
 
-import be.labil.anacarde.domain.dto.user.ProducerDetailDto;
-import be.labil.anacarde.domain.dto.user.TraderDetailDto;
-import be.labil.anacarde.domain.dto.user.TransformerDetailDto;
+import be.labil.anacarde.domain.dto.db.user.ProducerDetailDto;
+import be.labil.anacarde.domain.dto.db.user.TraderDetailDto;
+import be.labil.anacarde.domain.dto.db.user.TransformerDetailDto;
 import be.labil.anacarde.domain.model.Producer;
 import be.labil.anacarde.domain.model.Trader;
 import be.labil.anacarde.domain.model.Transformer;
@@ -11,7 +11,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.ObjectFactory;
 import org.mapstruct.ReportingPolicy;
 
-@Mapper(componentModel = "spring", uses = {HibernateLazyCondition.class, RoleMapper.class,
+@Mapper(componentModel = "spring", uses = {MapperHelpers.class, RoleMapper.class,
 		LanguageMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class TraderDetailMapper {
 

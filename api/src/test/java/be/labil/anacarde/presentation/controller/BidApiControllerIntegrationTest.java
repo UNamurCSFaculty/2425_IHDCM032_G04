@@ -5,8 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import be.labil.anacarde.domain.dto.*;
-import be.labil.anacarde.domain.dto.user.ProducerDetailDto;
+import be.labil.anacarde.domain.dto.write.BidUpdateDto;
 import be.labil.anacarde.domain.model.Bid;
 import be.labil.anacarde.infrastructure.persistence.BidRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -42,25 +41,13 @@ public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 	 */
 	@Test
 	public void testCreateBid() throws Exception {
-		ProductDto productDto = new HarvestProductDto();
-		productDto.setId(getTestHarvestProduct().getId());
 
-		ProducerDetailDto producer = new ProducerDetailDto();
-		producer.setId(getProducerTestUser().getId());
-
-		AuctionDto auctionDto = new AuctionDto();
-		auctionDto.setId(getTestAuction().getId());
-		auctionDto.setProduct(productDto);
-
-		TradeStatusDto statusDto = new TradeStatusDto();
-		statusDto.setId(getTestBidStatus().getId());
-
-		BidDto newBid = new BidDto();
+		BidUpdateDto newBid = new BidUpdateDto();
 		newBid.setAmount(new BigDecimal("999.99"));
-		newBid.setStatus(statusDto);
+		newBid.setStatusId(getTestBidStatus().getId());
 		newBid.setCreationDate(LocalDateTime.now());
-		newBid.setTrader(producer);
-		newBid.setAuctionId(auctionDto.getId());
+		newBid.setTraderId(getProducerTestUser().getId());
+		newBid.setAuctionId(getTestAuction().getId());
 
 		ObjectNode node = objectMapper.valueToTree(newBid);
 		String jsonContent = node.toString();
@@ -95,22 +82,13 @@ public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 	 */
 	@Test
 	public void testUpdateBid() throws Exception {
-		AuctionDto auctionDto = new AuctionDto();
-		auctionDto.setId(getTestAuction().getId());
-
-		TradeStatusDto TradeStatusDto = new TradeStatusDto();
-		TradeStatusDto.setId(getTestBidStatus().getId());
-
-		ProducerDetailDto producer = new ProducerDetailDto();
-		producer.setId(getProducerTestUser().getId());
-
-		BidDto updateBid = new BidDto();
+		BidUpdateDto updateBid = new BidUpdateDto();
 		updateBid.setAmount(new BigDecimal("1234567.01"));
-		updateBid.setAuctionId(auctionDto.getId());
-		updateBid.setStatus(TradeStatusDto);
+		updateBid.setAuctionId(getTestAuction().getId());
+		updateBid.setStatusId(getTestBidStatus().getId());
 		updateBid.setCreationDate(LocalDateTime.now());
-		updateBid.setTrader(producer);
-		updateBid.setAuctionId(auctionDto.getId());
+		updateBid.setTraderId(getProducerTestUser().getId());
+		updateBid.setAuctionId(getTestAuction().getId());
 
 		ObjectNode node = objectMapper.valueToTree(updateBid);
 		String jsonContent = node.toString();

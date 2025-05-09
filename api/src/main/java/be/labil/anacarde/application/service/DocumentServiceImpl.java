@@ -1,7 +1,7 @@
 package be.labil.anacarde.application.service;
 
 import be.labil.anacarde.application.exception.ResourceNotFoundException;
-import be.labil.anacarde.domain.dto.DocumentDto;
+import be.labil.anacarde.domain.dto.db.DocumentDto;
 import be.labil.anacarde.domain.mapper.DocumentMapper;
 import be.labil.anacarde.domain.model.Document;
 import be.labil.anacarde.infrastructure.persistence.DocumentRepository;

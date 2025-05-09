@@ -5,7 +5,7 @@ export const Route = createFileRoute('/signup')({
   component: RouteComponent,
 
   beforeLoad: async ({ location, context }) => {
-    if (context.user !== null) {
+    if (context.user) {
       throw redirect({
         to: '/',
         search: {

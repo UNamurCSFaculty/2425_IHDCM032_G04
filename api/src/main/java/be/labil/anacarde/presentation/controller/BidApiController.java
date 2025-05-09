@@ -2,7 +2,8 @@ package be.labil.anacarde.presentation.controller;
 
 import be.labil.anacarde.application.service.AuctionService;
 import be.labil.anacarde.application.service.BidService;
-import be.labil.anacarde.domain.dto.BidDto;
+import be.labil.anacarde.domain.dto.db.BidDto;
+import be.labil.anacarde.domain.dto.write.BidUpdateDto;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ public class BidApiController implements BidApi {
 	private final AuctionService auctionService;
 
 	@Override
-	public ResponseEntity<BidDto> getBid(Integer bidId) {
+	public ResponseEntity<BidDto> getBid(Integer auctionId, Integer bidId) {
 		BidDto bid = bidService.getBidById(bidId);
 		return ResponseEntity.ok(bid);
 	}
@@ -29,7 +30,7 @@ public class BidApiController implements BidApi {
 	}
 
 	@Override
-	public ResponseEntity<BidDto> createBid(BidDto bidDto) {
+	public ResponseEntity<BidDto> createBid(Integer auctionId, BidUpdateDto bidDto) {
 		BidDto created = bidService.createBid(bidDto);
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(created.getId())
 				.toUri();
@@ -37,7 +38,7 @@ public class BidApiController implements BidApi {
 	}
 
 	@Override
-	public ResponseEntity<BidDto> updateBid(Integer auctionId, Integer bidId, BidDto bidDto) {
+	public ResponseEntity<BidDto> updateBid(Integer auctionId, Integer bidId, BidUpdateDto bidDto) {
 		BidDto updated = bidService.updateBid(bidId, bidDto);
 		return ResponseEntity.ok(updated);
 	}
@@ -49,7 +50,7 @@ public class BidApiController implements BidApi {
 	}
 
 	@Override
-	public ResponseEntity<Void> deleteBid(Integer id) {
+	public ResponseEntity<Void> deleteBid(Integer auctionId, Integer id) {
 		bidService.deleteBid(id);
 		return ResponseEntity.noContent().build();
 	}

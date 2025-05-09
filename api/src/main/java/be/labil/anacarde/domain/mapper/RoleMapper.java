@@ -1,6 +1,6 @@
 package be.labil.anacarde.domain.mapper;
 
-import be.labil.anacarde.domain.dto.RoleDto;
+import be.labil.anacarde.domain.dto.db.RoleDto;
 import be.labil.anacarde.domain.model.Role;
 import org.mapstruct.Mapper;
 

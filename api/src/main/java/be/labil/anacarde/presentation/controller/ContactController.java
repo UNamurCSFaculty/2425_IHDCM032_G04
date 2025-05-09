@@ -1,6 +1,6 @@
 package be.labil.anacarde.presentation.controller;
 
-import be.labil.anacarde.domain.dto.ContactRequestDto;
+import be.labil.anacarde.domain.dto.write.ContactRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;

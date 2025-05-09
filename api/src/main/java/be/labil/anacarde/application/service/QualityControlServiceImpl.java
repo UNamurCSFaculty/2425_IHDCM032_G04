@@ -1,10 +1,12 @@
 package be.labil.anacarde.application.service;
 
 import be.labil.anacarde.application.exception.ResourceNotFoundException;
-import be.labil.anacarde.domain.dto.QualityControlDto;
+import be.labil.anacarde.domain.dto.db.QualityControlDto;
+import be.labil.anacarde.domain.dto.write.QualityControlUpdateDto;
 import be.labil.anacarde.domain.mapper.QualityControlMapper;
 import be.labil.anacarde.domain.model.QualityControl;
 import be.labil.anacarde.infrastructure.persistence.QualityControlRepository;
+import be.labil.anacarde.infrastructure.util.PersistenceHelper;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -19,12 +21,14 @@ public class QualityControlServiceImpl implements QualityControlService {
 
 	private final QualityControlRepository qualityControlRepository;
 	private final QualityControlMapper qualityControlMapper;
+	private final PersistenceHelper persistenceHelper;
 
 	@Override
-	public QualityControlDto createQualityControl(QualityControlDto dto) {
+	public QualityControlDto createQualityControl(QualityControlUpdateDto dto) {
 		QualityControl entity = qualityControlMapper.toEntity(dto);
-		QualityControl saved = qualityControlRepository.save(entity);
-		return qualityControlMapper.toDto(saved);
+
+		QualityControl full = persistenceHelper.saveAndReload(qualityControlRepository, entity, QualityControl::getId);
+		return qualityControlMapper.toDto(full);
 	}
 
 	@Override
@@ -45,8 +49,7 @@ public class QualityControlServiceImpl implements QualityControlService {
 		if (qc.getQuality() != null && qc.getQuality().getId() != null) {
 			Hibernate.initialize(qc.getQuality());
 		}
-		QualityControlDto qualityControlDto = qualityControlMapper.toDto(qc);
-		return qualityControlDto;
+		return qualityControlMapper.toDto(qc);
 	}
 
 	@Override
@@ -57,14 +60,14 @@ public class QualityControlServiceImpl implements QualityControlService {
 	}
 
 	@Override
-	public QualityControlDto updateQualityControl(Integer id, QualityControlDto dto) {
+	public QualityControlDto updateQualityControl(Integer id, QualityControlUpdateDto dto) {
 		QualityControl existing = qualityControlRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Contrôle qualité non trouvé"));
 
 		QualityControl updated = qualityControlMapper.partialUpdate(dto, existing);
 
-		QualityControl saved = qualityControlRepository.save(updated);
-		return qualityControlMapper.toDto(saved);
+		QualityControl full = persistenceHelper.saveAndReload(qualityControlRepository, updated, QualityControl::getId);
+		return qualityControlMapper.toDto(full);
 	}
 
 	@Override

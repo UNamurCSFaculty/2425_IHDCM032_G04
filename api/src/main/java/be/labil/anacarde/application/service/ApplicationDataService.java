@@ -1,6 +1,6 @@
 package be.labil.anacarde.application.service;
 
-import be.labil.anacarde.domain.dto.ApplicationDataDto;
+import be.labil.anacarde.domain.dto.db.ApplicationDataDto;
 
 public interface ApplicationDataService {
 

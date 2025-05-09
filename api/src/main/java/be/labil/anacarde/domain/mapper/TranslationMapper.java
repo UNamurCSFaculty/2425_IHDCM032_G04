@@ -1,6 +1,6 @@
 package be.labil.anacarde.domain.mapper;
 
-import be.labil.anacarde.domain.dto.TranslationDto;
+import be.labil.anacarde.domain.dto.db.TranslationDto;
 import be.labil.anacarde.domain.model.Translation;
 import org.mapstruct.*;
 

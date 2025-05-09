@@ -1,12 +1,14 @@
 package be.labil.anacarde.application.service;
 
 import be.labil.anacarde.application.exception.ResourceNotFoundException;
-import be.labil.anacarde.domain.dto.CooperativeDto;
+import be.labil.anacarde.domain.dto.db.CooperativeDto;
+import be.labil.anacarde.domain.dto.write.CooperativeUpdateDto;
 import be.labil.anacarde.domain.mapper.CooperativeMapper;
 import be.labil.anacarde.domain.model.Cooperative;
 import be.labil.anacarde.domain.model.Producer;
 import be.labil.anacarde.infrastructure.persistence.CooperativeRepository;
 import be.labil.anacarde.infrastructure.persistence.user.ProducerRepository;
+import be.labil.anacarde.infrastructure.util.PersistenceHelper;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -21,12 +23,13 @@ public class CooperativeServiceImpl implements CooperativeService {
 	private final CooperativeRepository cooperativeRepository;
 	private final CooperativeMapper cooperativeMapper;
 	private final ProducerRepository producerRepository;
+	private final PersistenceHelper persistenceHelper;
 
 	@Override
-	public CooperativeDto createCooperative(CooperativeDto dto) {
+	public CooperativeDto createCooperative(CooperativeUpdateDto dto) {
 		Cooperative cooperative = cooperativeMapper.toEntity(dto);
-		Cooperative saved = cooperativeRepository.save(cooperative);
-		return cooperativeMapper.toDto(saved);
+		Cooperative full = persistenceHelper.saveAndReload(cooperativeRepository, cooperative, Cooperative::getId);
+		return cooperativeMapper.toDto(full);
 	}
 
 	@Override
@@ -45,14 +48,14 @@ public class CooperativeServiceImpl implements CooperativeService {
 	}
 
 	@Override
-	public CooperativeDto updateCooperative(Integer id, CooperativeDto dto) {
+	public CooperativeDto updateCooperative(Integer id, CooperativeUpdateDto dto) {
 		Cooperative existing = cooperativeRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Coopérative non trouvée"));
 
 		Cooperative updated = cooperativeMapper.partialUpdate(dto, existing);
 
-		Cooperative saved = cooperativeRepository.save(updated);
-		return cooperativeMapper.toDto(saved);
+		Cooperative full = persistenceHelper.saveAndReload(cooperativeRepository, updated, Cooperative::getId);
+		return cooperativeMapper.toDto(full);
 	}
 
 	/**
