@@ -1,8 +1,4 @@
 import {
-  type HarvestProductDtoReadable,
-  type TransformedProductDtoReadable,
-} from '@/api/generated'
-import {
   deleteAuctionMutation,
   listAuctionsOptions,
   listAuctionsQueryKey,
@@ -20,7 +16,7 @@ import {
 } from '@/components/ui/table'
 import { formatDate } from '@/lib/utils'
 import { useAuctionStore } from '@/store/auctionStore'
-import { useUserStore } from '@/store/userStore'
+import { useAuthUser } from '@/store/userStore'
 import {
   useMutation,
   useQueryClient,
@@ -47,7 +43,7 @@ export function RouteComponent() {
 
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
-  const { user } = useUserStore()
+  const user = useAuthUser()
 
   const { data: auctionsData } = useSuspenseQuery(
     listAuctionsQueryOptions(user!.id)
@@ -130,11 +126,7 @@ export function RouteComponent() {
                       <TableCell>
                         <div className="flex items-center">
                           <MapPin className="size-5 shrink-0" />
-                          {auction.product.type === 'harvest'
-                            ? (auction.product as HarvestProductDtoReadable)
-                                .store.name
-                            : (auction.product as TransformedProductDtoReadable)
-                                .location}
+                          {auction.product.store.name}
                         </div>
                       </TableCell>
                       <TableCell>

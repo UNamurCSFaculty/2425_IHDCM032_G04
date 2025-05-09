@@ -15,7 +15,7 @@ export const zRoleDto = z.object({
 })
 
 export const zLanguageDto = z.object({
-  id: z.number().int().optional(),
+  id: z.number().int().readonly(),
   code: z.string().min(1),
   name: z.string().min(1),
 })
@@ -219,20 +219,21 @@ export const zContractOfferDto = z.object({
   quality: zQualityDto,
 })
 
+export const zAuctionUpdateDto = z.object({
+  price: z.number(),
+  productQuantity: z.number().int(),
+  expirationDate: z.iso.datetime(),
+  creationDate: z.iso.datetime().readonly().optional(),
+  active: z.boolean(),
+  productId: z.number().int(),
+  traderId: z.number().int(),
+  strategyId: z.number().int().optional(),
+  statusId: z.number().int().optional(),
+})
+
 export const zAuctionStrategyDto = z.object({
   id: z.number().int().readonly(),
   name: z.string().min(1),
-})
-
-export const zAuctionOptionDto = z.object({
-  id: z.number().int().readonly(),
-  name: z.string().min(1),
-})
-
-export const zAuctionOptionValueDto = z.object({
-  id: z.number().int().readonly(),
-  auctionOption: zAuctionOptionDto,
-  optionValue: z.string().min(1),
 })
 
 export const zTradeStatusDto = z.object({
@@ -262,7 +263,6 @@ export const zAuctionDto = z.object({
   active: z.boolean(),
   strategy: zAuctionStrategyDto,
   product: z.union([zHarvestProductDto, zTransformedProductDto]),
-  auctionOptionValues: z.array(zAuctionOptionValueDto).optional(),
   trader: z.union([
     zExporterDetailDto,
     zProducerDetailDto,
@@ -379,7 +379,7 @@ export const zDeleteAuctionResponse = z.union([z.unknown(), z.void()])
 
 export const zGetAuctionResponse = zAuctionDto
 
-export const zUpdateAuctionResponse = zAuctionDto
+export const zUpdateAuctionResponse = zAuctionUpdateDto
 
 export const zAcceptAuctionResponse = zAuctionDto
 
@@ -437,11 +437,13 @@ export const zAuthenticateUserResponse = zUserDetailDto
 
 export const zListAuctionsResponse = z.array(zAuctionDto)
 
-export const zCreateAuctionResponse = zAuctionDto
+export const zCreateAuctionResponse = zAuctionUpdateDto
 
 export const zListBidsResponse = z.array(zBidDto)
 
 export const zCreateBidResponse = zBidDto
+
+export const zTestResponse = z.string()
 
 export const zListDocumentsByUserResponse = z.array(zDocumentDto)
 

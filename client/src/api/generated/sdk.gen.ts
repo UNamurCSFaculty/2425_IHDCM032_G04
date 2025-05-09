@@ -174,6 +174,8 @@ import type {
   LogoutData,
   SendContactMessageData,
   SendContactMessageError,
+  TestData,
+  TestResponse,
   UpdateAuctionData,
   UpdateAuctionError,
   UpdateAuctionResponse,
@@ -252,6 +254,12 @@ export const deleteField = <ThrowOnError extends boolean = false>(
     DeleteFieldError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/users/{userId}/fields/{id}',
     ...options,
   })
@@ -268,6 +276,12 @@ export const getField = <ThrowOnError extends boolean = false>(
     GetFieldError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/users/{userId}/fields/{id}',
     ...options,
   })
@@ -284,6 +298,12 @@ export const updateField = <ThrowOnError extends boolean = false>(
     UpdateFieldError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/users/{userId}/fields/{id}',
     ...options,
     headers: {
@@ -305,6 +325,12 @@ export const deleteUser = <ThrowOnError extends boolean = false>(
     DeleteUserError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/users/{id}',
     ...options,
   })
@@ -322,6 +348,12 @@ export const getUser = <ThrowOnError extends boolean = false>(
     GetUserError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/users/{id}',
     ...options,
   })
@@ -339,6 +371,12 @@ export const updateUser = <ThrowOnError extends boolean = false>(
     UpdateUserError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/users/{id}',
     ...options,
     headers: {
@@ -360,6 +398,12 @@ export const updateUserRoles = <ThrowOnError extends boolean = false>(
     UpdateUserRolesError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/users/{id}/roles',
     ...options,
     headers: {
@@ -380,6 +424,12 @@ export const deleteStore = <ThrowOnError extends boolean = false>(
     DeleteStoreError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/stores/{id}',
     ...options,
   })
@@ -396,6 +446,12 @@ export const getStore = <ThrowOnError extends boolean = false>(
     GetStoreError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/stores/{id}',
     ...options,
   })
@@ -412,6 +468,12 @@ export const updateStore = <ThrowOnError extends boolean = false>(
     UpdateStoreError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/stores/{id}',
     ...options,
     headers: {
@@ -432,6 +494,12 @@ export const addCarrier = <ThrowOnError extends boolean = false>(
     AddCarrierError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/regions/{regionId}/carriers/{carrierId}',
     ...options,
   })
@@ -448,6 +516,12 @@ export const deleteRegion = <ThrowOnError extends boolean = false>(
     DeleteRegionError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/regions/{id}',
     ...options,
   })
@@ -464,6 +538,12 @@ export const getRegion = <ThrowOnError extends boolean = false>(
     GetRegionError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/regions/{id}',
     ...options,
   })
@@ -480,6 +560,12 @@ export const updateRegion = <ThrowOnError extends boolean = false>(
     UpdateRegionError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/regions/{id}',
     ...options,
     headers: {
@@ -500,6 +586,12 @@ export const deleteQuality = <ThrowOnError extends boolean = false>(
     DeleteQualityError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/qualities/{id}',
     ...options,
   })
@@ -516,6 +608,12 @@ export const getQuality = <ThrowOnError extends boolean = false>(
     GetQualityError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/qualities/{id}',
     ...options,
   })
@@ -532,6 +630,12 @@ export const updateQuality = <ThrowOnError extends boolean = false>(
     UpdateQualityError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/qualities/{id}',
     ...options,
     headers: {
@@ -552,6 +656,12 @@ export const deleteQualityControl = <ThrowOnError extends boolean = false>(
     DeleteQualityControlError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/products/{productId}/quality-controls/{id}',
     ...options,
   })
@@ -568,6 +678,12 @@ export const getQualityControl = <ThrowOnError extends boolean = false>(
     GetQualityControlError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/products/{productId}/quality-controls/{id}',
     ...options,
   })
@@ -584,6 +700,12 @@ export const updateQualityControl = <ThrowOnError extends boolean = false>(
     UpdateQualityControlError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/products/{productId}/quality-controls/{id}',
     ...options,
     headers: {
@@ -604,6 +726,12 @@ export const deleteProduct = <ThrowOnError extends boolean = false>(
     DeleteProductError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/products/{id}',
     ...options,
   })
@@ -620,6 +748,12 @@ export const getProduct = <ThrowOnError extends boolean = false>(
     GetProductError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/products/{id}',
     ...options,
   })
@@ -636,6 +770,12 @@ export const updateProduct = <ThrowOnError extends boolean = false>(
     UpdateProductError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/products/{id}',
     ...options,
     headers: {
@@ -657,6 +797,12 @@ export const deleteLanguage = <ThrowOnError extends boolean = false>(
     DeleteLanguageError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/languages/{id}',
     ...options,
   })
@@ -674,6 +820,12 @@ export const getLanguage = <ThrowOnError extends boolean = false>(
     GetLanguageError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/languages/{id}',
     ...options,
   })
@@ -691,6 +843,12 @@ export const updateLanguage = <ThrowOnError extends boolean = false>(
     UpdateLanguageError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/languages/{id}',
     ...options,
     headers: {
@@ -711,6 +869,12 @@ export const deleteDocument = <ThrowOnError extends boolean = false>(
     DeleteDocumentError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/documents/{id}',
     ...options,
   })
@@ -727,6 +891,12 @@ export const getDocument = <ThrowOnError extends boolean = false>(
     GetDocumentError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/documents/{id}',
     ...options,
   })
@@ -743,6 +913,12 @@ export const updateDocument = <ThrowOnError extends boolean = false>(
     UpdateDocumentError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/documents/{id}',
     ...options,
     headers: {
@@ -763,6 +939,12 @@ export const deleteCooperative = <ThrowOnError extends boolean = false>(
     DeleteCooperativeError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/cooperatives/{id}',
     ...options,
   })
@@ -779,6 +961,12 @@ export const getCooperative = <ThrowOnError extends boolean = false>(
     GetCooperativeError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/cooperatives/{id}',
     ...options,
   })
@@ -795,6 +983,12 @@ export const updateCooperative = <ThrowOnError extends boolean = false>(
     UpdateCooperativeError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/cooperatives/{id}',
     ...options,
     headers: {
@@ -815,6 +1009,12 @@ export const deleteContractOffer = <ThrowOnError extends boolean = false>(
     DeleteContractOfferError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/contracts/{id}',
     ...options,
   })
@@ -831,6 +1031,12 @@ export const getContractOffer = <ThrowOnError extends boolean = false>(
     GetContractOfferError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/contracts/{id}',
     ...options,
   })
@@ -847,6 +1053,12 @@ export const updateContractOffer = <ThrowOnError extends boolean = false>(
     UpdateContractOfferError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/contracts/{id}',
     ...options,
     headers: {
@@ -867,6 +1079,12 @@ export const deleteAuction = <ThrowOnError extends boolean = false>(
     DeleteAuctionError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/auctions/{id}',
     ...options,
   })
@@ -883,6 +1101,12 @@ export const getAuction = <ThrowOnError extends boolean = false>(
     GetAuctionError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/auctions/{id}',
     ...options,
   })
@@ -899,6 +1123,12 @@ export const updateAuction = <ThrowOnError extends boolean = false>(
     UpdateAuctionError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/auctions/{id}',
     ...options,
     headers: {
@@ -919,6 +1149,12 @@ export const acceptAuction = <ThrowOnError extends boolean = false>(
     AcceptAuctionError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/auctions/{id}/accept',
     ...options,
   })
@@ -935,6 +1171,12 @@ export const deleteBid = <ThrowOnError extends boolean = false>(
     DeleteBidError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/auctions/{auctionId}/bids/{bidId}',
     ...options,
   })
@@ -951,6 +1193,12 @@ export const getBid = <ThrowOnError extends boolean = false>(
     GetBidError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/auctions/{auctionId}/bids/{bidId}',
     ...options,
   })
@@ -967,6 +1215,12 @@ export const updateBid = <ThrowOnError extends boolean = false>(
     UpdateBidError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/auctions/{auctionId}/bids/{bidId}',
     ...options,
     headers: {
@@ -987,6 +1241,12 @@ export const acceptBid = <ThrowOnError extends boolean = false>(
     AcceptBidError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/auctions/{auctionId}/bids/{bidId}/accept',
     ...options,
   })
@@ -1003,6 +1263,12 @@ export const deleteAuctionStrategy = <ThrowOnError extends boolean = false>(
     DeleteAuctionStrategyError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/auctions/strategies/{id}',
     ...options,
   })
@@ -1019,6 +1285,12 @@ export const getAuctionStrategy = <ThrowOnError extends boolean = false>(
     GetAuctionStrategyError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/auctions/strategies/{id}',
     ...options,
   })
@@ -1035,6 +1307,12 @@ export const updateAuctionStrategy = <ThrowOnError extends boolean = false>(
     UpdateAuctionStrategyError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/auctions/strategies/{id}',
     ...options,
     headers: {
@@ -1056,6 +1334,12 @@ export const listUsers = <ThrowOnError extends boolean = false>(
     unknown,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/users',
     ...options,
   })
@@ -1073,6 +1357,12 @@ export const createUser = <ThrowOnError extends boolean = false>(
     CreateUserError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/users',
     ...options,
     headers: {
@@ -1093,6 +1383,12 @@ export const listFields = <ThrowOnError extends boolean = false>(
     unknown,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/users/{userId}/fields',
     ...options,
   })
@@ -1109,6 +1405,12 @@ export const createField = <ThrowOnError extends boolean = false>(
     CreateFieldError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/users/{userId}/fields',
     ...options,
     headers: {
@@ -1130,6 +1432,12 @@ export const addRoleToUser = <ThrowOnError extends boolean = false>(
     AddRoleToUserError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/users/{id}/roles/{roleName}',
     ...options,
   })
@@ -1146,6 +1454,12 @@ export const listStores = <ThrowOnError extends boolean = false>(
     unknown,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/stores',
     ...options,
   })
@@ -1162,6 +1476,12 @@ export const createStore = <ThrowOnError extends boolean = false>(
     CreateStoreError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/stores',
     ...options,
     headers: {
@@ -1182,6 +1502,12 @@ export const listRegions = <ThrowOnError extends boolean = false>(
     unknown,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/regions',
     ...options,
   })
@@ -1198,6 +1524,12 @@ export const createRegion = <ThrowOnError extends boolean = false>(
     CreateRegionError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/regions',
     ...options,
     headers: {
@@ -1218,6 +1550,12 @@ export const listQualities = <ThrowOnError extends boolean = false>(
     ListQualitiesError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/qualities',
     ...options,
   })
@@ -1234,6 +1572,12 @@ export const createQuality = <ThrowOnError extends boolean = false>(
     CreateQualityError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/qualities',
     ...options,
     headers: {
@@ -1254,6 +1598,12 @@ export const listProducts = <ThrowOnError extends boolean = false>(
     unknown,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/products',
     ...options,
   })
@@ -1270,6 +1620,12 @@ export const createProduct = <ThrowOnError extends boolean = false>(
     CreateProductError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/products',
     ...options,
     headers: {
@@ -1290,6 +1646,12 @@ export const listQualityControls = <ThrowOnError extends boolean = false>(
     unknown,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/products/{productId}/quality-controls',
     ...options,
   })
@@ -1306,6 +1668,12 @@ export const createQualityControl = <ThrowOnError extends boolean = false>(
     CreateQualityControlError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/products/{productId}/quality-controls',
     ...options,
     headers: {
@@ -1327,6 +1695,12 @@ export const listLanguages = <ThrowOnError extends boolean = false>(
     unknown,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/languages',
     ...options,
   })
@@ -1344,6 +1718,12 @@ export const createLanguage = <ThrowOnError extends boolean = false>(
     CreateLanguageError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/languages',
     ...options,
     headers: {
@@ -1364,6 +1744,12 @@ export const createDocument = <ThrowOnError extends boolean = false>(
     CreateDocumentError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/documents',
     ...options,
     headers: {
@@ -1384,6 +1770,12 @@ export const listCooperatives = <ThrowOnError extends boolean = false>(
     unknown,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/cooperatives',
     ...options,
   })
@@ -1400,6 +1792,12 @@ export const createCooperative = <ThrowOnError extends boolean = false>(
     CreateCooperativeError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/cooperatives',
     ...options,
     headers: {
@@ -1420,6 +1818,12 @@ export const listContractOffers = <ThrowOnError extends boolean = false>(
     unknown,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/contracts',
     ...options,
   })
@@ -1436,6 +1840,12 @@ export const createContractOffer = <ThrowOnError extends boolean = false>(
     CreateContractOfferError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/contracts',
     ...options,
     headers: {
@@ -1515,6 +1925,12 @@ export const listAuctions = <ThrowOnError extends boolean = false>(
     unknown,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/auctions',
     ...options,
   })
@@ -1531,6 +1947,12 @@ export const createAuction = <ThrowOnError extends boolean = false>(
     CreateAuctionError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/auctions',
     ...options,
     headers: {
@@ -1551,6 +1973,12 @@ export const listBids = <ThrowOnError extends boolean = false>(
     unknown,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/auctions/{auctionId}/bids/',
     ...options,
   })
@@ -1567,6 +1995,12 @@ export const createBid = <ThrowOnError extends boolean = false>(
     CreateBidError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/auctions/{auctionId}/bids/',
     ...options,
     headers: {
@@ -1587,6 +2021,12 @@ export const listAuctionStrategies = <ThrowOnError extends boolean = false>(
     ListAuctionStrategiesError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/auctions/strategies',
     ...options,
   })
@@ -1603,12 +2043,31 @@ export const createAuctionStrategy = <ThrowOnError extends boolean = false>(
     CreateAuctionStrategyError,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/auctions/strategies',
     ...options,
     headers: {
       'Content-Type': 'application/json',
       ...options?.headers,
     },
+  })
+}
+
+export const test = <ThrowOnError extends boolean = false>(
+  options?: Options<TestData, ThrowOnError>
+) => {
+  return (options?.client ?? _heyApiClient).get<
+    TestResponse,
+    unknown,
+    ThrowOnError
+  >({
+    url: '/test',
+    ...options,
   })
 }
 
@@ -1623,6 +2082,12 @@ export const listDocumentsByUser = <ThrowOnError extends boolean = false>(
     unknown,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/documents/users/{userId}',
     ...options,
   })

@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
 @SecurityRequirement(name = "jwt")
 @RequestMapping(value = "/api/users/{userId}/fields", produces = "application/json")
 @Tag(name = "fields", description = "Opérations relatives aux champs")
-@Tag(name = "users", description = "Opérations relatives aux utilisateurs")
 public interface FieldApi {
 
 	@Operation(summary = "Obtenir un champ")

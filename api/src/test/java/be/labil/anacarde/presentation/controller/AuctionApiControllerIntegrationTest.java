@@ -2,6 +2,7 @@ package be.labil.anacarde.presentation.controller;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import be.labil.anacarde.domain.dto.*;
@@ -53,22 +54,22 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		TradeStatusDto statusDto = new TradeStatusDto();
 		statusDto.setId(getTestAuctionStatus().getId());
 
-		AuctionDto newAuction = new AuctionDto();
+		AuctionUpdateDto newAuction = new AuctionUpdateDto();
 		newAuction.setPrice(new BigDecimal("111.11"));
 		newAuction.setProductQuantity(11);
 		newAuction.setActive(true);
 		newAuction.setCreationDate(LocalDateTime.now());
 		newAuction.setExpirationDate(LocalDateTime.now());
-		newAuction.setStrategy(strategyDto);
-		newAuction.setProduct(productDto);
-		newAuction.setTrader(producer);
-		newAuction.setStatus(statusDto);
+		newAuction.setStrategyId(strategyDto.getId());
+		newAuction.setProductId(productDto.getId());
+		newAuction.setTraderId(producer.getId());
+		newAuction.setStatusId(statusDto.getId());
 
 		ObjectNode node = objectMapper.valueToTree(newAuction);
 		String jsonContent = node.toString();
 
 		mockMvc.perform(post("/api/auctions").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
-				.andExpect(status().isCreated())
+				.andDo(print()).andExpect(status().isCreated())
 				.andExpect(header().string("Location", containsString("/api/auctions/")))
 				.andExpect(jsonPath("$.price").value("111.11")).andExpect(jsonPath("$.productQuantity").value("11"))
 				.andExpect(jsonPath("$.active").value("true"))
@@ -92,14 +93,14 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		ProductDto productDto = new HarvestProductDto();
 		productDto.setId(getTestHarvestProduct().getId());
 
-		AuctionDto newAuction = new AuctionDto();
+		AuctionUpdateDto newAuction = new AuctionUpdateDto();
 		newAuction.setPrice(new BigDecimal("111.11"));
 		newAuction.setProductQuantity(11);
 		newAuction.setActive(true);
 		newAuction.setCreationDate(LocalDateTime.now());
 		newAuction.setExpirationDate(LocalDateTime.now());
-		newAuction.setProduct(productDto);
-		newAuction.setTrader(producer);
+		newAuction.setProductId(productDto.getId());
+		newAuction.setTraderId(producer.getId());
 
 		ObjectNode node = objectMapper.valueToTree(newAuction);
 		String jsonContent = node.toString();
@@ -157,16 +158,16 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		TradeStatusDto statusDto = new TradeStatusDto();
 		statusDto.setId(getTestAuctionStatus().getId());
 
-		AuctionDto updateAuction = new AuctionDto();
+		AuctionUpdateDto updateAuction = new AuctionUpdateDto();
 		updateAuction.setPrice(new BigDecimal("999.99"));
 		updateAuction.setProductQuantity(99);
 		updateAuction.setActive(true);
 		updateAuction.setCreationDate(LocalDateTime.now());
 		updateAuction.setExpirationDate(LocalDateTime.now());
-		updateAuction.setStrategy(strategyDto);
-		updateAuction.setProduct(productDto);
-		updateAuction.setTrader(producer);
-		updateAuction.setStatus(statusDto);
+		updateAuction.setStrategyId(strategyDto.getId());
+		updateAuction.setProductId(productDto.getId());
+		updateAuction.setTraderId(producer.getId());
+		updateAuction.setStatusId(statusDto.getId());
 
 		ObjectNode node = objectMapper.valueToTree(updateAuction);
 		String jsonContent = node.toString();

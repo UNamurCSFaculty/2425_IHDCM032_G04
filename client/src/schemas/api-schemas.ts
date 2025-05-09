@@ -4,12 +4,12 @@ import { z } from 'zod'
  * Propriétés des utilisateurs : Role et Langage
  */
 export const zRole = z.object({
-  id: z.number().int().readonly().optional(),
+  id: z.number().int().readonly(),
   name: z.string().min(1),
 })
 
 export const zLanguage = z.object({
-  id: z.number().int().readonly().optional(),
+  id: z.number().int().readonly(),
   code: z.string().min(1),
   name: z.string().min(1),
 })
@@ -18,7 +18,7 @@ export const zLanguage = z.object({
  * Les différents types d'utilisateurs (hiérarchie)
  */
 export const zUser = z.object({
-  id: z.number().int().readonly().optional(),
+  id: z.number().int().readonly(),
   type: z.enum([
     'admin',
     'producer',
@@ -92,14 +92,14 @@ export const zTrader = z.discriminatedUnion('type', [
  * Table Champ, Coopérative, Magasin, Région, Qualité et Document
  */
 export const zField = z.object({
-  id: z.number().int().readonly().optional(),
+  id: z.number().int().readonly(),
   identifier: z.string().optional(),
   location: z.string().optional(),
   producer: zProducer.optional(),
 })
 
 export const zCooperative: z.ZodObject = z.object({
-  id: z.number().int().readonly().optional(),
+  id: z.number().int().readonly(),
   name: z.string().min(1),
   address: z.string().min(1),
   creationDate: z.iso.datetime(),
@@ -107,23 +107,23 @@ export const zCooperative: z.ZodObject = z.object({
 })
 
 export const zStore = z.object({
-  id: z.number().int().readonly().optional(),
+  id: z.number().int().readonly(),
   location: z.string(),
   userId: z.number().int(),
 })
 
 export const zRegion = z.object({
-  id: z.number().int().readonly().optional(),
+  id: z.number().int().readonly(),
   name: z.string().min(1),
 })
 
 export const zQuality = z.object({
-  id: z.number().int().readonly().optional(),
+  id: z.number().int().readonly(),
   name: z.string().min(1),
 })
 
 export const zDocument = z.object({
-  id: z.number().int().readonly().optional(),
+  id: z.number().int().readonly(),
   documentType: z.string().min(1),
   format: z.string().min(1),
   storagePath: z.string().min(1),
@@ -135,7 +135,7 @@ export const zDocument = z.object({
  * Les différents types de produits (hiérarchie)
  */
 export const zProduct: z.ZodObject = z.object({
-  id: z.number().int().readonly().optional(),
+  id: z.number().int().readonly(),
   weightKg: z.number().optional(),
   qualityControlId: z.number().int(),
 })
@@ -164,7 +164,7 @@ export const zProductDeposit = z.discriminatedUnion('type', [
  * Le contrôle de qualité et les offres de contrats
  */
 export const zQualityControl: z.ZodObject = z.object({
-  id: z.number().int().readonly().optional(),
+  id: z.number().int().readonly(),
   identifier: z.string().min(1),
   controlDate: z.iso.datetime(),
   granularity: z.number(),
@@ -178,7 +178,7 @@ export const zQualityControl: z.ZodObject = z.object({
 
 export const zContractOffer = z
   .object({
-    id: z.number().int().readonly().optional(),
+    id: z.number().int().readonly(),
     status: z.string().min(1),
     pricePerKg: z.number(),
     creationDate: z.iso.datetime().readonly(),
@@ -195,31 +195,31 @@ export const zContractOffer = z
  * Les offres avec leurs enchères, options et stratégies
  */
 export const zAuctionStrategy = z.object({
-  id: z.number().int().readonly().optional(),
+  id: z.number().int().readonly(),
   name: z.string().min(1),
 })
 
 export const zAuctionOption = z.object({
-  id: z.number().int().readonly().optional(),
+  id: z.number().int().readonly(),
   name: z.string().min(1),
 })
 
 export const zAuctionOptionValue = z.object({
-  id: z.number().int().readonly().optional(),
+  id: z.number().int().readonly(),
   auctionOption: zAuctionOption,
   optionValue: z.string().min(1),
 })
 
 export const zTradeStatus = z.object({
-  id: z.number().int().readonly().optional(),
+  id: z.number().int().readonly(),
   name: z.string().min(1),
 })
 
 export const zAuction = z.object({
-  id: z.number().int().readonly().optional(),
-  price: z.coerce.number().positive(),
-  productId: z.coerce.number().int(),
-  productQuantity: z.coerce.number().int().positive(),
+  id: z.number().int(),
+  price: z.number().positive(),
+  productId: z.number().int(),
+  productQuantity: z.number().int().positive(),
   expirationDate: z.iso.datetime(),
   // TODO implement strategy
   //auctionStrategy: zAuctionStrategy
@@ -227,7 +227,7 @@ export const zAuction = z.object({
 })
 
 export const zBid = z.object({
-  id: z.number().int().readonly().optional(),
+  id: z.number().int().readonly(),
   amount: z.number(),
   auctionDate: z.iso.datetime(),
   creationDate: z.iso.datetime().readonly(),

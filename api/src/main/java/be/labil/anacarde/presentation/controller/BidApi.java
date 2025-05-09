@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 @SecurityRequirement(name = "jwt")
 @RequestMapping(value = "/api/auctions/{auctionId}/bids/", produces = "application/json")
-@Tag(name = "auctions", description = "Opérations relatives aux offres")
+@Tag(name = "bids", description = "Opérations relatives aux offres")
 public interface BidApi {
 
 	@Operation(summary = "Obtenir une offre")

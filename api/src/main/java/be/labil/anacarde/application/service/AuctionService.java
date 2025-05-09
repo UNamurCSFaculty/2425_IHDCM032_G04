@@ -2,6 +2,7 @@
 package be.labil.anacarde.application.service;
 
 import be.labil.anacarde.domain.dto.AuctionDto;
+import be.labil.anacarde.domain.dto.AuctionUpdateDto;
 import java.util.List;
 
 /**
@@ -16,7 +17,7 @@ public interface AuctionService {
 	 *            Le AuctionDto contenant les informations de la nouvelle enchère.
 	 * @return Un AuctionDto représentant l'enchère créée.
 	 */
-	AuctionDto createAuction(AuctionDto AuctionDto);
+	AuctionDto createAuction(AuctionUpdateDto AuctionDto);
 
 	/**
 	 * Retourne l'enchère correspondant à l'ID fourni.
@@ -48,7 +49,7 @@ public interface AuctionService {
 	 *            Le AuctionDto contenant les informations mises à jour.
 	 * @return Un AuctionDto représentant l'enchère mis à jour.
 	 */
-	AuctionDto updateAuction(Integer id, AuctionDto AuctionDto);
+	AuctionDto updateAuction(Integer id, AuctionUpdateDto AuctionDto);
 
 	/**
 	 * Accepter l'enchère identifiée par l'ID donné.

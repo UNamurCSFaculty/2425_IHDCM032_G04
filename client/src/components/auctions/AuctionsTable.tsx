@@ -1,8 +1,4 @@
-import {
-  type AuctionDtoReadable,
-  type HarvestProductDtoReadable,
-  type TransformedProductDtoReadable,
-} from '@/api/generated'
+import { type AuctionDto } from '@/api/generated'
 import { Card, CardContent } from '@/components/ui/card'
 import {
   Table,
@@ -20,7 +16,7 @@ interface AuctionsTableProps {
   tableTitle: string
   showColumnBidder: boolean
   showColumnBidderPrice: boolean
-  auctions: AuctionDtoReadable[]
+  auctions: AuctionDto[]
 }
 
 const AuctionsTable: React.FC<AuctionsTableProps> = ({

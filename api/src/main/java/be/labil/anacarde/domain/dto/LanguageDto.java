@@ -18,6 +18,7 @@ import lombok.NoArgsConstructor;
 public class LanguageDto {
 
 	/** Identifiant unique de la langue. */
+	@Schema(description = "Identifiant de la langue", example = "1", accessMode = Schema.AccessMode.READ_ONLY, requiredMode = Schema.RequiredMode.REQUIRED)
 	private Integer id;
 
 	/** Nom de la langue. */

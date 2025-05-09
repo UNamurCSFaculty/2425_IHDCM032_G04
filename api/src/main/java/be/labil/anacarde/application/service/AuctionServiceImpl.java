@@ -2,11 +2,13 @@ package be.labil.anacarde.application.service;
 
 import be.labil.anacarde.application.exception.ResourceNotFoundException;
 import be.labil.anacarde.domain.dto.AuctionDto;
+import be.labil.anacarde.domain.dto.AuctionUpdateDto;
 import be.labil.anacarde.domain.mapper.AuctionMapper;
 import be.labil.anacarde.domain.model.Auction;
 import be.labil.anacarde.domain.model.TradeStatus;
 import be.labil.anacarde.infrastructure.persistence.AuctionRepository;
 import be.labil.anacarde.infrastructure.persistence.TradeStatusRepository;
+import jakarta.persistence.EntityManager;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -20,12 +22,13 @@ public class AuctionServiceImpl implements AuctionService {
 	private final TradeStatusRepository tradeStatusRepository;
 	private final AuctionRepository auctionRepository;
 	private final AuctionMapper auctionMapper;
+	private final EntityManager entityManager;
 
 	@Override
-	public AuctionDto createAuction(AuctionDto dto) {
-		Auction auction = auctionMapper.toEntity(dto);
+	public AuctionDto createAuction(AuctionUpdateDto dto) {
+		Auction auction = auctionMapper.fromUpdateDto(dto);
 
-		if (dto.getStatus() == null) {
+		if (dto.getStatusId() == null) {
 			TradeStatus pendingStatus = tradeStatusRepository.findStatusPending();
 			if (pendingStatus == null) {
 				throw new ResourceNotFoundException("Status non trouvé");
@@ -34,7 +37,14 @@ public class AuctionServiceImpl implements AuctionService {
 		}
 
 		Auction saved = auctionRepository.save(auction);
-		return auctionMapper.toDto(saved);
+		// On flush pour s'assurer que l'entité est bien persisté
+		// On clear pour éviter les problèmes de lazy loading (cache Hibernate)
+		// On recharge l'entité pour s'assurer que toutes les relations sont bien
+		entityManager.flush();
+		entityManager.clear();
+		Auction full = auctionRepository.findById(saved.getId()).orElseThrow(() -> new ResourceNotFoundException(
+				"Création échouée : impossible de recharger l’enchère id=" + saved.getId()));
+		return auctionMapper.toDto(full);
 	}
 
 	@Override
@@ -53,14 +63,21 @@ public class AuctionServiceImpl implements AuctionService {
 	}
 
 	@Override
-	public AuctionDto updateAuction(Integer id, AuctionDto auctionDetailDto) {
+	public AuctionDto updateAuction(Integer id, AuctionUpdateDto auctionDetailDto) {
 		Auction existingAuction = auctionRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Enchère non trouvée"));
 
-		Auction updatedAuction = auctionMapper.partialUpdate(auctionDetailDto, existingAuction);
+		Auction updatedAuction = auctionMapper.partialUpdateFromDto(auctionDetailDto, existingAuction);
 
 		Auction saved = auctionRepository.save(updatedAuction);
-		return auctionMapper.toDto(saved);
+		// On flush pour s'assurer que l'entité est bien persisté
+		// On clear pour éviter les problèmes de lazy loading (cache Hibernate)
+		// On recharge l'entité pour s'assurer que toutes les relations sont bien
+		entityManager.flush();
+		entityManager.clear();
+		Auction full = auctionRepository.findById(saved.getId()).orElseThrow(() -> new ResourceNotFoundException(
+				"Création échouée : impossible de recharger l’enchère id=" + saved.getId()));
+		return auctionMapper.toDto(full);
 	}
 
 	@Override
@@ -81,8 +98,8 @@ public class AuctionServiceImpl implements AuctionService {
 
 	@Override
 	public void deleteAuction(Integer id) {
-		if (auctionRepository.findById(id) != null) {
-			AuctionDto dto = new AuctionDto();
+		if (auctionRepository.findById(id).isPresent()) {
+			AuctionUpdateDto dto = new AuctionUpdateDto();
 			dto.setActive(false);
 			updateAuction(id, dto);
 		} else {

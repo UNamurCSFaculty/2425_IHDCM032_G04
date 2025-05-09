@@ -12,8 +12,8 @@ import org.mapstruct.Named;
 
 public class HibernateLazyCondition {
 	@Condition
-	protected static boolean isInitialized(Object coop) {
-		return coop != null && Hibernate.isInitialized(coop);
+	protected static boolean isInitialized(Object obj) {
+		return obj != null && Hibernate.isInitialized(obj);
 	}
 
 	@Named("pointToString")

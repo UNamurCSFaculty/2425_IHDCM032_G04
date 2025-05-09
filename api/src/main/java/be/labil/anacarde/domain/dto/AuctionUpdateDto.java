@@ -1,22 +1,14 @@
 package be.labil.anacarde.domain.dto;
 
-import be.labil.anacarde.domain.dto.user.TraderDetailDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 import lombok.Data;
 
-/**
- * DTO pour l'entité Action.
- */
 @Data
 @Schema(description = "Objet de transfert de données pour les enchères.")
-public class AuctionDto {
-
-	@Schema(description = "Identifiant unique de l'enchère", example = "1", accessMode = Schema.AccessMode.READ_ONLY, requiredMode = Schema.RequiredMode.REQUIRED)
-	private Integer id;
+public class AuctionUpdateDto {
 
 	@NotNull(message = "Le prix est requis")
 	@Schema(description = "Prix de l'enchère", example = "100.50", requiredMode = Schema.RequiredMode.REQUIRED)
@@ -37,20 +29,17 @@ public class AuctionDto {
 	@Schema(description = "Statut actif de l'enchère", example = "true", requiredMode = Schema.RequiredMode.REQUIRED)
 	private Boolean active;
 
-	@Schema(description = "Stratégie d'enchère associée", requiredMode = Schema.RequiredMode.REQUIRED)
-	private AuctionStrategyDto strategy;
-
 	@NotNull(message = "Le produit est requis")
 	@Schema(description = "Produit associé à l'enchère", requiredMode = Schema.RequiredMode.REQUIRED)
-	private ProductDto product;
+	private Integer productId;
 
 	@NotNull(message = "Le trader est requis")
 	@Schema(description = "Trader ayant créé l'enchère", requiredMode = Schema.RequiredMode.REQUIRED)
-	private TraderDetailDto trader;
+	private Integer traderId;
 
-	@Schema(description = "Statut de l'enchère", requiredMode = Schema.RequiredMode.REQUIRED)
-	private TradeStatusDto status;
+	@Schema(description = "Stratégie d'enchère associée")
+	private Integer strategyId;
 
-	@Schema(description = "Liste des offres posées sur l'enchère")
-	private List<BidDto> bids;
+	@Schema(description = "Statut de l'enchère")
+	private Integer statusId;
 }

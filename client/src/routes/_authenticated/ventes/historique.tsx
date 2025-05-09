@@ -1,7 +1,7 @@
-import { type AuctionDtoReadable } from '@/api/generated'
+import { type AuctionDto } from '@/api/generated'
 import { listAuctionsOptions } from '@/api/generated/@tanstack/react-query.gen'
 import AuctionsTable from '@/components/auctions/AuctionsTable'
-import { useUserStore } from '@/store/userStore'
+import { useAuthUser } from '@/store/userStore'
 import { useQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 
@@ -18,11 +18,11 @@ export const Route = createFileRoute('/_authenticated/ventes/historique')({
 })
 
 export function RouteComponent() {
-  const { user } = useUserStore()
+  const user = useAuthUser()
 
-  const { data } = useQuery(listAuctionsQueryOptions(user!.id))
+  const { data } = useQuery(listAuctionsQueryOptions(user.id))
 
-  const historyAuctions = (data as AuctionDtoReadable[]).filter(
+  const historyAuctions = (data as AuctionDto[]).filter(
     auction => auction.status.name !== 'Ouvert'
   )
 

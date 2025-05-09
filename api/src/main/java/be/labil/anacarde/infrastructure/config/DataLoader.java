@@ -94,23 +94,23 @@ public class DataLoader implements CommandLineRunner {
 		tradeStatusAccepted = tradeStatusService.createTradeStatus(tradeStatusAccepted);
 
 		// Création d'enchères (pour l'utilisateur producer)
-		AuctionDto auction1 = createAuction(product, (TraderDetailDto) producer, BigDecimal.valueOf(500), 10,
-				LocalDateTime.now(), auctionStrategy, tradeStatusOpen);
-		AuctionDto auction2 = createAuction(product, (TraderDetailDto) producer, BigDecimal.valueOf(2500), 20,
-				LocalDateTime.now().plusDays(5), auctionStrategy, tradeStatusOpen);
-		AuctionDto auction3 = createAuction(product, (TraderDetailDto) producer, BigDecimal.valueOf(3500), 50,
-				LocalDateTime.now().plusDays(5), auctionStrategy, tradeStatusOpen);
-		AuctionDto auction4 = createAuction(product, (TraderDetailDto) producer, BigDecimal.valueOf(777), 50,
+		AuctionUpdateDto createAuction1 = createAuction(product, (TraderDetailDto) producer, BigDecimal.valueOf(500),
+				10, LocalDateTime.now(), auctionStrategy, tradeStatusOpen);
+		AuctionUpdateDto createAuction2 = createAuction(product, (TraderDetailDto) producer, BigDecimal.valueOf(2500),
+				20, LocalDateTime.now().plusDays(5), auctionStrategy, tradeStatusOpen);
+		AuctionUpdateDto createuction3 = createAuction(product, (TraderDetailDto) producer, BigDecimal.valueOf(3500),
+				50, LocalDateTime.now().plusDays(5), auctionStrategy, tradeStatusOpen);
+		AuctionUpdateDto createuction4 = createAuction(product, (TraderDetailDto) producer, BigDecimal.valueOf(777), 50,
 				LocalDateTime.now().plusDays(5), auctionStrategy, tradeStatusExpired);
-		auction1 = auctionService.createAuction(auction1);
-		auction2 = auctionService.createAuction(auction2);
-		auction3 = auctionService.createAuction(auction3);
-		auction4 = auctionService.createAuction(auction4);
+		AuctionDto auction1 = auctionService.createAuction(createAuction1);
+		AuctionDto auction2 = auctionService.createAuction(createAuction2);
+		AuctionDto auction3 = auctionService.createAuction(createuction3);
+		AuctionDto auction4 = auctionService.createAuction(createuction4);
 
 		// Création d'enchères (pour l'utilisateur transformateur)
-		AuctionDto auction5 = createAuction(product, (TraderDetailDto) transformer, BigDecimal.valueOf(999), 100,
-				LocalDateTime.now().plusDays(5), auctionStrategy, tradeStatusOpen);
-		auction5 = auctionService.createAuction(auction4);
+		AuctionUpdateDto createAuction5 = createAuction(product, (TraderDetailDto) transformer, BigDecimal.valueOf(999),
+				100, LocalDateTime.now().plusDays(5), auctionStrategy, tradeStatusOpen);
+		AuctionDto auction5 = auctionService.createAuction(createAuction5);
 
 		// Création d'offres
 		BidDto bid1 = createBid(auction1, (TraderDetailDto) transformer, BigDecimal.valueOf(100), LocalDateTime.now(),
@@ -166,18 +166,18 @@ public class DataLoader implements CommandLineRunner {
 		return harvestProduct;
 	}
 
-	private AuctionDto createAuction(ProductDto product, TraderDetailDto trader, BigDecimal price, int quantity,
+	private AuctionUpdateDto createAuction(ProductDto product, TraderDetailDto trader, BigDecimal price, int quantity,
 			LocalDateTime date, AuctionStrategyDto strategy, TradeStatusDto status) {
-		AuctionDto auction = new AuctionDto();
-		auction.setProduct(product);
+		AuctionUpdateDto auction = new AuctionUpdateDto();
+		auction.setProductId(product.getId());
 		auction.setPrice(price);
 		auction.setActive(true);
 		auction.setCreationDate(date);
 		auction.setExpirationDate(date.plusDays(20));
 		auction.setProductQuantity(quantity);
-		auction.setStrategy(strategy);
-		auction.setTrader(trader);
-		auction.setStatus(status);
+		auction.setStrategyId(strategy.getId());
+		auction.setTraderId(trader.getId());
+		auction.setStatusId(status.getId());
 		return auction;
 	}
 

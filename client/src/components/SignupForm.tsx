@@ -45,6 +45,7 @@ export const SignupForm: React.FC = () => {
   >({
     validators: { onChange: zUserRegistration },
     defaultValues: {
+      id: 0,
       type: 'producer',
       firstName: '',
       lastName: '',

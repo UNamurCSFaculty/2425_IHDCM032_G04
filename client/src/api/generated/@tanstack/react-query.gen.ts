@@ -67,6 +67,7 @@ import {
   listUsers,
   logout,
   sendContactMessage,
+  test,
   updateAuction,
   updateAuctionStrategy,
   updateBid,
@@ -213,6 +214,7 @@ import type {
   LogoutData,
   SendContactMessageData,
   SendContactMessageError,
+  TestData,
   UpdateAuctionData,
   UpdateAuctionError,
   UpdateAuctionResponse,
@@ -2336,6 +2338,24 @@ export const createAuctionStrategyMutation = (
     },
   }
   return mutationOptions
+}
+
+export const testQueryKey = (options?: Options<TestData>) =>
+  createQueryKey('test', options)
+
+export const testOptions = (options?: Options<TestData>) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await test({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: testQueryKey(options),
+  })
 }
 
 export const listDocumentsByUserQueryKey = (
