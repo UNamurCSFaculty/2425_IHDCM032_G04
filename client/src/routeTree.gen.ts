@@ -16,6 +16,7 @@ import { Route as LoginImport } from './routes/login'
 import { Route as AuthenticatedImport } from './routes/_authenticated'
 import { Route as IndexImport } from './routes/index'
 import { Route as ContactIndexImport } from './routes/contact/index'
+import { Route as TestHistoriqueImport } from './routes/test/historique'
 import { Route as ContactMerciImport } from './routes/contact/merci'
 import { Route as AuthenticatedEncheresIndexImport } from './routes/_authenticated/encheres/index'
 import { Route as AuthenticatedVentesNouvelleEnchereImport } from './routes/_authenticated/ventes/nouvelle-enchere'
@@ -54,6 +55,12 @@ const IndexRoute = IndexImport.update({
 const ContactIndexRoute = ContactIndexImport.update({
   id: '/contact/',
   path: '/contact/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const TestHistoriqueRoute = TestHistoriqueImport.update({
+  id: '/test/historique',
+  path: '/test/historique',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -159,6 +166,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContactMerciImport
       parentRoute: typeof rootRoute
     }
+    '/test/historique': {
+      id: '/test/historique'
+      path: '/test/historique'
+      fullPath: '/test/historique'
+      preLoaderRoute: typeof TestHistoriqueImport
+      parentRoute: typeof rootRoute
+    }
     '/contact/': {
       id: '/contact/'
       path: '/contact'
@@ -260,6 +274,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/contact/merci': typeof ContactMerciRoute
+  '/test/historique': typeof TestHistoriqueRoute
   '/contact': typeof ContactIndexRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/encheres/autres': typeof AuthenticatedEncheresAutresRoute
@@ -277,6 +292,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/contact/merci': typeof ContactMerciRoute
+  '/test/historique': typeof TestHistoriqueRoute
   '/contact': typeof ContactIndexRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/encheres/autres': typeof AuthenticatedEncheresAutresRoute
@@ -295,6 +311,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/contact/merci': typeof ContactMerciRoute
+  '/test/historique': typeof TestHistoriqueRoute
   '/contact/': typeof ContactIndexRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/encheres/autres': typeof AuthenticatedEncheresAutresRoute
@@ -314,6 +331,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/contact/merci'
+    | '/test/historique'
     | '/contact'
     | '/admin/users'
     | '/encheres/autres'
@@ -330,6 +348,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/contact/merci'
+    | '/test/historique'
     | '/contact'
     | '/admin/users'
     | '/encheres/autres'
@@ -346,6 +365,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/contact/merci'
+    | '/test/historique'
     | '/contact/'
     | '/_authenticated/admin/users'
     | '/_authenticated/encheres/autres'
@@ -364,6 +384,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
   ContactMerciRoute: typeof ContactMerciRoute
+  TestHistoriqueRoute: typeof TestHistoriqueRoute
   ContactIndexRoute: typeof ContactIndexRoute
 }
 
@@ -373,6 +394,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
   ContactMerciRoute: ContactMerciRoute,
+  TestHistoriqueRoute: TestHistoriqueRoute,
   ContactIndexRoute: ContactIndexRoute,
 }
 
@@ -391,6 +413,7 @@ export const routeTree = rootRoute
         "/login",
         "/signup",
         "/contact/merci",
+        "/test/historique",
         "/contact/"
       ]
     },
@@ -418,6 +441,9 @@ export const routeTree = rootRoute
     },
     "/contact/merci": {
       "filePath": "contact/merci.tsx"
+    },
+    "/test/historique": {
+      "filePath": "test/historique.tsx"
     },
     "/contact/": {
       "filePath": "contact/index.tsx"
