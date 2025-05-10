@@ -2,7 +2,6 @@ import { createBidMutation } from '@/api/generated/@tanstack/react-query.gen.ts'
 import { useAppForm } from '@/components/form'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
-import { zBidUpdateDto } from '@/api/generated/zod.gen'
 import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAuthUser } from '@/store/userStore'
@@ -31,7 +30,8 @@ export function BidForm({ auctionId, onMakeBid }: BidFormProps): React.ReactElem
   })
 
   const form = useAppForm({
-    validators: { onChange: zBidUpdateDto },
+    // TODO: cannot receive amount as string
+    // validators: { onChange: zAuctionUpdateDto },
 
     defaultValues: {
       amount: '',
@@ -40,7 +40,11 @@ export function BidForm({ auctionId, onMakeBid }: BidFormProps): React.ReactElem
     },
 
     onSubmit({ value }) {
-      createBidRequest.mutate({ body: value })
+      const castValue  = {
+        ...value,
+        amount: Number(value.amount),
+      }
+      createBidRequest.mutate({ body: castValue, path: { auctionId: auctionId } })
     }
   })
 
