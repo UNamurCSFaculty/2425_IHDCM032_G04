@@ -1,4 +1,4 @@
-import imgNoix from '@/assets/Noix de cajou bol.webp'
+import imgNoix from '@/assets/noix de cajou bol.webp'
 import { BlogSection } from '@/components/Homepage/BlogSection'
 import FaqSection from '@/components/Homepage/FaqSection'
 import { FeaturesSection } from '@/components/Homepage/FeatureSection'
