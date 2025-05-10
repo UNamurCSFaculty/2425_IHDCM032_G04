@@ -146,15 +146,9 @@ export function AuctionForm({
                           <form.AppField
                             name="expirationDate"
                             children={field => (
-                              <field.TextField
-                                label="Expiration de l'enchère"
-                                type="expirationDate"
-                                placeholder="2023-10-05T14:48:00.000Z"
-                                // value="2023-10-05T14:48:00.000Z"
-                              />
+                              <field.DateTimePickerField label="Expiration de l'enchère" />
                             )}
                           />
-
                           {isError && error?.errors?.length > 0 && (
                             <Alert
                               variant="destructive"

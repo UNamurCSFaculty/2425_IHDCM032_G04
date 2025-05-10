@@ -1,13 +1,11 @@
 import { createBidMutation } from '@/api/generated/@tanstack/react-query.gen.ts'
+import { zBidUpdateDto } from '@/api/generated/zod.gen'
 import { useAppForm } from '@/components/form'
 import { useAuthUser } from '@/store/userStore'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-
-// import { zBidUpdateDto } from '@/api/generated/zod.gen'
-// import { z } from 'zod'
 
 interface BidFormProps {
   auctionId: number
@@ -35,12 +33,8 @@ export function BidForm({
     },
   })
 
-  // const zBidUpdateSchema = zBidUpdateDto.extend({
-  //   amount: z.coerce.number(),
-  // })
-
   const form = useAppForm({
-    // validators: { onChange: zBidUpdateSchema },
+    validators: { onChange: zBidUpdateDto },
 
     defaultValues: {
       amount: 0,

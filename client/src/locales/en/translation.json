@@ -99,6 +99,9 @@
     "message": "Message",
     "password": "Password",
     "phone": "Phone",
+    "placeholder": {
+      "date": "Pick a date"
+    },
     "type": "I am"
   },
   "languages": {
