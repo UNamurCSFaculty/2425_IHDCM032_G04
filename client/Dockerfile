@@ -1,6 +1,7 @@
 FROM node:20-alpine AS build
 WORKDIR /client
 COPY package*.json ./
+RUN npm install --ignore-scripts
 RUN npm ci --ignore-scripts
 COPY . .
 RUN npm run build 
