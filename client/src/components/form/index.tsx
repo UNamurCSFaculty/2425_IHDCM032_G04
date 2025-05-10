@@ -1,4 +1,5 @@
 import { CheckboxField } from './checkbox-field'
+import { DateTimePickerField } from './datetime-field'
 import { ResetButton } from './reset-button'
 import { SelectField } from './select-field'
 import { SubmitButton } from './submit-button'
@@ -15,6 +16,7 @@ export const { useAppForm } = createFormHook({
     CheckboxField,
     SelectField,
     TextAreaField,
+    DateTimePickerField,
   },
   formComponents: {
     SubmitButton,
