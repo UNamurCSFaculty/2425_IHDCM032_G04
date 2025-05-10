@@ -1,7 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { listAuctionsOptions, listAuctionsQueryKey } from '@/api/generated/@tanstack/react-query.gen'
-import { type AuctionDtoReadable } from '@/api/generated'
 import { useAuctionStore } from '@/store/auctionStore'
 import { useState } from 'react';
 import BidsDialog from '@/components/auctions/BidsDialog'
@@ -25,11 +24,9 @@ export function RouteComponent() {
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const { data } = useSuspenseQuery(
+  const { data : auctionsData } = useSuspenseQuery(
     listAuctionsQueryOptions(),
   );
-
-  const auctionsData = data as AuctionDtoReadable[];
 
   const handleMakeBid = (auctionId: number) => {
     setSelectedAuctionId(auctionId);

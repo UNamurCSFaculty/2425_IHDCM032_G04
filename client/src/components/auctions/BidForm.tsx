@@ -1,19 +1,19 @@
 import { createBidMutation } from '@/api/generated/@tanstack/react-query.gen.ts'
 import { useAppForm } from '@/components/form'
-import { zBid } from '@/schemas/api-schemas'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
+import { zBidUpdateDto } from '@/api/generated/zod.gen'
 import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { ProducerDetailDtoWritable, BidDtoWritable } from '@/api/generated'
-import { useUserStore } from '@/store/userStore'
+import type { BidUpdateDto } from '@/api/generated'
+import { useAuthUser } from '@/store/userStore'
 
 interface BidFormProps {
   auctionId: number;
 }
 
 export function BidForm({ auctionId }: BidFormProps): React.ReactElement<'div'> {
-  const { user } = useUserStore();
+  const user = useAuthUser()
   const navigate = useNavigate()
   const { i18n } = useTranslation()
 
@@ -28,27 +28,15 @@ export function BidForm({ auctionId }: BidFormProps): React.ReactElement<'div'> 
   })
 
   const form = useAppForm({
-    // validators: { onChange: zBid },
+    validators: { onChange: zBidUpdateDto },
 
     defaultValues: {
       amount: '',
+      traderId: user.id
     },
 
     onSubmit({ value }) {
-      const formData = zBid.parse(value)
-      
-      const traderDto: ProducerDetailDtoWritable = {
-        id: user!.id,
-        type: "producer"
-      };
-
-      const bidDto: BidDtoWritable = {
-        auctionId: auctionId,
-        amount: formData.amount,
-        trader: traderDto
-      }
-
-      createBidRequest.mutate({ body: bidDto })
+      createBidRequest.mutate({ body: value })
     }
   })
 
