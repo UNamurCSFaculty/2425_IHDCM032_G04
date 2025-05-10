@@ -41,7 +41,6 @@ public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 	 */
 	@Test
 	public void testCreateBid() throws Exception {
-
 		BidUpdateDto newBid = new BidUpdateDto();
 		newBid.setAmount(new BigDecimal("999.99"));
 		newBid.setStatusId(getTestBidStatus().getId());
@@ -73,21 +72,11 @@ public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 	 */
 	@Test
 	public void testCreateBidWithDefaultStatus() throws Exception {
-		ProductDto productDto = new HarvestProductDto();
-		productDto.setId(getTestHarvestProduct().getId());
-
-		ProducerDetailDto producer = new ProducerDetailDto();
-		producer.setId(getProducerTestUser().getId());
-
-		AuctionDto auctionDto = new AuctionDto();
-		auctionDto.setId(getTestAuction().getId());
-		auctionDto.setProduct(productDto);
-
-		BidDto newBid = new BidDto();
-		newBid.setAmount(new BigDecimal("666.66"));
+		BidUpdateDto newBid = new BidUpdateDto();
+		newBid.setAmount(new BigDecimal("999.99"));
 		newBid.setCreationDate(LocalDateTime.now());
-		newBid.setTrader(producer);
-		newBid.setAuctionId(auctionDto.getId());
+		newBid.setTraderId(getProducerTestUser().getId());
+		newBid.setAuctionId(getTestAuction().getId());
 
 		ObjectNode node = objectMapper.valueToTree(newBid);
 		String jsonContent = node.toString();
