@@ -40,8 +40,8 @@ public interface AuctionApi {
 			@ApiResponse(responseCode = "201", description = "", content = @Content(schema = @Schema(implementation = AuctionUpdateDto.class))),
 			@ApiResponse(responseCode = "400", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
 			@ApiResponse(responseCode = "409", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
-	ResponseEntity<AuctionDto> createAuction(
-			@Validated({Default.class, ValidationGroups.Create.class}) @RequestBody AuctionUpdateDto auctionDto);
+	ResponseEntity<AuctionDto> createAuction(@Validated({Default.class,
+			ValidationGroups.Create.class}) @RequestBody AuctionUpdateDto auctionDto);
 
 	@Operation(summary = "Mettre à jour une enchère")
 	@PutMapping(value = "/{id}", consumes = "application/json")
@@ -50,7 +50,8 @@ public interface AuctionApi {
 			@ApiResponse(responseCode = "400", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
 			@ApiResponse(responseCode = "409", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
 	ResponseEntity<AuctionDto> updateAuction(@ApiValidId @PathVariable("id") Integer id,
-			@Validated({Default.class, ValidationGroups.Update.class}) @RequestBody AuctionUpdateDto auctionDto);
+			@Validated({Default.class,
+					ValidationGroups.Update.class}) @RequestBody AuctionUpdateDto auctionDto);
 
 	@Operation(summary = "Accepter une enchère")
 	@PutMapping(value = "/{id}/accept")
@@ -70,7 +71,8 @@ public interface AuctionApi {
 	@Operation(summary = "Supprimer une enchère")
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@ApiResponses({@ApiResponse(responseCode = "200", description = "", content = @Content(schema = @Schema())),
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "", content = @Content(schema = @Schema())),
 			@ApiResponse(responseCode = "404", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
 	ResponseEntity<Void> deleteAuction(@ApiValidId @PathVariable("id") Integer id);
 }

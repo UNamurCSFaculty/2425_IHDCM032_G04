@@ -30,7 +30,8 @@ public interface AuctionStrategyApi {
 	@Operation(summary = "Obtenir une stratégie d'enchère")
 	@GetMapping("/{id}")
 	@ApiResponseGet
-	ResponseEntity<AuctionStrategyDto> getAuctionStrategy(@ApiValidId @PathVariable("id") Integer id);
+	ResponseEntity<AuctionStrategyDto> getAuctionStrategy(
+			@ApiValidId @PathVariable("id") Integer id);
 
 	@Operation(summary = "Créer une stratégie d'enchère")
 	@PostMapping
@@ -41,8 +42,9 @@ public interface AuctionStrategyApi {
 	@Operation(summary = "Mettre à jour une stratégie d'enchère")
 	@PutMapping("/{id}")
 	@ApiResponsePut
-	ResponseEntity<AuctionStrategyDto> updateAuctionStrategy(@ApiValidId @PathVariable("id") Integer id, @Validated({
-			Default.class, ValidationGroups.Update.class}) @RequestBody AuctionStrategyDto auctionStrategyDto);
+	ResponseEntity<AuctionStrategyDto> updateAuctionStrategy(
+			@ApiValidId @PathVariable("id") Integer id, @Validated({Default.class,
+					ValidationGroups.Update.class}) @RequestBody AuctionStrategyDto auctionStrategyDto);
 
 	@Operation(summary = "Obtenir toutes les stratégies d'enchère")
 	@GetMapping
@@ -52,7 +54,8 @@ public interface AuctionStrategyApi {
 	@Operation(summary = "Supprimer une stratégie d'enchère")
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@ApiResponses({@ApiResponse(responseCode = "200", description = "", content = @Content(schema = @Schema())),
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "", content = @Content(schema = @Schema())),
 			@ApiResponse(responseCode = "404", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
 	ResponseEntity<Void> deleteAuctionStrategy(@ApiValidId @PathVariable("id") Integer id);
 }

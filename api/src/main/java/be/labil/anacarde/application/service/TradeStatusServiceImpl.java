@@ -45,7 +45,8 @@ public class TradeStatusServiceImpl implements TradeStatusService {
 		TradeStatus existingTradeStatus = TradeStatusRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Status non trouvé"));
 
-		TradeStatus updatedTradeStatus = TradeStatusMapper.partialUpdate(TradeStatusDetailDto, existingTradeStatus);
+		TradeStatus updatedTradeStatus = TradeStatusMapper.partialUpdate(TradeStatusDetailDto,
+				existingTradeStatus);
 
 		TradeStatus saved = TradeStatusRepository.save(updatedTradeStatus);
 		return TradeStatusMapper.toDto(saved);

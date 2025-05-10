@@ -56,8 +56,8 @@ public class CooperativeApiControllerIntegrationTest extends AbstractIntegration
 
 		ObjectNode json = objectMapper.valueToTree(dto);
 
-		mockMvc.perform(post("/api/cooperatives").contentType(MediaType.APPLICATION_JSON).content(json.toString()))
-				.andExpect(status().isCreated())
+		mockMvc.perform(post("/api/cooperatives").contentType(MediaType.APPLICATION_JSON)
+				.content(json.toString())).andExpect(status().isCreated())
 				.andExpect(header().string("Location", containsString("/api/cooperatives/")))
 				.andExpect(jsonPath("$.name").value("Coopérative de Natitingou"))
 				.andExpect(jsonPath("$.address").value("Quartier Kpébié, Natitingou, Bénin"))
@@ -74,8 +74,9 @@ public class CooperativeApiControllerIntegrationTest extends AbstractIntegration
 	 */
 	@Test
 	public void testListCooperatives() throws Exception {
-		mockMvc.perform(get("/api/cooperatives").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
-				.andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(1));
+		mockMvc.perform(get("/api/cooperatives").accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()).andExpect(jsonPath("$").isArray())
+				.andExpect(jsonPath("$.length()").value(1));
 	}
 
 	/**
@@ -93,8 +94,9 @@ public class CooperativeApiControllerIntegrationTest extends AbstractIntegration
 
 		ObjectNode json = objectMapper.valueToTree(dto);
 
-		mockMvc.perform(put("/api/cooperatives/" + cooperative.getId()).contentType(MediaType.APPLICATION_JSON)
-				.content(json.toString())).andExpect(status().isOk()).andExpect(jsonPath("$.name").value("Coop MAJ"))
+		mockMvc.perform(put("/api/cooperatives/" + cooperative.getId())
+				.contentType(MediaType.APPLICATION_JSON).content(json.toString()))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.name").value("Coop MAJ"))
 				.andExpect(jsonPath("$.address").value(cooperative.getAddress()))
 				.andExpect(jsonPath("$.presidentId").value(cooperative.getPresident().getId()));
 	}
@@ -108,6 +110,7 @@ public class CooperativeApiControllerIntegrationTest extends AbstractIntegration
 		mockMvc.perform(delete("/api/cooperatives/" + getMainTestCooperative().getId()))
 				.andExpect(status().isNoContent());
 
-		mockMvc.perform(get("/api/cooperatives/" + getMainTestCooperative().getId())).andExpect(status().isNotFound());
+		mockMvc.perform(get("/api/cooperatives/" + getMainTestCooperative().getId()))
+				.andExpect(status().isNotFound());
 	}
 }

@@ -57,8 +57,9 @@ public class SecurityIntegrationTest {
 		Language language = Language.builder().code("fr").name("Français").build();
 		language = languageRepository.save(language);
 
-		user = Admin.builder().firstName("John").lastName("Doe").email("user@example.com").password("password")
-				.registrationDate(LocalDateTime.now()).phone("+2290197000000").language(language).enabled(true).build();
+		user = Admin.builder().firstName("John").lastName("Doe").email("user@example.com")
+				.password("password").registrationDate(LocalDateTime.now()).phone("+2290197000000")
+				.language(language).enabled(true).build();
 		user = userRepository.save(user);
 		String token = jwtUtil.generateToken(user);
 		jwtCookie = new Cookie("jwt", token);
@@ -77,7 +78,8 @@ public class SecurityIntegrationTest {
 	 * Vérifie que les points de terminaison protégés nécessitent un JWT.
 	 */
 	/**
-	 * Vérifie que les points de terminaison protégés nécessitent un JWT, même si le token CSRF est présent.
+	 * Vérifie que les points de terminaison protégés nécessitent un JWT, même si le token CSRF est
+	 * présent.
 	 */
 	@Test
 	public void testProtectedEndpointsWithoutJwt() throws Exception {
@@ -88,19 +90,22 @@ public class SecurityIntegrationTest {
 				.andExpect(status().isUnauthorized());
 
 		// PUT → on ajoute csrf() pour ne pas tomber en 403 CSRF
-		mockMvc.perform(put("/api/users/" + userId).with(csrf()).contentType(MediaType.APPLICATION_JSON).content("{}"))
+		mockMvc.perform(put("/api/users/" + userId).with(csrf())
+				.contentType(MediaType.APPLICATION_JSON).content("{}"))
 				.andExpect(status().isUnauthorized());
 
 		// DELETE → idem
-		mockMvc.perform(delete("/api/users/" + userId).with(csrf())).andExpect(status().isUnauthorized());
+		mockMvc.perform(delete("/api/users/" + userId).with(csrf()))
+				.andExpect(status().isUnauthorized());
 
 		// POST /roles
 		mockMvc.perform(post("/api/users/" + userId + "/roles/ROLE_USER").with(csrf()))
 				.andExpect(status().isUnauthorized());
 
 		// PUT /roles
-		mockMvc.perform(put("/api/users/" + userId + "/roles").with(csrf()).contentType(MediaType.APPLICATION_JSON)
-				.content("[]")).andExpect(status().isUnauthorized());
+		mockMvc.perform(put("/api/users/" + userId + "/roles").with(csrf())
+				.contentType(MediaType.APPLICATION_JSON).content("[]"))
+				.andExpect(status().isUnauthorized());
 	}
 
 	/**
@@ -116,8 +121,7 @@ public class SecurityIntegrationTest {
 		ObjectNode node = objectMapper.valueToTree(newStore);
 		String jsonContent = node.toString();
 
-		mockMvc.perform(
-				post("/api/stores").contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(addJwtCookie()))
-				.andExpect(status().isForbidden());
+		mockMvc.perform(post("/api/stores").contentType(MediaType.APPLICATION_JSON)
+				.content(jsonContent).with(addJwtCookie())).andExpect(status().isForbidden());
 	}
 }

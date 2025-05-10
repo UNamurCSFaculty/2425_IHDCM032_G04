@@ -6,7 +6,8 @@ import be.labil.anacarde.domain.dto.write.product.ProductUpdateDto;
 import java.util.List;
 
 /**
- * Ce service offre des méthodes permettant de créer, récupérer, mettre à jour et supprimer des informations de produit.
+ * Ce service offre des méthodes permettant de créer, récupérer, mettre à jour et supprimer des
+ * informations de produit.
  */
 public interface ProductService {
 
@@ -38,7 +39,8 @@ public interface ProductService {
 	List<ProductDto> listProducts(Integer traderId);
 
 	/**
-	 * Met à jour le produit identifié par l'ID donné avec les informations fournies dans le ProductDto.
+	 * Met à jour le produit identifié par l'ID donné avec les informations fournies dans le
+	 * ProductDto.
 	 *
 	 * @param id
 	 *            L'identifiant unique du produit à mettre à jour.

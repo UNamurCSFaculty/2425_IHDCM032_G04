@@ -34,7 +34,8 @@ public abstract class ProducerDetailMapper {
 		}
 
 		if (dto.getCooperativeId() != null) {
-			((Producer) user).setCooperative(em.getReference(Cooperative.class, dto.getCooperativeId()));
+			((Producer) user)
+					.setCooperative(em.getReference(Cooperative.class, dto.getCooperativeId()));
 		}
 	}
 }

@@ -24,7 +24,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Cette API offre des points d'accès permettant de récupérer, créer, mettre à jour et supprimer des utilisateurs.
+ * Cette API offre des points d'accès permettant de récupérer, créer, mettre à jour et supprimer des
+ * utilisateurs.
  */
 @Validated
 @Tag(name = "Users", description = "API de gestion des utilisateurs")
@@ -48,23 +49,24 @@ public interface UserApi {
 			@NotNull(message = "L'ID de l'utilisateur est obligatoire") @Positive(message = "L'ID doit être un entier positif") @Parameter(description = "Identifiant de l'utilisateur", example = "1", required = true) @PathVariable("id") Integer id);
 
 	/**
-	 * Crée un nouvel utilisateur en utilisant le groupe de validation "Create", qui rend le champ mot de passe
-	 * obligatoire.
+	 * Crée un nouvel utilisateur en utilisant le groupe de validation "Create", qui rend le champ
+	 * mot de passe obligatoire.
 	 *
 	 * @param userUpdateDto
 	 *            Les données de l'utilisateur à créer.
 	 * @return Une ResponseEntity contenant les détails de l'utilisateur créé.
 	 */
 	@Operation(summary = "Créer un utilisateur", description = "Crée un nouvel utilisateur dans le système.")
-	// @Parameter(name = "type", description = "Type d'utilisateur. Valeurs possibles: ", example = "admin", required =
+	// @Parameter(name = "type", description = "Type d'utilisateur. Valeurs possibles: ", example =
+	// "admin", required =
 	// true)
 	@ApiResponses({
 			@ApiResponse(responseCode = "201", description = "Utilisateur créé avec succès", content = @Content(schema = @Schema(implementation = UserDetailDto.class, discriminatorProperty = "type"))),
 			@ApiResponse(responseCode = "400", description = "Erreur de validation ou JSON invalide", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
 			@ApiResponse(responseCode = "409", description = "Conflit avec un utilisateur existant", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
 	@PostMapping(consumes = "application/json")
-	ResponseEntity<? extends UserDetailDto> createUser(
-			@Validated({Default.class, ValidationGroups.Create.class}) @RequestBody UserUpdateDto userUpdateDto);
+	ResponseEntity<? extends UserDetailDto> createUser(@Validated({Default.class,
+			ValidationGroups.Create.class}) @RequestBody UserUpdateDto userUpdateDto);
 
 	/**
 	 * Récupère la liste de tous les utilisateurs.
@@ -78,8 +80,8 @@ public interface UserApi {
 	ResponseEntity<List<? extends UserListDto>> listUsers();
 
 	/**
-	 * Met à jour un utilisateur existant en utilisant le groupe de validation "Update", qui rend le champ mot de passe
-	 * optionnel.
+	 * Met à jour un utilisateur existant en utilisant le groupe de validation "Update", qui rend le
+	 * champ mot de passe optionnel.
 	 *
 	 * @param id
 	 *            L'identifiant de l'utilisateur à mettre à jour.
@@ -95,7 +97,8 @@ public interface UserApi {
 	@PutMapping(value = "/{id}", consumes = "application/json")
 	ResponseEntity<? extends UserDetailDto> updateUser(
 			@NotNull(message = "L'ID de l'utilisateur est obligatoire") @Positive(message = "L'ID doit être un entier positif") @Parameter(description = "Identifiant de l'utilisateur", example = "1", required = true) @PathVariable("id") Integer id,
-			@Validated({Default.class, ValidationGroups.Update.class}) @RequestBody UserUpdateDto userDetailDto);
+			@Validated({Default.class,
+					ValidationGroups.Update.class}) @RequestBody UserUpdateDto userDetailDto);
 
 	/**
 	 * Supprime un utilisateur à partir de son identifiant.
@@ -104,7 +107,8 @@ public interface UserApi {
 	 *            L'identifiant de l'utilisateur à supprimer.
 	 */
 	@Operation(summary = "Supprimer un utilisateur", description = "Supprime un utilisateur en fonction de son identifiant.")
-	@ApiResponses({@ApiResponse(responseCode = "204", description = "Utilisateur supprimé avec succès"),
+	@ApiResponses({
+			@ApiResponse(responseCode = "204", description = "Utilisateur supprimé avec succès"),
 			@ApiResponse(responseCode = "404", description = "Utilisateur non trouvé", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)

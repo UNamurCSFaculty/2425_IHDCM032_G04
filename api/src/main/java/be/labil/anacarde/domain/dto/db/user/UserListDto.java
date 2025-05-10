@@ -30,7 +30,8 @@ import lombok.EqualsAndHashCode;
 				@DiscriminatorMapping(value = "quality_inspector", schema = QualityInspectorDetailDto.class),
 				@DiscriminatorMapping(value = "exporter", schema = ExporterDetailDto.class),
 				@DiscriminatorMapping(value = "carrier", schema = CarrierDetailDto.class)}, subTypes = {
-						TraderListDto.class, CarrierListDto.class, QualityInspectorListDto.class, AdminListDto.class})
+						TraderListDto.class, CarrierListDto.class, QualityInspectorListDto.class,
+						AdminListDto.class})
 public abstract class UserListDto extends BaseDto {
 
 	/** User's first name. */
@@ -66,13 +67,14 @@ public abstract class UserListDto extends BaseDto {
 	private String address;
 
 	/** Numéro de téléphone de l'utilisateur. */
-	@Pattern(regexp = "^(?:\\+229)?(?:01[2-9]\\d{7}|[2-9]\\d{7})$", message = "Numéro invalide – doit être +229XXXXXXXX ou +22901XXXXXXXX")
-	@Schema(description = "Numéro de téléphone (Bénin, ancien et nouveau formats)", example = "+2290197123456", pattern = "^(?:\\+229)?(?:01[2-9]\\d{7}|[2-9]\\d{7})$")
+	@Pattern(regexp = "^(?:\\+229)?01\\d{8}$", message = "Numéro invalide – doit être +229XXXXXXXX ou +22901XXXXXXXX")
+	@Schema(description = "Numéro de téléphone (Bénin, format local à 10 chiffres débutant par 01, ou +229...)", example = "+2290178123456", pattern = "^(?:\\+229)?01\\d{8}$")
 	private String phone;
 
 	/**
-	 * Propriété virtuelle pour Swagger. Ce getter n'est pas utilisé par Jackson car il est ignoré, mais permet
-	 * d'afficher dans le schéma OpenAPI une propriété "type" avec un exemple et des valeurs autorisées.
+	 * Propriété virtuelle pour Swagger. Ce getter n'est pas utilisé par Jackson car il est ignoré,
+	 * mais permet d'afficher dans le schéma OpenAPI une propriété "type" avec un exemple et des
+	 * valeurs autorisées.
 	 */
 	@Schema(name = "type", description = "Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier", requiredMode = Schema.RequiredMode.REQUIRED, example = "admin", allowableValues = {
 			"admin", "producer", "transformer", "quality_inspector", "exporter", "carrier"})

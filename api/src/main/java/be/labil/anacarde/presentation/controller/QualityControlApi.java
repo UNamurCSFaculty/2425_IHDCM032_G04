@@ -33,7 +33,8 @@ public interface QualityControlApi {
 			@ApiResponse(responseCode = "200", description = "", content = @Content(schema = @Schema(implementation = QualityControlDto.class))),
 			@ApiResponse(responseCode = "404", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
 	ResponseEntity<? extends QualityControlDto> getQualityControl(
-			@ApiValidId @PathVariable("productId") Integer productId, @ApiValidId @PathVariable("id") Integer id);
+			@ApiValidId @PathVariable("productId") Integer productId,
+			@ApiValidId @PathVariable("id") Integer id);
 
 	@Operation(summary = "Créer un contrôle qualité")
 	@PostMapping
@@ -52,21 +53,24 @@ public interface QualityControlApi {
 			@ApiResponse(responseCode = "400", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
 			@ApiResponse(responseCode = "409", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
 	ResponseEntity<? extends QualityControlDto> updateQualityControl(
-			@ApiValidId @PathVariable("productId") Integer productId, @ApiValidId @PathVariable("id") Integer id,
-			@Validated({Default.class,
+			@ApiValidId @PathVariable("productId") Integer productId,
+			@ApiValidId @PathVariable("id") Integer id, @Validated({Default.class,
 					ValidationGroups.Update.class}) @RequestBody QualityControlUpdateDto qualityControlDto);
 
 	@Operation(summary = "Lister tous les contrôles qualité d’un produit")
 	@GetMapping
 	@ApiResponses({
 			@ApiResponse(responseCode = "200", description = "Liste récupérée avec succès", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = QualityControlDto.class))))})
-	ResponseEntity<List<? extends QualityControlDto>> listQualityControls(@PathVariable("productId") Integer productId);
+	ResponseEntity<List<? extends QualityControlDto>> listQualityControls(
+			@PathVariable("productId") Integer productId);
 
 	@Operation(summary = "Supprimer un contrôle qualité")
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@ApiResponses({@ApiResponse(responseCode = "200", description = "", content = @Content(schema = @Schema())),
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "", content = @Content(schema = @Schema())),
 			@ApiResponse(responseCode = "404", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
-	ResponseEntity<Void> deleteQualityControl(@ApiValidId @PathVariable("productId") Integer productId,
+	ResponseEntity<Void> deleteQualityControl(
+			@ApiValidId @PathVariable("productId") Integer productId,
 			@ApiValidId @PathVariable("id") Integer id);
 }

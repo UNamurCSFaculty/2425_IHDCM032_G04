@@ -5,7 +5,8 @@ import be.labil.anacarde.domain.dto.write.QualityControlUpdateDto;
 import java.util.List;
 
 /**
- * Ce service offre des méthodes permettant de créer, récupérer, mettre à jour et supprimer des contrôles qualité.
+ * Ce service offre des méthodes permettant de créer, récupérer, mettre à jour et supprimer des
+ * contrôles qualité.
  */
 public interface QualityControlService {
 

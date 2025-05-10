@@ -32,7 +32,8 @@ public abstract class ContractOfferMapper {
 	@Mapping(target = "buyer", ignore = true)
 	@Mapping(target = "quality", ignore = true)
 	@Mapping(target = "id", ignore = true)
-	public abstract ContractOffer partialUpdate(ContractOfferUpdateDto dto, @MappingTarget ContractOffer entity);
+	public abstract ContractOffer partialUpdate(ContractOfferUpdateDto dto,
+			@MappingTarget ContractOffer entity);
 
 	@AfterMapping
 	protected void afterUpdateDto(ContractOfferUpdateDto dto, @MappingTarget ContractOffer a) {

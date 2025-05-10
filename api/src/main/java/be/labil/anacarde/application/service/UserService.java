@@ -7,8 +7,8 @@ import be.labil.anacarde.domain.dto.write.user.UserUpdateDto;
 import java.util.List;
 
 /**
- * Ce service offre des méthodes permettant de créer, récupérer, mettre à jour et supprimer des informations
- * d'utilisateur.
+ * Ce service offre des méthodes permettant de créer, récupérer, mettre à jour et supprimer des
+ * informations d'utilisateur.
  */
 public interface UserService {
 
@@ -38,7 +38,8 @@ public interface UserService {
 	List<UserListDto> listUsers();
 
 	/**
-	 * Met à jour l'utilisateur identifié par l'ID donné avec les informations fournies dans le UserDto.
+	 * Met à jour l'utilisateur identifié par l'ID donné avec les informations fournies dans le
+	 * UserDto.
 	 *
 	 * @param id
 	 *            L'identifiant unique de l'utilisateur à mettre à jour.

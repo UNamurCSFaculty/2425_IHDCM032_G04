@@ -31,7 +31,7 @@ export const zTraderDetailDto = z.object({
   address: z.string().optional(),
   phone: z
     .string()
-    .regex(/^(?:\+229)?(?:01[2-9]\d{7}|[2-9]\d{7})$/)
+    .regex(/^(?:\+229)?01\d{8}$/)
     .optional(),
   roles: z.array(zRoleDto).readonly().optional(),
   language: zLanguageDto,
@@ -83,7 +83,7 @@ export const zUserUpdateDto = z.object({
   address: z.string().optional(),
   phone: z
     .string()
-    .regex(/^(?:\+229)?(?:01[2-9]\d{7}|[2-9]\d{7})$/)
+    .regex(/^(?:\+229)?01\d{8}$/)
     .optional(),
   password: z.string().optional(),
   roles: z.array(zRoleDto).optional(),
@@ -202,7 +202,7 @@ export const zUserDetailDto = z.object({
   address: z.string().optional(),
   phone: z
     .string()
-    .regex(/^(?:\+229)?(?:01[2-9]\d{7}|[2-9]\d{7})$/)
+    .regex(/^(?:\+229)?01\d{8}$/)
     .optional(),
   roles: z.array(zRoleDto).readonly().optional(),
   language: zLanguageDto,
@@ -490,7 +490,7 @@ export const zUserListDto = z.object({
   address: z.string().optional(),
   phone: z
     .string()
-    .regex(/^(?:\+229)?(?:01[2-9]\d{7}|[2-9]\d{7})$/)
+    .regex(/^(?:\+229)?01\d{8}$/)
     .optional(),
   type: z.enum([
     'admin',

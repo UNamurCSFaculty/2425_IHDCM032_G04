@@ -1,18 +1,18 @@
 {
   "app": {
     "accueil": {
-      "sous_titre": "Join the real-time auction platform for raw cashew nuts and their processed products in Benin. Watch, outbid, and support local producers with confidence.",
-      "titre": "Cashew Auctions & Marketplace"
+      "subtitle": "Join the real-time auction platform for raw cashew nuts and their processed products in Benin. Watch, outbid, and support local producers with confidence.",
+      "title": "Cashew Auctions & Marketplace"
     },
     "contact": {
-      "sous_titre": "Do not hesitate to send your questions or comments.",
-      "titre": "Contact us"
+      "subtitle": "Do not hesitate to send your questions or comments.",
+      "title": "Contact us"
     },
     "loading": "Loading…",
     "networkError": "Cannot reach server",
     "signup": {
-      "sous_titre": "Your registration will be validated within 48 hours after sending the form.",
-      "titre": "Subscribe"
+      "subtitle": "Your registration will be validated within 48 hours after sending the form.",
+      "title": "Subscribe"
     },
     "statut": {
       "connection": "Connection...",

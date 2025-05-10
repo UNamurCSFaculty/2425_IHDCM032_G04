@@ -101,7 +101,8 @@ public class ApiErrorErrors {
 			return false;
 		}
 		ApiErrorErrors apiErrorErrors = (ApiErrorErrors) o;
-		return Objects.equals(this.path, apiErrorErrors.path) && Objects.equals(this.message, apiErrorErrors.message)
+		return Objects.equals(this.path, apiErrorErrors.path)
+				&& Objects.equals(this.message, apiErrorErrors.message)
 				&& Objects.equals(this.errorCode, apiErrorErrors.errorCode);
 	}
 
@@ -123,7 +124,8 @@ public class ApiErrorErrors {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first
+	 * line).
 	 */
 	private String toIndentedString(java.lang.Object o) {
 		if (o == null) {

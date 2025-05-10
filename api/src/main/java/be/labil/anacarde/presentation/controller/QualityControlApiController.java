@@ -17,13 +17,15 @@ public class QualityControlApiController implements QualityControlApi {
 	private final QualityControlService qualityControlService;
 
 	@Override
-	public ResponseEntity<? extends QualityControlDto> getQualityControl(Integer productId, Integer id) {
+	public ResponseEntity<? extends QualityControlDto> getQualityControl(Integer productId,
+			Integer id) {
 		QualityControlDto qc = qualityControlService.getQualityControlById(id);
 		return ResponseEntity.ok(qc);
 	}
 
 	@Override
-	public ResponseEntity<List<? extends QualityControlDto>> listQualityControls(Integer productId) {
+	public ResponseEntity<List<? extends QualityControlDto>> listQualityControls(
+			Integer productId) {
 		List<QualityControlDto> list = qualityControlService.listQualityControls(productId);
 		return ResponseEntity.ok(list);
 	}
@@ -32,15 +34,16 @@ public class QualityControlApiController implements QualityControlApi {
 	public ResponseEntity<QualityControlDto> createQualityControl(Integer productId,
 			QualityControlUpdateDto qualityControlDto) {
 		QualityControlDto created = qualityControlService.createQualityControl(qualityControlDto);
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(created.getId())
-				.toUri();
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+				.buildAndExpand(created.getId()).toUri();
 		return ResponseEntity.created(location).body(created);
 	}
 
 	@Override
 	public ResponseEntity<QualityControlDto> updateQualityControl(Integer productId, Integer id,
 			QualityControlUpdateDto qualityControlDto) {
-		QualityControlDto updated = qualityControlService.updateQualityControl(id, qualityControlDto);
+		QualityControlDto updated = qualityControlService.updateQualityControl(id,
+				qualityControlDto);
 		return ResponseEntity.ok(updated);
 	}
 

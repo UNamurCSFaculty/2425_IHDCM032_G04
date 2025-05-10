@@ -25,10 +25,12 @@ public abstract class CooperativeMapper {
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 	@Mapping(source = "presidentId", target = "president.id")
 	@Mapping(target = "id", ignore = true)
-	public abstract Cooperative partialUpdate(CooperativeUpdateDto dto, @MappingTarget Cooperative entity);
+	public abstract Cooperative partialUpdate(CooperativeUpdateDto dto,
+			@MappingTarget Cooperative entity);
 
 	@AfterMapping
-	protected void afterUpdateDto(CooperativeUpdateDto dto, @MappingTarget Cooperative cooperative) {
+	protected void afterUpdateDto(CooperativeUpdateDto dto,
+			@MappingTarget Cooperative cooperative) {
 		if (dto.getPresidentId() != null) {
 			cooperative.setPresident(em.getReference(Producer.class, dto.getPresidentId()));
 		}

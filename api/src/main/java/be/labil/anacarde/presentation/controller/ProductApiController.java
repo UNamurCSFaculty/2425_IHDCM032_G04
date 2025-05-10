@@ -30,8 +30,8 @@ public class ProductApiController implements ProductApi {
 	@Override
 	public ResponseEntity<ProductDto> createProduct(ProductUpdateDto productDto) {
 		ProductDto created = productService.createProduct(productDto);
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(created.getId())
-				.toUri();
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+				.buildAndExpand(created.getId()).toUri();
 		return ResponseEntity.created(location).body(created);
 	}
 

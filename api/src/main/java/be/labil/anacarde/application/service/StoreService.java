@@ -5,7 +5,8 @@ import be.labil.anacarde.domain.dto.db.StoreDetailDto;
 import java.util.List;
 
 /**
- * Ce service offre des méthodes permettant de créer, récupérer, mettre à jour et supprimer des informations de magasin.
+ * Ce service offre des méthodes permettant de créer, récupérer, mettre à jour et supprimer des
+ * informations de magasin.
  */
 public interface StoreService {
 
@@ -35,7 +36,8 @@ public interface StoreService {
 	List<StoreDetailDto> listStores();
 
 	/**
-	 * Met à jour du magasin identifié par l'ID donné avec les informations fournies dans le StoreDto.
+	 * Met à jour du magasin identifié par l'ID donné avec les informations fournies dans le
+	 * StoreDto.
 	 *
 	 * @param id
 	 *            L'identifiant unique du magasin à mettre à jour.

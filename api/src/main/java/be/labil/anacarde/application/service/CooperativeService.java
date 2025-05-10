@@ -5,7 +5,8 @@ import be.labil.anacarde.domain.dto.write.CooperativeUpdateDto;
 import java.util.List;
 
 /**
- * Ce service offre des méthodes permettant de créer, récupérer, mettre à jour et supprimer des coopératives.
+ * Ce service offre des méthodes permettant de créer, récupérer, mettre à jour et supprimer des
+ * coopératives.
  */
 public interface CooperativeService {
 
@@ -35,7 +36,8 @@ public interface CooperativeService {
 	List<CooperativeDto> listCooperatives();
 
 	/**
-	 * Met à jour la coopérative identifiée par l'ID donné avec les informations fournies dans le CooperativeDto.
+	 * Met à jour la coopérative identifiée par l'ID donné avec les informations fournies dans le
+	 * CooperativeDto.
 	 *
 	 * @param id
 	 *            L'identifiant unique de la coopérative à mettre à jour.

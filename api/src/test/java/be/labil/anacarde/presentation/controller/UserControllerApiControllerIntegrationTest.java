@@ -4,7 +4,6 @@ import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -35,8 +34,10 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 	 */
 	@Test
 	public void testGetUser() throws Exception {
-		mockMvc.perform(get("/api/users/" + getMainTestUser().getId()).accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk()).andExpect(jsonPath("$.email").value(getMainTestUser().getEmail()));
+		mockMvc.perform(
+				get("/api/users/" + getMainTestUser().getId()).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.email").value(getMainTestUser().getEmail()));
 	}
 
 	/**
@@ -59,13 +60,14 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 		ObjectNode node = objectMapper.valueToTree(newUser);
 		String jsonContent = node.toString();
 
-		mockMvc.perform(
-				post("/api/users").with(jwtAndCsrf()).contentType(MediaType.APPLICATION_JSON).content(jsonContent))
-				.andDo(print()).andExpect(status().isCreated())
+		mockMvc.perform(post("/api/users").with(jwtAndCsrf())
+				.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				.andExpect(status().isCreated())
 				// Vérifie que l'en-tête "Location" contient l'ID du nouvel utilisateur
 				// .andExpect(header().string("Location", containsString("/api/users/")))
 				.andExpect(jsonPath("$.email").value("alice.smith@example.com"))
-				.andExpect(jsonPath("$.firstName").value("Alice")).andExpect(jsonPath("$.lastName").value("Smith"));
+				.andExpect(jsonPath("$.firstName").value("Alice"))
+				.andExpect(jsonPath("$.lastName").value("Smith"));
 
 		User createdUser = userRepository.findByEmail("alice.smith@example.com")
 				.orElseThrow(() -> new AssertionError("Utilisateur non trouvé"));
@@ -74,7 +76,8 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 	}
 
 	/**
-	 * Teste que la création d'un utilisateur échoue si le champ "type" n'est pas présent dans le JSON.
+	 * Teste que la création d'un utilisateur échoue si le champ "type" n'est pas présent dans le
+	 * JSON.
 	 */
 	@Test
 	public void testCreateUserMissingTypeFails() throws Exception {
@@ -91,10 +94,10 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 
 		String jsonContent = node.toString();
 
-		mockMvc.perform(post("/api/users").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+		mockMvc.perform(
+				post("/api/users").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
 				.andExpect(status().isBadRequest()).andExpect(jsonPath("$.errors[0].message",
-						containsString("Le champ discriminant 'type' est obligatoire.")))
-				.andDo(print());
+						containsString("Le champ discriminant 'type' est obligatoire.")));
 	}
 
 	/**
@@ -103,7 +106,8 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 	 */
 	@Test
 	public void testListUsers() throws Exception {
-		mockMvc.perform(get("/api/users").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+		mockMvc.perform(get("/api/users").accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
 				// print
 				.andExpect(jsonPath("$").isArray());
 	}
@@ -125,19 +129,23 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 		int userRoleSize = getMainTestUser().getRoles().size();
 
 		ObjectNode node = objectMapper.valueToTree(updateUser);
-		node.put("password", updateUser.getPassword()); // Ajout manuel car le mot de passe n'est pas sérialisé
+		node.put("password", updateUser.getPassword()); // Ajout manuel car le mot de passe n'est
+														// pas sérialisé
 		String jsonContent = node.toString();
 
-		mockMvc.perform(put("/api/users/" + getMainTestUser().getId()).contentType(MediaType.APPLICATION_JSON)
-				.content(jsonContent)).andExpect(status().isOk())
+		mockMvc.perform(put("/api/users/" + getMainTestUser().getId())
+				.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.firstName").value("John Updated"));
 
 		// Vérifie que le mot de passe est correctement haché après la mise à jour
 		User updatedUser = userRepository.findByEmail("email@updated.com")
 				.orElseThrow(() -> new AssertionError("Utilisateur non trouvé"));
 		// Vérifie que les rôles ne sont pas mis à jour
-		assertEquals(updatedUser.getRoles().size(), userRoleSize, "Les rôles ne doivent pas être mis à jour");
-		assertEquals(updatedUser.getRoles().iterator().next().getName(), getUserTestRole().getName(),
+		assertEquals(updatedUser.getRoles().size(), userRoleSize,
+				"Les rôles ne doivent pas être mis à jour");
+		assertEquals(updatedUser.getRoles().iterator().next().getName(),
+				getUserTestRole().getName(),
 				"Le rôle ne doit pas être mis à jour avec le rôle ADMIN");
 		assertTrue(bCryptPasswordEncoder.matches("newpassword", updatedUser.getPassword()),
 				"Le mot de passe stocké doit correspondre au nouveau mot de passe 'newpassword'");
@@ -166,8 +174,10 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 		Integer userId = getMainTestUser().getId();
 
 		mockMvc.perform(post("/api/users/" + userId + "/roles/" + getAdminTestRole().getName())
-				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andExpect(jsonPath("$.roles").isArray())
-				.andExpect(jsonPath("$.roles[?(@.name=='" + getAdminTestRole().getName() + "')]").exists());
+				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+				.andExpect(jsonPath("$.roles").isArray())
+				.andExpect(jsonPath("$.roles[?(@.name=='" + getAdminTestRole().getName() + "')]")
+						.exists());
 	}
 
 	/**
@@ -180,9 +190,10 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 		List<String> roleNames = List.of(getUserTestRole().getName(), getAdminTestRole().getName());
 		String jsonContent = objectMapper.writeValueAsString(roleNames);
 
-		mockMvc.perform(put("/api/users/" + userId + "/roles").contentType(MediaType.APPLICATION_JSON)
-				.content(jsonContent).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
-				.andExpect(jsonPath("$.roles").isArray())
+		mockMvc.perform(
+				put("/api/users/" + userId + "/roles").contentType(MediaType.APPLICATION_JSON)
+						.content(jsonContent).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.roles").isArray())
 				.andExpect(jsonPath("$.roles[?(@.name=='ROLE_ADMIN')]").exists())
 				.andExpect(jsonPath("$.roles[?(@.name=='ROLE_USER')]").exists());
 	}
@@ -211,9 +222,9 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 		node.put("password", newUser.getPassword());
 		String jsonContent = node.toString();
 
-		mockMvc.perform(
-				post("/api/users").with(jwtAndCsrf()).contentType(MediaType.APPLICATION_JSON).content(jsonContent))
-				.andExpect(status().isBadRequest()).andDo(print())
+		mockMvc.perform(post("/api/users").with(jwtAndCsrf())
+				.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.code", containsString("validation.error")));
 	}
 
@@ -224,7 +235,8 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 	@Test
 	public void testAddRoleToUserUserNotFound() throws Exception {
 		int nonExistentUserId = 999999;
-		mockMvc.perform(post("/api/users/" + nonExistentUserId + "/roles/" + getUserTestRole().getName()))
+		mockMvc.perform(
+				post("/api/users/" + nonExistentUserId + "/roles/" + getUserTestRole().getName()))
 				.andExpect(status().isNotFound());
 	}
 
@@ -250,8 +262,9 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 		List<String> roleNames = List.of(getUserTestRole().getName());
 		String jsonContent = objectMapper.writeValueAsString(roleNames);
 
-		mockMvc.perform(put("/api/users/" + nonExistentUserId + "/roles").contentType(MediaType.APPLICATION_JSON)
-				.content(jsonContent)).andExpect(status().isNotFound());
+		mockMvc.perform(put("/api/users/" + nonExistentUserId + "/roles")
+				.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				.andExpect(status().isNotFound());
 	}
 
 	/**
@@ -264,8 +277,8 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 		List<String> roleNames = List.of("ROLE_NON_EXISTENT");
 		String jsonContent = objectMapper.writeValueAsString(roleNames);
 
-		mockMvc.perform(
-				put("/api/users/" + userId + "/roles").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+		mockMvc.perform(put("/api/users/" + userId + "/roles")
+				.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
 				.andExpect(status().isNotFound());
 	}
 }

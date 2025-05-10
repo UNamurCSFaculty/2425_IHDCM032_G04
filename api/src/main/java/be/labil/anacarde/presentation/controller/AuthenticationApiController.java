@@ -35,17 +35,20 @@ public class AuthenticationApiController implements AuthenticationApi {
 	private int tokenValidityMonths;
 
 	@Override
-	public ResponseEntity<UserDetailDto> authenticateUser(LoginRequest loginRequest, HttpServletResponse response) {
-		Authentication auth = authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+	public ResponseEntity<UserDetailDto> authenticateUser(LoginRequest loginRequest,
+			HttpServletResponse response) {
+		Authentication auth = authenticationManager
+				.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),
+						loginRequest.getPassword()));
 
-		String jwt = jwtUtil
-				.generateToken((org.springframework.security.core.userdetails.UserDetails) auth.getPrincipal());
+		String jwt = jwtUtil.generateToken(
+				(org.springframework.security.core.userdetails.UserDetails) auth.getPrincipal());
 
-		boolean isProd = Arrays.stream(environment.getActiveProfiles()).anyMatch(p -> p.equalsIgnoreCase("prod"));
+		boolean isProd = Arrays.stream(environment.getActiveProfiles())
+				.anyMatch(p -> p.equalsIgnoreCase("prod"));
 
-		ResponseCookie jwtCookie = ResponseCookie.from("jwt", jwt).httpOnly(true).secure(isProd).path("/")
-				.maxAge(Duration.ofDays(tokenValidityMonths)).sameSite("Strict").build();
+		ResponseCookie jwtCookie = ResponseCookie.from("jwt", jwt).httpOnly(true).secure(isProd)
+				.path("/").maxAge(Duration.ofDays(tokenValidityMonths)).sameSite("Strict").build();
 		response.addHeader(HttpHeaders.SET_COOKIE, jwtCookie.toString());
 
 		UserDetailDto dto = userDetailMapper.toDto((User) auth.getPrincipal());
@@ -66,7 +69,8 @@ public class AuthenticationApiController implements AuthenticationApi {
 	@Override
 	public ResponseEntity<Void> logout(HttpServletResponse response) {
 		ResponseCookie jwtClear = ResponseCookie.from("jwt", "").httpOnly(true)
-				.secure(Arrays.stream(environment.getActiveProfiles()).anyMatch(p -> p.equalsIgnoreCase("prod")))
+				.secure(Arrays.stream(environment.getActiveProfiles())
+						.anyMatch(p -> p.equalsIgnoreCase("prod")))
 				.path("/").maxAge(0).sameSite("Strict").build();
 		response.addHeader(HttpHeaders.SET_COOKIE, jwtClear.toString());
 		return ResponseEntity.ok().build();

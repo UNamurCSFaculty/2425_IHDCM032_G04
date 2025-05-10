@@ -9,7 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
 /**
- * Teste les fonctionnalités de génération, d'extraction et de validation des tokens JWT par la classe JwtUtil.
+ * Teste les fonctionnalités de génération, d'extraction et de validation des tokens JWT par la
+ * classe JwtUtil.
  */
 public class JwtUtilTest {
 
@@ -19,7 +20,8 @@ public class JwtUtilTest {
 	public void setUp() {
 		jwtUtil = new JwtUtil();
 		// Injecte les valeurs de configuration pour les besoins des tests via ReflectionTestUtils
-		ReflectionTestUtils.setField(jwtUtil, "secretKey", "V2Vha1NlY3VyZUtleVNlY3VyZUtleVNlY3VyZUtleVNlY3VyZQ==");
+		ReflectionTestUtils.setField(jwtUtil, "secretKey",
+				"V2Vha1NlY3VyZUtleVNlY3VyZUtleVNlY3VyZUtleVNlY3VyZQ==");
 		ReflectionTestUtils.setField(jwtUtil, "tokenValidityMonths", 1);
 	}
 
@@ -27,8 +29,9 @@ public class JwtUtilTest {
 	 * Teste la génération et la validation d'un token JWT pour un utilisateur.
 	 *
 	 * <p>
-	 * Ce test crée un utilisateur fictif sans autorités, génère un token JWT pour cet utilisateur, puis vérifie que le
-	 * nom d'utilisateur extrait du token correspond à celui de l'utilisateur et que le token est valide.
+	 * Ce test crée un utilisateur fictif sans autorités, génère un token JWT pour cet utilisateur,
+	 * puis vérifie que le nom d'utilisateur extrait du token correspond à celui de l'utilisateur et
+	 * que le token est valide.
 	 */
 	@Test
 	public void testGenerateAndValidateToken() {
@@ -52,8 +55,9 @@ public class JwtUtilTest {
 	 * Teste l'expiration d'un token JWT.
 	 *
 	 * <p>
-	 * Pour ce test, la durée de validité du token est définie à 0 heure (expiration immédiate). Le test attend ensuite
-	 * brièvement pour s'assurer que le token est expiré, puis vérifie que la validation du token échoue.
+	 * Pour ce test, la durée de validité du token est définie à 0 heure (expiration immédiate). Le
+	 * test attend ensuite brièvement pour s'assurer que le token est expiré, puis vérifie que la
+	 * validation du token échoue.
 	 *
 	 * @throws InterruptedException
 	 *             en cas d'interruption pendant l'attente

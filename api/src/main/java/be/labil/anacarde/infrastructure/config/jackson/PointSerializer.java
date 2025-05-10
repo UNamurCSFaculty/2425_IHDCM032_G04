@@ -13,7 +13,8 @@ public class PointSerializer extends StdSerializer<Point> {
 	}
 
 	@Override
-	public void serialize(Point point, JsonGenerator gen, SerializerProvider provider) throws IOException {
+	public void serialize(Point point, JsonGenerator gen, SerializerProvider provider)
+			throws IOException {
 		if (point == null) {
 			gen.writeNull();
 		} else {

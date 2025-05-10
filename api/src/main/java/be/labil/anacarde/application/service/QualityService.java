@@ -5,7 +5,8 @@ import be.labil.anacarde.domain.dto.db.QualityDto;
 import java.util.List;
 
 /**
- * Ce service offre des méthodes permettant de créer, récupérer, mettre à jour et supprimer des informations de qualité.
+ * Ce service offre des méthodes permettant de créer, récupérer, mettre à jour et supprimer des
+ * informations de qualité.
  */
 public interface QualityService {
 
@@ -35,7 +36,8 @@ public interface QualityService {
 	List<QualityDto> listQualities();
 
 	/**
-	 * Met à jour de la qualité identifiée par l'ID donné avec les informations fournies dans le QualityDto.
+	 * Met à jour de la qualité identifiée par l'ID donné avec les informations fournies dans le
+	 * QualityDto.
 	 *
 	 * @param id
 	 *            L'identifiant unique de la qualité à mettre à jour.

@@ -19,7 +19,8 @@ class StoreMapperTest {
 
 	@Test
 	void shouldMapEntityToDto() {
-		Point location = new GeometryFactory().createPoint(new org.locationtech.jts.geom.Coordinate(2.3522, 48.8566));
+		Point location = new GeometryFactory()
+				.createPoint(new org.locationtech.jts.geom.Coordinate(2.3522, 48.8566));
 		Store store = new Store();
 		store.setId(1);
 		store.setName("Nassara");
@@ -98,8 +99,8 @@ class StoreMapperTest {
 
 		Store entity = new Store();
 		entity.setId(1);
-		entity.setLocation(
-				new GeometryFactory().createPoint(new org.locationtech.jts.geom.Coordinate(2.3522, 48.8566)));
+		entity.setLocation(new GeometryFactory()
+				.createPoint(new org.locationtech.jts.geom.Coordinate(2.3522, 48.8566)));
 		entity.setUser(new Transformer());
 		entity.getUser().setId(41);
 

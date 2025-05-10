@@ -40,19 +40,21 @@ public class ContractOfferServiceImpl implements ContractOfferService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<ContractOfferDto> listContractOffers() {
-		return contractOfferRepository.findAll().stream().map(contractOfferMapper::toDto).collect(Collectors.toList());
+		return contractOfferRepository.findAll().stream().map(contractOfferMapper::toDto)
+				.collect(Collectors.toList());
 	}
 
 	@Override
-	public ContractOfferDto updateContractOffer(Integer id, ContractOfferUpdateDto contractOfferDetailDto) {
+	public ContractOfferDto updateContractOffer(Integer id,
+			ContractOfferUpdateDto contractOfferDetailDto) {
 		ContractOffer existingContractOffer = contractOfferRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Contrat non trouvé"));
 
-		ContractOffer updatedContractOffer = contractOfferMapper.partialUpdate(contractOfferDetailDto,
-				existingContractOffer);
+		ContractOffer updatedContractOffer = contractOfferMapper
+				.partialUpdate(contractOfferDetailDto, existingContractOffer);
 
-		ContractOffer full = persistenceHelper.saveAndReload(contractOfferRepository, updatedContractOffer,
-				ContractOffer::getId);
+		ContractOffer full = persistenceHelper.saveAndReload(contractOfferRepository,
+				updatedContractOffer, ContractOffer::getId);
 		return contractOfferMapper.toDto(full);
 	}
 

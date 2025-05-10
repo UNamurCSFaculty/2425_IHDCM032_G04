@@ -30,8 +30,8 @@ public class FieldApiController implements FieldApi {
 	@Override
 	public ResponseEntity<FieldDto> createField(Integer userId, FieldDto fieldDto) {
 		FieldDto created = fieldService.createField(fieldDto);
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(created.getId())
-				.toUri();
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+				.buildAndExpand(created.getId()).toUri();
 		return ResponseEntity.created(location).body(created);
 	}
 

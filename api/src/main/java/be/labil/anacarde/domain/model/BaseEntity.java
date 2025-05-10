@@ -24,8 +24,8 @@ public abstract class BaseEntity implements Serializable {
 	private Integer id;
 
 	/**
-	 * La comparaison est basée sur l'identifiant unique de l'entité. Une gestion particulière est prévue pour comparer
-	 * correctement les instances proxy gérées par Hibernate.
+	 * La comparaison est basée sur l'identifiant unique de l'entité. Une gestion particulière est
+	 * prévue pour comparer correctement les instances proxy gérées par Hibernate.
 	 *
 	 * @param o
 	 *            L'objet à comparer.
@@ -49,7 +49,8 @@ public abstract class BaseEntity implements Serializable {
 	}
 
 	/**
-	 * Le hash code est basé sur le type de la classe, en tenant compte des instances proxy de Hibernate.
+	 * Le hash code est basé sur le type de la classe, en tenant compte des instances proxy de
+	 * Hibernate.
 	 *
 	 * @return Le hash code en tant qu'entier.
 	 */

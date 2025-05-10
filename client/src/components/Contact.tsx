@@ -45,8 +45,8 @@ export const ContactForm: React.FC = () => {
   return (
     <section className="body-font relative text-gray-600">
       <BreadcrumbSection
-        titleKey="app.signup.titre"
-        subtitleKey="app.signup.sous_titre"
+        titleKey="app.contact.title"
+        subtitleKey="app.contact.subtitle"
         breadcrumbs={[{ labelKey: 'breadcrumb.contact' }]}
       />
 

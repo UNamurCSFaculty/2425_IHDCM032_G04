@@ -25,8 +25,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 /**
  * Cette API offre un point d'accès pour l'authentification des utilisateurs.
  *
- * En cas de succès, un token JWT est généré et renvoyé sous forme de cookie HTTP-only, et le détail de l'utilisateur
- * est renvoyé dans le corps de la réponse.
+ * En cas de succès, un token JWT est généré et renvoyé sous forme de cookie HTTP-only, et le détail
+ * de l'utilisateur est renvoyé dans le corps de la réponse.
  */
 @Validated
 @Tag(name = "Authentication", description = "API pour l'authentification des utilisateurs")
@@ -34,14 +34,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public interface AuthenticationApi {
 
 	/**
-	 * Authentifie un utilisateur et renvoie un token JWT sous forme de cookie HTTP-only, ainsi que les détails de
-	 * l'utilisateur authentifié dans le corps.
+	 * Authentifie un utilisateur et renvoie un token JWT sous forme de cookie HTTP-only, ainsi que
+	 * les détails de l'utilisateur authentifié dans le corps.
 	 *
 	 * @param loginRequest
 	 *            Le payload contenant les identifiants (nom d'utilisateur et mot de passe).
 	 * @param response
 	 *            La réponse HTTP à laquelle le cookie JWT sera ajouté.
-	 * @return Une ResponseEntity contenant un UserDetailDto si l'authentification est réussie, ou un statut 401 sinon.
+	 * @return Une ResponseEntity contenant un UserDetailDto si l'authentification est réussie, ou
+	 *         un statut 401 sinon.
 	 */
 	@Operation(summary = "Authentifier l'utilisateur", description = "Authentifie un utilisateur et renvoie un token JWT "
 			+ "sous forme de cookie HTTP-only ainsi que son UserDetailDto")
@@ -55,7 +56,8 @@ public interface AuthenticationApi {
 			HttpServletResponse response);
 
 	/**
-	 * Renvoie les détails de l'utilisateur actuellement authentifié et génère un premier token csrf pour l'utilisateur.
+	 * Renvoie les détails de l'utilisateur actuellement authentifié et génère un premier token csrf
+	 * pour l'utilisateur.
 	 * 
 	 * @param currentUser
 	 *            L'utilisateur actuellement authentifié.
@@ -64,7 +66,8 @@ public interface AuthenticationApi {
 	 * @param response
 	 *            La réponse HTTP à laquelle le cookie JWT sera ajouté.
 	 *
-	 * @return Une ResponseEntity contenant un UserDetailDto si le client présente un cookie JWT valide, ou 401 sinon.
+	 * @return Une ResponseEntity contenant un UserDetailDto si le client présente un cookie JWT
+	 *         valide, ou 401 sinon.
 	 */
 	@Operation(summary = "Récupérer l'utilisateur courant", description = "Renvoie les détails (UserDetailDto) de l'utilisateur authentifié via le cookie JWT, cette méthode génère aussi un premier token csrf pour l'utilisateur")
 	@ApiResponses({

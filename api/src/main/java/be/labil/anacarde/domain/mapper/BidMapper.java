@@ -9,7 +9,8 @@ import jakarta.persistence.EntityManager;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@Mapper(componentModel = "spring", uses = {MapperHelpers.class, AuctionMapper.class, TraderDetailMapper.class,
+@Mapper(componentModel = "spring", uses = {MapperHelpers.class, AuctionMapper.class,
+		TraderDetailMapper.class,
 		TradeStatusMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class BidMapper {
 
