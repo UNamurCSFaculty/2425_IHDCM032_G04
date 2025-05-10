@@ -408,8 +408,8 @@ function RouteComponent() {
   return (
     <>
       <BreadcrumbSection
-        titleKey="app.signup.titre"
-        subtitleKey="app.signup.sous_titre"
+        titleKey="app.signup.title"
+        subtitleKey="app.signup.subtitle"
         breadcrumbs={[{ labelKey: 'breadcrumb.contact' }]}
         className="border-b border-gray-200 dark:border-gray-700"
       />

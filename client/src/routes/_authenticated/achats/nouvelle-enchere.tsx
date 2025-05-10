@@ -1,56 +1,59 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { useSuspenseQuery } from '@tanstack/react-query'
-import { listAuctionsOptions, listAuctionsQueryKey } from '@/api/generated/@tanstack/react-query.gen'
-import { useAuctionStore } from '@/store/auctionStore'
-import { useState } from 'react';
-import BidsDialog from '@/components/auctions/BidsDialog'
+import {
+  listAuctionsOptions,
+  listAuctionsQueryKey,
+} from '@/api/generated/@tanstack/react-query.gen'
 import AuctionsTable from '@/components/auctions/AuctionsTable'
+import BidsDialog from '@/components/auctions/BidsDialog'
+import { useAuctionStore } from '@/store/auctionStore'
+import { useSuspenseQuery } from '@tanstack/react-query'
+import { createFileRoute } from '@tanstack/react-router'
+import { useState } from 'react'
 
 const listAuctionsQueryOptions = () => ({
-  ...listAuctionsOptions({ query: { status: "Ouvert" } }),
+  ...listAuctionsOptions({ query: { status: 'Ouvert' } }),
   queryKey: listAuctionsQueryKey(),
   staleTime: 10_000,
-});
+})
 
-export const Route = createFileRoute('/_authenticated/achats/nouvelle-enchere')({
-  component: RouteComponent,
-  loader: async ({ context: { queryClient } }) => {
-    return queryClient.ensureQueryData(listAuctionsQueryOptions())
-  },
-});
+export const Route = createFileRoute('/_authenticated/achats/nouvelle-enchere')(
+  {
+    component: RouteComponent,
+    loader: async ({ context: { queryClient } }) => {
+      return queryClient.ensureQueryData(listAuctionsQueryOptions())
+    },
+  }
+)
 
 export function RouteComponent() {
-  const { selectedAuctionId, setSelectedAuctionId } = useAuctionStore();
+  const { selectedAuctionId, setSelectedAuctionId } = useAuctionStore()
 
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
 
-  const { data : auctionsData } = useSuspenseQuery(
-    listAuctionsQueryOptions(),
-  );
+  const { data: auctionsData } = useSuspenseQuery(listAuctionsQueryOptions())
 
   const handleMakeBid = (auctionId: number) => {
-    setSelectedAuctionId(auctionId);
-    setIsDialogOpen(true);
-  };
+    setSelectedAuctionId(auctionId)
+    setIsDialogOpen(true)
+  }
 
   const isDialogOpenChanged = (isOpen: boolean) => {
-    setIsDialogOpen(isOpen);
+    setIsDialogOpen(isOpen)
   }
 
   return (
-          <>
-            <AuctionsTable 
-              tableTitle="Acheter un produit" 
-              showColumnMakeBid={true}
-              handleMakeBid={handleMakeBid}
-              auctions={auctionsData} 
-            />
-            <BidsDialog
-              auctionId={selectedAuctionId!}
-              isOpen={isDialogOpen}
-              openChange={isDialogOpenChanged}
-              showBidForm={true}
-            />
-          </>
-      )
+    <>
+      <AuctionsTable
+        tableTitle="Acheter un produit"
+        showColumnMakeBid={true}
+        handleMakeBid={handleMakeBid}
+        auctions={auctionsData}
+      />
+      <BidsDialog
+        auctionId={selectedAuctionId!}
+        isOpen={isDialogOpen}
+        openChange={isDialogOpenChanged}
+        showBidForm={true}
+      />
+    </>
+  )
 }

@@ -1,19 +1,23 @@
 import { createBidMutation } from '@/api/generated/@tanstack/react-query.gen.ts'
 import { useAppForm } from '@/components/form'
+import { useAuthUser } from '@/store/userStore'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAuthUser } from '@/store/userStore'
+
 // import { zBidUpdateDto } from '@/api/generated/zod.gen'
 // import { z } from 'zod'
 
 interface BidFormProps {
-  auctionId: number;
-  onMakeBid?: () => void;
+  auctionId: number
+  onMakeBid?: () => void
 }
 
-export function BidForm({ auctionId, onMakeBid }: BidFormProps): React.ReactElement<'div'> {
+export function BidForm({
+  auctionId,
+  onMakeBid,
+}: BidFormProps): React.ReactElement<'div'> {
   const user = useAuthUser()
   const navigate = useNavigate()
   const { i18n } = useTranslation()
@@ -22,7 +26,7 @@ export function BidForm({ auctionId, onMakeBid }: BidFormProps): React.ReactElem
     ...createBidMutation(),
     onSuccess() {
       if (onMakeBid) {
-        onMakeBid();
+        onMakeBid()
       }
       navigate({ to: '/achats/nouvelle-enchere' })
     },
@@ -41,16 +45,19 @@ export function BidForm({ auctionId, onMakeBid }: BidFormProps): React.ReactElem
     defaultValues: {
       amount: 0,
       auctionId: auctionId,
-      traderId: user.id
+      traderId: user.id,
     },
 
     onSubmit({ value }) {
-      const castValue  = {
+      const castValue = {
         ...value,
         amount: Number(value.amount),
       }
-      createBidRequest.mutate({ body: castValue, path: { auctionId: auctionId } })
-    }
+      createBidRequest.mutate({
+        body: castValue,
+        path: { auctionId: auctionId },
+      })
+    },
   })
 
   useEffect(() => {
@@ -58,31 +65,31 @@ export function BidForm({ auctionId, onMakeBid }: BidFormProps): React.ReactElem
   }, [i18n.language, form])
 
   return (
-      <div className="container mx-auto px-5 py-5">
-          <form
-            onSubmit={e => {
-              e.preventDefault()
-              e.stopPropagation()
-              form.handleSubmit()
-            }}
-          >
-            <div className="flex flex-col gap-6">
-                <form.AppField
-                  name="amount"
-                  children={field => (
-                    <field.TextField
-                      label="Votre offre (CFA)"
-                      type="amount"
-                      placeholder="0.0"
-                    />
-                  )}
-                />
+    <div className="container mx-auto px-5 py-5">
+      <form
+        onSubmit={e => {
+          e.preventDefault()
+          e.stopPropagation()
+          form.handleSubmit()
+        }}
+      >
+        <div className="flex flex-col gap-6">
+          <form.AppField
+            name="amount"
+            children={field => (
+              <field.TextField
+                label="Votre offre (CFA)"
+                type="amount"
+                placeholder="0.0"
+              />
+            )}
+          />
 
-              <form.AppForm>
-                <form.SubmitButton>Enchérir</form.SubmitButton>
-              </form.AppForm>
-            </div>
-          </form>
-      </div>
+          <form.AppForm>
+            <form.SubmitButton>Enchérir</form.SubmitButton>
+          </form.AppForm>
+        </div>
+      </form>
+    </div>
   )
 }
