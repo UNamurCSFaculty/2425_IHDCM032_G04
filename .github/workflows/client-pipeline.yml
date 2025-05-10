@@ -1,0 +1,35 @@
+# .github/workflows/client-pipeline.yml
+name: Client Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  format-and-build:
+    name: Check format & build Client
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        working-directory: ./client
+        run: npm ci
+
+      - name: Check code format
+        working-directory: ./client
+        run: npm run format:check
+
+      - name: Build application
+        working-directory: ./client
+        run: npm run build
