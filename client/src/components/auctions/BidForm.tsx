@@ -5,6 +5,8 @@ import { useNavigate } from '@tanstack/react-router'
 import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAuthUser } from '@/store/userStore'
+// import { zBidUpdateDto } from '@/api/generated/zod.gen'
+// import { z } from 'zod'
 
 interface BidFormProps {
   auctionId: number;
@@ -29,12 +31,15 @@ export function BidForm({ auctionId, onMakeBid }: BidFormProps): React.ReactElem
     },
   })
 
+  // const zBidUpdateSchema = zBidUpdateDto.extend({
+  //   amount: z.coerce.number(),
+  // })
+
   const form = useAppForm({
-    // TODO: cannot receive amount as string
-    // validators: { onChange: zAuctionUpdateDto },
+    // validators: { onChange: zBidUpdateSchema },
 
     defaultValues: {
-      amount: '',
+      amount: 0,
       auctionId: auctionId,
       traderId: user.id
     },
