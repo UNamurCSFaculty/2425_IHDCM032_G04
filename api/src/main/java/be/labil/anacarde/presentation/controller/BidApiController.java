@@ -1,6 +1,5 @@
 package be.labil.anacarde.presentation.controller;
 
-import be.labil.anacarde.application.service.AuctionService;
 import be.labil.anacarde.application.service.BidService;
 import be.labil.anacarde.domain.dto.db.BidDto;
 import be.labil.anacarde.domain.dto.write.BidUpdateDto;
@@ -15,7 +14,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RequiredArgsConstructor
 public class BidApiController implements BidApi {
 	private final BidService bidService;
-	private final AuctionService auctionService;
 
 	@Override
 	public ResponseEntity<BidDto> getBid(Integer auctionId, Integer bidId) {

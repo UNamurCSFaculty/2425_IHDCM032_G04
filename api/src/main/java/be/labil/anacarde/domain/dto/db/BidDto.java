@@ -38,7 +38,7 @@ public class BidDto extends BaseDto {
 	private TraderDetailDto trader;
 
 	/** Statut de l'offre. */
-	@NotNull(message = "Le statut est requis")
+	@NotNull(message = "Le statut de l'offre est requis")
 	@Schema(description = "Statut de l'offre", requiredMode = Schema.RequiredMode.REQUIRED)
 	private TradeStatusDto status;
 }

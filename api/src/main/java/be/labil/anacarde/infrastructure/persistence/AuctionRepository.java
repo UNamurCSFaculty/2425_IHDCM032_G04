@@ -12,11 +12,11 @@ public interface AuctionRepository extends JpaRepository<Auction, Integer> {
 	 * l'entité n'a pas été supprimée de la base de données.
 	 *
 	 * @param traderId
-	 *            Identifiant du trader ayant créé l'enchère.
+	 *            (optionnel) Identifiant du trader ayant créé l'enchère.
 	 * @param status
-	 *            Status de l'enchère.
+	 *            (optionnel) Status de l'enchère.
 	 *
-	 * @return Une liste d'enchères actives.
+	 * @return Une liste d'enchères actives et filtrées.
 	 */
 	@Query("""
 			    SELECT a FROM Auction a
@@ -25,6 +25,26 @@ public interface AuctionRepository extends JpaRepository<Auction, Integer> {
 			      AND (:status IS NULL OR a.status.name = :status)
 			    ORDER BY a.id DESC
 			""")
-	List<Auction> findByActiveTrueFiltered(@Param("traderId") Integer traderId,
+	List<Auction> findByTraderAndStatus(@Param("traderId") Integer traderId,
+			@Param("status") String status);
+
+	/**
+	 * Recherche les enchères actives, selon des paramètres de filtrage. Une enchère est active si
+	 * l'entité n'a pas été supprimée de la base de données.
+	 *
+	 * @param buyerId
+	 *            (obligatoire) Identifiant du trader ayant participé à l'enchère.
+	 * @param status
+	 *            (optionnel) Status de l'enchère.
+	 *
+	 * @return Une liste d'enchères actives et filtrées.
+	 */
+	@Query("""
+			   SELECT a FROM Auction a
+			   LEFT JOIN Bid b ON b.auctionId = a.id
+			   WHERE a.active = true AND b.trader.id = :buyerId AND (:status IS NULL OR b.status.name = :status)
+			   ORDER BY a.id DESC
+			""")
+	List<Auction> findByBuyerAndStatus(@Param("buyerId") Integer buyerId,
 			@Param("status") String status);
 }

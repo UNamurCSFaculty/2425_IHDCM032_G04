@@ -954,7 +954,7 @@ export type AuctionDto = {
   /**
    * Stratégie d'enchère associée
    */
-  strategy: AuctionStrategyDto
+  strategy?: AuctionStrategyDto
   /**
    * Produit associé à l'enchère
    */
@@ -1054,7 +1054,7 @@ export type BidUpdateDto = {
   /**
    * Statut de l'offre
    */
-  statusId: number
+  statusId?: number
 }
 
 /**
@@ -3417,9 +3417,13 @@ export type ListAuctionsData = {
   path?: never
   query?: {
     /**
-     * ID du trader pour filtrer les enchères
+     * ID du trader ayant créé les enchères
      */
     traderId?: number
+    /**
+     * ID du trader ayant remporté les enchères
+     */
+    buyerId?: number
     /**
      * Status pour filtrer les enchères
      */

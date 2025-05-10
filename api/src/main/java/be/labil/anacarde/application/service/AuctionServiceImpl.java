@@ -50,9 +50,17 @@ public class AuctionServiceImpl implements AuctionService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<AuctionDto> listAuctions(Integer traderId, String status) {
-		return auctionRepository.findByActiveTrueFiltered(traderId, status).stream()
-				.map(auctionMapper::toDto).collect(Collectors.toList());
+	public List<AuctionDto> listAuctions(Integer traderId, Integer buyerId, String status) {
+		if (traderId != null && buyerId != null) {
+			throw new IllegalArgumentException(
+					"TraderId et BuyerId ne peuvent pas être spécifiés en même temps.");
+		} else if (buyerId != null) {
+			return auctionRepository.findByBuyerAndStatus(buyerId, status).stream()
+					.map(auctionMapper::toDto).collect(Collectors.toList());
+		} else {
+			return auctionRepository.findByTraderAndStatus(traderId, status).stream()
+					.map(auctionMapper::toDto).collect(Collectors.toList());
+		}
 	}
 
 	@Override

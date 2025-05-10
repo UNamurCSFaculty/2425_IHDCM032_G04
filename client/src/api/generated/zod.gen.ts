@@ -449,7 +449,7 @@ export const zAuctionDto = z.object({
   expirationDate: z.string().datetime(),
   creationDate: z.string().datetime().readonly(),
   active: z.boolean(),
-  strategy: zAuctionStrategyDto,
+  strategy: zAuctionStrategyDto.optional(),
   product: z.union([zHarvestProductDto, zTransformedProductDto]),
   trader: z.union([
     zExporterDetailDto,
@@ -465,7 +465,7 @@ export const zBidUpdateDto = z.object({
   creationDate: z.string().datetime().readonly().optional(),
   auctionId: z.number().int(),
   traderId: z.number().int(),
-  statusId: z.number().int(),
+  statusId: z.number().int().optional(),
 })
 
 export const zContactRequestDto = z.object({
