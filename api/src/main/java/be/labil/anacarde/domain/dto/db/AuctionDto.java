@@ -48,7 +48,8 @@ public class AuctionDto extends BaseDto {
 	@Schema(description = "Trader ayant créé l'enchère", requiredMode = Schema.RequiredMode.REQUIRED)
 	private TraderDetailDto trader;
 
-	@Schema(description = "Statut de l'enchère")
+	@NotNull(message = "Le statut de l'enchère est requis")
+	@Schema(description = "Statut de l'enchère", requiredMode = Schema.RequiredMode.REQUIRED)
 	private TradeStatusDto status;
 
 	@Schema(description = "Liste des offres posées sur l'enchère", requiredMode = Schema.RequiredMode.REQUIRED)

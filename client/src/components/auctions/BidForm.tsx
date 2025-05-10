@@ -5,7 +5,6 @@ import { useNavigate } from '@tanstack/react-router'
 import { zBidUpdateDto } from '@/api/generated/zod.gen'
 import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { BidUpdateDto } from '@/api/generated'
 import { useAuthUser } from '@/store/userStore'
 
 interface BidFormProps {
@@ -36,6 +35,7 @@ export function BidForm({ auctionId, onMakeBid }: BidFormProps): React.ReactElem
 
     defaultValues: {
       amount: '',
+      auctionId: auctionId,
       traderId: user.id
     },
 

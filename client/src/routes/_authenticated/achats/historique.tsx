@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { listAuctionsOptions } from '@/api/generated/@tanstack/react-query.gen'
-import { type AuctionDtoReadable } from '@/api/generated'
+import { type AuctionDto } from '@/api/generated'
 import { useUserStore } from '@/store/userStore'
 import AuctionsTable from '@/components/auctions/AuctionsTable'
 
@@ -22,7 +22,7 @@ export function RouteComponent() {
 
   const { data } = useQuery(listAuctionsQueryOptions(user!.id));
 
-  const historyAuctions = data as AuctionDtoReadable[];
+  const historyAuctions = data as AuctionDto[];
 
   return <AuctionsTable 
             tableTitle="Mes achats passés" 
