@@ -73,7 +73,7 @@ public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 	@Test
 	public void testCreateBidWithDefaultStatus() throws Exception {
 		BidUpdateDto newBid = new BidUpdateDto();
-		newBid.setAmount(new BigDecimal("999.99"));
+		newBid.setAmount(new BigDecimal("555.55"));
 		newBid.setCreationDate(LocalDateTime.now());
 		newBid.setTraderId(getProducerTestUser().getId());
 		newBid.setAuctionId(getTestAuction().getId());
@@ -86,10 +86,10 @@ public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 				.andExpect(status().isCreated())
 				.andExpect(header().string("Location",
 						containsString("/api/auctions/" + getTestAuction().getId() + "/bids/")))
-				.andExpect(jsonPath("$.amount").value("666.66"));
+				.andExpect(jsonPath("$.amount").value("555.55"));
 
 		Bid createdBid = bidRepository.findAll().stream()
-				.filter(bid -> bid.getAmount().equals(new BigDecimal("666.66"))).findFirst()
+				.filter(bid -> bid.getAmount().equals(new BigDecimal("555.55"))).findFirst()
 				.orElseThrow(() -> new AssertionError("Offre non trouvée"));
 	}
 
