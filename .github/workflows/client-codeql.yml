@@ -1,3 +1,4 @@
+# .github/workflows/codeql-analysis-client.yml
 name: CodeQL Analysis for Client (JS/TS)
 
 on:
@@ -24,11 +25,19 @@ jobs:
         with:
           languages: javascript,typescript
 
-      - name: Install and build Client
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+          cache: true
+
+      - name: Install dependencies
         working-directory: ./client
-        run: |
-          npm ci
-          npm run build
+        run: bun install --frozen-lockfile
+
+      - name: Build application
+        working-directory: ./client
+        run: bun run build
 
       - name: Run CodeQL Analysis
         uses: github/codeql-action/analyze@v3
