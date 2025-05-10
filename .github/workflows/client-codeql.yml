@@ -1,0 +1,39 @@
+name: CodeQL Analysis for Client (JS/TS)
+
+on:
+  workflow_run:
+    workflows: ["Client Pipeline"]
+    types:
+      - completed
+  schedule:
+    # Hebdomadaire, chaque lundi à 14:20 UTC
+    - cron: '20 14 * * 1'
+
+jobs:
+  codeql-client:
+    name: CodeQL Analysis for Client
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript,typescript
+
+      - name: Install and build Client
+        working-directory: ./client
+        run: |
+          npm ci
+          npm run build
+
+      - name: Run CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          paths: ./client
+          output: codeql-client-results.sarif
+          upload: true
+          category: client-js
