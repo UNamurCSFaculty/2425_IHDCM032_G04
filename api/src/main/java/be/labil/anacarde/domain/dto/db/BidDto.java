@@ -24,7 +24,7 @@ public class BidDto extends BaseDto {
 	private BigDecimal amount;
 
 	/** Date de création de l'offre. */
-	@Schema(description = "Date de création de l'offre", example = "2025-04-07T11:30:00", accessMode = Schema.AccessMode.READ_ONLY)
+	@Schema(description = "Date de création de l'offre", example = "2025-04-07T11:30:00", accessMode = Schema.AccessMode.READ_ONLY, requiredMode = Schema.RequiredMode.REQUIRED)
 	private LocalDateTime creationDate;
 
 	/** Enchère associée à l'offre. */

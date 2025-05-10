@@ -664,7 +664,7 @@ export type ProductDto = {
   /**
    * Poids en kg du produit
    */
-  weightKg?: number
+  weightKg: number
   qualityControlId?: number
   /**
    * Type de produit.
@@ -946,7 +946,7 @@ export type AuctionDto = {
   /**
    * Date de création de l'enchère
    */
-  readonly creationDate?: string
+  readonly creationDate: string
   /**
    * Statut actif de l'enchère
    */
@@ -970,7 +970,7 @@ export type AuctionDto = {
   /**
    * Liste des offres posées sur l'enchère
    */
-  bids?: Array<BidDto>
+  bids: Array<BidDto>
 }
 
 /**
@@ -1002,7 +1002,7 @@ export type BidDto = {
   /**
    * Date de création de l'offre
    */
-  readonly creationDate?: string
+  readonly creationDate: string
   /**
    * Identifiant de l'enchère associée à l'offre
    */
