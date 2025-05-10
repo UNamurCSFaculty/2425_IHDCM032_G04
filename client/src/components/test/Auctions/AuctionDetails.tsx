@@ -1,20 +1,26 @@
-import type { AuctionDtoReadable } from '@/api/generated'
+import type { AuctionDto } from '@/api/generated'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 import { Separator } from '@/components/ui/separator'
+import dayjs from '@/utils/dayjs-config'
+import { formatPrice } from '@/utils/formatter'
 import { CheckCircle, XCircle } from 'lucide-react'
 import React from 'react'
 
 interface AuctionDetailsProps {
-  auction: AuctionDtoReadable
+  auction: AuctionDto
   onBidAction: (
     auctionId: number,
     bidId: number,
@@ -27,111 +33,156 @@ export const AuctionDetails: React.FC<AuctionDetailsProps> = ({
   onBidAction,
 }) => {
   const sortedBids = [...auction.bids].sort((a, b) => b.amount - a.amount)
+
   return (
-    <div className="space-y-6">
-      <Card className="overflow-hidden animate-in fade-in duration-300">
+    <div className="space-y-6 max-w-lg mx-auto">
+      <Card className="overflow-hidden animate-in fade-in duration-300 gap-2 bg-white shadow-lg">
         <CardHeader>
-          <CardTitle>Gestion des offres</CardTitle>
-          <CardDescription>
-            {sortedBids.length} {sortedBids.length === 1 ? 'offre' : 'offres'}{' '}
-            reçue{sortedBids.length > 1 ? 's' : ''}
-          </CardDescription>
+          <CardTitle>
+            <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
+              <span className="bg-background text-muted-foreground relative z-10 px-2">
+                <span className="text-gray-900 px-2 text-xl">
+                  {sortedBids.length}{' '}
+                  {sortedBids.length === 1 ? 'offre' : 'offres'} reçue
+                  {sortedBids.length > 1 ? 's' : ''}
+                </span>
+              </span>
+            </div>
+          </CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {sortedBids.length === 0 ? (
-              <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-                Aucune offre n'a encore été effectué.
-              </div>
-            ) : (
-              sortedBids.map((bid, index) => (
-                <div
-                  key={bid.id}
-                  className={`p-3 rounded-lg ${
-                    index === 0
-                      ? 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800'
-                      : 'bg-gray-50 dark:bg-gray-800 shadow'
-                  }`}
-                >
-                  <div className="flex justify-between items-start mb-2">
-                    <div>
-                      <div className="font-medium">
-                        {bid.trader.firstName} {bid.trader.lastName}
-                      </div>
-                      <div className="text-xs text-gray-500 dark:text-gray-400">
-                        {new Date(bid.auctionDate).toLocaleDateString('fr-FR')}
-                      </div>
-                    </div>
-                    <div
-                      className={`font-bold ${index === 0 ? 'text-green-600 dark:text-green-400' : ''}`}
-                    >
-                      €{bid.amount.toLocaleString('fr-BE')}
-                    </div>
+
+        <CardContent className="max-h-80 overflow-y-auto space-y-2 bg-neutral-100 pt-2 pb-2">
+          {sortedBids.length === 0 ? (
+            <div className="text-center py-8 text-gray-500 text-xl">
+              Aucune offre n'a encore été effectuée.
+            </div>
+          ) : (
+            sortedBids.map(bid => (
+              <div
+                key={bid.id}
+                className="flex items-start justify-between p-3 rounded-lg mb-1  bg-green-50 shadow-sm"
+              >
+                <div className="flex-1">
+                  <div className="font-medium text-sm">
+                    {bid.trader.firstName} {bid.trader.lastName}
                   </div>
-                  {bid.status.name === 'Pending' ? (
-                    <div className="flex gap-2 mt-2">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="flex-1 bg-green-50 hover:bg-green-100 text-green-700 border-green-200 hover:border-green-300 dark:bg-green-900/20 dark:hover:bg-green-900/40 dark:text-green-400 dark:border-green-800"
-                        onClick={() =>
-                          onBidAction(auction.id, bid.id, 'accept')
-                        }
-                      >
-                        <CheckCircle className="h-4 w-4 mr-1" /> Accepter
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="flex-1 bg-red-50 hover:bg-red-100 text-red-700 border-red-200 hover:border-red-300 dark:bg-red-900/20 dark:hover:bg-red-900/40 dark:text-red-400 dark:border-red-800"
-                        onClick={() =>
-                          onBidAction(auction.id, bid.id, 'reject')
-                        }
-                      >
-                        <XCircle className="h-4 w-4 mr-1" /> Refuser
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="mt-2">
-                      <Badge
-                        variant="outline"
-                        className={
-                          bid.status.name === 'Accepted'
-                            ? 'bg-green-50 text-green-700 border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800'
-                            : 'bg-red-50 text-red-700 border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800'
-                        }
-                      >
-                        {bid.status.name === 'Accepted' ? (
-                          <>
+                  <div className="text-md text-gray-600">
+                    {dayjs(bid.creationDate).fromNow()}
+                  </div>
+                </div>
+                <div className="flex flex-col items-end">
+                  <div className="font-semibold text-lg text-green-700">
+                    {formatPrice.format(bid.amount)}
+                  </div>
+                  {bid.status.name === 'Pending' && (
+                    <div className="flex space-x-1 mt-1">
+                      {/* Accept Popover */}
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="flex items-center px-2 py-1 bg-green-700 text-white border-green-200"
+                          >
                             <CheckCircle className="h-3 w-3 mr-1" /> Acceptée
-                          </>
-                        ) : (
-                          <>
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-50 p-2">
+                          <p className="text-sm mb-4 text-center font-semibold">
+                            Confirmer l'acceptation ?
+                          </p>
+                          <div className="flex justify-end space-x-2">
+                            <Button size="sm" variant="ghost">
+                              Annuler
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="default"
+                              onClick={() =>
+                                onBidAction(auction.id, bid.id, 'accept')
+                              }
+                            >
+                              Confirmer
+                            </Button>
+                          </div>
+                        </PopoverContent>
+                      </Popover>
+
+                      {/* Reject Popover */}
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="flex items-center px-2 py-1 bg-red-600 text-white border-red-200"
+                          >
                             <XCircle className="h-3 w-3 mr-1" /> Refusée
-                          </>
-                        )}
-                      </Badge>
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-50 p-2">
+                          <p className="text-sm mb-4 text-center font-semibold">
+                            Confirmer le refus ?
+                          </p>
+                          <div className="flex justify-end space-x-2">
+                            <Button size="sm" variant="ghost">
+                              Annuler
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="destructive"
+                              onClick={() =>
+                                onBidAction(auction.id, bid.id, 'reject')
+                              }
+                            >
+                              Confirmer
+                            </Button>
+                          </div>
+                        </PopoverContent>
+                      </Popover>
                     </div>
                   )}
+                  {bid.status.name !== 'Pending' && (
+                    <Badge
+                      variant="outline"
+                      className={
+                        bid.status.name === 'Accepted'
+                          ? 'bg-green-50 text-green-700 border-green-200'
+                          : 'bg-red-50 text-red-700 border-red-200'
+                      }
+                    >
+                      {bid.status.name === 'Accepted' ? (
+                        <>
+                          <CheckCircle className="h-3 w-3 mr-1 inline-block" />
+                          Acceptée
+                        </>
+                      ) : (
+                        <>
+                          <XCircle className="h-3 w-3 mr-1 inline-block" />
+                          Refusée
+                        </>
+                      )}
+                    </Badge>
+                  )}
                 </div>
-              ))
-            )}
-          </div>
+              </div>
+            ))
+          )}
         </CardContent>
-        <CardFooter className="flex-col">
-          <Separator className="mb-4" />
-          <div className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+
+        <CardFooter className="flex-col space-y-1 mt-2">
+          <Separator />
+          <div className="text-xs text-gray-500">
             Offre la plus haute :{' '}
-            <span className="font-semibold text-gray-700 dark:text-gray-300">
-              €
+            <span className="font-semibold text-gray-700">
               {sortedBids
                 .reduce((max, b) => (b.amount > max ? b.amount : max), 0)
-                .toLocaleString('fr-BE')}
+                .toLocaleString('fr-BE')}{' '}
+              CFA
             </span>
           </div>
-          <div className="text-sm text-gray-500 dark:text-gray-400">
+          <div className="text-xs text-gray-500">
             Fin de l'enchère :{' '}
-            <span className="font-semibold text-gray-700 dark:text-gray-300">
+            <span className="font-semibold text-gray-700">
               {new Date(auction.expirationDate).toLocaleDateString('fr-FR')}
             </span>
           </div>

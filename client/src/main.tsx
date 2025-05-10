@@ -12,6 +12,7 @@ import { routeTree } from './routeTree.gen'
 import { useUserStore } from './store/userStore.tsx'
 import './styles.css'
 import { getCookie } from './utils/cookies.ts'
+import { setDayjsLocale } from './utils/dayjs-config.ts'
 import { client } from '@/api/generated/client.gen.ts'
 import { useAppStore } from '@/store/appStore.tsx'
 import '@/utils/zod-config.ts'
@@ -22,9 +23,18 @@ import {
 } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
+import i18n from 'i18next'
 import { StrictMode, useEffect } from 'react'
 import ReactDOM from 'react-dom/client'
 import { Observer } from 'tailwindcss-intersect'
+
+// Initialise dayjs sur la langue courante
+setDayjsLocale(i18n.language)
+
+// Met à jour dayjs si la langue change dynamiquement
+i18n.on('languageChanged', lng => {
+  setDayjsLocale(lng)
+})
 
 client.setConfig({
   credentials: 'include', // pour les cookies (HTTP Only)

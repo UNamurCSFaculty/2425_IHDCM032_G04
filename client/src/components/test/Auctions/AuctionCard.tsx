@@ -6,22 +6,24 @@ import {
   CardHeader,
   CardTitle,
 } from '../../ui/card'
-import type { AuctionDtoReadable } from '@/api/generated'
-import { CountdownTimer } from '@/components/test/CountdownTimer'
+import { CountdownTimer } from '../CountDownTimer'
+import type { AuctionDto } from '@/api/generated'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { formatPrice, formatWeight } from '@/utils/formatter'
 import {
   ChevronRight,
   Clock,
   DollarSign,
   Home,
   MapPin,
+  NotebookText,
   Package,
 } from 'lucide-react'
 import React from 'react'
 
 interface AuctionCardProps {
-  auction: AuctionDtoReadable
+  auction: AuctionDto
   isSelected?: boolean
   onVoirDetails: (id: number) => void
 }
@@ -34,7 +36,7 @@ export const AuctionCard: React.FC<AuctionCardProps> = ({
   const endsIn = new Date(auction.expirationDate)
   return (
     <Card
-      className={`overflow-hidden shadow-lg transform transition-all duration-300 hover:shadow-xl ${
+      className={`overflow-hidden shadow-lg transform transition-all duration-300 hover:shadow-xl gap-2 bg-gradient-to-b from-green-50 to-yellow-50 ${
         isSelected
           ? 'ring-2 ring-emerald-500'
           : 'hover:scale-105  hover:-translate-y-1'
@@ -59,9 +61,13 @@ export const AuctionCard: React.FC<AuctionCardProps> = ({
               <div>
                 Lot de {auction.product.type} à {auction.product.store.location}
               </div>
-              <CardDescription className="flex items-center text-sm text-gray-400 mt-4">
+              <CardDescription className="flex items-center justify-around text-sm text-white mt-2 bg-green-700 rounded-lg inset-shadow-sm p-2">
                 <MapPin className="w-4 h-4 mr-1" />
                 {auction.product.store.location}
+                <span className="mx-1">|</span>
+
+                <Home className="w-4 h-4 mr-1" />
+                {auction.product.store.name}
               </CardDescription>
             </div>
           </CardTitle>
@@ -69,7 +75,7 @@ export const AuctionCard: React.FC<AuctionCardProps> = ({
       </CardHeader>
 
       <CardContent>
-        <div className="p-3 bg-gradient-to-b from-green-50 to-yellow-50 rounded-lg mb-4">
+        <div className="p-3  bg-white shadow-sm rounded-lg mb-4">
           <div className="flex items-center text-lg text-gray-700 justify-center">
             <Clock className="w-4 h-4 mr-1" /> Fini dans
           </div>
@@ -78,52 +84,49 @@ export const AuctionCard: React.FC<AuctionCardProps> = ({
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 mb-4">
-          <div className="p-3 bg-gradient-to-b from-green-50 to-yellow-50 rounded-lg">
-            <div className="flex items-center text-xs text-gray-400">
-              <Home className="w-4 h-4 mr-1" /> Magasin
-            </div>
-            <div className="mt-1 font-semibold text-sm">
-              {auction.product.store.location}
-            </div>
-          </div>
-          <div className="p-3 bg-gradient-to-b from-green-50 to-yellow-50 rounded-lg">
-            <div className="flex items-center text-xs text-gray-400">
-              <Package className="w-4 h-4 mr-1" /> Quantité
-            </div>
-            <div className="mt-1 font-semibold text-sm">
-              {auction.productQuantity} × {auction.product.weightKg}kg
-            </div>
-          </div>
-          <div className="p-3 bg-gradient-to-b from-green-50 to-yellow-50 rounded-lg">
-            <div className="flex items-center text-xs text-gray-400">
-              <DollarSign className="w-4 h-4 mr-1" /> Prix demandé
-            </div>
-            <div className="mt-1 font-semibold text-sm">
-              {auction.price.toLocaleString('fr-BE', {
-                style: 'currency',
-                currency: 'EUR',
-              })}
-            </div>
-          </div>
-          <div className="p-3 bg-gradient-to-b from-green-50 to-yellow-50 rounded-lg">
-            <div className="flex items-center text-xs text-gray-400">
+        <div className="grid grid-cols-2 gap-2 mb-4">
+          <div className="p-3 bg-white shadow-sm rounded-lg">
+            <div className="flex items-center justify-center text-xs text-gray-500">
               <Package className="w-4 h-4 mr-1" /> Type
             </div>
-            <div className="mt-1 font-semibold text-sm">
+            <div className="mt-1 font-semibold text-sm text-center">
               {auction.product.type}
+            </div>
+          </div>
+          <div className="p-3 bg-white shadow-sm rounded-lg">
+            <div className="flex items-center justify-center text-xs text-gray-500">
+              <NotebookText className="w-4 h-4 mr-1" /> Qualité
+            </div>
+            <div className="mt-1 font-semibold text-sm text-center">
+              {auction.product.qualityControlId}
+            </div>
+          </div>
+          <div className="p-3 bg-white shadow-sm rounded-lg">
+            <div className="flex items-center justify-center text-xs text-gray-500">
+              <Package className="w-4 h-4 mr-1" /> Quantité
+            </div>
+            <div className="mt-1 font-semibold text-sm text-center">
+              {formatWeight(auction.product.weightKg)}
+            </div>
+          </div>
+          <div className="p-3 bg-white shadow-sm rounded-lg">
+            <div className="flex items-center justify-center text-xs text-gray-500">
+              <DollarSign className="w-4 h-4 mr-1" /> Prix souhaité
+            </div>
+            <div className="mt-1 font-semibold text-sm text-center">
+              {formatPrice.format(auction.price)}
             </div>
           </div>
         </div>
 
-        <div className="flex items-center space-x-4 justify-center">
+        <div className="flex items-center space-x-4 justify-center bg-white shadow-sm rounded-lg">
           <div className="w-16 h-16 bg-neutral-00 rounded-lg flex items-center justify-center">
             <Package className="w-8 h-8" />
           </div>
           <div>
-            <div className="text-md text-gray-400">Meilleure offre</div>
+            <div className="text-md text-gray-500">Meilleure offre</div>
             <div className="mt-1 text-lg font-bold text-green-600">
-              €{auction.price.toLocaleString('fr-BE')}
+              {formatPrice.format(auction.price)}
             </div>
           </div>
         </div>
@@ -132,7 +135,7 @@ export const AuctionCard: React.FC<AuctionCardProps> = ({
       <CardFooter className="pt-0">
         <Button
           variant="outline"
-          className="w-full flex items-center justify-center space-x-2"
+          className="w-full flex items-center justify-center space-x-2  text-sm border-1"
           onClick={() => onVoirDetails(auction.id)}
         >
           <span>Voir détails</span>

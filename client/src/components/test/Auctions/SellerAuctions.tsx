@@ -1,14 +1,14 @@
 import { AuctionCard } from './AuctionCard'
 import { AuctionDetails } from './AuctionDetails'
 import { AuctionHeader } from './AuctionHeader'
-import type { AuctionDtoReadable } from '@/api/generated'
+import type { AuctionDto } from '@/api/generated'
 import { Button } from '@/components/ui/button'
 import React, { useState } from 'react'
 
 const ITEMS_PER_PAGE = 3
 
 interface SellerAuctionsProps {
-  auctions: AuctionDtoReadable[]
+  auctions: AuctionDto[]
 }
 export type SellerAuctionsTab = 'active' | 'ended'
 

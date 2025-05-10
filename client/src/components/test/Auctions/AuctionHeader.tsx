@@ -1,13 +1,13 @@
 import type { SellerAuctionsTab } from './SellerAuctions'
-import type { AuctionDtoReadable } from '@/api/generated'
+import type { AuctionDto } from '@/api/generated'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ArrowLeft } from 'lucide-react'
 import React from 'react'
 
 type AuctionHeaderProps = {
-  auctions: AuctionDtoReadable[]
-  selectedAuction?: AuctionDtoReadable
+  auctions: AuctionDto[]
+  selectedAuction?: AuctionDto
   tab: SellerAuctionsTab
   setSelectedId: (id: number | null) => void
   setPage: (page: number) => void
