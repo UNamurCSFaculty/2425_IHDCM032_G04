@@ -11,19 +11,30 @@ type TextFieldProps = {
   endIcon?: LucideIcon
   label: string
   required?: boolean
+  castNumber?: boolean
+  fieldType?: 'string' | 'number'
 } & React.InputHTMLAttributes<HTMLInputElement>
 
-export const TextField = ({
+export function TextField<T extends string | number>({
   label,
   startIcon,
   endIcon,
   className,
   required = true,
+  fieldType = 'string',
   ...restProps
-}: TextFieldProps) => {
-  const field = useFieldContext<string>()
+}: TextFieldProps) {
+  const field = useFieldContext<T>()
   const hasError =
     field.state.meta.isTouched && field.state.meta.errors.length > 0
+
+  const _parse = (v: string): T => {
+    if (fieldType === 'number') {
+      const parsed = Number(v)
+      return isNaN(parsed) ? (v as T) : (parsed as T)
+    }
+    return v as T
+  }
 
   return (
     <div className="space-y-2">
@@ -35,7 +46,10 @@ export const TextField = ({
         <Input
           id={field.name}
           value={field.state.value}
-          onChange={e => field.handleChange(e.target.value)}
+          onChange={e => {
+            const parsedVal = _parse(e.target.value)
+            field.handleChange(parsedVal as T)
+          }}
           onBlur={field.handleBlur}
           startIcon={startIcon}
           endIcon={endIcon}

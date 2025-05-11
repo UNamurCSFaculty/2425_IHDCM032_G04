@@ -9,7 +9,7 @@
     "serve": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest --watch",
-    "format": "prettier --write \"src/**/*.{js,ts,tsx,css,html,json,md}\"",
+    "format": "prettier --end-of-line auto --write \"src/**/*.{js,ts,tsx,css,html,json,md}\"",
     "format:check": "prettier --check \"src/**/*.{js,ts,tsx,css,html,json,md}\"",
     "lint": "eslint . --ext ts,tsx --fix --report-unused-disable-directives --max-warnings 0",
     "generate:api": "openapi-ts",

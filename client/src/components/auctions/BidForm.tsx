@@ -43,12 +43,8 @@ export function BidForm({
     },
 
     onSubmit({ value }) {
-      const castValue = {
-        ...value,
-        amount: Number(value.amount),
-      }
       createBidRequest.mutate({
-        body: castValue,
+        body: value,
         path: { auctionId: auctionId },
       })
     },
@@ -74,6 +70,7 @@ export function BidForm({
               <field.TextField
                 label="Votre offre (CFA)"
                 type="amount"
+                fieldType="number"
                 placeholder="0.0"
               />
             )}
