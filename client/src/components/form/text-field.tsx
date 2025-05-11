@@ -30,8 +30,8 @@ export function TextField<T extends string | number>({
 
   const _parse = (v: string): T => {
     if (fieldType === 'number') {
-      const parsed = Number(v);
-      return isNaN(parsed) ? (v as T) : (parsed as T);
+      const parsed = Number(v)
+      return isNaN(parsed) ? (v as T) : (parsed as T)
     }
     return v as T
   }
