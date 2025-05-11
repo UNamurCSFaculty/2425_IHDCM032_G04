@@ -69,8 +69,8 @@ export function AuctionForm({
     null
   )
 
-  const handleProductChange = (productId: string) => {
-    const product = products.find(p => p.id.toString() === productId)
+  const handleProductChange = (productId: number) => {
+    const product = products.find(p => p.id === productId)
     setSelectedProduct(product || null)
   }
 
@@ -100,7 +100,7 @@ export function AuctionForm({
                             children={field => (
                               <field.SelectField
                                 options={products.map(product => ({
-                                  value: String(product.id),
+                                  value: product.id,
                                   label:
                                     'Lot n°' +
                                     product.id +
@@ -127,6 +127,7 @@ export function AuctionForm({
                                   label="Quantité (kg)"
                                   type="quantity"
                                   placeholder="0.0"
+                                  fieldType="number"
                                 />
                               )}
                             />
@@ -138,6 +139,7 @@ export function AuctionForm({
                                   label="Prix (CFA)"
                                   type="price"
                                   placeholder="0.0"
+                                  fieldType="number"
                                 />
                               )}
                             />
