@@ -140,7 +140,7 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 	}
 
 	/**
-	 * Teste la récupération de la liste des enchères d'un utilisateur.
+	 * Teste la récupération de la liste des enchères créées par un utilisateur.
 	 *
 	 */
 	@Test
@@ -148,6 +148,19 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		mockMvc.perform(get("/api/auctions?traderId=" + getProducerTestUser().getId())
 				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
 				.andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(2));
+	}
+
+	/**
+	 * Teste la récupération de la liste de enchères remportées par un utilisateur.
+	 *
+	 */
+	@Test
+	public void testListAuctionsByBuyerId() throws Exception {
+		mockMvc.perform(
+				get("/api/auctions?buyerId=" + getProducerTestUser().getId() + "&status=Accepté")
+						.accept(MediaType.APPLICATION_JSON).with(jwtAndCsrf()))
+				.andExpect(status().isOk()).andExpect(jsonPath("$").isArray())
+				.andExpect(jsonPath("$.length()").value(1));
 	}
 
 	/**

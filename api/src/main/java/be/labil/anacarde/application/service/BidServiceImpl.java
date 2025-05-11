@@ -27,6 +27,15 @@ public class BidServiceImpl implements BidService {
 	@Override
 	public BidDto createBid(BidUpdateDto dto) {
 		Bid bid = bidMapper.toEntity(dto);
+
+		if (dto.getStatusId() == null) {
+			TradeStatus pendingStatus = tradeStatusRepository.findStatusPending();
+			if (pendingStatus == null) {
+				throw new ResourceNotFoundException("Status non trouvé");
+			}
+			bid.setStatus(pendingStatus);
+		}
+
 		Bid full = persistenceHelper.saveAndReload(bidRepository, bid, Bid::getId);
 		return bidMapper.toDto(full);
 	}

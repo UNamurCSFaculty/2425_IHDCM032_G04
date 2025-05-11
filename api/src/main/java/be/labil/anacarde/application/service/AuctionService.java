@@ -33,13 +33,15 @@ public interface AuctionService {
 	 * Récupère toutes les enchères du système.
 	 *
 	 * @param traderId
-	 *            L'identifiant unique du trader ayant créé l'enchère.
+	 *            L'identifiant du trader ayant créé les enchères.
+	 * @param buyerId
+	 *            L'identifiant du trader ayant remporté les enchères.
 	 * @param auctionStatus
 	 *            Le status de l'enchère.
 	 *
 	 * @return Une List de AuctionDto représentant toutes les enchères.
 	 */
-	List<AuctionDto> listAuctions(Integer traderId, String auctionStatus);
+	List<AuctionDto> listAuctions(Integer traderId, Integer buyerId, String auctionStatus);
 
 	/**
 	 * Mise à jour de l'enchère identifiée par l'ID donné avec les informations fournies dans le

@@ -102,6 +102,9 @@
     "message": "Message",
     "password": "Mot de passe",
     "phone": "Téléphone",
+    "placeholder": {
+      "date": "Sélectionner une date"
+    },
     "type": "Je suis"
   },
   "languages": {

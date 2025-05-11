@@ -30,14 +30,14 @@ public class AuctionDto extends BaseDto {
 	@Schema(description = "Date d'expiration de l'enchère", example = "2025-12-31T23:59:59", requiredMode = Schema.RequiredMode.REQUIRED)
 	private LocalDateTime expirationDate;
 
-	@Schema(description = "Date de création de l'enchère", example = "2025-01-01T00:00:00", accessMode = Schema.AccessMode.READ_ONLY)
+	@Schema(description = "Date de création de l'enchère", example = "2025-01-01T00:00:00", accessMode = Schema.AccessMode.READ_ONLY, requiredMode = Schema.RequiredMode.REQUIRED)
 	private LocalDateTime creationDate;
 
 	@NotNull(message = "Le statut actif est requis")
 	@Schema(description = "Statut actif de l'enchère", example = "true", requiredMode = Schema.RequiredMode.REQUIRED)
 	private Boolean active;
 
-	@Schema(description = "Stratégie d'enchère associée", requiredMode = Schema.RequiredMode.REQUIRED)
+	@Schema(description = "Stratégie d'enchère associée")
 	private AuctionStrategyDto strategy;
 
 	@NotNull(message = "Le produit est requis")
@@ -48,9 +48,10 @@ public class AuctionDto extends BaseDto {
 	@Schema(description = "Trader ayant créé l'enchère", requiredMode = Schema.RequiredMode.REQUIRED)
 	private TraderDetailDto trader;
 
+	@NotNull(message = "Le statut de l'enchère est requis")
 	@Schema(description = "Statut de l'enchère", requiredMode = Schema.RequiredMode.REQUIRED)
 	private TradeStatusDto status;
 
-	@Schema(description = "Liste des offres posées sur l'enchère")
+	@Schema(description = "Liste des offres posées sur l'enchère", requiredMode = Schema.RequiredMode.REQUIRED)
 	private List<BidDto> bids;
 }

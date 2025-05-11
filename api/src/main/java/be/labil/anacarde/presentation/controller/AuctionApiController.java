@@ -22,22 +22,23 @@ public class AuctionApiController implements AuctionApi {
 	}
 
 	@Override
-	public ResponseEntity<List<AuctionDto>> listAuctions(Integer traderId, String auctionStatus) {
-		List<AuctionDto> auctions = auctionService.listAuctions(traderId, auctionStatus);
+	public ResponseEntity<List<AuctionDto>> listAuctions(Integer traderId, Integer buyerId,
+			String auctionStatus) {
+		List<AuctionDto> auctions = auctionService.listAuctions(traderId, buyerId, auctionStatus);
 		return ResponseEntity.ok(auctions);
 	}
 
 	@Override
-	public ResponseEntity<AuctionDto> createAuction(AuctionUpdateDto auctionDetailDto) {
-		AuctionDto created = auctionService.createAuction(auctionDetailDto);
+	public ResponseEntity<AuctionDto> createAuction(AuctionUpdateDto auctionUpdateDto) {
+		AuctionDto created = auctionService.createAuction(auctionUpdateDto);
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(created.getId()).toUri();
 		return ResponseEntity.created(location).body(created);
 	}
 
 	@Override
-	public ResponseEntity<AuctionDto> updateAuction(Integer id, AuctionUpdateDto auctionDetailDto) {
-		AuctionDto updated = auctionService.updateAuction(id, auctionDetailDto);
+	public ResponseEntity<AuctionDto> updateAuction(Integer id, AuctionUpdateDto auctionUpdateDto) {
+		AuctionDto updated = auctionService.updateAuction(id, auctionUpdateDto);
 		return ResponseEntity.ok(updated);
 	}
 

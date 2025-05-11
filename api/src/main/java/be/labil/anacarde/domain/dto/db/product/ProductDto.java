@@ -37,7 +37,7 @@ public abstract class ProductDto extends BaseDto {
 	@Schema(description = "Magasin associé au produit récolté", requiredMode = Schema.RequiredMode.REQUIRED)
 	private StoreDetailDto store;
 
-	@Schema(description = "Poids en kg du produit", example = "100.0")
+	@Schema(description = "Poids en kg du produit", example = "100.0", requiredMode = Schema.RequiredMode.REQUIRED)
 	private Double weightKg;
 
 	@JsonIgnoreProperties("product")

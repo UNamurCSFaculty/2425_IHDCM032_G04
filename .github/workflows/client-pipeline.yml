@@ -1,0 +1,35 @@
+# .github/workflows/client-pipeline.yml
+name: Client Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  format-and-build:
+    name: Check format & build Client
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+          cache: true
+
+      - name: Install dependencies
+        working-directory: ./client
+        run: bun install --frozen-lockfile
+
+      - name: Check code format
+        working-directory: ./client
+        run: bun run format:check
+
+      - name: Build application
+        working-directory: ./client
+        run: bun run build

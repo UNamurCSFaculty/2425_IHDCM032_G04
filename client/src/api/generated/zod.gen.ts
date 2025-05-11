@@ -292,7 +292,7 @@ export const zProductDto = z.object({
   id: z.number().int().readonly(),
   deliveryDate: z.string().datetime().optional(),
   store: zStoreDetailDto,
-  weightKg: z.number().optional(),
+  weightKg: z.number(),
   qualityControlId: z.number().int().optional(),
   type: z.enum(['harvest', 'transformed']),
 })
@@ -432,7 +432,7 @@ export const zTradeStatusDto = z.object({
 export const zBidDto = z.object({
   id: z.number().int().readonly(),
   amount: z.number(),
-  creationDate: z.string().datetime().readonly().optional(),
+  creationDate: z.string().datetime().readonly(),
   auctionId: z.number().int(),
   trader: z.union([
     zExporterDetailDto,
@@ -447,9 +447,9 @@ export const zAuctionDto = z.object({
   price: z.number(),
   productQuantity: z.number().int(),
   expirationDate: z.string().datetime(),
-  creationDate: z.string().datetime().readonly().optional(),
+  creationDate: z.string().datetime().readonly(),
   active: z.boolean(),
-  strategy: zAuctionStrategyDto,
+  strategy: zAuctionStrategyDto.optional(),
   product: z.union([zHarvestProductDto, zTransformedProductDto]),
   trader: z.union([
     zExporterDetailDto,
@@ -457,7 +457,7 @@ export const zAuctionDto = z.object({
     zTransformerDetailDto,
   ]),
   status: zTradeStatusDto,
-  bids: z.array(zBidDto).optional(),
+  bids: z.array(zBidDto),
 })
 
 export const zBidUpdateDto = z.object({
@@ -465,7 +465,7 @@ export const zBidUpdateDto = z.object({
   creationDate: z.string().datetime().readonly().optional(),
   auctionId: z.number().int(),
   traderId: z.number().int(),
-  statusId: z.number().int(),
+  statusId: z.number().int().optional(),
 })
 
 export const zContactRequestDto = z.object({

@@ -41,7 +41,6 @@ public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 	 */
 	@Test
 	public void testCreateBid() throws Exception {
-
 		BidUpdateDto newBid = new BidUpdateDto();
 		newBid.setAmount(new BigDecimal("999.99"));
 		newBid.setStatusId(getTestBidStatus().getId());
@@ -64,6 +63,33 @@ public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 
 		Bid createdBid = bidRepository.findAll().stream()
 				.filter(bid -> bid.getAmount().equals(new BigDecimal("999.99"))).findFirst()
+				.orElseThrow(() -> new AssertionError("Offre non trouvée"));
+	}
+
+	/**
+	 * Teste la création d'une nouvelle enchère, avec un status par défaut.
+	 *
+	 */
+	@Test
+	public void testCreateBidWithDefaultStatus() throws Exception {
+		BidUpdateDto newBid = new BidUpdateDto();
+		newBid.setAmount(new BigDecimal("555.55"));
+		newBid.setCreationDate(LocalDateTime.now());
+		newBid.setTraderId(getProducerTestUser().getId());
+		newBid.setAuctionId(getTestAuction().getId());
+
+		ObjectNode node = objectMapper.valueToTree(newBid);
+		String jsonContent = node.toString();
+
+		mockMvc.perform(post("/api/auctions/" + getTestAuction().getId() + "/bids/")
+				.contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwtAndCsrf()))
+				.andExpect(status().isCreated())
+				.andExpect(header().string("Location",
+						containsString("/api/auctions/" + getTestAuction().getId() + "/bids/")))
+				.andExpect(jsonPath("$.amount").value("555.55"));
+
+		Bid createdBid = bidRepository.findAll().stream()
+				.filter(bid -> bid.getAmount().equals(new BigDecimal("555.55"))).findFirst()
 				.orElseThrow(() -> new AssertionError("Offre non trouvée"));
 	}
 

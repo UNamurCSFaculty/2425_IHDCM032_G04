@@ -487,21 +487,21 @@ public abstract class AbstractIntegrationTest {
 				.status(auctionStatusOpen).build();
 		auctionRepository.save(auction4);
 
-		TradeStatus bidStatusPending = TradeStatus.builder().name("En cours").build();
-		testBidStatus = tradeStatusRepository.save(bidStatusPending);
-
 		TradeStatus bidStatusAccepted = TradeStatus.builder().name("Accepté").build();
-		tradeStatusRepository.save(bidStatusAccepted);
+		testBidStatus = tradeStatusRepository.save(bidStatusAccepted);
 
-		// A bid on an auction
+		TradeStatus bidStatusPending = TradeStatus.builder().name("En cours").build();
+		tradeStatusRepository.save(bidStatusPending);
+
+		// An accepted bid on an auction
 		Bid bid = Bid.builder().amount(new BigDecimal("10.0")).creationDate(LocalDateTime.now())
 				.auctionId(testAuction.getId()).trader((Trader) producer).status(testBidStatus)
 				.build();
 		testBid = bidRepository.save(bid);
 
-		// A bid on a different auction
+		// A pending bid on a different auction
 		Bid bid2 = Bid.builder().amount(new BigDecimal("500.0")).creationDate(LocalDateTime.now())
-				.auctionId(auction2.getId()).trader((Trader) producer).status(testBidStatus)
+				.auctionId(auction2.getId()).trader((Trader) producer).status(bidStatusPending)
 				.build();
 		bidRepository.save(bid2);
 

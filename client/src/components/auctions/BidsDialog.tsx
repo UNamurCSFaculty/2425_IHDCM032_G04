@@ -1,3 +1,4 @@
+import { BidForm } from './BidForm'
 import {
   acceptAuctionMutation,
   acceptBidMutation,
@@ -21,15 +22,17 @@ import React from 'react'
 interface BidsDialogProps {
   auctionId: number
   isOpen: boolean
-  setIsOpen: (open: boolean) => void
-  updateAuction: () => void
+  openChange: (open: boolean) => void
+  showColumnAcceptBid?: boolean
+  showBidForm?: boolean
 }
 
 const BidsDialog: React.FC<BidsDialogProps> = ({
   auctionId,
   isOpen,
-  setIsOpen,
-  updateAuction,
+  openChange,
+  showColumnAcceptBid,
+  showBidForm,
 }) => {
   const {
     data: bidsData,
@@ -46,12 +49,11 @@ const BidsDialog: React.FC<BidsDialogProps> = ({
   const handleAcceptBid = (bidId: number) => {
     acceptBid({ path: { auctionId, bidId } })
     acceptAuction({ path: { id: auctionId } })
-    setIsOpen(false)
-    updateAuction()
+    openChange(false)
   }
 
   return (
-    <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog.Root open={isOpen} onOpenChange={openChange}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 backdrop-blur-xs" />
         <Dialog.Content
@@ -59,7 +61,7 @@ const BidsDialog: React.FC<BidsDialogProps> = ({
           className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg w-auto max-w-[90%]"
         >
           <Dialog.Title className="text-xl font-bold">
-            Offres pour votre enchère
+            Offres sur l'enchère
           </Dialog.Title>
           <Dialog.Close asChild>
             <button className="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
@@ -80,7 +82,7 @@ const BidsDialog: React.FC<BidsDialogProps> = ({
                     <TableHead>Date</TableHead>
                     <TableHead>Enchérisseur</TableHead>
                     <TableHead>Montant</TableHead>
-                    <TableHead></TableHead>
+                    {showColumnAcceptBid && <TableHead></TableHead>}
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -91,21 +93,30 @@ const BidsDialog: React.FC<BidsDialogProps> = ({
                         {bid.trader.firstName} {bid.trader.lastName}
                       </TableCell>
                       <TableCell>{bid.amount.toLocaleString()} CFA</TableCell>
-                      <TableCell>
-                        <Button
-                          onClick={() => {
-                            handleAcceptBid(bid.id)
-                          }}
-                        >
-                          Accepter
-                        </Button>
-                      </TableCell>
+                      {showColumnAcceptBid && (
+                        <TableCell>
+                          <Button
+                            onClick={() => {
+                              handleAcceptBid(bid.id)
+                            }}
+                          >
+                            Accepter
+                          </Button>
+                        </TableCell>
+                      )}
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
             )}
           </div>
+
+          {showBidForm && (
+            <BidForm
+              auctionId={auctionId}
+              onMakeBid={() => openChange(false)}
+            />
+          )}
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>

@@ -24,7 +24,7 @@ public class BidDto extends BaseDto {
 	private BigDecimal amount;
 
 	/** Date de création de l'offre. */
-	@Schema(description = "Date de création de l'offre", example = "2025-04-07T11:30:00", accessMode = Schema.AccessMode.READ_ONLY)
+	@Schema(description = "Date de création de l'offre", example = "2025-04-07T11:30:00", accessMode = Schema.AccessMode.READ_ONLY, requiredMode = Schema.RequiredMode.REQUIRED)
 	private LocalDateTime creationDate;
 
 	/** Enchère associée à l'offre. */
@@ -38,7 +38,7 @@ public class BidDto extends BaseDto {
 	private TraderDetailDto trader;
 
 	/** Statut de l'offre. */
-	@NotNull(message = "Le statut est requis")
+	@NotNull(message = "Le statut de l'offre est requis")
 	@Schema(description = "Statut de l'offre", requiredMode = Schema.RequiredMode.REQUIRED)
 	private TradeStatusDto status;
 }
