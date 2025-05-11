@@ -40,7 +40,8 @@ public class QualityControl extends BaseEntity {
 	@JoinColumn(name = "quality_id", nullable = false)
 	private Quality quality;
 
-	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "document_id", nullable = false)
+	// TODO set doc id mandatory
+	@ManyToOne(optional = true, fetch = FetchType.LAZY)
+	@JoinColumn(name = "document_id", nullable = true)
 	private Document document;
 }

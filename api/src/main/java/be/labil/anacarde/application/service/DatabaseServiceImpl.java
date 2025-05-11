@@ -3,11 +3,13 @@ package be.labil.anacarde.application.service;
 import be.labil.anacarde.domain.dto.db.*;
 import be.labil.anacarde.domain.dto.db.product.ProductDto;
 import be.labil.anacarde.domain.dto.db.user.ProducerDetailDto;
+import be.labil.anacarde.domain.dto.db.user.QualityInspectorDetailDto;
 import be.labil.anacarde.domain.dto.db.user.TraderDetailDto;
 import be.labil.anacarde.domain.dto.db.user.UserDetailDto;
 import be.labil.anacarde.domain.dto.write.AuctionUpdateDto;
 import be.labil.anacarde.domain.dto.write.BidUpdateDto;
 import be.labil.anacarde.domain.dto.write.CooperativeUpdateDto;
+import be.labil.anacarde.domain.dto.write.QualityControlUpdateDto;
 import be.labil.anacarde.domain.dto.write.product.HarvestProductUpdateDto;
 import be.labil.anacarde.domain.dto.write.product.ProductUpdateDto;
 import be.labil.anacarde.domain.dto.write.user.*;
@@ -39,8 +41,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 	private final CooperativeRepository cooperativeRepository;
 	private final RegionRepository regionRepository;
 	private final DocumentRepository documentRepository;
-	private final QualityRepository qualityRepository;
 	private final ContractOfferRepository contractOfferRepository;
+	private final QualityRepository qualityRepository;
 	private final QualityControlRepository qualityControlRepository;
 
 	private final StoreService storeService;
@@ -53,6 +55,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 	private final CooperativeService cooperativeService;
 	private final AuctionStrategyService auctionStrategyService;
 	private final FieldService fieldService;
+	private final QualityService qualityService;
+	private final QualityControlService qualityControlService;
 
 	private final EntityManager entityManager;
 
@@ -121,15 +125,39 @@ public class DatabaseServiceImpl implements DatabaseService {
 		UserUpdateDto transformerUpdate = createTransformer(languageFr);
 		UserDetailDto transformer = userService.createUser(transformerUpdate);
 
+		// Création de l'utilisateur qualiticien
+		UserUpdateDto qualityInspectorUpdate = createQualityInspector(languageFr);
+		UserDetailDto qualityInspector = userService.createUser(qualityInspectorUpdate);
+
 		// Création d'un store
 		StoreDetailDto store = createStore(admin);
 		store = storeService.createStore(store);
 
+		// Création d'une qualité
+		QualityDto quality = createQuality("WW10");
+		quality = qualityService.createQuality(quality);
+
+		QualityDto quality2 = createQuality("AA20");
+		quality2 = qualityService.createQuality(quality);
+
+		// Création d'un contrôle qualité
+		QualityControlUpdateDto qualityControlUpdate = createQualityControl(quality,
+				(QualityInspectorDetailDto) qualityInspector);
+		QualityControlDto qualityControl = qualityControlService
+				.createQualityControl(qualityControlUpdate);
+
+		QualityControlUpdateDto qualityControlUpdate2 = createQualityControl(quality2,
+				(QualityInspectorDetailDto) qualityInspector);
+		QualityControlDto qualityControl2 = qualityControlService
+				.createQualityControl(qualityControlUpdate2);
+
 		// Création d'un produit
-		ProductUpdateDto productUpdate = createHarvestProduct(store, producer, field, 1000);
+		ProductUpdateDto productUpdate = createHarvestProduct(store, producer, field,
+				qualityControl, 1000);
 		ProductDto product = productService.createProduct(productUpdate);
 
-		ProductUpdateDto product2Update = createHarvestProduct(store, producer, field, 2000);
+		ProductUpdateDto product2Update = createHarvestProduct(store, producer, field,
+				qualityControl2, 2000);
 		ProductDto product2 = productService.createProduct(product2Update);
 
 		// Création d'une stratégie d'enchère
@@ -214,13 +242,15 @@ public class DatabaseServiceImpl implements DatabaseService {
 	}
 
 	private HarvestProductUpdateDto createHarvestProduct(StoreDetailDto store,
-			UserDetailDto producer, FieldDto field, double weight) {
+			UserDetailDto producer, FieldDto field, QualityControlDto qualityControl,
+			double weight) {
 		HarvestProductUpdateDto harvestProduct = new HarvestProductUpdateDto();
 		harvestProduct.setProducerId(producer.getId());
 		harvestProduct.setStoreId(store.getId());
 		harvestProduct.setWeightKg(weight);
 		harvestProduct.setDeliveryDate(LocalDateTime.now());
 		harvestProduct.setFieldId(field.getId());
+		harvestProduct.setQualityControlId(qualityControl.getId());
 		return harvestProduct;
 	}
 
@@ -263,6 +293,26 @@ public class DatabaseServiceImpl implements DatabaseService {
 		store.setLocation("POINT(2.3522 48.8566)");
 		store.setUserId(manager.getId());
 		return store;
+	}
+
+	private QualityDto createQuality(String qualityName) {
+		QualityDto quality = new QualityDto();
+		quality.setName(qualityName);
+		return quality;
+	}
+
+	private QualityControlUpdateDto createQualityControl(QualityDto quality,
+			QualityInspectorDetailDto qualityInspector) {
+		QualityControlUpdateDto qualityControl = new QualityControlUpdateDto();
+		qualityControl.setIdentifier("QC-001");
+		qualityControl.setQualityId(quality.getId());
+		qualityControl.setQualityInspectorId(qualityInspector.getId());
+		qualityControl.setHumidity(12.0f);
+		qualityControl.setGranularity(5.0f);
+		qualityControl.setKorTest(89.0f);
+		qualityControl.setControlDate(LocalDateTime.now());
+
+		return qualityControl;
 	}
 
 	private AdminUpdateDto createAdmin(LanguageDto languageDto) {
@@ -325,5 +375,20 @@ public class DatabaseServiceImpl implements DatabaseService {
 		transformer.setPhone("+22944223201");
 		transformer.setLanguageId(languageDto.getId());
 		return transformer;
+	}
+
+	private QualityInspectorUpdateDto createQualityInspector(LanguageDto languageDto) {
+		QualityInspectorUpdateDto qualityInspector = new QualityInspectorUpdateDto();
+		qualityInspector.setFirstName("Bart");
+		qualityInspector.setLastName("QualityInspector");
+		qualityInspector.setEmail("bart@gmail.com");
+		qualityInspector.setPassword("azertyui");
+		qualityInspector.setAddress("Springfield");
+		qualityInspector.setEnabled(true);
+		qualityInspector.setRegistrationDate(LocalDateTime.now());
+		qualityInspector.setValidationDate(LocalDateTime.now());
+		qualityInspector.setPhone("+22944225551");
+		qualityInspector.setLanguageId(languageDto.getId());
+		return qualityInspector;
 	}
 }

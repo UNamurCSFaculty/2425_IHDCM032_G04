@@ -54,7 +54,7 @@ public class QualityControlDto extends BaseDto {
 	private QualityDto quality;
 
 	/** Document associé au contrôle qualité. */
-	@NotNull(message = "Le document est requis")
+	// @NotNull(message = "Le document est requis") TODO enable document
 	@Schema(description = "Document associé au contrôle qualité", requiredMode = Schema.RequiredMode.REQUIRED)
 	private DocumentDto document;
 }
