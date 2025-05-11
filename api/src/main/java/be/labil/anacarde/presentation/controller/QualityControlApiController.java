@@ -17,21 +17,19 @@ public class QualityControlApiController implements QualityControlApi {
 	private final QualityControlService qualityControlService;
 
 	@Override
-	public ResponseEntity<? extends QualityControlDto> getQualityControl(Integer productId,
-			Integer id) {
+	public ResponseEntity<? extends QualityControlDto> getQualityControl(Integer id) {
 		QualityControlDto qc = qualityControlService.getQualityControlById(id);
 		return ResponseEntity.ok(qc);
 	}
 
 	@Override
-	public ResponseEntity<List<? extends QualityControlDto>> listQualityControls(
-			Integer productId) {
-		List<QualityControlDto> list = qualityControlService.listQualityControls(productId);
+	public ResponseEntity<List<? extends QualityControlDto>> listQualityControls() {
+		List<QualityControlDto> list = qualityControlService.listQualityControls();
 		return ResponseEntity.ok(list);
 	}
 
 	@Override
-	public ResponseEntity<QualityControlDto> createQualityControl(Integer productId,
+	public ResponseEntity<QualityControlDto> createQualityControl(
 			QualityControlUpdateDto qualityControlDto) {
 		QualityControlDto created = qualityControlService.createQualityControl(qualityControlDto);
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
@@ -40,7 +38,7 @@ public class QualityControlApiController implements QualityControlApi {
 	}
 
 	@Override
-	public ResponseEntity<QualityControlDto> updateQualityControl(Integer productId, Integer id,
+	public ResponseEntity<QualityControlDto> updateQualityControl(Integer id,
 			QualityControlUpdateDto qualityControlDto) {
 		QualityControlDto updated = qualityControlService.updateQualityControl(id,
 				qualityControlDto);
@@ -48,7 +46,7 @@ public class QualityControlApiController implements QualityControlApi {
 	}
 
 	@Override
-	public ResponseEntity<Void> deleteQualityControl(Integer productId, Integer id) {
+	public ResponseEntity<Void> deleteQualityControl(Integer id) {
 		qualityControlService.deleteQualityControl(id);
 		return ResponseEntity.noContent().build();
 	}

@@ -67,16 +67,16 @@ public class DatabaseServiceImpl implements DatabaseService {
 		});
 		userRepository.flush();
 		// Delete all entities in the correct order to avoid foreign key constraint violations
-		qualityControlRepository.deleteAllInBatch();
 		cooperativeRepository.deleteAllInBatch();
 		contractOfferRepository.deleteAllInBatch();
-		qualityRepository.deleteAllInBatch();
-		documentRepository.deleteAllInBatch();
 		bidRepository.deleteAllInBatch();
 		auctionRepository.deleteAllInBatch();
 		tradeStatusRepository.deleteAllInBatch();
 		auctionStrategyRepository.deleteAllInBatch();
 		productRepository.deleteAllInBatch();
+		qualityControlRepository.deleteAllInBatch();
+		qualityRepository.deleteAllInBatch();
+		documentRepository.deleteAllInBatch();
 		fieldRepository.deleteAllInBatch();
 		storeRepository.deleteAllInBatch();
 		userRepository.deleteAllInBatch();

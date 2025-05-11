@@ -30,7 +30,7 @@ public abstract class Product extends BaseEntity {
 	@Column(nullable = false)
 	private Double weightKg;
 
-	@OneToOne(mappedBy = "product")
-	@JoinColumn(name = "qualityControl_id")
+	@OneToOne(optional = false)
+	@JoinColumn(name = "qualityControl_id", nullable = false)
 	private QualityControl qualityControl;
 }

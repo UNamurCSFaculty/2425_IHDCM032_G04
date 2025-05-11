@@ -1,8 +1,8 @@
 package be.labil.anacarde.domain.dto.db.product;
 
 import be.labil.anacarde.domain.dto.db.BaseDto;
+import be.labil.anacarde.domain.dto.db.QualityControlDto;
 import be.labil.anacarde.domain.dto.db.StoreDetailDto;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -34,14 +34,15 @@ public abstract class ProductDto extends BaseDto {
 
 	/** Magasin associé au produit récolté. */
 	@NotNull(message = "Le magasin est requis")
-	@Schema(description = "Magasin associé au produit récolté", requiredMode = Schema.RequiredMode.REQUIRED)
+	@Schema(description = "Magasin associé au produit", requiredMode = Schema.RequiredMode.REQUIRED)
 	private StoreDetailDto store;
 
 	@Schema(description = "Poids en kg du produit", example = "100.0", requiredMode = Schema.RequiredMode.REQUIRED)
 	private Double weightKg;
 
-	@JsonIgnoreProperties("product")
-	private Integer qualityControlId;
+	@NotNull(message = "Le contrôle qualité est requis")
+	@Schema(description = "Contrôle qualité associé au produit", requiredMode = Schema.RequiredMode.REQUIRED)
+	private QualityControlDto qualityControl;
 
 	/**
 	 * Propriété virtuelle pour Swagger. Ce getter n'est pas utilisé par Jackson car il est ignoré,
