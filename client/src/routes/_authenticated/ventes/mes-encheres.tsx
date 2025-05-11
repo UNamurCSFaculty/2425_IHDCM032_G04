@@ -1,18 +1,21 @@
 import {
-  deleteAuctionMutation,
+  // deleteAuctionMutation,
   listAuctionsOptions,
 } from '@/api/generated/@tanstack/react-query.gen'
-import AuctionsTable from '@/components/auctions/AuctionsTable'
-import BidsDialog from '@/components/auctions/BidsDialog'
-import { useAuctionStore } from '@/store/auctionStore'
+import { BreadcrumbSection } from '@/components/BreadcrumbSection'
+// import AuctionsTable from '@/components/auctions/AuctionsTable'
+// import BidsDialog from '@/components/auctions/BidsDialog'
+import { SellerAuctions } from '@/components/auctions/SellerAuctions'
+// import { useAuctionStore } from '@/store/auctionStore'
 import { useAuthUser } from '@/store/userStore'
 import {
-  useMutation,
-  useQueryClient,
+  // useMutation,
+  // useQueryClient,
   useSuspenseQuery,
 } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
-import { useState } from 'react'
+
+// import { useState } from 'react'
 
 const listAuctionsQueryOptions = (userId: number) => ({
   ...listAuctionsOptions({ query: { traderId: userId, status: 'Ouvert' } }),
@@ -25,6 +28,29 @@ export const Route = createFileRoute('/_authenticated/ventes/mes-encheres')({
   },
 })
 
+export function RouteComponent() {
+  const user = useAuthUser()
+
+  const { data: auctionsData } = useSuspenseQuery(
+    listAuctionsQueryOptions(user!.id!)
+  )
+
+  return (
+    <>
+      <BreadcrumbSection
+        titleKey="app.signup.title"
+        subtitleKey="app.signup.subtitle"
+        breadcrumbs={[{ labelKey: 'breadcrumb.contact' }]}
+        className="border-b border-gray-200 dark:border-gray-700"
+      />
+      <div className="container mx-auto px-4 py-8">
+        <SellerAuctions auctions={auctionsData} />
+      </div>
+    </>
+  )
+}
+
+/*
 export function RouteComponent() {
   const { selectedAuctionId, setSelectedAuctionId } = useAuctionStore()
 
@@ -83,3 +109,4 @@ export function RouteComponent() {
     </>
   )
 }
+*/

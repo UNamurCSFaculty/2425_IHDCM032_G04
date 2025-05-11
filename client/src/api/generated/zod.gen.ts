@@ -227,7 +227,30 @@ export const zCarrierDetailDto = zUserDetailDto.and(
 
 export const zExporterDetailDto = zTraderDetailDto
 
-export const zQualityInspectorDetailDto = zUserDetailDto
+export const zQualityInspectorDetailDto = z.object({
+  id: z.number().int().readonly(),
+  firstName: z.string().min(1),
+  lastName: z.string().min(1),
+  email: z.string().min(1),
+  registrationDate: z.string().datetime().readonly().optional(),
+  validationDate: z.string().datetime().readonly().optional(),
+  enabled: z.boolean().optional(),
+  address: z.string().optional(),
+  phone: z
+    .string()
+    .regex(/^(?:\+229)?01\d{8}$/)
+    .optional(),
+  roles: z.array(zRoleDto).readonly().optional(),
+  language: zLanguageDto,
+  type: z.enum([
+    'admin',
+    'producer',
+    'transformer',
+    'quality_inspector',
+    'exporter',
+    'carrier',
+  ]),
+})
 
 export const zTransformerDetailDto = zTraderDetailDto
 
@@ -241,22 +264,6 @@ export const zStoreDetailDto = z.object({
 export const zRegionDto = z.object({
   id: z.number().int().readonly(),
   name: z.string().min(1),
-})
-
-export const zQualityDto = z.object({
-  id: z.number().int().readonly(),
-  name: z.string().min(1),
-})
-
-export const zApiErrorErrors = z.object({
-  path: z.string().optional(),
-  message: z.string().optional(),
-  errorCode: z.string().optional(),
-})
-
-export const zApiError = z.object({
-  message: z.string().optional(),
-  errors: z.array(zApiErrorErrors).optional(),
 })
 
 export const zDocumentUpdateDto = z.object({
@@ -288,40 +295,10 @@ export const zDocumentDto = z.object({
   userId: z.number().int(),
 })
 
-export const zProductDto = z.object({
+export const zQualityDto = z.object({
   id: z.number().int().readonly(),
-  deliveryDate: z.string().datetime().optional(),
-  store: zStoreDetailDto,
-  weightKg: z.number(),
-  qualityControlId: z.number().int().optional(),
-  type: z.enum(['harvest', 'transformed']),
+  name: z.string().min(1),
 })
-
-export const zHarvestProductDto = zProductDto
-  .and(
-    z.object({
-      type: z.literal('harvest'),
-    })
-  )
-  .and(
-    z.object({
-      producer: zProducerDetailDto,
-      field: zFieldDto,
-    })
-  )
-
-export const zTransformedProductDto = zProductDto
-  .and(
-    z.object({
-      type: z.literal('transformed'),
-    })
-  )
-  .and(
-    z.object({
-      identifier: z.string().min(1),
-      transformer: zTransformerDetailDto,
-    })
-  )
 
 export const zQualityControlDto = z.object({
   id: z.number().int().readonly(),
@@ -331,9 +308,19 @@ export const zQualityControlDto = z.object({
   korTest: z.number(),
   humidity: z.number(),
   qualityInspector: zQualityInspectorDetailDto,
-  product: z.union([zHarvestProductDto, zTransformedProductDto]),
   quality: zQualityDto,
   document: zDocumentDto,
+})
+
+export const zApiErrorErrors = z.object({
+  path: z.string().optional(),
+  message: z.string().optional(),
+  errorCode: z.string().optional(),
+})
+
+export const zApiError = z.object({
+  message: z.string().optional(),
+  errors: z.array(zApiErrorErrors).optional(),
 })
 
 export const zProductUpdateDto = z.object({
@@ -341,7 +328,7 @@ export const zProductUpdateDto = z.object({
   deliveryDate: z.string().datetime().optional(),
   storeId: z.number().int(),
   weightKg: z.number().optional(),
-  qualityControlId: z.number().int().optional(),
+  qualityControlId: z.number().int(),
   type: z.string(),
 })
 
@@ -368,6 +355,41 @@ export const zTransformedProductUpdateDto = zProductUpdateDto
     z.object({
       identifier: z.string().min(1),
       transformerId: z.number().int(),
+    })
+  )
+
+export const zProductDto = z.object({
+  id: z.number().int().readonly(),
+  deliveryDate: z.string().datetime().optional(),
+  store: zStoreDetailDto,
+  weightKg: z.number(),
+  qualityControl: zQualityControlDto,
+  type: z.enum(['harvest', 'transformed']),
+})
+
+export const zHarvestProductDto = zProductDto
+  .and(
+    z.object({
+      type: z.literal('harvest'),
+    })
+  )
+  .and(
+    z.object({
+      producer: zProducerDetailDto,
+      field: zFieldDto,
+    })
+  )
+
+export const zTransformedProductDto = zProductDto
+  .and(
+    z.object({
+      type: z.literal('transformed'),
+    })
+  )
+  .and(
+    z.object({
+      identifier: z.string().min(1),
+      transformer: zTransformerDetailDto,
     })
   )
 
@@ -532,13 +554,13 @@ export const zGetRegionResponse = zRegionDto
 
 export const zUpdateRegionResponse = zRegionDto
 
-export const zDeleteQualityResponse = z.union([z.unknown(), z.void()])
-
 export const zDeleteQualityControlResponse = z.union([z.unknown(), z.void()])
 
 export const zGetQualityControlResponse = zQualityControlDto
 
 export const zUpdateQualityControlResponse = zQualityControlDto
+
+export const zDeleteQualityResponse = z.union([z.unknown(), z.void()])
 
 export const zDeleteProductResponse = z.union([z.unknown(), z.void()])
 
@@ -606,13 +628,13 @@ export const zListRegionsResponse = z.array(zRegionDto)
 
 export const zCreateRegionResponse = zRegionDto
 
-export const zListProductsResponse = z.array(zProductDto)
-
-export const zCreateProductResponse = zProductDto
-
 export const zListQualityControlsResponse = z.array(zQualityControlDto)
 
 export const zCreateQualityControlResponse = zQualityControlDto
+
+export const zListProductsResponse = z.array(zProductDto)
+
+export const zCreateProductResponse = zProductDto
 
 export const zListLanguagesResponse = z.array(zLanguageDto)
 

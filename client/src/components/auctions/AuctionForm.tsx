@@ -199,7 +199,8 @@ export function AuctionForm({
                               <TableRow>
                                 <TableCell>Qualité</TableCell>
                                 <TableCell>
-                                  {selectedProduct?.qualityControlId || 'N/A'}
+                                  {selectedProduct?.qualityControl.quality.id ||
+                                    'N/A'}
                                 </TableCell>
                               </TableRow>
                               <TableRow>

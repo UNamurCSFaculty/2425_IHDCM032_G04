@@ -1,3 +1,4 @@
+import { CountdownTimer } from '../CountDownTimer'
 import {
   Card,
   CardContent,
@@ -5,17 +6,17 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '../../ui/card'
-import { CountdownTimer } from '../CountDownTimer'
+} from '../ui/card'
 import type { AuctionDto } from '@/api/generated'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { formatCoordinates } from '@/lib/utils'
 import { formatPrice, formatWeight } from '@/utils/formatter'
 import {
   ChevronRight,
   Clock,
   DollarSign,
-  Home,
+  // Home,
   MapPin,
   NotebookText,
   Package,
@@ -55,19 +56,19 @@ export const AuctionCard: React.FC<AuctionCardProps> = ({
                   className="text-green-600 border-green-600 font-semibold mb-2"
                 >
                   {auction.bids.length}{' '}
-                  {auction.bids.length > 1 ? 'Enchères' : 'Enchère'}
+                  {auction.bids.length > 1 ? 'enchères' : 'enchère'}
                 </Badge>
               </div>
               <div>
-                Lot de {auction.product.type} à {auction.product.store.location}
+                Lot de {auction.product.type} à {auction.product.store.name}
               </div>
               <CardDescription className="flex items-center justify-around text-sm text-white mt-2 bg-green-700 rounded-lg inset-shadow-sm p-2">
                 <MapPin className="w-4 h-4 mr-1" />
-                {auction.product.store.location}
-                <span className="mx-1">|</span>
+                {formatCoordinates(auction.product.store.location)}
+                {/* <span className="mx-1">|</span> */}
 
-                <Home className="w-4 h-4 mr-1" />
-                {auction.product.store.name}
+                {/* <Home className="w-4 h-4 mr-1" />
+                {auction.product.store.name} */}
               </CardDescription>
             </div>
           </CardTitle>
@@ -77,7 +78,7 @@ export const AuctionCard: React.FC<AuctionCardProps> = ({
       <CardContent>
         <div className="p-3  bg-white shadow-sm rounded-lg mb-4">
           <div className="flex items-center text-lg text-gray-700 justify-center">
-            <Clock className="w-4 h-4 mr-1" /> Fini dans
+            <Clock className="w-4 h-4 mr-1" /> Expire dans
           </div>
           <div className="mt-1 font-semibold text-3xl flex items-center justify-center text-dark-gray-800">
             <CountdownTimer endDate={endsIn} />
@@ -98,7 +99,7 @@ export const AuctionCard: React.FC<AuctionCardProps> = ({
               <NotebookText className="w-4 h-4 mr-1" /> Qualité
             </div>
             <div className="mt-1 font-semibold text-sm text-center">
-              {auction.product.qualityControlId}
+              {auction.product.qualityControl.quality.name}
             </div>
           </div>
           <div className="p-3 bg-white shadow-sm rounded-lg">

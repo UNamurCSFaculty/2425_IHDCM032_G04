@@ -43,8 +43,7 @@ export const AuctionDetails: React.FC<AuctionDetailsProps> = ({
               <span className="bg-background text-muted-foreground relative z-10 px-2">
                 <span className="text-gray-900 px-2 text-xl">
                   {sortedBids.length}{' '}
-                  {sortedBids.length === 1 ? 'offre' : 'offres'} reçue
-                  {sortedBids.length > 1 ? 's' : ''}
+                  {sortedBids.length <= 1 ? 'offre reçue' : 'offres reçues'}
                 </span>
               </span>
             </div>
@@ -54,7 +53,7 @@ export const AuctionDetails: React.FC<AuctionDetailsProps> = ({
         <CardContent className="max-h-80 overflow-y-auto space-y-2 bg-neutral-100 pt-2 pb-2">
           {sortedBids.length === 0 ? (
             <div className="text-center py-8 text-gray-500 text-xl">
-              Aucune offre n'a encore été effectuée.
+              Aucune offre d'achat n'a été effectuée.
             </div>
           ) : (
             sortedBids.map(bid => (
@@ -172,7 +171,7 @@ export const AuctionDetails: React.FC<AuctionDetailsProps> = ({
         <CardFooter className="flex-col space-y-1 mt-2">
           <Separator />
           <div className="text-xs text-gray-500">
-            Offre la plus haute :{' '}
+            Meilleure offre :{' '}
             <span className="font-semibold text-gray-700">
               {sortedBids
                 .reduce((max, b) => (b.amount > max ? b.amount : max), 0)
@@ -181,7 +180,7 @@ export const AuctionDetails: React.FC<AuctionDetailsProps> = ({
             </span>
           </div>
           <div className="text-xs text-gray-500">
-            Fin de l'enchère :{' '}
+            Expiration de l'enchère :{' '}
             <span className="font-semibold text-gray-700">
               {new Date(auction.expirationDate).toLocaleDateString('fr-FR')}
             </span>
