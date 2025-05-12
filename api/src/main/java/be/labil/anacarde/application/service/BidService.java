@@ -58,6 +58,15 @@ public interface BidService {
 	BidDto acceptBid(Integer id);
 
 	/**
+	 * Rejeter l'offre identifiée par l'ID donné.
+	 *
+	 * @param id
+	 *            L'identifiant unique de l'offre à mettre à jour.
+	 * @return Un BidDto représentant l'offre mis à jour.
+	 */
+	BidDto rejectBid(Integer id);
+
+	/**
 	 * Supprime l'offre identifiée par l'ID donné du système.
 	 *
 	 * @param id

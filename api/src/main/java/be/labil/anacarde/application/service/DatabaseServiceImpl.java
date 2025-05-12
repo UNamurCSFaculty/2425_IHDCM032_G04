@@ -12,6 +12,7 @@ import be.labil.anacarde.domain.dto.write.CooperativeUpdateDto;
 import be.labil.anacarde.domain.dto.write.QualityControlUpdateDto;
 import be.labil.anacarde.domain.dto.write.product.HarvestProductUpdateDto;
 import be.labil.anacarde.domain.dto.write.product.ProductUpdateDto;
+import be.labil.anacarde.domain.dto.write.product.TransformedProductUpdateDto;
 import be.labil.anacarde.domain.dto.write.user.*;
 import be.labil.anacarde.domain.model.Producer;
 import be.labil.anacarde.infrastructure.persistence.*;
@@ -138,7 +139,10 @@ public class DatabaseServiceImpl implements DatabaseService {
 		quality = qualityService.createQuality(quality);
 
 		QualityDto quality2 = createQuality("AA20");
-		quality2 = qualityService.createQuality(quality);
+		quality2 = qualityService.createQuality(quality2);
+
+		QualityDto quality3 = createQuality("TP570");
+		quality3 = qualityService.createQuality(quality3);
 
 		// Création d'un contrôle qualité
 		QualityControlUpdateDto qualityControlUpdate = createQualityControl(quality,
@@ -151,7 +155,12 @@ public class DatabaseServiceImpl implements DatabaseService {
 		QualityControlDto qualityControl2 = qualityControlService
 				.createQualityControl(qualityControlUpdate2);
 
-		// Création d'un produit
+		QualityControlUpdateDto qualityControlUpdate3 = createQualityControl(quality3,
+				(QualityInspectorDetailDto) qualityInspector);
+		QualityControlDto qualityControl3 = qualityControlService
+				.createQualityControl(qualityControlUpdate3);
+
+		// Création de produits
 		ProductUpdateDto productUpdate = createHarvestProduct(store, producer, field,
 				qualityControl, 1000);
 		ProductDto product = productService.createProduct(productUpdate);
@@ -159,6 +168,10 @@ public class DatabaseServiceImpl implements DatabaseService {
 		ProductUpdateDto product2Update = createHarvestProduct(store, producer, field,
 				qualityControl2, 2000);
 		ProductDto product2 = productService.createProduct(product2Update);
+
+		ProductUpdateDto transformedProductUpdate = createTransformedProduct(store, transformer,
+				qualityControl3, 500);
+		ProductDto transformedProduct = productService.createProduct(transformedProductUpdate);
 
 		// Création d'une stratégie d'enchère
 		AuctionStrategyDto auctionStrategy = new AuctionStrategyDto();
@@ -176,13 +189,13 @@ public class DatabaseServiceImpl implements DatabaseService {
 		// Création d'enchères (pour l'utilisateur producer)
 		AuctionUpdateDto createAuction1 = createAuction(product, (TraderDetailDto) producer,
 				BigDecimal.valueOf(500), 10, LocalDateTime.now(), auctionStrategy, tradeStatusOpen);
-		AuctionUpdateDto createAuction2 = createAuction(product, (TraderDetailDto) producer,
+		AuctionUpdateDto createAuction2 = createAuction(product2, (TraderDetailDto) producer,
 				BigDecimal.valueOf(2500), 20, LocalDateTime.now().plusDays(5), auctionStrategy,
 				tradeStatusOpen);
-		AuctionUpdateDto createuction3 = createAuction(product, (TraderDetailDto) producer,
-				BigDecimal.valueOf(3500), 50, LocalDateTime.now().plusDays(5), auctionStrategy,
-				tradeStatusOpen);
-		AuctionUpdateDto createuction4 = createAuction(product, (TraderDetailDto) producer,
+		AuctionUpdateDto createuction3 = createAuction(transformedProduct,
+				(TraderDetailDto) producer, BigDecimal.valueOf(3500), 50,
+				LocalDateTime.now().plusDays(5), auctionStrategy, tradeStatusOpen);
+		AuctionUpdateDto createuction4 = createAuction(product2, (TraderDetailDto) producer,
 				BigDecimal.valueOf(777), 50, LocalDateTime.now().plusDays(5), auctionStrategy,
 				tradeStatusExpired);
 		AuctionDto auction1 = auctionService.createAuction(createAuction1);
@@ -252,6 +265,18 @@ public class DatabaseServiceImpl implements DatabaseService {
 		harvestProduct.setFieldId(field.getId());
 		harvestProduct.setQualityControlId(qualityControl.getId());
 		return harvestProduct;
+	}
+
+	private TransformedProductUpdateDto createTransformedProduct(StoreDetailDto store,
+			UserDetailDto producer, QualityControlDto qualityControl, double weight) {
+		TransformedProductUpdateDto transformedProduct = new TransformedProductUpdateDto();
+		transformedProduct.setIdentifier("ID-Transformed-20402");
+		transformedProduct.setTransformerId(producer.getId());
+		transformedProduct.setStoreId(store.getId());
+		transformedProduct.setWeightKg(weight);
+		transformedProduct.setDeliveryDate(LocalDateTime.now());
+		transformedProduct.setQualityControlId(qualityControl.getId());
+		return transformedProduct;
 	}
 
 	private AuctionUpdateDto createAuction(ProductDto product, TraderDetailDto trader,

@@ -48,6 +48,12 @@ public class BidApiController implements BidApi {
 	}
 
 	@Override
+	public ResponseEntity<BidDto> rejectBid(Integer auctionId, Integer bidId) {
+		BidDto updated = bidService.rejectBid(bidId);
+		return ResponseEntity.ok(updated);
+	}
+
+	@Override
 	public ResponseEntity<Void> deleteBid(Integer auctionId, Integer id) {
 		bidService.deleteBid(id);
 		return ResponseEntity.noContent().build();
