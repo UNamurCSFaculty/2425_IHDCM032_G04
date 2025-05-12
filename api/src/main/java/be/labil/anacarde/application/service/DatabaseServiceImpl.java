@@ -14,12 +14,18 @@ import be.labil.anacarde.domain.dto.write.product.HarvestProductUpdateDto;
 import be.labil.anacarde.domain.dto.write.product.ProductUpdateDto;
 import be.labil.anacarde.domain.dto.write.product.TransformedProductUpdateDto;
 import be.labil.anacarde.domain.dto.write.user.*;
+import be.labil.anacarde.domain.model.City;
 import be.labil.anacarde.domain.model.Producer;
+import be.labil.anacarde.domain.model.Region;
+import be.labil.anacarde.infrastructure.import_data.RegionCityImportService;
 import be.labil.anacarde.infrastructure.persistence.*;
 import be.labil.anacarde.infrastructure.persistence.user.UserRepository;
 import jakarta.persistence.EntityManager;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,7 +46,6 @@ public class DatabaseServiceImpl implements DatabaseService {
 	private final TradeStatusRepository tradeStatusRepository;
 	private final FieldRepository fieldRepository;
 	private final CooperativeRepository cooperativeRepository;
-	private final RegionRepository regionRepository;
 	private final DocumentRepository documentRepository;
 	private final ContractOfferRepository contractOfferRepository;
 	private final QualityRepository qualityRepository;
@@ -59,7 +64,10 @@ public class DatabaseServiceImpl implements DatabaseService {
 	private final QualityService qualityService;
 	private final QualityControlService qualityControlService;
 
+	private final RegionRepository regionRepository;
+	private final CityRepository cityRepository;
 	private final EntityManager entityManager;
+	private final RegionCityImportService regionCityImportService;
 
 	@Override
 	public void dropDatabase() {
@@ -87,6 +95,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 		userRepository.deleteAllInBatch();
 		roleRepository.deleteAllInBatch();
 		regionRepository.deleteAllInBatch();
+		cityRepository.deleteAllInBatch();
 		languageRepository.deleteAllInBatch();
 	}
 
@@ -99,8 +108,32 @@ public class DatabaseServiceImpl implements DatabaseService {
 		LanguageDto languageEn = LanguageDto.builder().name("English").code("en").build();
 		languageEn = languageService.createLanguage(languageEn);
 
+		// Ajout des régions et villes
+		List<Region> regions = List.of();
+		List<City> cities = List.of();
+		try {
+			Map<Integer, Region> regs = regionCityImportService.importRegions();
+			regions = regs.values().stream().toList();
+			cities = regionCityImportService.importCities("/data/cities.json", regs);
+			entityManager.flush();
+		} catch (Exception e) {
+			System.out
+					.println("Erreur lors de la création des régions et villes: " + e.getMessage());
+			return;
+		}
+
+		// 1️⃣ Récupérer une ville “par défaut” pour tous les exemples d’adresses
+		City defaultCity = cityRepository.findByName("Cotonou")
+				.orElseGet(() -> cityRepository.findAll().stream().findFirst()
+						.orElseThrow(() -> new IllegalStateException("Aucune ville trouvée")));
+		Integer defaultCityId = defaultCity.getId();
+		Integer defaultRegionId = defaultCity.getRegion().getId();
+
+		getRandomEl(regions);
+
 		// Création du producteur (sans coopérative) et d'un champ
-		UserUpdateDto producerUpdate = createProducer(languageFr);
+		UserUpdateDto producerUpdate = createProducer(languageFr, getRandomEl(regions),
+				getRandomEl(cities));
 		UserDetailDto producer = userService.createUser(producerUpdate);
 		FieldDto field = createField((ProducerDetailDto) producer);
 		field = fieldService.createField(field);
@@ -243,7 +276,6 @@ public class DatabaseServiceImpl implements DatabaseService {
 		CooperativeUpdateDto cooperativeDto = new CooperativeUpdateDto();
 		cooperativeDto.setName("Cooperative de test");
 		cooperativeDto.setCreationDate(LocalDateTime.now().minusDays(30));
-		cooperativeDto.setAddress("Adresse de la cooperative");
 		cooperativeDto.setPresidentId(producer.getId());
 		return cooperativeDto;
 	}
@@ -319,6 +351,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 		store.setName("Nassara");
 		store.setLocation("POINT(2.3522 48.8566)");
 		store.setUserId(manager.getId());
+		store.setAddress(AddressDto.builder().street("Rue du Store").cityId(1).regionId(1).build());
 		return store;
 	}
 
@@ -348,7 +381,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 		admin.setLastName("Doe");
 		admin.setEmail("johndoe@gmail.com");
 		admin.setPassword("azertyui");
-		admin.setAddress("Rue de la Loi");
+		admin.setAddress(AddressDto.builder().street("Rue Admin").cityId(1).regionId(1).build());
 		admin.setEnabled(true);
 		admin.setEnabled(true);
 		admin.setRegistrationDate(LocalDateTime.now());
@@ -358,14 +391,15 @@ public class DatabaseServiceImpl implements DatabaseService {
 		return admin;
 	}
 
-	private ProducerUpdateDto createProducer(LanguageDto languageDto) {
+	private ProducerUpdateDto createProducer(LanguageDto languageDto, Region region, City city) {
 		ProducerUpdateDto producer = new ProducerUpdateDto();
 		producer.setFirstName("Fabrice");
 		producer.setLastName("Producer");
 		producer.setEmail("fabricecipolla@gmail.com");
 		producer.setPassword("azertyui");
 		producer.setEnabled(true);
-		producer.setAddress("Rue de la Paix");
+		producer.setAddress(AddressDto.builder().street("Rue Producer").cityId(city.getId())
+				.regionId(region.getId()).build());
 		producer.setRegistrationDate(LocalDateTime.now());
 		producer.setValidationDate(LocalDateTime.now());
 		producer.setPhone("+2290197000000");
@@ -380,7 +414,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 		exporter.setLastName("Exporter");
 		exporter.setEmail("stephaneglibert@gmail.com");
 		exporter.setPassword("azertyui");
-		exporter.setAddress("Rue du Commerce");
+		exporter.setAddress(
+				AddressDto.builder().street("Rue Exporter").cityId(1).regionId(1).build());
 		exporter.setEnabled(true);
 		exporter.setRegistrationDate(LocalDateTime.now());
 		exporter.setValidationDate(LocalDateTime.now());
@@ -395,7 +430,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 		transformer.setLastName("Transformer");
 		transformer.setEmail("homer@gmail.com");
 		transformer.setPassword("azertyui");
-		transformer.setAddress("Springfield");
+				AddressDto.builder().street("Rue Transformer").cityId(1).regionId(1).build());
+		transformer.setAddress(
 		transformer.setEnabled(true);
 		transformer.setRegistrationDate(LocalDateTime.now());
 		transformer.setValidationDate(LocalDateTime.now());

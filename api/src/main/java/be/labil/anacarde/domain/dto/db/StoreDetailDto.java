@@ -29,4 +29,8 @@ public class StoreDetailDto extends BaseDto {
 	@NotNull(message = "L'identifiant de l'utilisateur est requis")
 	@Schema(description = "Identifiant de l'utilisateur lié au store", example = "42", requiredMode = Schema.RequiredMode.REQUIRED)
 	private Integer userId;
+
+	@Schema(description = "Adresse de l'utilisateur", requiredMode = Schema.RequiredMode.REQUIRED)
+	@NotNull(message = "L'adresse est requise")
+	private AddressDto address;
 }

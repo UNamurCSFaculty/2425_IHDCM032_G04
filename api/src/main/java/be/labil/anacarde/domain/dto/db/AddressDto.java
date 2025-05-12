@@ -1,0 +1,14 @@
+package be.labil.anacarde.domain.dto.db;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+import lombok.experimental.SuperBuilder;
+
+@Data
+@Schema(description = "DTO pour l'entité Adresse.")
+@SuperBuilder
+public class AddressDto {
+	private String street;
+	private Integer cityId;
+	private Integer regionId;
+}

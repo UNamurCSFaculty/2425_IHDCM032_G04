@@ -1,5 +1,6 @@
 package be.labil.anacarde.domain.dto.db.user;
 
+import be.labil.anacarde.domain.dto.db.AddressDto;
 import be.labil.anacarde.domain.dto.db.LanguageDto;
 import be.labil.anacarde.domain.dto.db.RoleDto;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -26,4 +27,8 @@ public abstract class UserDetailDto extends UserListDto {
 	@Schema(description = "Identifiant de la langue préférée", requiredMode = Schema.RequiredMode.REQUIRED)
 	@NotNull(message = "La langue est requise")
 	private LanguageDto language;
+
+	@Schema(description = "Adresse de l'utilisateur", requiredMode = Schema.RequiredMode.REQUIRED)
+	@NotNull(message = "L'adresse est requise")
+	private AddressDto address;
 }
