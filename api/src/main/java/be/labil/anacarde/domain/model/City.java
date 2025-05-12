@@ -11,23 +11,25 @@ import org.hibernate.type.SqlTypes;
 import org.locationtech.jts.geom.Point;
 
 @Entity
-@Table(name = "store")
+@Table(name = "city")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class Store extends BaseEntity {
+public class City {
+	@Id
+	private Integer id;
+
 	@Column(nullable = false)
 	private String name;
+
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "region_id")
+	private Region region;
 
 	@JdbcTypeCode(SqlTypes.GEOMETRY)
 	private Point location;
 
-	@Embedded
-	private Address address;
-
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "user_id", nullable = false)
-	private User user;
+	Long population;
 }
