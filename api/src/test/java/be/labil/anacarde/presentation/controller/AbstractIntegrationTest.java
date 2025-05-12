@@ -53,6 +53,7 @@ public abstract class AbstractIntegrationTest {
 	protected @Autowired FieldRepository fieldRepository;
 	protected @Autowired CooperativeRepository cooperativeRepository;
 	protected @Autowired RegionRepository regionRepository;
+	protected @Autowired CityRepository cityRepository;
 	protected @Autowired DocumentRepository documentRepository;
 	protected @Autowired QualityRepository qualityRepository;
 	protected @Autowired ContractOfferRepository contractOfferRepository;
@@ -79,6 +80,8 @@ public abstract class AbstractIntegrationTest {
 	private Field mainTestField;
 	private Cooperative mainTestCooperative;
 	private Region mainTestRegion;
+	private City mainTestCity;
+	private Address mainAddress;
 	private Document mainTestDocument;
 	private Quality mainTestQuality;
 	private ContractOffer mainTestContractOffer;
@@ -355,44 +358,50 @@ public abstract class AbstractIntegrationTest {
 		mainLanguage = languageRepository.save(language);
 
 		// A simple region
-		Region region = Region.builder().name("sud").build();
+		Region region = Region.builder().name("sud").id(1).build();
 		mainTestRegion = regionRepository.save(region);
 
+		City city = City.builder().name("sud city").id(1).region(mainTestRegion).build();
+		mainTestCity = cityRepository.save(city);
+
+		mainAddress = Address.builder().street("Rue de la paix").city(mainTestCity)
+				.region(mainTestRegion).build();
+
 		User user1 = Admin.builder().firstName("John").lastName("Doe").email("user@example.com")
-				.password("$2a$10$abcdefghijklmnopqrstuv1234567890AB")
+				.password("$2a$10$abcdefghijklmnopqrstuv1234567890AB").address(mainAddress)
 				.registrationDate(LocalDateTime.now()).phone("+2290197000000")
 				.language(mainLanguage).enabled(true).build();
 
 		User user2 = Admin.builder().firstName("Foo").lastName("Bar").email("foo@bar.com")
-				.password("$2a$10$abcdefghijklmnopqrstuv1234567890AB")
+				.password("$2a$10$abcdefghijklmnopqrstuv1234567890AB").address(mainAddress)
 				.registrationDate(LocalDateTime.now()).phone("+2290197000001")
 				.language(mainLanguage).enabled(true).build();
 
 		User producer = Producer.builder().firstName("Bruce").lastName("Banner")
 				.email("bruce@hulk.com").password("$2a$10$abcdefghijklmnopqrstuv1234567890AB")
-				.registrationDate(LocalDateTime.now()).phone("+2290197000002")
+				.address(mainAddress).registrationDate(LocalDateTime.now()).phone("+2290197000002")
 				.language(mainLanguage).enabled(true).agriculturalIdentifier("111-222-333").build();
 
 		User producer2 = Producer.builder().firstName("Steve").lastName("Rogers")
 				.email("steve@captain.com").password("$2a$10$abcdefghijklmnopqrstuv1234567890AB")
-				.registrationDate(LocalDateTime.now()).phone("+2290197000003")
+				.address(mainAddress).registrationDate(LocalDateTime.now()).phone("+2290197000003")
 				.language(mainLanguage).enabled(true).agriculturalIdentifier("000-111-222").build();
 
 		User transformer = Transformer.builder().firstName("Scott").lastName("Summers")
 				.email("scott@xmen.com").password("$2a$10$abcdefghijklmnopqrstuv1234567890AB")
-				.registrationDate(LocalDateTime.now()).phone("+2290197000004")
+				.address(mainAddress).registrationDate(LocalDateTime.now()).phone("+2290197000004")
 				.language(mainLanguage).enabled(true).build();
 
 		User qualityInspector = QualityInspector.builder().firstName("Inspector").lastName("Best")
 				.email("inspector@best.com").password("$2a$10$abcdefghijklmnopqrstuv1234567890AB")
-				.phone("+2290197000005").registrationDate(LocalDateTime.now())
+				.address(mainAddress).phone("+2290197000005").registrationDate(LocalDateTime.now())
 				.language(mainLanguage).enabled(true).build();
 
 		Set regions = new HashSet<Region>();
 		regions.add(mainTestRegion);
 		User carrier = Carrier.builder().firstName("Pierre").lastName("Verse")
 				.email("pierre@verse.com").password("$2a$10$abcdefghijklmnopqrstuv1234567890AB")
-				.registrationDate(LocalDateTime.now()).phone("+2290197000006")
+				.address(mainAddress).registrationDate(LocalDateTime.now()).phone("+2290197000006")
 				.language(mainLanguage).enabled(true).regions(regions)
 				.pricePerKm(new BigDecimal(100)).build();
 
@@ -417,8 +426,8 @@ public abstract class AbstractIntegrationTest {
 		qualityInspector = userRepository.save(qualityInspector);
 
 		Point storeLocation = new GeometryFactory().createPoint(new Coordinate(2.3522, 48.8566));
-		Store store = Store.builder().name("Nassara").location(storeLocation).user(mainTestUser)
-				.build();
+		Store store = Store.builder().name("Nassara").location(storeLocation).address(mainAddress)
+				.user(mainTestUser).build();
 		mainTestStore = storeRepository.save(store);
 
 		// Fields
@@ -507,8 +516,8 @@ public abstract class AbstractIntegrationTest {
 
 		// A cooperative who has for president 'producer'
 		Cooperative cooperative = Cooperative.builder().name("Coopérative Agricole de Parakou")
-				.address("Quartier Albarika, Rue 12, Parakou, Bénin").president((Producer) producer)
-				.creationDate(LocalDateTime.of(2025, 4, 7, 12, 0)).build();
+				.president((Producer) producer).creationDate(LocalDateTime.of(2025, 4, 7, 12, 0))
+				.build();
 		mainTestCooperative = cooperativeRepository.save(cooperative);
 
 		Producer p = (Producer) producer;

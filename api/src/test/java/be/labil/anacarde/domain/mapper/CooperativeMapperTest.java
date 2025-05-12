@@ -28,7 +28,6 @@ class CooperativeMapperTest {
 		Cooperative entity = new Cooperative();
 		entity.setId(100);
 		entity.setName("Coopérative du Nord");
-		entity.setAddress("Abobo, Abidjan");
 		entity.setCreationDate(LocalDateTime.of(2023, 6, 15, 0, 0));
 		entity.setPresident(president);
 
@@ -37,7 +36,6 @@ class CooperativeMapperTest {
 		assertThat(dto).isNotNull();
 		assertThat(dto.getId()).isEqualTo(100);
 		assertThat(dto.getName()).isEqualTo("Coopérative du Nord");
-		assertThat(dto.getAddress()).isEqualTo("Abobo, Abidjan");
 		assertThat(dto.getCreationDate()).isEqualTo("2023-06-15T00:00:00");
 		assertThat(dto.getPresidentId()).isNotNull();
 		assertThat(dto.getPresidentId()).isEqualTo(1);
@@ -52,7 +50,6 @@ class CooperativeMapperTest {
 
 		CooperativeUpdateDto dto = new CooperativeUpdateDto();
 		dto.setName("Coopérative du Sud");
-		dto.setAddress("Yopougon, Abidjan");
 		dto.setCreationDate(LocalDateTime.of(2024, 1, 1, 12, 0));
 		dto.setPresidentId(presidentDto.getId());
 
@@ -60,7 +57,6 @@ class CooperativeMapperTest {
 
 		assertThat(entity).isNotNull();
 		assertThat(entity.getName()).isEqualTo("Coopérative du Sud");
-		assertThat(entity.getAddress()).isEqualTo("Yopougon, Abidjan");
 		assertThat(entity.getCreationDate()).isEqualTo(LocalDateTime.of(2024, 1, 1, 12, 0));
 		assertThat(entity.getPresident()).isNotNull();
 		assertThat(entity.getPresident().getId()).isEqualTo(2);
