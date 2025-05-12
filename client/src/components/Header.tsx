@@ -100,7 +100,7 @@ export function Header() {
       items: [
         {
           title: 'Vendre un produit',
-          description: 'Créer une nouvelle vente',
+          description: 'Créer une nouvelle offre de vente',
           icon: <CircleDollarSign className="size-5 shrink-0" />,
           url: '/ventes/nouvelle-enchere',
         },
@@ -109,12 +109,6 @@ export function Header() {
           description: 'Consulter mes ventes en cours',
           icon: <ArrowLeftRight className="size-5 shrink-0" />,
           url: '/ventes/mes-encheres',
-        },
-        {
-          title: 'Mon historique',
-          description: 'Détails de mes ventes passées',
-          icon: <History className="size-5 shrink-0" />,
-          url: '/ventes/historique',
         },
       ],
     },
