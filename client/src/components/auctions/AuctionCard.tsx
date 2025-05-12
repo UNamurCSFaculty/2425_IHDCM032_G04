@@ -10,9 +10,10 @@ import {
 import type { AuctionDto } from '@/api/generated'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { formatCoordinates } from '@/lib/utils'
+import { TradeStatus, formatCoordinates, formatDate } from '@/lib/utils'
 import { formatPrice, formatWeight } from '@/utils/formatter'
 import {
+  CheckCircle,
   ChevronRight,
   Clock,
   DollarSign,
@@ -20,8 +21,11 @@ import {
   MapPin,
   NotebookText,
   Package,
+  TrendingUp,
+  Wheat,
 } from 'lucide-react'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 
 interface AuctionCardProps {
   auction: AuctionDto
@@ -34,7 +38,9 @@ export const AuctionCard: React.FC<AuctionCardProps> = ({
   isSelected = false,
   onVoirDetails,
 }) => {
+  const { t } = useTranslation()
   const endsIn = new Date(auction.expirationDate)
+
   return (
     <Card
       className={`overflow-hidden shadow-lg transform transition-all duration-300 hover:shadow-xl gap-2 bg-gradient-to-b from-green-50 to-yellow-50 ${
@@ -60,7 +66,8 @@ export const AuctionCard: React.FC<AuctionCardProps> = ({
                 </Badge>
               </div>
               <div>
-                Lot de {auction.product.type} à {auction.product.store.name}
+                {t('database.' + auction.product.type)} – lot n°
+                {auction.product.id} à {auction.product.store.name}
               </div>
               <CardDescription className="flex items-center justify-around text-sm text-white mt-2 bg-green-700 rounded-lg inset-shadow-sm p-2">
                 <MapPin className="w-4 h-4 mr-1" />
@@ -77,21 +84,39 @@ export const AuctionCard: React.FC<AuctionCardProps> = ({
 
       <CardContent>
         <div className="p-3  bg-white shadow-sm rounded-lg mb-4">
-          <div className="flex items-center text-lg text-gray-700 justify-center">
-            <Clock className="w-4 h-4 mr-1" /> Expire dans
-          </div>
-          <div className="mt-1 font-semibold text-3xl flex items-center justify-center text-dark-gray-800">
-            <CountdownTimer endDate={endsIn} />
-          </div>
+          {auction.status.name === TradeStatus.OPEN ? (
+            <>
+              <div className="flex items-center text-lg text-gray-700 justify-center">
+                <Clock className="w-4 h-4 mr-1" /> Expire dans
+              </div>
+              <div className="mt-1 font-semibold text-3xl flex items-center justify-center text-dark-gray-800">
+                <CountdownTimer endDate={endsIn} />
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="flex items-center text-lg text-gray-700 justify-center">
+                {auction.status.name === TradeStatus.EXPIRED ? (
+                  <Clock className="w-4 h-4 mr-1" />
+                ) : (
+                  <CheckCircle className="w-4 h-4 mr-1" />
+                )}
+                {auction.status.name}
+              </div>
+              <div className="mt-1 font-semibold text-3xl flex items-center justify-center text-dark-gray-800">
+                {formatDate(auction.expirationDate)}
+              </div>
+            </>
+          )}
         </div>
 
         <div className="grid grid-cols-2 gap-2 mb-4">
           <div className="p-3 bg-white shadow-sm rounded-lg">
             <div className="flex items-center justify-center text-xs text-gray-500">
-              <Package className="w-4 h-4 mr-1" /> Type
+              <Wheat className="w-4 h-4 mr-1" /> Type
             </div>
             <div className="mt-1 font-semibold text-sm text-center">
-              {auction.product.type}
+              {t('database.' + auction.product.type)}
             </div>
           </div>
           <div className="p-3 bg-white shadow-sm rounded-lg">
@@ -112,7 +137,7 @@ export const AuctionCard: React.FC<AuctionCardProps> = ({
           </div>
           <div className="p-3 bg-white shadow-sm rounded-lg">
             <div className="flex items-center justify-center text-xs text-gray-500">
-              <DollarSign className="w-4 h-4 mr-1" /> Prix souhaité
+              <DollarSign className="w-4 h-4 mr-1" /> Achat immédiat
             </div>
             <div className="mt-1 font-semibold text-sm text-center">
               {formatPrice.format(auction.price)}
@@ -122,12 +147,17 @@ export const AuctionCard: React.FC<AuctionCardProps> = ({
 
         <div className="flex items-center space-x-4 justify-center bg-white shadow-sm rounded-lg">
           <div className="w-16 h-16 bg-neutral-00 rounded-lg flex items-center justify-center">
-            <Package className="w-8 h-8" />
+            <TrendingUp className="w-8 h-8" />
           </div>
           <div>
             <div className="text-md text-gray-500">Meilleure offre</div>
             <div className="mt-1 text-lg font-bold text-green-600">
-              {formatPrice.format(auction.price)}
+              {formatPrice.format(
+                auction.bids.reduce(
+                  (max, b) => (b.amount > max ? b.amount : max),
+                  0
+                )
+              )}
             </div>
           </div>
         </div>

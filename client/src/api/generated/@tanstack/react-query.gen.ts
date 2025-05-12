@@ -66,6 +66,7 @@ import {
   listStores,
   listUsers,
   logout,
+  rejectBid,
   sendContactMessage,
   updateAuction,
   updateAuctionStrategy,
@@ -211,6 +212,9 @@ import type {
   ListStoresData,
   ListUsersData,
   LogoutData,
+  RejectBidData,
+  RejectBidError,
+  RejectBidResponse,
   SendContactMessageData,
   SendContactMessageError,
   UpdateAuctionData,
@@ -1219,6 +1223,30 @@ export const updateBidMutation = (
   > = {
     mutationFn: async localOptions => {
       const { data } = await updateBid({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+export const rejectBidMutation = (
+  options?: Partial<Options<RejectBidData>>
+): UseMutationOptions<
+  RejectBidResponse,
+  RejectBidError,
+  Options<RejectBidData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    RejectBidResponse,
+    RejectBidError,
+    Options<RejectBidData>
+  > = {
+    mutationFn: async localOptions => {
+      const { data } = await rejectBid({
         ...options,
         ...localOptions,
         throwOnError: true,

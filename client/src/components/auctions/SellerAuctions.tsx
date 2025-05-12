@@ -2,7 +2,14 @@ import { AuctionCard } from './AuctionCard'
 import { AuctionDetails } from './AuctionDetails'
 import { AuctionHeader } from './AuctionHeader'
 import type { AuctionDto } from '@/api/generated'
+import {
+  acceptAuctionMutation,
+  acceptBidMutation,
+  rejectBidMutation,
+} from '@/api/generated/@tanstack/react-query.gen'
 import { Button } from '@/components/ui/button'
+import { TradeStatus } from '@/lib/utils'
+import { useMutation } from '@tanstack/react-query'
 import React, { useState } from 'react'
 
 const ITEMS_PER_PAGE = 3
@@ -17,21 +24,32 @@ export const SellerAuctions: React.FC<SellerAuctionsProps> = ({ auctions }) => {
   const [tab, setTab] = useState<SellerAuctionsTab>('active')
   const [page, setPage] = useState(1)
 
-  const filtered = auctions.filter(a => (tab === 'active') === a.active)
+  const filtered = auctions.filter(
+    a => (tab === 'active') === (a.status.name === TradeStatus.OPEN)
+  )
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE)
   const paginated = filtered.slice(
     (page - 1) * ITEMS_PER_PAGE,
     page * ITEMS_PER_PAGE
   )
+
   const selectedAuction = auctions.find(a => a.id === selectedId)
+
+  const { mutate: acceptAuction } = useMutation(acceptAuctionMutation())
+  const { mutate: acceptBid } = useMutation(acceptBidMutation())
+  const { mutate: rejectBid } = useMutation(rejectBidMutation())
 
   const handleBidAction = (
     auctionId: number,
     bidId: number,
     action: 'accept' | 'reject'
   ) => {
-    // TODO: appeler API pour accepter ou refuser
-    console.log(`Auction ${auctionId}, Bid ${bidId}: ${action}`)
+    if (action == 'accept') {
+      acceptBid({ path: { auctionId, bidId } })
+      acceptAuction({ path: { id: auctionId } })
+    } else if (action == 'reject') {
+      rejectBid({ path: { auctionId, bidId } })
+    }
   }
 
   return (

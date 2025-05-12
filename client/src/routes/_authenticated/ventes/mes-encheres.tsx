@@ -18,7 +18,7 @@ import { createFileRoute } from '@tanstack/react-router'
 // import { useState } from 'react'
 
 const listAuctionsQueryOptions = (userId: number) => ({
-  ...listAuctionsOptions({ query: { traderId: userId, status: 'Ouvert' } }),
+  ...listAuctionsOptions({ query: { traderId: userId } }),
 })
 
 export const Route = createFileRoute('/_authenticated/ventes/mes-encheres')({
@@ -32,15 +32,15 @@ export function RouteComponent() {
   const user = useAuthUser()
 
   const { data: auctionsData } = useSuspenseQuery(
-    listAuctionsQueryOptions(user!.id!)
+    listAuctionsQueryOptions(user.id)
   )
 
   return (
     <>
       <BreadcrumbSection
-        titleKey="app.signup.title"
-        subtitleKey="app.signup.subtitle"
-        breadcrumbs={[{ labelKey: 'breadcrumb.contact' }]}
+        titleKey="app.auctions_sales.title"
+        subtitleKey="app.auctions_sales.subtitle"
+        breadcrumbs={[{ labelKey: 'breadcrumb.vendre' }]}
         className="border-b border-gray-200 dark:border-gray-700"
       />
       <div className="container mx-auto px-4 py-8">

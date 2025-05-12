@@ -2657,6 +2657,40 @@ export type UpdateBidResponses = {
 
 export type UpdateBidResponse = UpdateBidResponses[keyof UpdateBidResponses]
 
+export type RejectBidData = {
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    auctionId: number
+    /**
+     * Identifiant de la ressource
+     */
+    bidId: number
+  }
+  query?: never
+  url: '/api/auctions/{auctionId}/bids/{bidId}/reject'
+}
+
+export type RejectBidErrors = {
+  /**
+   * Not Found
+   */
+  404: ApiErrorResponse
+}
+
+export type RejectBidError = RejectBidErrors[keyof RejectBidErrors]
+
+export type RejectBidResponses = {
+  /**
+   * OK
+   */
+  200: BidDto
+}
+
+export type RejectBidResponse = RejectBidResponses[keyof RejectBidResponses]
+
 export type AcceptBidData = {
   body?: never
   path: {

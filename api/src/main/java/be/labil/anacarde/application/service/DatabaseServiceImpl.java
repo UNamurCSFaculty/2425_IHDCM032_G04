@@ -182,9 +182,11 @@ public class DatabaseServiceImpl implements DatabaseService {
 		TradeStatusDto tradeStatusOpen = createTradeStatus("Ouvert");
 		TradeStatusDto tradeStatusExpired = createTradeStatus("Expiré");
 		TradeStatusDto tradeStatusAccepted = createTradeStatus("Accepté");
+		TradeStatusDto tradeStatusRejected = createTradeStatus("Refusé");
 		tradeStatusOpen = tradeStatusService.createTradeStatus(tradeStatusOpen);
 		tradeStatusExpired = tradeStatusService.createTradeStatus(tradeStatusExpired);
 		tradeStatusAccepted = tradeStatusService.createTradeStatus(tradeStatusAccepted);
+		tradeStatusRejected = tradeStatusService.createTradeStatus(tradeStatusRejected);
 
 		// Création d'enchères (pour l'utilisateur producer)
 		AuctionUpdateDto createAuction1 = createAuction(product, (TraderDetailDto) producer,

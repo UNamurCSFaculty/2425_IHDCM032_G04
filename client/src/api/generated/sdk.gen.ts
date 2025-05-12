@@ -172,6 +172,9 @@ import type {
   ListUsersData,
   ListUsersResponse,
   LogoutData,
+  RejectBidData,
+  RejectBidError,
+  RejectBidResponse,
   SendContactMessageData,
   SendContactMessageError,
   UpdateAuctionData,
@@ -1225,6 +1228,28 @@ export const updateBid = <ThrowOnError extends boolean = false>(
       'Content-Type': 'application/json',
       ...options?.headers,
     },
+  })
+}
+
+/**
+ * Rejeter une offre
+ */
+export const rejectBid = <ThrowOnError extends boolean = false>(
+  options: Options<RejectBidData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).put<
+    RejectBidResponse,
+    RejectBidError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/auctions/{auctionId}/bids/{bidId}/reject',
+    ...options,
   })
 }
 

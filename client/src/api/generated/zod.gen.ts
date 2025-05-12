@@ -606,6 +606,8 @@ export const zGetBidResponse = zBidDto
 
 export const zUpdateBidResponse = zBidDto
 
+export const zRejectBidResponse = zBidDto
+
 export const zAcceptBidResponse = zBidDto
 
 export const zDeleteAuctionStrategyResponse = z.union([z.unknown(), z.void()])

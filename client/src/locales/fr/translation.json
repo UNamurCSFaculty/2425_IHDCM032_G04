@@ -22,6 +22,10 @@
     "welcome": {
       "message": "Prêt(e) pour vos prochaines enchères ?",
       "title": "Bienvenue"
+    },
+    "auctions_sales": {
+      "title": "Enchères et ventes",
+      "subtitle": "Vendez vos produits en ligne et consultez les enchères sur vos ventes."
     }
   },
   "breadcrumb": {
@@ -34,7 +38,8 @@
     "profile": "Profil",
     "settings": "Paramètres",
     "signup": "Inscription",
-    "terms": "Conditions d’utilisation"
+    "terms": "Conditions d’utilisation",
+    "vendre": "Vendre"
   },
   "buttons": {
     "cancel": "Annuler",
@@ -135,5 +140,9 @@
     "passwordValidation": "Les mots de passe ne correspondent pas",
     "phone": "Numéro béninois invalide : +22901XXXXXXXX attendu",
     "required": "Ce champ est requis"
+  },
+  "database": {
+    "harvest": "noix de cajou",
+    "transformed": "amandes"
   }
 }

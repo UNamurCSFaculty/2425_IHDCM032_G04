@@ -36,3 +36,10 @@ export const formatCoordinates = (wktString: string): string => {
   const coordinates = `${latDMS} ${latitude >= 0 ? 'N' : 'S'} ${lonDMS} ${longitude >= 0 ? 'E' : 'W'}`
   return coordinates
 }
+
+export enum TradeStatus {
+  OPEN = 'Ouvert',
+  EXPIRED = 'Expiré',
+  ACCEPTED = 'Accepté',
+  REJECTED = 'Refusé',
+}
