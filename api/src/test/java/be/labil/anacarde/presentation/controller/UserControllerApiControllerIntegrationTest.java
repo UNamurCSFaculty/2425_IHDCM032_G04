@@ -68,6 +68,10 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 				.andExpect(status().isCreated())
 				// Vérifie que l'en-tête "Location" contient l'ID du nouvel utilisateur
 				// .andExpect(header().string("Location", containsString("/api/users/")))
+				.andExpect(jsonPath("$.address").exists())
+				.andExpect(jsonPath("$.address.street").value("Rue de la paix"))
+				.andExpect(jsonPath("$.address.cityId").value(1))
+				.andExpect(jsonPath("$.address.regionId").value(1))
 				.andExpect(jsonPath("$.email").value("alice.smith@example.com"))
 				.andExpect(jsonPath("$.firstName").value("Alice"))
 				.andExpect(jsonPath("$.lastName").value("Smith"));

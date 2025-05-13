@@ -6,7 +6,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import be.labil.anacarde.domain.dto.db.StoreDetailDto;
 import be.labil.anacarde.domain.model.*;
+import be.labil.anacarde.infrastructure.persistence.CityRepository;
 import be.labil.anacarde.infrastructure.persistence.LanguageRepository;
+import be.labil.anacarde.infrastructure.persistence.RegionRepository;
 import be.labil.anacarde.infrastructure.persistence.user.UserRepository;
 import be.labil.anacarde.infrastructure.security.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -37,6 +39,10 @@ public class SecurityIntegrationTest {
 
 	private Cookie jwtCookie;
 	private User user;
+	@Autowired
+	private RegionRepository regionRepository;
+	@Autowired
+	private CityRepository cityRepository;
 
 	private RequestPostProcessor addJwtCookie() {
 		return request -> {
@@ -51,7 +57,9 @@ public class SecurityIntegrationTest {
 		Language language = Language.builder().code("fr").name("Français").build();
 		language = languageRepository.save(language);
 		Region region = Region.builder().name("sud").id(1).build();
+		region = regionRepository.save(region);
 		City city = City.builder().name("sud city").id(1).region(region).build();
+		city = cityRepository.save(city);
 		Address address = Address.builder().street("Rue de la paix").city(city).region(region)
 				.build();
 
