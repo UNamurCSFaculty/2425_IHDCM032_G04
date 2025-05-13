@@ -417,23 +417,22 @@ public abstract class AbstractIntegrationTest {
 		mainTestCarrier = userRepository.save(carrier);
 		qualityInspector = userRepository.save(qualityInspector);
 
-		Point storeLocation = new GeometryFactory().createPoint(new Coordinate(2.3522, 48.8566));
-		Store store = Store.builder().name("Nassara").location(storeLocation).address(mainAddress)
-				.user(mainTestUser).build();
+		Store store = Store.builder().name("Nassara").address(mainAddress).user(mainTestUser)
+				.build();
 		mainTestStore = storeRepository.save(store);
 
 		// Fields
 		// A field binded to main producer
 		Point pointField = new GeometryFactory().createPoint(new Coordinate(2.3522, 48.8566));
 		Field field = Field.builder().producer((Producer) producerTestUser).identifier("FIELD-001")
-				.location(pointField).build();
+				.address(mainAddress).build();
 
 		mainTestField = fieldRepository.save(field);
 
 		// A field to another producer
 		Point pointField2 = new GeometryFactory().createPoint(new Coordinate(1.198, 10.300));
 		Field field2 = Field.builder().producer((Producer) producerTestUser).identifier("FIELD-002")
-				.location(pointField2).build();
+				.address(mainAddress).build();
 		fieldRepository.save(field2);
 
 		// A quality

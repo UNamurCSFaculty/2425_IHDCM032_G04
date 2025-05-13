@@ -2,9 +2,9 @@ package be.labil.anacarde.domain.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import be.labil.anacarde.domain.dto.db.AddressDto;
 import be.labil.anacarde.domain.dto.db.StoreDetailDto;
-import be.labil.anacarde.domain.model.Store;
-import be.labil.anacarde.domain.model.Transformer;
+import be.labil.anacarde.domain.model.*;
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
@@ -24,7 +24,11 @@ class StoreMapperTest {
 		Store store = new Store();
 		store.setId(1);
 		store.setName("Nassara");
-		store.setLocation(location);
+		Region region = Region.builder().name("sud").id(1).build();
+		City city = City.builder().name("sud city").id(1).region(region).build();
+		Address address = Address.builder().street("Rue de la paix").city(city).region(region)
+				.build();
+		store.setAddress(address);
 		store.setUser(new Transformer());
 		store.getUser().setId(42);
 
@@ -33,7 +37,9 @@ class StoreMapperTest {
 		assertThat(dto).isNotNull();
 		assertThat(dto.getId()).isEqualTo(store.getId());
 		assertThat(dto.getName()).isEqualTo("Nassara");
-		assertThat(dto.getLocation()).isEqualTo("POINT (2.3522 48.8566)"); // WKT representation
+		assertThat(dto.getAddress().getStreet()).isEqualTo("Rue de la paix");
+		assertThat(dto.getAddress().getCityId()).isEqualTo(1);
+		assertThat(dto.getAddress().getRegionId()).isEqualTo(1);
 		assertThat(dto.getUserId()).isEqualTo(store.getUser().getId());
 	}
 
@@ -42,7 +48,7 @@ class StoreMapperTest {
 		StoreDetailDto dto = new StoreDetailDto();
 		dto.setId(1);
 		dto.setName("Nassara");
-		dto.setLocation("POINT (2.3522 48.8566)");
+		dto.setAddress(AddressDto.builder().street("Rue de la paix").cityId(1).regionId(1).build());
 		dto.setUserId(42);
 
 		Store entity = storeMapper.toEntity(dto);
@@ -50,8 +56,7 @@ class StoreMapperTest {
 		assertThat(entity).isNotNull();
 		assertThat(entity.getId()).isEqualTo(dto.getId());
 		assertThat(entity.getName()).isEqualTo("Nassara");
-		assertThat(entity.getLocation().getX()).isEqualTo(2.3522);
-		assertThat(entity.getLocation().getY()).isEqualTo(48.8566);
+		assertThat(entity.getAddress()).isNotNull();
 		assertThat(entity.getUser().getId()).isEqualTo(dto.getUserId());
 	}
 
@@ -60,7 +65,7 @@ class StoreMapperTest {
 		StoreDetailDto dto = new StoreDetailDto();
 		dto.setName(null);
 		dto.setId(null);
-		dto.setLocation(null);
+		dto.setAddress(null);
 		dto.setUserId(null);
 
 		Store entity = storeMapper.toEntity(dto);
@@ -68,7 +73,7 @@ class StoreMapperTest {
 		assertThat(entity).isNotNull();
 		assertThat(entity.getId()).isNull();
 		assertThat(entity.getName()).isNull();
-		assertThat(entity.getLocation()).isNull();
+		assertThat(entity.getAddress()).isNull();
 		assertThat(entity.getUser()).isNull();
 	}
 
@@ -77,7 +82,7 @@ class StoreMapperTest {
 		Store store = new Store();
 		store.setId(null);
 		store.setName(null);
-		store.setLocation(null);
+		store.setAddress(null);
 		store.setUser(null);
 
 		StoreDetailDto dto = storeMapper.toDto(store);
@@ -85,7 +90,7 @@ class StoreMapperTest {
 		assertThat(dto).isNotNull();
 		assertThat(dto.getId()).isNull();
 		assertThat(dto.getName()).isNull();
-		assertThat(dto.getLocation()).isNull();
+		assertThat(dto.getAddress()).isNull();
 		assertThat(dto.getUserId()).isNull();
 	}
 
@@ -94,13 +99,16 @@ class StoreMapperTest {
 		StoreDetailDto dto = new StoreDetailDto();
 		dto.setId(1);
 		dto.setName("Nassara");
-		dto.setLocation("POINT (3.3522 49.8566)");
+		dto.setAddress(AddressDto.builder().street("Rue de la paix").cityId(1).regionId(1).build());
 		dto.setUserId(42);
 
 		Store entity = new Store();
 		entity.setId(1);
-		entity.setLocation(new GeometryFactory()
-				.createPoint(new org.locationtech.jts.geom.Coordinate(2.3522, 48.8566)));
+		Region region = Region.builder().name("sud").id(1).build();
+		City city = City.builder().name("sud city").id(1).region(region).build();
+		Address address = Address.builder().street("Rue de la paix").city(city).region(region)
+				.build();
+		entity.setAddress(address);
 		entity.setUser(new Transformer());
 		entity.getUser().setId(41);
 
@@ -109,8 +117,9 @@ class StoreMapperTest {
 		assertThat(entity).isNotNull();
 		assertThat(entity.getId()).isEqualTo(dto.getId());
 		assertThat(entity.getName()).isEqualTo(dto.getName());
-		assertThat(entity.getLocation().getX()).isEqualTo(3.3522);
-		assertThat(entity.getLocation().getY()).isEqualTo(49.8566);
+		assertThat(dto.getAddress().getStreet()).isEqualTo("Rue de la paix");
+		assertThat(dto.getAddress().getCityId()).isEqualTo(1);
+		assertThat(dto.getAddress().getRegionId()).isEqualTo(1);
 		assertThat(entity.getUser().getId()).isEqualTo(42); // User ID should be updated
 	}
 }

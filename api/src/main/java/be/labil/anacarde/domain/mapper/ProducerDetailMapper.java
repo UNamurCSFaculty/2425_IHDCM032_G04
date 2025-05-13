@@ -11,7 +11,7 @@ import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(componentModel = "spring", uses = {MapperHelpers.class, RoleMapper.class,
-		LanguageMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+		LanguageMapper.class, AddressMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class ProducerDetailMapper {
 
 	@Autowired
@@ -20,11 +20,13 @@ public abstract class ProducerDetailMapper {
 	@Mapping(target = "cooperative", ignore = true)
 	@Mapping(source = "roles", target = "roles")
 	@Mapping(target = "language", ignore = true)
+	@Mapping(source = "address", target = "address")
 	public abstract Producer toEntity(ProducerUpdateDto dto);
 
 	@Mapping(source = "cooperative", target = "cooperative")
 	@Mapping(source = "roles", target = "roles")
 	@Mapping(source = "language", target = "language")
+	@Mapping(source = "address", target = "address")
 	public abstract ProducerDetailDto toDto(Producer entity);
 
 	@AfterMapping
