@@ -131,6 +131,8 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 		updateUser.setFirstName("John Updated");
 		updateUser.setLastName("Doe Updated");
 		updateUser.setEmail("email@updated.com");
+		updateUser.setAddress(
+				AddressDto.builder().street("Rue de la paix").cityId(1).regionId(1).build());
 		updateUser.setPassword("newpassword");
 		updateUser.setRoles(Set.of(RoleDto.builder().name(getAdminTestRole().getName()).build()));
 		updateUser.setLanguageId(getMainLanguageDto().getId());
