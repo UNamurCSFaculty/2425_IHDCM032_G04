@@ -5,11 +5,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import be.labil.anacarde.domain.dto.db.StoreDetailDto;
-import be.labil.anacarde.domain.mapper.UserDetailMapper;
 import be.labil.anacarde.domain.model.*;
-import be.labil.anacarde.infrastructure.persistence.CityRepository;
 import be.labil.anacarde.infrastructure.persistence.LanguageRepository;
-import be.labil.anacarde.infrastructure.persistence.RegionRepository;
 import be.labil.anacarde.infrastructure.persistence.user.UserRepository;
 import be.labil.anacarde.infrastructure.security.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
@@ -35,16 +31,9 @@ public class SecurityIntegrationTest {
 
 	private @Autowired MockMvc mockMvc;
 	private @Autowired ObjectMapper objectMapper;
-	private @Autowired UserDetailsService userDetailsService;
 	private @Autowired LanguageRepository languageRepository;
 	private @Autowired UserRepository userRepository;
-	protected @Autowired RegionRepository regionRepository;
-	protected @Autowired CityRepository cityRepository;
 	private @Autowired JwtUtil jwtUtil;
-	private @Autowired UserDetailMapper userDetailMapper;
-	private Region mainTestRegion;
-	private City mainTestCity;
-	private Address mainAddress;
 
 	private Cookie jwtCookie;
 	private User user;
@@ -62,14 +51,12 @@ public class SecurityIntegrationTest {
 		Language language = Language.builder().code("fr").name("Français").build();
 		language = languageRepository.save(language);
 		Region region = Region.builder().name("sud").id(1).build();
-		mainTestRegion = regionRepository.save(region);
-		City city = City.builder().name("sud city").id(1).region(mainTestRegion).build();
-		mainTestCity = cityRepository.save(city);
-		mainAddress = Address.builder().street("Rue de la paix").city(mainTestCity)
-				.region(mainTestRegion).build();
+		City city = City.builder().name("sud city").id(1).region(region).build();
+		Address address = Address.builder().street("Rue de la paix").city(city).region(region)
+				.build();
 
 		user = Admin.builder().firstName("John").lastName("Doe").email("user@example.com")
-				.address(mainAddress).password("password").registrationDate(LocalDateTime.now())
+				.address(address).password("password").registrationDate(LocalDateTime.now())
 				.phone("+2290197000000").language(language).enabled(true).build();
 		user = userRepository.save(user);
 		String token = jwtUtil.generateToken(user);
