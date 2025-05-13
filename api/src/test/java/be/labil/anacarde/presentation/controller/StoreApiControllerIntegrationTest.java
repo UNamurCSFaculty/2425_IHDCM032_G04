@@ -97,6 +97,8 @@ public class StoreApiControllerIntegrationTest extends AbstractIntegrationTest {
 		StoreDetailDto updateStore = new StoreDetailDto();
 		updateStore.setName("Casimir");
 		updateStore.setLocation("POINT (1.111 2.222)");
+		updateStore.setAddress(
+				AddressDto.builder().street("Rue de la paix").cityId(1).regionId(1).build());
 		updateStore.setUserId(getMainTestUser().getId());
 
 		ObjectNode node = objectMapper.valueToTree(updateStore);
