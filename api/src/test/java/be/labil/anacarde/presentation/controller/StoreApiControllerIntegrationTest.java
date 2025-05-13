@@ -67,6 +67,10 @@ public class StoreApiControllerIntegrationTest extends AbstractIntegrationTest {
 				.andExpect(header().string("Location", containsString("/api/stores/")))
 				.andExpect(jsonPath("$.name").value("Nassara"))
 				.andExpect(jsonPath("$.location").value("POINT (2.3522 48.8566)"))
+				.andExpect(jsonPath("$.address").exists())
+				.andExpect(jsonPath("$.address.street").value("Rue de la paix"))
+				.andExpect(jsonPath("$.address.cityId").value(1))
+				.andExpect(jsonPath("$.address.regionId").value(1))
 				.andExpect(jsonPath("$.userId").value(getMainTestUser().getId()));
 
 		Store createdStore = storeRepository.findAll().stream()
