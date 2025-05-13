@@ -1,6 +1,6 @@
 package be.labil.anacarde.domain.dto.db;
 
-import be.labil.anacarde.domain.dto.db.user.TraderDetailDto;
+import be.labil.anacarde.domain.dto.db.user.UserMiniDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -42,12 +42,12 @@ public class ContractOfferDto extends BaseDto {
 	/** Trader vendeur associé à l'offre. */
 	@NotNull(message = "Le vendeur est requis")
 	@Schema(description = "Vendeur associé à l'offre", requiredMode = Schema.RequiredMode.REQUIRED)
-	private TraderDetailDto seller;
+	private UserMiniDto seller;
 
 	/** Trader acheteur associé à l'offre. */
 	@NotNull(message = "L'acheteur est requis")
 	@Schema(description = "Acheteur associé à l'offre", requiredMode = Schema.RequiredMode.REQUIRED)
-	private TraderDetailDto buyer;
+	private UserMiniDto buyer;
 
 	/** Qualité associée à l'offre. */
 	@NotNull(message = "La qualité est requise")

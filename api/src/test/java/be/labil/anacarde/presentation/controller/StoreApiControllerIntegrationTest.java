@@ -70,6 +70,7 @@ public class StoreApiControllerIntegrationTest extends AbstractIntegrationTest {
 				.andExpect(jsonPath("$.address.street").value("Rue de la paix"))
 				.andExpect(jsonPath("$.address.cityId").value(1))
 				.andExpect(jsonPath("$.address.regionId").value(1))
+				.andExpect(jsonPath("$.address.location").value("POINT (2.3522 48.8566)"))
 				.andExpect(jsonPath("$.userId").value(getMainTestUser().getId()));
 	}
 

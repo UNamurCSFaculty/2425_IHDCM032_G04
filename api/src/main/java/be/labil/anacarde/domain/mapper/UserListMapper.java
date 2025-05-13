@@ -3,14 +3,12 @@ package be.labil.anacarde.domain.mapper;
 import be.labil.anacarde.domain.dto.db.user.*;
 import be.labil.anacarde.domain.model.*;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.ObjectFactory;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = MapperHelpers.class)
 public abstract class UserListMapper {
 
-	@Mapping(target = "id", ignore = true)
 	public abstract UserListDto toDto(User user);
 
 	@ObjectFactory
