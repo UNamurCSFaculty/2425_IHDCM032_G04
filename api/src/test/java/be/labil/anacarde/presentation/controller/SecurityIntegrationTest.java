@@ -6,10 +6,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import be.labil.anacarde.domain.dto.db.StoreDetailDto;
 import be.labil.anacarde.domain.mapper.UserDetailMapper;
-import be.labil.anacarde.domain.model.Admin;
-import be.labil.anacarde.domain.model.Language;
-import be.labil.anacarde.domain.model.User;
+import be.labil.anacarde.domain.model.*;
+import be.labil.anacarde.infrastructure.persistence.CityRepository;
 import be.labil.anacarde.infrastructure.persistence.LanguageRepository;
+import be.labil.anacarde.infrastructure.persistence.RegionRepository;
 import be.labil.anacarde.infrastructure.persistence.user.UserRepository;
 import be.labil.anacarde.infrastructure.security.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,8 +38,13 @@ public class SecurityIntegrationTest {
 	private @Autowired UserDetailsService userDetailsService;
 	private @Autowired LanguageRepository languageRepository;
 	private @Autowired UserRepository userRepository;
+	protected @Autowired RegionRepository regionRepository;
+	protected @Autowired CityRepository cityRepository;
 	private @Autowired JwtUtil jwtUtil;
 	private @Autowired UserDetailMapper userDetailMapper;
+	private Region mainTestRegion;
+	private City mainTestCity;
+	private Address mainAddress;
 
 	private Cookie jwtCookie;
 	private User user;
@@ -56,10 +61,16 @@ public class SecurityIntegrationTest {
 		// Création de la langue
 		Language language = Language.builder().code("fr").name("Français").build();
 		language = languageRepository.save(language);
+		Region region = Region.builder().name("sud").id(1).build();
+		mainTestRegion = regionRepository.save(region);
+		City city = City.builder().name("sud city").id(1).region(mainTestRegion).build();
+		mainTestCity = cityRepository.save(city);
+		mainAddress = Address.builder().street("Rue de la paix").city(mainTestCity)
+				.region(mainTestRegion).build();
 
 		user = Admin.builder().firstName("John").lastName("Doe").email("user@example.com")
-				.password("password").registrationDate(LocalDateTime.now()).phone("+2290197000000")
-				.language(language).enabled(true).build();
+				.address(mainAddress).password("password").registrationDate(LocalDateTime.now())
+				.phone("+2290197000000").language(language).enabled(true).build();
 		user = userRepository.save(user);
 		String token = jwtUtil.generateToken(user);
 		jwtCookie = new Cookie("jwt", token);

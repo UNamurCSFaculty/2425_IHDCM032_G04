@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import be.labil.anacarde.domain.dto.db.AddressDto;
 import be.labil.anacarde.domain.dto.db.StoreDetailDto;
 import be.labil.anacarde.domain.model.Store;
 import be.labil.anacarde.infrastructure.persistence.StoreRepository;
@@ -52,6 +53,8 @@ public class StoreApiControllerIntegrationTest extends AbstractIntegrationTest {
 	public void testCreateStore() throws Exception {
 		StoreDetailDto newStore = new StoreDetailDto();
 		newStore.setName("Nassara");
+		newStore.setAddress(
+				AddressDto.builder().street("Rue de la paix").cityId(1).regionId(1).build());
 		newStore.setLocation("POINT(2.3522 48.8566)");
 		newStore.setUserId(getMainTestUser().getId());
 

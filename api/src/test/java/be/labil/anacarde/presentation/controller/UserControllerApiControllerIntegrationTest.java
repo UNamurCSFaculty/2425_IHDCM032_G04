@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import be.labil.anacarde.domain.dto.db.AddressDto;
 import be.labil.anacarde.domain.dto.db.RoleDto;
 import be.labil.anacarde.domain.dto.write.user.AdminUpdateDto;
 import be.labil.anacarde.domain.dto.write.user.ExporterUpdateDto;
@@ -51,6 +52,8 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 		newUser.setFirstName("Alice");
 		newUser.setLastName("Smith");
 		newUser.setEmail("alice.smith@example.com");
+		newUser.setAddress(
+				AddressDto.builder().street("Rue de la paix").cityId(1).regionId(1).build());
 		newUser.setPassword("secret!!!");
 		newUser.setLanguageId(getMainLanguageDto().getId());
 		newUser.setPhone("+2290197005502");
@@ -85,6 +88,8 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 		newUser.setFirstName("Charlie");
 		newUser.setLastName("Brown");
 		newUser.setEmail("charlie.brown@example.com");
+		newUser.setAddress(
+				AddressDto.builder().street("Rue de la paix").cityId(1).regionId(1).build());
 		newUser.setPassword("secret");
 		newUser.setLanguageId(getMainLanguageDto().getId());
 
@@ -216,6 +221,8 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 		UserUpdateDto newUser = new AdminUpdateDto();
 		newUser.setFirstName("Bob");
 		newUser.setLastName("Smith");
+		newUser.setAddress(
+				AddressDto.builder().street("Rue de la paix").cityId(1).regionId(1).build());
 		newUser.setPassword("secret");
 
 		ObjectNode node = objectMapper.valueToTree(newUser);
