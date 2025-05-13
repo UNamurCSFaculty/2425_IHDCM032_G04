@@ -1,6 +1,6 @@
 package be.labil.anacarde.domain.dto.db;
 
-import be.labil.anacarde.domain.dto.db.user.TraderDetailDto;
+import be.labil.anacarde.domain.dto.db.user.UserMiniDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -35,7 +35,7 @@ public class BidDto extends BaseDto {
 	/** Trader ayant passé l'offre. */
 	@NotNull(message = "Le trader est requis")
 	@Schema(description = "Trader ayant passé l'offre", requiredMode = Schema.RequiredMode.REQUIRED)
-	private TraderDetailDto trader;
+	private UserMiniDto trader;
 
 	/** Statut de l'offre. */
 	@NotNull(message = "Le statut de l'offre est requis")

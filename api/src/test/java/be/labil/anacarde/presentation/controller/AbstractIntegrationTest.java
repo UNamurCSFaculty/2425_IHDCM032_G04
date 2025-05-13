@@ -363,9 +363,9 @@ public abstract class AbstractIntegrationTest {
 
 		City city = City.builder().name("sud city").id(1).region(mainTestRegion).build();
 		mainTestCity = cityRepository.save(city);
-
+		Point storeLocation = new GeometryFactory().createPoint(new Coordinate(3.3522, 8.8566));
 		mainAddress = Address.builder().street("Rue de la paix").city(mainTestCity)
-				.region(mainTestRegion).build();
+				.region(mainTestRegion).location(storeLocation).build();
 
 		User user1 = Admin.builder().firstName("John").lastName("Doe").email("user@example.com")
 				.password("$2a$10$abcdefghijklmnopqrstuv1234567890AB").address(mainAddress)

@@ -11,7 +11,7 @@ import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(componentModel = "spring", uses = {MapperHelpers.class, UserDetailMapper.class,
-		ProductMapper.class, QualityMapper.class,
+		ProductMapper.class, QualityMapper.class, UserMiniMapper.class,
 		DocumentMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class QualityControlMapper {
 
