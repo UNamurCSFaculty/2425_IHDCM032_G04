@@ -106,7 +106,7 @@ export function Header() {
         },
         {
           title: 'Mes ventes',
-          description: 'Consulter mes ventes en cours',
+          description: 'Consulter toutes mes ventes',
           icon: <ArrowLeftRight className="size-5 shrink-0" />,
           url: '/ventes/mes-encheres',
         },

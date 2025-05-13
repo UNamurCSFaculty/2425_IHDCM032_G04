@@ -40,7 +40,10 @@ export function RouteComponent() {
       <BreadcrumbSection
         titleKey="app.auctions_sales.title"
         subtitleKey="app.auctions_sales.subtitle"
-        breadcrumbs={[{ labelKey: 'breadcrumb.vendre' }]}
+        breadcrumbs={[
+          { labelKey: 'breadcrumb.vendre' },
+          { labelKey: 'breadcrumb.my_auctions' },
+        ]}
         className="border-b border-gray-200 dark:border-gray-700"
       />
       <div className="container mx-auto px-4 py-8">

@@ -26,6 +26,10 @@
     "auctions_sales": {
       "title": "Enchères et ventes",
       "subtitle": "Vendez vos produits en ligne et consultez les offres sur vos enchères."
+    },
+    "auctions_new_sale": {
+      "title": "Nouvelle vente",
+      "subtitle": "Créez une nouvelle vente aux enchères pour votre produit."
     }
   },
   "breadcrumb": {
@@ -39,7 +43,9 @@
     "settings": "Paramètres",
     "signup": "Inscription",
     "terms": "Conditions d’utilisation",
-    "vendre": "Vendre"
+    "vendre": "Vendre",
+    "my_auctions": "Mes enchères",
+    "new_auction": "Nouvelle enchère"
   },
   "buttons": {
     "cancel": "Annuler",

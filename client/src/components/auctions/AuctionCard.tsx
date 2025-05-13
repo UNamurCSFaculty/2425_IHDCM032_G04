@@ -17,7 +17,7 @@ import {
   ChevronRight,
   Clock,
   DollarSign,
-  // Home,
+  Home,
   MapPin,
   NotebookText,
   Package,
@@ -67,15 +67,14 @@ export const AuctionCard: React.FC<AuctionCardProps> = ({
               </div>
               <div>
                 {t('database.' + auction.product.type)} – lot n°
-                {auction.product.id} à {auction.product.store.name}
+                {auction.product.id}
               </div>
-              <CardDescription className="flex items-center justify-around text-sm text-white mt-2 bg-green-700 rounded-lg inset-shadow-sm p-2">
+              <CardDescription className="flex items-center justify-around font-normal text-sm text-white mt-2 bg-green-700 rounded-lg inset-shadow-sm p-2">
+                <Home className="w-4 h-4 mr-1" />
+                {auction.product.store.name}
+                <span className="mx-1">|</span>
                 <MapPin className="w-4 h-4 mr-1" />
                 {formatCoordinates(auction.product.store.location)}
-                {/* <span className="mx-1">|</span> */}
-
-                {/* <Home className="w-4 h-4 mr-1" />
-                {auction.product.store.name} */}
               </CardDescription>
             </div>
           </CardTitle>
