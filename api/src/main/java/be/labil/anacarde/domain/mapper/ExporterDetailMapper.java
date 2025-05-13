@@ -12,9 +12,11 @@ public abstract class ExporterDetailMapper {
 
 	@Mapping(source = "roles", target = "roles")
 	@Mapping(source = "language", target = "language")
+	@Mapping(source = "address", target = "address")
 	public abstract Exporter toEntity(ExporterDetailDto dto);
 
 	@Mapping(source = "roles", target = "roles")
 	@Mapping(source = "language", target = "language")
+	@Mapping(source = "address", target = "address")
 	public abstract ExporterDetailDto toDto(Exporter entity);
 }

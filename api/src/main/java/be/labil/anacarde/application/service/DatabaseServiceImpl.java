@@ -239,7 +239,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 
 	private FieldDto createField(ProducerDetailDto producer) {
 		FieldDto fieldDto = new FieldDto();
-		fieldDto.setLocation("POINT (2.3522 48.8566)");
+		fieldDto.setAddress(
+				AddressDto.builder().street("Rue de la paix").cityId(1).regionId(1).build());
 		fieldDto.setIdentifier("F12748");
 		fieldDto.setProducer(producer);
 		return fieldDto;
@@ -292,7 +293,6 @@ public class DatabaseServiceImpl implements DatabaseService {
 	private StoreDetailDto createStore(UserDetailDto manager) {
 		StoreDetailDto store = new StoreDetailDto();
 		store.setName("Nassara");
-		store.setLocation("POINT(2.3522 48.8566)");
 		store.setUserId(manager.getId());
 		store.setAddress(AddressDto.builder().street("Rue du Store").cityId(1).regionId(1).build());
 		return store;

@@ -4,6 +4,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import be.labil.anacarde.domain.dto.db.AddressDto;
 import be.labil.anacarde.domain.dto.db.StoreDetailDto;
 import be.labil.anacarde.domain.model.*;
 import be.labil.anacarde.infrastructure.persistence.CityRepository;
@@ -121,7 +122,8 @@ public class SecurityIntegrationTest {
 	public void testCreateUserWithoutCsrfReturnsForbidden() throws Exception {
 
 		StoreDetailDto newStore = new StoreDetailDto();
-		newStore.setLocation("POINT(2.3522 48.8566)");
+		newStore.setAddress(AddressDto.builder().street("Rue de la paix")
+				.location("POINT(2.3522 48.8566)").cityId(1).regionId(1).build());
 		newStore.setUserId(user.getId());
 
 		ObjectNode node = objectMapper.valueToTree(newStore);
