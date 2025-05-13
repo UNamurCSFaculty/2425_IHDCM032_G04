@@ -94,8 +94,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 		storeRepository.deleteAllInBatch();
 		userRepository.deleteAllInBatch();
 		roleRepository.deleteAllInBatch();
-		regionRepository.deleteAllInBatch();
 		cityRepository.deleteAllInBatch();
+		regionRepository.deleteAllInBatch();
 		languageRepository.deleteAllInBatch();
 	}
 
