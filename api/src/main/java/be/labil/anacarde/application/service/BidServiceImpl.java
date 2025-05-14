@@ -73,10 +73,35 @@ public class BidServiceImpl implements BidService {
 			throw new ResourceNotFoundException("Status non trouvé");
 		}
 
+		// Accept current bid
 		Bid existingBid = bidRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Offre non trouvée"));
-
 		existingBid.setStatus(acceptedStatus);
+
+		bidRepository.findByAuctionId(existingBid.getId());
+		Bid acceptedBid = bidRepository.save(existingBid);
+
+		// Reject all other bids
+		List<BidDto> otherBids = listBids(existingBid.getAuctionId());
+		for (BidDto bidDto : otherBids) {
+			if (bidDto.getId() != acceptedBid.getId()) {
+				rejectBid(bidDto.getId());
+			}
+		}
+
+		return bidMapper.toDto(acceptedBid);
+	}
+
+	@Override
+	public BidDto rejectBid(Integer id) {
+		TradeStatus rejectedStatus = tradeStatusRepository.findStatusRejected();
+		if (rejectedStatus == null) {
+			throw new ResourceNotFoundException("Status non trouvé");
+		}
+
+		Bid existingBid = bidRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Offre non trouvée"));
+		existingBid.setStatus(rejectedStatus);
 
 		Bid saved = bidRepository.save(existingBid);
 		return bidMapper.toDto(saved);

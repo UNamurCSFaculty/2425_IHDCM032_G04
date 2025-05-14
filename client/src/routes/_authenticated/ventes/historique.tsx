@@ -1,6 +1,7 @@
 import { type AuctionDto } from '@/api/generated'
 import { listAuctionsOptions } from '@/api/generated/@tanstack/react-query.gen'
 import AuctionsTable from '@/components/auctions/AuctionsTable'
+import { TradeStatus } from '@/lib/utils'
 import { useAuthUser } from '@/store/userStore'
 import { useQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
@@ -23,7 +24,7 @@ export function RouteComponent() {
   const { data } = useQuery(listAuctionsQueryOptions(user.id))
 
   const historyAuctions = (data as AuctionDto[]).filter(
-    auction => auction.status.name !== 'Ouvert'
+    auction => auction.status.name !== TradeStatus.OPEN
   )
 
   return (

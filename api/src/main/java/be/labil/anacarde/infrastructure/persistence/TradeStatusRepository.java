@@ -15,6 +15,14 @@ public interface TradeStatusRepository extends JpaRepository<TradeStatus, Intege
 	TradeStatus findStatusAccepted();
 
 	/**
+	 * Retourne le status refusé.
+	 *
+	 * @return Un status correspondant au refus d'un achat/vente.
+	 */
+	@Query("SELECT s FROM TradeStatus s WHERE s.name = 'Refusé'")
+	TradeStatus findStatusRejected();
+
+	/**
 	 * Retourne le status en cours.
 	 *
 	 * @return Un status correspondant à l'évaluation d'une achat/vente.

@@ -2,6 +2,7 @@ import type { SellerAuctionsTab } from './SellerAuctions'
 import type { AuctionDto } from '@/api/generated'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { TradeStatus } from '@/lib/utils'
 import { ArrowLeft } from 'lucide-react'
 import React from 'react'
 
@@ -22,13 +23,17 @@ export const AuctionHeader: React.FC<AuctionHeaderProps> = ({
   tab,
   setTab,
 }) => {
+  const openAuctions = auctions.filter(
+    auction => auction.status.name === TradeStatus.OPEN
+  )
   return (
     <div>
       {/* En-tête */}
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">Gestion des enchères</h1>
         <span className="text-sm text-gray-500">
-          {auctions.length} enchère{auctions.length > 1 ? 's' : ''} au total
+          {auctions.length} {auctions.length > 1 ? 'ventes' : 'vente'} au total
+          <br />
         </span>
       </div>
 
@@ -51,8 +56,12 @@ export const AuctionHeader: React.FC<AuctionHeaderProps> = ({
             }}
           >
             <TabsList className="grid grid-cols-2">
-              <TabsTrigger value="active">En cours</TabsTrigger>
-              <TabsTrigger value="ended">Terminées</TabsTrigger>
+              <TabsTrigger value="active">
+                En cours ({openAuctions.length})
+              </TabsTrigger>
+              <TabsTrigger value="ended">
+                Terminées ({auctions.length - openAuctions.length})
+              </TabsTrigger>
             </TabsList>
           </Tabs>
         </div>

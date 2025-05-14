@@ -41,9 +41,6 @@ public class QualityControlServiceImpl implements QualityControlService {
 		if (qc.getQualityInspector() != null && qc.getQualityInspector().getId() != null) {
 			Hibernate.initialize(qc.getQualityInspector());
 		}
-		if (qc.getProduct() != null && qc.getProduct().getId() != null) {
-			Hibernate.initialize(qc.getProduct());
-		}
 		if (qc.getDocument() != null && qc.getDocument().getId() != null) {
 			Hibernate.initialize(qc.getDocument());
 		}
@@ -55,8 +52,8 @@ public class QualityControlServiceImpl implements QualityControlService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<QualityControlDto> listQualityControls(Integer productId) {
-		List<QualityControl> controls = qualityControlRepository.findByProductId(productId);
+	public List<QualityControlDto> listQualityControls() {
+		List<QualityControl> controls = qualityControlRepository.findAll();
 		return controls.stream().map(qualityControlMapper::toDto).collect(Collectors.toList());
 	}
 

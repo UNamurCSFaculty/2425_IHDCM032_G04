@@ -334,7 +334,62 @@ export type ExporterDetailDto = TraderDetailDto
 /**
  * Objet de transfert de données pour les inspecteurs qualité.
  */
-export type QualityInspectorDetailDto = UserDetailDto
+export type QualityInspectorDetailDto = {
+  /**
+   * Identifiant unique
+   */
+  readonly id: number
+  /**
+   * Prénom de l'utilisateur
+   */
+  firstName: string
+  /**
+   * Nom de famille de l'utilisateur
+   */
+  lastName: string
+  /**
+   * Adresse email de l'utilisateur
+   */
+  email: string
+  /**
+   * Date d'enregistrement
+   */
+  readonly registrationDate?: string
+  /**
+   * Date de validation
+   */
+  readonly validationDate?: string
+  /**
+   * Compte activé
+   */
+  enabled?: boolean
+  /**
+   * Adresse postale de l'utilisateur
+   */
+  address?: string
+  /**
+   * Numéro de téléphone (Bénin, format local à 10 chiffres débutant par 01, ou +229...)
+   */
+  phone?: string
+  /**
+   * Liste des rôles de l'utilisateur
+   */
+  readonly roles?: Array<RoleDto>
+  /**
+   * Identifiant de la langue préférée
+   */
+  language: LanguageDto
+  /**
+   * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
+   */
+  type:
+    | 'admin'
+    | 'producer'
+    | 'transformer'
+    | 'quality_inspector'
+    | 'exporter'
+    | 'carrier'
+}
 
 /**
  * Objet de transfert de données pour les traders.
@@ -498,43 +553,6 @@ export type RegionDto = {
 }
 
 /**
- * Représente une qualité de produit.
- */
-export type QualityDto = {
-  /**
-   * Identifiant unique
-   */
-  readonly id: number
-  /**
-   * Nom de la qualité
-   */
-  name: string
-}
-
-export type ApiError = {
-  /**
-   * human-readable error message
-   */
-  message?: string
-  errors?: Array<ApiErrorErrors>
-}
-
-export type ApiErrorErrors = {
-  /**
-   * For input validation errors, identifies where in the  JSON request body the error occurred.
-   */
-  path?: string
-  /**
-   * Human-readable error message.
-   */
-  message?: string
-  /**
-   * Code indicating error type.
-   */
-  errorCode?: string
-}
-
-/**
  * Objet de transfert pour créer ou mettre à jour un document.
  */
 export type DocumentUpdateDto = {
@@ -633,46 +651,6 @@ export type DocumentDto = {
 }
 
 /**
- * Objet de transfert de données pour les produits récoltés.
- */
-export type HarvestProductDto = ProductDto & {
-  type: 'harvest'
-} & {
-  /**
-   * Producteur associé au produit récolté
-   */
-  producer: ProducerDetailDto
-  /**
-   * Champ associé au produit récolté
-   */
-  field: FieldDto
-}
-
-/**
- * Data Transfer Object pour un produit
- */
-export type ProductDto = {
-  /**
-   * Identifiant unique
-   */
-  readonly id: number
-  deliveryDate?: string
-  /**
-   * Magasin associé au produit récolté
-   */
-  store: StoreDetailDto
-  /**
-   * Poids en kg du produit
-   */
-  weightKg: number
-  qualityControlId?: number
-  /**
-   * Type de produit.
-   */
-  type: 'harvest' | 'transformed'
-}
-
-/**
  * Objet de transfert de données pour le contrôle qualité.
  */
 export type QualityControlDto = {
@@ -705,10 +683,6 @@ export type QualityControlDto = {
    */
   qualityInspector: QualityInspectorDetailDto
   /**
-   * Produit associé
-   */
-  product: HarvestProductDto | TransformedProductDto
-  /**
    * Qualité associée
    */
   quality: QualityDto
@@ -719,19 +693,40 @@ export type QualityControlDto = {
 }
 
 /**
- * Objet de transfert de données pour les produits transformés.
+ * Représente une qualité de produit.
  */
-export type TransformedProductDto = ProductDto & {
-  type: 'transformed'
-} & {
+export type QualityDto = {
   /**
-   * Identifiant du produit transformé
+   * Identifiant unique
    */
-  identifier: string
+  readonly id: number
   /**
-   * Transformateur associé
+   * Nom de la qualité
    */
-  transformer: TransformerDetailDto
+  name: string
+}
+
+export type ApiError = {
+  /**
+   * human-readable error message
+   */
+  message?: string
+  errors?: Array<ApiErrorErrors>
+}
+
+export type ApiErrorErrors = {
+  /**
+   * For input validation errors, identifies where in the  JSON request body the error occurred.
+   */
+  path?: string
+  /**
+   * Human-readable error message.
+   */
+  message?: string
+  /**
+   * Code indicating error type.
+   */
+  errorCode?: string
 }
 
 /**
@@ -760,14 +755,17 @@ export type ProductUpdateDto = {
   readonly id: number
   deliveryDate?: string
   /**
-   * Magasin associé au produit récolté
+   * Magasin associé au produit
    */
   storeId: number
   /**
    * Poids en kg du produit
    */
   weightKg?: number
-  qualityControlId?: number
+  /**
+   * Contrôle qualité associé au produit
+   */
+  qualityControlId: number
   type: string
 }
 
@@ -785,6 +783,65 @@ export type TransformedProductUpdateDto = ProductUpdateDto & {
    * Transformateur associé
    */
   transformerId: number
+}
+
+/**
+ * Objet de transfert de données pour les produits récoltés.
+ */
+export type HarvestProductDto = ProductDto & {
+  type: 'harvest'
+} & {
+  /**
+   * Producteur associé au produit récolté
+   */
+  producer: ProducerDetailDto
+  /**
+   * Champ associé au produit récolté
+   */
+  field: FieldDto
+}
+
+/**
+ * Data Transfer Object pour un produit
+ */
+export type ProductDto = {
+  /**
+   * Identifiant unique
+   */
+  readonly id: number
+  deliveryDate?: string
+  /**
+   * Magasin associé au produit
+   */
+  store: StoreDetailDto
+  /**
+   * Poids en kg du produit
+   */
+  weightKg: number
+  /**
+   * Contrôle qualité associé au produit
+   */
+  qualityControl: QualityControlDto
+  /**
+   * Type de produit.
+   */
+  type: 'harvest' | 'transformed'
+}
+
+/**
+ * Objet de transfert de données pour les produits transformés.
+ */
+export type TransformedProductDto = ProductDto & {
+  type: 'transformed'
+} & {
+  /**
+   * Identifiant du produit transformé
+   */
+  identifier: string
+  /**
+   * Transformateur associé
+   */
+  transformer: TransformerDetailDto
 }
 
 /**
@@ -1634,6 +1691,110 @@ export type UpdateRegionResponses = {
 export type UpdateRegionResponse =
   UpdateRegionResponses[keyof UpdateRegionResponses]
 
+export type DeleteQualityControlData = {
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/quality-controls/{id}'
+}
+
+export type DeleteQualityControlErrors = {
+  /**
+   * Not Found
+   */
+  404: ApiErrorResponse
+}
+
+export type DeleteQualityControlError =
+  DeleteQualityControlErrors[keyof DeleteQualityControlErrors]
+
+export type DeleteQualityControlResponses = {
+  /**
+   * OK
+   */
+  200: unknown
+  /**
+   * No Content
+   */
+  204: void
+}
+
+export type DeleteQualityControlResponse =
+  DeleteQualityControlResponses[keyof DeleteQualityControlResponses]
+
+export type GetQualityControlData = {
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/quality-controls/{id}'
+}
+
+export type GetQualityControlErrors = {
+  /**
+   * Not Found
+   */
+  404: ApiErrorResponse
+}
+
+export type GetQualityControlError =
+  GetQualityControlErrors[keyof GetQualityControlErrors]
+
+export type GetQualityControlResponses = {
+  /**
+   * OK
+   */
+  200: QualityControlDto
+}
+
+export type GetQualityControlResponse =
+  GetQualityControlResponses[keyof GetQualityControlResponses]
+
+export type UpdateQualityControlData = {
+  body: QualityControlUpdateDto
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/quality-controls/{id}'
+}
+
+export type UpdateQualityControlErrors = {
+  /**
+   * Bad Request
+   */
+  400: ApiErrorResponse
+  /**
+   * Conflict
+   */
+  409: ApiErrorResponse
+}
+
+export type UpdateQualityControlError =
+  UpdateQualityControlErrors[keyof UpdateQualityControlErrors]
+
+export type UpdateQualityControlResponses = {
+  /**
+   * Created
+   */
+  201: QualityControlDto
+}
+
+export type UpdateQualityControlResponse =
+  UpdateQualityControlResponses[keyof UpdateQualityControlResponses]
+
 export type DeleteQualityData = {
   body?: never
   path: {
@@ -1744,122 +1905,6 @@ export type UpdateQualityResponses = {
    */
   200: unknown
 }
-
-export type DeleteQualityControlData = {
-  body?: never
-  path: {
-    /**
-     * Identifiant de la ressource
-     */
-    productId: number
-    /**
-     * Identifiant de la ressource
-     */
-    id: number
-  }
-  query?: never
-  url: '/api/products/{productId}/quality-controls/{id}'
-}
-
-export type DeleteQualityControlErrors = {
-  /**
-   * Not Found
-   */
-  404: ApiErrorResponse
-}
-
-export type DeleteQualityControlError =
-  DeleteQualityControlErrors[keyof DeleteQualityControlErrors]
-
-export type DeleteQualityControlResponses = {
-  /**
-   * OK
-   */
-  200: unknown
-  /**
-   * No Content
-   */
-  204: void
-}
-
-export type DeleteQualityControlResponse =
-  DeleteQualityControlResponses[keyof DeleteQualityControlResponses]
-
-export type GetQualityControlData = {
-  body?: never
-  path: {
-    /**
-     * Identifiant de la ressource
-     */
-    productId: number
-    /**
-     * Identifiant de la ressource
-     */
-    id: number
-  }
-  query?: never
-  url: '/api/products/{productId}/quality-controls/{id}'
-}
-
-export type GetQualityControlErrors = {
-  /**
-   * Not Found
-   */
-  404: ApiErrorResponse
-}
-
-export type GetQualityControlError =
-  GetQualityControlErrors[keyof GetQualityControlErrors]
-
-export type GetQualityControlResponses = {
-  /**
-   * OK
-   */
-  200: QualityControlDto
-}
-
-export type GetQualityControlResponse =
-  GetQualityControlResponses[keyof GetQualityControlResponses]
-
-export type UpdateQualityControlData = {
-  body: QualityControlUpdateDto
-  path: {
-    /**
-     * Identifiant de la ressource
-     */
-    productId: number
-    /**
-     * Identifiant de la ressource
-     */
-    id: number
-  }
-  query?: never
-  url: '/api/products/{productId}/quality-controls/{id}'
-}
-
-export type UpdateQualityControlErrors = {
-  /**
-   * Bad Request
-   */
-  400: ApiErrorResponse
-  /**
-   * Conflict
-   */
-  409: ApiErrorResponse
-}
-
-export type UpdateQualityControlError =
-  UpdateQualityControlErrors[keyof UpdateQualityControlErrors]
-
-export type UpdateQualityControlResponses = {
-  /**
-   * Created
-   */
-  201: QualityControlDto
-}
-
-export type UpdateQualityControlResponse =
-  UpdateQualityControlResponses[keyof UpdateQualityControlResponses]
 
 export type DeleteProductData = {
   body?: never
@@ -2612,6 +2657,40 @@ export type UpdateBidResponses = {
 
 export type UpdateBidResponse = UpdateBidResponses[keyof UpdateBidResponses]
 
+export type RejectBidData = {
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    auctionId: number
+    /**
+     * Identifiant de la ressource
+     */
+    bidId: number
+  }
+  query?: never
+  url: '/api/auctions/{auctionId}/bids/{bidId}/reject'
+}
+
+export type RejectBidErrors = {
+  /**
+   * Not Found
+   */
+  404: ApiErrorResponse
+}
+
+export type RejectBidError = RejectBidErrors[keyof RejectBidErrors]
+
+export type RejectBidResponses = {
+  /**
+   * OK
+   */
+  200: BidDto
+}
+
+export type RejectBidResponse = RejectBidResponses[keyof RejectBidResponses]
+
 export type AcceptBidData = {
   body?: never
   path: {
@@ -2999,6 +3078,54 @@ export type CreateRegionResponses = {
 export type CreateRegionResponse =
   CreateRegionResponses[keyof CreateRegionResponses]
 
+export type ListQualityControlsData = {
+  body?: never
+  path?: never
+  query?: never
+  url: '/api/quality-controls'
+}
+
+export type ListQualityControlsResponses = {
+  /**
+   * Liste récupérée avec succès
+   */
+  200: Array<QualityControlDto>
+}
+
+export type ListQualityControlsResponse =
+  ListQualityControlsResponses[keyof ListQualityControlsResponses]
+
+export type CreateQualityControlData = {
+  body: QualityControlUpdateDto
+  path?: never
+  query?: never
+  url: '/api/quality-controls'
+}
+
+export type CreateQualityControlErrors = {
+  /**
+   * Bad Request
+   */
+  400: ApiErrorResponse
+  /**
+   * Conflict
+   */
+  409: ApiErrorResponse
+}
+
+export type CreateQualityControlError =
+  CreateQualityControlErrors[keyof CreateQualityControlErrors]
+
+export type CreateQualityControlResponses = {
+  /**
+   * Created
+   */
+  201: QualityControlDto
+}
+
+export type CreateQualityControlResponse =
+  CreateQualityControlResponses[keyof CreateQualityControlResponses]
+
 export type ListQualitiesData = {
   body?: never
   path?: never
@@ -3112,61 +3239,6 @@ export type CreateProductResponses = {
 
 export type CreateProductResponse =
   CreateProductResponses[keyof CreateProductResponses]
-
-export type ListQualityControlsData = {
-  body?: never
-  path: {
-    productId: number
-  }
-  query?: never
-  url: '/api/products/{productId}/quality-controls'
-}
-
-export type ListQualityControlsResponses = {
-  /**
-   * Liste récupérée avec succès
-   */
-  200: Array<QualityControlDto>
-}
-
-export type ListQualityControlsResponse =
-  ListQualityControlsResponses[keyof ListQualityControlsResponses]
-
-export type CreateQualityControlData = {
-  body: QualityControlUpdateDto
-  path: {
-    /**
-     * Identifiant de la ressource
-     */
-    productId: number
-  }
-  query?: never
-  url: '/api/products/{productId}/quality-controls'
-}
-
-export type CreateQualityControlErrors = {
-  /**
-   * Bad Request
-   */
-  400: ApiErrorResponse
-  /**
-   * Conflict
-   */
-  409: ApiErrorResponse
-}
-
-export type CreateQualityControlError =
-  CreateQualityControlErrors[keyof CreateQualityControlErrors]
-
-export type CreateQualityControlResponses = {
-  /**
-   * Created
-   */
-  201: QualityControlDto
-}
-
-export type CreateQualityControlResponse =
-  CreateQualityControlResponses[keyof CreateQualityControlResponses]
 
 export type ListLanguagesData = {
   body?: never

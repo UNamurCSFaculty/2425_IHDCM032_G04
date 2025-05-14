@@ -5,6 +5,7 @@ import { useAppForm } from '@/components/form'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Card, CardContent } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
+import { formatDate } from '@/lib/utils'
 import { useAuthUser } from '@/store/userStore'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
@@ -105,7 +106,7 @@ export function AuctionForm({
                                     'Lot n°' +
                                     product.id +
                                     ' - ' +
-                                    product.type +
+                                    t('database.' + product.type) +
                                     ' ' +
                                     product.weightKg +
                                     ' kg @ ' +
@@ -193,13 +194,16 @@ export function AuctionForm({
                               <TableRow>
                                 <TableCell>Marchandise</TableCell>
                                 <TableCell>
-                                  {selectedProduct?.type || 'N/A'}
+                                  {selectedProduct
+                                    ? t('database.' + selectedProduct.type)
+                                    : 'N/A'}
                                 </TableCell>
                               </TableRow>
                               <TableRow>
                                 <TableCell>Qualité</TableCell>
                                 <TableCell>
-                                  {selectedProduct?.qualityControlId || 'N/A'}
+                                  {selectedProduct?.qualityControl.quality
+                                    .name || 'N/A'}
                                 </TableCell>
                               </TableRow>
                               <TableRow>
@@ -213,12 +217,16 @@ export function AuctionForm({
                               <TableRow>
                                 <TableCell>Date de dépôt</TableCell>
                                 <TableCell>
-                                  {selectedProduct?.deliveryDate || 'N/A'}
+                                  {selectedProduct
+                                    ? formatDate(selectedProduct.deliveryDate)
+                                    : 'N/A'}
                                 </TableCell>
                               </TableRow>
                               <TableRow>
                                 <TableCell>Magasin</TableCell>
-                                <TableCell>N/A</TableCell>
+                                <TableCell>
+                                  {selectedProduct?.store.name || 'N/A'}
+                                </TableCell>
                               </TableRow>
                             </TableBody>
                           </Table>

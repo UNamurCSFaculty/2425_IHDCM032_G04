@@ -58,7 +58,7 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		productDto.setId(getTestHarvestProduct().getId());
 
 		TradeStatusDto statusDto = new TradeStatusDto();
-		statusDto.setId(getTestAuctionStatus().getId());
+		statusDto.setId(getTestTradeStatus().getId());
 
 		AuctionUpdateDto newAuction = new AuctionUpdateDto();
 		newAuction.setPrice(new BigDecimal("111.11"));
@@ -179,7 +179,7 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		productDto.setId(getTestHarvestProduct().getId());
 
 		TradeStatusDto statusDto = new TradeStatusDto();
-		statusDto.setId(getTestAuctionStatus().getId());
+		statusDto.setId(getTestTradeStatus().getId());
 
 		AuctionUpdateDto updateAuction = new AuctionUpdateDto();
 		updateAuction.setPrice(new BigDecimal("999.99"));

@@ -22,7 +22,6 @@ import { Route as ContactMerciImport } from './routes/contact/merci'
 import { Route as IndexImport } from './routes/index'
 import { Route as LoginImport } from './routes/login'
 import { Route as SignupImport } from './routes/signup'
-import { Route as TestHistoriqueImport } from './routes/test/historique'
 
 // Create/Update Routes
 
@@ -52,12 +51,6 @@ const IndexRoute = IndexImport.update({
 const ContactIndexRoute = ContactIndexImport.update({
   id: '/contact/',
   path: '/contact/',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const TestHistoriqueRoute = TestHistoriqueImport.update({
-  id: '/test/historique',
-  path: '/test/historique',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -175,13 +168,6 @@ declare module '@tanstack/react-router' {
       path: '/contact/merci'
       fullPath: '/contact/merci'
       preLoaderRoute: typeof ContactMerciImport
-      parentRoute: typeof rootRoute
-    }
-    '/test/historique': {
-      id: '/test/historique'
-      path: '/test/historique'
-      fullPath: '/test/historique'
-      preLoaderRoute: typeof TestHistoriqueImport
       parentRoute: typeof rootRoute
     }
     '/contact/': {
@@ -304,7 +290,6 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/contact/merci': typeof ContactMerciRoute
-  '/test/historique': typeof TestHistoriqueRoute
   '/contact': typeof ContactIndexRoute
   '/achats/historique': typeof AuthenticatedAchatsHistoriqueRoute
   '/achats/nouvelle-enchere': typeof AuthenticatedAchatsNouvelleEnchereRoute
@@ -324,7 +309,6 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/contact/merci': typeof ContactMerciRoute
-  '/test/historique': typeof TestHistoriqueRoute
   '/contact': typeof ContactIndexRoute
   '/achats/historique': typeof AuthenticatedAchatsHistoriqueRoute
   '/achats/nouvelle-enchere': typeof AuthenticatedAchatsNouvelleEnchereRoute
@@ -345,7 +329,6 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/contact/merci': typeof ContactMerciRoute
-  '/test/historique': typeof TestHistoriqueRoute
   '/contact/': typeof ContactIndexRoute
   '/_authenticated/achats/historique': typeof AuthenticatedAchatsHistoriqueRoute
   '/_authenticated/achats/nouvelle-enchere': typeof AuthenticatedAchatsNouvelleEnchereRoute
@@ -367,7 +350,6 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/contact/merci'
-    | '/test/historique'
     | '/contact'
     | '/achats/historique'
     | '/achats/nouvelle-enchere'
@@ -386,7 +368,6 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/contact/merci'
-    | '/test/historique'
     | '/contact'
     | '/achats/historique'
     | '/achats/nouvelle-enchere'
@@ -405,7 +386,6 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/contact/merci'
-    | '/test/historique'
     | '/contact/'
     | '/_authenticated/achats/historique'
     | '/_authenticated/achats/nouvelle-enchere'
@@ -426,7 +406,6 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
   ContactMerciRoute: typeof ContactMerciRoute
-  TestHistoriqueRoute: typeof TestHistoriqueRoute
   ContactIndexRoute: typeof ContactIndexRoute
 }
 
@@ -436,7 +415,6 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
   ContactMerciRoute: ContactMerciRoute,
-  TestHistoriqueRoute: TestHistoriqueRoute,
   ContactIndexRoute: ContactIndexRoute,
 }
 
@@ -455,7 +433,6 @@ export const routeTree = rootRoute
         "/login",
         "/signup",
         "/contact/merci",
-        "/test/historique",
         "/contact/"
       ]
     },
@@ -485,9 +462,6 @@ export const routeTree = rootRoute
     },
     "/contact/merci": {
       "filePath": "contact/merci.tsx"
-    },
-    "/test/historique": {
-      "filePath": "test/historique.tsx"
     },
     "/contact/": {
       "filePath": "contact/index.tsx"

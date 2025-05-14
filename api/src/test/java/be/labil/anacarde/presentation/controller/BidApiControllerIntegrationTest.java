@@ -43,7 +43,7 @@ public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 	public void testCreateBid() throws Exception {
 		BidUpdateDto newBid = new BidUpdateDto();
 		newBid.setAmount(new BigDecimal("999.99"));
-		newBid.setStatusId(getTestBidStatus().getId());
+		newBid.setStatusId(getTestTradeStatus().getId());
 		newBid.setCreationDate(LocalDateTime.now());
 		newBid.setTraderId(getProducerTestUser().getId());
 		newBid.setAuctionId(getTestAuction().getId());
@@ -59,7 +59,7 @@ public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 						containsString("/api/auctions/" + getTestAuction().getId() + "/bids/")))
 				.andExpect(jsonPath("$.amount").value("999.99"))
 				.andExpect(jsonPath("$.amount").value("999.99"))
-				.andExpect(jsonPath("$.status.id").value(getTestBidStatus().getId()));
+				.andExpect(jsonPath("$.status.id").value(getTestTradeStatus().getId()));
 
 		Bid createdBid = bidRepository.findAll().stream()
 				.filter(bid -> bid.getAmount().equals(new BigDecimal("999.99"))).findFirst()
@@ -113,7 +113,7 @@ public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 		BidUpdateDto updateBid = new BidUpdateDto();
 		updateBid.setAmount(new BigDecimal("1234567.01"));
 		updateBid.setAuctionId(getTestAuction().getId());
-		updateBid.setStatusId(getTestBidStatus().getId());
+		updateBid.setStatusId(getTestTradeStatus().getId());
 		updateBid.setCreationDate(LocalDateTime.now());
 		updateBid.setTraderId(getProducerTestUser().getId());
 		updateBid.setAuctionId(getTestAuction().getId());
@@ -140,6 +140,17 @@ public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 						+ "/accept").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
 				.andExpect(status().isOk()).andExpect(jsonPath("$.amount").value("10.0"))
 				.andExpect(jsonPath("$.status.name").value("Accepté"));
+	}
+
+	@Test
+	public void testRejectBid() throws Exception {
+		String jsonContent = "";
+
+		mockMvc.perform(
+				put("/api/auctions/" + getTestAuction().getId() + "/bids/" + getTestBid().getId()
+						+ "/reject").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.amount").value("10.0"))
+				.andExpect(jsonPath("$.status.name").value("Refusé"));
 	}
 
 	/**

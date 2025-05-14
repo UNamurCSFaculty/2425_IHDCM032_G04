@@ -172,6 +172,9 @@ import type {
   ListUsersData,
   ListUsersResponse,
   LogoutData,
+  RejectBidData,
+  RejectBidError,
+  RejectBidResponse,
   SendContactMessageData,
   SendContactMessageError,
   UpdateAuctionData,
@@ -574,6 +577,76 @@ export const updateRegion = <ThrowOnError extends boolean = false>(
 }
 
 /**
+ * Supprimer un contrôle qualité
+ */
+export const deleteQualityControl = <ThrowOnError extends boolean = false>(
+  options: Options<DeleteQualityControlData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).delete<
+    DeleteQualityControlResponse,
+    DeleteQualityControlError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/quality-controls/{id}',
+    ...options,
+  })
+}
+
+/**
+ * Obtenir un contrôle qualité
+ */
+export const getQualityControl = <ThrowOnError extends boolean = false>(
+  options: Options<GetQualityControlData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).get<
+    GetQualityControlResponse,
+    GetQualityControlError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/quality-controls/{id}',
+    ...options,
+  })
+}
+
+/**
+ * Mettre à jour un contrôle qualité
+ */
+export const updateQualityControl = <ThrowOnError extends boolean = false>(
+  options: Options<UpdateQualityControlData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).put<
+    UpdateQualityControlResponse,
+    UpdateQualityControlError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/quality-controls/{id}',
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options?.headers,
+    },
+  })
+}
+
+/**
  * Supprimer une qualité
  */
 export const deleteQuality = <ThrowOnError extends boolean = false>(
@@ -635,76 +708,6 @@ export const updateQuality = <ThrowOnError extends boolean = false>(
       },
     ],
     url: '/api/qualities/{id}',
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...options?.headers,
-    },
-  })
-}
-
-/**
- * Supprimer un contrôle qualité
- */
-export const deleteQualityControl = <ThrowOnError extends boolean = false>(
-  options: Options<DeleteQualityControlData, ThrowOnError>
-) => {
-  return (options.client ?? _heyApiClient).delete<
-    DeleteQualityControlResponse,
-    DeleteQualityControlError,
-    ThrowOnError
-  >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
-    url: '/api/products/{productId}/quality-controls/{id}',
-    ...options,
-  })
-}
-
-/**
- * Obtenir un contrôle qualité
- */
-export const getQualityControl = <ThrowOnError extends boolean = false>(
-  options: Options<GetQualityControlData, ThrowOnError>
-) => {
-  return (options.client ?? _heyApiClient).get<
-    GetQualityControlResponse,
-    GetQualityControlError,
-    ThrowOnError
-  >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
-    url: '/api/products/{productId}/quality-controls/{id}',
-    ...options,
-  })
-}
-
-/**
- * Mettre à jour un contrôle qualité
- */
-export const updateQualityControl = <ThrowOnError extends boolean = false>(
-  options: Options<UpdateQualityControlData, ThrowOnError>
-) => {
-  return (options.client ?? _heyApiClient).put<
-    UpdateQualityControlResponse,
-    UpdateQualityControlError,
-    ThrowOnError
-  >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
-    url: '/api/products/{productId}/quality-controls/{id}',
     ...options,
     headers: {
       'Content-Type': 'application/json',
@@ -1229,6 +1232,28 @@ export const updateBid = <ThrowOnError extends boolean = false>(
 }
 
 /**
+ * Rejeter une offre
+ */
+export const rejectBid = <ThrowOnError extends boolean = false>(
+  options: Options<RejectBidData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).put<
+    RejectBidResponse,
+    RejectBidError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/auctions/{auctionId}/bids/{bidId}/reject',
+    ...options,
+  })
+}
+
+/**
  * Accepter une offre
  */
 export const acceptBid = <ThrowOnError extends boolean = false>(
@@ -1538,6 +1563,54 @@ export const createRegion = <ThrowOnError extends boolean = false>(
 }
 
 /**
+ * Lister tous les contrôles qualité d’un produit
+ */
+export const listQualityControls = <ThrowOnError extends boolean = false>(
+  options?: Options<ListQualityControlsData, ThrowOnError>
+) => {
+  return (options?.client ?? _heyApiClient).get<
+    ListQualityControlsResponse,
+    unknown,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/quality-controls',
+    ...options,
+  })
+}
+
+/**
+ * Créer un contrôle qualité
+ */
+export const createQualityControl = <ThrowOnError extends boolean = false>(
+  options: Options<CreateQualityControlData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).post<
+    CreateQualityControlResponse,
+    CreateQualityControlError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/quality-controls',
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options?.headers,
+    },
+  })
+}
+
+/**
  * Obtenir toutes les qualités
  */
 export const listQualities = <ThrowOnError extends boolean = false>(
@@ -1625,54 +1698,6 @@ export const createProduct = <ThrowOnError extends boolean = false>(
       },
     ],
     url: '/api/products',
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...options?.headers,
-    },
-  })
-}
-
-/**
- * Lister tous les contrôles qualité d’un produit
- */
-export const listQualityControls = <ThrowOnError extends boolean = false>(
-  options: Options<ListQualityControlsData, ThrowOnError>
-) => {
-  return (options.client ?? _heyApiClient).get<
-    ListQualityControlsResponse,
-    unknown,
-    ThrowOnError
-  >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
-    url: '/api/products/{productId}/quality-controls',
-    ...options,
-  })
-}
-
-/**
- * Créer un contrôle qualité
- */
-export const createQualityControl = <ThrowOnError extends boolean = false>(
-  options: Options<CreateQualityControlData, ThrowOnError>
-) => {
-  return (options.client ?? _heyApiClient).post<
-    CreateQualityControlResponse,
-    CreateQualityControlError,
-    ThrowOnError
-  >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
-    url: '/api/products/{productId}/quality-controls',
     ...options,
     headers: {
       'Content-Type': 'application/json',
