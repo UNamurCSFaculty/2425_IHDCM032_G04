@@ -5,11 +5,12 @@ import type { AuctionDto } from '@/api/generated'
 import {
   acceptAuctionMutation,
   acceptBidMutation,
+  listAuctionsQueryKey,
   rejectBidMutation,
 } from '@/api/generated/@tanstack/react-query.gen'
 import { Button } from '@/components/ui/button'
 import { TradeStatus } from '@/lib/utils'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import React, { useState } from 'react'
 
 const ITEMS_PER_PAGE = 3
@@ -35,6 +36,8 @@ export const SellerAuctions: React.FC<SellerAuctionsProps> = ({ auctions }) => {
 
   const selectedAuction = auctions.find(a => a.id === selectedId)
 
+  const queryClient = useQueryClient()
+
   const { mutate: acceptAuction } = useMutation(acceptAuctionMutation())
   const { mutate: acceptBid } = useMutation(acceptBidMutation())
   const { mutate: rejectBid } = useMutation(rejectBidMutation())
@@ -47,9 +50,10 @@ export const SellerAuctions: React.FC<SellerAuctionsProps> = ({ auctions }) => {
     if (action == 'accept') {
       acceptBid({ path: { auctionId, bidId } })
       acceptAuction({ path: { id: auctionId } })
-    } else if (action == 'reject') {
+    } else {
       rejectBid({ path: { auctionId, bidId } })
     }
+    queryClient.invalidateQueries({ queryKey: listAuctionsQueryKey() })
   }
 
   return (
