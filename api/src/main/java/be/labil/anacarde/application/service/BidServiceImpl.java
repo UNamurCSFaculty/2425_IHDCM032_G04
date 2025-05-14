@@ -78,7 +78,6 @@ public class BidServiceImpl implements BidService {
 				.orElseThrow(() -> new ResourceNotFoundException("Offre non trouvée"));
 		existingBid.setStatus(acceptedStatus);
 
-		bidRepository.findByAuctionId(existingBid.getId());
 		Bid acceptedBid = bidRepository.save(existingBid);
 
 		// Reject all other bids
