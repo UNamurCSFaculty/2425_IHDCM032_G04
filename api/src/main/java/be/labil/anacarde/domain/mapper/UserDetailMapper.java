@@ -12,9 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
  * Les Producteurs sont mappés dans un mapper dédié (ProducerDetailMapper) pour éviter les
  * ambiguïtés.
  */
-@Mapper(componentModel = "spring", uses = {MapperHelpers.class, MapperHelpers.class,
-		RoleMapper.class, LanguageMapper.class, AddressMapper.class,
-		CooperativeMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring", uses = {MapperHelpers.class, RoleMapper.class,
+		LanguageMapper.class, AddressMapper.class, CooperativeMapper.class,
+		DocumentMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class UserDetailMapper {
 
 	@Autowired
@@ -158,24 +158,28 @@ public abstract class UserDetailMapper {
 	@Mapping(target = "roles", ignore = true)
 	@Mapping(target = "id", ignore = true)
 	@Mapping(source = "address", target = "address")
+	@Mapping(target = "documents", ignore = true)
 	public abstract void partialUpdate(AdminUpdateDto dto, @MappingTarget Admin entity);
 
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 	@Mapping(target = "roles", ignore = true)
 	@Mapping(target = "id", ignore = true)
 	@Mapping(source = "address", target = "address")
+	@Mapping(target = "documents", ignore = true)
 	public abstract void partialUpdate(ExporterUpdateDto dto, @MappingTarget Exporter entity);
 
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 	@Mapping(target = "roles", ignore = true)
 	@Mapping(target = "id", ignore = true)
 	@Mapping(source = "address", target = "address")
+	@Mapping(target = "documents", ignore = true)
 	public abstract void partialUpdate(CarrierUpdateDto dto, @MappingTarget Carrier entity);
 
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 	@Mapping(target = "roles", ignore = true)
 	@Mapping(target = "id", ignore = true)
 	@Mapping(source = "address", target = "address")
+	@Mapping(target = "documents", ignore = true)
 	public abstract void partialUpdate(QualityInspectorUpdateDto dto,
 			@MappingTarget QualityInspector entity);
 
@@ -183,6 +187,7 @@ public abstract class UserDetailMapper {
 	@Mapping(target = "roles", ignore = true)
 	@Mapping(target = "id", ignore = true)
 	@Mapping(source = "address", target = "address")
+	@Mapping(target = "documents", ignore = true)
 	public abstract void partialUpdate(TransformerUpdateDto dto, @MappingTarget Transformer entity);
 
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
@@ -190,6 +195,7 @@ public abstract class UserDetailMapper {
 	@Mapping(target = "cooperative", ignore = true)
 	@Mapping(target = "id", ignore = true)
 	@Mapping(source = "address", target = "address")
+	@Mapping(target = "documents", ignore = true)
 	public abstract void partialUpdate(ProducerUpdateDto dto, @MappingTarget Producer entity);
 
 	/**

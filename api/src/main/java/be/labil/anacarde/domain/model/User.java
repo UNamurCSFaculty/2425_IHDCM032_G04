@@ -2,10 +2,7 @@ package be.labil.anacarde.domain.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -62,6 +59,9 @@ public abstract class User extends BaseEntity implements UserDetails {
 	@ManyToOne
 	@JoinColumn(nullable = false)
 	private Language language;
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	private List<Document> documents = new ArrayList<>();
 
 	/**
 	 * Ajoute un rôle à cet utilisateur et met à jour le côté inverse (le rôle) pour maintenir la
