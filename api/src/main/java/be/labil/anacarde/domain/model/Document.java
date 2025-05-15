@@ -10,29 +10,40 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
-@Table(name = "document", indexes = {@Index(columnList = "user_id")})
+@Table(name = "document", indexes = @Index(columnList = "user_id"))
 @Getter
 @Setter
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-/** Entité représentant un document dans le système. */
 public class Document extends BaseEntity {
 
+	/** MIME type, ex. : `application/pdf` */
 	@Column(nullable = false)
-	private String type;
+	private String contentType;
 
+	/** Nom original du fichier pour l’affichage */
 	@Column(nullable = false)
-	private String format;
+	private String originalFilename;
 
+	/** Taille du fichier en octets */
+	@Column(nullable = false)
+	private long size;
+
+	/** Extension (pdf, jpg, …) – pratique pour filtrer rapidement */
+	@Column(nullable = false, length = 10)
+	private String extension;
+
+	/** Emplacement final (chemin disque ou clé S3) */
 	@Column(nullable = false)
 	private String storagePath;
 
-	@Column(nullable = false, updatable = false)
 	@CreationTimestamp
+	@Column(nullable = false, updatable = false)
 	private LocalDateTime uploadDate;
 
+	/* relations */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id")
+	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 }

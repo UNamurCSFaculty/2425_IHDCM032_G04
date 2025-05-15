@@ -541,6 +541,17 @@ public abstract class AbstractIntegrationTest {
 		p.setCooperative(mainTestCooperative);
 		producerTestUser = userRepository.save(p);
 
+		// A document with a qualityInspector
+		Document document = Document.builder().contentType("QUALITY")
+				.originalFilename("attestation.pdf").size(212).extension("PDF")
+				.storagePath("/storage").user(qualityInspector).uploadDate(LocalDateTime.now())
+				.build();
+		mainTestDocument = documentRepository.save(document);
+
+		// A quality
+		Quality quality = Quality.builder().name("WW160").build();
+		mainTestQuality = qualityRepository.save(quality);
+
 		// A contract
 		ContractOffer contractOffer = ContractOffer.builder().status("Accepted")
 				.pricePerKg(new BigDecimal("20.0")).creationDate(LocalDateTime.now())
