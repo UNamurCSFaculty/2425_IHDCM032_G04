@@ -167,6 +167,11 @@
             <version>${hibernate-spatial.version}</version>
         </dependency>
         <dependency>
+            <groupId>net.datafaker</groupId>
+            <artifactId>datafaker</artifactId>
+            <version>2.4.3</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-wrapper-plugin</artifactId>
             <version>${maven.wrapper.version}</version>
