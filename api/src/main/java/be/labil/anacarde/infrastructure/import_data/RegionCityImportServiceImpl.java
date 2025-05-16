@@ -48,16 +48,16 @@ public class RegionCityImportServiceImpl implements RegionCityImportService {
 	public List<City> importCities(String jsonClasspath, Map<Integer, Region> regions)
 			throws IOException {
 		List<CityImportDto> dtos = mapper.readValue(getClass().getResourceAsStream(jsonClasspath),
-				new TypeReference<List<CityImportDto>>() {
+				new TypeReference<>() {
 				});
 
 		List<City> cities = dtos.stream().map(dto -> {
 			double lat = Double.parseDouble(dto.getLat().replace(",", "."));
-			double lng = Double.parseDouble(dto.getLng().replace(",", "."));
+			double lng = Double.parseDouble(dto.getLon().replace(",", "."));
 			Point location = geometryFactory.createPoint(new Coordinate(lng, lat));
 
-			return City.builder().id(dto.getId()).name(dto.getN()).region(regions.get(dto.getRid()))
-					.location(location).build();
+			return City.builder().id(dto.getId()).name(dto.getName())
+					.region(regions.get(dto.getRegion())).location(location).build();
 		}).collect(Collectors.toList());
 
 		return cityRepository.saveAll(cities);

@@ -9,6 +9,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
@@ -24,11 +25,13 @@ public class UserControllerApiController implements UserApi {
 	}
 
 	@Override
-	public ResponseEntity<UserDetailDto> createUser(UserUpdateDto userUpdateDto) {
-		// userUpdateDto.setId(null);
-		UserDetailDto created = userService.createUser(userUpdateDto);
+	public ResponseEntity<UserDetailDto> createUser(UserUpdateDto user,
+			List<MultipartFile> documents) {
+
+		UserDetailDto created = userService.createUser(user);
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(created.getId()).toUri();
+
 		return ResponseEntity.created(location).body(created);
 	}
 
