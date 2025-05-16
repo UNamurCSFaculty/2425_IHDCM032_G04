@@ -9,9 +9,11 @@ import io.swagger.v3.oas.annotations.media.DiscriminatorMapping;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * DTO pour l'entité User.
@@ -96,4 +98,10 @@ public abstract class UserUpdateDto {
 	@Schema(description = "Adresse de l'utilisateur", requiredMode = Schema.RequiredMode.REQUIRED)
 	@NotNull(message = "L'adresse est requise")
 	private AddressDto address;
+	/*
+	 * @ArraySchema( schema = @Schema(type = "string", format = "binary", description =
+	 * "Fichiers à uploader") )
+	 */
+	@Schema(description = "Fichiers à uploader", implementation = MultipartFile[].class)
+	private List<MultipartFile> documents;
 }

@@ -5,9 +5,8 @@ import lombok.Data;
 @Data
 public class CityImportDto {
 	public int id;
-	public String n;
-	public int rid;
+	public String name;
+	public int region;
 	public String lat;
-	public String lng;
-	public long pop;
+	public String lon;
 }

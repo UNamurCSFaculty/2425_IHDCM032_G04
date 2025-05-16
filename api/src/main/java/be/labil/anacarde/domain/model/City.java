@@ -30,6 +30,4 @@ public class City {
 
 	@JdbcTypeCode(SqlTypes.GEOMETRY)
 	private Point location;
-
-	Long population;
 }

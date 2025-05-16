@@ -7,21 +7,24 @@ import be.labil.anacarde.domain.dto.db.user.UserListDto;
 import be.labil.anacarde.domain.dto.write.user.UserUpdateDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.StringToClassMapItem;
+import io.swagger.v3.oas.annotations.media.*;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.groups.Default;
 import java.util.List;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Cette API offre des points d'accès permettant de récupérer, créer, mettre à jour et supprimer des
@@ -52,21 +55,46 @@ public interface UserApi {
 	 * Crée un nouvel utilisateur en utilisant le groupe de validation "Create", qui rend le champ
 	 * mot de passe obligatoire.
 	 *
-	 * @param userUpdateDto
-	 *            Les données de l'utilisateur à créer.
+	 * @param user
+	 *            Les détails de l'utilisateur à créer.
+	 * @param documents
+	 *            Liste de fichiers à télécharger pour l'utilisateur.
 	 * @return Une ResponseEntity contenant les détails de l'utilisateur créé.
 	 */
-	@Operation(summary = "Créer un utilisateur", description = "Crée un nouvel utilisateur dans le système.")
-	// @Parameter(name = "type", description = "Type d'utilisateur. Valeurs possibles: ", example =
-	// "admin", required =
-	// true)
+	/*
+	 * @Operation(summary = "Créer un utilisateur", description =
+	 * "Crée un nouvel utilisateur dans le système.") // @Parameter(name = "type", description =
+	 * "Type d'utilisateur. Valeurs possibles: ", example = // "admin", required = // true)
+	 * 
+	 * @ApiResponses({
+	 * 
+	 * @ApiResponse(responseCode = "201", description = "Utilisateur créé avec succès", content
+	 * = @Content(schema = @Schema(implementation = UserDetailDto.class, discriminatorProperty =
+	 * "type"))),
+	 * 
+	 * @ApiResponse(responseCode = "400", description = "Erreur de validation ou JSON invalide",
+	 * content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
+	 * 
+	 * @ApiResponse(responseCode = "409", description = "Conflit avec un utilisateur existant",
+	 * content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
+	 * 
+	 * @PostMapping(consumes = "application/json")
+	 */
+	@Operation(summary = "Créer un utilisateur et téléverser éventuellement des documents")
+	@RequestBody(required = true, content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE, schema = @Schema(type = "object", properties = {
+			@StringToClassMapItem(key = "user", value = UserUpdateDto.class),
+			@StringToClassMapItem(key = "documents", value = MultipartFile[].class)}), encoding = {
+					@Encoding(name = "user", contentType = MediaType.APPLICATION_JSON_VALUE),
+					@Encoding(name = "documents", contentType = MediaType.APPLICATION_OCTET_STREAM_VALUE)}))
 	@ApiResponses({
 			@ApiResponse(responseCode = "201", description = "Utilisateur créé avec succès", content = @Content(schema = @Schema(implementation = UserDetailDto.class, discriminatorProperty = "type"))),
 			@ApiResponse(responseCode = "400", description = "Erreur de validation ou JSON invalide", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
 			@ApiResponse(responseCode = "409", description = "Conflit avec un utilisateur existant", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
-	@PostMapping(consumes = "application/json")
-	ResponseEntity<? extends UserDetailDto> createUser(@Validated({Default.class,
-			ValidationGroups.Create.class}) @RequestBody UserUpdateDto userUpdateDto);
+	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	ResponseEntity<? extends UserDetailDto> createUser(
+			@Validated({Default.class,
+					ValidationGroups.Create.class}) @RequestPart("user") @Valid UserUpdateDto user,
+			@RequestPart(value = "documents", required = false) List<MultipartFile> documents);
 
 	/**
 	 * Récupère la liste de tous les utilisateurs.

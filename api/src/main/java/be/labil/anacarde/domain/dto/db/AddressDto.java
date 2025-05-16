@@ -1,7 +1,6 @@
 package be.labil.anacarde.domain.dto.db;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -21,7 +20,7 @@ public class AddressDto {
 	@Schema(description = "Id de la ville", example = "Bompoko")
 	private Integer cityId;
 
-	@NotNull(message = "La région est requise")
-	@Schema(description = "Id de la région", example = "Sud", requiredMode = Schema.RequiredMode.REQUIRED)
+	// @NotNull(message = "La région est requise")
+	@Schema(description = "Id de la région", example = "Sud")
 	private Integer regionId;
 }
