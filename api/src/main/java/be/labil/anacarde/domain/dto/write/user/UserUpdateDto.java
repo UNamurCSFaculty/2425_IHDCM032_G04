@@ -5,6 +5,7 @@ import be.labil.anacarde.domain.dto.db.RoleDto;
 import be.labil.anacarde.domain.dto.db.ValidationGroups;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.DiscriminatorMapping;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
@@ -98,10 +99,8 @@ public abstract class UserUpdateDto {
 	@Schema(description = "Adresse de l'utilisateur", requiredMode = Schema.RequiredMode.REQUIRED)
 	@NotNull(message = "L'adresse est requise")
 	private AddressDto address;
-	/*
-	 * @ArraySchema( schema = @Schema(type = "string", format = "binary", description =
-	 * "Fichiers à uploader") )
-	 */
+
+	@ArraySchema(schema = @Schema(type = "string", format = "binary", description = "Fichiers à uploader"))
 	@Schema(description = "Fichiers à uploader", implementation = MultipartFile[].class)
 	private List<MultipartFile> documents;
 }

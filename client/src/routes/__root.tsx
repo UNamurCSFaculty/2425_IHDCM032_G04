@@ -4,8 +4,14 @@ import { FooterCta } from '@/components/FooterCta'
 import { Header } from '@/components/Header'
 import { ContentSkeleton } from '@/components/Skeleton/ContentSkeleton'
 import type { QueryClient } from '@tanstack/react-query'
-import { Outlet, createRootRouteWithContext } from '@tanstack/react-router'
+import {
+  Outlet,
+  createRootRouteWithContext,
+  useRouterState,
+} from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
+
+// Assurez-vous d'importer React
 
 export interface MyRouterContext {
   user?: UserDetailDto
@@ -13,16 +19,38 @@ export interface MyRouterContext {
 }
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
-  component: () => (
-    <>
-      <Header />
-      <Outlet />
-
-      <FooterCta />
-      <Footer />
-      <TanStackRouterDevtools />
-    </>
-  ),
+  component: RootComponent, // Utilisez un composant séparé pour la logique
   errorComponent: () => <div>Erreur de chargement</div>,
   pendingComponent: () => <ContentSkeleton />,
 })
+
+function RootComponent() {
+  const { location } = useRouterState()
+  const isAdminRoute = location.pathname.startsWith('/admin')
+
+  if (isAdminRoute) {
+    // Pour les routes admin, ne rend que l'Outlet (qui chargera le layout admin)
+    // et les devtools.
+    return (
+      <>
+        <Outlet />
+        {import.meta.env.DEV && (
+          <TanStackRouterDevtools position="bottom-right" />
+        )}
+      </>
+    )
+  }
+
+  // Layout public
+  return (
+    <>
+      <Header />
+      <Outlet />
+      <FooterCta />
+      <Footer />
+      {import.meta.env.DEV && (
+        <TanStackRouterDevtools position="bottom-right" />
+      )}
+    </>
+  )
+}

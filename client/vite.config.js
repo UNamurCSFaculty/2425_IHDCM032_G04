@@ -39,6 +39,10 @@ export default defineConfig(({ command }) => ({
     },
     checker({
       typescript: true,
+      overlay: {
+        initialIsOpen: false,
+        position: 'br',
+      },
     }),
   ],
   test: {

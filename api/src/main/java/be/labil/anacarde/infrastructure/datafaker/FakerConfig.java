@@ -1,4 +1,4 @@
-package be.labil.anacarde.infrastructure.data_faker;
+package be.labil.anacarde.infrastructure.datafaker;
 
 import net.datafaker.Faker;
 import org.springframework.context.annotation.Bean;

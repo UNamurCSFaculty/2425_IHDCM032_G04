@@ -23,6 +23,8 @@ import java.math.RoundingMode;
 import java.time.*;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
@@ -62,6 +64,13 @@ public class DatabaseServiceImpl implements DatabaseService {
 	private static final int MAX_BIDS_PER_FINISHED_AUCTION = 30;
 	private static final String DEFAULT_PASSWORD = "password";
 
+	private static final Map<Class<? extends UserUpdateDto>, String> DEFAULT_EMAILS = Map.of(
+			AdminUpdateDto.class, "admin@example.com", ProducerUpdateDto.class,
+			"producer@example.com", TransformerUpdateDto.class, "transformer@example.com",
+			ExporterUpdateDto.class, "exporter@example.com", CarrierUpdateDto.class,
+			"carrier@example.com", QualityInspectorUpdateDto.class,
+			"quality_inspector@example.com");
+
 	// --- Injected Dependencies (Final with Lombok RequiredArgsConstructor) ---
 	private final UserRepository userRepository;
 	private final RoleRepository roleRepository;
@@ -97,7 +106,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 	private final ObjectMapper mapper;
 
 	// --- Internal State ---
-	private final Faker faker = new Faker(new Locale("fr")); // Use French Faker locale
+	private final Faker faker = new Faker(Locale.of("fr")); // Use French Faker locale
 	private final GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326); // SRID
 																										// for
 																										// WGS84
@@ -134,6 +143,11 @@ public class DatabaseServiceImpl implements DatabaseService {
 	private List<CooperativeDto> createdCooperatives = new ArrayList<>();
 	private Map<Integer, List<FieldDto>> producerFieldsMap = new HashMap<>();
 	private List<ProductDto> createdProducts = new ArrayList<>();
+
+	@Override
+	public boolean isInitialized() {
+		return userRepository.count() > 0;
+	}
 
 	@Override
 	public void dropDatabase() {
@@ -287,37 +301,69 @@ public class DatabaseServiceImpl implements DatabaseService {
 
 	// --- Step 3: Users ---
 	private void createUsers() {
-		log.info(
-				"Creating {} Producers, {} Transformers, {} Exporters, {} Admins, {} Carriers, {} Quality_Inspectors",
-				NUM_PRODUCERS, NUM_TRANSFORMERS, NUM_EXPORTERS, NUM_ADMINS, NUM_CARRIERS,
+
+		createdAdmins = createUsersOfType(AdminUpdateDto.class, this::createRandomAdminDto,
+				dto -> (AdminDetailDto) userService.createUser(dto), NUM_ADMINS);
+
+		createdProducers = createUsersOfType(ProducerUpdateDto.class, this::createRandomProducerDto,
+				dto -> (ProducerDetailDto) userService.createUser(dto), NUM_PRODUCERS);
+
+		createdTransformers = createUsersOfType(TransformerUpdateDto.class,
+				this::createRandomTransformerDto,
+				dto -> (TransformerDetailDto) userService.createUser(dto), NUM_TRANSFORMERS);
+
+		createdExporters = createUsersOfType(ExporterUpdateDto.class, this::createRandomExporterDto,
+				dto -> (ExporterDetailDto) userService.createUser(dto), NUM_EXPORTERS);
+
+		createdCarriers = createUsersOfType(CarrierUpdateDto.class, this::createRandomCarrierDto,
+				dto -> (CarrierDetailDto) userService.createUser(dto), NUM_CARRIERS);
+
+		createdQualityInspectors = createUsersOfType(QualityInspectorUpdateDto.class,
+				this::createRandomQualityInspectorDto,
+				dto -> (QualityInspectorDetailDto) userService.createUser(dto),
 				NUM_QUALITY_INSPECTORS);
 
-		createdProducers = IntStream.range(0, NUM_PRODUCERS)
-				.mapToObj(i -> userService.createUser(createRandomProducerDto()))
-				.map(ProducerDetailDto.class::cast) // Cast UserDetailDto to ProducerDetailDto
-				.collect(Collectors.toList());
-
-		createdTransformers = IntStream.range(0, NUM_TRANSFORMERS)
-				.mapToObj(i -> userService.createUser(createRandomTransformerDto()))
-				.map(TransformerDetailDto.class::cast).collect(Collectors.toList());
-
-		createdExporters = IntStream.range(0, NUM_EXPORTERS)
-				.mapToObj(i -> userService.createUser(createRandomExporterDto()))
-				.map(ExporterDetailDto.class::cast).collect(Collectors.toList());
-
-		createdAdmins = IntStream.range(0, NUM_ADMINS)
-				.mapToObj(i -> userService.createUser(createRandomAdminDto()))
-				.map(AdminDetailDto.class::cast).collect(Collectors.toList());
-
-		createdCarriers = IntStream.range(0, NUM_CARRIERS)
-				.mapToObj(i -> userService.createUser(createRandomCarrierDto()))
-				.map(CarrierDetailDto.class::cast).collect(Collectors.toList());
-
-		createdQualityInspectors = IntStream.range(0, NUM_QUALITY_INSPECTORS)
-				.mapToObj(i -> userService.createUser(createRandomQualityInspectorDto()))
-				.map(QualityInspectorDetailDto.class::cast).collect(Collectors.toList());
-
 		log.info("Users created.");
+	}
+
+	/**
+	 * Crée d’abord un utilisateur « par défaut » avec un email fixe, puis d’autres utilisateurs
+	 * aléatoires.
+	 *
+	 * @param dtoClass
+	 *            La classe du DTO (pour récupérer l’email fixe)
+	 * @param dtoSupplier
+	 *            Fournit un nouveau DTO « vide »
+	 * @param createMethod
+	 *            Appelle userService.createUser et cast le résultat
+	 * @param totalCount
+	 *            Nombre total d’utilisateurs à créer
+	 * @param <U>
+	 *            Type du DTO d’entrée
+	 * @param <D>
+	 *            Type du DTO renvoyé par userService
+	 * @return Liste des DTO créés
+	 */
+	private <U extends UserUpdateDto, D> List<D> createUsersOfType(Class<U> dtoClass,
+                                                                   Supplier<U> dtoSupplier, Function<U, D> createMethod, int totalCount) {
+		List<D> list = new ArrayList<>(totalCount);
+
+		log.info("Création de {} instances de {}", totalCount, dtoClass.getSimpleName());
+
+		// 1) L’utilisateur « par défaut »
+		U defaultDto = dtoSupplier.get();
+		defaultDto.setEmail(DEFAULT_EMAILS.get(dtoClass));
+		D defaultUser = createMethod.apply(defaultDto);
+		list.add(defaultUser);
+
+		// 2) Les autres générés aléatoirement
+		IntStream.range(1, totalCount).forEach(i -> {
+			U randomDto = dtoSupplier.get();
+			D randomUser = createMethod.apply(randomDto);
+			list.add(randomUser);
+		});
+
+		return list;
 	}
 
 	// --- Step 4: Cooperatives ---

@@ -17,6 +17,10 @@ public class DataLoader implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws IOException {
+		if (databaseService.isInitialized()) {
+			log.info("Database already initialized, skipping initialization.");
+			return;
+		}
 		databaseService.dropDatabase();
 		databaseService.createDatabase();
 	}

@@ -1,4 +1,4 @@
-package be.labil.anacarde.infrastructure.data_faker;
+package be.labil.anacarde.infrastructure.datafaker;
 
 import be.labil.anacarde.infrastructure.persistence.user.UserRepository;
 import net.datafaker.Faker;

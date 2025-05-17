@@ -1,4 +1,4 @@
-package be.labil.anacarde.infrastructure.import_data;
+package be.labil.anacarde.infrastructure.importdata;
 
 import static java.util.Map.entry;
 

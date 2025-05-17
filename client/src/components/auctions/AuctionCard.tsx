@@ -10,7 +10,7 @@ import {
 import type { AuctionDto } from '@/api/generated'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { TradeStatus, formatCoordinates, formatDate } from '@/lib/utils'
+import { TradeStatus, formatDate } from '@/lib/utils'
 import { formatPrice, formatWeight } from '@/utils/formatter'
 import {
   CheckCircle,
@@ -74,7 +74,7 @@ export const AuctionCard: React.FC<AuctionCardProps> = ({
                 {auction.product.store.name}
                 <span className="mx-1">|</span>
                 <MapPin className="w-4 h-4 mr-1" />
-                {formatCoordinates(auction.product.store.location)}
+                {auction.product.store.address.cityId}
               </CardDescription>
             </div>
           </CardTitle>
@@ -123,7 +123,7 @@ export const AuctionCard: React.FC<AuctionCardProps> = ({
               <NotebookText className="w-4 h-4 mr-1" /> Qualité
             </div>
             <div className="mt-1 font-semibold text-sm text-center">
-              {auction.product.qualityControl.quality.name}
+              {auction.product.qualityControl?.quality.name ?? 'N/A'}
             </div>
           </div>
           <div className="p-3 bg-white shadow-sm rounded-lg">
