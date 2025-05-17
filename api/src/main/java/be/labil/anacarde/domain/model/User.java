@@ -61,7 +61,7 @@ public abstract class User extends BaseEntity implements UserDetails {
 	private Language language;
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-	private List<Document> documents = new ArrayList<>();
+	private List<Document> documents;
 
 	/**
 	 * Ajoute un rôle à cet utilisateur et met à jour le côté inverse (le rôle) pour maintenir la

@@ -467,31 +467,39 @@ public abstract class AbstractIntegrationTest {
 		TradeStatus auctionStatusExpired = TradeStatus.builder().name("Expiré").build();
 		tradeStatusRepository.save(auctionStatusExpired);
 
+		AuctionOptions auctionOptions = new AuctionOptions();
+		auctionOptions.setStrategy(testAuctionStrategy);
+		auctionOptions.setFixedPriceKg(150.);
+		auctionOptions.setMaxPriceKg(300.);
+		auctionOptions.setMinPriceKg(80.);
+		auctionOptions.setBuyNowPrice(250.);
+		auctionOptions.setShowPublic(true);
+
 		// An auction with a harvest product
-		Auction auction = Auction.builder().price(new BigDecimal("500.0")).productQuantity(10)
-				.active(true).creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now())
-				.product(productHarvest).strategy(testAuctionStrategy).trader((Trader) producer)
+		Auction auction = Auction.builder().price(500.0).productQuantity(10).active(true)
+				.creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now())
+				.product(productHarvest).options(auctionOptions).trader((Trader) producer)
 				.status(auctionStatusOpen).build();
 		testAuction = auctionRepository.save(auction);
 
 		// An auction with a transformed product
-		Auction auction2 = Auction.builder().price(new BigDecimal("10000.0")).productQuantity(1000)
-				.active(true).creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now())
-				.product(productTransform).strategy(testAuctionStrategy).trader((Trader) producer)
+		Auction auction2 = Auction.builder().price(10000.0).productQuantity(1000).active(true)
+				.creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now())
+				.product(productTransform).options(auctionOptions).trader((Trader) producer)
 				.status(auctionStatusOpen).build();
 		auctionRepository.save(auction2);
 
 		// An auction from another user
-		Auction auction3 = Auction.builder().price(new BigDecimal("777.0")).productQuantity(777)
-				.active(true).creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now())
-				.product(productTransform).strategy(testAuctionStrategy)
-				.trader((Trader) transformer).status(auctionStatusOpen).build();
+		Auction auction3 = Auction.builder().price(777.0).productQuantity(777).active(true)
+				.creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now())
+				.product(productTransform).options(auctionOptions).trader((Trader) transformer)
+				.status(auctionStatusOpen).build();
 		auctionRepository.save(auction3);
 
 		// A "deleted" auction (= inactive)
-		Auction auction4 = Auction.builder().price(new BigDecimal("999.0")).productQuantity(999)
-				.active(false).creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now())
-				.product(productTransform).strategy(testAuctionStrategy).trader((Trader) producer)
+		Auction auction4 = Auction.builder().price(999.0).productQuantity(999).active(false)
+				.creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now())
+				.product(productTransform).options(auctionOptions).trader((Trader) producer)
 				.status(auctionStatusOpen).build();
 		auctionRepository.save(auction4);
 

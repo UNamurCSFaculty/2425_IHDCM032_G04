@@ -4,7 +4,8 @@ import be.labil.anacarde.domain.dto.db.QualityDto;
 import be.labil.anacarde.domain.model.Quality;
 import org.mapstruct.*;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring", uses = {MapperHelpers.class,
+		QualityTypeMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class QualityMapper {
 
 	public abstract QualityDto toDto(Quality entity);

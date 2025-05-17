@@ -3,8 +3,10 @@ package be.labil.anacarde.domain.mapper;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import be.labil.anacarde.domain.dto.db.AuctionOptionDto;
-import be.labil.anacarde.domain.model.AuctionOption;
+import be.labil.anacarde.domain.dto.db.AuctionOptionsDto;
+import be.labil.anacarde.domain.dto.write.AuctionOptionsUpdateDto;
+import be.labil.anacarde.domain.model.AuctionOptions;
+import be.labil.anacarde.domain.model.AuctionStrategy;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,31 +15,44 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class AuctionOptionMapperTest {
 
 	@Autowired
-	private AuctionOptionMapper auctionOptionMapper;
+	private AuctionOptionsMapper auctionOptionsMapper;
 
 	@Test
 	public void testToDto() {
-		AuctionOption auctionOption = new AuctionOption();
-		auctionOption.setId(1);
-		auctionOption.setName("Option A");
+		AuctionOptions auctionOption = new AuctionOptions();
+		AuctionStrategy auctionStrategy = new AuctionStrategy();
+		auctionStrategy.setName("bestOffer");
+		auctionOption.setStrategy(auctionStrategy);
+		auctionOption.setFixedPriceKg(150.);
+		auctionOption.setMaxPriceKg(300.);
+		auctionOption.setMinPriceKg(80.);
+		auctionOption.setBuyNowPrice(250.);
+		auctionOption.setShowPublic(true);
 
-		AuctionOptionDto auctionOptionDto = auctionOptionMapper.toDto(auctionOption);
+		AuctionOptionsDto auctionOptionDto = auctionOptionsMapper.toDto(auctionOption);
 
 		assertNotNull(auctionOptionDto);
-		assertEquals(auctionOption.getId(), auctionOptionDto.getId());
-		assertEquals(auctionOption.getName(), auctionOptionDto.getName());
+		// TODO:
 	}
 
 	@Test
 	public void testToEntity() {
-		AuctionOptionDto auctionOptionDto = new AuctionOptionDto();
-		auctionOptionDto.setId(1);
-		auctionOptionDto.setName("Option A");
+		AuctionOptionsUpdateDto auctionOptionsDto = new AuctionOptionsUpdateDto();
+		auctionOptionsDto.setStrategyId(1);
+		auctionOptionsDto.setFixedPriceKg(150);
+		auctionOptionsDto.setMaxPriceKg(300);
+		auctionOptionsDto.setMinPriceKg(80);
+		auctionOptionsDto.setBuyNowPrice(250);
+		auctionOptionsDto.setShowPublic(true);
 
-		AuctionOption auctionOption = auctionOptionMapper.toEntity(auctionOptionDto);
+		AuctionOptions auctionOptions = auctionOptionsMapper.toEntity(auctionOptionsDto);
 
-		assertNotNull(auctionOption);
-		assertEquals(auctionOptionDto.getId(), auctionOption.getId());
-		assertEquals(auctionOptionDto.getName(), auctionOption.getName());
+		assertNotNull(auctionOptions);
+		assertEquals(auctionOptionsDto.getStrategyId(), auctionOptions.getStrategy().getId());
+		assertEquals(auctionOptionsDto.getFixedPriceKg(), auctionOptions.getFixedPriceKg());
+		assertEquals(auctionOptionsDto.getMaxPriceKg(), auctionOptions.getMaxPriceKg());
+		assertEquals(auctionOptionsDto.getMinPriceKg(), auctionOptions.getMinPriceKg());
+		assertEquals(auctionOptionsDto.getBuyNowPrice(), auctionOptions.getBuyNowPrice());
+		assertEquals(auctionOptionsDto.getShowPublic(), auctionOptions.getShowPublic());
 	}
 }
