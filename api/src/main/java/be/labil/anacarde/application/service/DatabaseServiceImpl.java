@@ -9,6 +9,8 @@ import be.labil.anacarde.domain.dto.write.*;
 import be.labil.anacarde.domain.dto.write.product.HarvestProductUpdateDto;
 import be.labil.anacarde.domain.dto.write.product.TransformedProductUpdateDto;
 import be.labil.anacarde.domain.dto.write.user.*;
+import be.labil.anacarde.domain.mapper.DocumentMapper;
+import be.labil.anacarde.domain.mapper.QualityControlMapper;
 import be.labil.anacarde.domain.model.*;
 import be.labil.anacarde.infrastructure.import_data.RegionCityImportService;
 import be.labil.anacarde.infrastructure.persistence.*;
@@ -101,6 +103,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 																										// WGS84
 	private final Random random = new Random();
 	private final QualityTypeRepository qualityTypeRepository;
+	private final DocumentMapper documentMapper;
+	private final QualityControlMapper qualityControlMapper;
 	private LocalDateTime generationTime; // Timestamp when generation starts
 	// juste après 'private final Random random = new Random();'
 	private final Set<String> generatedEmails = new HashSet<>();
@@ -478,25 +482,46 @@ public class DatabaseServiceImpl implements DatabaseService {
 			for (int i = 0; i < numProducts; i++) {
 				StoreDetailDto store = createdStores.get(random.nextInt(createdStores.size()));
 				FieldDto field = fields.get(random.nextInt(fields.size()));
+				QualityInspectorDetailDto inspector = createdQualityInspectors
+						.get(random.nextInt(createdQualityInspectors.size()));
 
-				// Choix d'un inspecteur qualité existant
-				// QualityInspectorDetailDto inspector =
-				// createdQualityInspectors.get(random.nextInt(createdQualityInspectors.size()));
+				// --- Création du document associé ---
+				DocumentUpdateDto docDto = new DocumentUpdateDto();
+				String[] extensions = {"pdf", "docx", "xlsx", "jpg", "png"};
+				docDto.setExtension(faker.options().option(extensions));
+				docDto.setContentType("application/" + docDto.getExtension());
+				docDto.setOriginalFilename(
+						faker.file().fileName(null, null, docDto.getExtension(), null));
+				docDto.setSize(faker.number().numberBetween(128, 4096));
+				docDto.setStoragePath("/documents/2025/"
+						+ faker.file().fileName(null, null, docDto.getExtension(), null));
+				docDto.setStoragePath(
+						"/documents/2025/harvest_" + faker.number().digits(8) + ".pdf");
+				docDto.setUploadDate(generateRandomDateTimeInPast());
+				docDto.setUserId(producer.getId());
+				Document document = documentRepository.save(documentMapper.toEntity(docDto));
 
-				// Crée le contrôle qualité (simplifié ici, à adapter à ton modèle)
-				// QualityControlUpdateDto qc = new QualityControlUpdateDto();
-				// qc.setProductId(inspector.getId());
-				// qc.setDate(generateRandomDateTimeInPast());
-				// qc = qualityControlRepository.save(qc);
+				// --- Création du contrôle qualité associé ---
+				QualityControlUpdateDto qc = new QualityControlUpdateDto();
+				qc.setIdentifier(faker.number().digits(6));
+				qc.setControlDate(generateRandomDateTimeInPast());
+				qc.setGranularity((float) faker.number().numberBetween(150, 450));
+				qc.setKorTest((float) faker.number().numberBetween(10, 50));
+				qc.setHumidity((float) faker.number().numberBetween(0, 100));
+				qc.setQualityInspectorId(inspector.getId());
+				qc.setDocumentId(document.getId());
+				qc.setQualityId(1);
+				QualityControl qualityControl = qualityControlRepository
+						.save(qualityControlMapper.toEntity(qc));
 
-				/* --- DTO d’écriture --- */
+				// --- Création du produit ---
 				HarvestProductUpdateDto dto = new HarvestProductUpdateDto();
 				dto.setProducerId(producer.getId());
 				dto.setStoreId(store.getId());
 				dto.setFieldId(field.getId());
-				dto.setWeightKg(faker.number().randomDouble(2, 500, 8000)); // 500 kg – 8000 kg
+				dto.setWeightKg(faker.number().randomDouble(2, 500, 8000));
 				dto.setDeliveryDate(generateRandomDateTimeInPast());
-				dto.setQualityControlId(1);
+				dto.setQualityControlId(qualityControl.getId());
 
 				try {
 					ProductDto created = productService.createProduct(dto); // compile désormais
@@ -514,14 +539,50 @@ public class DatabaseServiceImpl implements DatabaseService {
 			int numProducts = random
 					.nextInt(MAX_PRODUCTS_PER_TRANSFORMER - MIN_PRODUCTS_PER_TRANSFORMER + 1)
 					+ MIN_PRODUCTS_PER_TRANSFORMER;
+
 			for (int i = 0; i < numProducts; i++) {
 				StoreDetailDto store = createdStores.get(random.nextInt(createdStores.size()));
+
+				// --- Création du document associé ---
+				DocumentUpdateDto docDto = new DocumentUpdateDto();
+				String[] extensions = {"pdf", "docx", "xlsx", "jpg", "png"};
+				docDto.setExtension(faker.options().option(extensions));
+				docDto.setContentType("application/" + docDto.getExtension());
+				docDto.setOriginalFilename(
+						faker.file().fileName(null, null, docDto.getExtension(), null));
+				docDto.setSize(faker.number().numberBetween(128, 4096));
+				docDto.setStoragePath("/documents/2025/"
+						+ faker.file().fileName(null, null, docDto.getExtension(), null));
+				docDto.setStoragePath(
+						"/documents/2025/harvest_" + faker.number().digits(8) + ".pdf");
+				docDto.setUploadDate(generateRandomDateTimeInPast());
+				docDto.setUserId(transformer.getId()); // Le transformeur est l'utilisateur associé
+				Document document = documentRepository.save(documentMapper.toEntity(docDto));
+
+				// --- Création du contrôle qualité associé ---
+				QualityInspectorDetailDto inspector = createdQualityInspectors
+						.get(random.nextInt(createdQualityInspectors.size()));
+				QualityControlUpdateDto qc = new QualityControlUpdateDto();
+				qc.setIdentifier(faker.number().digits(6));
+				qc.setControlDate(generateRandomDateTimeInPast());
+				qc.setGranularity((float) faker.number().numberBetween(150, 450));
+				qc.setKorTest((float) faker.number().numberBetween(10, 50));
+				qc.setHumidity((float) faker.number().numberBetween(0, 100));
+				qc.setQualityInspectorId(inspector.getId());
+				qc.setDocumentId(document.getId());
+				qc.setQualityId(1);
+				QualityControl qualityControl = qualityControlRepository
+						.save(qualityControlMapper.toEntity(qc));
+
+				// --- Création du produit transformé ---
 				TransformedProductUpdateDto dto = new TransformedProductUpdateDto();
 				dto.setTransformerId(transformer.getId());
 				dto.setStoreId(store.getId());
 				dto.setIdentifier("TRANS-" + faker.letterify("??????").toUpperCase());
-				dto.setWeightKg(faker.number().randomDouble(2, 200, 5000)); // 200kg - 5000kg
+				dto.setWeightKg(faker.number().randomDouble(2, 200, 5000));
 				dto.setDeliveryDate(generateRandomDateTimeInPast());
+				dto.setQualityControlId(qualityControl.getId()); // Lien contrôle qualité
+
 				try {
 					createdProducts.add(productService.createProduct(dto));
 				} catch (Exception e) {
