@@ -20,7 +20,6 @@ public class GlobalSettings {
 	// On force id à toujours valoir 1
 	@Id
 	@Column(name = "id", nullable = false, columnDefinition = "INT NOT NULL DEFAULT 1 CHECK (id = 1)")
-	@ColumnDefault("1")
 	@Builder.Default
 	private Integer id = 1;
 
