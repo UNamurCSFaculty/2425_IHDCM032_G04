@@ -12,7 +12,7 @@ import be.labil.anacarde.domain.dto.write.user.*;
 import be.labil.anacarde.domain.mapper.DocumentMapper;
 import be.labil.anacarde.domain.mapper.QualityControlMapper;
 import be.labil.anacarde.domain.model.*;
-import be.labil.anacarde.infrastructure.import_data.RegionCityImportService;
+import be.labil.anacarde.infrastructure.importdata.RegionCityImportService;
 import be.labil.anacarde.infrastructure.persistence.*;
 import be.labil.anacarde.infrastructure.persistence.user.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
