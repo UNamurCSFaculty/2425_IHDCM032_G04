@@ -60,8 +60,7 @@ public interface UserApi {
 	 * @return L'utilisateur créé.
 	 */
 	@Operation(summary = "Créer un utilisateur et téléverser des documents")
-	@io.swagger.v3.oas.annotations.parameters.RequestBody
-	(required = true, content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE, schema = @Schema(type = "object", properties = {
+	@io.swagger.v3.oas.annotations.parameters.RequestBody(required = true, content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE, schema = @Schema(type = "object", properties = {
 			@StringToClassMapItem(key = "user", value = UserUpdateDto.class),
 			@StringToClassMapItem(key = "documents", value = MultipartFile[].class)}), encoding = {
 					@Encoding(name = "user", contentType = MediaType.APPLICATION_JSON_VALUE),
