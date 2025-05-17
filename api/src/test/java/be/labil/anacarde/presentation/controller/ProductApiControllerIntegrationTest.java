@@ -31,6 +31,10 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 		mockMvc.perform(get("/api/products/" + getTestHarvestProduct().getId())
 				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
 				.andExpect(jsonPath("$.type").value("harvest"))
+				.andExpect(jsonPath("$.store.location").value("POINT (2.3522 48.8566)"))
+				.andExpect(jsonPath("$.weightKg").value("2000.0"))
+				.andExpect(jsonPath("$.qualityControl.identifier").value("QC-002"))
+				.andExpect(jsonPath("$.qualityControl.quality.name").value("WW160"))
 				.andExpect(jsonPath("$.store").isNotEmpty())
 				.andExpect(jsonPath("$.weightKg").value("2000.0"));
 	}
@@ -41,7 +45,9 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
 				.andExpect(jsonPath("$.type").value("transformed"))
 				.andExpect(jsonPath("$.identifier").value("XYZ"))
-				.andExpect(jsonPath("$.weightKg").value("2000.0"));
+				.andExpect(jsonPath("$.weightKg").value("2000.0"))
+				.andExpect(jsonPath("$.qualityControl.identifier").value("QC-003"))
+				.andExpect(jsonPath("$.qualityControl.quality.name").value("WW160"));
 	}
 
 	/**
@@ -54,6 +60,7 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 		Integer producerId = getProducerTestUser().getId();
 		Integer fieldId = getMainTestField().getId();
 		Integer storeId = getMainTestStore().getId();
+		Integer qualityControlId = getMainTestQualityControl().getId();
 
 		HarvestProductUpdateDto newProduct = new HarvestProductUpdateDto();
 		newProduct.setProducerId(producerId);
@@ -61,6 +68,7 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 		newProduct.setWeightKg(200.0);
 		newProduct.setDeliveryDate(LocalDateTime.now().plusMonths(1));
 		newProduct.setFieldId(fieldId);
+		newProduct.setQualityControlId(qualityControlId);
 
 		ObjectNode node = objectMapper.valueToTree(newProduct);
 		String jsonContent = node.toString();
@@ -71,7 +79,9 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 				.andExpect(header().string("Location", containsString("/api/products/")))
 				.andExpect(jsonPath("$.type").value("harvest"))
 				.andExpect(jsonPath("$.weightKg").value("200.0"))
-				.andExpect(jsonPath("$.producer.id").value(producerId));
+				.andExpect(jsonPath("$.producer.id").value(producerId))
+				.andExpect(jsonPath("$.store.id").value(storeId))
+				.andExpect(jsonPath("$.qualityControl.id").value(qualityControlId));
 
 		Product createdProduct = productRepository.findAll().stream()
 				.filter(product -> product.getWeightKg().equals(200.0)).findFirst()
@@ -86,6 +96,7 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 	public void testCreateTransformedProduct() throws Exception {
 		Integer storeId = getMainTestStore().getId();
 		Integer transformerId = getTransformerTestUser().getId();
+		Integer qualityControlId = getMainTestQualityControl().getId();
 
 		TransformedProductUpdateDto newProduct = new TransformedProductUpdateDto();
 		newProduct.setTransformerId(transformerId);
@@ -93,6 +104,7 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 		newProduct.setIdentifier("TP001");
 		newProduct.setDeliveryDate(LocalDateTime.now().minusDays(1));
 		newProduct.setStoreId(storeId);
+		newProduct.setQualityControlId(qualityControlId);
 
 		ObjectNode node = objectMapper.valueToTree(newProduct);
 		String jsonContent = node.toString();
@@ -103,7 +115,9 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 				.andExpect(header().string("Location", containsString("/api/products/")))
 				.andExpect(jsonPath("$.type").value("transformed"))
 				.andExpect(jsonPath("$.weightKg").value("1234567.0"))
-				.andExpect(jsonPath("$.transformer.id").value(transformerId));
+				.andExpect(jsonPath("$.transformer.id").value(transformerId))
+				.andExpect(jsonPath("$.store.id").value(storeId))
+				.andExpect(jsonPath("$.qualityControl.id").value(qualityControlId));
 
 		Product createdProduct = productRepository.findAll().stream()
 				.filter(product -> product.getWeightKg().equals(1234567.0)).findFirst()

@@ -75,8 +75,7 @@ public abstract class AbstractIntegrationTest {
 	private Auction testAuction;
 	private AuctionStrategy testAuctionStrategy;
 	private Bid testBid;
-	private TradeStatus testBidStatus;
-	private TradeStatus testAuctionStatus;
+	private TradeStatus testTradeStatus;
 	private Field mainTestField;
 	private Cooperative mainTestCooperative;
 	private Region mainTestRegion;
@@ -251,18 +250,11 @@ public abstract class AbstractIntegrationTest {
 		return testBid;
 	}
 
-	public TradeStatus getTestBidStatus() {
-		if (testBidStatus == null) {
-			throw new IllegalStateException("Statut d'offre non initialisé");
+	public TradeStatus getTestTradeStatus() {
+		if (testTradeStatus == null) {
+			throw new IllegalStateException("Statut de trade non initialisé");
 		}
-		return testBidStatus;
-	}
-
-	public TradeStatus getTestAuctionStatus() {
-		if (testAuctionStatus == null) {
-			throw new IllegalStateException("Statut d'enchère non initialisé");
-		}
-		return testAuctionStatus;
+		return testTradeStatus;
 	}
 
 	public AuctionStrategy getTestAuctionStrategy() {
@@ -443,29 +435,69 @@ public abstract class AbstractIntegrationTest {
 				.address(mainAddress).build();
 		fieldRepository.save(field2);
 
+		// A quality
+		Quality quality = Quality.builder().name("WW160").build();
+		mainTestQuality = qualityRepository.save(quality);
+
+		// A document with a qualityInspector
+		Document document = Document.builder().format("text").type("TEXT").storagePath("/storage")
+				.user(qualityInspector).uploadDate(LocalDateTime.now()).build();
+		mainTestDocument = documentRepository.save(document);
+
+		// A quality control
+		QualityControl qualityControl = QualityControl.builder().identifier("QC-001")
+				.controlDate(LocalDateTime.of(2025, 4, 7, 10, 0)).granularity(0.5f).korTest(0.8f)
+				.humidity(12.5f).qualityInspector((QualityInspector) qualityInspector)
+				.quality(quality).document(document).build();
+		mainTestQualityControl = qualityControlRepository.save(qualityControl);
+
+		QualityControl qualityControl2 = QualityControl.builder().identifier("QC-002")
+				.controlDate(LocalDateTime.of(2025, 6, 6, 6, 0)).granularity(0.5f).korTest(0.8f)
+				.humidity(12.5f).qualityInspector((QualityInspector) qualityInspector)
+				.quality(quality).document(document).build();
+		qualityControlRepository.save(qualityControl2);
+
+		QualityControl qualityControl3 = QualityControl.builder().identifier("QC-003")
+				.controlDate(LocalDateTime.of(2025, 6, 6, 6, 0)).granularity(0.5f).korTest(0.8f)
+				.humidity(12.5f).qualityInspector((QualityInspector) qualityInspector)
+				.quality(quality).document(document).build();
+		qualityControlRepository.save(qualityControl3);
+
 		// A harvest product
 		Product productHarvest = HarvestProduct.builder().producer((Producer) producerTestUser)
 				.store(mainTestStore).deliveryDate(LocalDateTime.now()).weightKg(2000.0)
-				.field(mainTestField).build();
+				.field(mainTestField).qualityControl(qualityControl2).build();
 		testHarvestProduct = productRepository.save(productHarvest);
 
 		// A transformed product
 		Product productTransform = TransformedProduct.builder()
 				.transformer((Transformer) transformerTestUser).store(mainTestStore)
-				.deliveryDate(LocalDateTime.now()).identifier("XYZ").weightKg(2000.0).build();
+				.deliveryDate(LocalDateTime.now()).identifier("XYZ").weightKg(2000.0)
+				.qualityControl(qualityControl3).build();
 		testTransformedProduct = productRepository.save(productTransform);
 
 		AuctionStrategy strategy = AuctionStrategy.builder().name("Meilleure offre").build();
 		testAuctionStrategy = auctionStrategyRepository.save(strategy);
 
-		TradeStatus auctionStatusOpen = TradeStatus.builder().name("Ouvert").build();
-		testAuctionStatus = tradeStatusRepository.save(auctionStatusOpen);
+		TradeStatus tradeStatusOpen = TradeStatus.builder().name("Ouvert").build();
+		testTradeStatus = tradeStatusRepository.save(tradeStatusOpen);
 
-		TradeStatus auctionStatusConcluded = TradeStatus.builder().name("Conclu").build();
-		tradeStatusRepository.save(auctionStatusConcluded);
+		TradeStatus tradeStatusAccepted = TradeStatus.builder().name("Accepté").build();
+		tradeStatusRepository.save(tradeStatusAccepted);
 
-		TradeStatus auctionStatusExpired = TradeStatus.builder().name("Expiré").build();
-		tradeStatusRepository.save(auctionStatusExpired);
+		TradeStatus tradeStatusRejected = TradeStatus.builder().name("Refusé").build();
+		tradeStatusRepository.save(tradeStatusRejected);
+
+		TradeStatus tradeStatusExpired = TradeStatus.builder().name("Expiré").build();
+		tradeStatusRepository.save(tradeStatusExpired);
+
+		AuctionOptions auctionOptions = new AuctionOptions();
+		auctionOptions.setStrategy(testAuctionStrategy);
+		auctionOptions.setFixedPriceKg(150.);
+		auctionOptions.setMaxPriceKg(300.);
+		auctionOptions.setMinPriceKg(80.);
+		auctionOptions.setBuyNowPrice(250.);
+		auctionOptions.setShowPublic(true);
 
 		AuctionOptions auctionOptions = new AuctionOptions();
 		auctionOptions.setStrategy(testAuctionStrategy);
@@ -503,21 +535,15 @@ public abstract class AbstractIntegrationTest {
 				.status(auctionStatusOpen).build();
 		auctionRepository.save(auction4);
 
-		TradeStatus bidStatusAccepted = TradeStatus.builder().name("Accepté").build();
-		testBidStatus = tradeStatusRepository.save(bidStatusAccepted);
-
-		TradeStatus bidStatusPending = TradeStatus.builder().name("En cours").build();
-		tradeStatusRepository.save(bidStatusPending);
-
 		// An accepted bid on an auction
 		Bid bid = Bid.builder().amount(new BigDecimal("10.0")).creationDate(LocalDateTime.now())
-				.auctionId(testAuction.getId()).trader((Trader) producer).status(testBidStatus)
-				.build();
+				.auctionId(testAuction.getId()).trader((Trader) producer)
+				.status(tradeStatusAccepted).build();
 		testBid = bidRepository.save(bid);
 
 		// A pending bid on a different auction
 		Bid bid2 = Bid.builder().amount(new BigDecimal("500.0")).creationDate(LocalDateTime.now())
-				.auctionId(auction2.getId()).trader((Trader) producer).status(bidStatusPending)
+				.auctionId(auction2.getId()).trader((Trader) producer).status(tradeStatusOpen)
 				.build();
 		bidRepository.save(bid2);
 
@@ -548,14 +574,6 @@ public abstract class AbstractIntegrationTest {
 				.endDate(LocalDateTime.now()).seller((Trader) producer).buyer((Trader) transformer)
 				.quality(quality).build();
 		mainTestContractOffer = contractOfferRepository.save(contractOffer);
-
-		QualityControl qualityControl = QualityControl.builder().identifier("QC-001")
-				.controlDate(LocalDateTime.of(2025, 4, 7, 10, 0)).granularity(0.5f).korTest(0.8f)
-				.humidity(12.5f).qualityInspector((QualityInspector) qualityInspector)
-				.product(productTransform).quality(quality).document(document).build();
-
-		mainTestQualityControl = qualityControlRepository.save(qualityControl);
-
 	}
 
 	/**

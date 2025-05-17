@@ -62,6 +62,14 @@ public interface BidApi {
 	ResponseEntity<BidDto> acceptBid(@ApiValidId @PathVariable("auctionId") Integer auctionId,
 			@ApiValidId @PathVariable("bidId") Integer bidId);
 
+	@Operation(summary = "Rejeter une offre")
+	@PutMapping(value = "/{bidId}/reject")
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "", content = @Content(schema = @Schema(implementation = BidDto.class))),
+			@ApiResponse(responseCode = "404", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
+	ResponseEntity<BidDto> rejectBid(@ApiValidId @PathVariable("auctionId") Integer auctionId,
+			@ApiValidId @PathVariable("bidId") Integer bidId);
+
 	@Operation(summary = "Obtenir toutes les offres")
 	@GetMapping
 	@ApiResponses({

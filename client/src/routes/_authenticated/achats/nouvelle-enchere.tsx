@@ -4,13 +4,14 @@ import {
 } from '@/api/generated/@tanstack/react-query.gen'
 import AuctionsTable from '@/components/auctions/AuctionsTable'
 import BidsDialog from '@/components/auctions/BidsDialog'
+import { TradeStatus } from '@/lib/utils'
 import { useAuctionStore } from '@/store/auctionStore'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 
 const listAuctionsQueryOptions = () => ({
-  ...listAuctionsOptions({ query: { status: 'Ouvert' } }),
+  ...listAuctionsOptions({ query: { status: TradeStatus.OPEN } }),
   queryKey: listAuctionsQueryKey(),
   staleTime: 10_000,
 })

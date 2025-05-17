@@ -1,6 +1,7 @@
 package be.labil.anacarde.domain.dto.db;
 
 import be.labil.anacarde.domain.dto.db.product.ProductDto;
+import be.labil.anacarde.domain.dto.db.user.QualityInspectorDetailDto;
 import be.labil.anacarde.domain.dto.db.user.UserMiniDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -49,18 +50,13 @@ public class QualityControlDto extends BaseDto {
 	@Schema(description = "Inspecteur qualité associé", requiredMode = Schema.RequiredMode.REQUIRED)
 	private UserMiniDto qualityInspector;
 
-	/** Produit associé au contrôle qualité. */
-	@NotNull(message = "Le produit est requis")
-	@Schema(description = "Produit associé", requiredMode = Schema.RequiredMode.REQUIRED)
-	private ProductDto product;
-
 	/** Qualité du produit mesurée. */
 	@NotNull(message = "La qualité est requise")
 	@Schema(description = "Qualité associée", requiredMode = Schema.RequiredMode.REQUIRED)
 	private QualityDto quality;
 
 	/** Document associé au contrôle qualité. */
-	@NotNull(message = "Le document est requis")
+	// @NotNull(message = "Le document est requis") TODO enable document
 	@Schema(description = "Document associé au contrôle qualité", requiredMode = Schema.RequiredMode.REQUIRED)
 	private DocumentDto document;
 }

@@ -86,14 +86,14 @@ public abstract class ProductMapper {
 	@Mapping(source = "store", target = "store")
 	@Mapping(source = "producer", target = "producer")
 	@Mapping(source = "field", target = "field")
-	@Mapping(target = "qualityControlId", ignore = true)
+	@Mapping(source = "qualityControl", target = "qualityControl")
 	public abstract HarvestProductDto toDto(HarvestProduct entity);
 
 	// Mapping inverse vers le DTO
 	@Mapping(source = "store", target = "store")
 	@Mapping(source = "identifier", target = "identifier")
 	@Mapping(source = "transformer", target = "transformer")
-	@Mapping(target = "qualityControlId", ignore = true)
+	@Mapping(source = "qualityControl", target = "qualityControl")
 	public abstract TransformedProductDto toDto(TransformedProduct entity);
 
 	public ProductDto toDto(Product entity) {

@@ -80,16 +80,10 @@ export function Header() {
           icon: <ShoppingCart className="size-5 shrink-0" />,
           url: '/achats/nouvelle-enchere',
         },
-        // {
-        //   title: 'Mes achats',
-        //   description: 'Consulter mes achats en cours',
-        //   icon: <ArrowLeftRight className="size-5 shrink-0" />,
-        //   url: '/achats/mes-encheres',
-        // },
         {
-          title: 'Mon historique',
-          description: 'Détails de mes achats passés',
-          icon: <History className="size-5 shrink-0" />,
+          title: 'Mes achats',
+          description: 'Consulter tous mes achats',
+          icon: <ArrowLeftRight className="size-5 shrink-0" />,
           url: '/achats/historique',
         },
       ],
@@ -100,21 +94,15 @@ export function Header() {
       items: [
         {
           title: 'Vendre un produit',
-          description: 'Créer une nouvelle vente',
+          description: 'Créer une nouvelle offre de vente',
           icon: <CircleDollarSign className="size-5 shrink-0" />,
           url: '/ventes/nouvelle-enchere',
         },
         {
           title: 'Mes ventes',
-          description: 'Consulter mes ventes en cours',
+          description: 'Consulter toutes mes ventes',
           icon: <ArrowLeftRight className="size-5 shrink-0" />,
           url: '/ventes/mes-encheres',
-        },
-        {
-          title: 'Mon historique',
-          description: 'Détails de mes ventes passées',
-          icon: <History className="size-5 shrink-0" />,
-          url: '/ventes/historique',
         },
       ],
     },

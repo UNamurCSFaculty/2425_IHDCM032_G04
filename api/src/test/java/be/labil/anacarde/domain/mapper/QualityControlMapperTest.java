@@ -39,7 +39,6 @@ class QualityControlMapperTest {
 		entity.setKorTest(0.8f);
 		entity.setHumidity(12.5f);
 		entity.setQualityInspector(qualityInspector);
-		entity.setProduct(product);
 		entity.setQuality(quality);
 		entity.setDocument(document);
 
@@ -53,7 +52,6 @@ class QualityControlMapperTest {
 		assertThat(dto.getKorTest()).isEqualTo(entity.getKorTest());
 		assertThat(dto.getHumidity()).isEqualTo(entity.getHumidity());
 		assertThat(dto.getQualityInspector()).isNotNull();
-		assertThat(dto.getProduct()).isNotNull();
 		assertThat(dto.getQuality()).isNotNull();
 		assertThat(dto.getDocument()).isNotNull();
 	}
@@ -80,7 +78,6 @@ class QualityControlMapperTest {
 		assertThat(entity.getKorTest()).isEqualTo(dto.getKorTest());
 		assertThat(entity.getHumidity()).isEqualTo(dto.getHumidity());
 		assertThat(entity.getQualityInspector().getId()).isEqualTo(1);
-		assertThat(entity.getProduct().getId()).isEqualTo(2);
 		assertThat(entity.getQuality().getId()).isEqualTo(3);
 		assertThat(entity.getDocument()).isNotNull();
 	}

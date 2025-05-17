@@ -9,6 +9,7 @@ import be.labil.anacarde.domain.model.TradeStatus;
 import be.labil.anacarde.infrastructure.persistence.AuctionRepository;
 import be.labil.anacarde.infrastructure.persistence.TradeStatusRepository;
 import be.labil.anacarde.infrastructure.util.PersistenceHelper;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -84,8 +85,8 @@ public class AuctionServiceImpl implements AuctionService {
 
 		Auction existingAuction = auctionRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Enchère non trouvée"));
-
 		existingAuction.setStatus(acceptedStatus);
+		existingAuction.setExpirationDate(LocalDateTime.now());
 
 		Auction saved = auctionRepository.save(existingAuction);
 		return auctionMapper.toDto(saved);

@@ -14,6 +14,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { Separator } from '@/components/ui/separator'
+import { TradeStatus, formatDate } from '@/lib/utils'
 import dayjs from '@/utils/dayjs-config'
 import { formatPrice } from '@/utils/formatter'
 import { CheckCircle, XCircle } from 'lucide-react'
@@ -33,7 +34,6 @@ export const AuctionDetails: React.FC<AuctionDetailsProps> = ({
   onBidAction,
 }) => {
   const sortedBids = [...auction.bids].sort((a, b) => b.amount - a.amount)
-
   return (
     <div className="space-y-6 max-w-lg mx-auto">
       <Card className="overflow-hidden animate-in fade-in duration-300 gap-2 bg-white shadow-lg">
@@ -43,8 +43,7 @@ export const AuctionDetails: React.FC<AuctionDetailsProps> = ({
               <span className="bg-background text-muted-foreground relative z-10 px-2">
                 <span className="text-gray-900 px-2 text-xl">
                   {sortedBids.length}{' '}
-                  {sortedBids.length === 1 ? 'offre' : 'offres'} reçue
-                  {sortedBids.length > 1 ? 's' : ''}
+                  {sortedBids.length <= 1 ? 'offre reçue' : 'offres reçues'}
                 </span>
               </span>
             </div>
@@ -54,7 +53,7 @@ export const AuctionDetails: React.FC<AuctionDetailsProps> = ({
         <CardContent className="max-h-80 overflow-y-auto space-y-2 bg-neutral-100 pt-2 pb-2">
           {sortedBids.length === 0 ? (
             <div className="text-center py-8 text-gray-500 text-xl">
-              Aucune offre n'a encore été effectuée.
+              Aucune offre d'achat n'a été effectuée.
             </div>
           ) : (
             sortedBids.map(bid => (
@@ -74,83 +73,89 @@ export const AuctionDetails: React.FC<AuctionDetailsProps> = ({
                   <div className="font-semibold text-lg text-green-700">
                     {formatPrice.format(bid.amount)}
                   </div>
-                  {bid.status.name === 'Pending' && (
+                  {auction.status.name === TradeStatus.OPEN && (
                     <div className="flex space-x-1 mt-1">
                       {/* Accept Popover */}
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="flex items-center px-2 py-1 bg-green-700 text-white border-green-200"
-                          >
-                            <CheckCircle className="h-3 w-3 mr-1" /> Acceptée
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-50 p-2">
-                          <p className="text-sm mb-4 text-center font-semibold">
-                            Confirmer l'acceptation ?
-                          </p>
-                          <div className="flex justify-end space-x-2">
-                            <Button size="sm" variant="ghost">
-                              Annuler
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="default"
-                              onClick={() =>
-                                onBidAction(auction.id, bid.id, 'accept')
-                              }
-                            >
-                              Confirmer
-                            </Button>
-                          </div>
-                        </PopoverContent>
-                      </Popover>
-
+                      {bid.status.name !== TradeStatus.ACCEPTED &&
+                        bid.status.name !== TradeStatus.REJECTED && (
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="flex items-center px-2 py-1 bg-green-700 text-white border-green-200"
+                              >
+                                <CheckCircle className="h-3 w-3 mr-1" />{' '}
+                                Accepter
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-60 p-2">
+                              <p className="text-sm mb-4 text-center font-semibold">
+                                Cette opération est définitive.
+                              </p>
+                              <div className="flex justify-end space-x-2">
+                                <Button size="sm" variant="ghost">
+                                  Annuler
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="default"
+                                  onClick={() =>
+                                    onBidAction(auction.id, bid.id, 'accept')
+                                  }
+                                >
+                                  Confirmer
+                                </Button>
+                              </div>
+                            </PopoverContent>
+                          </Popover>
+                        )}
                       {/* Reject Popover */}
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="flex items-center px-2 py-1 bg-red-600 text-white border-red-200"
-                          >
-                            <XCircle className="h-3 w-3 mr-1" /> Refusée
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-50 p-2">
-                          <p className="text-sm mb-4 text-center font-semibold">
-                            Confirmer le refus ?
-                          </p>
-                          <div className="flex justify-end space-x-2">
-                            <Button size="sm" variant="ghost">
-                              Annuler
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="destructive"
-                              onClick={() =>
-                                onBidAction(auction.id, bid.id, 'reject')
-                              }
-                            >
-                              Confirmer
-                            </Button>
-                          </div>
-                        </PopoverContent>
-                      </Popover>
+                      {bid.status.name !== TradeStatus.ACCEPTED &&
+                        bid.status.name !== TradeStatus.REJECTED && (
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="flex items-center px-2 py-1 bg-red-600 text-white border-red-200"
+                              >
+                                <XCircle className="h-3 w-3 mr-1" /> Refuser
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-60 p-2">
+                              <p className="text-sm mb-4 text-center font-semibold">
+                                Cette opération est définitive.
+                              </p>
+                              <div className="flex justify-end space-x-2">
+                                <Button size="sm" variant="ghost">
+                                  Annuler
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="destructive"
+                                  onClick={() =>
+                                    onBidAction(auction.id, bid.id, 'reject')
+                                  }
+                                >
+                                  Confirmer
+                                </Button>
+                              </div>
+                            </PopoverContent>
+                          </Popover>
+                        )}
                     </div>
                   )}
-                  {bid.status.name !== 'Pending' && (
+                  {bid.status.name !== TradeStatus.OPEN && (
                     <Badge
                       variant="outline"
                       className={
-                        bid.status.name === 'Accepted'
+                        bid.status.name === TradeStatus.ACCEPTED
                           ? 'bg-green-50 text-green-700 border-green-200'
                           : 'bg-red-50 text-red-700 border-red-200'
                       }
                     >
-                      {bid.status.name === 'Accepted' ? (
+                      {bid.status.name === TradeStatus.ACCEPTED ? (
                         <>
                           <CheckCircle className="h-3 w-3 mr-1 inline-block" />
                           Acceptée
@@ -172,7 +177,7 @@ export const AuctionDetails: React.FC<AuctionDetailsProps> = ({
         <CardFooter className="flex-col space-y-1 mt-2">
           <Separator />
           <div className="text-xs text-gray-500">
-            Offre la plus haute :{' '}
+            Meilleure offre :{' '}
             <span className="font-semibold text-gray-700">
               {sortedBids
                 .reduce((max, b) => (b.amount > max ? b.amount : max), 0)
@@ -181,9 +186,9 @@ export const AuctionDetails: React.FC<AuctionDetailsProps> = ({
             </span>
           </div>
           <div className="text-xs text-gray-500">
-            Fin de l'enchère :{' '}
+            Expiration de l'enchère :{' '}
             <span className="font-semibold text-gray-700">
-              {new Date(auction.expirationDate).toLocaleDateString('fr-FR')}
+              {formatDate(auction.expirationDate)}
             </span>
           </div>
         </CardFooter>

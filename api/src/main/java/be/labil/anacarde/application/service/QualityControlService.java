@@ -29,13 +29,11 @@ public interface QualityControlService {
 	QualityControlDto getQualityControlById(Integer id);
 
 	/**
-	 * Récupère tous les contrôles qualité associés à un produit.
+	 * Récupère tous les contrôles qualité.
 	 *
-	 * @param productId
-	 *            L'identifiant du produit.
-	 * @return Une liste de QualityControlDto associés à cet utilisateur.
+	 * @return Une liste de QualityControlDto.
 	 */
-	List<QualityControlDto> listQualityControls(Integer productId);
+	List<QualityControlDto> listQualityControls();
 
 	/**
 	 * Met à jour un contrôle qualité existant.

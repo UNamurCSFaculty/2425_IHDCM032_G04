@@ -66,6 +66,7 @@ import {
   listStores,
   listUsers,
   logout,
+  rejectBid,
   sendContactMessage,
   updateAuction,
   updateAuctionStrategy,
@@ -211,6 +212,9 @@ import type {
   ListStoresData,
   ListUsersData,
   LogoutData,
+  RejectBidData,
+  RejectBidError,
+  RejectBidResponse,
   SendContactMessageData,
   SendContactMessageError,
   UpdateAuctionData,
@@ -605,72 +609,6 @@ export const updateRegionMutation = (
   return mutationOptions
 }
 
-export const deleteQualityMutation = (
-  options?: Partial<Options<DeleteQualityData>>
-): UseMutationOptions<
-  DeleteQualityResponse,
-  DeleteQualityError,
-  Options<DeleteQualityData>
-> => {
-  const mutationOptions: UseMutationOptions<
-    DeleteQualityResponse,
-    DeleteQualityError,
-    Options<DeleteQualityData>
-  > = {
-    mutationFn: async localOptions => {
-      const { data } = await deleteQuality({
-        ...options,
-        ...localOptions,
-        throwOnError: true,
-      })
-      return data
-    },
-  }
-  return mutationOptions
-}
-
-export const getQualityQueryKey = (options: Options<GetQualityData>) =>
-  createQueryKey('getQuality', options)
-
-export const getQualityOptions = (options: Options<GetQualityData>) => {
-  return queryOptions({
-    queryFn: async ({ queryKey, signal }) => {
-      const { data } = await getQuality({
-        ...options,
-        ...queryKey[0],
-        signal,
-        throwOnError: true,
-      })
-      return data
-    },
-    queryKey: getQualityQueryKey(options),
-  })
-}
-
-export const updateQualityMutation = (
-  options?: Partial<Options<UpdateQualityData>>
-): UseMutationOptions<
-  unknown,
-  UpdateQualityError,
-  Options<UpdateQualityData>
-> => {
-  const mutationOptions: UseMutationOptions<
-    unknown,
-    UpdateQualityError,
-    Options<UpdateQualityData>
-  > = {
-    mutationFn: async localOptions => {
-      const { data } = await updateQuality({
-        ...options,
-        ...localOptions,
-        throwOnError: true,
-      })
-      return data
-    },
-  }
-  return mutationOptions
-}
-
 export const deleteQualityControlMutation = (
   options?: Partial<Options<DeleteQualityControlData>>
 ): UseMutationOptions<
@@ -730,6 +668,72 @@ export const updateQualityControlMutation = (
   > = {
     mutationFn: async localOptions => {
       const { data } = await updateQualityControl({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+export const deleteQualityMutation = (
+  options?: Partial<Options<DeleteQualityData>>
+): UseMutationOptions<
+  DeleteQualityResponse,
+  DeleteQualityError,
+  Options<DeleteQualityData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    DeleteQualityResponse,
+    DeleteQualityError,
+    Options<DeleteQualityData>
+  > = {
+    mutationFn: async localOptions => {
+      const { data } = await deleteQuality({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+export const getQualityQueryKey = (options: Options<GetQualityData>) =>
+  createQueryKey('getQuality', options)
+
+export const getQualityOptions = (options: Options<GetQualityData>) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getQuality({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: getQualityQueryKey(options),
+  })
+}
+
+export const updateQualityMutation = (
+  options?: Partial<Options<UpdateQualityData>>
+): UseMutationOptions<
+  unknown,
+  UpdateQualityError,
+  Options<UpdateQualityData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    unknown,
+    UpdateQualityError,
+    Options<UpdateQualityData>
+  > = {
+    mutationFn: async localOptions => {
+      const { data } = await updateQuality({
         ...options,
         ...localOptions,
         throwOnError: true,
@@ -1229,6 +1233,30 @@ export const updateBidMutation = (
   return mutationOptions
 }
 
+export const rejectBidMutation = (
+  options?: Partial<Options<RejectBidData>>
+): UseMutationOptions<
+  RejectBidResponse,
+  RejectBidError,
+  Options<RejectBidData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    RejectBidResponse,
+    RejectBidError,
+    Options<RejectBidData>
+  > = {
+    mutationFn: async localOptions => {
+      const { data } = await rejectBid({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
 export const acceptBidMutation = (
   options?: Partial<Options<AcceptBidData>>
 ): UseMutationOptions<
@@ -1604,6 +1632,72 @@ export const createRegionMutation = (
   return mutationOptions
 }
 
+export const listQualityControlsQueryKey = (
+  options?: Options<ListQualityControlsData>
+) => createQueryKey('listQualityControls', options)
+
+export const listQualityControlsOptions = (
+  options?: Options<ListQualityControlsData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await listQualityControls({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: listQualityControlsQueryKey(options),
+  })
+}
+
+export const createQualityControlQueryKey = (
+  options: Options<CreateQualityControlData>
+) => createQueryKey('createQualityControl', options)
+
+export const createQualityControlOptions = (
+  options: Options<CreateQualityControlData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await createQualityControl({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: createQualityControlQueryKey(options),
+  })
+}
+
+export const createQualityControlMutation = (
+  options?: Partial<Options<CreateQualityControlData>>
+): UseMutationOptions<
+  CreateQualityControlResponse,
+  CreateQualityControlError,
+  Options<CreateQualityControlData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    CreateQualityControlResponse,
+    CreateQualityControlError,
+    Options<CreateQualityControlData>
+  > = {
+    mutationFn: async localOptions => {
+      const { data } = await createQualityControl({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
 export const listQualitiesQueryKey = (options?: Options<ListQualitiesData>) =>
   createQueryKey('listQualities', options)
 
@@ -1714,72 +1808,6 @@ export const createProductMutation = (
   > = {
     mutationFn: async localOptions => {
       const { data } = await createProduct({
-        ...options,
-        ...localOptions,
-        throwOnError: true,
-      })
-      return data
-    },
-  }
-  return mutationOptions
-}
-
-export const listQualityControlsQueryKey = (
-  options: Options<ListQualityControlsData>
-) => createQueryKey('listQualityControls', options)
-
-export const listQualityControlsOptions = (
-  options: Options<ListQualityControlsData>
-) => {
-  return queryOptions({
-    queryFn: async ({ queryKey, signal }) => {
-      const { data } = await listQualityControls({
-        ...options,
-        ...queryKey[0],
-        signal,
-        throwOnError: true,
-      })
-      return data
-    },
-    queryKey: listQualityControlsQueryKey(options),
-  })
-}
-
-export const createQualityControlQueryKey = (
-  options: Options<CreateQualityControlData>
-) => createQueryKey('createQualityControl', options)
-
-export const createQualityControlOptions = (
-  options: Options<CreateQualityControlData>
-) => {
-  return queryOptions({
-    queryFn: async ({ queryKey, signal }) => {
-      const { data } = await createQualityControl({
-        ...options,
-        ...queryKey[0],
-        signal,
-        throwOnError: true,
-      })
-      return data
-    },
-    queryKey: createQualityControlQueryKey(options),
-  })
-}
-
-export const createQualityControlMutation = (
-  options?: Partial<Options<CreateQualityControlData>>
-): UseMutationOptions<
-  CreateQualityControlResponse,
-  CreateQualityControlError,
-  Options<CreateQualityControlData>
-> => {
-  const mutationOptions: UseMutationOptions<
-    CreateQualityControlResponse,
-    CreateQualityControlError,
-    Options<CreateQualityControlData>
-  > = {
-    mutationFn: async localOptions => {
-      const { data } = await createQualityControl({
         ...options,
         ...localOptions,
         throwOnError: true,

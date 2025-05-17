@@ -59,7 +59,13 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		productDto.setId(getTestHarvestProduct().getId());
 
 		TradeStatusDto statusDto = new TradeStatusDto();
-		statusDto.setId(getTestAuctionStatus().getId());
+		statusDto.setId(getTestTradeStatus().getId());
+
+		AuctionOptionsUpdateDto optionsDto = new AuctionOptionsUpdateDto();
+		strategyDto.setName("BestOffer");
+		optionsDto.setStrategyId(getTestAuctionStrategy().getId());
+		optionsDto.setBuyNowPrice(100.50);
+		optionsDto.setShowPublic(true);
 
 		AuctionOptionsUpdateDto optionsDto = new AuctionOptionsUpdateDto();
 		strategyDto.setName("BestOffer");
@@ -187,7 +193,13 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		productDto.setId(getTestHarvestProduct().getId());
 
 		TradeStatusDto statusDto = new TradeStatusDto();
-		statusDto.setId(getTestAuctionStatus().getId());
+		statusDto.setId(getTestTradeStatus().getId());
+
+		AuctionOptionsUpdateDto optionsDto = new AuctionOptionsUpdateDto();
+		strategyDto.setName("BestOffer");
+		optionsDto.setStrategyId(getTestAuctionStrategy().getId());
+		optionsDto.setBuyNowPrice(100.50);
+		optionsDto.setShowPublic(true);
 
 		AuctionOptionsUpdateDto optionsDto = new AuctionOptionsUpdateDto();
 		strategyDto.setName("BestOffer");
