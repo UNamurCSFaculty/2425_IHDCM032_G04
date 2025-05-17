@@ -103,6 +103,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 																										// for
 																										// WGS84
 	private final Random random = new Random();
+	private final QualityTypeRepository qualityTypeRepository;
 	private LocalDateTime generationTime; // Timestamp when generation starts
 	// juste après 'private final Random random = new Random();'
 	private final Set<String> generatedEmails = new HashSet<>();
@@ -153,6 +154,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 		productRepository.deleteAllInBatch();
 		qualityControlRepository.deleteAllInBatch();
 		qualityRepository.deleteAllInBatch();
+		qualityTypeRepository.deleteAllInBatch();
 		documentRepository.deleteAllInBatch();
 		fieldRepository.deleteAllInBatch();
 		storeRepository.deleteAllInBatch();
