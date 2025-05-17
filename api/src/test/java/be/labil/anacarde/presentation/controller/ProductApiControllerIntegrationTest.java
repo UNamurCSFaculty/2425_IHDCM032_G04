@@ -31,7 +31,7 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 		mockMvc.perform(get("/api/products/" + getTestHarvestProduct().getId())
 				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
 				.andExpect(jsonPath("$.type").value("harvest"))
-				.andExpect(jsonPath("$.store.location").value("POINT (2.3522 48.8566)"))
+				.andExpect(jsonPath("$.store.address.location").value("POINT (3.3522 8.8566)"))
 				.andExpect(jsonPath("$.weightKg").value("2000.0"))
 				.andExpect(jsonPath("$.qualityControl.identifier").value("QC-002"))
 				.andExpect(jsonPath("$.qualityControl.quality.name").value("WW160"))
