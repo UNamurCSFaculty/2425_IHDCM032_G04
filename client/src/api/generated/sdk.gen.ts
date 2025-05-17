@@ -46,9 +46,6 @@ import type {
   CreateQualityControlResponse,
   CreateQualityData,
   CreateQualityError,
-  CreateRegionData,
-  CreateRegionError,
-  CreateRegionResponse,
   CreateStoreData,
   CreateStoreError,
   CreateStoreResponse,
@@ -221,10 +218,11 @@ import type {
   UpdateUserRolesError,
   UpdateUserRolesResponse,
 } from './types.gen'
-import type {
-  Client,
-  Options as ClientOptions,
-  TDataShape,
+import {
+  type Client,
+  type Options as ClientOptions,
+  type TDataShape,
+  formDataBodySerializer,
 } from '@hey-api/client-fetch'
 
 export type Options<
@@ -362,7 +360,7 @@ export const getUser = <ThrowOnError extends boolean = false>(
 
 /**
  * Mettre à jour un utilisateur
- * Met à jour un utilisateur existant en utilisant l'ID spécifié dans l'URL.
+ * Met à jour un utilisateur existant en utilisant l'ID spécifié.
  */
 export const updateUser = <ThrowOnError extends boolean = false>(
   options: Options<UpdateUserData, ThrowOnError>
@@ -389,7 +387,7 @@ export const updateUser = <ThrowOnError extends boolean = false>(
 
 /**
  * Mettre à jour les rôles d'un utilisateur
- * Remplace l'ensemble des rôles de l'utilisateur spécifié par la liste fournie.
+ * Remplace l'ensemble des rôles de l'utilisateur spécifié.
  */
 export const updateUserRoles = <ThrowOnError extends boolean = false>(
   options: Options<UpdateUserRolesData, ThrowOnError>
@@ -1369,8 +1367,7 @@ export const listUsers = <ThrowOnError extends boolean = false>(
 }
 
 /**
- * Créer un utilisateur
- * Crée un nouvel utilisateur dans le système.
+ * Créer un utilisateur et téléverser des documents
  */
 export const createUser = <ThrowOnError extends boolean = false>(
   options: Options<CreateUserData, ThrowOnError>
@@ -1380,6 +1377,7 @@ export const createUser = <ThrowOnError extends boolean = false>(
     CreateUserError,
     ThrowOnError
   >({
+    ...formDataBodySerializer,
     security: [
       {
         scheme: 'bearer',
@@ -1389,7 +1387,7 @@ export const createUser = <ThrowOnError extends boolean = false>(
     url: '/api/users',
     ...options,
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': null,
       ...options?.headers,
     },
   })
@@ -1445,7 +1443,7 @@ export const createField = <ThrowOnError extends boolean = false>(
 
 /**
  * Ajouter un rôle à un utilisateur
- * Ajoute un rôle spécifique à l'utilisateur en utilisant le nom du rôle.
+ * Ajoute un rôle spécifique à l'utilisateur.
  */
 export const addRoleToUser = <ThrowOnError extends boolean = false>(
   options: Options<AddRoleToUserData, ThrowOnError>
@@ -1506,54 +1504,6 @@ export const createStore = <ThrowOnError extends boolean = false>(
       },
     ],
     url: '/api/stores',
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...options?.headers,
-    },
-  })
-}
-
-/**
- * Lister toutes les régions
- */
-export const listRegions = <ThrowOnError extends boolean = false>(
-  options?: Options<ListRegionsData, ThrowOnError>
-) => {
-  return (options?.client ?? _heyApiClient).get<
-    ListRegionsResponse,
-    unknown,
-    ThrowOnError
-  >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
-    url: '/api/regions',
-    ...options,
-  })
-}
-
-/**
- * Créer une nouvelle région
- */
-export const createRegion = <ThrowOnError extends boolean = false>(
-  options: Options<CreateRegionData, ThrowOnError>
-) => {
-  return (options.client ?? _heyApiClient).post<
-    CreateRegionResponse,
-    CreateRegionError,
-    ThrowOnError
-  >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
-    url: '/api/regions',
     ...options,
     headers: {
       'Content-Type': 'application/json',
@@ -2078,6 +2028,28 @@ export const createAuctionStrategy = <ThrowOnError extends boolean = false>(
       'Content-Type': 'application/json',
       ...options?.headers,
     },
+  })
+}
+
+/**
+ * Lister toutes les régions
+ */
+export const listRegions = <ThrowOnError extends boolean = false>(
+  options?: Options<ListRegionsData, ThrowOnError>
+) => {
+  return (options?.client ?? _heyApiClient).get<
+    ListRegionsResponse,
+    unknown,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/regions',
+    ...options,
   })
 }
 

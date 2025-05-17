@@ -10,7 +10,7 @@ import be.labil.anacarde.domain.dto.write.product.HarvestProductUpdateDto;
 import be.labil.anacarde.domain.dto.write.product.TransformedProductUpdateDto;
 import be.labil.anacarde.domain.dto.write.user.*;
 import be.labil.anacarde.domain.model.*;
-import be.labil.anacarde.infrastructure.import_data.RegionCityImportService;
+import be.labil.anacarde.infrastructure.importdata.RegionCityImportService;
 import be.labil.anacarde.infrastructure.persistence.*;
 import be.labil.anacarde.infrastructure.persistence.user.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -95,7 +95,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 	private final ObjectMapper mapper;
 
 	// --- Internal State ---
-	private final Faker faker = new Faker(new Locale("fr")); // Use French Faker locale
+	private final Faker faker = new Faker(Locale.of("fr")); // Use French Faker locale
 	private final GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326); // SRID
 																										// for
 																										// WGS84
@@ -130,6 +130,11 @@ public class DatabaseServiceImpl implements DatabaseService {
 	private List<CooperativeDto> createdCooperatives = new ArrayList<>();
 	private Map<Integer, List<FieldDto>> producerFieldsMap = new HashMap<>();
 	private List<ProductDto> createdProducts = new ArrayList<>();
+
+	@Override
+	public boolean isInitialized() {
+		return userRepository.count() > 0;
+	}
 
 	@Override
 	public void dropDatabase() {

@@ -3,7 +3,12 @@ package be.labil.anacarde.domain.dto.db.user;
 import be.labil.anacarde.domain.dto.db.BaseDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
+import lombok.experimental.SuperBuilder;
 
+@Data
+@Schema(description = "Données minimales d'un utilisateur.")
+@SuperBuilder
 public class UserMiniDto extends BaseDto {
 
 	/** User's first name. */

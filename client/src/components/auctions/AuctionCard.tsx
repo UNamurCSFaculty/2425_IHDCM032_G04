@@ -74,7 +74,7 @@ export const AuctionCard: React.FC<AuctionCardProps> = ({
                 {auction.product.store.name}
                 <span className="mx-1">|</span>
                 <MapPin className="w-4 h-4 mr-1" />
-                {formatCoordinates(auction.product.store.location)}
+                {auction.product.store.address.location && formatCoordinates(auction.product.store.address.location)}
               </CardDescription>
             </div>
           </CardTitle>
