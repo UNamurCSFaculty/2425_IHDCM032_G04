@@ -491,6 +491,14 @@ public abstract class AbstractIntegrationTest {
 		TradeStatus tradeStatusExpired = TradeStatus.builder().name("Expiré").build();
 		tradeStatusRepository.save(tradeStatusExpired);
 
+		AuctionOptions auctionOptions = new AuctionOptions();
+		auctionOptions.setStrategy(testAuctionStrategy);
+		auctionOptions.setFixedPriceKg(150.);
+		auctionOptions.setMaxPriceKg(300.);
+		auctionOptions.setMinPriceKg(80.);
+		auctionOptions.setBuyNowPrice(250.);
+		auctionOptions.setShowPublic(true);
+
 		// An auction with a harvest product
 		Auction auction = Auction.builder().price(new BigDecimal("500.0")).productQuantity(10)
 				.active(true).creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now())

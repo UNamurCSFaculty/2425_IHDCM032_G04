@@ -5,6 +5,7 @@ import be.labil.anacarde.domain.dto.db.product.HarvestProductDto;
 import be.labil.anacarde.domain.dto.db.product.ProductDto;
 import be.labil.anacarde.domain.dto.db.product.TransformedProductDto;
 import be.labil.anacarde.domain.dto.db.user.*;
+import be.labil.anacarde.domain.dto.write.AuctionOptionsUpdateDto;
 import be.labil.anacarde.domain.dto.write.AuctionUpdateDto;
 import be.labil.anacarde.domain.dto.write.BidUpdateDto;
 import be.labil.anacarde.domain.dto.write.CooperativeUpdateDto;
@@ -570,7 +571,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 			auctionDto.setCreationDate(creationDate);
 			auctionDto.setExpirationDate(expirationDate);
 			auctionDto.setStatusId(status.getId());
-			auctionDto.setStrategyId(strategyOffer.getId()); // Use default strategy
+			auctionDto.setOptions(new AuctionOptionsUpdateDto()); // Use default strategy
 
 			try {
 				createdAuctions.add(auctionService.createAuction(auctionDto));
@@ -617,7 +618,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 
 			boolean auctionFinished = !auction.getStatus().getId().equals(statusOpen.getId());
 
-			BigDecimal currentHighest = auction.getPrice();
+			BigDecimal currentHighest = BigDecimal.valueOf(auction.getPrice());
 			LocalDateTime lastBidTime = auction.getCreationDate();
 
 			List<BidUpdateDto> bids = new ArrayList<>();
@@ -686,9 +687,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 
 	// --- Helper Methods ---
 
-	private BigDecimal generateRandomPrice() {
-		return BigDecimal.valueOf(faker.number().randomDouble(2, 10, 10000)); // Price between 10.00
-		// and 10000.00
+	private double generateRandomPrice() {
+		return faker.number().randomDouble(2, 10, 10000);
 	}
 
 	/** Génère une adresse email unique pour tout le run */

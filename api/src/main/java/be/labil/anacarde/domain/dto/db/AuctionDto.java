@@ -4,7 +4,6 @@ import be.labil.anacarde.domain.dto.db.product.ProductDto;
 import be.labil.anacarde.domain.dto.db.user.UserMiniDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Data;
@@ -20,7 +19,7 @@ public class AuctionDto extends BaseDto {
 
 	@NotNull(message = "Le prix est requis")
 	@Schema(description = "Prix de l'enchère", example = "100.50", requiredMode = Schema.RequiredMode.REQUIRED)
-	private BigDecimal price;
+	private Double price;
 
 	@NotNull(message = "La quantité de produit est requise")
 	@Schema(description = "Quantité de produit associée à l'enchère", example = "10", requiredMode = Schema.RequiredMode.REQUIRED)
@@ -37,9 +36,6 @@ public class AuctionDto extends BaseDto {
 	@Schema(description = "Statut actif de l'enchère", example = "true", requiredMode = Schema.RequiredMode.REQUIRED)
 	private Boolean active;
 
-	@Schema(description = "Stratégie d'enchère associée")
-	private AuctionStrategyDto strategy;
-
 	@NotNull(message = "Le produit est requis")
 	@Schema(description = "Produit associé à l'enchère", requiredMode = Schema.RequiredMode.REQUIRED)
 	private ProductDto product;
@@ -54,4 +50,7 @@ public class AuctionDto extends BaseDto {
 
 	@Schema(description = "Liste des offres posées sur l'enchère", requiredMode = Schema.RequiredMode.REQUIRED)
 	private List<BidDto> bids;
+
+	@Schema(description = "Options spécifiques à l'enchère")
+	private AuctionOptionsDto options;
 }

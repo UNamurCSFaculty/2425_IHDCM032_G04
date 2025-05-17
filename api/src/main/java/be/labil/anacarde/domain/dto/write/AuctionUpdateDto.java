@@ -2,7 +2,6 @@ package be.labil.anacarde.domain.dto.write;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import lombok.Data;
 
@@ -12,7 +11,7 @@ public class AuctionUpdateDto {
 
 	@NotNull(message = "Le prix est requis")
 	@Schema(description = "Prix de l'enchère", example = "100.50", requiredMode = Schema.RequiredMode.REQUIRED)
-	private BigDecimal price;
+	private double price;
 
 	@NotNull(message = "La quantité de produit est requise")
 	@Schema(description = "Quantité de produit associée à l'enchère", example = "10", requiredMode = Schema.RequiredMode.REQUIRED)
@@ -37,9 +36,9 @@ public class AuctionUpdateDto {
 	@Schema(description = "Trader ayant créé l'enchère", requiredMode = Schema.RequiredMode.REQUIRED)
 	private Integer traderId;
 
-	@Schema(description = "Stratégie d'enchère associée")
-	private Integer strategyId;
-
 	@Schema(description = "Statut de l'enchère")
 	private Integer statusId;
+
+	@Schema(description = "Options d'enchère")
+	private AuctionOptionsUpdateDto options;
 }
