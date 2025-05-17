@@ -3,6 +3,7 @@ package be.labil.anacarde.domain.mapper;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import be.labil.anacarde.domain.dto.db.QualityDto;
+import be.labil.anacarde.domain.dto.write.QualityUpdateDto;
 import be.labil.anacarde.domain.model.Quality;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,14 +30,14 @@ class QualityMapperTest {
 
 	@Test
 	void shouldMapDtoToEntity() {
-		QualityDto dto = new QualityDto();
-		dto.setId(1);
+		QualityUpdateDto dto = new QualityUpdateDto();
 		dto.setName("A");
+		dto.setQualityTypeId(1);
 
 		Quality entity = qualityMapper.toEntity(dto);
 
 		assertThat(entity).isNotNull();
-		assertThat(entity.getId()).isEqualTo(dto.getId());
+		assertThat(entity.getQualityType().getId()).isEqualTo(dto.getQualityTypeId());
 		assertThat(entity.getName()).isEqualTo(dto.getName());
 	}
 }

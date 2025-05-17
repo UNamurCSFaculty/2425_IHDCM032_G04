@@ -4,8 +4,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import be.labil.anacarde.domain.dto.db.QualityDto;
-import be.labil.anacarde.domain.dto.db.QualityTypeDto;
+import be.labil.anacarde.domain.dto.write.QualityUpdateDto;
 import be.labil.anacarde.infrastructure.persistence.QualityRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -36,11 +35,9 @@ public class QualityApiControllerIntegrationTest extends AbstractIntegrationTest
 	 */
 	@Test
 	public void testCreateQuality() throws Exception {
-		QualityDto newQuality = new QualityDto();
+		QualityUpdateDto newQuality = new QualityUpdateDto();
 		newQuality.setName("ZZZ-000");
-		QualityTypeDto newQualityType = new QualityTypeDto();
-		newQualityType.setName("Amande");
-		newQuality.setQualityType(newQualityType);
+		newQuality.setQualityTypeId(getMainTestQualityType().getId());
 
 		ObjectNode node = objectMapper.valueToTree(newQuality);
 		String jsonContent = node.toString();
@@ -71,8 +68,9 @@ public class QualityApiControllerIntegrationTest extends AbstractIntegrationTest
 	 */
 	@Test
 	public void testUpdateQuality() throws Exception {
-		QualityDto updateQuality = new QualityDto();
+		QualityUpdateDto updateQuality = new QualityUpdateDto();
 		updateQuality.setName("WW450");
+		updateQuality.setQualityTypeId(getMainTestQualityType().getId());
 
 		ObjectNode node = objectMapper.valueToTree(updateQuality);
 		String jsonContent = node.toString();
