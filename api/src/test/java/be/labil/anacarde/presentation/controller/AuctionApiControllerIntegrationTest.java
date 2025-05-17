@@ -15,7 +15,6 @@ import be.labil.anacarde.domain.model.Auction;
 import be.labil.anacarde.infrastructure.persistence.AuctionRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,12 +66,6 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		optionsDto.setBuyNowPrice(100.50);
 		optionsDto.setShowPublic(true);
 
-		AuctionOptionsUpdateDto optionsDto = new AuctionOptionsUpdateDto();
-		strategyDto.setName("BestOffer");
-		optionsDto.setStrategyId(getTestAuctionStrategy().getId());
-		optionsDto.setBuyNowPrice(100.50);
-		optionsDto.setShowPublic(true);
-
 		AuctionUpdateDto newAuction = new AuctionUpdateDto();
 		newAuction.setPrice(111.11);
 		newAuction.setProductQuantity(11);
@@ -98,14 +91,12 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 						jsonPath("$.options.strategy.id").value(getTestAuctionStrategy().getId()))
 				.andExpect(jsonPath("$.trader.id").value(getProducerTestUser().getId()));
 
-		Auction createdAuction = auctionRepository.findAll().stream()
-				.filter(auction -> auction.getPrice().equals(new BigDecimal("111.11"))).findFirst()
-				.orElseThrow(() -> new AssertionError("Enchère non trouvée"));
+		auctionRepository.findAll().stream().filter(auction -> auction.getPrice().equals(111.11))
+				.findFirst().orElseThrow(() -> new AssertionError("Enchère non trouvée"));
 	}
 
 	/**
 	 * Teste la création d'une nouvelle enchère, avec un status par défaut.
-	 *
 	 */
 	@Test
 	public void testCreateAuctionWithDefaultStatus() throws Exception {
@@ -138,7 +129,7 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 				.andExpect(jsonPath("$.status.name").value("Ouvert"));
 
 		Auction createdAuction = auctionRepository.findAll().stream()
-				.filter(auction -> auction.getPrice().equals(new BigDecimal("111.11"))).findFirst()
+				.filter(auction -> auction.getPrice().equals(111.11)).findFirst()
 				.orElseThrow(() -> new AssertionError("Enchère non trouvée"));
 	}
 
@@ -194,12 +185,6 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 
 		TradeStatusDto statusDto = new TradeStatusDto();
 		statusDto.setId(getTestTradeStatus().getId());
-
-		AuctionOptionsUpdateDto optionsDto = new AuctionOptionsUpdateDto();
-		strategyDto.setName("BestOffer");
-		optionsDto.setStrategyId(getTestAuctionStrategy().getId());
-		optionsDto.setBuyNowPrice(100.50);
-		optionsDto.setShowPublic(true);
 
 		AuctionOptionsUpdateDto optionsDto = new AuctionOptionsUpdateDto();
 		strategyDto.setName("BestOffer");

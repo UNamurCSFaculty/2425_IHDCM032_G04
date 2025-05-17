@@ -1,7 +1,5 @@
 package be.labil.anacarde.domain.dto.db;
 
-import be.labil.anacarde.domain.dto.db.product.ProductDto;
-import be.labil.anacarde.domain.dto.db.user.QualityInspectorDetailDto;
 import be.labil.anacarde.domain.dto.db.user.UserMiniDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;

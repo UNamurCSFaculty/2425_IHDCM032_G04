@@ -95,19 +95,7 @@ public class AuctionMapperTest {
 	@Test
 	public void testUpdateToEntity() {
 		AuctionUpdateDto auctionDto = getAuctionUpdateDto();
-		Auction existingAuction = new Auction();
-		existingAuction.setProductQuantity(20);
-		existingAuction.setPrice(50.);
-
-		existingAuction.setPrice(90.);
-		existingAuction.setExpirationDate(LocalDateTime.of(2025, 1, 1, 0, 0, 0, 0));
-		existingAuction.setCreationDate(LocalDateTime.of(2025, 1, 1, 0, 0, 0, 0));
-		existingAuction.setActive(true);
-		existingAuction.setOptions();
-		existingAuction.setProductQuantity(20);
-		existingAuction.setTrader(new Producer());
-		existingAuction.setStatus(new TradeStatus());
-
+		Auction existingAuction = getAuction();
 		Auction auction = auctionMapper.partialUpdate(auctionDto, existingAuction);
 
 		assertNotNull(auction);
@@ -125,11 +113,9 @@ public class AuctionMapperTest {
 
 	private static AuctionUpdateDto getAuctionUpdateDto() {
 		AuctionOptionsUpdateDto optionsDto = new AuctionOptionsUpdateDto();
-		AuctionStrategyDto strategyDto = new AuctionStrategyDto();
-		strategyDto.setName("BestOffer");
-		optionsDto.setStrategyId(1);
 		optionsDto.setBuyNowPrice(100.50);
 		optionsDto.setShowPublic(true);
+		optionsDto.setStrategyId(1);
 		AuctionUpdateDto auctionDto = new AuctionUpdateDto();
 		auctionDto.setPrice(100.50);
 		auctionDto.setProductQuantity(10);
@@ -143,23 +129,24 @@ public class AuctionMapperTest {
 		return auctionDto;
 	}
 
-	private static AuctionUpdateDto getAuctionOptions() {
-		AuctionOptionsUpdateDto optionsDto = new AuctionOptionsUpdateDto();
-		AuctionStrategyDto strategyDto = new AuctionStrategyDto();
-		strategyDto.setName("BestOffer");
-		optionsDto.setStrategyId(1);
-		optionsDto.setBuyNowPrice(100.50);
-		optionsDto.setShowPublic(true);
-		AuctionUpdateDto auctionDto = new AuctionUpdateDto();
-		auctionDto.setPrice(100.50);
-		auctionDto.setProductQuantity(10);
-		auctionDto.setExpirationDate(LocalDateTime.of(2025, 1, 1, 0, 0, 0, 0));
-		auctionDto.setCreationDate(LocalDateTime.of(2025, 1, 1, 0, 0, 0, 0));
-		auctionDto.setTraderId(1);
-		auctionDto.setStatusId(2);
-		auctionDto.setOptions(optionsDto);
-		auctionDto.setProductId(4);
-		auctionDto.setActive(true);
-		return auctionDto;
+	private static Auction getAuction() {
+		AuctionOptions options = new AuctionOptions();
+		AuctionStrategy strategy = new AuctionStrategy();
+		strategy.setName("BestOffer");
+		strategy.setId(1);
+		options.setStrategy(strategy);
+		options.setBuyNowPrice(120.);
+		options.setShowPublic(true);
+		Auction auction = new Auction();
+		auction.setPrice(90.);
+		auction.setProductQuantity(15);
+		auction.setExpirationDate(LocalDateTime.of(2025, 1, 1, 0, 0, 0, 0));
+		auction.setCreationDate(LocalDateTime.of(2025, 1, 1, 0, 0, 0, 0));
+		auction.setTrader(new Producer());
+		auction.setStatus(new TradeStatus());
+		auction.setOptions(options);
+		auction.setProduct(new HarvestProduct());
+		auction.setActive(false);
+		return auction;
 	}
 }
