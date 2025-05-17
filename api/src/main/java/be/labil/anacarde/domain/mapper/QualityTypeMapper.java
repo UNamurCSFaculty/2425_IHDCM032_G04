@@ -9,12 +9,13 @@ import org.mapstruct.*;
  */
 @Mapper(componentModel = "spring", uses = {
 		MapperHelpers.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface QualityTypeMapper {
+public abstract class QualityTypeMapper {
 
-	QualityTypeDto toDto(QualityType entity);
+	public abstract QualityTypeDto toDto(QualityType entity);
 
-	QualityType toEntity(QualityTypeDto dto);
+	public abstract QualityType toEntity(QualityTypeDto dto);
 
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-	QualityType partialUpdate(QualityTypeDto dto, @MappingTarget QualityType entity);
+	public abstract QualityType partialUpdate(QualityTypeDto dto,
+			@MappingTarget QualityType entity);
 }

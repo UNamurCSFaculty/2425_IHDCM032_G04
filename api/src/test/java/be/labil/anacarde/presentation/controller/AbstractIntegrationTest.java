@@ -84,6 +84,7 @@ public abstract class AbstractIntegrationTest {
 	private Address mainAddress;
 	private Document mainTestDocument;
 	private Quality mainTestQuality;
+	private QualityType mainQualityType;
 	private ContractOffer mainTestContractOffer;
 	private QualityControl mainTestQualityControl;
 
@@ -322,6 +323,16 @@ public abstract class AbstractIntegrationTest {
 		return mainTestQuality;
 	}
 
+	/**
+	 * Renvoie un Type de Qualité de test.
+	 */
+	public QualityType getMainTestQualityType() {
+		if (mainQualityType == null) {
+			throw new IllegalStateException("Qualité de test non initialisée");
+		}
+		return mainQualityType;
+	}
+
 	public ContractOffer getMainTestContractOffer() {
 		if (mainTestQuality == null) {
 			throw new IllegalStateException("Contrat de test non initialisé");
@@ -436,8 +447,8 @@ public abstract class AbstractIntegrationTest {
 		fieldRepository.save(field2);
 
 		// Quality Type
-		QualityType qualityType = QualityType.builder().name("Grade I").build();
-		qualityType = qualityTypeRepository.save(qualityType);
+		QualityType qualityType = QualityType.builder().name("Amande").build();
+		mainQualityType = qualityTypeRepository.save(qualityType);
 
 		// A quality
 		Quality quality = Quality.builder().name("WW160").qualityType(qualityType).build();

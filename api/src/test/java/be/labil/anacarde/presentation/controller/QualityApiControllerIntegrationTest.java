@@ -5,7 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import be.labil.anacarde.domain.dto.db.QualityDto;
-import be.labil.anacarde.domain.model.Quality;
+import be.labil.anacarde.domain.dto.db.QualityTypeDto;
 import be.labil.anacarde.infrastructure.persistence.QualityRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -38,6 +38,9 @@ public class QualityApiControllerIntegrationTest extends AbstractIntegrationTest
 	public void testCreateQuality() throws Exception {
 		QualityDto newQuality = new QualityDto();
 		newQuality.setName("ZZZ-000");
+		QualityTypeDto newQualityType = new QualityTypeDto();
+		newQualityType.setName("Amande");
+		newQuality.setQualityType(newQualityType);
 
 		ObjectNode node = objectMapper.valueToTree(newQuality);
 		String jsonContent = node.toString();
@@ -48,9 +51,8 @@ public class QualityApiControllerIntegrationTest extends AbstractIntegrationTest
 				.andExpect(header().string("Location", containsString("/api/qualities/")))
 				.andExpect(jsonPath("$.name").value("ZZZ-000"));
 
-		Quality createdQuality = qualityRepository.findAll().stream()
-				.filter(quality -> quality.getName().equals("ZZZ-000")).findFirst()
-				.orElseThrow(() -> new AssertionError("Qualitée non trouvée"));
+		qualityRepository.findAll().stream().filter(quality -> quality.getName().equals("ZZZ-000"))
+				.findFirst().orElseThrow(() -> new AssertionError("Qualité non trouvée"));
 	}
 
 	/**
