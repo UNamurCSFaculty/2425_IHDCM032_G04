@@ -347,7 +347,7 @@ public abstract class AbstractIntegrationTest {
 		// userRepository.deleteAll();
 		// languageRepository.deleteAll();
 
-		Language language = Language.builder().name("Français").code("fr").id(1).build();
+		Language language = Language.builder().name("Français").code("fr").build();
 		mainLanguage = languageRepository.save(language);
 
 		// A simple region

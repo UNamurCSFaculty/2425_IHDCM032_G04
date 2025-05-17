@@ -3,7 +3,6 @@ package be.labil.anacarde.domain.model;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.ColumnDefault;
 
 /**
  * Paramètres globaux applicables par défaut aux enchères
