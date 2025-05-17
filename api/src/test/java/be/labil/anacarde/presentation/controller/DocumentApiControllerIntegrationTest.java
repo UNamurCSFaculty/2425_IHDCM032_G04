@@ -122,7 +122,7 @@ public class DocumentApiControllerIntegrationTest extends AbstractIntegrationTes
 	public void testListDocumentsForAUser() throws Exception {
 		mockMvc.perform(get("/api/documents/users/" + getMainTestDocument().getUser().getId())
 				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
-				.andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(1))
-				.andExpect(jsonPath("$[0].id").value(getMainTestDocument().getId()));
+				.andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(2))
+				.andExpect(jsonPath("$[1].id").value(getMainTestDocument().getId()));
 	}
 }
