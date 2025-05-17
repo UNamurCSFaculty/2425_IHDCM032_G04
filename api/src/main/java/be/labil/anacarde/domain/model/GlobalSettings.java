@@ -38,4 +38,8 @@ public class GlobalSettings {
 	@Column(name = "show_only_active", nullable = false)
 	@Builder.Default
 	private Boolean showOnlyActive = Boolean.TRUE;
+
+	@Column(name = "min_increment", nullable = false)
+	@Builder.Default
+	private Integer minIncrement = 1;
 }

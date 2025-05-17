@@ -31,4 +31,8 @@ public class AuctionOptions {
 	@Column(name = "show_public", nullable = false)
 	@Builder.Default
 	private Boolean showPublic = Boolean.TRUE;
+
+	@Column(name = "min_increment", nullable = false)
+	@Builder.Default
+	private Integer minIncrement = 1;
 }

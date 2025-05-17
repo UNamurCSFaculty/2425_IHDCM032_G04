@@ -24,4 +24,7 @@ public class GlobalSettingsUpdateDto {
 	@NotNull(message = "Le flag showOnlyActive est requis")
 	@Schema(description = "Filtrer les enchères terminées", example = "true", required = true)
 	private Boolean showOnlyActive;
+
+	@Schema(description = "Incrément minimum d'une sur enchère")
+	private Integer minIncrement = 1;
 }

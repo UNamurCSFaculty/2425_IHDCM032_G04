@@ -22,4 +22,7 @@ public class GlobalSettingsDto {
 
 	@Schema(description = "Filtrer automatiquement les enchères terminées", example = "true")
 	private Boolean showOnlyActive;
+
+	@Schema(description = "Incrément minimum d'une sur enchère")
+	private Integer minIncrement = 1;
 }

@@ -5,10 +5,7 @@ import be.labil.anacarde.domain.dto.db.product.HarvestProductDto;
 import be.labil.anacarde.domain.dto.db.product.ProductDto;
 import be.labil.anacarde.domain.dto.db.product.TransformedProductDto;
 import be.labil.anacarde.domain.dto.db.user.*;
-import be.labil.anacarde.domain.dto.write.AuctionOptionsUpdateDto;
-import be.labil.anacarde.domain.dto.write.AuctionUpdateDto;
-import be.labil.anacarde.domain.dto.write.BidUpdateDto;
-import be.labil.anacarde.domain.dto.write.CooperativeUpdateDto;
+import be.labil.anacarde.domain.dto.write.*;
 import be.labil.anacarde.domain.dto.write.product.HarvestProductUpdateDto;
 import be.labil.anacarde.domain.dto.write.product.TransformedProductUpdateDto;
 import be.labil.anacarde.domain.dto.write.user.*;
@@ -225,6 +222,46 @@ public class DatabaseServiceImpl implements DatabaseService {
 		dto1.setName("Enchères montantes");
 		AuctionStrategyDto strategyBid = auctionStrategyService.createAuctionStrategy(dto1);
 		log.debug("Base lookups created.");
+
+		// create QualityTypes and Qualities
+		// --- Création des QualityType ---
+		QualityType anacardeType = qualityTypeRepository.save(new QualityType("Harvest"));
+		QualityType amandeType = qualityTypeRepository.save(new QualityType("Transformed"));
+
+		// --- Qualités Anacarde brute ---
+		List<String> anacardeQualities = List.of("Grade I", "Grade II", "Grade III", "Hors normes");
+
+		for (String name : anacardeQualities) {
+			Quality q = new Quality();
+			q.setName(name);
+			q.setQualityType(anacardeType);
+			qualityRepository.save(q);
+		}
+
+		// --- Qualités Amande transformée (combinaison catégorie et calibre pour WW/SW/DW) ---
+		List<String> amandeCategories = List.of("WW", "SW", "DW");
+		List<String> amandeCalibres = List.of("180", "210", "240", "280", "320", "400", "450",
+				"500");
+
+		// Catégories entières avec calibres
+		for (String cat : amandeCategories) {
+			for (String calibre : amandeCalibres) {
+				String name = cat + calibre;
+				Quality q = new Quality();
+				q.setName(name);
+				q.setQualityType(amandeType);
+				qualityRepository.save(q);
+			}
+		}
+		// Les autres styles et morceaux sans calibre
+		List<String> otherAmandeQualities = List.of("SWP", "LWP", "FB", "SB", "FS", "SS", "SP",
+				"SSP", "SPS", "DP", "BB", "SSW");
+		for (String name : otherAmandeQualities) {
+			Quality q = new Quality();
+			q.setName(name);
+			q.setQualityType(amandeType);
+			qualityRepository.save(q);
+		}
 	}
 
 	// --- Step 2: Regions and Cities ---
@@ -323,8 +360,9 @@ public class DatabaseServiceImpl implements DatabaseService {
 			Collections.shuffle(membersPool);
 
 			for (int j = 0; j < numMembers; j++) {
-				ProducerDetailDto memberDto = membersPool.remove(0); // retire du pool pour éviter
-																		// doublons
+				ProducerDetailDto memberDto = membersPool.removeFirst(); // retire du pool pour
+																			// éviter
+																			// doublons
 				userRepository.findById(memberDto.getId()).ifPresent(user -> {
 					if (user instanceof Producer p) {
 						p.setCooperative(
@@ -441,6 +479,16 @@ public class DatabaseServiceImpl implements DatabaseService {
 				StoreDetailDto store = createdStores.get(random.nextInt(createdStores.size()));
 				FieldDto field = fields.get(random.nextInt(fields.size()));
 
+				// Choix d'un inspecteur qualité existant
+				// QualityInspectorDetailDto inspector =
+				// createdQualityInspectors.get(random.nextInt(createdQualityInspectors.size()));
+
+				// Crée le contrôle qualité (simplifié ici, à adapter à ton modèle)
+				// QualityControlUpdateDto qc = new QualityControlUpdateDto();
+				// qc.setProductId(inspector.getId());
+				// qc.setDate(generateRandomDateTimeInPast());
+				// qc = qualityControlRepository.save(qc);
+
 				/* --- DTO d’écriture --- */
 				HarvestProductUpdateDto dto = new HarvestProductUpdateDto();
 				dto.setProducerId(producer.getId());
@@ -448,6 +496,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 				dto.setFieldId(field.getId());
 				dto.setWeightKg(faker.number().randomDouble(2, 500, 8000)); // 500 kg – 8000 kg
 				dto.setDeliveryDate(generateRandomDateTimeInPast());
+				dto.setQualityControlId(1);
 
 				try {
 					ProductDto created = productService.createProduct(dto); // compile désormais
@@ -564,6 +613,16 @@ public class DatabaseServiceImpl implements DatabaseService {
 				isActive = false; // Finished auctions are inactive
 			}
 
+			// Create AuctionOptions
+			AuctionOptionsUpdateDto opt = new AuctionOptionsUpdateDto();
+			opt.setStrategyId(strategyOffer.getId());
+			opt.setBuyNowPrice(faker.number().randomDouble(2, 100, 5000));
+			opt.setShowPublic(true);
+			opt.setStrategyId(strategyOffer.getId());
+			opt.setFixedPriceKg(faker.number().randomDouble(2, 100, 5000));
+			opt.setMinPriceKg(faker.number().randomDouble(2, 100, 5000));
+			opt.setMaxPriceKg(faker.number().randomDouble(2, 100, 5000));
+
 			AuctionUpdateDto auctionDto = new AuctionUpdateDto();
 			auctionDto.setProductId(product.getId());
 			auctionDto.setTraderId(trader.getId());
@@ -573,7 +632,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 			auctionDto.setCreationDate(creationDate);
 			auctionDto.setExpirationDate(expirationDate);
 			auctionDto.setStatusId(status.getId());
-			auctionDto.setOptions(new AuctionOptionsUpdateDto()); // Use default strategy
+			auctionDto.setOptions(opt);
 
 			try {
 				createdAuctions.add(auctionService.createAuction(auctionDto));
