@@ -30,6 +30,10 @@
     "auctions_new_sale": {
       "title": "Nouvelle vente",
       "subtitle": "Créez une nouvelle vente aux enchères pour votre produit."
+    },
+    "deposits_new_product": {
+      "title": "Nouveau produit",
+      "subtitle": "Déposez un nouveau produit en magasin."
     }
   },
   "breadcrumb": {
@@ -45,7 +49,10 @@
     "terms": "Conditions d’utilisation",
     "vendre": "Vendre",
     "my_auctions": "Mes enchères",
-    "new_auction": "Nouvelle enchère"
+    "new_auction": "Nouvelle enchère",
+    "deposits": "Depôts",
+    "my_deposits": "Mes produits",
+    "new_deposit": "Nouveau produit"
   },
   "buttons": {
     "cancel": "Annuler",
@@ -149,6 +156,12 @@
   },
   "database": {
     "harvest": "noix de cajou",
-    "transformed": "amandes"
+    "transformed": "amandes",
+    "AdminListDto": "admin",
+    "ProducerListDto": "producteur",
+    "TransformerListDto": "transformateur",
+    "QualityInspectorListDto": "qualiticien",
+    "ExporterListDto": "exportateur",
+    "CarrierListDto": "transporteur"
   }
 }

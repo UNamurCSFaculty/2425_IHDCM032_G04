@@ -117,9 +117,9 @@ export function Header() {
           url: '/depots/nouveau-produit',
         },
         {
-          title: 'Mon historique',
-          description: 'Détails de mes dépôts passés',
-          icon: <History className="size-5 shrink-0" />,
+          title: 'Mes dépôts',
+          description: 'Consulter tous mes dépôts',
+          icon: <ArrowLeftRight className="size-5 shrink-0" />,
           url: '/depots/mes-produits',
         },
       ],

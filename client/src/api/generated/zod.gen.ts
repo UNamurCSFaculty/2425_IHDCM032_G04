@@ -36,12 +36,12 @@ export const zTraderDetailDto = z.object({
   roles: z.array(zRoleDto).readonly().optional(),
   language: zLanguageDto,
   type: z.enum([
-    'admin',
-    'producer',
-    'transformer',
-    'quality_inspector',
-    'exporter',
-    'carrier',
+    'AdminListDto',
+    'ProducerListDto',
+    'TransformerListDto',
+    'QualityInspectorListDto',
+    'ExporterListDto',
+    'CarrierListDto',
   ]),
 })
 
@@ -207,12 +207,12 @@ export const zUserDetailDto = z.object({
   roles: z.array(zRoleDto).readonly().optional(),
   language: zLanguageDto,
   type: z.enum([
-    'admin',
-    'producer',
-    'transformer',
-    'quality_inspector',
-    'exporter',
-    'carrier',
+    'AdminListDto',
+    'ProducerListDto',
+    'TransformerListDto',
+    'QualityInspectorListDto',
+    'ExporterListDto',
+    'CarrierListDto',
   ]),
 })
 
@@ -243,12 +243,12 @@ export const zQualityInspectorDetailDto = z.object({
   roles: z.array(zRoleDto).readonly().optional(),
   language: zLanguageDto,
   type: z.enum([
-    'admin',
-    'producer',
-    'transformer',
-    'quality_inspector',
-    'exporter',
-    'carrier',
+    'AdminListDto',
+    'ProducerListDto',
+    'TransformerListDto',
+    'QualityInspectorListDto',
+    'ExporterListDto',
+    'CarrierListDto',
   ]),
 })
 
@@ -515,12 +515,12 @@ export const zUserListDto = z.object({
     .regex(/^(?:\+229)?01\d{8}$/)
     .optional(),
   type: z.enum([
-    'admin',
-    'producer',
-    'transformer',
-    'quality_inspector',
-    'exporter',
-    'carrier',
+    'AdminListDto',
+    'ProducerListDto',
+    'TransformerListDto',
+    'QualityInspectorListDto',
+    'ExporterListDto',
+    'CarrierListDto',
   ]),
 })
 

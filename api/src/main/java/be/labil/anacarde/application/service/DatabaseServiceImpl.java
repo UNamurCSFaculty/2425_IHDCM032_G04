@@ -131,8 +131,11 @@ public class DatabaseServiceImpl implements DatabaseService {
 		UserDetailDto qualityInspector = userService.createUser(qualityInspectorUpdate);
 
 		// Création d'un store
-		StoreDetailDto store = createStore(admin);
+		StoreDetailDto store = createStore(admin, "Nassara", "POINT(2.3522 48.8566)");
 		store = storeService.createStore(store);
+
+		StoreDetailDto store2 = createStore(producer, "Porto-Novo", "POINT(2.3222 47.8566)");
+		storeService.createStore(store2);
 
 		// Création d'une qualité
 		QualityDto quality = createQuality("WW10");
@@ -314,10 +317,10 @@ public class DatabaseServiceImpl implements DatabaseService {
 		return bid;
 	}
 
-	private StoreDetailDto createStore(UserDetailDto manager) {
+	private StoreDetailDto createStore(UserDetailDto manager, String name, String location) {
 		StoreDetailDto store = new StoreDetailDto();
-		store.setName("Nassara");
-		store.setLocation("POINT(2.3522 48.8566)");
+		store.setName(name);
+		store.setLocation(location);
 		store.setUserId(manager.getId());
 		return store;
 	}
@@ -361,7 +364,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 	private ProducerUpdateDto createProducer(LanguageDto languageDto) {
 		ProducerUpdateDto producer = new ProducerUpdateDto();
 		producer.setFirstName("Fabrice");
-		producer.setLastName("Producer");
+		producer.setLastName("Cipolla");
 		producer.setEmail("fabricecipolla@gmail.com");
 		producer.setPassword("azertyui");
 		producer.setEnabled(true);
@@ -377,7 +380,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 	private ExporterUpdateDto createExporter(LanguageDto languageDto) {
 		ExporterUpdateDto exporter = new ExporterUpdateDto();
 		exporter.setFirstName("Stéphane");
-		exporter.setLastName("Exporter");
+		exporter.setLastName("Glibert");
 		exporter.setEmail("stephaneglibert@gmail.com");
 		exporter.setPassword("azertyui");
 		exporter.setAddress("Rue du Commerce");
@@ -392,7 +395,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 	private TransformerUpdateDto createTransformer(LanguageDto languageDto) {
 		TransformerUpdateDto transformer = new TransformerUpdateDto();
 		transformer.setFirstName("Homer");
-		transformer.setLastName("Transformer");
+		transformer.setLastName("Simpson");
 		transformer.setEmail("homer@gmail.com");
 		transformer.setPassword("azertyui");
 		transformer.setAddress("Springfield");
@@ -407,7 +410,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 	private QualityInspectorUpdateDto createQualityInspector(LanguageDto languageDto) {
 		QualityInspectorUpdateDto qualityInspector = new QualityInspectorUpdateDto();
 		qualityInspector.setFirstName("Bart");
-		qualityInspector.setLastName("QualityInspector");
+		qualityInspector.setLastName("Simpson");
 		qualityInspector.setEmail("bart@gmail.com");
 		qualityInspector.setPassword("azertyui");
 		qualityInspector.setAddress("Springfield");

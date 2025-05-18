@@ -383,12 +383,12 @@ export type QualityInspectorDetailDto = {
    * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
    */
   type:
-    | 'admin'
-    | 'producer'
-    | 'transformer'
-    | 'quality_inspector'
-    | 'exporter'
-    | 'carrier'
+    | 'AdminListDto'
+    | 'ProducerListDto'
+    | 'TransformerListDto'
+    | 'QualityInspectorListDto'
+    | 'ExporterListDto'
+    | 'CarrierListDto'
 }
 
 /**
@@ -443,12 +443,12 @@ export type TraderDetailDto = {
    * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
    */
   type:
-    | 'admin'
-    | 'producer'
-    | 'transformer'
-    | 'quality_inspector'
-    | 'exporter'
-    | 'carrier'
+    | 'AdminListDto'
+    | 'ProducerListDto'
+    | 'TransformerListDto'
+    | 'QualityInspectorListDto'
+    | 'ExporterListDto'
+    | 'CarrierListDto'
 }
 
 /**
@@ -508,12 +508,12 @@ export type UserDetailDto = {
    * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
    */
   type:
-    | 'admin'
-    | 'producer'
-    | 'transformer'
-    | 'quality_inspector'
-    | 'exporter'
-    | 'carrier'
+    | 'AdminListDto'
+    | 'ProducerListDto'
+    | 'TransformerListDto'
+    | 'QualityInspectorListDto'
+    | 'ExporterListDto'
+    | 'CarrierListDto'
 }
 
 /**
@@ -1184,12 +1184,12 @@ export type UserListDto = {
    * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
    */
   type:
-    | 'admin'
-    | 'producer'
-    | 'transformer'
-    | 'quality_inspector'
-    | 'exporter'
-    | 'carrier'
+    | 'AdminListDto'
+    | 'ProducerListDto'
+    | 'TransformerListDto'
+    | 'QualityInspectorListDto'
+    | 'ExporterListDto'
+    | 'CarrierListDto'
 }
 
 /**
