@@ -15,14 +15,12 @@ import be.labil.anacarde.domain.model.*;
 import be.labil.anacarde.infrastructure.importdata.RegionCityImportService;
 import be.labil.anacarde.infrastructure.persistence.*;
 import be.labil.anacarde.infrastructure.persistence.user.UserRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.*;
 import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -59,9 +57,9 @@ public class DatabaseServiceImpl implements DatabaseService {
 	private static final int MAX_PRODUCTS_PER_PRODUCER = 10;
 	private static final int MIN_PRODUCTS_PER_TRANSFORMER = 5;
 	private static final int MAX_PRODUCTS_PER_TRANSFORMER = 15;
-	private static final int NUM_AUCTIONS = 1000;
+	private static final int NUM_AUCTIONS = 100;
 	private static final int MIN_BIDS_PER_FINISHED_AUCTION = 0;
-	private static final int MAX_BIDS_PER_FINISHED_AUCTION = 30;
+	private static final int MAX_BIDS_PER_FINISHED_AUCTION = 10;
 	private static final String DEFAULT_PASSWORD = "password";
 
 	private static final Map<Class<? extends UserUpdateDto>, String> DEFAULT_EMAILS = Map.of(
@@ -103,12 +101,11 @@ public class DatabaseServiceImpl implements DatabaseService {
 	private final RegionCityImportService regionCityImportService;
 
 	private final EntityManager entityManager;
-	private final ObjectMapper mapper;
 
 	// --- Internal State ---
 	private final Faker faker = new Faker(Locale.of("fr")); // Use French Faker locale
 	private final GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326); // SRID
-																										// for
+																										// for//
 																										// WGS84
 	private final Random random = new Random();
 	private final QualityTypeRepository qualityTypeRepository;
@@ -118,6 +115,23 @@ public class DatabaseServiceImpl implements DatabaseService {
 	// juste après 'private final Random random = new Random();'
 	private final Set<String> generatedEmails = new HashSet<>();
 	private final List<AuctionDto> createdAuctions = new ArrayList<>(); // Reset list for this run
+	private static final double[] regionWeights = {0.006, // ID 1
+			0.158, // ID 2 (Atacora 15.8 %)
+			0.006, // ID 3
+			0.259, // ID 4 (Borgou 25.9 %)
+			0.101, // ID 5 (Collines 10.1 %)
+			0.045, // ID 6 (Autres 4.5 %)
+			0.395, // ID 7 (Donga 39.5 %)
+			0.006, // ID 8
+			0.006, // ID 9
+			0.006, // ID 10
+			0.006, // ID 11
+			0.006 // ID 12 (Zou 0.6 %)
+	};
+	// clé = qualité, valeur = [prixMin, prixMax] en FCFA/kg
+	private static final Map<String, double[]> cashewPriceRanges = Map.of("Grade I",
+			new double[]{600.0, 800.0}, "Grade II", new double[]{500.0, 700.0}, "Grade III",
+			new double[]{400.0, 600.0}, "Hors normes", new double[]{300.0, 500.0});
 
 	// Base data loaded once
 	private LanguageDto langFr;
@@ -345,7 +359,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 	 * @return Liste des DTO créés
 	 */
 	private <U extends UserUpdateDto, D> List<D> createUsersOfType(Class<U> dtoClass,
-                                                                   Supplier<U> dtoSupplier, Function<U, D> createMethod, int totalCount) {
+			Supplier<U> dtoSupplier, Function<U, D> createMethod, int totalCount) {
 		List<D> list = new ArrayList<>(totalCount);
 
 		log.info("Création de {} instances de {}", totalCount, dtoClass.getSimpleName());
@@ -442,18 +456,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 			UserDetailDto manager = potentialManagers.get(random.nextInt(potentialManagers.size()));
 			StoreDetailDto storeDto = new StoreDetailDto();
 			storeDto.setName(faker.company().suffix() + " " + faker.address().city() + " Dépôt");
-			Region randomRegion = regions.get(faker.number().numberBetween(0, regions.size()));
-			List<City> citiesInRegion = cities.stream()
-					.filter(c -> c.getRegion().equals(randomRegion)).collect(Collectors.toList());
-			if (citiesInRegion.isEmpty()) {
-				citiesInRegion = List.copyOf(cities);
-			}
-			City randomCity = citiesInRegion
-					.get(faker.number().numberBetween(0, citiesInRegion.size()));
-			AddressDto addr = AddressDto.builder().street(faker.address().streetAddress())
-					.location(randomWktPoint()).regionId(randomRegion.getId())
-					.cityId(randomCity.getId()).build();
-			storeDto.setAddress(addr);
+			storeDto.setAddress(createVariationAddress(manager.getAddress()));
 			storeDto.setUserId(manager.getId());
 			try {
 				createdStores.add(storeService.createStore(storeDto));
@@ -480,19 +483,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 			for (int i = 0; i < numFields; i++) {
 				FieldDto fieldDto = new FieldDto();
 				fieldDto.setIdentifier("FIELD-" + faker.number().digits(6));
-				Region randomRegion = regions.get(faker.number().numberBetween(0, regions.size()));
-				List<City> citiesInRegion = cities.stream()
-						.filter(c -> c.getRegion().equals(randomRegion))
-						.collect(Collectors.toList());
-				if (citiesInRegion.isEmpty()) {
-					citiesInRegion = List.copyOf(cities);
-				}
-				City randomCity = citiesInRegion
-						.get(faker.number().numberBetween(0, citiesInRegion.size()));
-				AddressDto addr = AddressDto.builder().street(faker.address().streetAddress())
-						.location(randomWktPoint()).regionId(randomRegion.getId())
-						.cityId(randomCity.getId()).build();
-				fieldDto.setAddress(addr);
+				fieldDto.setAddress(createVariationAddress(producer.getAddress()));
 				fieldDto.setProducer(producer);
 				try {
 					fieldsForProducer.add(fieldService.createField(fieldDto));
@@ -712,29 +703,44 @@ public class DatabaseServiceImpl implements DatabaseService {
 			} else {
 				// Past auction - choose a finished status
 				int statusChoice = random.nextInt(10); // 0-9
-				if (statusChoice < 5)
-					status = statusAccepted; // 50% chance Accepted
-				else if (statusChoice < 8)
-					status = statusExpired; // 30% chance Expired
-				else status = statusConcluded; // 20% chance Concluded
+				if (statusChoice < 8)
+					status = statusConcluded; // 80% chance conclue
+				else status = statusExpired; // 20% chance Concluded
 				isActive = false; // Finished auctions are inactive
 			}
+
+			// --- Détermination du nom de la qualité et la quantité du produit ---
+			String qualityName = product.getQualityControl().getQuality().getName();
+			int quantity = faker.number().numberBetween(1, 100) * 50;
+			// --- Récupération de la fourchette correspondante ---
+			double[] range;
+			if (cashewPriceRanges.containsKey(qualityName)) {
+				range = cashewPriceRanges.get(qualityName);
+			} else {
+				range = new double[]{500.0, 800.0};
+			}
+			double minPrice = range[0];
+			double maxPrice = range[1];
+
+			// --- Génération aléatoire du price dans [minPrice,maxPrice] ---
+			double price = minPrice + random.nextDouble() * (maxPrice - minPrice) / 2;
+			price = BigDecimal.valueOf(price * quantity).setScale(2, RoundingMode.HALF_UP)
+					.doubleValue();
 
 			// Create AuctionOptions
 			AuctionOptionsUpdateDto opt = new AuctionOptionsUpdateDto();
 			opt.setStrategyId(strategyOffer.getId());
-			opt.setBuyNowPrice(faker.number().randomDouble(2, 100, 5000));
+			opt.setBuyNowPrice(maxPrice * quantity);
 			opt.setShowPublic(true);
 			opt.setStrategyId(strategyOffer.getId());
-			opt.setFixedPriceKg(faker.number().randomDouble(2, 100, 5000));
-			opt.setMinPriceKg(faker.number().randomDouble(2, 100, 5000));
-			opt.setMaxPriceKg(faker.number().randomDouble(2, 100, 5000));
+			opt.setMinPriceKg(minPrice);
+			opt.setMaxPriceKg(maxPrice);
 
 			AuctionUpdateDto auctionDto = new AuctionUpdateDto();
 			auctionDto.setProductId(product.getId());
 			auctionDto.setTraderId(trader.getId());
-			auctionDto.setPrice(generateRandomPrice());
-			auctionDto.setProductQuantity(faker.number().numberBetween(5, 500)); // Example quantity
+			auctionDto.setProductQuantity(quantity); // Example quantity
+			auctionDto.setPrice(price);
 			auctionDto.setActive(isActive);
 			auctionDto.setCreationDate(creationDate);
 			auctionDto.setExpirationDate(expirationDate);
@@ -746,7 +752,6 @@ public class DatabaseServiceImpl implements DatabaseService {
 			} catch (Exception e) {
 				log.error("Failed to create auction for trader {}: {}", trader.getId(),
 						e.getMessage());
-				// Potential issues: constraint violations, null pointers if data inconsistent
 			}
 		}
 		log.info("Auctions created (Total: {}).", createdAuctions.size());
@@ -785,6 +790,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 			if (bidders.isEmpty()) continue;
 
 			boolean auctionFinished = !auction.getStatus().getId().equals(statusOpen.getId());
+			boolean auctionConcluded = auction.getStatus().getId().equals(statusConcluded.getId());
 
 			BigDecimal currentHighest = BigDecimal.valueOf(auction.getPrice());
 			LocalDateTime lastBidTime = auction.getCreationDate();
@@ -814,26 +820,34 @@ public class DatabaseServiceImpl implements DatabaseService {
 						ZoneId.systemDefault());
 				lastBidTime = bidCreationDate;
 
-				/* montant = +0-15 % au-dessus de l'offre courante */
-				BigDecimal amount = currentHighest
-						.multiply(BigDecimal.valueOf(1 + random.nextDouble() * 0.15))
-						.setScale(2, RoundingMode.HALF_UP);
-				currentHighest = amount;
-
 				BidUpdateDto bid = new BidUpdateDto();
 				bid.setAuctionId(auction.getId());
 				bid.setTraderId(bidder.getId());
-				bid.setAmount(amount);
 				bid.setCreationDate(bidCreationDate);
 
-				// statut provisoire : Ouvert si l'auction l'est encore, sinon Expiré
-				bid.setStatusId(auctionFinished ? statusRejected.getId() : statusOpen.getId());
-
-				bids.add(bid);
+				/* montant = +0-5 % au-dessus de l'offre courante */
+				BigDecimal amount = currentHighest
+						.multiply(BigDecimal.valueOf(1 + random.nextDouble() * 0.5))
+						.setScale(2, RoundingMode.HALF_UP);
+				if (amount.compareTo(
+						BigDecimal.valueOf(auction.getOptions().getBuyNowPrice())) >= 0) {
+					if (auctionConcluded) {
+						bid.setStatusId(statusOpen.getId());
+						bid.setAmount(BigDecimal.valueOf(auction.getOptions().getBuyNowPrice()));
+						bids.add(bid);
+					}
+					i = numBids;
+				} else {
+					currentHighest = amount;
+					// statut provisoire : Ouvert si l'auction l'est encore, sinon Expiré
+					bid.setStatusId(auctionFinished ? statusRejected.getId() : statusOpen.getId());
+					bid.setAmount(amount);
+					bids.add(bid);
+				}
 			}
 
 			// 4) Si la vente est terminée, on accepte la meilleure enchère --------
-			if (auctionFinished && !bids.isEmpty()) {
+			if (auctionFinished && auctionConcluded && !bids.isEmpty()) {
 				BidUpdateDto winner = bids.stream()
 						.max(Comparator.comparing(BidUpdateDto::getAmount)).orElseThrow();
 				winner.setStatusId(statusAccepted.getId());
@@ -889,50 +903,92 @@ public class DatabaseServiceImpl implements DatabaseService {
 		return LocalDateTime.ofInstant(randomDate.toInstant(), ZoneId.systemDefault());
 	}
 
-	private Point createRandomPointInCity() {
-		// Si pas de villes en base, génère une coordonnée aléatoire
-		if (cities == null || cities.isEmpty()) {
-			double lat = parseDoubleSafe(faker.address().latitude());
-			double lon = parseDoubleSafe(faker.address().longitude());
-			return geometryFactory.createPoint(new Coordinate(lon, lat));
-		}
-
-		// Sinon, on pioche une ville existante et on retourne son point
-		City randomCity = cities.get(ThreadLocalRandom.current().nextInt(cities.size()));
-		return randomCity.getLocation();
-	}
-
-	/** Construit un WKT POINT(longitude latitude) au format décimal US (séparateur '.') */
-	private String randomWktPoint() {
-		double lon = parseDoubleSafe(faker.address().longitude());
-		double lat = parseDoubleSafe(faker.address().latitude());
-		return String.format(Locale.US, "POINT(%f %f)", lon, lat);
-	}
-
 	/** Prix au km aléatoire entre 0.50 € et 5.00 € */
 	private BigDecimal randomPricePerKm() {
 		return BigDecimal.valueOf(faker.number().randomDouble(2, 50, 500))
 				.divide(BigDecimal.valueOf(100));
 	}
 
-	private double parseDoubleSafe(String coord) {
-		if (coord == null) {
-			throw new IllegalArgumentException("Coordonnée invalide : null");
-		}
-		// remplace la virgule par un point si nécessaire
-		coord = coord.replace(',', '.');
-		try {
-			return Double.parseDouble(coord);
-		} catch (NumberFormatException e) {
-			throw new IllegalArgumentException(
-					"Impossible de parser la coordonnée « " + coord + " »", e);
-		}
-	}
-
 	private TradeStatusDto createTradeStatusDto(String name) {
 		TradeStatusDto status = new TradeStatusDto();
 		status.setName(name);
 		return status;
+	}
+
+	/**
+	 * Crée une adresse aléatoire pondérée par la production d'anacarde par région.
+	 */
+	public AddressDto createRandomAddress() {
+		// 1) Choix de la région selon le poids
+		Region selectedRegion = selectRegionByWeight();
+
+		// 2) Récupération des villes dans la région
+		List<City> citiesInRegion = cities.stream()
+				.filter(c -> c.getRegion().equals(selectedRegion)).collect(Collectors.toList());
+		if (citiesInRegion.isEmpty()) {
+			citiesInRegion = new ArrayList<>(cities);
+		}
+
+		// 3) Choix aléatoire d'une ville
+		City selectedCity = citiesInRegion.get(random.nextInt(citiesInRegion.size()));
+
+		// 4) Récupération des coordonnées du Point JTS et décalage ±0.1°
+		Point orig = selectedCity.getLocation();
+		double lon0 = orig.getX();
+		double lat0 = orig.getY();
+		double lon = lon0 + (random.nextDouble() * 0.2 - 0.1);
+		double lat = lat0 + (random.nextDouble() * 0.2 - 0.1);
+		Point newPoint = geometryFactory.createPoint(new Coordinate(lon, lat));
+		String newWkt = newPoint.toText();
+
+		// 5) Construction du DTO
+		return AddressDto.builder().street(faker.address().streetAddress()).location(newWkt)
+				.regionId(selectedRegion.getId()).cityId(selectedCity.getId()).build();
+	}
+
+	/**
+	 * Construit une AddressDto pour un champ en reprenant la même région et ville que le
+	 * producteur, mais avec rue aléatoire et décalage ±0.1° sur le point.
+	 */
+	private AddressDto createVariationAddress(AddressDto addressDto) {
+		// On récupère la même région et la même ville
+		Integer regionId = addressDto.getRegionId();
+		Integer cityId = addressDto.getCityId();
+
+		// Trouve la City correspondante pour son Point JTS
+		City baseCity = cities.stream().filter(c -> c.getId().equals(cityId)).findFirst()
+				.orElseThrow(() -> new IllegalStateException("Ville du producteur introuvable"));
+
+		// Récupère les coordonnées du Point JTS et ajoute ±0.1°
+		Point orig = baseCity.getLocation();
+		double lon0 = orig.getX();
+		double lat0 = orig.getY();
+		double lon = lon0 + (random.nextDouble() * 0.2 - 0.1);
+		double lat = lat0 + (random.nextDouble() * 0.2 - 0.1);
+		Point newPoint = geometryFactory.createPoint(new Coordinate(lon, lat));
+
+		// Construit et retourne l'AddressDto
+		return AddressDto.builder().street(faker.address().streetAddress()) // rue aléatoire
+				.location(newPoint.toText()) // WKT du nouveau point
+				.regionId(regionId) // même région que le producteur
+				.cityId(cityId) // même ville que le producteur
+				.build();
+	}
+
+	/**
+	 * Sélectionne une région en fonction des poids de production.
+	 */
+	private Region selectRegionByWeight() {
+		double r = random.nextDouble();
+		double cumulative = 0.0;
+		for (int i = 0; i < regions.size(); i++) {
+			cumulative += regionWeights[i];
+			if (r <= cumulative) {
+				return regions.get(i);
+			}
+		}
+		// En cas de somme < 1, retourner la dernière région
+		return regions.getLast();
 	}
 
 	// --- User DTO Creation Helpers ---
@@ -944,17 +1000,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 		admin.setEmail(uniqueEmail());
 		admin.setPassword(DEFAULT_PASSWORD);
 		Region randomRegion = regions.get(faker.number().numberBetween(0, regions.size()));
-		List<City> citiesInRegion = cities.stream().filter(c -> c.getRegion().equals(randomRegion))
-				.collect(Collectors.toList());
-		if (citiesInRegion.isEmpty()) {
-			citiesInRegion = List.copyOf(cities);
-		}
-		City randomCity = citiesInRegion
-				.get(faker.number().numberBetween(0, citiesInRegion.size()));
-		AddressDto addr = AddressDto.builder().street(faker.address().streetAddress())
-				.location(randomWktPoint()).regionId(randomRegion.getId())
-				.cityId(randomCity.getId()).build();
-		admin.setAddress(addr);
+		admin.setAddress(createRandomAddress());
 		admin.setEnabled(true);
 		admin.setRegistrationDate(generateRandomDateTimeInPast());
 		admin.setValidationDate(
@@ -974,18 +1020,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 		producer.setEmail(uniqueEmail());
 		producer.setPassword(DEFAULT_PASSWORD);
 		producer.setEnabled(true);
-		Region randomRegion = regions.get(faker.number().numberBetween(0, regions.size()));
-		List<City> citiesInRegion = cities.stream().filter(c -> c.getRegion().equals(randomRegion))
-				.collect(Collectors.toList());
-		if (citiesInRegion.isEmpty()) {
-			citiesInRegion = List.copyOf(cities);
-		}
-		City randomCity = citiesInRegion
-				.get(faker.number().numberBetween(0, citiesInRegion.size()));
-		AddressDto addr = AddressDto.builder().street(faker.address().streetAddress())
-				.location(randomWktPoint()).regionId(randomRegion.getId())
-				.cityId(randomCity.getId()).build();
-		producer.setAddress(addr);
+		producer.setAddress(createRandomAddress());
 		producer.setRegistrationDate(generateRandomDateTimeInPast());
 		producer.setValidationDate(
 				producer.getRegistrationDate().plusDays(faker.number().numberBetween(1, 10)));
@@ -1003,17 +1038,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 		transformer.setPassword(DEFAULT_PASSWORD);
 		transformer.setEnabled(true);
 		Region randomRegion = regions.get(faker.number().numberBetween(0, regions.size()));
-		List<City> citiesInRegion = cities.stream().filter(c -> c.getRegion().equals(randomRegion))
-				.collect(Collectors.toList());
-		if (citiesInRegion.isEmpty()) {
-			citiesInRegion = List.copyOf(cities);
-		}
-		City randomCity = citiesInRegion
-				.get(faker.number().numberBetween(0, citiesInRegion.size()));
-		AddressDto addr = AddressDto.builder().street(faker.address().streetAddress())
-				.location(randomWktPoint()).regionId(randomRegion.getId())
-				.cityId(randomCity.getId()).build();
-		transformer.setAddress(addr);
+		transformer.setAddress(createRandomAddress());
 		transformer.setRegistrationDate(generateRandomDateTimeInPast());
 		transformer.setValidationDate(
 				transformer.getRegistrationDate().plusDays(faker.number().numberBetween(1, 10)));
@@ -1030,17 +1055,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 		exporter.setPassword(DEFAULT_PASSWORD);
 		exporter.setEnabled(true);
 		Region randomRegion = regions.get(faker.number().numberBetween(0, regions.size()));
-		List<City> citiesInRegion = cities.stream().filter(c -> c.getRegion().equals(randomRegion))
-				.collect(Collectors.toList());
-		if (citiesInRegion.isEmpty()) {
-			citiesInRegion = List.copyOf(cities);
-		}
-		City randomCity = citiesInRegion
-				.get(faker.number().numberBetween(0, citiesInRegion.size()));
-		AddressDto addr = AddressDto.builder().street(faker.address().streetAddress())
-				.location(randomWktPoint()).regionId(randomRegion.getId())
-				.cityId(randomCity.getId()).build();
-		exporter.setAddress(addr);
+		exporter.setAddress(createRandomAddress());
 		exporter.setRegistrationDate(generateRandomDateTimeInPast());
 		exporter.setValidationDate(
 				exporter.getRegistrationDate().plusDays(faker.number().numberBetween(1, 10)));
@@ -1056,18 +1071,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 		carrier.setEmail(uniqueEmail());
 		carrier.setPassword(DEFAULT_PASSWORD);
 		carrier.setEnabled(true);
-		Region randomRegion = regions.get(faker.number().numberBetween(0, regions.size()));
-		List<City> citiesInRegion = cities.stream().filter(c -> c.getRegion().equals(randomRegion))
-				.collect(Collectors.toList());
-		if (citiesInRegion.isEmpty()) {
-			citiesInRegion = List.copyOf(cities);
-		}
-		City randomCity = citiesInRegion
-				.get(faker.number().numberBetween(0, citiesInRegion.size()));
-		AddressDto addr = AddressDto.builder().street(faker.address().streetAddress())
-				.location(randomWktPoint()).regionId(randomRegion.getId())
-				.cityId(randomCity.getId()).build();
-		carrier.setAddress(addr);
+		carrier.setAddress(createRandomAddress());
 		carrier.setPricePerKm(randomPricePerKm());
 		carrier.setRegistrationDate(generateRandomDateTimeInPast());
 		carrier.setValidationDate(
@@ -1084,18 +1088,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 		qualityInspector.setEmail(uniqueEmail());
 		qualityInspector.setPassword(DEFAULT_PASSWORD);
 		qualityInspector.setEnabled(true);
-		Region randomRegion = regions.get(faker.number().numberBetween(0, regions.size()));
-		List<City> citiesInRegion = cities.stream().filter(c -> c.getRegion().equals(randomRegion))
-				.collect(Collectors.toList());
-		if (citiesInRegion.isEmpty()) {
-			citiesInRegion = List.copyOf(cities);
-		}
-		City randomCity = citiesInRegion
-				.get(faker.number().numberBetween(0, citiesInRegion.size()));
-		AddressDto addr = AddressDto.builder().street(faker.address().streetAddress())
-				.location(randomWktPoint()).regionId(randomRegion.getId())
-				.cityId(randomCity.getId()).build();
-		qualityInspector.setAddress(addr);
+		qualityInspector.setAddress(createRandomAddress());
 		qualityInspector.setRegistrationDate(generateRandomDateTimeInPast());
 		qualityInspector.setValidationDate(qualityInspector.getRegistrationDate()
 				.plusDays(faker.number().numberBetween(1, 10)));
