@@ -16,6 +16,7 @@ type SelectOption<T> = {
 
 type SelectFieldProps<T extends string | number> = {
   label: string
+  hint?: string
   options: SelectOption<T>[]
   placeholder?: string
   className?: string
@@ -31,6 +32,7 @@ type SelectFieldProps<T extends string | number> = {
 
 export function SelectField<T extends string | number>({
   label,
+  hint,
   options,
   placeholder,
   className = 'w-full',
@@ -53,10 +55,13 @@ export function SelectField<T extends string | number>({
   return (
     <div className="space-y-2">
       <div className="space-y-1">
-        <Label htmlFor={field.name}>
-          {label}
-          {required && <span className="text-red-500">*</span>}
-        </Label>
+        <div className="flex items-center justify-between">
+          <Label htmlFor={field.name}>
+            {label}
+            {required && <span className="text-red-500">*</span>}
+          </Label>
+          {hint && <span className="text-sm text-gray-500">{hint}</span>}
+        </div>
         <Select
           // on passe toujours une string au <Select>
           disabled={disabled}

@@ -48,6 +48,7 @@ export function ProductForm({
   )
 
   const [selectedTraderId, setSelectedTraderId] = useState<number | null>(null)
+  const [selectedField, setSelectedField] = useState<FieldDto | null>(null)
 
   const { data: fields } = useQuery({
     ...listFieldsOptions({ path: { userId: selectedTraderId! } }),
@@ -175,9 +176,10 @@ export function ProductForm({
                         },
                       ]}
                       label="Marchandise"
-                      onChange={productType =>
+                      onChange={productType => {
+                        setSelectedTraderId(null)
                         setSelectedProductType(productType)
-                      }
+                      }}
                     />
                   )}
                 />
@@ -211,6 +213,9 @@ export function ProductForm({
                       ? 'Producteur'
                       : 'Transformateur'
                   }
+                  hint={
+                    selectedTraderId ? 'identifiant : ' + selectedTraderId : ''
+                  }
                   onChange={traderId => {
                     setSelectedTraderId(traderId)
                   }}
@@ -224,13 +229,18 @@ export function ProductForm({
                   <field.SelectField
                     options={(fields as FieldDto[]).map(field => ({
                       value: field.id,
-                      label:
-                        'Champ ' +
-                        field.identifier +
-                        ' @ ' +
-                        formatCoordinates(field.location!),
+                      label: 'Champ ' + field.identifier,
                     }))}
-                    label="Origine du produit"
+                    label="Origine"
+                    hint={
+                      selectedField && selectedField.location
+                        ? 'gps : ' + formatCoordinates(selectedField.location)
+                        : ''
+                    }
+                    onChange={fieldId => {
+                      const f = fields.find(field => field.id === fieldId)
+                      setSelectedField(f!)
+                    }}
                   />
                 )}
               />

@@ -71,7 +71,7 @@ export function Header() {
   const menu: MenuItem[] = [
     { title: 'Accueil', url: '/' },
     {
-      title: 'Acheter',
+      title: 'Achats',
       url: '#',
       items: [
         {
@@ -89,7 +89,7 @@ export function Header() {
       ],
     },
     {
-      title: 'Vendre',
+      title: 'Ventes',
       url: '#',
       items: [
         {
