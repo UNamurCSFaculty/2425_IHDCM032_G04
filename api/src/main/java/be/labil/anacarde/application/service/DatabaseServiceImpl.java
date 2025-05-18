@@ -1083,7 +1083,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 		carrier.setLastName(faker.name().lastName());
 		carrier.setEmail(uniqueEmail());
 		carrier.setPassword(DEFAULT_PASSWORD);
-		carrier.setEnabled(true);
+		carrier.setEnabled(Math.random() >= 0.2);
 		carrier.setAddress(createRandomAddress());
 		carrier.setPricePerKm(randomPricePerKm());
 		carrier.setRegistrationDate(generateRandomDateTimeInPast());
@@ -1100,7 +1100,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 		qualityInspector.setLastName(faker.name().lastName());
 		qualityInspector.setEmail(uniqueEmail());
 		qualityInspector.setPassword(DEFAULT_PASSWORD);
-		qualityInspector.setEnabled(true);
+		qualityInspector.setEnabled(Math.random() >= 0.2);
 		qualityInspector.setAddress(createRandomAddress());
 		qualityInspector.setRegistrationDate(generateRandomDateTimeInPast());
 		qualityInspector.setValidationDate(qualityInspector.getRegistrationDate()
