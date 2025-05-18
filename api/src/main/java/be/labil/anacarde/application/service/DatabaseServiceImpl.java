@@ -718,8 +718,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 			double price = minPrice + random.nextDouble() * (maxPrice - minPrice) / 2;
 			BigDecimal total = BigDecimal.valueOf(price * quantity);
 			BigDecimal hundred = BigDecimal.valueOf(100);
-			BigDecimal roundedDownToHundred = total
-					.divide(hundred, 0, RoundingMode.FLOOR)
+			BigDecimal roundedDownToHundred = total.divide(hundred, 0, RoundingMode.FLOOR)
 					.multiply(hundred);
 			price = roundedDownToHundred.doubleValue();
 
@@ -746,7 +745,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 				AuctionDto createdAuctionDto = auctionService.createAuction(auctionDto);
 				createdAuctionDto.setCreationDate(creationDate);
 				createdAuctions.add(createdAuctionDto);
-				auctionRepository.overrideCreationDateNative(createdAuctionDto.getId(), creationDate);
+				auctionRepository.overrideCreationDateNative(createdAuctionDto.getId(),
+						creationDate);
 			} catch (Exception e) {
 				log.error("Failed to create auction for trader {}: {}", trader.getId(),
 						e.getMessage());
@@ -814,20 +814,20 @@ public class DatabaseServiceImpl implements DatabaseService {
 				}
 
 				// Bornes en millisecondes UTC
-				long startMillis = lastBidTime.plusSeconds(1)
-						.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-				long endMillis   = maxBidTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+				long startMillis = lastBidTime.plusSeconds(1).atZone(ZoneId.systemDefault())
+						.toInstant().toEpochMilli();
+				long endMillis = maxBidTime.atZone(ZoneId.systemDefault()).toInstant()
+						.toEpochMilli();
 				if (startMillis >= endMillis) break;
 
 				// ----- Tirage biaisé vers le début -----
-				double u         = random.nextDouble();     // uniforme [0,1[
-				double biasPow   = 2.0;                     // >1 → plus près du début
-				long offset      = (long) ((endMillis - startMillis) * Math.pow(u, biasPow));
-				long bidMillis   = startMillis + offset;
+				double u = random.nextDouble(); // uniforme [0,1[
+				double biasPow = 2.0; // >1 → plus près du début
+				long offset = (long) ((endMillis - startMillis) * Math.pow(u, biasPow));
+				long bidMillis = startMillis + offset;
 
 				LocalDateTime bidCreationDate = Instant.ofEpochMilli(bidMillis)
-						.atZone(ZoneId.systemDefault())
-						.toLocalDateTime();
+						.atZone(ZoneId.systemDefault()).toLocalDateTime();
 				lastBidTime = bidCreationDate;
 				// ------------------------------------------------------------
 
@@ -840,9 +840,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 				BigDecimal raw = currentHighest
 						.multiply(BigDecimal.valueOf(1 + random.nextDouble() * 0.05));
 				BigDecimal hundred = BigDecimal.valueOf(100);
-				BigDecimal amount = raw
-						.divide(hundred, 0, RoundingMode.FLOOR)
-						.multiply(hundred);
+				BigDecimal amount = raw.divide(hundred, 0, RoundingMode.FLOOR).multiply(hundred);
 
 				if (amount.compareTo(
 						BigDecimal.valueOf(auction.getOptions().getBuyNowPrice())) >= 0) {
@@ -873,7 +871,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 			for (BidUpdateDto dto : bids) {
 				try {
 					BidDto createdBidDto = bidService.createBid(dto);
-					bidRepository.overrideCreationDateNative(createdBidDto.getId(), dto.getCreationDate());
+					bidRepository.overrideCreationDateNative(createdBidDto.getId(),
+							dto.getCreationDate());
 					bidsCreatedCount++;
 				} catch (Exception e) {
 					log.error("Failed to create bid for auction {}: {}", auction.getId(),
