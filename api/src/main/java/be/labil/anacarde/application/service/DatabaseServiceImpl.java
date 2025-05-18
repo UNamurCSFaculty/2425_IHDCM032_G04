@@ -392,8 +392,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 
 		// listes de travail
 		List<ProducerDetailDto> presidentsPool = new ArrayList<>(createdProducers);
-		List<ProducerDetailDto> membersPool = new ArrayList<>(createdProducers); // producteurs
-																					// restants
+		List<ProducerDetailDto> membersPool = new ArrayList<>(createdProducers); // producteur
+																					// restant
 
 		for (int i = 0; i < NUM_COOPERATIVES && !presidentsPool.isEmpty(); i++) {
 
@@ -482,7 +482,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 			List<FieldDto> fieldsForProducer = new ArrayList<>();
 			for (int i = 0; i < numFields; i++) {
 				FieldDto fieldDto = new FieldDto();
-				fieldDto.setIdentifier("FIELD-" + faker.number().digits(6));
+				fieldDto.setIdentifier("FIELD-" + faker.number().digits(10));
 				fieldDto.setAddress(createVariationAddress(producer.getAddress()));
 				fieldDto.setProducer(producer);
 				try {
@@ -645,12 +645,6 @@ public class DatabaseServiceImpl implements DatabaseService {
 		allTraders.addAll(createdTransformers);
 		// Add Exporters if they can trade: allTraders.addAll(createdExporters);
 
-		Instant startOfYear = ZonedDateTime
-				.of(TARGET_YEAR, 1, 1, 0, 0, 0, 0, ZoneId.systemDefault()).toInstant();
-		Instant endOfYear = ZonedDateTime
-				.of(TARGET_YEAR, 12, 31, 23, 59, 59, 999_999_999, ZoneId.systemDefault())
-				.toInstant();
-
 		for (int i = 0; i < NUM_AUCTIONS; i++) {
 			ProductDto product = createdProducts.get(random.nextInt(createdProducts.size()));
 			TraderDetailDto trader;
@@ -688,16 +682,14 @@ public class DatabaseServiceImpl implements DatabaseService {
 			}
 
 			// Generate dates
-			Date randomDate = faker.date().between(Date.from(startOfYear), Date.from(endOfYear));
-			LocalDateTime creationDate = LocalDateTime.ofInstant(randomDate.toInstant(),
-					ZoneId.systemDefault());
+			LocalDateTime creationDate = generateRandomDateTimeInPast();
 			LocalDateTime expirationDate = creationDate
 					.plusDays(faker.number().numberBetween(5, 45));
 
 			// Determine Status based on creationDate vs now
 			TradeStatusDto status;
 			boolean isActive;
-			if (creationDate.isAfter(generationTime)) {
+			if (expirationDate.isAfter(generationTime)) {
 				status = statusOpen; // Future auction
 				isActive = true;
 			} else {
@@ -724,8 +716,12 @@ public class DatabaseServiceImpl implements DatabaseService {
 
 			// --- Génération aléatoire du price dans [minPrice,maxPrice] ---
 			double price = minPrice + random.nextDouble() * (maxPrice - minPrice) / 2;
-			price = BigDecimal.valueOf(price * quantity).setScale(2, RoundingMode.HALF_UP)
-					.doubleValue();
+			BigDecimal total = BigDecimal.valueOf(price * quantity);
+			BigDecimal hundred = BigDecimal.valueOf(100);
+			BigDecimal roundedDownToHundred = total
+					.divide(hundred, 0, RoundingMode.FLOOR)
+					.multiply(hundred);
+			price = roundedDownToHundred.doubleValue();
 
 			// Create AuctionOptions
 			AuctionOptionsUpdateDto opt = new AuctionOptionsUpdateDto();
@@ -742,13 +738,15 @@ public class DatabaseServiceImpl implements DatabaseService {
 			auctionDto.setProductQuantity(quantity); // Example quantity
 			auctionDto.setPrice(price);
 			auctionDto.setActive(isActive);
-			auctionDto.setCreationDate(creationDate);
 			auctionDto.setExpirationDate(expirationDate);
 			auctionDto.setStatusId(status.getId());
 			auctionDto.setOptions(opt);
 
 			try {
-				createdAuctions.add(auctionService.createAuction(auctionDto));
+				AuctionDto createdAuctionDto = auctionService.createAuction(auctionDto);
+				createdAuctionDto.setCreationDate(creationDate);
+				createdAuctions.add(createdAuctionDto);
+				auctionRepository.overrideCreationDateNative(createdAuctionDto.getId(), creationDate);
 			} catch (Exception e) {
 				log.error("Failed to create auction for trader {}: {}", trader.getId(),
 						e.getMessage());
@@ -807,18 +805,31 @@ public class DatabaseServiceImpl implements DatabaseService {
 						? auction.getExpirationDate()
 						: generationTime;
 
+				// On ajuste lastBidTime s'il est trop proche de maxBidTime
 				if (lastBidTime.isAfter(maxBidTime.minusMinutes(1))) {
 					lastBidTime = maxBidTime.minusMinutes(1);
 				}
-				if (lastBidTime.equals(maxBidTime)) break;
+				if (lastBidTime.equals(maxBidTime)) {
+					break;
+				}
 
-				Date bidDate = faker.date().between(
-						Date.from(lastBidTime.plusSeconds(1).atZone(ZoneId.systemDefault())
-								.toInstant()),
-						Date.from(maxBidTime.atZone(ZoneId.systemDefault()).toInstant()));
-				LocalDateTime bidCreationDate = LocalDateTime.ofInstant(bidDate.toInstant(),
-						ZoneId.systemDefault());
+				// Bornes en millisecondes UTC
+				long startMillis = lastBidTime.plusSeconds(1)
+						.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+				long endMillis   = maxBidTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+				if (startMillis >= endMillis) break;
+
+				// ----- Tirage biaisé vers le début -----
+				double u         = random.nextDouble();     // uniforme [0,1[
+				double biasPow   = 2.0;                     // >1 → plus près du début
+				long offset      = (long) ((endMillis - startMillis) * Math.pow(u, biasPow));
+				long bidMillis   = startMillis + offset;
+
+				LocalDateTime bidCreationDate = Instant.ofEpochMilli(bidMillis)
+						.atZone(ZoneId.systemDefault())
+						.toLocalDateTime();
 				lastBidTime = bidCreationDate;
+				// ------------------------------------------------------------
 
 				BidUpdateDto bid = new BidUpdateDto();
 				bid.setAuctionId(auction.getId());
@@ -826,9 +837,13 @@ public class DatabaseServiceImpl implements DatabaseService {
 				bid.setCreationDate(bidCreationDate);
 
 				/* montant = +0-5 % au-dessus de l'offre courante */
-				BigDecimal amount = currentHighest
-						.multiply(BigDecimal.valueOf(1 + random.nextDouble() * 0.5))
-						.setScale(2, RoundingMode.HALF_UP);
+				BigDecimal raw = currentHighest
+						.multiply(BigDecimal.valueOf(1 + random.nextDouble() * 0.05));
+				BigDecimal hundred = BigDecimal.valueOf(100);
+				BigDecimal amount = raw
+						.divide(hundred, 0, RoundingMode.FLOOR)
+						.multiply(hundred);
+
 				if (amount.compareTo(
 						BigDecimal.valueOf(auction.getOptions().getBuyNowPrice())) >= 0) {
 					if (auctionConcluded) {
@@ -836,7 +851,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 						bid.setAmount(BigDecimal.valueOf(auction.getOptions().getBuyNowPrice()));
 						bids.add(bid);
 					}
-					i = numBids;
+					// on sort de la boucle
+					break;
 				} else {
 					currentHighest = amount;
 					// statut provisoire : Ouvert si l'auction l'est encore, sinon Expiré
@@ -856,7 +872,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 			// 5) Persistance ------------------------------------------------------
 			for (BidUpdateDto dto : bids) {
 				try {
-					bidService.createBid(dto);
+					BidDto createdBidDto = bidService.createBid(dto);
+					bidRepository.overrideCreationDateNative(createdBidDto.getId(), dto.getCreationDate());
 					bidsCreatedCount++;
 				} catch (Exception e) {
 					log.error("Failed to create bid for auction {}: {}", auction.getId(),
@@ -868,10 +885,6 @@ public class DatabaseServiceImpl implements DatabaseService {
 	}
 
 	// --- Helper Methods ---
-
-	private double generateRandomPrice() {
-		return faker.number().randomDouble(2, 10, 10000);
-	}
 
 	/** Génère une adresse email unique pour tout le run */
 	private String uniqueEmail() {

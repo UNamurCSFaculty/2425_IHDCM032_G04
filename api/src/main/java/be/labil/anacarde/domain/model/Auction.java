@@ -28,7 +28,7 @@ public class Auction extends BaseEntity {
 	@Column(nullable = false)
 	private LocalDateTime expirationDate;
 
-	@Column(nullable = false)
+	@Column(nullable = false, updatable = false)
 	@CreationTimestamp
 	private LocalDateTime creationDate;
 
