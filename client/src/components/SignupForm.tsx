@@ -1,4 +1,3 @@
-import { SelectorMap } from './map/SelectorMap'
 import { Alert, AlertDescription, AlertTitle } from './ui/alert'
 import { createUserMutation } from '@/api/generated/@tanstack/react-query.gen.ts'
 import { BreadcrumbSection } from '@/components/BreadcrumbSection.tsx'
@@ -276,14 +275,6 @@ export const SignupForm: React.FC = () => {
                 />
               )}
             />
-            <div className="w-1/2 p-2">
-              <h2>Selector Map</h2>
-              <SelectorMap
-                onPositionChange={(point, adress) => {
-                  console.log(point, adress)
-                }}
-              />
-            </div>
 
             <div className="flex w-full items-center justify-center gap-4 p-2">
               <form.AppForm>

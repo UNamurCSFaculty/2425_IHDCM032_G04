@@ -409,6 +409,7 @@ export const zAuctionOptionsUpdateDto = z.object({
   minPriceKg: z.number().optional(),
   buyNowPrice: z.number().optional(),
   showPublic: z.boolean().optional(),
+  minIncrement: z.number().int().optional(),
 })
 
 export const zAuctionUpdateDto = z.object({
@@ -449,6 +450,7 @@ export const zAuctionOptionsDto = z.object({
   minPriceKg: z.number().optional(),
   buyNowPrice: z.number().optional(),
   showPublic: z.boolean().optional(),
+  minIncrement: z.number().int().optional(),
 })
 
 export const zAuctionDto = z.object({

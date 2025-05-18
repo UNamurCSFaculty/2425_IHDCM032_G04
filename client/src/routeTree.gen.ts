@@ -33,6 +33,7 @@ import { Route as AuthenticatedVentesHistoriqueImport } from './routes/_authenti
 import { Route as AuthenticatedEncheresCajouImport } from './routes/_authenticated/encheres/cajou'
 import { Route as AuthenticatedEncheresAutresImport } from './routes/_authenticated/encheres/autres'
 import { Route as AuthenticatedAchatsNouvelleEnchereImport } from './routes/_authenticated/achats/nouvelle-enchere'
+import { Route as AuthenticatedAchatsMarcheImport } from './routes/_authenticated/achats/marche'
 import { Route as AuthenticatedAchatsHistoriqueImport } from './routes/_authenticated/achats/historique'
 import { Route as AuthenticatedEncheresDetailIdImport } from './routes/_authenticated/encheres/detail/$id'
 
@@ -178,6 +179,12 @@ const AuthenticatedAchatsNouvelleEnchereRoute =
     getParentRoute: () => AuthenticatedRoute,
   } as any)
 
+const AuthenticatedAchatsMarcheRoute = AuthenticatedAchatsMarcheImport.update({
+  id: '/achats/marche',
+  path: '/achats/marche',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
 const AuthenticatedAchatsHistoriqueRoute =
   AuthenticatedAchatsHistoriqueImport.update({
     id: '/achats/historique',
@@ -271,6 +278,13 @@ declare module '@tanstack/react-router' {
       path: '/achats/historique'
       fullPath: '/achats/historique'
       preLoaderRoute: typeof AuthenticatedAchatsHistoriqueImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/achats/marche': {
+      id: '/_authenticated/achats/marche'
+      path: '/achats/marche'
+      fullPath: '/achats/marche'
+      preLoaderRoute: typeof AuthenticatedAchatsMarcheImport
       parentRoute: typeof AuthenticatedImport
     }
     '/_authenticated/achats/nouvelle-enchere': {
@@ -371,6 +385,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteChildren {
   AuthenticatedAchatsHistoriqueRoute: typeof AuthenticatedAchatsHistoriqueRoute
+  AuthenticatedAchatsMarcheRoute: typeof AuthenticatedAchatsMarcheRoute
   AuthenticatedAchatsNouvelleEnchereRoute: typeof AuthenticatedAchatsNouvelleEnchereRoute
   AuthenticatedEncheresAutresRoute: typeof AuthenticatedEncheresAutresRoute
   AuthenticatedEncheresCajouRoute: typeof AuthenticatedEncheresCajouRoute
@@ -383,6 +398,7 @@ interface AuthenticatedRouteChildren {
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAchatsHistoriqueRoute: AuthenticatedAchatsHistoriqueRoute,
+  AuthenticatedAchatsMarcheRoute: AuthenticatedAchatsMarcheRoute,
   AuthenticatedAchatsNouvelleEnchereRoute:
     AuthenticatedAchatsNouvelleEnchereRoute,
   AuthenticatedEncheresAutresRoute: AuthenticatedEncheresAutresRoute,
@@ -435,6 +451,7 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AdminIndexRoute
   '/contact': typeof ContactIndexRoute
   '/achats/historique': typeof AuthenticatedAchatsHistoriqueRoute
+  '/achats/marche': typeof AuthenticatedAchatsMarcheRoute
   '/achats/nouvelle-enchere': typeof AuthenticatedAchatsNouvelleEnchereRoute
   '/encheres/autres': typeof AuthenticatedEncheresAutresRoute
   '/encheres/cajou': typeof AuthenticatedEncheresCajouRoute
@@ -461,6 +478,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminIndexRoute
   '/contact': typeof ContactIndexRoute
   '/achats/historique': typeof AuthenticatedAchatsHistoriqueRoute
+  '/achats/marche': typeof AuthenticatedAchatsMarcheRoute
   '/achats/nouvelle-enchere': typeof AuthenticatedAchatsNouvelleEnchereRoute
   '/encheres/autres': typeof AuthenticatedEncheresAutresRoute
   '/encheres/cajou': typeof AuthenticatedEncheresCajouRoute
@@ -489,6 +507,7 @@ export interface FileRoutesById {
   '/admin/': typeof AdminIndexRoute
   '/contact/': typeof ContactIndexRoute
   '/_authenticated/achats/historique': typeof AuthenticatedAchatsHistoriqueRoute
+  '/_authenticated/achats/marche': typeof AuthenticatedAchatsMarcheRoute
   '/_authenticated/achats/nouvelle-enchere': typeof AuthenticatedAchatsNouvelleEnchereRoute
   '/_authenticated/encheres/autres': typeof AuthenticatedEncheresAutresRoute
   '/_authenticated/encheres/cajou': typeof AuthenticatedEncheresCajouRoute
@@ -518,6 +537,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/contact'
     | '/achats/historique'
+    | '/achats/marche'
     | '/achats/nouvelle-enchere'
     | '/encheres/autres'
     | '/encheres/cajou'
@@ -543,6 +563,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/contact'
     | '/achats/historique'
+    | '/achats/marche'
     | '/achats/nouvelle-enchere'
     | '/encheres/autres'
     | '/encheres/cajou'
@@ -569,6 +590,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/contact/'
     | '/_authenticated/achats/historique'
+    | '/_authenticated/achats/marche'
     | '/_authenticated/achats/nouvelle-enchere'
     | '/_authenticated/encheres/autres'
     | '/_authenticated/encheres/cajou'
@@ -631,6 +653,7 @@ export const routeTree = rootRoute
       "filePath": "_authenticated.tsx",
       "children": [
         "/_authenticated/achats/historique",
+        "/_authenticated/achats/marche",
         "/_authenticated/achats/nouvelle-enchere",
         "/_authenticated/encheres/autres",
         "/_authenticated/encheres/cajou",
@@ -680,6 +703,10 @@ export const routeTree = rootRoute
     },
     "/_authenticated/achats/historique": {
       "filePath": "_authenticated/achats/historique.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/achats/marche": {
+      "filePath": "_authenticated/achats/marche.tsx",
       "parent": "/_authenticated"
     },
     "/_authenticated/achats/nouvelle-enchere": {

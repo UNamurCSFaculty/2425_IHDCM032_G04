@@ -180,3 +180,8 @@ code {
     }
   }
 }
+
+/* Map */
+.leaflet-pane {
+  z-index: 25;
+}

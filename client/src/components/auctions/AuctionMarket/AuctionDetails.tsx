@@ -1,0 +1,351 @@
+import type { AuctionDto, BidDto } from '@/api/generated'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
+import { Separator } from '@/components/ui/separator'
+import { TradeStatus, wktToLatLon } from '@/lib/utils'
+import dayjs from '@/utils/dayjs-config'
+import { formatPrice } from '@/utils/formatter'
+import 'leaflet/dist/leaflet.css'
+import {
+  CheckCircle,
+  PlusCircle,
+  ShoppingCart,
+  UserCircle2,
+  XCircle,
+} from 'lucide-react'
+import React, { useMemo, useState } from 'react'
+import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
+
+export type UserRole = 'buyer' | 'seller'
+
+interface Props {
+  auction: AuctionDto
+  role: UserRole
+  onBidAction?: (
+    auctionId: number,
+    bidId: number,
+    action: 'accept' | 'reject'
+  ) => void
+  onMakeBid?: (auctionId: number, amount: number) => void
+  onBuyNow?: (auctionId: number) => void
+}
+
+const AuctionDetailsPanel: React.FC<Props> = ({
+  auction,
+  role,
+  onBidAction,
+  onMakeBid,
+  onBuyNow,
+}) => {
+  const [amount, setAmount] = useState('')
+  const [buyOpen, setBuyOpen] = useState(false)
+  const [bidOpen, setBidOpen] = useState(false)
+
+  const sortedBids = useMemo<BidDto[]>(
+    () => [...auction.bids].sort((a, b) => b.amount - a.amount),
+    [auction.bids]
+  )
+  const isOpen = auction.status.name === TradeStatus.OPEN
+  const canBid = role === 'buyer' && isOpen
+
+  const handleSubmitBid = () => {
+    const value = Number(amount)
+    if (!value || value <= 0) return
+    onMakeBid?.(auction.id, value)
+    setAmount('')
+    setBidOpen(false)
+  }
+
+  // Position map
+  const coords = wktToLatLon(auction.product.store.address.location)
+  const mapCenter = (coords ?? [0, 0]) as [number, number]
+
+  return (
+    <div className="flex flex-col gap-6 w-full mx-auto p-4">
+      {/* Header */}
+      <div className="space-y-1 flex flex-wrap">
+        <h2 className="text-2xl font-semibold flex items-center gap-2">
+          {auction.product.type === 'harvest' ? 'Récolte' : 'Transformé'} · lot
+          #{auction.product.id}
+        </h2>
+        <div className="flex flex-wrap gap-4 text-sm text-muted-foreground ml-4">
+          <span className="flex items-center gap-1">
+            <UserCircle2 className="size-4" />
+            {auction.trader.firstName} {auction.trader.lastName}
+          </span>
+          <span className="flex items-center gap-1">
+            <ShoppingCart className="size-4" />
+            {auction.product.store.name}
+          </span>
+        </div>
+      </div>
+
+      {/* Map */}
+      {coords && (
+        <div className="h-48 w-full rounded-md overflow-hidden">
+          <MapContainer
+            center={mapCenter}
+            zoom={13}
+            scrollWheelZoom={false}
+            className="h-full w-full"
+          >
+            <TileLayer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              attribution="© OpenStreetMap"
+            />
+            <Marker position={mapCenter}>
+              <Popup>
+                <div className="text-sm">
+                  <div className="font-medium">
+                    {auction.product.store.name}
+                  </div>
+                </div>
+              </Popup>
+            </Marker>
+          </MapContainer>
+        </div>
+      )}
+
+      <div className="flex flex-col lg:flex-row gap-4">
+        {/* Left column: actions */}
+        {role === 'buyer' && (
+          <div className="flex-1 flex flex-col gap-6">
+            <Card className="p-4 bg-neutral-100 rounded-lg shadow">
+              {/* Achat immédiat */}
+              {auction.options?.buyNowPrice && (
+                <div className="flex flex-col items-center text-center">
+                  <span className="text-base font-medium text-gray-700 mb-2">
+                    Achat immédiat
+                  </span>
+                  <Popover open={buyOpen} onOpenChange={setBuyOpen}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        className="bg-amber-600 hover:bg-amber-700 text-white px-6"
+                        onClick={() => setBuyOpen(true)}
+                      >
+                        <ShoppingCart className="size-4 mr-2" />
+                        {formatPrice.format(auction.options.buyNowPrice)}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-64 p-4">
+                      <p className="text-center text-sm mb-4">
+                        Confirmer l’achat immédiat&nbsp;
+                        <span className="font-semibold">
+                          {formatPrice.format(auction.options.buyNowPrice)}
+                        </span>
+                        &nbsp;?
+                      </p>
+                      <div className="flex justify-end gap-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setBuyOpen(false)}
+                        >
+                          Annuler
+                        </Button>
+                        <Button
+                          size="sm"
+                          onClick={() => {
+                            onBuyNow?.(auction.id)
+                            setBuyOpen(false)
+                          }}
+                        >
+                          Confirmer
+                        </Button>
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+                </div>
+              )}
+
+              <Separator />
+
+              {/* Ajouter une enchère */}
+              {canBid && (
+                <div className="flex flex-col items-center text-center">
+                  <span className="text-base font-medium text-gray-700 mb-2">
+                    Ajouter une enchère
+                  </span>
+                  <Input
+                    type="number"
+                    min="1"
+                    placeholder="Montant CFA"
+                    value={amount}
+                    onChange={e => setAmount(e.target.value)}
+                    className="mb-3 w-full bg-white"
+                  />
+                  <Popover open={bidOpen} onOpenChange={setBidOpen}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        disabled={!amount}
+                        className="w-full px-6"
+                        onClick={() => setBidOpen(true)}
+                      >
+                        <PlusCircle className="size-4 mr-2" />
+                        Placer l’offre
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-64 p-4">
+                      <p className="text-center text-sm mb-4">
+                        Confirmer votre offre de&nbsp;
+                        <span className="font-semibold">
+                          {formatPrice.format(Number(amount) || 0)}
+                        </span>
+                        &nbsp;?
+                      </p>
+                      <div className="flex justify-end gap-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            setAmount('')
+                            setBidOpen(false)
+                          }}
+                        >
+                          Annuler
+                        </Button>
+                        <Button size="sm" onClick={handleSubmitBid}>
+                          Confirmer
+                        </Button>
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+                </div>
+              )}
+            </Card>
+          </div>
+        )}
+
+        {/* Right column: liste des bids */}
+        <div className="flex-2">
+          <Card className="overflow-hidden">
+            <CardHeader>
+              <CardTitle className="text-lg text-center">
+                {sortedBids.length}{' '}
+                {sortedBids.length <= 1 ? 'offre reçue' : 'offres reçues'}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="max-h-80 overflow-y-auto divide-y bg-neutral-100 p-2">
+              {sortedBids.length === 0 ? (
+                <div className="text-center py-8 text-gray-500">
+                  Aucune offre pour le moment.
+                </div>
+              ) : (
+                sortedBids.map(bid => (
+                  <div
+                    key={bid.id}
+                    className="flex items-center justify-between py-2"
+                  >
+                    <div>
+                      <div className="font-medium">
+                        {bid.trader.firstName} {bid.trader.lastName}
+                      </div>
+                      <div className="text-xs text-gray-600">
+                        {dayjs(bid.creationDate).fromNow()}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <span className="font-semibold">
+                        {formatPrice.format(bid.amount)}
+                      </span>
+                      {role === 'seller' &&
+                        isOpen &&
+                        bid.status.name === TradeStatus.OPEN && (
+                          <div className="flex gap-1">
+                            {/* Accept */}
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  className="flex items-center px-2 py-1 bg-green-700 text-white border-green-200"
+                                >
+                                  <CheckCircle className="h-3 w-3 mr-1" />{' '}
+                                  Accepter
+                                </Button>
+                              </PopoverTrigger>
+                              <PopoverContent className="w-48 p-2">
+                                <p className="text-sm text-center mb-2">
+                                  Accepter cette offre ?
+                                </p>
+                                <div className="flex justify-end gap-2">
+                                  <Button variant="ghost" size="sm">
+                                    Annuler
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    onClick={() =>
+                                      onBidAction?.(
+                                        auction.id,
+                                        bid.id,
+                                        'accept'
+                                      )
+                                    }
+                                  >
+                                    Oui
+                                  </Button>
+                                </div>
+                              </PopoverContent>
+                            </Popover>
+                            {/* Reject */}
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  className="flex items-center px-2 py-1 bg-red-600 text-white border-red-200"
+                                >
+                                  <XCircle className="h-3 w-3 mr-1" /> Refuser
+                                </Button>
+                              </PopoverTrigger>
+                              <PopoverContent className="w-48 p-2">
+                                <p className="text-sm text-center mb-2">
+                                  Refuser cette offre ?
+                                </p>
+                                <div className="flex justify-end gap-2">
+                                  <Button variant="ghost" size="sm">
+                                    Annuler
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="destructive"
+                                    onClick={() =>
+                                      onBidAction?.(
+                                        auction.id,
+                                        bid.id,
+                                        'reject'
+                                      )
+                                    }
+                                  >
+                                    Oui
+                                  </Button>
+                                </div>
+                              </PopoverContent>
+                            </Popover>
+                          </div>
+                        )}
+                      {bid.status.name !== TradeStatus.OPEN && (
+                        <Badge variant="outline" className="text-xs">
+                          {bid.status.name}
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+                ))
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default AuctionDetailsPanel

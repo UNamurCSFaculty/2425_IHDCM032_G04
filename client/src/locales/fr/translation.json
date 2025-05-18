@@ -30,16 +30,23 @@
     "auctions_new_sale": {
       "title": "Nouvelle vente",
       "subtitle": "Créez une nouvelle vente aux enchères pour votre produit."
+    },
+    "marketplace": {
+      "title": "Marché des enchères",
+      "subtitle": "Achetez des produits en ligne."
     }
   },
   "breadcrumb": {
     "about": "À propos",
     "auctions": "Enchères",
+    "buy": "Acheter",
     "contact": "Contact",
     "home": "Accueil",
     "login": "Connexion",
+    "marketplace": "Marché des enchères",
     "privacy": "Politique de confidentialité",
     "profile": "Profil",
+    "sell": "Vendre",
     "settings": "Paramètres",
     "signup": "Inscription",
     "terms": "Conditions d’utilisation",

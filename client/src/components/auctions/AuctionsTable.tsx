@@ -96,7 +96,8 @@ const AuctionsTable: React.FC<AuctionsTableProps> = ({
                         <TableCell>{auction.product.id}</TableCell>
                         <TableCell>{auction.productQuantity} kg</TableCell>
                         <TableCell>
-                          {auction.product.qualityControl?.quality.name ?? 'N/A'}
+                          {auction.product.qualityControl?.quality.name ??
+                            'N/A'}
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center">

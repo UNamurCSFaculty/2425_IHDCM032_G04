@@ -1002,6 +1002,10 @@ export type AuctionOptionsUpdateDto = {
    * Afficher au public
    */
   showPublic?: boolean
+  /**
+   * Incrément minimum d'une sur enchère
+   */
+  minIncrement?: number
 }
 
 /**
@@ -1124,6 +1128,10 @@ export type AuctionOptionsDto = {
    * Afficher au public
    */
   showPublic?: boolean
+  /**
+   * Incrément minimum d'une sur enchère
+   */
+  minIncrement?: number
 }
 
 /**

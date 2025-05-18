@@ -22,19 +22,29 @@
     "welcome": {
       "message": "Ready for your next auction?",
       "title": "Welcome"
+    },
+    "marketplace": {
+      "title": "Auction Marketplace",
+      "subtitle": "Buy products online."
     }
   },
   "breadcrumb": {
     "about": "About",
     "auctions": "Auctions",
+    "buy": "Acheter",
     "contact": "Contact",
     "home": "Home",
     "login": "Log in",
+    "marketplace": "Auction Marketplace",
     "privacy": "Privacy Policy",
-    "profile": "Profile",
+    "profile": "profile",
+    "sell": "Vendre",
     "settings": "Settings",
     "signup": "Sign up",
-    "terms": "Terms of Service"
+    "terms": "Terms of Service",
+    "vendre": "Vendre",
+    "my_auctions": "My Auctions",
+    "new_auction": "New Auction"
   },
   "buttons": {
     "cancel": "Cancel",
