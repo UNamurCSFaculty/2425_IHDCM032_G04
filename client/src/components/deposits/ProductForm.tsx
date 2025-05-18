@@ -1,3 +1,4 @@
+import FormSectionTitle from '../FormSectionTitle'
 import type {
   FieldDto,
   QualityDto,
@@ -27,21 +28,10 @@ import { useTranslation } from 'react-i18next'
 import z from 'zod'
 
 interface ProductFormProps {
-  mode: 'create' | 'update'
   traders: TraderDetailDto[]
   stores: StoreDetailDto[]
   qualities: QualityDto[]
   qualityInspectors: QualityInspectorDetailDto[]
-}
-
-const FormSectionTitle: React.FC<{ text: string }> = ({ text }) => {
-  return (
-    <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
-      <span className="bg-background text-muted-foreground relative z-10 px-2">
-        {text}
-      </span>
-    </div>
-  )
 }
 
 export function ProductForm({
@@ -250,7 +240,7 @@ export function ProductForm({
                                         formatCoordinates(field.location!),
                                     })
                                   )}
-                                  label="Origine"
+                                  label="Origine du produit"
                                 />
                               )}
                             />

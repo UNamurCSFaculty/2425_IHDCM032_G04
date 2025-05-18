@@ -57,7 +57,6 @@ function RouteComponent() {
         className="border-b border-gray-200 dark:border-gray-700"
       />
       <ProductForm
-        mode="create"
         traders={tradersData as TraderDetailDto[]}
         stores={storesData as StoreDetailDto[]}
         qualities={qualitiesData as QualityDto[]}

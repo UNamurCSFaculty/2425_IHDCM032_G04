@@ -1,3 +1,4 @@
+import FormSectionTitle from '../FormSectionTitle'
 import type { ProductDto } from '@/api/generated'
 import { createAuctionMutation } from '@/api/generated/@tanstack/react-query.gen.ts'
 import { zAuctionUpdateDto } from '@/api/generated/zod.gen'
@@ -15,16 +16,6 @@ import { useTranslation } from 'react-i18next'
 
 interface AuctionFormProps {
   products: ProductDto[]
-}
-
-const FormSectionTitle: React.FC<{ text: string }> = ({ text }) => {
-  return (
-    <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
-      <span className="bg-background text-muted-foreground relative z-10 px-2">
-        {text}
-      </span>
-    </div>
-  )
 }
 
 export function AuctionForm({
