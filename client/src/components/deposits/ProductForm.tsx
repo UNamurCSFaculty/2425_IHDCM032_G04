@@ -1,3 +1,4 @@
+import FormContainer from '../FormContainer'
 import FormSectionTitle from '../FormSectionTitle'
 import type {
   FieldDto,
@@ -18,7 +19,6 @@ import {
 } from '@/api/generated/zod.gen'
 import { useAppForm } from '@/components/form'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { Card, CardContent } from '@/components/ui/card'
 import { ProductType, formatCoordinates } from '@/lib/utils'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
@@ -146,210 +146,194 @@ export function ProductForm({
   )
 
   return (
-    <div className="flex min-h-svh flex-col items-center justify-center p-6 md:p-10">
-      <div className="w-full max-w-screen-lg">
-        <div className="flex flex-col gap-6">
-          <Card className="overflow-hidden">
-            <CardContent>
-              <section className="body-font relative text-gray-600">
-                <h2 className="text-2xl font-bold">Saisie des données</h2>
-                <div className="container mx-auto px-5 py-10">
-                  <form
-                    onSubmit={e => {
-                      e.preventDefault()
-                      e.stopPropagation()
-                      form.handleSubmit()
-                    }}
-                  >
-                    <div className="flex flex-row gap-10">
-                      <div className="flex flex-col gap-6 w-1/2">
-                        <FormSectionTitle text="Paramètres du dépôt" />
+    <FormContainer title="Saisie du produit">
+      <form
+        onSubmit={e => {
+          e.preventDefault()
+          e.stopPropagation()
+          form.handleSubmit()
+        }}
+      >
+        <div className="flex flex-row gap-10">
+          <div className="flex flex-col gap-6 w-1/2">
+            <FormSectionTitle text="Paramètres du dépôt" />
 
-                        <div className="flex gap-4">
-                          <div className="flex-1">
-                            <form.AppField
-                              name="product.type"
-                              children={field => (
-                                <field.SelectField
-                                  options={[
-                                    {
-                                      value: ProductType.TRANSFORMED,
-                                      label: t('database.transformed'),
-                                    },
-                                    {
-                                      value: ProductType.HARVEST,
-                                      label: t('database.harvest'),
-                                    },
-                                  ]}
-                                  label="Marchandise"
-                                  onChange={productType =>
-                                    setSelectedProductType(productType)
-                                  }
-                                />
-                              )}
-                            />
-                          </div>
+            <div className="flex gap-4">
+              <div className="flex-1">
+                <form.AppField
+                  name="product.type"
+                  children={field => (
+                    <field.SelectField
+                      options={[
+                        {
+                          value: ProductType.TRANSFORMED,
+                          label: t('database.transformed'),
+                        },
+                        {
+                          value: ProductType.HARVEST,
+                          label: t('database.harvest'),
+                        },
+                      ]}
+                      label="Marchandise"
+                      onChange={productType =>
+                        setSelectedProductType(productType)
+                      }
+                    />
+                  )}
+                />
+              </div>
 
-                          <div className="flex-1">
-                            <form.AppField
-                              name="product.weightKg"
-                              children={field => (
-                                <field.TextField
-                                  label="Poids (kg)"
-                                  type="product.weightKg"
-                                  placeholder="0.0"
-                                  fieldType="number"
-                                />
-                              )}
-                            />
-                          </div>
-                        </div>
+              <div className="flex-1">
+                <form.AppField
+                  name="product.weightKg"
+                  children={field => (
+                    <field.TextField
+                      label="Poids (kg)"
+                      type="product.weightKg"
+                      placeholder="0.0"
+                      fieldType="number"
+                    />
+                  )}
+                />
+              </div>
+            </div>
 
-                        <form.AppField
-                          name={`product.${selectedProductType === ProductType.HARVEST ? 'producerId' : 'transformerId'}`}
-                          children={field => (
-                            <field.SelectField
-                              options={filteredTraders.map(trader => ({
-                                value: trader.id,
-                                label: trader.firstName + ' ' + trader.lastName,
-                              }))}
-                              label={
-                                selectedProductType === ProductType.HARVEST
-                                  ? 'Producteur'
-                                  : 'Transformateur'
-                              }
-                              onChange={traderId => {
-                                setSelectedTraderId(traderId)
-                              }}
-                            />
-                          )}
-                        />
-                        {selectedProductType == ProductType.HARVEST &&
-                          fields && (
-                            <form.AppField
-                              name="product.fieldId"
-                              children={field => (
-                                <field.SelectField
-                                  options={(fields as FieldDto[]).map(
-                                    field => ({
-                                      value: field.id,
-                                      label:
-                                        'Champ ' +
-                                        field.identifier +
-                                        ' @ ' +
-                                        formatCoordinates(field.location!),
-                                    })
-                                  )}
-                                  label="Origine du produit"
-                                />
-                              )}
-                            />
-                          )}
+            <form.AppField
+              name={`product.${selectedProductType === ProductType.HARVEST ? 'producerId' : 'transformerId'}`}
+              children={field => (
+                <field.SelectField
+                  options={filteredTraders.map(trader => ({
+                    value: trader.id,
+                    label: trader.firstName + ' ' + trader.lastName,
+                  }))}
+                  label={
+                    selectedProductType === ProductType.HARVEST
+                      ? 'Producteur'
+                      : 'Transformateur'
+                  }
+                  onChange={traderId => {
+                    setSelectedTraderId(traderId)
+                  }}
+                />
+              )}
+            />
+            {selectedProductType == ProductType.HARVEST && fields && (
+              <form.AppField
+                name="product.fieldId"
+                children={field => (
+                  <field.SelectField
+                    options={(fields as FieldDto[]).map(field => ({
+                      value: field.id,
+                      label:
+                        'Champ ' +
+                        field.identifier +
+                        ' @ ' +
+                        formatCoordinates(field.location!),
+                    }))}
+                    label="Origine du produit"
+                  />
+                )}
+              />
+            )}
 
-                        <form.AppField
-                          name="product.storeId"
-                          children={field => (
-                            <field.SelectField
-                              options={stores.map(store => ({
-                                value: store.id,
-                                label: store.name,
-                              }))}
-                              label={
-                                selectedProductType === ProductType.HARVEST
-                                  ? 'Magasin'
-                                  : 'Entrepôt'
-                              }
-                            />
-                          )}
-                        />
+            <form.AppField
+              name="product.storeId"
+              children={field => (
+                <field.SelectField
+                  options={stores.map(store => ({
+                    value: store.id,
+                    label: store.name,
+                  }))}
+                  label={
+                    selectedProductType === ProductType.HARVEST
+                      ? 'Magasin'
+                      : 'Entrepôt'
+                  }
+                />
+              )}
+            />
 
-                        {isError && error?.errors?.length > 0 && (
-                          <Alert
-                            variant="destructive"
-                            className="border-red-300 bg-red-50 mt-4 mb-4"
-                          >
-                            <AlertCircle className="h-4 w-4" />
-                            <AlertTitle>{t('common.error')}</AlertTitle>
-                            <AlertDescription>
-                              <ul className="list-disc">
-                                {error.errors.map((err, idx) => (
-                                  <li key={idx} className="mb-1">
-                                    {err.field
-                                      ? `${t('errors.fields.' + err.field)}: `
-                                      : ''}
-                                    {t('errors.' + err.code)}
-                                  </li>
-                                ))}
-                              </ul>
-                            </AlertDescription>
-                          </Alert>
-                        )}
+            {isError && error?.errors?.length > 0 && (
+              <Alert
+                variant="destructive"
+                className="border-red-300 bg-red-50 mt-4 mb-4"
+              >
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>{t('common.error')}</AlertTitle>
+                <AlertDescription>
+                  <ul className="list-disc">
+                    {error.errors.map((err, idx) => (
+                      <li key={idx} className="mb-1">
+                        {err.field
+                          ? `${t('errors.fields.' + err.field)}: `
+                          : ''}
+                        {t('errors.' + err.code)}
+                      </li>
+                    ))}
+                  </ul>
+                </AlertDescription>
+              </Alert>
+            )}
 
-                        <form.AppForm>
-                          <form.SubmitButton className="w-full">
-                            Enregistrer le produit
-                          </form.SubmitButton>
-                        </form.AppForm>
-                      </div>
+            <form.AppForm>
+              <form.SubmitButton className="w-full">
+                Enregistrer le produit
+              </form.SubmitButton>
+            </form.AppForm>
+          </div>
 
-                      <div className="flex flex-col gap-6 w-1/2">
-                        <FormSectionTitle text="Contrôle qualité" />
+          <div className="flex flex-col gap-6 w-1/2">
+            <FormSectionTitle text="Contrôle qualité" />
 
-                        <div className="flex gap-4">
-                          <div className="flex-1">
-                            <form.AppField
-                              name="qualityControl.qualityId"
-                              children={field => (
-                                <field.SelectField
-                                  options={qualities.map(quality => ({
-                                    value: quality.id,
-                                    label: quality.name,
-                                  }))}
-                                  label="Qualité"
-                                />
-                              )}
-                            />
-                          </div>
-                          <div className="flex-1">
-                            <form.AppField
-                              name="qualityControl.qualityInspectorId"
-                              children={field => (
-                                <field.SelectField
-                                  options={qualityInspectors.map(qi => ({
-                                    value: qi.id,
-                                    label: qi.firstName + ' ' + qi.lastName,
-                                  }))}
-                                  label="Qualiticien"
-                                />
-                              )}
-                            />
-                          </div>
-                        </div>
-                        <form.AppField
-                          name="qualityControl.controlDate"
-                          children={field => (
-                            <field.DateTimePickerField label="Date du contrôle" />
-                          )}
-                        />
-                        <form.AppField
-                          name="qualityControl.document"
-                          children={field => (
-                            <field.TextField
-                              label="Certificat (Photo ou PDF)"
-                              type="document"
-                              required={false}
-                            />
-                          )}
-                        />
-                      </div>
-                    </div>
-                  </form>
-                </div>
-              </section>
-            </CardContent>
-          </Card>
+            <div className="flex gap-4">
+              <div className="flex-1">
+                <form.AppField
+                  name="qualityControl.qualityId"
+                  children={field => (
+                    <field.SelectField
+                      options={qualities.map(quality => ({
+                        value: quality.id,
+                        label: quality.name,
+                      }))}
+                      label="Qualité"
+                    />
+                  )}
+                />
+              </div>
+              <div className="flex-1">
+                <form.AppField
+                  name="qualityControl.qualityInspectorId"
+                  children={field => (
+                    <field.SelectField
+                      options={qualityInspectors.map(qi => ({
+                        value: qi.id,
+                        label: qi.firstName + ' ' + qi.lastName,
+                      }))}
+                      label="Qualiticien"
+                    />
+                  )}
+                />
+              </div>
+            </div>
+            <form.AppField
+              name="qualityControl.controlDate"
+              children={field => (
+                <field.DateTimePickerField label="Date du contrôle" />
+              )}
+            />
+            <form.AppField
+              name="qualityControl.document"
+              children={field => (
+                <field.TextField
+                  label="Certificat (Photo ou PDF)"
+                  type="document"
+                  required={false}
+                />
+              )}
+            />
+          </div>
         </div>
-      </div>
-    </div>
+      </form>
+    </FormContainer>
   )
 }
