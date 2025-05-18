@@ -852,11 +852,10 @@ public class DatabaseServiceImpl implements DatabaseService {
 				if (amount.compareTo(
 						BigDecimal.valueOf(auction.getOptions().getBuyNowPrice())) >= 0) {
 					if (auctionConcluded) {
-						bid.setStatusId(statusOpen.getId());
+						bid.setStatusId(statusAccepted.getId());
 						bid.setAmount(BigDecimal.valueOf(auction.getOptions().getBuyNowPrice()));
 						bids.add(bid);
 					}
-					// on sort de la boucle
 					break;
 				} else {
 					currentHighest = amount;
