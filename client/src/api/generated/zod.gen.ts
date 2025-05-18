@@ -240,14 +240,6 @@ export const zRegionDto = z.object({
   name: z.string().min(1),
 })
 
-export const zDocumentUpdateDto = z.object({
-  documentType: z.string().min(1),
-  format: z.string().min(1),
-  storagePath: z.string().min(1),
-  uploadDate: z.string().datetime().readonly().optional(),
-  userId: z.number().int(),
-})
-
 export const zQualityControlUpdateDto = z.object({
   identifier: z.string().min(1),
   controlDate: z.string().datetime(),
@@ -257,7 +249,7 @@ export const zQualityControlUpdateDto = z.object({
   qualityInspectorId: z.number().int(),
   productId: z.number().int(),
   qualityId: z.number().int(),
-  document: zDocumentUpdateDto.optional(),
+  documentId: z.number().int(),
 })
 
 export const zUserMiniDto = z.object({

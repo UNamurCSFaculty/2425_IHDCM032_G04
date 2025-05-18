@@ -573,32 +573,6 @@ export type RegionDto = {
 }
 
 /**
- * Objet de transfert pour créer ou mettre à jour un document.
- */
-export type DocumentUpdateDto = {
-  /**
-   * Type de document
-   */
-  documentType: string
-  /**
-   * Format du document
-   */
-  format: string
-  /**
-   * Chemin de stockage du document
-   */
-  storagePath: string
-  /**
-   * Date et heure de l'envoi du document
-   */
-  readonly uploadDate?: string
-  /**
-   * Identifiant de l'utilisateur associé au document
-   */
-  userId: number
-}
-
-/**
  * Objet de transfert pour créer ou mettre à jour un contrôle qualité.
  */
 export type QualityControlUpdateDto = {
@@ -637,7 +611,7 @@ export type QualityControlUpdateDto = {
   /**
    * Document associé au contrôle qualité
    */
-  document?: DocumentUpdateDto
+  documentId: number
 }
 
 /**
