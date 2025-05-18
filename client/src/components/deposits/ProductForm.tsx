@@ -55,7 +55,7 @@ export function ProductForm({
   const { t, i18n } = useTranslation()
 
   const [selectedProductType, setSelectedProductType] = useState(
-    ProductType.HARVEST
+    ProductType.TRANSFORMED
   )
 
   const createProductRequest = useMutation({
@@ -116,9 +116,9 @@ export function ProductForm({
         storeId: 0,
         weightKg: 0,
         qualityControlId: 0,
-        fieldId: 0,
-        type: ProductType.HARVEST,
-        producerId: 0,
+        type: ProductType.TRANSFORMED,
+        transformerId: 0,
+        identifier: 'TR-000', //TODO: remove from DB
       },
       qualityControl: {
         identifier: 'QC-000', //TODO: remove from DB
@@ -185,8 +185,8 @@ export function ProductForm({
                                     },
                                   ]}
                                   label="Marchandise"
-                                  onChange={producType =>
-                                    setSelectedProductType(producType)
+                                  onChange={productType =>
+                                    setSelectedProductType(productType)
                                   }
                                 />
                               )}
