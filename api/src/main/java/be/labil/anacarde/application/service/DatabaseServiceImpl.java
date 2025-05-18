@@ -11,6 +11,7 @@ import be.labil.anacarde.domain.dto.write.product.TransformedProductUpdateDto;
 import be.labil.anacarde.domain.dto.write.user.*;
 import be.labil.anacarde.domain.mapper.DocumentMapper;
 import be.labil.anacarde.domain.mapper.QualityControlMapper;
+import be.labil.anacarde.domain.mapper.QualityMapper;
 import be.labil.anacarde.domain.model.*;
 import be.labil.anacarde.infrastructure.importdata.RegionCityImportService;
 import be.labil.anacarde.infrastructure.persistence.*;
@@ -111,6 +112,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 	private final QualityTypeRepository qualityTypeRepository;
 	private final DocumentMapper documentMapper;
 	private final QualityControlMapper qualityControlMapper;
+	private final QualityMapper qualityMapper;
 	private LocalDateTime generationTime; // Timestamp when generation starts
 	// juste après 'private final Random random = new Random();'
 	private final Set<String> generatedEmails = new HashSet<>();
@@ -157,6 +159,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 	private List<CooperativeDto> createdCooperatives = new ArrayList<>();
 	private Map<Integer, List<FieldDto>> producerFieldsMap = new HashMap<>();
 	private List<ProductDto> createdProducts = new ArrayList<>();
+	private List<QualityDto> anacardeQualities = new ArrayList<>();
+	private List<QualityDto> amandeQualities = new ArrayList<>();
 
 	@Override
 	public boolean isInitialized() {
@@ -261,13 +265,13 @@ public class DatabaseServiceImpl implements DatabaseService {
 		QualityType amandeType = qualityTypeRepository.save(new QualityType("Transformed"));
 
 		// --- Qualités Anacarde brute ---
-		List<String> anacardeQualities = List.of("Grade I", "Grade II", "Grade III", "Hors normes");
+		List<String> anacardeCategory = List.of("Grade I", "Grade II", "Grade III", "Hors normes");
 
-		for (String name : anacardeQualities) {
+		for (String name : anacardeCategory) {
 			Quality q = new Quality();
 			q.setName(name);
 			q.setQualityType(anacardeType);
-			qualityRepository.save(q);
+			anacardeQualities.add(qualityMapper.toDto(qualityRepository.save(q)));
 		}
 
 		// --- Qualités Amande transformée (combinaison catégorie et calibre pour WW/SW/DW) ---
@@ -282,7 +286,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 				Quality q = new Quality();
 				q.setName(name);
 				q.setQualityType(amandeType);
-				qualityRepository.save(q);
+				amandeQualities.add(qualityMapper.toDto(qualityRepository.save(q)));
 			}
 		}
 		// Les autres styles et morceaux sans calibre
@@ -292,7 +296,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 			Quality q = new Quality();
 			q.setName(name);
 			q.setQualityType(amandeType);
-			qualityRepository.save(q);
+			amandeQualities.add(qualityMapper.toDto(qualityRepository.save(q)));
 		}
 	}
 
@@ -521,6 +525,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 				FieldDto field = fields.get(random.nextInt(fields.size()));
 				QualityInspectorDetailDto inspector = createdQualityInspectors
 						.get(random.nextInt(createdQualityInspectors.size()));
+				QualityDto quality = anacardeQualities
+						.get(random.nextInt(anacardeQualities.size()));
 
 				// --- Création du document associé ---
 				DocumentUpdateDto docDto = new DocumentUpdateDto();
@@ -547,7 +553,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 				qc.setHumidity((float) faker.number().numberBetween(0, 100));
 				qc.setQualityInspectorId(inspector.getId());
 				qc.setDocumentId(document.getId());
-				qc.setQualityId(1);
+				qc.setQualityId(quality.getId());
 				QualityControl qualityControl = qualityControlRepository
 						.save(qualityControlMapper.toEntity(qc));
 
@@ -579,6 +585,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 
 			for (int i = 0; i < numProducts; i++) {
 				StoreDetailDto store = createdStores.get(random.nextInt(createdStores.size()));
+				QualityDto quality = amandeQualities.get(random.nextInt(anacardeQualities.size()));
 
 				// --- Création du document associé ---
 				DocumentUpdateDto docDto = new DocumentUpdateDto();
@@ -607,7 +614,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 				qc.setHumidity((float) faker.number().numberBetween(0, 100));
 				qc.setQualityInspectorId(inspector.getId());
 				qc.setDocumentId(document.getId());
-				qc.setQualityId(1);
+				qc.setQualityId(quality.getId());
 				QualityControl qualityControl = qualityControlRepository
 						.save(qualityControlMapper.toEntity(qc));
 
@@ -684,7 +691,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 			// Generate dates
 			LocalDateTime creationDate = generateRandomDateTimeInPast();
 			LocalDateTime expirationDate = creationDate
-					.plusDays(faker.number().numberBetween(5, 45));
+					.plusDays(faker.number().numberBetween(15, 90));
 
 			// Determine Status based on creationDate vs now
 			TradeStatusDto status;

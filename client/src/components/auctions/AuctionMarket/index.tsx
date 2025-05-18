@@ -110,7 +110,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
 
   // ------------------------------------- filters
   const [search, setSearch] = useState('')
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 100_000])
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 5_000_000])
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [quality, setQuality] = useState<QualityOption>('All')
   const [productType, setProductType] = useState<ProductTypeOption>('All')
@@ -211,7 +211,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
 
   const resetFilters = () => {
     setSearch('')
-    setPriceRange([0, 100_000])
+    setPriceRange([0, 5_000_000])
     setSelectedDate(null)
     setQuality('All')
     setProductType('All')
@@ -513,7 +513,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
             value={priceRange}
             onValueChange={v => setPriceRange(v as [number, number])}
             min={0}
-            max={100_000}
+            max={5_000_000}
             step={500}
           />
         </div>
