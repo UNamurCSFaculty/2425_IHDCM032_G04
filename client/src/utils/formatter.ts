@@ -4,8 +4,8 @@
  */
 export const formatPrice = new Intl.NumberFormat('fr-BJ', {
   notation: 'compact', // compacte → k, M…
-  compactDisplay: 'short', // affichage court (“k”)
-  maximumFractionDigits: 0, // 1 chiffre après la virgule si besoin
+  compactDisplay: 'long', // affichage court (“k”)
+  maximumFractionDigits: 2, // 1 chiffre après la virgule si besoin
   style: 'currency', // on reste en “currency” pour XOF
   currency: 'CFA', // ISO 4217 pour CFA BCEAO
   currencyDisplay: 'code', // “XOF” plutôt que le symbole “F”

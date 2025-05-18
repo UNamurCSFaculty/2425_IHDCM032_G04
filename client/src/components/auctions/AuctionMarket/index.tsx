@@ -7,13 +7,7 @@ import VirtualizedSelect from '@/components/VirtualizedSelect'
 import AuctionDetails from '@/components/auctions/AuctionMarket/AuctionDetails'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogFooter } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import {
   Popover,
@@ -245,21 +239,23 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
             <div>
               <div className="flex flex-wrap gap-2 items-center">
                 {/* sorting */}
-                <Select
-                  value={sort}
-                  onValueChange={v => setSort(v as SortOptionValue)}
-                >
-                  <SelectTrigger className="w-40">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {sortOptions.map(o => (
-                      <SelectItem key={o.value} value={o.value}>
-                        {o.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                {viewMode !== 'map' && (
+                  <Select
+                    value={sort}
+                    onValueChange={v => setSort(v as SortOptionValue)}
+                  >
+                    <SelectTrigger className="w-40">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {sortOptions.map(o => (
+                        <SelectItem key={o.value} value={o.value}>
+                          {o.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
 
                 {/* view */}
                 <Select
@@ -336,7 +332,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
           </div>
         )}
 
-        <div className="space-y-6 relative">
+        <div className="relative">
           {/* Cards mode */}
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             {viewMode === 'cards' &&
@@ -381,11 +377,13 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                   ))}
 
                   {totalPages > 1 && (
-                    <PaginationControls
-                      current={currentPage}
-                      total={totalPages}
-                      onChange={handlePageChange}
-                    />
+                    <div className="col-span-3 flex justify-center">
+                      <PaginationControls
+                        current={currentPage}
+                        total={totalPages}
+                        onChange={handlePageChange}
+                      />
+                    </div>
                   )}
                 </>
               ))}
@@ -454,9 +452,6 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
       {dialogAuction && viewMode !== 'cards' && (
         <Dialog open onOpenChange={o => !o && setDialogAuction(null)}>
           <DialogContent className="w-full max-w-[80vw]! max-h-[90vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>Enchère #{dialogAuction.id}</DialogTitle>
-            </DialogHeader>
             <AuctionDetails
               auction={dialogAuction}
               role={userRole}
