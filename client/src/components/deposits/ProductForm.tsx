@@ -71,14 +71,14 @@ export function ProductForm({
       navigate({ to: '/depots/mes-produits' })
     },
     onError(error) {
-      console.error('Requête invalide :', error)
+      console.error('Invalid request:', error)
     },
   })
 
   const createQualityControlRequest = useMutation({
     ...createQualityControlMutation(),
     onError(error) {
-      console.error('Requête invalide :', error)
+      console.error('Invalid request:', error)
     },
   })
 
