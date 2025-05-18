@@ -3,7 +3,6 @@ package be.labil.anacarde.domain.mapper;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import be.labil.anacarde.domain.dto.db.QualityControlDto;
-import be.labil.anacarde.domain.dto.write.DocumentUpdateDto;
 import be.labil.anacarde.domain.dto.write.QualityControlUpdateDto;
 import be.labil.anacarde.domain.model.*;
 import java.time.LocalDateTime;
@@ -67,7 +66,7 @@ class QualityControlMapperTest {
 		dto.setQualityInspectorId(1);
 		dto.setProductId(2);
 		dto.setQualityId(3);
-		dto.setDocument(new DocumentUpdateDto());
+		dto.setDocumentId(5);
 
 		QualityControl entity = qualityControlMapper.toEntity(dto);
 
@@ -79,7 +78,7 @@ class QualityControlMapperTest {
 		assertThat(entity.getHumidity()).isEqualTo(dto.getHumidity());
 		assertThat(entity.getQualityInspector().getId()).isEqualTo(1);
 		assertThat(entity.getQuality().getId()).isEqualTo(3);
-		assertThat(entity.getDocument()).isNotNull();
+		assertThat(entity.getDocument().getId()).isEqualTo(5);
 	}
 
 	@Test

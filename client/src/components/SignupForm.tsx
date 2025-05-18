@@ -55,19 +55,36 @@ export const SignupForm: React.FC = () => {
   >({
     validators: { onChange: zUserRegistration },
     defaultValues: {
+      documents: [],
       type: 'producer',
       firstName: '',
       lastName: '',
       email: '',
       phone: '+22901',
-      address: '',
+      address: {
+        cityId: 0,
+        street: '',
+      },
       password: '',
       passwordValidation: '',
       languageId: appData.languages[0].id,
       agriculturalIdentifier: '',
     },
     onSubmit({ value }) {
-      signinMutation.mutate({ body: value })
+      console.log('Form submitted:', value)
+      const { documents = [], ...user } = value
+      /*
+      const formData = new FormData()
+      formData.append(
+        'user', // nom de la part JSON
+        new Blob([JSON.stringify(user)], {
+          type: 'application/json',
+        })
+      )
+      documents.forEach(f => formData.append('documents', f))
+      */
+
+      signinMutation.mutate({ body: { user, documents } })
     },
   })
 
@@ -164,9 +181,9 @@ export const SignupForm: React.FC = () => {
               <form.AppField
                 name="address"
                 children={field => (
-                  <field.TextField
+                  <field.AddressField
+                    withMap={true}
                     label={t('form.address')}
-                    disabled={isPending}
                   />
                 )}
               />
@@ -246,6 +263,19 @@ export const SignupForm: React.FC = () => {
                 </AlertDescription>
               </Alert>
             )}
+
+            <form.AppField
+              name="documents"
+              children={field => (
+                <field.FileUploadField
+                  label={t('form.documents')}
+                  accept="application/pdf,image/*"
+                  maxFiles={5}
+                  maxSize={5}
+                />
+              )}
+            />
+
             <div className="flex w-full items-center justify-center gap-4 p-2">
               <form.AppForm>
                 <form.SubmitButton disabled={isPending}>

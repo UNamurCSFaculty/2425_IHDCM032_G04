@@ -2,66 +2,60 @@ package be.labil.anacarde.domain.mapper;
 
 import be.labil.anacarde.domain.dto.db.DocumentDto;
 import be.labil.anacarde.domain.dto.write.DocumentUpdateDto;
-import be.labil.anacarde.domain.model.Carrier;
 import be.labil.anacarde.domain.model.Document;
 import be.labil.anacarde.domain.model.User;
+import jakarta.persistence.EntityManager;
 import org.mapstruct.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
-/** Interface Mapper pour la conversion entre l'entité Document et DocumentDto. */
+/**
+ * Mapper pour convertir l'entité Document et ses DTOs.
+ */
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class DocumentMapper {
 
-	/**
-	 * Convertit une entité DocumentUpdateDto en DocumentDto.
-	 */
-	@Mapping(target = "id", ignore = true)
-	public abstract DocumentDto toDocumentDto(DocumentUpdateDto document);
+	@Autowired
+	protected EntityManager em;
 
 	/**
-	 * Convertit un DocumentUpdateDto en entité Document.
+	 * Création : DocumentUpdateDto → Document (nouvelle entité). - id et uploadDate sont laissés à
+	 * null / gérés par JPA. - userId → User via getReference().
 	 */
 	@Mapping(target = "id", ignore = true)
 	@Mapping(source = "userId", target = "user", qualifiedByName = "mapUserIdToUser")
-	public abstract Document fromDocumentUpdate(DocumentUpdateDto document);
+	public abstract Document toEntity(DocumentUpdateDto dto);
 
 	/**
-	 * Convertit une entité Document en DocumentDto.
-	 *
-	 * @param document
-	 *            l'entité Document à convertir.
-	 * @return le DocumentDto correspondant.
+	 * Lecture : Document → DocumentDto - user.id → userId - tous les autres champs sont nommés à
+	 * l’identique, MapStruct s’en charge automatiquement.
 	 */
-
 	@Mapping(source = "user.id", target = "userId")
-	@Mapping(source = "type", target = "documentType")
 	public abstract DocumentDto toDto(Document document);
 
 	/**
-	 * Convertit un DocumentDto en entité Document.
-	 *
-	 * @param documentDto
-	 *            le DocumentDto à convertir.
-	 * @return l'entité Document correspondante.
+	 * Écrasement complet : DocumentDto → Document. Idem que toEntity, mais depuis le DTO de
+	 * lecture.
 	 */
-
+	@Mapping(target = "id", ignore = true)
 	@Mapping(source = "userId", target = "user", qualifiedByName = "mapUserIdToUser")
-	@Mapping(source = "documentType", target = "type")
-	public abstract Document toEntity(DocumentDto documentDto);
+	public abstract Document toEntity(DocumentDto dto);
 
+	/**
+	 * Mise à jour partielle : n’écrase que les champs non-null du DTO.
+	 */
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 	@Mapping(source = "userId", target = "user", qualifiedByName = "mapUserIdToUser")
-	@Mapping(source = "documentType", target = "type")
-	@Mapping(target = "id", ignore = true)
-	public abstract Document partialUpdate(DocumentDto documentDto, @MappingTarget Document entity);
+	public abstract Document partialUpdate(DocumentDto dto, @MappingTarget Document entity);
 
+	/**
+	 * Transforme un identifiant en une référence JPA User (proxy).
+	 */
 	@Named("mapUserIdToUser")
-	public static User mapUserIdToUser(Integer userId) {
+	protected User mapUserIdToUser(Integer userId) {
 		if (userId == null) {
 			return null;
 		}
-		// Par défaut, on retourne une instance concrète de User, ici Carrier.
-		Carrier user = new Carrier();
-		user.setId(userId);
-		return user;
+		// ne charge pas l’utilisateur, crée un proxy qui sera résolu à l’accès
+		return em.getReference(User.class, userId);
 	}
 }

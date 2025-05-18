@@ -19,4 +19,9 @@ public class QualityDto extends BaseDto {
 	@NotBlank
 	@Schema(description = "Nom de la qualité", example = "Extra", requiredMode = Schema.RequiredMode.REQUIRED)
 	private String name;
+
+	/** Identifiant du type de qualité. */
+	@NotNull
+	@Schema(description = "Identifiant du type de qualité", requiredMode = Schema.RequiredMode.REQUIRED)
+	private QualityTypeDto qualityType;
 }

@@ -1,6 +1,7 @@
 package be.labil.anacarde.infrastructure.config;
 
 import be.labil.anacarde.application.service.DatabaseService;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -15,7 +16,11 @@ public class DataLoader implements CommandLineRunner {
 	private final DatabaseService databaseService;
 
 	@Override
-	public void run(String... args) {
+	public void run(String... args) throws IOException {
+		if (databaseService.isInitialized()) {
+			log.info("Database already initialized, skipping initialization.");
+			return;
+		}
 		databaseService.dropDatabase();
 		databaseService.createDatabase();
 	}

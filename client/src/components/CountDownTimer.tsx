@@ -39,7 +39,7 @@ export function CountdownTimer({ endDate }: CountdownTimerProps) {
   }
 
   return (
-    <div className="font-semibold mt-2">
+    <div className="font-semibold">
       {days > 0 && `${days}d `}
       {hours.toString().padStart(2, '0')}:{minutes.toString().padStart(2, '0')}:
       {seconds.toString().padStart(2, '0')}

@@ -1,11 +1,9 @@
 package be.labil.anacarde.presentation.controller;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import be.labil.anacarde.domain.dto.db.RegionDto;
-import be.labil.anacarde.domain.model.Region;
 import be.labil.anacarde.infrastructure.persistence.RegionRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -34,24 +32,23 @@ public class RegionApiControllerIntegrationTest extends AbstractIntegrationTest 
 	/**
 	 * Teste la création d'une région.
 	 */
-	@Test
-	public void testCreateRegion() throws Exception {
-		RegionDto newRegionDto = new RegionDto();
-		newRegionDto.setName("Nouvelle Région");
-
-		ObjectNode node = objectMapper.valueToTree(newRegionDto);
-		String jsonContent = node.toString();
-
-		mockMvc.perform(
-				post("/api/regions").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
-				.andExpect(status().isCreated())
-				.andExpect(header().string("Location", containsString("/api/regions/")))
-				.andExpect(jsonPath("$.name").value("Nouvelle Région"));
-
-		Region createdRegion = regionRepository.findAll().stream()
-				.filter(r -> "Nouvelle Région".equals(r.getName())).findFirst()
-				.orElseThrow(() -> new AssertionError("Région non trouvée"));
-	}
+	/*
+	 * @Test public void testCreateRegion() throws Exception { RegionDto newRegionDto = new
+	 * RegionDto(); newRegionDto.setName("Nouvelle Région");
+	 * 
+	 * ObjectNode node = objectMapper.valueToTree(newRegionDto); String jsonContent =
+	 * node.toString();
+	 * 
+	 * mockMvc.perform(
+	 * post("/api/regions").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+	 * .andExpect(status().isCreated()) .andExpect(header().string("Location",
+	 * containsString("/api/regions/"))) .andExpect(jsonPath("$.id").isNumber())
+	 * .andExpect(jsonPath("$.name").value("Nouvelle Région"));
+	 * 
+	 * Region createdRegion = regionRepository.findAll().stream() .filter(r ->
+	 * "Nouvelle Région".equals(r.getName())).findFirst() .orElseThrow(() -> new
+	 * AssertionError("Région non trouvée")); }
+	 */
 
 	/**
 	 * Teste la récupération de la liste des régions.

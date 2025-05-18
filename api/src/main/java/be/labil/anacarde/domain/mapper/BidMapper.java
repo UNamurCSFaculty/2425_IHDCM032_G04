@@ -10,7 +10,7 @@ import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(componentModel = "spring", uses = {MapperHelpers.class, AuctionMapper.class,
-		TraderDetailMapper.class,
+		TraderDetailMapper.class, UserMiniMapper.class,
 		TradeStatusMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class BidMapper {
 

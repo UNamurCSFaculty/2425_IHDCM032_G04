@@ -62,10 +62,6 @@ public abstract class UserListDto extends BaseDto {
 	@Schema(description = "Compte activé", example = "true")
 	private boolean enabled;
 
-	/** Adresse postale de l'utilisateur. */
-	@Schema(description = "Adresse postale de l'utilisateur", example = "Rue de la Loi 16, 1000 Bruxelles")
-	private String address;
-
 	/** Numéro de téléphone de l'utilisateur. */
 	@Pattern(regexp = "^(?:\\+229)?01\\d{8}$", message = "Numéro invalide – doit être +229XXXXXXXX ou +22901XXXXXXXX")
 	@Schema(description = "Numéro de téléphone (Bénin, format local à 10 chiffres débutant par 01, ou +229...)", example = "+2290178123456", pattern = "^(?:\\+229)?01\\d{8}$")

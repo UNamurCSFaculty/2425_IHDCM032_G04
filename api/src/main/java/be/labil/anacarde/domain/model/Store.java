@@ -6,9 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
-import org.locationtech.jts.geom.Point;
 
 @Entity
 @Table(name = "store")
@@ -21,8 +18,8 @@ public class Store extends BaseEntity {
 	@Column(nullable = false)
 	private String name;
 
-	@JdbcTypeCode(SqlTypes.GEOMETRY)
-	private Point location;
+	@Embedded
+	private Address address;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "user_id", nullable = false)

@@ -7,7 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import be.labil.anacarde.domain.dto.db.RoleDto;
+import be.labil.anacarde.domain.dto.db.AddressDto;
 import be.labil.anacarde.domain.dto.write.user.AdminUpdateDto;
 import be.labil.anacarde.domain.dto.write.user.ExporterUpdateDto;
 import be.labil.anacarde.domain.dto.write.user.ProducerUpdateDto;
@@ -16,10 +16,10 @@ import be.labil.anacarde.domain.model.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.util.List;
-import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /** Tests d'intégration pour le contrôleur des utilisateurs. */
@@ -42,29 +42,31 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 
 	/**
 	 * Teste la création d'un nouvel utilisateur.
-	 * 
 	 */
 	@Test
 	public void testCreateUser() throws Exception {
-
 		ProducerUpdateDto newUser = new ProducerUpdateDto();
 		newUser.setFirstName("Alice");
 		newUser.setLastName("Smith");
 		newUser.setEmail("alice.smith@example.com");
+		newUser.setAddress(
+				AddressDto.builder().street("Rue de la paix").cityId(1).regionId(1).build());
 		newUser.setPassword("secret!!!");
 		newUser.setLanguageId(getMainLanguageDto().getId());
 		newUser.setPhone("+2290197005502");
 		newUser.setAgriculturalIdentifier("TS450124");
 		newUser.setCooperativeId(getMainTestCooperative().getId());
 
-		ObjectNode node = objectMapper.valueToTree(newUser);
-		String jsonContent = node.toString();
+		byte[] json = objectMapper.writeValueAsBytes(newUser);
+		MockMultipartFile userPart = new MockMultipartFile("user", "user.json",
+				MediaType.APPLICATION_JSON_VALUE, json);
 
-		mockMvc.perform(post("/api/users").with(jwtAndCsrf())
-				.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
-				.andExpect(status().isCreated())
-				// Vérifie que l'en-tête "Location" contient l'ID du nouvel utilisateur
-				// .andExpect(header().string("Location", containsString("/api/users/")))
+		mockMvc.perform(multipart("/api/users").file(userPart).with(jwtAndCsrf())
+				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isCreated())
+				.andExpect(jsonPath("$.address").exists())
+				.andExpect(jsonPath("$.address.street").value("Rue de la paix"))
+				.andExpect(jsonPath("$.address.cityId").value(1))
+				.andExpect(jsonPath("$.address.regionId").value(1))
 				.andExpect(jsonPath("$.email").value("alice.smith@example.com"))
 				.andExpect(jsonPath("$.firstName").value("Alice"))
 				.andExpect(jsonPath("$.lastName").value("Smith"));
@@ -72,12 +74,11 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 		User createdUser = userRepository.findByEmail("alice.smith@example.com")
 				.orElseThrow(() -> new AssertionError("Utilisateur non trouvé"));
 		assertTrue(bCryptPasswordEncoder.matches("secret!!!", createdUser.getPassword()),
-				"Le mot de passe stocké doit correspondre au mot de passe brut 'secret'");
+				"Le mot de passe stocké doit correspondre au mot de passe brut 'secret!!!'");
 	}
 
 	/**
-	 * Teste que la création d'un utilisateur échoue si le champ "type" n'est pas présent dans le
-	 * JSON.
+	 * Teste que la création d'un utilisateur échoue si le champ "type" n'est pas présent.
 	 */
 	@Test
 	public void testCreateUserMissingTypeFails() throws Exception {
@@ -85,17 +86,19 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 		newUser.setFirstName("Charlie");
 		newUser.setLastName("Brown");
 		newUser.setEmail("charlie.brown@example.com");
+		newUser.setAddress(
+				AddressDto.builder().street("Rue de la paix").cityId(1).regionId(1).build());
 		newUser.setPassword("secret");
 		newUser.setLanguageId(getMainLanguageDto().getId());
 
 		ObjectNode node = objectMapper.valueToTree(newUser);
 		node.put("password", newUser.getPassword());
-		node.remove("type"); // Supprime le champ "type" pour simuler l'absence de ce champ
+		node.remove("type");
+		byte[] json = objectMapper.writeValueAsBytes(node);
+		MockMultipartFile userPart = new MockMultipartFile("user", "user.json",
+				MediaType.APPLICATION_JSON_VALUE, json);
 
-		String jsonContent = node.toString();
-
-		mockMvc.perform(
-				post("/api/users").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+		mockMvc.perform(multipart("/api/users").file(userPart).with(jwtAndCsrf()))
 				.andExpect(status().isBadRequest()).andExpect(jsonPath("$.errors[0].message",
 						containsString("Le champ discriminant 'type' est obligatoire.")));
 	}
@@ -122,15 +125,16 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 		updateUser.setFirstName("John Updated");
 		updateUser.setLastName("Doe Updated");
 		updateUser.setEmail("email@updated.com");
+		updateUser.setAddress(
+				AddressDto.builder().street("Rue de la paix").cityId(1).regionId(1).build());
 		updateUser.setPassword("newpassword");
-		updateUser.setRoles(Set.of(RoleDto.builder().name(getAdminTestRole().getName()).build()));
 		updateUser.setLanguageId(getMainLanguageDto().getId());
+
+		ObjectNode node = objectMapper.valueToTree(updateUser);
+		node.put("password", updateUser.getPassword());
 
 		int userRoleSize = getMainTestUser().getRoles().size();
 
-		ObjectNode node = objectMapper.valueToTree(updateUser);
-		node.put("password", updateUser.getPassword()); // Ajout manuel car le mot de passe n'est
-														// pas sérialisé
 		String jsonContent = node.toString();
 
 		mockMvc.perform(put("/api/users/" + getMainTestUser().getId())
@@ -209,21 +213,23 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 
 	/**
 	 * Teste la création d'un utilisateur sans email.
-	 * 
 	 */
 	@Test
 	public void testCreateUserMissingEmail() throws Exception {
 		UserUpdateDto newUser = new AdminUpdateDto();
 		newUser.setFirstName("Bob");
 		newUser.setLastName("Smith");
+		newUser.setAddress(
+				AddressDto.builder().street("Rue de la paix").cityId(1).regionId(1).build());
 		newUser.setPassword("secret");
 
 		ObjectNode node = objectMapper.valueToTree(newUser);
 		node.put("password", newUser.getPassword());
-		String jsonContent = node.toString();
+		byte[] json = objectMapper.writeValueAsBytes(node);
+		MockMultipartFile userPart = new MockMultipartFile("user", "user.json",
+				MediaType.APPLICATION_JSON_VALUE, json);
 
-		mockMvc.perform(post("/api/users").with(jwtAndCsrf())
-				.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+		mockMvc.perform(multipart("/api/users").file(userPart).with(jwtAndCsrf()))
 				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.code", containsString("validation.error")));
 	}
@@ -254,7 +260,6 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 
 	/**
 	 * Teste la mise à jour des rôles d'un utilisateur inexistant.
-	 * 
 	 */
 	@Test
 	public void testUpdateUserRolesUserNotFound() throws Exception {

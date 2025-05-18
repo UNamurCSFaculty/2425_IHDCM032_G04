@@ -2,6 +2,7 @@ package be.labil.anacarde.application.service;
 
 import be.labil.anacarde.application.exception.ResourceNotFoundException;
 import be.labil.anacarde.domain.dto.db.QualityDto;
+import be.labil.anacarde.domain.dto.write.QualityUpdateDto;
 import be.labil.anacarde.domain.mapper.QualityMapper;
 import be.labil.anacarde.domain.model.Quality;
 import be.labil.anacarde.infrastructure.persistence.QualityRepository;
@@ -19,7 +20,7 @@ public class QualityServiceImpl implements QualityService {
 	private final QualityMapper qualityMapper;
 
 	@Override
-	public QualityDto createQuality(QualityDto dto) {
+	public QualityDto createQuality(QualityUpdateDto dto) {
 		Quality quality = qualityMapper.toEntity(dto);
 		Quality saved = qualityRepository.save(quality);
 		return qualityMapper.toDto(saved);
@@ -41,11 +42,11 @@ public class QualityServiceImpl implements QualityService {
 	}
 
 	@Override
-	public QualityDto updateQuality(Integer id, QualityDto qualityDetailDto) {
+	public QualityDto updateQuality(Integer id, QualityUpdateDto qualityUpdateDto) {
 		Quality existingQuality = qualityRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Qualité non trouvée"));
 
-		Quality updatedQuality = qualityMapper.partialUpdate(qualityDetailDto, existingQuality);
+		Quality updatedQuality = qualityMapper.partialUpdate(qualityUpdateDto, existingQuality);
 
 		Quality saved = qualityRepository.save(updatedQuality);
 		return qualityMapper.toDto(saved);

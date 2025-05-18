@@ -30,16 +30,23 @@
     "auctions_new_sale": {
       "title": "Nouvelle vente",
       "subtitle": "Créez une nouvelle vente aux enchères pour votre produit."
+    },
+    "marketplace": {
+      "title": "Marché des enchères",
+      "subtitle": "Achetez des produits en ligne."
     }
   },
   "breadcrumb": {
     "about": "À propos",
     "auctions": "Enchères",
+    "buy": "Acheter",
     "contact": "Contact",
     "home": "Accueil",
     "login": "Connexion",
+    "marketplace": "Marché des enchères",
     "privacy": "Politique de confidentialité",
     "profile": "Profil",
+    "sell": "Vendre",
     "settings": "Paramètres",
     "signup": "Inscription",
     "terms": "Conditions d’utilisation",
@@ -114,9 +121,13 @@
     "password": "Mot de passe",
     "phone": "Téléphone",
     "placeholder": {
-      "date": "Sélectionner une date"
+      "date": "Sélectionner une date",
+      "no_city_found": "Aucune ville trouvée",
+      "search": "Rechercher",
+      "select_city": "Sélectionner une ville"
     },
-    "type": "Je suis"
+    "type": "Je suis",
+    "upload_component": "Cliquez pour télécharger ou glisser-déposer"
   },
   "languages": {
     "en": "Anglais",

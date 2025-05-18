@@ -1,16 +1,20 @@
 package be.labil.anacarde.domain.dto.write.user;
 
+import be.labil.anacarde.domain.dto.db.AddressDto;
 import be.labil.anacarde.domain.dto.db.RoleDto;
 import be.labil.anacarde.domain.dto.db.ValidationGroups;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.DiscriminatorMapping;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * DTO pour l'entité User.
@@ -68,10 +72,6 @@ public abstract class UserUpdateDto {
 	@Schema(description = "Compte activé", example = "true")
 	private boolean enabled;
 
-	/** Adresse postale de l'utilisateur. */
-	@Schema(description = "Adresse postale de l'utilisateur", example = "Rue de la Loi 16, 1000 Bruxelles")
-	private String address;
-
 	/** Numéro de téléphone de l'utilisateur. */
 	@Pattern(regexp = "^(?:\\+229)?01\\d{8}$", message = "Numéro invalide – doit être +229XXXXXXXX ou +22901XXXXXXXX")
 	@Schema(description = "Numéro de téléphone (Bénin, format local à 10 chiffres débutant par 01, ou +229...)", example = "+2290178123456", pattern = "^(?:\\+229)?01\\d{8}$")
@@ -95,4 +95,12 @@ public abstract class UserUpdateDto {
 	@Schema(description = "Identifiant de la langue préférée", requiredMode = Schema.RequiredMode.REQUIRED)
 	@NotNull(message = "La langue est requise")
 	private Integer languageId;
+
+	@Schema(description = "Adresse de l'utilisateur", requiredMode = Schema.RequiredMode.REQUIRED)
+	@NotNull(message = "L'adresse est requise")
+	private AddressDto address;
+
+	@ArraySchema(schema = @Schema(type = "string", format = "binary", description = "Fichiers à uploader"))
+	@Schema(description = "Fichiers à uploader", implementation = MultipartFile[].class)
+	private List<MultipartFile> documents;
 }
