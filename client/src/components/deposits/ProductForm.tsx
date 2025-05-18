@@ -178,6 +178,7 @@ export function ProductForm({
                       label="Marchandise"
                       onChange={productType => {
                         setSelectedTraderId(null)
+                        setSelectedField(null)
                         setSelectedProductType(productType)
                       }}
                     />
