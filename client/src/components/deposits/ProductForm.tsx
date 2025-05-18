@@ -8,6 +8,7 @@ import type {
 import {
   createProductMutation,
   createQualityControlMutation,
+  listFieldsOptions,
 } from '@/api/generated/@tanstack/react-query.gen.ts'
 import {
   zHarvestProductUpdateDto,
@@ -18,7 +19,7 @@ import { useAppForm } from '@/components/form'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Card, CardContent } from '@/components/ui/card'
 import { ProductType, formatCoordinates } from '@/lib/utils'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { AlertCircle } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
@@ -31,7 +32,6 @@ interface ProductFormProps {
   stores: StoreDetailDto[]
   qualities: QualityDto[]
   qualityInspectors: QualityInspectorDetailDto[]
-  fields: FieldDto[]
 }
 
 const FormSectionTitle: React.FC<{ text: string }> = ({ text }) => {
@@ -49,7 +49,6 @@ export function ProductForm({
   stores,
   qualities,
   qualityInspectors,
-  fields,
 }: ProductFormProps): React.ReactElement<'div'> {
   const navigate = useNavigate()
   const { t, i18n } = useTranslation()
@@ -57,6 +56,14 @@ export function ProductForm({
   const [selectedProductType, setSelectedProductType] = useState(
     ProductType.TRANSFORMED
   )
+
+  const [selectedTraderId, setSelectedTraderId] = useState<number | null>(null)
+
+  const { data: fields } = useQuery({
+    ...listFieldsOptions({ path: { userId: selectedTraderId! } }),
+    staleTime: 10_000,
+    enabled: !!selectedTraderId,
+  })
 
   const createProductRequest = useMutation({
     ...createProductMutation(),
@@ -176,12 +183,12 @@ export function ProductForm({
                                 <field.SelectField
                                   options={[
                                     {
-                                      value: ProductType.HARVEST,
-                                      label: t('database.harvest'),
-                                    },
-                                    {
                                       value: ProductType.TRANSFORMED,
                                       label: t('database.transformed'),
+                                    },
+                                    {
+                                      value: ProductType.HARVEST,
+                                      label: t('database.harvest'),
                                     },
                                   ]}
                                   label="Marchandise"
@@ -221,27 +228,33 @@ export function ProductForm({
                                   ? 'Producteur'
                                   : 'Transformateur'
                               }
+                              onChange={traderId => {
+                                setSelectedTraderId(traderId)
+                              }}
                             />
                           )}
                         />
-                        {selectedProductType == ProductType.HARVEST && (
-                          <form.AppField
-                            name="product.fieldId"
-                            children={field => (
-                              <field.SelectField
-                                options={fields.map(field => ({
-                                  value: field.id,
-                                  label:
-                                    'Champ ' +
-                                    field.identifier +
-                                    ' @ ' +
-                                    formatCoordinates(field.location!),
-                                }))}
-                                label="Origine"
-                              />
-                            )}
-                          />
-                        )}
+                        {selectedProductType == ProductType.HARVEST &&
+                          fields && (
+                            <form.AppField
+                              name="product.fieldId"
+                              children={field => (
+                                <field.SelectField
+                                  options={(fields as FieldDto[]).map(
+                                    field => ({
+                                      value: field.id,
+                                      label:
+                                        'Champ ' +
+                                        field.identifier +
+                                        ' @ ' +
+                                        formatCoordinates(field.location!),
+                                    })
+                                  )}
+                                  label="Origine"
+                                />
+                              )}
+                            />
+                          )}
 
                         <form.AppField
                           name="product.storeId"

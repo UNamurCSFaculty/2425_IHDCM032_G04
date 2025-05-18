@@ -99,11 +99,20 @@ public class DatabaseServiceImpl implements DatabaseService {
 		LanguageDto languageEn = LanguageDto.builder().name("English").code("en").build();
 		languageEn = languageService.createLanguage(languageEn);
 
-		// Création du producteur (sans coopérative) et d'un champ
-		UserUpdateDto producerUpdate = createProducer(languageFr);
+		// Création de producteurs (sans coopérative)
+		UserUpdateDto producerUpdate = createProducer(languageFr, "Fabrice", "Cipolla", "fabricecipolla@gmail.com", "A-123456", "+229019700000");
 		UserDetailDto producer = userService.createUser(producerUpdate);
-		FieldDto field = createField((ProducerDetailDto) producer);
+
+		UserUpdateDto producerUpdate2 = createProducer(languageFr, "Fermier", "Ducoin", "fermierducoin@gmail.com", "A-777809", "+229019711111");
+		UserDetailDto producer2 = userService.createUser(producerUpdate2);
+
+		// Création de champs
+		FieldDto field = createField((ProducerDetailDto) producer, "F1111");
 		field = fieldService.createField(field);
+		FieldDto field2 = createField((ProducerDetailDto) producer2, "F2222");
+		fieldService.createField(field2);
+		FieldDto field3 = createField((ProducerDetailDto) producer2, "F3333");
+		fieldService.createField(field3);
 
 		// Création de la coopérative
 		CooperativeUpdateDto cooperativeUpdateDto = createCooperative((ProducerDetailDto) producer);
@@ -251,10 +260,10 @@ public class DatabaseServiceImpl implements DatabaseService {
 		return cooperativeDto;
 	}
 
-	private FieldDto createField(ProducerDetailDto producer) {
+	private FieldDto createField(ProducerDetailDto producer, String identifier) {
 		FieldDto fieldDto = new FieldDto();
 		fieldDto.setLocation("POINT (2.3522 48.8566)");
-		fieldDto.setIdentifier("F12748");
+		fieldDto.setIdentifier(identifier);
 		fieldDto.setProducer(producer);
 		return fieldDto;
 	}
@@ -361,18 +370,19 @@ public class DatabaseServiceImpl implements DatabaseService {
 		return admin;
 	}
 
-	private ProducerUpdateDto createProducer(LanguageDto languageDto) {
+	private ProducerUpdateDto createProducer(LanguageDto languageDto,
+											 String firstName, String lastName, String email, String identifier, String phone) {
 		ProducerUpdateDto producer = new ProducerUpdateDto();
-		producer.setFirstName("Fabrice");
-		producer.setLastName("Cipolla");
-		producer.setEmail("fabricecipolla@gmail.com");
+		producer.setFirstName(firstName);
+		producer.setLastName(lastName);
+		producer.setEmail(email);
 		producer.setPassword("azertyui");
 		producer.setEnabled(true);
 		producer.setAddress("Rue de la Paix");
 		producer.setRegistrationDate(LocalDateTime.now());
 		producer.setValidationDate(LocalDateTime.now());
-		producer.setPhone("+2290197000000");
-		producer.setAgriculturalIdentifier("123456789");
+		producer.setPhone(phone);
+		producer.setAgriculturalIdentifier(identifier);
 		producer.setLanguageId(languageDto.getId());
 		return producer;
 	}
