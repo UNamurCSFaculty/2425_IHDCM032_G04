@@ -21,7 +21,9 @@ import {
   MapPin,
   NotebookText,
   Package,
+  ShoppingCart,
   TrendingUp,
+  UserCircle2,
 } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 
@@ -122,8 +124,8 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
   return (
     <Card
       className={cn(
-        'overflow-hidden shadow-sm transition-all flex flex-col hover:shadow-lg bg-gradient-to-b to-yellow-50/50 from-green-50/50 hover:scale-102',
-        isEndingSoon && 'ring-2 ring-amber-400'
+        'overflow-hidden shadow-sm gap-2 transition-all flex flex-col hover:shadow-lg bg-gradient-to-b to-yellow-50/50 from-green-50/50 hover:scale-102',
+        isEndingSoon && 'ring-2 ring-red-400 bg-red-50/50'
       )}
     >
       <CardHeader className="pb-2">
@@ -137,8 +139,24 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
             {auction.bids.length} offre{auction.bids.length === 1 ? '' : 's'}
           </Badge>
         </CardTitle>
-        <CardDescription className="flex flex-wrap items-center gap-1.5 text-sm text-muted-foreground">
-          <MapPin className="size-3.5" /> {cityLabel}, {regionLabel}
+        <CardDescription className="flex flex-wrap flex-col items-center gap-1.5 text-sm text-neutral-700 justify-center">
+          <div className="flex items-center gap-1 mt-2">
+            <Badge variant="outline">
+              <MapPin className="size-3.5" /> {cityLabel}, {regionLabel}
+            </Badge>
+          </div>
+          <div className="flex items-center gap-1">
+            <Badge variant="outline">
+              <ShoppingCart className="size-4" />
+              {auction.product.store.name}
+            </Badge>
+          </div>
+          <div className="flex items-center gap-1">
+            <Badge variant="outline">
+              <UserCircle2 className="size-3.5" /> {auction.trader.firstName}{' '}
+              {auction.trader.lastName}
+            </Badge>
+          </div>
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-3 pt-0 flex-grow">

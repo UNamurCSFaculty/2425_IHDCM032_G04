@@ -189,13 +189,15 @@ export function Header() {
                       </NavigationMenuContent>
                     </>
                   ) : (
-                    <Link to={item.url} activeProps={activeStyle}>
-                      <NavigationMenuLink
+                    <NavigationMenuLink asChild>
+                      <Link
+                        to={item.url}
+                        activeProps={activeStyle}
                         className={navigationMenuTriggerStyle()}
                       >
                         {item.title}
-                      </NavigationMenuLink>
-                    </Link>
+                      </Link>
+                    </NavigationMenuLink>
                   )}
                 </NavigationMenuItem>
               ))}

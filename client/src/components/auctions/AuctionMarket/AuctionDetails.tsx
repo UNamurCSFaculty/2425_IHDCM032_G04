@@ -1,4 +1,5 @@
 import type { AuctionDto, BidDto } from '@/api/generated'
+import { CountdownTimer } from '@/components/CountDownTimer'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -15,6 +16,7 @@ import { formatPrice } from '@/utils/formatter'
 import 'leaflet/dist/leaflet.css'
 import {
   CheckCircle,
+  Clock,
   PlusCircle,
   ShoppingCart,
   UserCircle2,
@@ -66,23 +68,23 @@ const AuctionDetailsPanel: React.FC<Props> = ({
   // Position map
   const coords = wktToLatLon(auction.product.store.address.location)
   const mapCenter = (coords ?? [0, 0]) as [number, number]
-
+  const endsIn = new Date(auction.expirationDate)
   return (
     <div className="flex flex-col gap-6 w-full mx-auto p-4">
       {/* Header */}
       <div className="space-y-1 flex flex-wrap">
         <h2 className="text-2xl font-semibold flex items-center gap-2">
           {auction.product.type === 'harvest' ? 'Récolte' : 'Transformé'} · lot
-          #{auction.product.id}
+          #{auction.product.id} -
+          <Badge variant={'outline'} className="font-semibold text-xl">
+            <Clock size={15} />
+            <CountdownTimer endDate={endsIn} />
+          </Badge>
         </h2>
         <div className="flex flex-wrap gap-4 text-sm text-muted-foreground ml-4">
           <span className="flex items-center gap-1">
             <UserCircle2 className="size-4" />
             {auction.trader.firstName} {auction.trader.lastName}
-          </span>
-          <span className="flex items-center gap-1">
-            <ShoppingCart className="size-4" />
-            {auction.product.store.name}
           </span>
         </div>
       </div>

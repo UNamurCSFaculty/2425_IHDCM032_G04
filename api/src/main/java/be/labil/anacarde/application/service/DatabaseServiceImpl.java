@@ -44,14 +44,14 @@ public class DatabaseServiceImpl implements DatabaseService {
 
 	// --- Configuration Constants ---
 	private static final int TARGET_YEAR = 2025; // Année cible pour les données
-	private static final int NUM_PRODUCERS = 100;
+	private static final int NUM_PRODUCERS = 120;
 	private static final int NUM_TRANSFORMERS = 20;
 	private static final int NUM_EXPORTERS = 10;
 	private static final int NUM_CARRIERS = 10;
 	private static final int NUM_QUALITY_INSPECTORS = 10;
 	private static final int NUM_ADMINS = 3;
 	private static final int NUM_COOPERATIVES = 15;
-	private static final int NUM_STORES = 25;
+	private static final int NUM_STORES = NUM_PRODUCERS + NUM_TRANSFORMERS;
 	private static final int MIN_FIELDS_PER_PRODUCER = 1;
 	private static final int MAX_FIELDS_PER_PRODUCER = 5;
 	private static final int MIN_PRODUCTS_PER_PRODUCER = 3;
