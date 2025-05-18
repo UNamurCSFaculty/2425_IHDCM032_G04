@@ -69,6 +69,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
   const coords = wktToLatLon(auction.product.store.address.location)
   const mapCenter = (coords ?? [0, 0]) as [number, number]
   const endsIn = new Date(auction.expirationDate)
+  const ended = endsIn < new Date()
   return (
     <div className="flex flex-col gap-6 w-full mx-auto p-4">
       {/* Header */}
@@ -117,7 +118,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
 
       <div className="flex flex-col lg:flex-row gap-4">
         {/* Left column: actions */}
-        {role === 'buyer' && (
+        {role === 'buyer' && !ended && (
           <div className="flex-1 flex flex-col gap-6">
             <Card className="p-4 bg-neutral-100 rounded-lg shadow">
               {/* Achat immédiat */}
@@ -224,7 +225,21 @@ const AuctionDetailsPanel: React.FC<Props> = ({
             </Card>
           </div>
         )}
-
+        {role === 'buyer' && ended && (
+          <div>
+            <Card className="p-4 bg-neutral-100 rounded-lg shadow">
+              <div className="flex flex-col items-center text-center">
+                <span className="text-base font-medium text-gray-700 mb-2">
+                  Enchère terminée
+                </span>
+                <div className="text-sm text-gray-500">
+                  Cette enchère est maintenant terminée.
+                </div>
+              </div>
+            </Card>
+          </div>
+        )}
+        {/* Separator */}
         {/* Right column: liste des bids */}
         <div className="flex-2">
           <Card className="overflow-hidden">

@@ -377,11 +377,13 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                   ))}
 
                   {totalPages > 1 && (
-                    <PaginationControls
-                      current={currentPage}
-                      total={totalPages}
-                      onChange={handlePageChange}
-                    />
+                    <div className="col-span-3 flex justify-center">
+                      <PaginationControls
+                        current={currentPage}
+                        total={totalPages}
+                        onChange={handlePageChange}
+                      />
+                    </div>
                   )}
                 </>
               ))}
