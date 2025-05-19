@@ -377,12 +377,16 @@ export type UserUpdateDto = {
 /**
  * Objet de transfert de données pour les administrateurs.
  */
-export type AdminDetailDto = UserDetailDto
+export type AdminDetailDto = UserDetailDto & {
+  type: 'admin'
+}
 
 /**
  * Objet de transfert de données pour les transporteurs.
  */
 export type CarrierDetailDto = UserDetailDto & {
+  type: 'carrier'
+} & {
   /**
    * Prix par kilomètre facturé par le transporteur
    */
@@ -401,12 +405,16 @@ export type ExporterDetailDto = TraderDetailDto
 /**
  * Objet de transfert de données pour les inspecteurs qualité.
  */
-export type QualityInspectorDetailDto = UserDetailDto
+export type QualityInspectorDetailDto = UserDetailDto & {
+  type: 'quality_inspector'
+}
 
 /**
  * Objet de transfert de données pour les traders.
  */
-export type TraderDetailDto = UserDetailDto
+export type TraderDetailDto = UserDetailDto & {
+  type: 'TraderDetailDto'
+}
 
 /**
  * Objet de transfert de données pour les transformateurs.
@@ -473,7 +481,7 @@ export type TransformerDetailDto = {
 }
 
 /**
- * Data Transfer Object pour un utilisateur avec toutes les informations
+ * Data Transfer Object pour un utilisateur
  */
 export type UserDetailDto = {
   /**
@@ -1217,6 +1225,122 @@ export type LoginRequest = {
   username: string
   password: string
 }
+
+/**
+ * Objet de transfert de données pour les administrateurs.
+ */
+export type AdminListDto = UserListDto & {
+  type: 'admin'
+}
+
+/**
+ * Objet de transfert de données pour les transporteurs.
+ */
+export type CarrierListDto = UserListDto & {
+  type: 'carrier'
+} & {
+  /**
+   * Prix par kilomètre facturé par le transporteur
+   */
+  pricePerKm: number
+}
+
+/**
+ * Objet de transfert de données pour les exportateurs.
+ */
+export type ExporterListDto = {
+  /**
+   * Identifiant unique
+   */
+  readonly id: number
+  /**
+   * Prénom de l'utilisateur
+   */
+  firstName: string
+  /**
+   * Nom de famille de l'utilisateur
+   */
+  lastName: string
+  /**
+   * Adresse email de l'utilisateur
+   */
+  email: string
+  /**
+   * Date d'enregistrement
+   */
+  readonly registrationDate?: string
+  /**
+   * Date de validation
+   */
+  readonly validationDate?: string
+  /**
+   * Compte activé
+   */
+  enabled?: boolean
+  /**
+   * Numéro de téléphone (Bénin, format local à 10 chiffres débutant par 01, ou +229...)
+   */
+  phone?: string
+  /**
+   * Liste des rôles de l'utilisateur
+   */
+  readonly roles?: Array<RoleDto>
+  /**
+   * Identifiant de la langue préférée
+   */
+  language: LanguageDto
+  /**
+   * Adresse de l'utilisateur
+   */
+  address: AddressDto
+  /**
+   * Détails complets d’un utilisateur
+   */
+  documents?: Array<DocumentDto>
+  /**
+   * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
+   */
+  type:
+    | 'admin'
+    | 'producer'
+    | 'transformer'
+    | 'quality_inspector'
+    | 'exporter'
+    | 'carrier'
+}
+
+/**
+ * Objet de transfert de données pour les producteurs.
+ */
+export type ProducerListDto = TraderListDto & {
+  /**
+   * Identifiant agricole
+   */
+  agriculturalIdentifier: string
+  /**
+   * Coopérative du producteur
+   */
+  cooperative: CooperativeDto
+}
+
+/**
+ * Objet de transfert de données pour les inspecteurs qualité.
+ */
+export type QualityInspectorListDto = UserListDto & {
+  type: 'quality_inspector'
+}
+
+/**
+ * Objet de transfert de données pour les traders.
+ */
+export type TraderListDto = UserListDto & {
+  type: 'TraderListDto'
+}
+
+/**
+ * Objet de transfert de données pour les transformateurs.
+ */
+export type TransformerListDto = TraderListDto
 
 /**
  * Data Transfer Object pour un utilisateur

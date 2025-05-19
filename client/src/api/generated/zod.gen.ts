@@ -187,20 +187,38 @@ export const zUserDetailDto = z.object({
   ]),
 })
 
-export const zAdminDetailDto = zUserDetailDto
-
-export const zCarrierDetailDto = zUserDetailDto.and(
+export const zAdminDetailDto = zUserDetailDto.and(
   z.object({
-    pricePerKm: z.number(),
-    regionIds: z.array(z.number().int()),
+    type: z.literal('admin'),
   })
 )
 
-export const zTraderDetailDto = zUserDetailDto
+export const zCarrierDetailDto = zUserDetailDto
+  .and(
+    z.object({
+      type: z.literal('carrier'),
+    })
+  )
+  .and(
+    z.object({
+      pricePerKm: z.number(),
+      regionIds: z.array(z.number().int()),
+    })
+  )
+
+export const zTraderDetailDto = zUserDetailDto.and(
+  z.object({
+    type: z.literal('TraderDetailDto'),
+  })
+)
 
 export const zExporterDetailDto = zTraderDetailDto
 
-export const zQualityInspectorDetailDto = zUserDetailDto
+export const zQualityInspectorDetailDto = zUserDetailDto.and(
+  z.object({
+    type: z.literal('quality_inspector'),
+  })
+)
 
 export const zTransformerDetailDto = z.object({
   id: z.number().int().readonly(),
@@ -499,6 +517,71 @@ export const zUserListDto = z.object({
     'carrier',
   ]),
 })
+
+export const zAdminListDto = zUserListDto.and(
+  z.object({
+    type: z.literal('admin'),
+  })
+)
+
+export const zCarrierListDto = zUserListDto
+  .and(
+    z.object({
+      type: z.literal('carrier'),
+    })
+  )
+  .and(
+    z.object({
+      pricePerKm: z.number(),
+    })
+  )
+
+export const zExporterListDto = z.object({
+  id: z.number().int().readonly(),
+  firstName: z.string().min(1),
+  lastName: z.string().min(1),
+  email: z.string().min(1),
+  registrationDate: z.string().datetime().readonly().optional(),
+  validationDate: z.string().datetime().readonly().optional(),
+  enabled: z.boolean().optional(),
+  phone: z
+    .string()
+    .regex(/^(?:\+229)?01\d{8}$/)
+    .optional(),
+  roles: z.array(zRoleDto).readonly().optional(),
+  language: zLanguageDto,
+  address: zAddressDto,
+  documents: z.array(zDocumentDto).optional(),
+  type: z.enum([
+    'admin',
+    'producer',
+    'transformer',
+    'quality_inspector',
+    'exporter',
+    'carrier',
+  ]),
+})
+
+export const zTraderListDto = zUserListDto.and(
+  z.object({
+    type: z.literal('TraderListDto'),
+  })
+)
+
+export const zProducerListDto = zTraderListDto.and(
+  z.object({
+    agriculturalIdentifier: z.string().min(1),
+    cooperative: zCooperativeDto,
+  })
+)
+
+export const zQualityInspectorListDto = zUserListDto.and(
+  z.object({
+    type: z.literal('quality_inspector'),
+  })
+)
+
+export const zTransformerListDto = zTraderListDto
 
 export const zApplicationDataDto = z.object({
   languages: z.array(zLanguageDto),
