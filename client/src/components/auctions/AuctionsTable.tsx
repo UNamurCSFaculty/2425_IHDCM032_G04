@@ -11,7 +11,8 @@ import {
 } from '@/components/ui/table'
 import { formatDate } from '@/lib/utils'
 import { MapPin } from 'lucide-react'
-import React from 'react'
+import React, { useState } from 'react'
+import { ContractModal } from '../ContractModal'
 
 interface AuctionsTableProps {
   tableTitle: string
@@ -38,6 +39,8 @@ const AuctionsTable: React.FC<AuctionsTableProps> = ({
   handleDeleteAuction,
   handleMakeBid,
 }) => {
+  const [isOpen, setIsOpen] = useState(false)
+  
   return (
     <div className="bg-muted flex flex-col p-6 md:p-10">
       <Card className="overflow-hidden">
@@ -158,6 +161,28 @@ const AuctionsTable: React.FC<AuctionsTableProps> = ({
                               Faire une offre
                             </Button>
                           </TableCell>
+                        )}
+                        {acceptedBid &&(
+                        <TableCell>
+
+                          <Button
+                              onClick={() => {
+                                setIsOpen(true)
+                              }}
+                            >
+                            Proposer un contrat
+                          </Button>
+                          
+                          <ContractModal
+                            acceptedBid ={acceptedBid}
+                            auction={auction}
+                            isOpen={isOpen}
+                            onClose={() => setIsOpen(false)}
+                            onSubmit={() => {
+                              setIsOpen(false)
+                            }}
+                          />
+                        </TableCell>
                         )}
                       </TableRow>
                     )
