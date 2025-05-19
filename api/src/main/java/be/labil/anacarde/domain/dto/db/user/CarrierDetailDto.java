@@ -1,5 +1,6 @@
 package be.labil.anacarde.domain.dto.db.user;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -15,6 +16,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Schema(description = "Objet de transfert de données pour les transporteurs.")
+@JsonTypeName("carrier")
 public class CarrierDetailDto extends UserDetailDto {
 
 	/** Prix par kilomètre facturé par le transporteur. */
