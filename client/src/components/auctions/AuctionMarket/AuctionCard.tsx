@@ -12,7 +12,10 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { TableCell, TableRow } from '@/components/ui/table'
-import { cn, getCities, getRegions } from '@/lib/utils'
+// Simple JSON import (no async fetch) -----------------------------------------
+import cities from '@/data/cities.json'
+import regions from '@/data/regions.json'
+import { cn } from '@/lib/utils'
 import dayjs from '@/utils/dayjs-config'
 import { formatPrice, formatWeight } from '@/utils/formatter'
 import {
@@ -25,7 +28,7 @@ import {
   TrendingUp,
   UserCircle2,
 } from 'lucide-react'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 
 export type CardLayout = 'grid' | 'row'
 export type UserRole = 'buyer' | 'seller'
@@ -45,15 +48,6 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
   isDetail = false,
   onDetails,
 }) => {
-  const [cities, setCities] = useState<string[]>([])
-  const [regions, setRegions] = useState<string[]>([])
-
-  useEffect(() => {
-    // charge une seule fois
-    void getCities().then(setCities)
-    void getRegions().then(setRegions)
-  }, [])
-
   const bestBid = auction.bids.reduce(
     (max, b) => (b.amount > max ? b.amount : max),
     0

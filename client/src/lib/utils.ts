@@ -1,15 +1,8 @@
-// -----------------------------------------------------------------------------
-// Lazy-loaded cities / regions with localStorage cache
-// -----------------------------------------------------------------------------
-// Simple JSON import (no async fetch) -----------------------------------------
-import cityNamesJson from '@/data/cities.json'
-import regionNamesJson from '@/data/regions.json'
 import { type ClassValue, clsx } from 'clsx'
 import { decimalToSexagesimal } from 'geolib'
 import { twMerge } from 'tailwind-merge'
 
 // Tailwind helper
-
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
@@ -59,14 +52,3 @@ export enum TradeStatus {
   ACCEPTED = 'Accepté',
   REJECTED = 'Refusé',
 }
-
-// -----------------------------------------------------------------------------
-
-// -----------------------------------------------------------------------------
-
-export const cityNames = cityNamesJson as string[]
-export const regionNames = regionNamesJson as string[]
-
-// helpers retained for legacy async API ---------------------------------------
-export const getCities = async (): Promise<string[]> => cityNames
-export const getRegions = async (): Promise<string[]> => regionNames

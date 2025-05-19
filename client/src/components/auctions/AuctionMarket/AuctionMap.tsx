@@ -2,10 +2,9 @@ import type { AuctionDto } from '@/api/generated'
 import { CountdownTimer } from '@/components/CountDownTimer'
 import { CardContent } from '@/components/ui/card'
 import { wktToLatLon } from '@/lib/utils'
-import { formatPrice } from '@/utils/formatter'
+import { formatPrice, formatWeight } from '@/utils/formatter'
 import dayjs from 'dayjs'
 import L from 'leaflet'
-import { UserCircle2 } from 'lucide-react'
 import React from 'react'
 import { MapContainer, Marker, TileLayer, Tooltip } from 'react-leaflet'
 import MarkerClusterGroup from 'react-leaflet-markercluster'
@@ -42,7 +41,7 @@ const AuctionMap: React.FC<{
             >
               <Tooltip
                 direction="top"
-                offset={[0, -20]}
+                offset={[-15.5, -20]}
                 opacity={1}
                 // interactive si vous voulez autoriser le survol du tooltip
                 interactive={false}
@@ -53,13 +52,9 @@ const AuctionMap: React.FC<{
                       {a.product.type === 'harvest' ? 'Récolte' : 'Transformé'}{' '}
                       · lot #{a.product.id}
                     </h3>
-
                     <dl className="space-y-0.5">
                       <div className="flex justify-between">
-                        <dt className="font-semibold">
-                          {' '}
-                          <UserCircle2 className="size-4" />
-                        </dt>
+                        <dt className="font-semibold">Vendeur</dt>
                         <dd className="ml-2">
                           {' '}
                           {a.trader.firstName} {a.trader.lastName}
@@ -68,6 +63,19 @@ const AuctionMap: React.FC<{
                       <div className="flex justify-between">
                         <dt className="font-semibold">Type</dt>
                         <dd className="ml-2">{typeLabel}</dd>
+                      </div>
+                      <div className="flex justify-between">
+                        <dt className="font-semibold">Qualité</dt>
+                        <dd className="ml-2">
+                          {' '}
+                          {a.product.qualityControl?.quality.name ?? 'N/A'}
+                        </dd>
+                      </div>
+                      <div className="flex justify-between">
+                        <dt className="font-semibold">Quantité</dt>
+                        <dd className="ml-2">
+                          {formatWeight(a.product.weightKg)}
+                        </dd>
                       </div>
                       <div className="flex justify-between">
                         <dt className="font-semibold">Prix demandé</dt>
@@ -92,7 +100,6 @@ const AuctionMap: React.FC<{
                         </dd>
                       </div>
                     </dl>
-
                     {/* Invite à cliquer */}
                     <div className="mt-1 text-center text-xs font-medium text-blue-600">
                       Cliquez pour voir les détails →
