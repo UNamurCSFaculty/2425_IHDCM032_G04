@@ -1,3 +1,4 @@
+import { NumberField } from './number-field'
 import { AddressField } from '@/components/form/adress-fields'
 import { CheckboxField } from '@/components/form/checkbox-field'
 import { DateTimePickerField } from '@/components/form/datetime-field'
@@ -8,7 +9,6 @@ import { SubmitButton } from '@/components/form/submit-button'
 import { TextField } from '@/components/form/text-field'
 import { TextAreaField } from '@/components/form/textarea-field'
 import { createFormHook, createFormHookContexts } from '@tanstack/react-form'
-import { NumberField } from './number-field'
 
 export const { fieldContext, useFieldContext, formContext, useFormContext } =
   createFormHookContexts()
@@ -22,7 +22,7 @@ export const { useAppForm } = createFormHook({
     DateTimePickerField,
     FileUploadField,
     AddressField,
-    NumberField
+    NumberField,
   },
   formComponents: {
     SubmitButton,

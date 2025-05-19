@@ -1,3 +1,4 @@
+import { ContractModal } from '../ContractModal'
 import { type AuctionDto } from '@/api/generated'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -12,7 +13,6 @@ import {
 import { formatDate } from '@/lib/utils'
 import { MapPin } from 'lucide-react'
 import React, { useState } from 'react'
-import { ContractModal } from '../ContractModal'
 
 interface AuctionsTableProps {
   tableTitle: string
@@ -40,7 +40,7 @@ const AuctionsTable: React.FC<AuctionsTableProps> = ({
   handleMakeBid,
 }) => {
   const [isOpen, setIsOpen] = useState(false)
-  
+
   return (
     <div className="bg-muted flex flex-col p-6 md:p-10">
       <Card className="overflow-hidden">
@@ -162,27 +162,26 @@ const AuctionsTable: React.FC<AuctionsTableProps> = ({
                             </Button>
                           </TableCell>
                         )}
-                        {acceptedBid &&(
-                        <TableCell>
-
-                          <Button
+                        {acceptedBid && (
+                          <TableCell>
+                            <Button
                               onClick={() => {
                                 setIsOpen(true)
                               }}
                             >
-                            Proposer un contrat
-                          </Button>
-                          
-                          <ContractModal
-                            acceptedBid ={acceptedBid}
-                            auction={auction}
-                            isOpen={isOpen}
-                            onClose={() => setIsOpen(false)}
-                            onSubmit={() => {
-                              setIsOpen(false)
-                            }}
-                          />
-                        </TableCell>
+                              Proposer un contrat
+                            </Button>
+
+                            <ContractModal
+                              acceptedBid={acceptedBid}
+                              auction={auction}
+                              isOpen={isOpen}
+                              onClose={() => setIsOpen(false)}
+                              onSubmit={() => {
+                                setIsOpen(false)
+                              }}
+                            />
+                          </TableCell>
                         )}
                       </TableRow>
                     )
