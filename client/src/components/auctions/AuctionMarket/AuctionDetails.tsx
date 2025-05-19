@@ -12,13 +12,16 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { TradeStatus, wktToLatLon } from '@/lib/utils'
 import dayjs from '@/utils/dayjs-config'
-import { formatPrice } from '@/utils/formatter'
+import { formatPrice, formatWeight } from '@/utils/formatter'
 import 'leaflet/dist/leaflet.css'
 import {
   CheckCircle,
   Clock,
+  DollarSign,
+  Package,
   PlusCircle,
   ShoppingCart,
+  TrendingUp,
   UserCircle2,
   XCircle,
 } from 'lucide-react'
@@ -30,6 +33,7 @@ export type UserRole = 'buyer' | 'seller'
 interface Props {
   auction: AuctionDto
   role: UserRole
+  showDetails?: boolean
   onBidAction?: (
     auctionId: number,
     bidId: number,
@@ -41,6 +45,7 @@ interface Props {
 
 const AuctionDetailsPanel: React.FC<Props> = ({
   auction,
+  showDetails = false,
   role,
   onBidAction,
   onMakeBid,
@@ -56,6 +61,10 @@ const AuctionDetailsPanel: React.FC<Props> = ({
   )
   const isOpen = auction.status.name === TradeStatus.OPEN
   const canBid = role === 'buyer' && isOpen
+  const bestBid = auction.bids.reduce(
+    (max, b) => (b.amount > max ? b.amount : max),
+    0
+  )
 
   const handleSubmitBid = () => {
     const value = Number(amount)
@@ -76,11 +85,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
       <div className="space-y-1 flex flex-wrap">
         <h2 className="text-2xl font-semibold flex items-center gap-2">
           {auction.product.type === 'harvest' ? 'Récolte' : 'Transformé'} · lot
-          #{auction.product.id} -
-          <Badge variant={'outline'} className="font-semibold text-xl">
-            <Clock size={15} />
-            <CountdownTimer endDate={endsIn} />
-          </Badge>
+          #{auction.product.id}
         </h2>
         <div className="flex flex-wrap gap-4 text-sm text-muted-foreground ml-4">
           <span className="flex items-center gap-1">
@@ -92,30 +97,78 @@ const AuctionDetailsPanel: React.FC<Props> = ({
 
       {/* Map */}
       {coords && (
-        <div className="h-48 w-full rounded-md overflow-hidden">
-          <MapContainer
-            center={mapCenter}
-            zoom={13}
-            scrollWheelZoom={false}
-            className="h-full w-full"
-          >
-            <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution="© OpenStreetMap"
-            />
-            <Marker position={mapCenter}>
-              <Popup>
-                <div className="text-sm">
-                  <div className="font-medium">
+        <div className="flex flex-col gap-4 w-full">
+          {showDetails && (
+            <Card className="bg-white shadow rounded-lg gap-0 py-3">
+              <CardHeader>
+                <CardTitle className="text-lg">Détails de l’enchère</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap gap-2">
+                  <Badge variant="outline" className="flex items-center gap-1">
+                    <Clock />
+                    Expire dans&nbsp;
+                    <span className="font-semibold">
+                      <CountdownTimer endDate={endsIn} />
+                    </span>
+                  </Badge>
+
+                  <Badge variant="default" className="flex items-center gap-1">
+                    <Package className="size-4" />
+                    Quantité&nbsp;
+                    <span className="font-semibold">
+                      {formatWeight(auction.productQuantity)}
+                    </span>
+                  </Badge>
+
+                  <Badge variant="default" className="flex items-center gap-1">
+                    <DollarSign className="size-4" />
+                    Prix demandé&nbsp;
+                    <span className="font-semibold">
+                      {formatPrice.format(auction.price)}
+                    </span>
+                  </Badge>
+
+                  {bestBid > 0 && (
+                    <Badge
+                      variant="default"
+                      className="flex items-center gap-1"
+                    >
+                      <TrendingUp className="size-4" />
+                      Meilleure offre&nbsp;
+                      <span className="font-semibold">
+                        {formatPrice.format(bestBid)}
+                      </span>
+                    </Badge>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* 2. La map en dessous */}
+          <div className="h-48 w-full rounded-md overflow-hidden">
+            <MapContainer
+              center={mapCenter}
+              zoom={12}
+              scrollWheelZoom={false}
+              className="h-full w-full"
+            >
+              <TileLayer
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution="© OpenStreetMap"
+              />
+              <Marker position={mapCenter}>
+                <Popup>
+                  <div className="text-sm font-medium">
                     {auction.product.store.name}
                   </div>
-                </div>
-              </Popup>
-            </Marker>
-          </MapContainer>
+                </Popup>
+              </Marker>
+            </MapContainer>
+          </div>
         </div>
       )}
-
       <div className="flex flex-col lg:flex-row gap-4">
         {/* Left column: actions */}
         {role === 'buyer' && !ended && (

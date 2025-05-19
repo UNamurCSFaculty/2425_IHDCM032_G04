@@ -7,7 +7,12 @@ import VirtualizedSelect from '@/components/VirtualizedSelect'
 import AuctionDetails from '@/components/auctions/AuctionMarket/AuctionDetails'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
-import { Dialog, DialogContent, DialogFooter } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import {
   Popover,
@@ -30,8 +35,11 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
+import cities from '@/data/cities.json'
+import regions from '@/data/regions.json'
 import { useMediaQuery } from '@/hooks/use-mobile'
-import { formatDate, getCities, getRegions } from '@/lib/utils'
+import { formatDate } from '@/lib/utils'
 import dayjs from '@/utils/dayjs-config'
 import { formatPrice } from '@/utils/formatter'
 import {
@@ -112,13 +120,6 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
   const [cityId, setCityId] = useState<number | null>(null)
   const [sort, setSort] = useState<SortOptionValue>('endDate-asc')
 
-  const [cities, setCities] = useState<string[]>([])
-  const [regions, setRegions] = useState<string[]>([])
-  useEffect(() => {
-    // charge une seule fois
-    void getCities().then(setCities)
-    void getRegions().then(setRegions)
-  }, [])
   useEffect(() => setCityId(null), [regionId])
 
   // ------------------------------------- filtering & sorting
@@ -237,50 +238,69 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
           )}
           {!isInCardDetail && (
             <div>
-              <div className="flex flex-wrap gap-2 items-center">
+              <div className="flex flex-wrap gap-2 items-center justify-around">
                 {/* sorting */}
                 {viewMode !== 'map' && (
-                  <Select
-                    value={sort}
-                    onValueChange={v => setSort(v as SortOptionValue)}
-                  >
-                    <SelectTrigger className="w-40">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {sortOptions.map(o => (
-                        <SelectItem key={o.value} value={o.value}>
-                          {o.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <div>
+                    <Select
+                      value={sort}
+                      onValueChange={v => setSort(v as SortOptionValue)}
+                    >
+                      <SelectTrigger className="w-40">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {sortOptions.map(o => (
+                          <SelectItem key={o.value} value={o.value}>
+                            Tri par {o.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
                 )}
 
                 {/* view */}
-                <Select
-                  value={viewMode}
-                  onValueChange={v => {
-                    setViewMode(v as ViewMode)
-                    setInlineAuction(null)
-                    setDialogAuction(null)
-                  }}
-                >
-                  <SelectTrigger className="w-32">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="cards">
-                      <LayoutGrid className="size-4 inline mr-2" /> Cartes
-                    </SelectItem>
-                    <SelectItem value="table">
-                      <ListIcon className="size-4 inline mr-2" /> Liste
-                    </SelectItem>
-                    <SelectItem value="map">
-                      <MapIcon className="size-4 inline mr-2" /> Carte
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
+                <div>
+                  <ToggleGroup
+                    size={'sm'}
+                    type="single"
+                    value={viewMode}
+                    onValueChange={v => {
+                      setViewMode(v as ViewMode)
+                      setInlineAuction(null)
+                      setDialogAuction(null)
+                    }}
+                    className="grid grid-cols-3 rounded-lg border bg-background overflow-hidden"
+                  >
+                    <ToggleGroupItem
+                      value="cards"
+                      aria-label="Cartes"
+                      className="flex items-center justify-center py-2 hover:bg-muted data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
+                    >
+                      <LayoutGrid className="size-4 mr-1" />
+                      Cartes
+                    </ToggleGroupItem>
+
+                    <ToggleGroupItem
+                      value="table"
+                      aria-label="Liste"
+                      className="flex items-center justify-center py-2 hover:bg-muted data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
+                    >
+                      <ListIcon className="size-4 mr-1" />
+                      Liste
+                    </ToggleGroupItem>
+
+                    <ToggleGroupItem
+                      value="map"
+                      aria-label="Carte"
+                      className="flex items-center justify-center py-2 hover:bg-muted data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
+                    >
+                      <MapIcon className="size-4 mr-1" />
+                      Carte
+                    </ToggleGroupItem>
+                  </ToggleGroup>
+                </div>
               </div>
               {/* create auction */}
               {userRole === 'seller' && onCreateAuction && (
@@ -332,13 +352,13 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
           </div>
         )}
 
-        <div className="relative">
+        <div className="relative w-full min-w-0">
           {/* Cards mode */}
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4">
             {viewMode === 'cards' &&
               (inlineAuction ? (
                 <>
-                  <div className="col-span-3 lg:col-span-1">
+                  <div>
                     <AuctionCard
                       key={inlineAuction.id}
                       auction={inlineAuction}
@@ -350,7 +370,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                       onBuyNow={onBuyNow}
                     />
                   </div>
-                  <div className="col-span-3 lg:col-span-2">
+                  <div className="col-span-full lg:col-span-2">
                     <AuctionDetails
                       auction={inlineAuction}
                       role={userRole}
@@ -361,7 +381,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                   </div>
                 </>
               ) : filtered.length === 0 ? (
-                <EmptyState onReset={resetFilters} />
+                <EmptyState onReset={resetFilters} className="col-span-full" />
               ) : (
                 <>
                   {paginated.map(a => (
@@ -377,7 +397,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                   ))}
 
                   {totalPages > 1 && (
-                    <div className="col-span-3 flex justify-center">
+                    <div className="col-span-full flex justify-center">
                       <PaginationControls
                         current={currentPage}
                         total={totalPages}
@@ -391,45 +411,48 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
           {/* Table mode */}
           {viewMode === 'table' && (
             <>
-              <div className="border rounded-lg overflow-hidden bg-background">
-                <Table className="text-sm">
-                  <TableHeader className="sticky top-0 backdrop-blur supports-[backdrop-filter]:bg-muted/60 z-10">
-                    <TableRow className="h-9  bg-neutral-100 text-white[& > *] ">
-                      <TableHead className="py-1 px-2 w-[120px]">
-                        Type
-                      </TableHead>
-                      <TableHead className="py-1 px-2 w-[120px]">
-                        Expire le
-                      </TableHead>
-                      <TableHead className="py-1 px-2">Région</TableHead>
-                      <TableHead className="py-1 px-2">Ville</TableHead>
-                      <TableHead className="py-1 px-2">Quantité</TableHead>
-                      <TableHead className="py-1 px-2">Qualité</TableHead>
-                      <TableHead className="py-1 px-2 text-right">
-                        Prix
-                      </TableHead>
-                      <TableHead className="py-1 px-2 text-right">
-                        Offre max
-                      </TableHead>
-                      <TableHead className="py-1 px-2 text-right">
-                        Actions
-                      </TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {paginated.map(a => (
-                      <AuctionCard
-                        key={a.id}
-                        auction={a}
-                        layout="row"
-                        role={userRole}
-                        onDetails={() => setDialogAuction(a)}
-                        onMakeBid={onMakeBid}
-                        onBuyNow={onBuyNow}
-                      />
-                    ))}
-                  </TableBody>
-                </Table>
+              <div className="border rounded-lg bg-background">
+                <div className="w-full overflow-x-auto">
+                  {/* on peut régler un min-width en fonction du nombre de colonnes */}
+                  <Table className="text-sm table auto">
+                    <TableHeader className="sticky top-0 backdrop-blur supports-[backdrop-filter]:bg-muted/60 z-10">
+                      <TableRow className="h-9  bg-neutral-100 text-white[& > *] ">
+                        <TableHead className="py-1 px-2 w-[120px]">
+                          Type
+                        </TableHead>
+                        <TableHead className="py-1 px-2 w-[120px]">
+                          Expire le
+                        </TableHead>
+                        <TableHead className="py-1 px-2">Région</TableHead>
+                        <TableHead className="py-1 px-2">Ville</TableHead>
+                        <TableHead className="py-1 px-2">Quantité</TableHead>
+                        <TableHead className="py-1 px-2">Qualité</TableHead>
+                        <TableHead className="py-1 px-2 text-right">
+                          Prix
+                        </TableHead>
+                        <TableHead className="py-1 px-2 text-right">
+                          Offre max
+                        </TableHead>
+                        <TableHead className="py-1 px-2 text-right">
+                          Actions
+                        </TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {paginated.map(a => (
+                        <AuctionCard
+                          key={a.id}
+                          auction={a}
+                          layout="row"
+                          role={userRole}
+                          onDetails={() => setDialogAuction(a)}
+                          onMakeBid={onMakeBid}
+                          onBuyNow={onBuyNow}
+                        />
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
               </div>
               {totalPages > 1 && (
                 <PaginationControls
@@ -438,6 +461,11 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                   onChange={setCurrentPage}
                 />
               )}
+              <div>
+                {paginated.length === 0 && (
+                  <EmptyState onReset={resetFilters} className="col-span-3" />
+                )}
+              </div>
             </>
           )}
 
@@ -451,10 +479,12 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
       {/* Dialog */}
       {dialogAuction && viewMode !== 'cards' && (
         <Dialog open onOpenChange={o => !o && setDialogAuction(null)}>
+          <DialogTitle />
           <DialogContent className="w-full max-w-[80vw]! max-h-[90vh] overflow-y-auto">
             <AuctionDetails
               auction={dialogAuction}
               role={userRole}
+              showDetails={true}
               onBidAction={onBidAction}
               onMakeBid={onMakeBid}
               onBuyNow={onBuyNow}
