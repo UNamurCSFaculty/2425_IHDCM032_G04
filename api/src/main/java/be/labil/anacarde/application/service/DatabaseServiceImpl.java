@@ -107,11 +107,11 @@ public class DatabaseServiceImpl implements DatabaseService {
 		UserDetailDto producer2 = userService.createUser(producerUpdate2);
 
 		// Création de champs
-		FieldDto field = createField((ProducerDetailDto) producer, "F1111");
+		FieldDto field = createField((ProducerDetailDto) producer, "F1111", "POINT (2.3522 48.8566)");
 		field = fieldService.createField(field);
-		FieldDto field2 = createField((ProducerDetailDto) producer2, "F2222");
+		FieldDto field2 = createField((ProducerDetailDto) producer2, "F2222", "POINT (1.3522 38.8566)");
 		fieldService.createField(field2);
-		FieldDto field3 = createField((ProducerDetailDto) producer2, "F3333");
+		FieldDto field3 = createField((ProducerDetailDto) producer2, "F3333", "POINT (0.3522 58.8566)");
 		fieldService.createField(field3);
 
 		// Création de la coopérative
@@ -260,9 +260,9 @@ public class DatabaseServiceImpl implements DatabaseService {
 		return cooperativeDto;
 	}
 
-	private FieldDto createField(ProducerDetailDto producer, String identifier) {
+	private FieldDto createField(ProducerDetailDto producer, String identifier, String location) {
 		FieldDto fieldDto = new FieldDto();
-		fieldDto.setLocation("POINT (2.3522 48.8566)");
+		fieldDto.setLocation(location);
 		fieldDto.setIdentifier(identifier);
 		fieldDto.setProducer(producer);
 		return fieldDto;

@@ -60,7 +60,9 @@ export function SelectField<T extends string | number>({
             {label}
             {required && <span className="text-red-500">*</span>}
           </Label>
-          {hint && <span className="text-sm text-gray-500">{hint}</span>}
+          {hint && (
+            <span className="font-semibold text-xs text-gray-500">{hint}</span>
+          )}
         </div>
         <Select
           // on passe toujours une string au <Select>

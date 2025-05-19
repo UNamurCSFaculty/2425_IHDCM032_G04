@@ -41,14 +41,13 @@ export function ProductForm({
   qualityInspectors,
 }: ProductFormProps): React.ReactElement<'div'> {
   const navigate = useNavigate()
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
 
   const [selectedProductType, setSelectedProductType] = useState(
     ProductType.TRANSFORMED
   )
 
   const [selectedTraderId, setSelectedTraderId] = useState<number | null>(null)
-  const [selectedField, setSelectedField] = useState<FieldDto | null>(null)
 
   const { data: fields } = useQuery({
     ...listFieldsOptions({ path: { userId: selectedTraderId! } }),
@@ -115,7 +114,7 @@ export function ProductForm({
         weightKg: 0,
         qualityControlId: 0,
         type: ProductType.TRANSFORMED,
-        transformerId: 0,
+        transformerId: -1,
         identifier: 'TR-000', //TODO: remove from DB
       },
       qualityControl: {
@@ -124,7 +123,7 @@ export function ProductForm({
         granularity: 0,
         korTest: 0,
         humidity: 0,
-        qualityInspectorId: 0,
+        qualityInspectorId: -1,
         productId: 0,
         qualityId: 0,
       },
@@ -135,8 +134,12 @@ export function ProductForm({
   })
 
   useEffect(() => {
-    form.validate('change')
-  }, [i18n.language, form])
+    form.setFieldValue(
+      `product.${selectedProductType === ProductType.HARVEST ? 'producerId' : 'transformerId'}`,
+      -1
+    )
+    setSelectedTraderId(null)
+  }, [form, selectedProductType])
 
   const filteredTraders = traders.filter(trader =>
     selectedProductType === ProductType.HARVEST
@@ -177,8 +180,8 @@ export function ProductForm({
                       ]}
                       label="Marchandise"
                       onChange={productType => {
+                        console.log('field.state.value', field.state.value)
                         setSelectedTraderId(null)
-                        setSelectedField(null)
                         setSelectedProductType(productType)
                       }}
                     />
@@ -215,7 +218,9 @@ export function ProductForm({
                       : 'Transformateur'
                   }
                   hint={
-                    selectedTraderId ? 'identifiant : ' + selectedTraderId : ''
+                    field.state.value !== -1
+                      ? 'identifiant : ' + field.state.value
+                      : ''
                   }
                   onChange={traderId => {
                     setSelectedTraderId(traderId)
@@ -226,24 +231,22 @@ export function ProductForm({
             {selectedProductType == ProductType.HARVEST && fields && (
               <form.AppField
                 name="product.fieldId"
-                children={field => (
-                  <field.SelectField
-                    options={(fields as FieldDto[]).map(field => ({
-                      value: field.id,
-                      label: 'Champ ' + field.identifier,
-                    }))}
-                    label="Origine"
-                    hint={
-                      selectedField && selectedField.location
-                        ? 'gps : ' + formatCoordinates(selectedField.location)
-                        : ''
-                    }
-                    onChange={fieldId => {
-                      const f = fields.find(field => field.id === fieldId)
-                      setSelectedField(f!)
-                    }}
-                  />
-                )}
+                children={field => {
+                  const gps = fields.find(
+                    f => f.id === field.state.value
+                  )?.location
+                  const hintText = gps ? 'gps : ' + formatCoordinates(gps) : ''
+                  return (
+                    <field.SelectField
+                      options={(fields as FieldDto[]).map(field => ({
+                        value: field.id,
+                        label: 'Champ ' + field.identifier,
+                      }))}
+                      label="Origine"
+                      hint={hintText}
+                    />
+                  )
+                }}
               />
             )}
 
@@ -296,36 +299,35 @@ export function ProductForm({
           <div className="flex flex-col gap-6 w-1/2">
             <FormSectionTitle text="Contrôle qualité" />
 
-            <div className="flex gap-4">
-              <div className="flex-1">
-                <form.AppField
-                  name="qualityControl.qualityId"
-                  children={field => (
-                    <field.SelectField
-                      options={qualities.map(quality => ({
-                        value: quality.id,
-                        label: quality.name,
-                      }))}
-                      label="Qualité"
-                    />
-                  )}
+            <form.AppField
+              name="qualityControl.qualityId"
+              children={field => (
+                <field.SelectField
+                  options={qualities.map(quality => ({
+                    value: quality.id,
+                    label: quality.name,
+                  }))}
+                  label="Qualité"
                 />
-              </div>
-              <div className="flex-1">
-                <form.AppField
-                  name="qualityControl.qualityInspectorId"
-                  children={field => (
-                    <field.SelectField
-                      options={qualityInspectors.map(qi => ({
-                        value: qi.id,
-                        label: qi.firstName + ' ' + qi.lastName,
-                      }))}
-                      label="Qualiticien"
-                    />
-                  )}
+              )}
+            />
+            <form.AppField
+              name="qualityControl.qualityInspectorId"
+              children={field => (
+                <field.SelectField
+                  options={qualityInspectors.map(qi => ({
+                    value: qi.id,
+                    label: qi.firstName + ' ' + qi.lastName,
+                  }))}
+                  label="Qualiticien"
+                  hint={
+                    field.state.value !== -1
+                      ? 'identifiant : ' + field.state.value
+                      : ''
+                  }
                 />
-              </div>
-            </div>
+              )}
+            />
             <form.AppField
               name="qualityControl.controlDate"
               children={field => (
