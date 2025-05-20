@@ -2,6 +2,7 @@ import FormContainer from '../FormContainer'
 import FormSectionTitle from '../FormSectionTitle'
 import type {
   FieldDto,
+  HarvestProductUpdateDto,
   QualityDto,
   QualityInspectorDetailDto,
   StoreDetailDto,
@@ -10,7 +11,6 @@ import type {
 import {
   createProductMutation,
   createQualityControlMutation,
-  listFieldsOptions,
 } from '@/api/generated/@tanstack/react-query.gen.ts'
 import {
   zHarvestProductUpdateDto,
@@ -20,10 +20,11 @@ import {
 import { useAppForm } from '@/components/form'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { ProductType, formatCoordinates } from '@/lib/utils'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useStore } from '@tanstack/react-form'
+import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { AlertCircle } from 'lucide-react'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 import z from 'zod'
 
@@ -32,6 +33,7 @@ interface ProductFormProps {
   stores: StoreDetailDto[]
   qualities: QualityDto[]
   qualityInspectors: QualityInspectorDetailDto[]
+  fields: FieldDto[]
 }
 
 export function ProductForm({
@@ -39,21 +41,10 @@ export function ProductForm({
   stores,
   qualities,
   qualityInspectors,
+  fields,
 }: ProductFormProps): React.ReactElement<'div'> {
   const navigate = useNavigate()
   const { t } = useTranslation()
-
-  const [selectedProductType, setSelectedProductType] = useState(
-    ProductType.TRANSFORMED
-  )
-
-  const [selectedTraderId, setSelectedTraderId] = useState<number | null>(null)
-
-  const { data: fields } = useQuery({
-    ...listFieldsOptions({ path: { userId: selectedTraderId! } }),
-    staleTime: 10_000,
-    enabled: !!selectedTraderId,
-  })
 
   const createProductRequest = useMutation({
     ...createProductMutation(),
@@ -124,7 +115,7 @@ export function ProductForm({
         korTest: 0,
         humidity: 0,
         qualityInspectorId: -1,
-        productId: 0,
+        productId: 0, // TODO: should not be in this entity
         qualityId: 0,
       },
     },
@@ -133,21 +124,14 @@ export function ProductForm({
     },
   })
 
-  useEffect(() => {
-    form.setFieldValue(
-      `product.${selectedProductType === ProductType.HARVEST ? 'producerId' : 'transformerId'}`,
-      -1
-    )
-    setSelectedTraderId(null)
-  }, [form, selectedProductType])
+  const productType = useStore(form.store, state => state.values.product.type)
 
-  const filteredTraders = traders.filter(trader =>
-    selectedProductType === ProductType.HARVEST
-      ? trader.type === 'ProducerListDto'
-      : selectedProductType === ProductType.TRANSFORMED
-        ? trader.type === 'TransformerListDto'
-        : true
-  )
+  const producerId = useStore(form.store, state => {
+    if (productType === ProductType.HARVEST) {
+      return (state.values.product as HarvestProductUpdateDto).producerId
+    }
+    return -1
+  })
 
   return (
     <FormContainer title="Saisie du produit">
@@ -179,10 +163,11 @@ export function ProductForm({
                         },
                       ]}
                       label="Marchandise"
-                      onChange={productType => {
-                        console.log('field.state.value', field.state.value)
-                        setSelectedTraderId(null)
-                        setSelectedProductType(productType)
+                      onChange={() => {
+                        // Reset dependent fields
+                        form.setFieldValue('product.producerId', -1)
+                        form.setFieldValue('product.transformerId', -1)
+                        form.setFieldValue('product.fieldId', -1)
                       }}
                     />
                   )}
@@ -205,30 +190,37 @@ export function ProductForm({
             </div>
 
             <form.AppField
-              name={`product.${selectedProductType === ProductType.HARVEST ? 'producerId' : 'transformerId'}`}
-              children={field => (
-                <field.SelectField
-                  options={filteredTraders.map(trader => ({
-                    value: trader.id,
-                    label: trader.firstName + ' ' + trader.lastName,
-                  }))}
-                  label={
-                    selectedProductType === ProductType.HARVEST
-                      ? 'Producteur'
-                      : 'Transformateur'
-                  }
-                  hint={
-                    field.state.value !== -1
-                      ? 'identifiant : ' + field.state.value
-                      : ''
-                  }
-                  onChange={traderId => {
-                    setSelectedTraderId(traderId)
-                  }}
-                />
-              )}
+              name={`product.${productType === ProductType.HARVEST ? 'producerId' : 'transformerId'}`}
+              children={field => {
+                const filteredTraders = traders.filter(trader =>
+                  productType === ProductType.HARVEST
+                    ? trader.type === 'ProducerListDto'
+                    : productType === ProductType.TRANSFORMED
+                      ? trader.type === 'TransformerListDto'
+                      : true
+                )
+
+                return (
+                  <field.SelectField
+                    options={filteredTraders.map(trader => ({
+                      value: trader.id,
+                      label: trader.firstName + ' ' + trader.lastName,
+                    }))}
+                    label={
+                      productType === ProductType.HARVEST
+                        ? 'Producteur'
+                        : 'Transformateur'
+                    }
+                    hint={
+                      field.state.value !== -1
+                        ? 'identifiant : ' + field.state.value
+                        : ''
+                    }
+                  />
+                )
+              }}
             />
-            {selectedProductType == ProductType.HARVEST && fields && (
+            {productType === ProductType.HARVEST && (
               <form.AppField
                 name="product.fieldId"
                 children={field => {
@@ -238,10 +230,12 @@ export function ProductForm({
                   const hintText = gps ? 'gps : ' + formatCoordinates(gps) : ''
                   return (
                     <field.SelectField
-                      options={(fields as FieldDto[]).map(field => ({
-                        value: field.id,
-                        label: 'Champ ' + field.identifier,
-                      }))}
+                      options={(fields as FieldDto[])
+                        .filter(field => field.producer?.id === producerId)
+                        .map(field => ({
+                          value: field.id,
+                          label: 'Champ ' + field.identifier,
+                        }))}
                       label="Origine"
                       hint={hintText}
                     />
@@ -259,9 +253,7 @@ export function ProductForm({
                     label: store.name,
                   }))}
                   label={
-                    selectedProductType === ProductType.HARVEST
-                      ? 'Magasin'
-                      : 'Entrepôt'
+                    productType === ProductType.HARVEST ? 'Magasin' : 'Entrepôt'
                   }
                 />
               )}

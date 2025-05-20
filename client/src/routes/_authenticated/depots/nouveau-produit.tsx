@@ -1,10 +1,12 @@
 import type {
+  FieldDto,
   QualityDto,
   QualityInspectorDetailDto,
   StoreDetailDto,
   TraderDetailDto,
 } from '@/api/generated'
 import {
+  listFieldsOptions,
   listQualitiesOptions,
   listStoresOptions,
   listUsersOptions,
@@ -28,6 +30,11 @@ function RouteComponent() {
 
   const { data: qualitiesData } = useSuspenseQuery({
     ...listQualitiesOptions(),
+    staleTime: staleTime,
+  })
+
+  const { data: fieldsData } = useSuspenseQuery({
+    ...listFieldsOptions(),
     staleTime: staleTime,
   })
 
@@ -61,6 +68,7 @@ function RouteComponent() {
         stores={storesData as StoreDetailDto[]}
         qualities={qualitiesData as QualityDto[]}
         qualityInspectors={qualityInspectorsData as QualityInspectorDetailDto[]}
+        fields={fieldsData as FieldDto[]}
       />
     </>
   )

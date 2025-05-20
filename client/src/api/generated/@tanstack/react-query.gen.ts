@@ -267,20 +267,20 @@ import {
   queryOptions,
 } from '@tanstack/react-query'
 
-export const deleteFieldMutation = (
-  options?: Partial<Options<DeleteFieldData>>
+export const deleteUserMutation = (
+  options?: Partial<Options<DeleteUserData>>
 ): UseMutationOptions<
-  DeleteFieldResponse,
-  DeleteFieldError,
-  Options<DeleteFieldData>
+  DeleteUserResponse,
+  DeleteUserError,
+  Options<DeleteUserData>
 > => {
   const mutationOptions: UseMutationOptions<
-    DeleteFieldResponse,
-    DeleteFieldError,
-    Options<DeleteFieldData>
+    DeleteUserResponse,
+    DeleteUserError,
+    Options<DeleteUserData>
   > = {
     mutationFn: async localOptions => {
-      const { data } = await deleteField({
+      const { data } = await deleteUser({
         ...options,
         ...localOptions,
         throwOnError: true,
@@ -323,72 +323,6 @@ const createQueryKey = <TOptions extends Options>(
     params.query = options.query
   }
   return [params]
-}
-
-export const getFieldQueryKey = (options: Options<GetFieldData>) =>
-  createQueryKey('getField', options)
-
-export const getFieldOptions = (options: Options<GetFieldData>) => {
-  return queryOptions({
-    queryFn: async ({ queryKey, signal }) => {
-      const { data } = await getField({
-        ...options,
-        ...queryKey[0],
-        signal,
-        throwOnError: true,
-      })
-      return data
-    },
-    queryKey: getFieldQueryKey(options),
-  })
-}
-
-export const updateFieldMutation = (
-  options?: Partial<Options<UpdateFieldData>>
-): UseMutationOptions<
-  UpdateFieldResponse,
-  UpdateFieldError,
-  Options<UpdateFieldData>
-> => {
-  const mutationOptions: UseMutationOptions<
-    UpdateFieldResponse,
-    UpdateFieldError,
-    Options<UpdateFieldData>
-  > = {
-    mutationFn: async localOptions => {
-      const { data } = await updateField({
-        ...options,
-        ...localOptions,
-        throwOnError: true,
-      })
-      return data
-    },
-  }
-  return mutationOptions
-}
-
-export const deleteUserMutation = (
-  options?: Partial<Options<DeleteUserData>>
-): UseMutationOptions<
-  DeleteUserResponse,
-  DeleteUserError,
-  Options<DeleteUserData>
-> => {
-  const mutationOptions: UseMutationOptions<
-    DeleteUserResponse,
-    DeleteUserError,
-    Options<DeleteUserData>
-  > = {
-    mutationFn: async localOptions => {
-      const { data } = await deleteUser({
-        ...options,
-        ...localOptions,
-        throwOnError: true,
-      })
-      return data
-    },
-  }
-  return mutationOptions
 }
 
 export const getUserQueryKey = (options: Options<GetUserData>) =>
@@ -866,6 +800,72 @@ export const updateLanguageMutation = (
   > = {
     mutationFn: async localOptions => {
       const { data } = await updateLanguage({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+export const deleteFieldMutation = (
+  options?: Partial<Options<DeleteFieldData>>
+): UseMutationOptions<
+  DeleteFieldResponse,
+  DeleteFieldError,
+  Options<DeleteFieldData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    DeleteFieldResponse,
+    DeleteFieldError,
+    Options<DeleteFieldData>
+  > = {
+    mutationFn: async localOptions => {
+      const { data } = await deleteField({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+export const getFieldQueryKey = (options: Options<GetFieldData>) =>
+  createQueryKey('getField', options)
+
+export const getFieldOptions = (options: Options<GetFieldData>) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getField({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: getFieldQueryKey(options),
+  })
+}
+
+export const updateFieldMutation = (
+  options?: Partial<Options<UpdateFieldData>>
+): UseMutationOptions<
+  UpdateFieldResponse,
+  UpdateFieldError,
+  Options<UpdateFieldData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    UpdateFieldResponse,
+    UpdateFieldError,
+    Options<UpdateFieldData>
+  > = {
+    mutationFn: async localOptions => {
+      const { data } = await updateField({
         ...options,
         ...localOptions,
         throwOnError: true,
@@ -1410,66 +1410,6 @@ export const createUserMutation = (
   return mutationOptions
 }
 
-export const listFieldsQueryKey = (options: Options<ListFieldsData>) =>
-  createQueryKey('listFields', options)
-
-export const listFieldsOptions = (options: Options<ListFieldsData>) => {
-  return queryOptions({
-    queryFn: async ({ queryKey, signal }) => {
-      const { data } = await listFields({
-        ...options,
-        ...queryKey[0],
-        signal,
-        throwOnError: true,
-      })
-      return data
-    },
-    queryKey: listFieldsQueryKey(options),
-  })
-}
-
-export const createFieldQueryKey = (options: Options<CreateFieldData>) =>
-  createQueryKey('createField', options)
-
-export const createFieldOptions = (options: Options<CreateFieldData>) => {
-  return queryOptions({
-    queryFn: async ({ queryKey, signal }) => {
-      const { data } = await createField({
-        ...options,
-        ...queryKey[0],
-        signal,
-        throwOnError: true,
-      })
-      return data
-    },
-    queryKey: createFieldQueryKey(options),
-  })
-}
-
-export const createFieldMutation = (
-  options?: Partial<Options<CreateFieldData>>
-): UseMutationOptions<
-  CreateFieldResponse,
-  CreateFieldError,
-  Options<CreateFieldData>
-> => {
-  const mutationOptions: UseMutationOptions<
-    CreateFieldResponse,
-    CreateFieldError,
-    Options<CreateFieldData>
-  > = {
-    mutationFn: async localOptions => {
-      const { data } = await createField({
-        ...options,
-        ...localOptions,
-        throwOnError: true,
-      })
-      return data
-    },
-  }
-  return mutationOptions
-}
-
 export const addRoleToUserQueryKey = (options: Options<AddRoleToUserData>) =>
   createQueryKey('addRoleToUser', options)
 
@@ -1868,6 +1808,66 @@ export const createLanguageMutation = (
   > = {
     mutationFn: async localOptions => {
       const { data } = await createLanguage({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+export const listFieldsQueryKey = (options?: Options<ListFieldsData>) =>
+  createQueryKey('listFields', options)
+
+export const listFieldsOptions = (options?: Options<ListFieldsData>) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await listFields({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: listFieldsQueryKey(options),
+  })
+}
+
+export const createFieldQueryKey = (options: Options<CreateFieldData>) =>
+  createQueryKey('createField', options)
+
+export const createFieldOptions = (options: Options<CreateFieldData>) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await createField({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: createFieldQueryKey(options),
+  })
+}
+
+export const createFieldMutation = (
+  options?: Partial<Options<CreateFieldData>>
+): UseMutationOptions<
+  CreateFieldResponse,
+  CreateFieldError,
+  Options<CreateFieldData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    CreateFieldResponse,
+    CreateFieldError,
+    Options<CreateFieldData>
+  > = {
+    mutationFn: async localOptions => {
+      const { data } = await createField({
         ...options,
         ...localOptions,
         throwOnError: true,
