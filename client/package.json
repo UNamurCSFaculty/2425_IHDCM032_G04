@@ -10,7 +10,7 @@
     "test": "vitest run",
     "test:watch": "vitest --watch",
     "format": "prettier --end-of-line auto --write \"src/**/*.{js,ts,tsx,css,html,json,md}\"",
-    "format:check": "prettier --check \"src/**/*.{js,ts,tsx,css,html,json,md}\"",
+    "format:check": "prettier --end-of-line auto --check \"src/**/*.{js,ts,tsx,css,html,json,md}\"",
     "lint": "eslint . --ext ts,tsx --fix --report-unused-disable-directives --max-warnings 0",
     "generate:api": "openapi-ts && node scripts/fix-zod.js",
     "postgenerate:api": "prettier --write \"src/api/**/*.{js,ts,tsx,css,html,json,md}\""
