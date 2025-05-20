@@ -216,6 +216,10 @@ export function ProductForm({
                         ? 'identifiant : ' + field.state.value
                         : ''
                     }
+                    onChange={() => {
+                      // Reset dependent fields
+                      form.setFieldValue('product.fieldId', -1)
+                    }}
                   />
                 )
               }}
