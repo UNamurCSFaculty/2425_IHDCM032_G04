@@ -37,7 +37,12 @@ public class FieldServiceImpl implements FieldService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<FieldDto> listFields(Integer userId) {
-		List<Field> fields = fieldRepository.findByProducerId(userId);
+		List<Field> fields;
+		if (userId != null) {
+			fields = fieldRepository.findByProducerId(userId);
+		} else {
+			fields = fieldRepository.findAll();
+		}
 		return fields.stream().map(fieldMapper::toDto).collect(Collectors.toList());
 	}
 

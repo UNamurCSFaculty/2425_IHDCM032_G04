@@ -100,18 +100,23 @@ public class DatabaseServiceImpl implements DatabaseService {
 		languageEn = languageService.createLanguage(languageEn);
 
 		// Création de producteurs (sans coopérative)
-		UserUpdateDto producerUpdate = createProducer(languageFr, "Fabrice", "Cipolla", "fabricecipolla@gmail.com", "A-123456", "+229019700000");
+		UserUpdateDto producerUpdate = createProducer(languageFr, "Fabrice", "Cipolla",
+				"fabricecipolla@gmail.com", "A-123456", "+229019700000");
 		UserDetailDto producer = userService.createUser(producerUpdate);
 
-		UserUpdateDto producerUpdate2 = createProducer(languageFr, "Fermier", "Ducoin", "fermierducoin@gmail.com", "A-777809", "+229019711111");
+		UserUpdateDto producerUpdate2 = createProducer(languageFr, "Fermier", "Ducoin",
+				"fermierducoin@gmail.com", "A-777809", "+229019711111");
 		UserDetailDto producer2 = userService.createUser(producerUpdate2);
 
 		// Création de champs
-		FieldDto field = createField((ProducerDetailDto) producer, "F1111", "POINT (2.3522 48.8566)");
+		FieldDto field = createField((ProducerDetailDto) producer, "F1111",
+				"POINT (2.3522 48.8566)");
 		field = fieldService.createField(field);
-		FieldDto field2 = createField((ProducerDetailDto) producer2, "F2222", "POINT (1.3522 38.8566)");
+		FieldDto field2 = createField((ProducerDetailDto) producer2, "F2222",
+				"POINT (1.3522 38.8566)");
 		fieldService.createField(field2);
-		FieldDto field3 = createField((ProducerDetailDto) producer2, "F3333", "POINT (0.3522 58.8566)");
+		FieldDto field3 = createField((ProducerDetailDto) producer2, "F3333",
+				"POINT (0.3522 58.8566)");
 		fieldService.createField(field3);
 
 		// Création de la coopérative
@@ -370,8 +375,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 		return admin;
 	}
 
-	private ProducerUpdateDto createProducer(LanguageDto languageDto,
-											 String firstName, String lastName, String email, String identifier, String phone) {
+	private ProducerUpdateDto createProducer(LanguageDto languageDto, String firstName,
+			String lastName, String email, String identifier, String phone) {
 		ProducerUpdateDto producer = new ProducerUpdateDto();
 		producer.setFirstName(firstName);
 		producer.setLastName(lastName);
