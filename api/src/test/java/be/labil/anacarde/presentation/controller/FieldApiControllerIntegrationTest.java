@@ -24,7 +24,7 @@ public class FieldApiControllerIntegrationTest extends AbstractIntegrationTest {
 		mockMvc.perform(
 				get("/api/fields/" + getMainTestField().getId()).accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.location").value("POINT (2.3522 48.8566)"))
+				.andExpect(jsonPath("$.address.location").value("POINT (3.3522 8.8566)"))
 				.andExpect(jsonPath("$.identifier").value(getMainTestField().getIdentifier()));
 	}
 

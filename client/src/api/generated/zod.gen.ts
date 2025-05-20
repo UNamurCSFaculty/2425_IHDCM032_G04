@@ -122,12 +122,12 @@ export const zUserDetailDto = z.object({
   address: zAddressDto,
   documents: z.array(zDocumentDto).optional(),
   type: z.enum([
-    'AdminListDto',
-    'ProducerListDto',
-    'TransformerListDto',
-    'QualityInspectorListDto',
-    'ExporterListDto',
-    'CarrierListDto',
+    'admin',
+    'producer',
+    'transformer',
+    'quality_inspector',
+    'exporter',
+    'carrier',
   ]),
 })
 
@@ -184,12 +184,12 @@ export const zProducerDetailDto = z.object({
   agriculturalIdentifier: z.string().min(1),
   cooperative: zCooperativeDto.optional(),
   type: z.enum([
-    'AdminListDto',
-    'ProducerListDto',
-    'TransformerListDto',
-    'QualityInspectorListDto',
-    'ExporterListDto',
-    'CarrierListDto',
+    'admin',
+    'producer',
+    'transformer',
+    'quality_inspector',
+    'exporter',
+    'carrier',
   ]),
 })
 
@@ -216,12 +216,12 @@ export const zTransformerDetailDto = z.object({
   address: zAddressDto,
   documents: z.array(zDocumentDto).optional(),
   type: z.enum([
-    'AdminListDto',
-    'ProducerListDto',
-    'TransformerListDto',
-    'QualityInspectorListDto',
-    'ExporterListDto',
-    'CarrierListDto',
+    'admin',
+    'producer',
+    'transformer',
+    'quality_inspector',
+    'exporter',
+    'carrier',
   ]),
 })
 
@@ -258,9 +258,8 @@ export const zQualityControlUpdateDto = z.object({
   korTest: z.number(),
   humidity: z.number(),
   qualityInspectorId: z.number().int(),
-  productId: z.number().int(),
   qualityId: z.number().int(),
-  documentId: z.number().int(),
+  documentId: z.number().int().optional(),
 })
 
 export const zUserMiniDto = z.object({
@@ -509,12 +508,12 @@ export const zUserListDto = z.object({
     .regex(/^(?:\+229)?01\d{8}$/)
     .optional(),
   type: z.enum([
-    'AdminListDto',
-    'ProducerListDto',
-    'TransformerListDto',
-    'QualityInspectorListDto',
-    'ExporterListDto',
-    'CarrierListDto',
+    'admin',
+    'producer',
+    'transformer',
+    'quality_inspector',
+    'exporter',
+    'carrier',
   ]),
 })
 
@@ -553,12 +552,12 @@ export const zExporterListDto = z.object({
   address: zAddressDto,
   documents: z.array(zDocumentDto).optional(),
   type: z.enum([
-    'AdminListDto',
-    'ProducerListDto',
-    'TransformerListDto',
-    'QualityInspectorListDto',
-    'ExporterListDto',
-    'CarrierListDto',
+    'admin',
+    'producer',
+    'transformer',
+    'quality_inspector',
+    'exporter',
+    'carrier',
   ]),
 })
 

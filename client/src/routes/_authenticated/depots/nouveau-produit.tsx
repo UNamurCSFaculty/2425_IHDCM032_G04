@@ -44,9 +44,9 @@ function RouteComponent() {
 
   const usersData = allUsersData.filter(
     user =>
-      user.type === 'TransformerListDto' ||
-      user.type === 'ProducerListDto' ||
-      user.type === 'QualityInspectorListDto'
+      user.type === 'transformer' ||
+      user.type === 'producer' ||
+      user.type === 'quality_inspector'
   )
 
   return (

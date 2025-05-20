@@ -64,7 +64,6 @@ class QualityControlMapperTest {
 		dto.setKorTest(0.8f);
 		dto.setHumidity(12.5f);
 		dto.setQualityInspectorId(1);
-		dto.setProductId(2);
 		dto.setQualityId(3);
 		dto.setDocumentId(5);
 

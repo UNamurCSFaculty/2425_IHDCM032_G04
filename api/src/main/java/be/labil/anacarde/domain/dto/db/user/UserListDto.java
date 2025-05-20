@@ -66,8 +66,7 @@ public abstract class UserListDto extends BaseDto {
 	 * valeurs autorisées.
 	 */
 	@Schema(name = "type", description = "Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier", requiredMode = Schema.RequiredMode.REQUIRED, example = "admin", allowableValues = {
-			"AdminListDto", "ProducerListDto", "TransformerListDto", "QualityInspectorListDto",
-			"ExporterListDto", "CarrierListDto"})
+			"admin", "producer", "transformer", "quality_inspector", "exporter", "carrier"})
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	public String getVirtualTypeForSwagger() {
 		return null;

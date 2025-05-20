@@ -112,9 +112,7 @@ export function ProductForm({
         korTest: 0,
         humidity: 0,
         qualityInspectorId: -1,
-        productId: 0, // TODO: should not be in this entity
         qualityId: 0,
-        documentId: 0,
       },
     },
     onSubmit({ value }) {
@@ -192,9 +190,9 @@ export function ProductForm({
               children={field => {
                 const traders = users.filter(user =>
                   productType === ProductType.HARVEST
-                    ? user.type === 'ProducerListDto'
+                    ? user.type === 'producer'
                     : productType === ProductType.TRANSFORMED
-                      ? user.type === 'TransformerListDto'
+                      ? user.type === 'transformer'
                       : true
                 )
 
@@ -235,9 +233,9 @@ export function ProductForm({
                         .filter(field => field.producer?.id === producerId)
                         .map(field => ({
                           value: field.id,
-                          label: 'Champ ' + field.identifier,
+                          label: field.identifier!,
                         }))}
-                      label="Origine"
+                      label="Champ cultivé"
                       hint={hintText}
                     />
                   )
@@ -309,7 +307,7 @@ export function ProductForm({
               children={field => (
                 <field.SelectField
                   options={users
-                    .filter(user => user.type === 'QualityInspectorListDto')
+                    .filter(user => user.type === 'quality_inspector')
                     .map(qi => ({
                       value: qi.id,
                       label: qi.firstName + ' ' + qi.lastName,
