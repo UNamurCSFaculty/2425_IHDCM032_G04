@@ -13,19 +13,28 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as SignupImport } from './routes/signup'
 import { Route as LoginImport } from './routes/login'
+import { Route as AdminImport } from './routes/admin'
 import { Route as AuthenticatedImport } from './routes/_authenticated'
 import { Route as IndexImport } from './routes/index'
 import { Route as ContactIndexImport } from './routes/contact/index'
+import { Route as AdminIndexImport } from './routes/admin/index'
 import { Route as ContactMerciImport } from './routes/contact/merci'
+import { Route as AdminSettingsImport } from './routes/admin/settings'
+import { Route as AdminAnalyticsImport } from './routes/admin/analytics'
+import { Route as AdminUsersIndexImport } from './routes/admin/users/index'
+import { Route as AdminCooperativesIndexImport } from './routes/admin/cooperatives/index'
+import { Route as AdminBlogIndexImport } from './routes/admin/blog/index'
 import { Route as AuthenticatedEncheresIndexImport } from './routes/_authenticated/encheres/index'
+import { Route as AdminUsersNewImport } from './routes/admin/users/new'
+import { Route as AdminUsersUserIdImport } from './routes/admin/users/$userId'
 import { Route as AuthenticatedVentesNouvelleEnchereImport } from './routes/_authenticated/ventes/nouvelle-enchere'
 import { Route as AuthenticatedVentesMesEncheresImport } from './routes/_authenticated/ventes/mes-encheres'
 import { Route as AuthenticatedVentesHistoriqueImport } from './routes/_authenticated/ventes/historique'
 import { Route as AuthenticatedEncheresCajouImport } from './routes/_authenticated/encheres/cajou'
 import { Route as AuthenticatedEncheresAutresImport } from './routes/_authenticated/encheres/autres'
 import { Route as AuthenticatedDepotsNouveauProduitImport } from './routes/_authenticated/depots/nouveau-produit'
-import { Route as AuthenticatedAdminUsersImport } from './routes/_authenticated/admin/users'
 import { Route as AuthenticatedAchatsNouvelleEnchereImport } from './routes/_authenticated/achats/nouvelle-enchere'
+import { Route as AuthenticatedAchatsMarcheImport } from './routes/_authenticated/achats/marche'
 import { Route as AuthenticatedAchatsHistoriqueImport } from './routes/_authenticated/achats/historique'
 import { Route as AuthenticatedEncheresDetailIdImport } from './routes/_authenticated/encheres/detail/$id'
 
@@ -40,6 +49,12 @@ const SignupRoute = SignupImport.update({
 const LoginRoute = LoginImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AdminRoute = AdminImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -60,10 +75,46 @@ const ContactIndexRoute = ContactIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const AdminIndexRoute = AdminIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+
 const ContactMerciRoute = ContactMerciImport.update({
   id: '/contact/merci',
   path: '/contact/merci',
   getParentRoute: () => rootRoute,
+} as any)
+
+const AdminSettingsRoute = AdminSettingsImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AdminRoute,
+} as any)
+
+const AdminAnalyticsRoute = AdminAnalyticsImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => AdminRoute,
+} as any)
+
+const AdminUsersIndexRoute = AdminUsersIndexImport.update({
+  id: '/users/',
+  path: '/users/',
+  getParentRoute: () => AdminRoute,
+} as any)
+
+const AdminCooperativesIndexRoute = AdminCooperativesIndexImport.update({
+  id: '/cooperatives/',
+  path: '/cooperatives/',
+  getParentRoute: () => AdminRoute,
+} as any)
+
+const AdminBlogIndexRoute = AdminBlogIndexImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => AdminRoute,
 } as any)
 
 const AuthenticatedEncheresIndexRoute = AuthenticatedEncheresIndexImport.update(
@@ -73,6 +124,18 @@ const AuthenticatedEncheresIndexRoute = AuthenticatedEncheresIndexImport.update(
     getParentRoute: () => AuthenticatedRoute,
   } as any,
 )
+
+const AdminUsersNewRoute = AdminUsersNewImport.update({
+  id: '/users/new',
+  path: '/users/new',
+  getParentRoute: () => AdminRoute,
+} as any)
+
+const AdminUsersUserIdRoute = AdminUsersUserIdImport.update({
+  id: '/users/$userId',
+  path: '/users/$userId',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 const AuthenticatedVentesNouvelleEnchereRoute =
   AuthenticatedVentesNouvelleEnchereImport.update({
@@ -117,18 +180,18 @@ const AuthenticatedDepotsNouveauProduitRoute =
     getParentRoute: () => AuthenticatedRoute,
   } as any)
 
-const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersImport.update({
-  id: '/admin/users',
-  path: '/admin/users',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
-
 const AuthenticatedAchatsNouvelleEnchereRoute =
   AuthenticatedAchatsNouvelleEnchereImport.update({
     id: '/achats/nouvelle-enchere',
     path: '/achats/nouvelle-enchere',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+
+const AuthenticatedAchatsMarcheRoute = AuthenticatedAchatsMarcheImport.update({
+  id: '/achats/marche',
+  path: '/achats/marche',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 
 const AuthenticatedAchatsHistoriqueRoute =
   AuthenticatedAchatsHistoriqueImport.update({
@@ -162,6 +225,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedImport
       parentRoute: typeof rootRoute
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminImport
+      parentRoute: typeof rootRoute
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -176,12 +246,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignupImport
       parentRoute: typeof rootRoute
     }
+    '/admin/analytics': {
+      id: '/admin/analytics'
+      path: '/analytics'
+      fullPath: '/admin/analytics'
+      preLoaderRoute: typeof AdminAnalyticsImport
+      parentRoute: typeof AdminImport
+    }
+    '/admin/settings': {
+      id: '/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AdminSettingsImport
+      parentRoute: typeof AdminImport
+    }
     '/contact/merci': {
       id: '/contact/merci'
       path: '/contact/merci'
       fullPath: '/contact/merci'
       preLoaderRoute: typeof ContactMerciImport
       parentRoute: typeof rootRoute
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexImport
+      parentRoute: typeof AdminImport
     }
     '/contact/': {
       id: '/contact/'
@@ -197,18 +288,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAchatsHistoriqueImport
       parentRoute: typeof AuthenticatedImport
     }
+    '/_authenticated/achats/marche': {
+      id: '/_authenticated/achats/marche'
+      path: '/achats/marche'
+      fullPath: '/achats/marche'
+      preLoaderRoute: typeof AuthenticatedAchatsMarcheImport
+      parentRoute: typeof AuthenticatedImport
+    }
     '/_authenticated/achats/nouvelle-enchere': {
       id: '/_authenticated/achats/nouvelle-enchere'
       path: '/achats/nouvelle-enchere'
       fullPath: '/achats/nouvelle-enchere'
       preLoaderRoute: typeof AuthenticatedAchatsNouvelleEnchereImport
-      parentRoute: typeof AuthenticatedImport
-    }
-    '/_authenticated/admin/users': {
-      id: '/_authenticated/admin/users'
-      path: '/admin/users'
-      fullPath: '/admin/users'
-      preLoaderRoute: typeof AuthenticatedAdminUsersImport
       parentRoute: typeof AuthenticatedImport
     }
     '/_authenticated/depots/nouveau-produit': {
@@ -253,12 +344,47 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedVentesNouvelleEnchereImport
       parentRoute: typeof AuthenticatedImport
     }
+    '/admin/users/$userId': {
+      id: '/admin/users/$userId'
+      path: '/users/$userId'
+      fullPath: '/admin/users/$userId'
+      preLoaderRoute: typeof AdminUsersUserIdImport
+      parentRoute: typeof AdminImport
+    }
+    '/admin/users/new': {
+      id: '/admin/users/new'
+      path: '/users/new'
+      fullPath: '/admin/users/new'
+      preLoaderRoute: typeof AdminUsersNewImport
+      parentRoute: typeof AdminImport
+    }
     '/_authenticated/encheres/': {
       id: '/_authenticated/encheres/'
       path: '/encheres'
       fullPath: '/encheres'
       preLoaderRoute: typeof AuthenticatedEncheresIndexImport
       parentRoute: typeof AuthenticatedImport
+    }
+    '/admin/blog/': {
+      id: '/admin/blog/'
+      path: '/blog'
+      fullPath: '/admin/blog'
+      preLoaderRoute: typeof AdminBlogIndexImport
+      parentRoute: typeof AdminImport
+    }
+    '/admin/cooperatives/': {
+      id: '/admin/cooperatives/'
+      path: '/cooperatives'
+      fullPath: '/admin/cooperatives'
+      preLoaderRoute: typeof AdminCooperativesIndexImport
+      parentRoute: typeof AdminImport
+    }
+    '/admin/users/': {
+      id: '/admin/users/'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersIndexImport
+      parentRoute: typeof AdminImport
     }
     '/_authenticated/encheres/detail/$id': {
       id: '/_authenticated/encheres/detail/$id'
@@ -274,8 +400,8 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteChildren {
   AuthenticatedAchatsHistoriqueRoute: typeof AuthenticatedAchatsHistoriqueRoute
+  AuthenticatedAchatsMarcheRoute: typeof AuthenticatedAchatsMarcheRoute
   AuthenticatedAchatsNouvelleEnchereRoute: typeof AuthenticatedAchatsNouvelleEnchereRoute
-  AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
   AuthenticatedDepotsNouveauProduitRoute: typeof AuthenticatedDepotsNouveauProduitRoute
   AuthenticatedEncheresAutresRoute: typeof AuthenticatedEncheresAutresRoute
   AuthenticatedEncheresCajouRoute: typeof AuthenticatedEncheresCajouRoute
@@ -288,9 +414,9 @@ interface AuthenticatedRouteChildren {
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAchatsHistoriqueRoute: AuthenticatedAchatsHistoriqueRoute,
+  AuthenticatedAchatsMarcheRoute: AuthenticatedAchatsMarcheRoute,
   AuthenticatedAchatsNouvelleEnchereRoute:
     AuthenticatedAchatsNouvelleEnchereRoute,
-  AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
   AuthenticatedDepotsNouveauProduitRoute:
     AuthenticatedDepotsNouveauProduitRoute,
   AuthenticatedEncheresAutresRoute: AuthenticatedEncheresAutresRoute,
@@ -307,23 +433,56 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
   AuthenticatedRouteChildren,
 )
 
+interface AdminRouteChildren {
+  AdminAnalyticsRoute: typeof AdminAnalyticsRoute
+  AdminSettingsRoute: typeof AdminSettingsRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+  AdminUsersUserIdRoute: typeof AdminUsersUserIdRoute
+  AdminUsersNewRoute: typeof AdminUsersNewRoute
+  AdminBlogIndexRoute: typeof AdminBlogIndexRoute
+  AdminCooperativesIndexRoute: typeof AdminCooperativesIndexRoute
+  AdminUsersIndexRoute: typeof AdminUsersIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminAnalyticsRoute: AdminAnalyticsRoute,
+  AdminSettingsRoute: AdminSettingsRoute,
+  AdminIndexRoute: AdminIndexRoute,
+  AdminUsersUserIdRoute: AdminUsersUserIdRoute,
+  AdminUsersNewRoute: AdminUsersNewRoute,
+  AdminBlogIndexRoute: AdminBlogIndexRoute,
+  AdminCooperativesIndexRoute: AdminCooperativesIndexRoute,
+  AdminUsersIndexRoute: AdminUsersIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '': typeof AuthenticatedRouteWithChildren
+  '/admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/settings': typeof AdminSettingsRoute
   '/contact/merci': typeof ContactMerciRoute
+  '/admin/': typeof AdminIndexRoute
   '/contact': typeof ContactIndexRoute
   '/achats/historique': typeof AuthenticatedAchatsHistoriqueRoute
+  '/achats/marche': typeof AuthenticatedAchatsMarcheRoute
   '/achats/nouvelle-enchere': typeof AuthenticatedAchatsNouvelleEnchereRoute
-  '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/depots/nouveau-produit': typeof AuthenticatedDepotsNouveauProduitRoute
   '/encheres/autres': typeof AuthenticatedEncheresAutresRoute
   '/encheres/cajou': typeof AuthenticatedEncheresCajouRoute
   '/ventes/historique': typeof AuthenticatedVentesHistoriqueRoute
   '/ventes/mes-encheres': typeof AuthenticatedVentesMesEncheresRoute
   '/ventes/nouvelle-enchere': typeof AuthenticatedVentesNouvelleEnchereRoute
+  '/admin/users/$userId': typeof AdminUsersUserIdRoute
+  '/admin/users/new': typeof AdminUsersNewRoute
   '/encheres': typeof AuthenticatedEncheresIndexRoute
+  '/admin/blog': typeof AdminBlogIndexRoute
+  '/admin/cooperatives': typeof AdminCooperativesIndexRoute
+  '/admin/users': typeof AdminUsersIndexRoute
   '/encheres/detail/$id': typeof AuthenticatedEncheresDetailIdRoute
 }
 
@@ -332,18 +491,26 @@ export interface FileRoutesByTo {
   '': typeof AuthenticatedRouteWithChildren
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/settings': typeof AdminSettingsRoute
   '/contact/merci': typeof ContactMerciRoute
+  '/admin': typeof AdminIndexRoute
   '/contact': typeof ContactIndexRoute
   '/achats/historique': typeof AuthenticatedAchatsHistoriqueRoute
+  '/achats/marche': typeof AuthenticatedAchatsMarcheRoute
   '/achats/nouvelle-enchere': typeof AuthenticatedAchatsNouvelleEnchereRoute
-  '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/depots/nouveau-produit': typeof AuthenticatedDepotsNouveauProduitRoute
   '/encheres/autres': typeof AuthenticatedEncheresAutresRoute
   '/encheres/cajou': typeof AuthenticatedEncheresCajouRoute
   '/ventes/historique': typeof AuthenticatedVentesHistoriqueRoute
   '/ventes/mes-encheres': typeof AuthenticatedVentesMesEncheresRoute
   '/ventes/nouvelle-enchere': typeof AuthenticatedVentesNouvelleEnchereRoute
+  '/admin/users/$userId': typeof AdminUsersUserIdRoute
+  '/admin/users/new': typeof AdminUsersNewRoute
   '/encheres': typeof AuthenticatedEncheresIndexRoute
+  '/admin/blog': typeof AdminBlogIndexRoute
+  '/admin/cooperatives': typeof AdminCooperativesIndexRoute
+  '/admin/users': typeof AdminUsersIndexRoute
   '/encheres/detail/$id': typeof AuthenticatedEncheresDetailIdRoute
 }
 
@@ -351,20 +518,29 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
+  '/admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/settings': typeof AdminSettingsRoute
   '/contact/merci': typeof ContactMerciRoute
+  '/admin/': typeof AdminIndexRoute
   '/contact/': typeof ContactIndexRoute
   '/_authenticated/achats/historique': typeof AuthenticatedAchatsHistoriqueRoute
+  '/_authenticated/achats/marche': typeof AuthenticatedAchatsMarcheRoute
   '/_authenticated/achats/nouvelle-enchere': typeof AuthenticatedAchatsNouvelleEnchereRoute
-  '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/depots/nouveau-produit': typeof AuthenticatedDepotsNouveauProduitRoute
   '/_authenticated/encheres/autres': typeof AuthenticatedEncheresAutresRoute
   '/_authenticated/encheres/cajou': typeof AuthenticatedEncheresCajouRoute
   '/_authenticated/ventes/historique': typeof AuthenticatedVentesHistoriqueRoute
   '/_authenticated/ventes/mes-encheres': typeof AuthenticatedVentesMesEncheresRoute
   '/_authenticated/ventes/nouvelle-enchere': typeof AuthenticatedVentesNouvelleEnchereRoute
+  '/admin/users/$userId': typeof AdminUsersUserIdRoute
+  '/admin/users/new': typeof AdminUsersNewRoute
   '/_authenticated/encheres/': typeof AuthenticatedEncheresIndexRoute
+  '/admin/blog/': typeof AdminBlogIndexRoute
+  '/admin/cooperatives/': typeof AdminCooperativesIndexRoute
+  '/admin/users/': typeof AdminUsersIndexRoute
   '/_authenticated/encheres/detail/$id': typeof AuthenticatedEncheresDetailIdRoute
 }
 
@@ -373,20 +549,29 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | ''
+    | '/admin'
     | '/login'
     | '/signup'
+    | '/admin/analytics'
+    | '/admin/settings'
     | '/contact/merci'
+    | '/admin/'
     | '/contact'
     | '/achats/historique'
+    | '/achats/marche'
     | '/achats/nouvelle-enchere'
-    | '/admin/users'
     | '/depots/nouveau-produit'
     | '/encheres/autres'
     | '/encheres/cajou'
     | '/ventes/historique'
     | '/ventes/mes-encheres'
     | '/ventes/nouvelle-enchere'
+    | '/admin/users/$userId'
+    | '/admin/users/new'
     | '/encheres'
+    | '/admin/blog'
+    | '/admin/cooperatives'
+    | '/admin/users'
     | '/encheres/detail/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -394,37 +579,54 @@ export interface FileRouteTypes {
     | ''
     | '/login'
     | '/signup'
+    | '/admin/analytics'
+    | '/admin/settings'
     | '/contact/merci'
+    | '/admin'
     | '/contact'
     | '/achats/historique'
+    | '/achats/marche'
     | '/achats/nouvelle-enchere'
-    | '/admin/users'
     | '/depots/nouveau-produit'
     | '/encheres/autres'
     | '/encheres/cajou'
     | '/ventes/historique'
     | '/ventes/mes-encheres'
     | '/ventes/nouvelle-enchere'
+    | '/admin/users/$userId'
+    | '/admin/users/new'
     | '/encheres'
+    | '/admin/blog'
+    | '/admin/cooperatives'
+    | '/admin/users'
     | '/encheres/detail/$id'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/admin'
     | '/login'
     | '/signup'
+    | '/admin/analytics'
+    | '/admin/settings'
     | '/contact/merci'
+    | '/admin/'
     | '/contact/'
     | '/_authenticated/achats/historique'
+    | '/_authenticated/achats/marche'
     | '/_authenticated/achats/nouvelle-enchere'
-    | '/_authenticated/admin/users'
     | '/_authenticated/depots/nouveau-produit'
     | '/_authenticated/encheres/autres'
     | '/_authenticated/encheres/cajou'
     | '/_authenticated/ventes/historique'
     | '/_authenticated/ventes/mes-encheres'
     | '/_authenticated/ventes/nouvelle-enchere'
+    | '/admin/users/$userId'
+    | '/admin/users/new'
     | '/_authenticated/encheres/'
+    | '/admin/blog/'
+    | '/admin/cooperatives/'
+    | '/admin/users/'
     | '/_authenticated/encheres/detail/$id'
   fileRoutesById: FileRoutesById
 }
@@ -432,6 +634,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
+  AdminRoute: typeof AdminRouteWithChildren
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
   ContactMerciRoute: typeof ContactMerciRoute
@@ -441,6 +644,7 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
+  AdminRoute: AdminRouteWithChildren,
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
   ContactMerciRoute: ContactMerciRoute,
@@ -459,6 +663,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/_authenticated",
+        "/admin",
         "/login",
         "/signup",
         "/contact/merci",
@@ -472,8 +677,8 @@ export const routeTree = rootRoute
       "filePath": "_authenticated.tsx",
       "children": [
         "/_authenticated/achats/historique",
+        "/_authenticated/achats/marche",
         "/_authenticated/achats/nouvelle-enchere",
-        "/_authenticated/admin/users",
         "/_authenticated/depots/nouveau-produit",
         "/_authenticated/encheres/autres",
         "/_authenticated/encheres/cajou",
@@ -484,14 +689,39 @@ export const routeTree = rootRoute
         "/_authenticated/encheres/detail/$id"
       ]
     },
+    "/admin": {
+      "filePath": "admin.tsx",
+      "children": [
+        "/admin/analytics",
+        "/admin/settings",
+        "/admin/",
+        "/admin/users/$userId",
+        "/admin/users/new",
+        "/admin/blog/",
+        "/admin/cooperatives/",
+        "/admin/users/"
+      ]
+    },
     "/login": {
       "filePath": "login.tsx"
     },
     "/signup": {
       "filePath": "signup.tsx"
     },
+    "/admin/analytics": {
+      "filePath": "admin/analytics.tsx",
+      "parent": "/admin"
+    },
+    "/admin/settings": {
+      "filePath": "admin/settings.tsx",
+      "parent": "/admin"
+    },
     "/contact/merci": {
       "filePath": "contact/merci.tsx"
+    },
+    "/admin/": {
+      "filePath": "admin/index.tsx",
+      "parent": "/admin"
     },
     "/contact/": {
       "filePath": "contact/index.tsx"
@@ -500,12 +730,12 @@ export const routeTree = rootRoute
       "filePath": "_authenticated/achats/historique.tsx",
       "parent": "/_authenticated"
     },
-    "/_authenticated/achats/nouvelle-enchere": {
-      "filePath": "_authenticated/achats/nouvelle-enchere.tsx",
+    "/_authenticated/achats/marche": {
+      "filePath": "_authenticated/achats/marche.tsx",
       "parent": "/_authenticated"
     },
-    "/_authenticated/admin/users": {
-      "filePath": "_authenticated/admin/users.tsx",
+    "/_authenticated/achats/nouvelle-enchere": {
+      "filePath": "_authenticated/achats/nouvelle-enchere.tsx",
       "parent": "/_authenticated"
     },
     "/_authenticated/depots/nouveau-produit": {
@@ -532,9 +762,29 @@ export const routeTree = rootRoute
       "filePath": "_authenticated/ventes/nouvelle-enchere.tsx",
       "parent": "/_authenticated"
     },
+    "/admin/users/$userId": {
+      "filePath": "admin/users/$userId.tsx",
+      "parent": "/admin"
+    },
+    "/admin/users/new": {
+      "filePath": "admin/users/new.tsx",
+      "parent": "/admin"
+    },
     "/_authenticated/encheres/": {
       "filePath": "_authenticated/encheres/index.tsx",
       "parent": "/_authenticated"
+    },
+    "/admin/blog/": {
+      "filePath": "admin/blog/index.tsx",
+      "parent": "/admin"
+    },
+    "/admin/cooperatives/": {
+      "filePath": "admin/cooperatives/index.tsx",
+      "parent": "/admin"
+    },
+    "/admin/users/": {
+      "filePath": "admin/users/index.tsx",
+      "parent": "/admin"
     },
     "/_authenticated/encheres/detail/$id": {
       "filePath": "_authenticated/encheres/detail/$id.tsx",

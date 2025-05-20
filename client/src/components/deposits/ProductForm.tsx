@@ -4,9 +4,8 @@ import type {
   FieldDto,
   HarvestProductUpdateDto,
   QualityDto,
-  QualityInspectorDetailDto,
   StoreDetailDto,
-  TraderDetailDto,
+  UserDetailDto,
 } from '@/api/generated'
 import {
   createProductMutation,
@@ -29,18 +28,16 @@ import { useTranslation } from 'react-i18next'
 import z from 'zod'
 
 interface ProductFormProps {
-  traders: TraderDetailDto[]
+  users: UserDetailDto[]
   stores: StoreDetailDto[]
   qualities: QualityDto[]
-  qualityInspectors: QualityInspectorDetailDto[]
   fields: FieldDto[]
 }
 
 export function ProductForm({
-  traders,
+  users,
   stores,
   qualities,
-  qualityInspectors,
   fields,
 }: ProductFormProps): React.ReactElement<'div'> {
   const navigate = useNavigate()
@@ -117,6 +114,7 @@ export function ProductForm({
         qualityInspectorId: -1,
         productId: 0, // TODO: should not be in this entity
         qualityId: 0,
+        documentId: 0,
       },
     },
     onSubmit({ value }) {
@@ -192,17 +190,17 @@ export function ProductForm({
             <form.AppField
               name={`product.${productType === ProductType.HARVEST ? 'producerId' : 'transformerId'}`}
               children={field => {
-                const filteredTraders = traders.filter(trader =>
+                const traders = users.filter(user =>
                   productType === ProductType.HARVEST
-                    ? trader.type === 'ProducerListDto'
+                    ? user.type === 'ProducerListDto'
                     : productType === ProductType.TRANSFORMED
-                      ? trader.type === 'TransformerListDto'
+                      ? user.type === 'TransformerListDto'
                       : true
                 )
 
                 return (
                   <field.SelectField
-                    options={filteredTraders.map(trader => ({
+                    options={traders.map(trader => ({
                       value: trader.id,
                       label: trader.firstName + ' ' + trader.lastName,
                     }))}
@@ -228,9 +226,8 @@ export function ProductForm({
               <form.AppField
                 name="product.fieldId"
                 children={field => {
-                  const gps = fields.find(
-                    f => f.id === field.state.value
-                  )?.location
+                  const gps = fields.find(f => f.id === field.state.value)
+                    ?.address.location
                   const hintText = gps ? 'gps : ' + formatCoordinates(gps) : ''
                   return (
                     <field.SelectField
@@ -311,10 +308,12 @@ export function ProductForm({
               name="qualityControl.qualityInspectorId"
               children={field => (
                 <field.SelectField
-                  options={qualityInspectors.map(qi => ({
-                    value: qi.id,
-                    label: qi.firstName + ' ' + qi.lastName,
-                  }))}
+                  options={users
+                    .filter(user => user.type === 'QualityInspectorListDto')
+                    .map(qi => ({
+                      value: qi.id,
+                      label: qi.firstName + ' ' + qi.lastName,
+                    }))}
                   label="Qualiticien"
                   hint={
                     field.state.value !== -1
@@ -331,7 +330,7 @@ export function ProductForm({
               )}
             />
             <form.AppField
-              name="qualityControl.document"
+              name="qualityControl.documentId"
               children={field => (
                 <field.TextField
                   label="Certificat (Photo ou PDF)"

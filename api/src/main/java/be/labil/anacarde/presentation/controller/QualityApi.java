@@ -3,6 +3,7 @@ package be.labil.anacarde.presentation.controller;
 import be.labil.anacarde.application.exception.ApiErrorResponse;
 import be.labil.anacarde.domain.dto.db.QualityDto;
 import be.labil.anacarde.domain.dto.db.ValidationGroups;
+import be.labil.anacarde.domain.dto.write.QualityUpdateDto;
 import be.labil.anacarde.presentation.controller.annotations.ApiResponseGet;
 import be.labil.anacarde.presentation.controller.annotations.ApiResponsePost;
 import be.labil.anacarde.presentation.controller.annotations.ApiResponsePut;
@@ -36,14 +37,14 @@ public interface QualityApi {
 	@PostMapping
 	@ApiResponsePost
 	ResponseEntity<QualityDto> createQuality(@Validated({Default.class,
-			ValidationGroups.Create.class}) @RequestBody QualityDto qualityDto);
+			ValidationGroups.Create.class}) @RequestBody QualityUpdateDto qualityDto);
 
 	@Operation(summary = "Mettre à jour une qualité")
 	@ApiResponsePut
 	@PutMapping(value = "/{id}", consumes = "application/json")
 	ResponseEntity<QualityDto> updateQuality(@ApiValidId @PathVariable("id") Integer id,
 			@Validated({Default.class,
-					ValidationGroups.Update.class}) @RequestBody QualityDto qualityDto);
+					ValidationGroups.Update.class}) @RequestBody QualityUpdateDto qualityDto);
 
 	@Operation(summary = "Obtenir toutes les qualités")
 	@ApiResponseGet

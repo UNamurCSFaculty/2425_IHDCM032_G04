@@ -1,10 +1,12 @@
-import { CheckboxField } from './checkbox-field'
-import { DateTimePickerField } from './datetime-field'
-import { ResetButton } from './reset-button'
-import { SelectField } from './select-field'
-import { SubmitButton } from './submit-button'
-import { TextField } from './text-field'
-import { TextAreaField } from './textarea-field'
+import { AddressField } from '@/components/form/adress-fields'
+import { CheckboxField } from '@/components/form/checkbox-field'
+import { DateTimePickerField } from '@/components/form/datetime-field'
+import { FileUploadField } from '@/components/form/file-upload-field'
+import { ResetButton } from '@/components/form/reset-button'
+import { SelectField } from '@/components/form/select-field'
+import { SubmitButton } from '@/components/form/submit-button'
+import { TextField } from '@/components/form/text-field'
+import { TextAreaField } from '@/components/form/textarea-field'
 import { createFormHook, createFormHookContexts } from '@tanstack/react-form'
 
 export const { fieldContext, useFieldContext, formContext, useFormContext } =
@@ -17,6 +19,8 @@ export const { useAppForm } = createFormHook({
     SelectField,
     TextAreaField,
     DateTimePickerField,
+    FileUploadField,
+    AddressField,
   },
   formComponents: {
     SubmitButton,

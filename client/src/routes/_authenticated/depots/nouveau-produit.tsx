@@ -1,9 +1,8 @@
 import type {
   FieldDto,
   QualityDto,
-  QualityInspectorDetailDto,
   StoreDetailDto,
-  TraderDetailDto,
+  UserDetailDto,
 } from '@/api/generated'
 import {
   listFieldsOptions,
@@ -38,18 +37,16 @@ function RouteComponent() {
     staleTime: staleTime,
   })
 
-  const { data: usersData } = useSuspenseQuery({
+  const { data: allUsersData } = useSuspenseQuery({
     ...listUsersOptions(),
     staleTime: staleTime,
   })
 
-  const tradersData = usersData.filter(
+  const usersData = allUsersData.filter(
     user =>
-      user.type === 'TransformerListDto' || user.type === 'ProducerListDto'
-  )
-
-  const qualityInspectorsData = usersData.filter(
-    user => user.type === 'QualityInspectorListDto'
+      user.type === 'TransformerListDto' ||
+      user.type === 'ProducerListDto' ||
+      user.type === 'QualityInspectorListDto'
   )
 
   return (
@@ -64,10 +61,9 @@ function RouteComponent() {
         className="border-b border-gray-200 dark:border-gray-700"
       />
       <ProductForm
-        traders={tradersData as TraderDetailDto[]}
+        users={usersData as UserDetailDto[]}
         stores={storesData as StoreDetailDto[]}
         qualities={qualitiesData as QualityDto[]}
-        qualityInspectors={qualityInspectorsData as QualityInspectorDetailDto[]}
         fields={fieldsData as FieldDto[]}
       />
     </>

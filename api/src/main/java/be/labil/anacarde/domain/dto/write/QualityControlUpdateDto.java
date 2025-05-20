@@ -51,8 +51,7 @@ public class QualityControlUpdateDto {
 	private Integer qualityId;
 
 	/** Document associé au contrôle qualité. */
-	// TODO: remettre le document en required
-	// @NotNull(message = "Le document est requis")
+	@NotNull(message = "Le document est requis")
 	@Schema(description = "Document associé au contrôle qualité")
-	private DocumentUpdateDto document;
+	private Integer documentId;
 }

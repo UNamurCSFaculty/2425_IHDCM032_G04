@@ -2,6 +2,7 @@
 package be.labil.anacarde.application.service;
 
 import be.labil.anacarde.domain.dto.db.QualityDto;
+import be.labil.anacarde.domain.dto.write.QualityUpdateDto;
 import java.util.List;
 
 /**
@@ -13,11 +14,11 @@ public interface QualityService {
 	/**
 	 * Crée une nouvelle qualité dans le système en utilisant le QualityDto fourni.
 	 *
-	 * @param QualityDto
+	 * @param qualityUpdateDto
 	 *            Le QualityDto contenant les informations du nouveau qualité.
 	 * @return Un QualityDto représentant le qualité créé.
 	 */
-	QualityDto createQuality(QualityDto QualityDto);
+	QualityDto createQuality(QualityUpdateDto qualityUpdateDto);
 
 	/**
 	 * Retourne la qualité correspondant à l'ID fourni.
@@ -45,7 +46,7 @@ public interface QualityService {
 	 *            Le QualityDto contenant les informations mises à jour.
 	 * @return Un QualityDto représentant la qualité mis à jour.
 	 */
-	QualityDto updateQuality(Integer id, QualityDto QualityDto);
+	QualityDto updateQuality(Integer id, QualityUpdateDto QualityDto);
 
 	/**
 	 * Supprime la qualité identifiée par l'ID donné du système.

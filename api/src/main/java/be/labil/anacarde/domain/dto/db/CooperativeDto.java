@@ -23,11 +23,6 @@ public class CooperativeDto extends BaseDto {
 	@Schema(description = "Nom de la coopérative", example = "Coopérative des Producteurs de Cajou", requiredMode = Schema.RequiredMode.REQUIRED)
 	private String name;
 
-	/** Adresse de la coopérative. */
-	@NotBlank
-	@Schema(description = "Adresse de la coopérative", example = "Rue des Cultures, Abidjan", requiredMode = Schema.RequiredMode.REQUIRED)
-	private String address;
-
 	/** Date de création de la coopérative. */
 	@Schema(description = "Date de création", example = "2023-06-15T00:00:00", requiredMode = Schema.RequiredMode.REQUIRED)
 	private LocalDateTime creationDate;

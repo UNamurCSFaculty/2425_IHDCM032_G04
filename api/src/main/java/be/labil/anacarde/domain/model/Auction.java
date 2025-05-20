@@ -1,7 +1,6 @@
 package be.labil.anacarde.domain.model;
 
 import jakarta.persistence.*;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -21,7 +20,7 @@ import org.hibernate.annotations.CreationTimestamp;
 public class Auction extends BaseEntity {
 
 	@Column(nullable = false)
-	private BigDecimal price;
+	private Double price;
 
 	@Column(nullable = false)
 	private Integer productQuantity;
@@ -29,16 +28,15 @@ public class Auction extends BaseEntity {
 	@Column(nullable = false)
 	private LocalDateTime expirationDate;
 
-	@Column(nullable = false)
+	@Column(nullable = false, updatable = false)
 	@CreationTimestamp
 	private LocalDateTime creationDate;
 
 	@Column(nullable = false)
 	private Boolean active;
 
-	@ManyToOne(optional = true) // TODO: implement strategy
-	@JoinColumn(name = "strategy_id", nullable = true)
-	private AuctionStrategy strategy;
+	@Embedded
+	private AuctionOptions options;
 
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "product_id", nullable = false)

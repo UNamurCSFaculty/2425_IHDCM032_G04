@@ -2,12 +2,10 @@ package be.labil.anacarde.presentation.controller;
 
 import be.labil.anacarde.application.service.RegionService;
 import be.labil.anacarde.domain.dto.db.RegionDto;
-import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,13 +25,13 @@ public class RegionApiController implements RegionApi {
 		return ResponseEntity.ok(regions);
 	}
 
-	@Override
-	public ResponseEntity<RegionDto> createRegion(RegionDto regionDto) {
-		RegionDto created = regionService.createRegion(regionDto);
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-				.buildAndExpand(created.getId()).toUri();
-		return ResponseEntity.created(location).body(created);
-	}
+	/*
+	 * @Override public ResponseEntity<RegionDto> createRegion(RegionDto regionDto) { RegionDto
+	 * created = regionService.createRegion(regionDto); URI location =
+	 * ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+	 * .buildAndExpand(created.getId()).toUri(); return
+	 * ResponseEntity.created(location).body(created); }
+	 */
 
 	@Override
 	public ResponseEntity<RegionDto> updateRegion(Integer id, RegionDto regionDto) {

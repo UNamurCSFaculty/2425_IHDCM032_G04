@@ -10,7 +10,7 @@ import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(componentModel = "spring", uses = {MapperHelpers.class, TraderDetailMapper.class,
-		QualityMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+		QualityMapper.class, UserMiniMapper.class,}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class ContractOfferMapper {
 
 	@Autowired

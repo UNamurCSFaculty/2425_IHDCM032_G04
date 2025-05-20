@@ -2,15 +2,16 @@ import { type ClassValue, clsx } from 'clsx'
 import { decimalToSexagesimal } from 'geolib'
 import { twMerge } from 'tailwind-merge'
 
+// Tailwind helper
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+// -----------------------------------------------------------------------------
+// Date & coords formatters
+// -----------------------------------------------------------------------------
 export const formatDate = (dateString: string | undefined): string => {
-  if (!dateString) {
-    return '—'
-  }
-
+  if (!dateString) return '—'
   return new Date(dateString).toLocaleString('fr-FR', {
     year: 'numeric',
     month: '2-digit',
@@ -22,19 +23,27 @@ export const formatDate = (dateString: string | undefined): string => {
 
 export const formatCoordinates = (wktString: string): string => {
   const match = wktString.match(
-    /^POINT\s*\(\s*([+-]?\d+(\.\d+)?)\s+([+-]?\d+(\.\d+)?)\s*\)$/
+    /^POINT\s*\(\s*([+-]?\d+(?:\.\d+)?)\s+([+-]?\d+(?:\.\d+)?)\s*\)$/
   )
   if (!match) return wktString
+  const lon = parseFloat(match[1])
+  const lat = parseFloat(match[2])
+  if (isNaN(lon) || isNaN(lat)) return wktString
+  const latDMS = decimalToSexagesimal(lat)
+  const lonDMS = decimalToSexagesimal(lon)
+  return `${latDMS} ${lat >= 0 ? 'N' : 'S'} ${lonDMS} ${lon >= 0 ? 'E' : 'W'}`
+}
 
-  const longitude = parseFloat(match[1])
-  const latitude = parseFloat(match[3])
-  if (isNaN(longitude) || isNaN(latitude)) return wktString
-
-  const latDMS = decimalToSexagesimal(latitude)
-  const lonDMS = decimalToSexagesimal(longitude)
-
-  const coordinates = `${latDMS} ${latitude >= 0 ? 'N' : 'S'} ${lonDMS} ${longitude >= 0 ? 'E' : 'W'}`
-  return coordinates
+// -----------------------------------------------------------------------------
+// WKT helpers
+// -----------------------------------------------------------------------------
+export function wktToLatLon(wkt?: string): [number, number] | null {
+  if (!wkt) return null
+  const m = wkt.match(/^POINT\s*\(\s*([+-]?[\d.]+)\s+([+-]?[\d.]+)\s*\)$/)
+  if (!m) return null
+  const lon = parseFloat(m[1])
+  const lat = parseFloat(m[2])
+  return isNaN(lat) || isNaN(lon) ? null : [lat, lon]
 }
 
 export enum TradeStatus {

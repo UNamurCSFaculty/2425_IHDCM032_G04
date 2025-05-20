@@ -7,10 +7,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import be.labil.anacarde.domain.model.Admin;
-import be.labil.anacarde.domain.model.Language;
-import be.labil.anacarde.domain.model.User;
+import be.labil.anacarde.domain.model.*;
+import be.labil.anacarde.infrastructure.persistence.CityRepository;
 import be.labil.anacarde.infrastructure.persistence.LanguageRepository;
+import be.labil.anacarde.infrastructure.persistence.RegionRepository;
 import be.labil.anacarde.infrastructure.persistence.user.UserRepository;
 import jakarta.servlet.http.Cookie;
 import java.time.LocalDateTime;
@@ -39,18 +39,29 @@ public class AuthenticationApiControllerIntegrationTest {
 	private PasswordEncoder passwordEncoder;
 	@Autowired
 	private LanguageRepository languageRepository;
+	@Autowired
+	private RegionRepository regionRepository;
+	@Autowired
+	private CityRepository cityRepository;
 
 	@BeforeEach
 	public void setUpDatabase() {
 		// Création de la langue
 		Language language = Language.builder().code("fr").name("Français").build();
 		language = languageRepository.save(language);
+		Region region = Region.builder().name("sud").id(1).build();
+		region = regionRepository.save(region);
+		City city = City.builder().name("sud city").id(1).region(region).build();
+		city = cityRepository.save(city);
+		Address address = Address.builder().street("Rue de la paix").city(city).region(region)
+				.build();
 
 		// Création de l'utilisateur admin
 		User user = new Admin();
 		user.setFirstName("John");
 		user.setLastName("Doe");
 		user.setEmail("user@example.com");
+		user.setAddress(address);
 		user.setPhone("+2290197020000");
 		user.setPassword(passwordEncoder.encode("password"));
 		user.setRegistrationDate(LocalDateTime.now());
@@ -88,7 +99,11 @@ public class AuthenticationApiControllerIntegrationTest {
 				.andExpect(jsonPath("$.registrationDate").exists())
 				.andExpect(jsonPath("$.validationDate").isEmpty())
 				.andExpect(jsonPath("$.enabled").value(true))
-				.andExpect(jsonPath("$.address").isEmpty())
+				.andExpect(jsonPath("$.address").exists())
+				.andExpect(jsonPath("$.address.street").value("Rue de la paix"))
+				.andExpect(jsonPath("$.address.cityId").value(1))
+				.andExpect(jsonPath("$.address.regionId").value(1))
+
 				.andExpect(jsonPath("$.phone").value("+2290197020000"))
 				.andExpect(jsonPath("$.roles").isArray()).andExpect(jsonPath("$.roles", hasSize(0)))
 				.andExpect(jsonPath("$.language.id").value(lang.getId()))

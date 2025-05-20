@@ -34,9 +34,9 @@ public class DocumentApiControllerIntegrationTest extends AbstractIntegrationTes
 				.andExpect(jsonPath("$.id").value(getMainTestDocument().getId()))
 				.andExpect(jsonPath("$.storagePath").value(getMainTestDocument().getStoragePath()))
 				.andExpect(jsonPath("$.userId").value(getMainTestDocument().getUser().getId()))
-				.andExpect(jsonPath("$.format").value(getMainTestDocument().getFormat()))
+				.andExpect(jsonPath("$.extension").value(getMainTestDocument().getExtension()))
 				.andExpect(jsonPath("$.uploadDate").value(startsWith(expectedDate)))
-				.andExpect(jsonPath("$.documentType").value(getMainTestDocument().getType()));
+				.andExpect(jsonPath("$.contentType").value(getMainTestDocument().getContentType()));
 	}
 
 	/**
@@ -45,11 +45,13 @@ public class DocumentApiControllerIntegrationTest extends AbstractIntegrationTes
 	@Test
 	public void testCreateDocument() throws Exception {
 		DocumentDto documentDto = new DocumentDto();
+		documentDto.setContentType("ATTEST");
+		documentDto.setOriginalFilename("attestation.pdf");
+		documentDto.setSize(187);
+		documentDto.setExtension("PDF");
 		documentDto.setStoragePath("/test/path/created.pdf");
-		documentDto.setUserId(getProducerTestUser().getId());
-		documentDto.setFormat("PDF");
 		documentDto.setUploadDate(getMainTestDocument().getUploadDate());
-		documentDto.setDocumentType("SOME_TYPE");
+		documentDto.setUserId(getProducerTestUser().getId());
 
 		ObjectNode node = objectMapper.valueToTree(documentDto);
 		String jsonContent = node.toString();
@@ -61,11 +63,13 @@ public class DocumentApiControllerIntegrationTest extends AbstractIntegrationTes
 				post("/api/documents").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
 				.andExpect(status().isCreated())
 				.andExpect(header().string("Location", containsString("/api/documents")))
+				.andExpect(jsonPath("$.contentType").value("ATTEST"))
+				.andExpect(jsonPath("$.originalFilename").value("attestation.pdf"))
+				.andExpect(jsonPath("$.size").value(187))
+				.andExpect(jsonPath("$.extension").value("PDF"))
 				.andExpect(jsonPath("$.storagePath").value("/test/path/created.pdf"))
-				.andExpect(jsonPath("$.userId").value(getProducerTestUser().getId()))
 				.andExpect(jsonPath("$.uploadDate").value(startsWith(expectedDate)))
-				.andExpect(jsonPath("$.format").value("PDF"))
-				.andExpect(jsonPath("$.documentType").value("SOME_TYPE"));
+				.andExpect(jsonPath("$.userId").value(getProducerTestUser().getId()));
 	}
 
 	/**
@@ -74,12 +78,13 @@ public class DocumentApiControllerIntegrationTest extends AbstractIntegrationTes
 	@Test
 	public void testUpdateDocument() throws Exception {
 		DocumentDto documentDto = new DocumentDto();
-		documentDto.setId(getMainTestDocument().getId());
-		documentDto.setStoragePath("/updated/path/updated.pdf");
-		documentDto.setUserId(getProducerTestUser().getId());
-		documentDto.setFormat("UPDATED_FORMAT");
+		documentDto.setContentType("ATTEST");
+		documentDto.setOriginalFilename("attestation.pdf");
+		documentDto.setSize(187);
+		documentDto.setExtension("PDF");
+		documentDto.setStoragePath("/test/path/created.pdf");
 		documentDto.setUploadDate(getMainTestDocument().getUploadDate());
-		documentDto.setDocumentType("UPDATED_TYPE");
+		documentDto.setUserId(getProducerTestUser().getId());
 
 		ObjectNode node = objectMapper.valueToTree(documentDto);
 		String jsonContent = node.toString();
@@ -88,13 +93,13 @@ public class DocumentApiControllerIntegrationTest extends AbstractIntegrationTes
 
 		mockMvc.perform(put("/api/documents/" + getMainTestDocument().getId())
 				.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.id").value(getMainTestDocument().getId()))
-				.andExpect(jsonPath("$.storagePath").value("/updated/path/updated.pdf"))
-				.andExpect(jsonPath("$.userId").value(getProducerTestUser().getId()))
-				.andExpect(jsonPath("$.format").value("UPDATED_FORMAT"))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.contentType").value("ATTEST"))
+				.andExpect(jsonPath("$.originalFilename").value("attestation.pdf"))
+				.andExpect(jsonPath("$.size").value(187))
+				.andExpect(jsonPath("$.extension").value("PDF"))
+				.andExpect(jsonPath("$.storagePath").value("/test/path/created.pdf"))
 				.andExpect(jsonPath("$.uploadDate").value(startsWith(expectedDate)))
-				.andExpect(jsonPath("$.documentType").value("UPDATED_TYPE"));
+				.andExpect(jsonPath("$.userId").value(getProducerTestUser().getId()));
 	}
 
 	/**
@@ -117,7 +122,7 @@ public class DocumentApiControllerIntegrationTest extends AbstractIntegrationTes
 	public void testListDocumentsForAUser() throws Exception {
 		mockMvc.perform(get("/api/documents/users/" + getMainTestDocument().getUser().getId())
 				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
-				.andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(1))
-				.andExpect(jsonPath("$[0].id").value(getMainTestDocument().getId()));
+				.andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(2))
+				.andExpect(jsonPath("$[1].id").value(getMainTestDocument().getId()));
 	}
 }

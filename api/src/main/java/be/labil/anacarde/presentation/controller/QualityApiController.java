@@ -2,6 +2,7 @@ package be.labil.anacarde.presentation.controller;
 
 import be.labil.anacarde.application.service.QualityService;
 import be.labil.anacarde.domain.dto.db.QualityDto;
+import be.labil.anacarde.domain.dto.write.QualityUpdateDto;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -27,16 +28,16 @@ public class QualityApiController implements QualityApi {
 	}
 
 	@Override
-	public ResponseEntity<QualityDto> createQuality(QualityDto qualityDetailDto) {
-		QualityDto created = qualityService.createQuality(qualityDetailDto);
+	public ResponseEntity<QualityDto> createQuality(QualityUpdateDto qualityUpdateDto) {
+		QualityDto created = qualityService.createQuality(qualityUpdateDto);
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(created.getId()).toUri();
 		return ResponseEntity.created(location).body(created);
 	}
 
 	@Override
-	public ResponseEntity<QualityDto> updateQuality(Integer id, QualityDto qualityDetailDto) {
-		QualityDto updated = qualityService.updateQuality(id, qualityDetailDto);
+	public ResponseEntity<QualityDto> updateQuality(Integer id, QualityUpdateDto qualityUpdateDto) {
+		QualityDto updated = qualityService.updateQuality(id, qualityUpdateDto);
 		return ResponseEntity.ok(updated);
 	}
 

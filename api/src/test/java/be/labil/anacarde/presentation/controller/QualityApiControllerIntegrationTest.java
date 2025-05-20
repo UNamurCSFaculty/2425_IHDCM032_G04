@@ -4,8 +4,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import be.labil.anacarde.domain.dto.db.QualityDto;
-import be.labil.anacarde.domain.model.Quality;
+import be.labil.anacarde.domain.dto.write.QualityUpdateDto;
 import be.labil.anacarde.infrastructure.persistence.QualityRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -36,8 +35,9 @@ public class QualityApiControllerIntegrationTest extends AbstractIntegrationTest
 	 */
 	@Test
 	public void testCreateQuality() throws Exception {
-		QualityDto newQuality = new QualityDto();
+		QualityUpdateDto newQuality = new QualityUpdateDto();
 		newQuality.setName("ZZZ-000");
+		newQuality.setQualityTypeId(getMainTestQualityType().getId());
 
 		ObjectNode node = objectMapper.valueToTree(newQuality);
 		String jsonContent = node.toString();
@@ -48,9 +48,8 @@ public class QualityApiControllerIntegrationTest extends AbstractIntegrationTest
 				.andExpect(header().string("Location", containsString("/api/qualities/")))
 				.andExpect(jsonPath("$.name").value("ZZZ-000"));
 
-		Quality createdQuality = qualityRepository.findAll().stream()
-				.filter(quality -> quality.getName().equals("ZZZ-000")).findFirst()
-				.orElseThrow(() -> new AssertionError("Qualitée non trouvée"));
+		qualityRepository.findAll().stream().filter(quality -> quality.getName().equals("ZZZ-000"))
+				.findFirst().orElseThrow(() -> new AssertionError("Qualité non trouvée"));
 	}
 
 	/**
@@ -69,8 +68,9 @@ public class QualityApiControllerIntegrationTest extends AbstractIntegrationTest
 	 */
 	@Test
 	public void testUpdateQuality() throws Exception {
-		QualityDto updateQuality = new QualityDto();
+		QualityUpdateDto updateQuality = new QualityUpdateDto();
 		updateQuality.setName("WW450");
+		updateQuality.setQualityTypeId(getMainTestQualityType().getId());
 
 		ObjectNode node = objectMapper.valueToTree(updateQuality);
 		String jsonContent = node.toString();

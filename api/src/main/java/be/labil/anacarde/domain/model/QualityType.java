@@ -7,15 +7,17 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name = "auction_option")
+@Table(name = "quality_type")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuctionOption extends BaseEntity {
+@SuperBuilder
+public class QualityType extends BaseEntity {
 
-	@Column(nullable = false, unique = true)
+	@Column(nullable = false)
 	private String name;
 }

@@ -18,7 +18,6 @@ import {
   createProduct,
   createQuality,
   createQualityControl,
-  createRegion,
   createStore,
   createUser,
   deleteAuction,
@@ -130,9 +129,6 @@ import type {
   CreateQualityControlResponse,
   CreateQualityData,
   CreateQualityError,
-  CreateRegionData,
-  CreateRegionError,
-  CreateRegionResponse,
   CreateStoreData,
   CreateStoreError,
   CreateStoreResponse,
@@ -1512,66 +1508,6 @@ export const createStoreMutation = (
   return mutationOptions
 }
 
-export const listRegionsQueryKey = (options?: Options<ListRegionsData>) =>
-  createQueryKey('listRegions', options)
-
-export const listRegionsOptions = (options?: Options<ListRegionsData>) => {
-  return queryOptions({
-    queryFn: async ({ queryKey, signal }) => {
-      const { data } = await listRegions({
-        ...options,
-        ...queryKey[0],
-        signal,
-        throwOnError: true,
-      })
-      return data
-    },
-    queryKey: listRegionsQueryKey(options),
-  })
-}
-
-export const createRegionQueryKey = (options: Options<CreateRegionData>) =>
-  createQueryKey('createRegion', options)
-
-export const createRegionOptions = (options: Options<CreateRegionData>) => {
-  return queryOptions({
-    queryFn: async ({ queryKey, signal }) => {
-      const { data } = await createRegion({
-        ...options,
-        ...queryKey[0],
-        signal,
-        throwOnError: true,
-      })
-      return data
-    },
-    queryKey: createRegionQueryKey(options),
-  })
-}
-
-export const createRegionMutation = (
-  options?: Partial<Options<CreateRegionData>>
-): UseMutationOptions<
-  CreateRegionResponse,
-  CreateRegionError,
-  Options<CreateRegionData>
-> => {
-  const mutationOptions: UseMutationOptions<
-    CreateRegionResponse,
-    CreateRegionError,
-    Options<CreateRegionData>
-  > = {
-    mutationFn: async localOptions => {
-      const { data } = await createRegion({
-        ...options,
-        ...localOptions,
-        throwOnError: true,
-      })
-      return data
-    },
-  }
-  return mutationOptions
-}
-
 export const listQualityControlsQueryKey = (
   options?: Options<ListQualityControlsData>
 ) => createQueryKey('listQualityControls', options)
@@ -2364,6 +2300,24 @@ export const createAuctionStrategyMutation = (
     },
   }
   return mutationOptions
+}
+
+export const listRegionsQueryKey = (options?: Options<ListRegionsData>) =>
+  createQueryKey('listRegions', options)
+
+export const listRegionsOptions = (options?: Options<ListRegionsData>) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await listRegions({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: listRegionsQueryKey(options),
+  })
 }
 
 export const listDocumentsByUserQueryKey = (

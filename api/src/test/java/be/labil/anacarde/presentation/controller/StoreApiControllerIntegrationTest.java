@@ -4,8 +4,8 @@ import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import be.labil.anacarde.domain.dto.db.AddressDto;
 import be.labil.anacarde.domain.dto.db.StoreDetailDto;
-import be.labil.anacarde.domain.model.Store;
 import be.labil.anacarde.infrastructure.persistence.StoreRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -41,7 +41,9 @@ public class StoreApiControllerIntegrationTest extends AbstractIntegrationTest {
 		mockMvc.perform(
 				get("/api/stores/" + getMainTestStore().getId()).accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.location").value("POINT (2.3522 48.8566)"));
+				.andExpect(jsonPath("$.address.street").value("Rue de la paix"))
+				.andExpect(jsonPath("$.address.cityId").value(1))
+				.andExpect(jsonPath("$.address.regionId").value(1));
 	}
 
 	/**
@@ -52,7 +54,8 @@ public class StoreApiControllerIntegrationTest extends AbstractIntegrationTest {
 	public void testCreateStore() throws Exception {
 		StoreDetailDto newStore = new StoreDetailDto();
 		newStore.setName("Nassara");
-		newStore.setLocation("POINT(2.3522 48.8566)");
+		newStore.setAddress(AddressDto.builder().street("Rue de la paix").cityId(1).regionId(1)
+				.location("POINT(2.3522 48.8566)").build());
 		newStore.setUserId(getMainTestUser().getId());
 
 		ObjectNode node = objectMapper.valueToTree(newStore);
@@ -63,12 +66,12 @@ public class StoreApiControllerIntegrationTest extends AbstractIntegrationTest {
 				.andExpect(status().isCreated())
 				.andExpect(header().string("Location", containsString("/api/stores/")))
 				.andExpect(jsonPath("$.name").value("Nassara"))
-				.andExpect(jsonPath("$.location").value("POINT (2.3522 48.8566)"))
+				.andExpect(jsonPath("$.address").exists())
+				.andExpect(jsonPath("$.address.street").value("Rue de la paix"))
+				.andExpect(jsonPath("$.address.cityId").value(1))
+				.andExpect(jsonPath("$.address.regionId").value(1))
+				.andExpect(jsonPath("$.address.location").value("POINT (2.3522 48.8566)"))
 				.andExpect(jsonPath("$.userId").value(getMainTestUser().getId()));
-
-		Store createdStore = storeRepository.findAll().stream()
-				.filter(store -> store.getLocation().toText().equals("POINT (2.3522 48.8566)"))
-				.findFirst().orElseThrow(() -> new AssertionError("Store non trouvé"));
 	}
 
 	/**
@@ -89,7 +92,10 @@ public class StoreApiControllerIntegrationTest extends AbstractIntegrationTest {
 	public void testUpdateStore() throws Exception {
 		StoreDetailDto updateStore = new StoreDetailDto();
 		updateStore.setName("Casimir");
-		updateStore.setLocation("POINT (1.111 2.222)");
+		updateStore.setAddress(
+				AddressDto.builder().street("Rue de la paix").cityId(1).regionId(1).build());
+		updateStore.setAddress(
+				AddressDto.builder().street("Rue de la paix").cityId(1).regionId(1).build());
 		updateStore.setUserId(getMainTestUser().getId());
 
 		ObjectNode node = objectMapper.valueToTree(updateStore);
@@ -98,7 +104,9 @@ public class StoreApiControllerIntegrationTest extends AbstractIntegrationTest {
 		mockMvc.perform(put("/api/stores/" + getMainTestStore().getId())
 				.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
 				.andExpect(status().isOk()).andExpect(jsonPath("$.name").value("Casimir"))
-				.andExpect(jsonPath("$.location").value("POINT (1.111 2.222)"));
+				.andExpect(jsonPath("$.address.street").value("Rue de la paix"))
+				.andExpect(jsonPath("$.address.cityId").value(1))
+				.andExpect(jsonPath("$.address.regionId").value(1));
 	}
 
 	/**

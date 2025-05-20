@@ -13,7 +13,9 @@ import { useUserStore } from './store/userStore.tsx'
 import './styles.css'
 import { getCookie } from './utils/cookies.ts'
 import { setDayjsLocale } from './utils/dayjs-config.ts'
+import '/node_modules/react-leaflet-markercluster/dist/styles.min.css'
 import { client } from '@/api/generated/client.gen.ts'
+import { Toaster } from '@/components/ui/sonner'
 import { useAppStore } from '@/store/appStore.tsx'
 import '@/utils/zod-config.ts'
 import {
@@ -24,6 +26,7 @@ import {
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
 import i18n from 'i18next'
+import 'leaflet/dist/leaflet.css'
 import { StrictMode, useEffect } from 'react'
 import ReactDOM from 'react-dom/client'
 import { Observer } from 'tailwindcss-intersect'
@@ -112,6 +115,7 @@ root.render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <AppWithProvider />
+      <Toaster richColors position="top-center" />
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   </StrictMode>

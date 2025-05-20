@@ -53,8 +53,10 @@ public abstract class AbstractIntegrationTest {
 	protected @Autowired FieldRepository fieldRepository;
 	protected @Autowired CooperativeRepository cooperativeRepository;
 	protected @Autowired RegionRepository regionRepository;
+	protected @Autowired CityRepository cityRepository;
 	protected @Autowired DocumentRepository documentRepository;
 	protected @Autowired QualityRepository qualityRepository;
+	protected @Autowired QualityTypeRepository qualityTypeRepository;
 	protected @Autowired ContractOfferRepository contractOfferRepository;
 	protected @Autowired QualityControlRepository qualityControlRepository;
 	protected @Autowired DatabaseService databaseService;
@@ -78,8 +80,11 @@ public abstract class AbstractIntegrationTest {
 	private Field mainTestField;
 	private Cooperative mainTestCooperative;
 	private Region mainTestRegion;
+	private City mainTestCity;
+	private Address mainAddress;
 	private Document mainTestDocument;
 	private Quality mainTestQuality;
+	private QualityType mainQualityType;
 	private ContractOffer mainTestContractOffer;
 	private QualityControl mainTestQualityControl;
 
@@ -318,6 +323,16 @@ public abstract class AbstractIntegrationTest {
 		return mainTestQuality;
 	}
 
+	/**
+	 * Renvoie un Type de Qualité de test.
+	 */
+	public QualityType getMainTestQualityType() {
+		if (mainQualityType == null) {
+			throw new IllegalStateException("Qualité de test non initialisée");
+		}
+		return mainQualityType;
+	}
+
 	public ContractOffer getMainTestContractOffer() {
 		if (mainTestQuality == null) {
 			throw new IllegalStateException("Contrat de test non initialisé");
@@ -347,44 +362,50 @@ public abstract class AbstractIntegrationTest {
 		mainLanguage = languageRepository.save(language);
 
 		// A simple region
-		Region region = Region.builder().name("sud").build();
+		Region region = Region.builder().name("sud").id(1).build();
 		mainTestRegion = regionRepository.save(region);
 
+		City city = City.builder().name("sud city").id(1).region(mainTestRegion).build();
+		mainTestCity = cityRepository.save(city);
+		Point storeLocation = new GeometryFactory().createPoint(new Coordinate(3.3522, 8.8566));
+		mainAddress = Address.builder().street("Rue de la paix").city(mainTestCity)
+				.region(mainTestRegion).location(storeLocation).build();
+
 		User user1 = Admin.builder().firstName("John").lastName("Doe").email("user@example.com")
-				.password("$2a$10$abcdefghijklmnopqrstuv1234567890AB")
+				.password("$2a$10$abcdefghijklmnopqrstuv1234567890AB").address(mainAddress)
 				.registrationDate(LocalDateTime.now()).phone("+2290197000000")
 				.language(mainLanguage).enabled(true).build();
 
 		User user2 = Admin.builder().firstName("Foo").lastName("Bar").email("foo@bar.com")
-				.password("$2a$10$abcdefghijklmnopqrstuv1234567890AB")
+				.password("$2a$10$abcdefghijklmnopqrstuv1234567890AB").address(mainAddress)
 				.registrationDate(LocalDateTime.now()).phone("+2290197000001")
 				.language(mainLanguage).enabled(true).build();
 
-		User producer = Producer.builder().firstName("Bruce").lastName("Banner")
+		Producer producer = Producer.builder().firstName("Bruce").lastName("Banner")
 				.email("bruce@hulk.com").password("$2a$10$abcdefghijklmnopqrstuv1234567890AB")
-				.registrationDate(LocalDateTime.now()).phone("+2290197000002")
+				.address(mainAddress).registrationDate(LocalDateTime.now()).phone("+2290197000002")
 				.language(mainLanguage).enabled(true).agriculturalIdentifier("111-222-333").build();
 
 		User producer2 = Producer.builder().firstName("Steve").lastName("Rogers")
 				.email("steve@captain.com").password("$2a$10$abcdefghijklmnopqrstuv1234567890AB")
-				.registrationDate(LocalDateTime.now()).phone("+2290197000003")
+				.address(mainAddress).registrationDate(LocalDateTime.now()).phone("+2290197000003")
 				.language(mainLanguage).enabled(true).agriculturalIdentifier("000-111-222").build();
 
-		User transformer = Transformer.builder().firstName("Scott").lastName("Summers")
+		Trader transformer = Transformer.builder().firstName("Scott").lastName("Summers")
 				.email("scott@xmen.com").password("$2a$10$abcdefghijklmnopqrstuv1234567890AB")
-				.registrationDate(LocalDateTime.now()).phone("+2290197000004")
+				.address(mainAddress).registrationDate(LocalDateTime.now()).phone("+2290197000004")
 				.language(mainLanguage).enabled(true).build();
 
 		User qualityInspector = QualityInspector.builder().firstName("Inspector").lastName("Best")
 				.email("inspector@best.com").password("$2a$10$abcdefghijklmnopqrstuv1234567890AB")
-				.phone("+2290197000005").registrationDate(LocalDateTime.now())
+				.address(mainAddress).phone("+2290197000005").registrationDate(LocalDateTime.now())
 				.language(mainLanguage).enabled(true).build();
 
-		Set regions = new HashSet<Region>();
+		Set<Region> regions = new HashSet<>();
 		regions.add(mainTestRegion);
 		User carrier = Carrier.builder().firstName("Pierre").lastName("Verse")
 				.email("pierre@verse.com").password("$2a$10$abcdefghijklmnopqrstuv1234567890AB")
-				.registrationDate(LocalDateTime.now()).phone("+2290197000006")
+				.address(mainAddress).registrationDate(LocalDateTime.now()).phone("+2290197000006")
 				.language(mainLanguage).enabled(true).regions(regions)
 				.pricePerKm(new BigDecimal(100)).build();
 
@@ -393,7 +414,6 @@ public abstract class AbstractIntegrationTest {
 		userTestRole = roleRepository.save(userRole);
 		adminTestRole = roleRepository.save(adminRole);
 
-		// Assurer la mise à jour bidirectionnelle TODO zak: quoi ??
 		user1.addRole(userTestRole);
 		user2.addRole(adminTestRole);
 		user2.addRole(userTestRole);
@@ -408,8 +428,7 @@ public abstract class AbstractIntegrationTest {
 		mainTestCarrier = userRepository.save(carrier);
 		qualityInspector = userRepository.save(qualityInspector);
 
-		Point storeLocation = new GeometryFactory().createPoint(new Coordinate(2.3522, 48.8566));
-		Store store = Store.builder().name("Nassara").location(storeLocation).user(mainTestUser)
+		Store store = Store.builder().name("Nassara").address(mainAddress).user(mainTestUser)
 				.build();
 		mainTestStore = storeRepository.save(store);
 
@@ -417,23 +436,28 @@ public abstract class AbstractIntegrationTest {
 		// A field binded to main producer
 		Point pointField = new GeometryFactory().createPoint(new Coordinate(2.3522, 48.8566));
 		Field field = Field.builder().producer((Producer) producerTestUser).identifier("FIELD-001")
-				.location(pointField).build();
+				.address(mainAddress).build();
 
 		mainTestField = fieldRepository.save(field);
 
 		// A field to another producer
 		Point pointField2 = new GeometryFactory().createPoint(new Coordinate(1.198, 10.300));
 		Field field2 = Field.builder().producer((Producer) producerTestUser).identifier("FIELD-002")
-				.location(pointField2).build();
+				.address(mainAddress).build();
 		fieldRepository.save(field2);
 
+		// Quality Type
+		QualityType qualityType = QualityType.builder().name("Amande").build();
+		mainQualityType = qualityTypeRepository.save(qualityType);
+
 		// A quality
-		Quality quality = Quality.builder().name("WW160").build();
+		Quality quality = Quality.builder().name("WW160").qualityType(qualityType).build();
 		mainTestQuality = qualityRepository.save(quality);
 
 		// A document with a qualityInspector
-		Document document = Document.builder().format("text").type("TEXT").storagePath("/storage")
-				.user(qualityInspector).uploadDate(LocalDateTime.now()).build();
+		Document document = Document.builder().extension("text").contentType("text/plain")
+				.originalFilename("metaBlop.txt").size(120).storagePath("/storage")
+				.uploadDate(LocalDateTime.now()).user(qualityInspector).build();
 		mainTestDocument = documentRepository.save(document);
 
 		// A quality control
@@ -483,61 +507,77 @@ public abstract class AbstractIntegrationTest {
 		TradeStatus tradeStatusExpired = TradeStatus.builder().name("Expiré").build();
 		tradeStatusRepository.save(tradeStatusExpired);
 
+		AuctionOptions auctionOptions = new AuctionOptions();
+		auctionOptions.setStrategy(testAuctionStrategy);
+		auctionOptions.setFixedPriceKg(150.);
+		auctionOptions.setMaxPriceKg(300.);
+		auctionOptions.setMinPriceKg(80.);
+		auctionOptions.setBuyNowPrice(250.);
+		auctionOptions.setShowPublic(true);
+
 		// An auction with a harvest product
-		Auction auction = Auction.builder().price(new BigDecimal("500.0")).productQuantity(10)
-				.active(true).creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now())
-				.product(productHarvest).strategy(testAuctionStrategy).trader((Trader) producer)
+		Auction auction = Auction.builder().price(500.0).productQuantity(10).active(true)
+				.creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now())
+				.product(productHarvest).options(auctionOptions).trader(producer)
 				.status(tradeStatusOpen).build();
 		testAuction = auctionRepository.save(auction);
 
 		// An auction with a transformed product
-		Auction auction2 = Auction.builder().price(new BigDecimal("10000.0")).productQuantity(1000)
-				.active(true).creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now())
-				.product(productTransform).strategy(testAuctionStrategy).trader((Trader) producer)
+		Auction auction2 = Auction.builder().price(10000.0).productQuantity(1000).active(true)
+				.creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now())
+				.product(productTransform).options(auctionOptions).trader(producer)
 				.status(tradeStatusOpen).build();
 		auctionRepository.save(auction2);
 
 		// An auction from another user
-		Auction auction3 = Auction.builder().price(new BigDecimal("777.0")).productQuantity(777)
-				.active(true).creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now())
-				.product(productTransform).strategy(testAuctionStrategy)
-				.trader((Trader) transformer).status(tradeStatusOpen).build();
+		Auction auction3 = Auction.builder().price(777.0).productQuantity(777).active(true)
+				.creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now())
+				.product(productTransform).options(auctionOptions).trader(transformer)
+				.status(tradeStatusOpen).build();
 		auctionRepository.save(auction3);
 
 		// A "deleted" auction (= inactive)
-		Auction auction4 = Auction.builder().price(new BigDecimal("999.0")).productQuantity(999)
-				.active(false).creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now())
-				.product(productTransform).strategy(testAuctionStrategy).trader((Trader) producer)
+		Auction auction4 = Auction.builder().price(999.0).productQuantity(999).active(false)
+				.creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now())
+				.product(productTransform).options(auctionOptions).trader(producer)
 				.status(tradeStatusOpen).build();
 		auctionRepository.save(auction4);
 
 		// An accepted bid on an auction
 		Bid bid = Bid.builder().amount(new BigDecimal("10.0")).creationDate(LocalDateTime.now())
-				.auctionId(testAuction.getId()).trader((Trader) producer)
-				.status(tradeStatusAccepted).build();
+				.auctionId(testAuction.getId()).trader(producer).status(tradeStatusAccepted)
+				.build();
 		testBid = bidRepository.save(bid);
 
 		// A pending bid on a different auction
 		Bid bid2 = Bid.builder().amount(new BigDecimal("500.0")).creationDate(LocalDateTime.now())
-				.auctionId(auction2.getId()).trader((Trader) producer).status(tradeStatusOpen)
-				.build();
+				.auctionId(auction2.getId()).trader(producer).status(tradeStatusOpen).build();
 		bidRepository.save(bid2);
 
 		// A cooperative who has for president 'producer'
 		Cooperative cooperative = Cooperative.builder().name("Coopérative Agricole de Parakou")
-				.address("Quartier Albarika, Rue 12, Parakou, Bénin").president((Producer) producer)
-				.creationDate(LocalDateTime.of(2025, 4, 7, 12, 0)).build();
+				.president(producer).creationDate(LocalDateTime.of(2025, 4, 7, 12, 0)).build();
 		mainTestCooperative = cooperativeRepository.save(cooperative);
 
-		Producer p = (Producer) producer;
-		p.setCooperative(mainTestCooperative);
-		producerTestUser = userRepository.save(p);
+		producer.setCooperative(mainTestCooperative);
+		producerTestUser = userRepository.save(producer);
+
+		// A document with a qualityInspector
+		Document document2 = Document.builder().contentType("QUALITY")
+				.originalFilename("attestation.pdf").size(212).extension("PDF")
+				.storagePath("/storage").user(qualityInspector).uploadDate(LocalDateTime.now())
+				.build();
+		mainTestDocument = documentRepository.save(document2);
+
+		// A quality
+		Quality quality2 = Quality.builder().name("WW160").qualityType(qualityType).build();
+		mainTestQuality = qualityRepository.save(quality2);
 
 		// A contract
 		ContractOffer contractOffer = ContractOffer.builder().status("Accepted")
 				.pricePerKg(new BigDecimal("20.0")).creationDate(LocalDateTime.now())
-				.endDate(LocalDateTime.now()).seller((Trader) producer).buyer((Trader) transformer)
-				.quality(quality).build();
+				.endDate(LocalDateTime.now()).seller(producer).buyer(transformer).quality(quality)
+				.build();
 		mainTestContractOffer = contractOfferRepository.save(contractOffer);
 	}
 

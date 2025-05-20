@@ -2,7 +2,6 @@ package be.labil.anacarde.domain.dto.db.user;
 
 import be.labil.anacarde.domain.dto.db.BaseDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.swagger.v3.oas.annotations.media.DiscriminatorMapping;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -16,20 +15,14 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type", visible = true)
-@JsonSubTypes({@JsonSubTypes.Type(value = AdminDetailDto.class, name = "admin"),
-		@JsonSubTypes.Type(value = ProducerDetailDto.class, name = "producer"),
-		@JsonSubTypes.Type(value = TransformerDetailDto.class, name = "transformer"),
-		@JsonSubTypes.Type(value = QualityInspectorDetailDto.class, name = "quality_inspector"),
-		@JsonSubTypes.Type(value = ExporterDetailDto.class, name = "exporter"),
-		@JsonSubTypes.Type(value = CarrierDetailDto.class, name = "carrier")})
 @Schema(description = "Data Transfer Object pour un utilisateur", requiredProperties = {
 		"type"}, discriminatorProperty = "type", discriminatorMapping = {
-				@DiscriminatorMapping(value = "admin", schema = AdminDetailDto.class),
-				@DiscriminatorMapping(value = "producer", schema = ProducerDetailDto.class),
-				@DiscriminatorMapping(value = "transformer", schema = TransformerDetailDto.class),
-				@DiscriminatorMapping(value = "quality_inspector", schema = QualityInspectorDetailDto.class),
-				@DiscriminatorMapping(value = "exporter", schema = ExporterDetailDto.class),
-				@DiscriminatorMapping(value = "carrier", schema = CarrierDetailDto.class)}, subTypes = {
+				@DiscriminatorMapping(value = "admin", schema = AdminListDto.class),
+				@DiscriminatorMapping(value = "producer", schema = ProducerListDto.class),
+				@DiscriminatorMapping(value = "transformer", schema = TransformerListDto.class),
+				@DiscriminatorMapping(value = "quality_inspector", schema = QualityInspectorListDto.class),
+				@DiscriminatorMapping(value = "exporter", schema = ExporterListDto.class),
+				@DiscriminatorMapping(value = "carrier", schema = CarrierListDto.class)}, subTypes = {
 						TraderListDto.class, CarrierListDto.class, QualityInspectorListDto.class,
 						AdminListDto.class})
 public abstract class UserListDto extends BaseDto {
@@ -61,10 +54,6 @@ public abstract class UserListDto extends BaseDto {
 	/** Statut d'activation du compte. */
 	@Schema(description = "Compte activé", example = "true")
 	private boolean enabled;
-
-	/** Adresse postale de l'utilisateur. */
-	@Schema(description = "Adresse postale de l'utilisateur", example = "Rue de la Loi 16, 1000 Bruxelles")
-	private String address;
 
 	/** Numéro de téléphone de l'utilisateur. */
 	@Pattern(regexp = "^(?:\\+229)?01\\d{8}$", message = "Numéro invalide – doit être +229XXXXXXXX ou +22901XXXXXXXX")
