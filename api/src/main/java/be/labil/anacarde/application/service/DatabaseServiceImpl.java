@@ -106,8 +106,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 	// --- Internal State ---
 	private final Faker faker = new Faker(Locale.of("fr")); // Use French Faker locale
 	private final GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326); // SRID
-																										// for//
-																										// WGS84
+	// for//
+	// WGS84
 	private final Random random = new Random();
 	private final QualityTypeRepository qualityTypeRepository;
 	private final DocumentMapper documentMapper;
@@ -321,24 +321,24 @@ public class DatabaseServiceImpl implements DatabaseService {
 	private void createUsers() {
 
 		createdAdmins = createUsersOfType(AdminUpdateDto.class, this::createRandomAdminDto,
-				dto -> (AdminDetailDto) userService.createUser(dto), NUM_ADMINS);
+				dto -> (AdminDetailDto) userService.createUser(dto, null), NUM_ADMINS);
 
 		createdProducers = createUsersOfType(ProducerUpdateDto.class, this::createRandomProducerDto,
-				dto -> (ProducerDetailDto) userService.createUser(dto), NUM_PRODUCERS);
+				dto -> (ProducerDetailDto) userService.createUser(dto, null), NUM_PRODUCERS);
 
 		createdTransformers = createUsersOfType(TransformerUpdateDto.class,
 				this::createRandomTransformerDto,
-				dto -> (TransformerDetailDto) userService.createUser(dto), NUM_TRANSFORMERS);
+				dto -> (TransformerDetailDto) userService.createUser(dto, null), NUM_TRANSFORMERS);
 
 		createdExporters = createUsersOfType(ExporterUpdateDto.class, this::createRandomExporterDto,
-				dto -> (ExporterDetailDto) userService.createUser(dto), NUM_EXPORTERS);
+				dto -> (ExporterDetailDto) userService.createUser(dto, null), NUM_EXPORTERS);
 
 		createdCarriers = createUsersOfType(CarrierUpdateDto.class, this::createRandomCarrierDto,
-				dto -> (CarrierDetailDto) userService.createUser(dto), NUM_CARRIERS);
+				dto -> (CarrierDetailDto) userService.createUser(dto, null), NUM_CARRIERS);
 
 		createdQualityInspectors = createUsersOfType(QualityInspectorUpdateDto.class,
 				this::createRandomQualityInspectorDto,
-				dto -> (QualityInspectorDetailDto) userService.createUser(dto),
+				dto -> (QualityInspectorDetailDto) userService.createUser(dto, null),
 				NUM_QUALITY_INSPECTORS);
 
 		log.info("Users created.");
@@ -397,7 +397,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 		// listes de travail
 		List<ProducerDetailDto> presidentsPool = new ArrayList<>(createdProducers);
 		List<ProducerDetailDto> membersPool = new ArrayList<>(createdProducers); // producteur
-																					// restant
+		// restant
 
 		for (int i = 0; i < NUM_COOPERATIVES && !presidentsPool.isEmpty(); i++) {
 
@@ -429,8 +429,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 
 			for (int j = 0; j < numMembers; j++) {
 				ProducerDetailDto memberDto = membersPool.removeFirst(); // retire du pool pour
-																			// éviter
-																			// doublons
+				// éviter
+				// doublons
 				userRepository.findById(memberDto.getId()).ifPresent(user -> {
 					if (user instanceof Producer p) {
 						p.setCooperative(

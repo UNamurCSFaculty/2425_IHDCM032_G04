@@ -347,7 +347,7 @@ export type QualityInspectorDetailDto = UserDetailDto & {
  * Objet de transfert de données pour les traders.
  */
 export type TraderDetailDto = UserDetailDto & {
-  type: 'TraderDetailDto'
+  type: 'trader'
 }
 
 /**
@@ -1330,7 +1330,7 @@ export type QualityInspectorListDto = UserListDto & {
  * Objet de transfert de données pour les traders.
  */
 export type TraderListDto = UserListDto & {
-  type: 'TraderListDto'
+  type: 'trader'
 }
 
 /**
@@ -2286,109 +2286,6 @@ export type UpdateFieldResponses = {
 
 export type UpdateFieldResponse =
   UpdateFieldResponses[keyof UpdateFieldResponses]
-
-export type DeleteDocumentData = {
-  body?: never
-  path: {
-    /**
-     * Identifiant de la ressource
-     */
-    id: number
-  }
-  query?: never
-  url: '/api/documents/{id}'
-}
-
-export type DeleteDocumentErrors = {
-  /**
-   * Not Found
-   */
-  404: ApiErrorResponse
-}
-
-export type DeleteDocumentError =
-  DeleteDocumentErrors[keyof DeleteDocumentErrors]
-
-export type DeleteDocumentResponses = {
-  /**
-   * OK
-   */
-  200: unknown
-  /**
-   * No Content
-   */
-  204: void
-}
-
-export type DeleteDocumentResponse =
-  DeleteDocumentResponses[keyof DeleteDocumentResponses]
-
-export type GetDocumentData = {
-  body?: never
-  path: {
-    /**
-     * Identifiant de la ressource
-     */
-    id: number
-  }
-  query?: never
-  url: '/api/documents/{id}'
-}
-
-export type GetDocumentErrors = {
-  /**
-   * Not Found
-   */
-  404: ApiErrorResponse
-}
-
-export type GetDocumentError = GetDocumentErrors[keyof GetDocumentErrors]
-
-export type GetDocumentResponses = {
-  /**
-   * OK
-   */
-  200: DocumentDto
-}
-
-export type GetDocumentResponse =
-  GetDocumentResponses[keyof GetDocumentResponses]
-
-export type UpdateDocumentData = {
-  body: DocumentDto
-  path: {
-    /**
-     * Identifiant de la ressource
-     */
-    id: number
-  }
-  query?: never
-  url: '/api/documents/{id}'
-}
-
-export type UpdateDocumentErrors = {
-  /**
-   * Bad Request
-   */
-  400: ApiErrorResponse
-  /**
-   * Conflict
-   */
-  409: ApiErrorResponse
-}
-
-export type UpdateDocumentError =
-  UpdateDocumentErrors[keyof UpdateDocumentErrors]
-
-export type UpdateDocumentResponses = {
-  /**
-   * Created
-   */
-  201: DocumentDto
-}
-
-export type UpdateDocumentResponse =
-  UpdateDocumentResponses[keyof UpdateDocumentResponses]
 
 export type DeleteCooperativeData = {
   body?: never
@@ -3411,22 +3308,65 @@ export type CreateFieldResponses = {
 export type CreateFieldResponse =
   CreateFieldResponses[keyof CreateFieldResponses]
 
-export type CreateDocumentData = {
-  body: DocumentDto
-  path?: never
+export type ListDocumentsByUserData = {
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    userId: number
+  }
   query?: never
-  url: '/api/documents'
+  url: '/api/documents/users/{userId}'
+}
+
+export type ListDocumentsByUserErrors = {
+  /**
+   * Utilisateur non trouvé
+   */
+  404: ApiErrorResponse
+}
+
+export type ListDocumentsByUserError =
+  ListDocumentsByUserErrors[keyof ListDocumentsByUserErrors]
+
+export type ListDocumentsByUserResponses = {
+  /**
+   * Liste récupérée
+   */
+  200: Array<DocumentDto>
+}
+
+export type ListDocumentsByUserResponse =
+  ListDocumentsByUserResponses[keyof ListDocumentsByUserResponses]
+
+export type CreateDocumentData = {
+  body: {
+    file?: Blob | File
+  }
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    userId: number
+  }
+  query?: never
+  url: '/api/documents/users/{userId}'
 }
 
 export type CreateDocumentErrors = {
   /**
-   * Bad Request
+   * Validation KO
    */
   400: ApiErrorResponse
   /**
-   * Conflict
+   * Utilisateur non trouvé
    */
-  409: ApiErrorResponse
+  404: ApiErrorResponse
+  /**
+   * Erreur stockage
+   */
+  500: ApiErrorResponse
 }
 
 export type CreateDocumentError =
@@ -3434,7 +3374,7 @@ export type CreateDocumentError =
 
 export type CreateDocumentResponses = {
   /**
-   * Created
+   * Document créé
    */
   201: DocumentDto
 }
@@ -3809,27 +3749,104 @@ export type ListRegionsResponses = {
 export type ListRegionsResponse =
   ListRegionsResponses[keyof ListRegionsResponses]
 
-export type ListDocumentsByUserData = {
+export type DeleteDocumentData = {
   body?: never
   path: {
     /**
      * Identifiant de la ressource
      */
-    userId: number
+    id: number
   }
   query?: never
-  url: '/api/documents/users/{userId}'
+  url: '/api/documents/{id}'
 }
 
-export type ListDocumentsByUserResponses = {
+export type DeleteDocumentErrors = {
   /**
-   * Liste récupérée avec succès
+   * Document non trouvé
    */
-  200: Array<DocumentDto>
+  404: ApiErrorResponse
 }
 
-export type ListDocumentsByUserResponse =
-  ListDocumentsByUserResponses[keyof ListDocumentsByUserResponses]
+export type DeleteDocumentError =
+  DeleteDocumentErrors[keyof DeleteDocumentErrors]
+
+export type DeleteDocumentResponses = {
+  /**
+   * Document supprimé
+   */
+  204: void
+}
+
+export type DeleteDocumentResponse =
+  DeleteDocumentResponses[keyof DeleteDocumentResponses]
+
+export type GetDocumentData = {
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/documents/{id}'
+}
+
+export type GetDocumentErrors = {
+  /**
+   * Document non trouvé
+   */
+  404: ApiErrorResponse
+}
+
+export type GetDocumentError = GetDocumentErrors[keyof GetDocumentErrors]
+
+export type GetDocumentResponses = {
+  /**
+   * Document trouvé
+   */
+  200: DocumentDto
+}
+
+export type GetDocumentResponse =
+  GetDocumentResponses[keyof GetDocumentResponses]
+
+export type DownloadDocumentData = {
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/documents/{id}/download'
+}
+
+export type DownloadDocumentErrors = {
+  /**
+   * Document non trouvé
+   */
+  404: ApiErrorResponse
+  /**
+   * Erreur lecture document
+   */
+  500: ApiErrorResponse
+}
+
+export type DownloadDocumentError =
+  DownloadDocumentErrors[keyof DownloadDocumentErrors]
+
+export type DownloadDocumentResponses = {
+  /**
+   * Flux binaire renvoyé
+   */
+  200: Blob | File
+}
+
+export type DownloadDocumentResponse =
+  DownloadDocumentResponses[keyof DownloadDocumentResponses]
 
 export type GetCurrentUserData = {
   body?: never

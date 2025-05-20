@@ -6,7 +6,11 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 import lombok.AllArgsConstructor;
+import org.springframework.core.env.Environment;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
@@ -26,6 +30,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
  */
 public class AuthTokenFilter extends OncePerRequestFilter {
 
+	private Environment env;
 	private final JwtUtil jwtUtil;
 	private final UserDetailsService userDetailsService;
 
@@ -54,6 +59,12 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 				String username = jwtUtil.extractUsername(jwt);
 				UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 				if (!jwtUtil.validateToken(jwt, userDetails)) {
+					// delete the cookie
+					ResponseCookie jwtClear = ResponseCookie.from("jwt", "").httpOnly(true)
+							.secure(Arrays.stream(env.getActiveProfiles())
+									.anyMatch(p -> p.equalsIgnoreCase("prod")))
+							.path("/").maxAge(0).sameSite("Strict").build();
+					response.addHeader(HttpHeaders.SET_COOKIE, jwtClear.toString());
 					throw new BadCredentialsException("Token JWT invalide ou expiré");
 				}
 				UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(

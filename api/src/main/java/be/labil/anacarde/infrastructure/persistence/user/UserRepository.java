@@ -2,8 +2,10 @@ package be.labil.anacarde.infrastructure.persistence.user;
 
 import be.labil.anacarde.domain.model.User;
 import java.util.Optional;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
 /** Interface Repository pour les entités User. */
@@ -32,7 +34,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	Optional<User> findByPhone(String phone);
 
 	@Override
-	@Query("SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.id = :id")
-	Optional<User> findById(Integer id);
-
+	@NonNull
+	@EntityGraph(attributePaths = {"roles", "documents", "address", "address.city",
+			"address.region", "language"})
+	Optional<User> findById(@NonNull Integer id);
 }

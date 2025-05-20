@@ -1,61 +1,83 @@
 package be.labil.anacarde.application.service;
 
 import be.labil.anacarde.application.exception.ResourceNotFoundException;
+import be.labil.anacarde.application.service.storage.StorageService;
 import be.labil.anacarde.domain.dto.db.DocumentDto;
 import be.labil.anacarde.domain.mapper.DocumentMapper;
 import be.labil.anacarde.domain.model.Document;
+import be.labil.anacarde.domain.model.User;
 import be.labil.anacarde.infrastructure.persistence.DocumentRepository;
+import be.labil.anacarde.infrastructure.persistence.user.UserRepository;
+import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
+@RequiredArgsConstructor
 @Transactional
-@AllArgsConstructor
-public class DocumentServiceImpl implements DocumentService {
+class DocumentServiceImpl implements DocumentService {
 
-	private final DocumentRepository documentRepository;
-	private final DocumentMapper documentMapper;
+	private final DocumentRepository docRepo;
+	private final DocumentMapper mapper;
+	private final UserRepository userRepo;
+	private final StorageService storage;
+
+	/* ---------- création ---------- */
 
 	@Override
-	public DocumentDto createDocument(DocumentDto dto) {
-		Document document = documentMapper.toEntity(dto);
-		Document saved = documentRepository.save(document);
-		return documentMapper.toDto(saved);
+	public DocumentDto createDocument(Integer userId, MultipartFile file) {
+		User user = userRepo.findById(userId).orElseThrow(
+				() -> new ResourceNotFoundException("Utilisateur non trouvé : " + userId));
+
+		Document stored = storage.storeAll(user, List.of(file)).getFirst();
+		stored.setUploadDate(LocalDateTime.now());
+
+		return mapper.toDto(docRepo.save(stored));
 	}
+
+	/* ---------- lecture ---------- */
 
 	@Override
 	@Transactional(readOnly = true)
 	public DocumentDto getDocumentById(Integer id) {
-		Document document = documentRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Document non trouvé"));
-		return documentMapper.toDto(document);
+		return mapper.toDto(findEntity(id));
 	}
 
-	@Override
-	public DocumentDto updateDocument(Integer id, DocumentDto dto) {
-		Document existing = documentRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Document non trouvé"));
-
-		Document updated = documentMapper.partialUpdate(dto, existing);
-		Document saved = documentRepository.save(updated);
-		return documentMapper.toDto(saved);
-	}
+	/* ---------- suppression ---------- */
 
 	@Override
 	public void deleteDocument(Integer id) {
-		if (!documentRepository.existsById(id)) {
-			throw new ResourceNotFoundException("Document non trouvé");
-		}
-		documentRepository.deleteById(id);
+		Document doc = findEntity(id);
+		storage.delete(doc);
+		docRepo.delete(doc);
 	}
+
+	/* ---------- listing ---------- */
 
 	@Override
 	@Transactional(readOnly = true)
 	public List<DocumentDto> listDocumentsByUser(Integer userId) {
-		return documentRepository.findByUserId(userId).stream().map(documentMapper::toDto)
+		return docRepo.findByUserId(userId).stream().map(mapper::toDto)
 				.collect(Collectors.toList());
+	}
+
+	/* ---------- streaming ---------- */
+
+	@Override
+	@Transactional(readOnly = true)
+	public InputStream streamDocumentContent(Integer id) {
+		return storage.get(findEntity(id));
+	}
+
+	/* ---------- utilitaire ---------- */
+
+	private Document findEntity(Integer id) {
+		return docRepo.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Document non trouvé : " + id));
 	}
 }

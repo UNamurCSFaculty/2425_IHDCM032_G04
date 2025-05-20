@@ -159,7 +159,7 @@ export const zCooperativeDto = z.object({
 
 export const zTraderDetailDto = zUserDetailDto.and(
   z.object({
-    type: z.literal('TraderDetailDto'),
+    type: z.literal('trader'),
   })
 )
 
@@ -563,7 +563,7 @@ export const zExporterListDto = z.object({
 
 export const zTraderListDto = zUserListDto.and(
   z.object({
-    type: z.literal('TraderListDto'),
+    type: z.literal('trader'),
   })
 )
 
@@ -632,12 +632,6 @@ export const zGetFieldResponse = zFieldDto
 
 export const zUpdateFieldResponse = zFieldDto
 
-export const zDeleteDocumentResponse = z.union([z.unknown(), z.void()])
-
-export const zGetDocumentResponse = zDocumentDto
-
-export const zUpdateDocumentResponse = zDocumentDto
-
 export const zDeleteCooperativeResponse = z.union([z.unknown(), z.void()])
 
 export const zGetCooperativeResponse = zCooperativeDto
@@ -696,6 +690,8 @@ export const zListFieldsResponse = z.array(zFieldDto)
 
 export const zCreateFieldResponse = zFieldDto
 
+export const zListDocumentsByUserResponse = z.array(zDocumentDto)
+
 export const zCreateDocumentResponse = zDocumentDto
 
 export const zListCooperativesResponse = z.array(zCooperativeDto)
@@ -718,7 +714,11 @@ export const zCreateBidResponse = zBidDto
 
 export const zListRegionsResponse = z.array(zRegionDto)
 
-export const zListDocumentsByUserResponse = z.array(zDocumentDto)
+export const zDeleteDocumentResponse = z.void()
+
+export const zGetDocumentResponse = zDocumentDto
+
+export const zDownloadDocumentResponse = z.string()
 
 export const zGetCurrentUserResponse = zUserDetailDto
 

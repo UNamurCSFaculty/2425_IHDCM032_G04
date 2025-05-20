@@ -34,6 +34,7 @@ import {
   deleteRegion,
   deleteStore,
   deleteUser,
+  downloadDocument,
   getApplicationData,
   getAuction,
   getAuctionStrategy,
@@ -72,7 +73,6 @@ import {
   updateBid,
   updateContractOffer,
   updateCooperative,
-  updateDocument,
   updateField,
   updateLanguage,
   updateProduct,
@@ -177,6 +177,7 @@ import type {
   DeleteUserData,
   DeleteUserError,
   DeleteUserResponse,
+  DownloadDocumentData,
   GetApplicationDataData,
   GetAuctionData,
   GetAuctionStrategyData,
@@ -227,9 +228,6 @@ import type {
   UpdateCooperativeData,
   UpdateCooperativeError,
   UpdateCooperativeResponse,
-  UpdateDocumentData,
-  UpdateDocumentError,
-  UpdateDocumentResponse,
   UpdateFieldData,
   UpdateFieldError,
   UpdateFieldResponse,
@@ -862,72 +860,6 @@ export const updateFieldMutation = (
   > = {
     mutationFn: async localOptions => {
       const { data } = await updateField({
-        ...options,
-        ...localOptions,
-        throwOnError: true,
-      })
-      return data
-    },
-  }
-  return mutationOptions
-}
-
-export const deleteDocumentMutation = (
-  options?: Partial<Options<DeleteDocumentData>>
-): UseMutationOptions<
-  DeleteDocumentResponse,
-  DeleteDocumentError,
-  Options<DeleteDocumentData>
-> => {
-  const mutationOptions: UseMutationOptions<
-    DeleteDocumentResponse,
-    DeleteDocumentError,
-    Options<DeleteDocumentData>
-  > = {
-    mutationFn: async localOptions => {
-      const { data } = await deleteDocument({
-        ...options,
-        ...localOptions,
-        throwOnError: true,
-      })
-      return data
-    },
-  }
-  return mutationOptions
-}
-
-export const getDocumentQueryKey = (options: Options<GetDocumentData>) =>
-  createQueryKey('getDocument', options)
-
-export const getDocumentOptions = (options: Options<GetDocumentData>) => {
-  return queryOptions({
-    queryFn: async ({ queryKey, signal }) => {
-      const { data } = await getDocument({
-        ...options,
-        ...queryKey[0],
-        signal,
-        throwOnError: true,
-      })
-      return data
-    },
-    queryKey: getDocumentQueryKey(options),
-  })
-}
-
-export const updateDocumentMutation = (
-  options?: Partial<Options<UpdateDocumentData>>
-): UseMutationOptions<
-  UpdateDocumentResponse,
-  UpdateDocumentError,
-  Options<UpdateDocumentData>
-> => {
-  const mutationOptions: UseMutationOptions<
-    UpdateDocumentResponse,
-    UpdateDocumentError,
-    Options<UpdateDocumentData>
-  > = {
-    mutationFn: async localOptions => {
-      const { data } = await updateDocument({
         ...options,
         ...localOptions,
         throwOnError: true,
@@ -1814,6 +1746,27 @@ export const createFieldMutation = (
   return mutationOptions
 }
 
+export const listDocumentsByUserQueryKey = (
+  options: Options<ListDocumentsByUserData>
+) => createQueryKey('listDocumentsByUser', options)
+
+export const listDocumentsByUserOptions = (
+  options: Options<ListDocumentsByUserData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await listDocumentsByUser({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: listDocumentsByUserQueryKey(options),
+  })
+}
+
 export const createDocumentQueryKey = (options: Options<CreateDocumentData>) =>
   createQueryKey('createDocument', options)
 
@@ -2320,16 +2273,37 @@ export const listRegionsOptions = (options?: Options<ListRegionsData>) => {
   })
 }
 
-export const listDocumentsByUserQueryKey = (
-  options: Options<ListDocumentsByUserData>
-) => createQueryKey('listDocumentsByUser', options)
+export const deleteDocumentMutation = (
+  options?: Partial<Options<DeleteDocumentData>>
+): UseMutationOptions<
+  DeleteDocumentResponse,
+  DeleteDocumentError,
+  Options<DeleteDocumentData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    DeleteDocumentResponse,
+    DeleteDocumentError,
+    Options<DeleteDocumentData>
+  > = {
+    mutationFn: async localOptions => {
+      const { data } = await deleteDocument({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
 
-export const listDocumentsByUserOptions = (
-  options: Options<ListDocumentsByUserData>
-) => {
+export const getDocumentQueryKey = (options: Options<GetDocumentData>) =>
+  createQueryKey('getDocument', options)
+
+export const getDocumentOptions = (options: Options<GetDocumentData>) => {
   return queryOptions({
     queryFn: async ({ queryKey, signal }) => {
-      const { data } = await listDocumentsByUser({
+      const { data } = await getDocument({
         ...options,
         ...queryKey[0],
         signal,
@@ -2337,7 +2311,28 @@ export const listDocumentsByUserOptions = (
       })
       return data
     },
-    queryKey: listDocumentsByUserQueryKey(options),
+    queryKey: getDocumentQueryKey(options),
+  })
+}
+
+export const downloadDocumentQueryKey = (
+  options: Options<DownloadDocumentData>
+) => createQueryKey('downloadDocument', options)
+
+export const downloadDocumentOptions = (
+  options: Options<DownloadDocumentData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await downloadDocument({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: downloadDocumentQueryKey(options),
   })
 }
 

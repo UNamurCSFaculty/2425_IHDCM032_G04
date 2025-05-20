@@ -21,6 +21,7 @@ import lombok.EqualsAndHashCode;
 		"type"}, discriminatorProperty = "type", discriminatorMapping = {
 				@DiscriminatorMapping(value = "admin", schema = AdminDetailDto.class),
 				@DiscriminatorMapping(value = "producer", schema = ProducerDetailDto.class),
+				@DiscriminatorMapping(value = "trader", schema = TraderDetailDto.class),
 				@DiscriminatorMapping(value = "transformer", schema = TransformerDetailDto.class),
 				@DiscriminatorMapping(value = "quality_inspector", schema = QualityInspectorDetailDto.class),
 				@DiscriminatorMapping(value = "exporter", schema = ExporterDetailDto.class),
