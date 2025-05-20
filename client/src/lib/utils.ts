@@ -52,3 +52,8 @@ export enum TradeStatus {
   ACCEPTED = 'Accepté',
   REJECTED = 'Refusé',
 }
+
+export enum ProductType {
+  HARVEST = 'harvest',
+  TRANSFORMED = 'transformed',
+}

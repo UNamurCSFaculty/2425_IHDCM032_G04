@@ -39,7 +39,7 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import cities from '@/data/cities.json'
 import regions from '@/data/regions.json'
 import { useMediaQuery } from '@/hooks/use-mobile'
-import { formatDate } from '@/lib/utils'
+import { ProductType, formatDate } from '@/lib/utils'
 import dayjs from '@/utils/dayjs-config'
 import { formatPrice } from '@/utils/formatter'
 import {
@@ -68,7 +68,11 @@ export const qualityOptions = [
 ] as const
 export type QualityOption = (typeof qualityOptions)[number]
 
-export const productTypeOptions = ['All', 'harvest', 'transformed'] as const
+export const productTypeOptions = [
+  'All',
+  ProductType.HARVEST,
+  ProductType.TRANSFORMED,
+] as const
 export type ProductTypeOption = (typeof productTypeOptions)[number]
 
 export const sortOptions = [

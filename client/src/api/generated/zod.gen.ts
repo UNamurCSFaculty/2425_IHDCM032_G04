@@ -8,82 +8,9 @@ export const zAddressDto = z.object({
   regionId: z.number().int().optional(),
 })
 
-export const zCooperativeDto = z.object({
-  id: z.number().int().readonly(),
-  name: z.string().min(1),
-  creationDate: z.string().datetime(),
-  presidentId: z.number().int(),
-})
-
-export const zDocumentDto = z.object({
-  id: z.number().int().readonly(),
-  contentType: z.string().min(1),
-  originalFilename: z.string().min(1),
-  size: z.coerce.bigint().gte(BigInt(1)),
-  extension: z.string().min(1),
-  storagePath: z.string().min(1),
-  uploadDate: z.string().datetime().readonly().optional(),
-  userId: z.number().int(),
-})
-
 export const zRoleDto = z.object({
   id: z.number().int().readonly(),
   name: z.string().min(1),
-})
-
-export const zLanguageDto = z.object({
-  id: z.number().int().readonly(),
-  code: z.string().min(1),
-  name: z.string().min(1),
-})
-
-export const zProducerDetailDto = z.object({
-  id: z.number().int().readonly(),
-  firstName: z.string().min(1),
-  lastName: z.string().min(1),
-  email: z.string().min(1),
-  registrationDate: z.string().datetime().readonly().optional(),
-  validationDate: z.string().datetime().readonly().optional(),
-  enabled: z.boolean().optional(),
-  phone: z
-    .string()
-    .regex(/^(?:\+229)?01\d{8}$/)
-    .optional(),
-  roles: z.array(zRoleDto).readonly().optional(),
-  language: zLanguageDto,
-  address: zAddressDto,
-  documents: z.array(zDocumentDto).optional(),
-  agriculturalIdentifier: z.string().min(1),
-  cooperative: zCooperativeDto.optional(),
-  type: z.enum([
-    'admin',
-    'producer',
-    'transformer',
-    'quality_inspector',
-    'exporter',
-    'carrier',
-  ]),
-})
-
-export const zFieldDto = z.object({
-  id: z.number().int().readonly(),
-  identifier: z.string().optional(),
-  address: zAddressDto,
-  producer: zProducerDetailDto.optional(),
-})
-
-export const zErrorDetail = z.object({
-  field: z.string().optional(),
-  code: z.string(),
-  message: z.string(),
-})
-
-export const zApiErrorResponse = z.object({
-  status: z.number().int(),
-  timestamp: z.string().datetime(),
-  path: z.string(),
-  code: z.string(),
-  errors: z.array(zErrorDetail),
 })
 
 export const zUserUpdateDto = z.object({
@@ -161,6 +88,23 @@ export const zTransformerUpdateDto = zUserUpdateDto.and(
   })
 )
 
+export const zLanguageDto = z.object({
+  id: z.number().int().readonly(),
+  code: z.string().min(1),
+  name: z.string().min(1),
+})
+
+export const zDocumentDto = z.object({
+  id: z.number().int().readonly(),
+  contentType: z.string().min(1),
+  originalFilename: z.string().min(1),
+  size: z.coerce.bigint().gte(BigInt(1)),
+  extension: z.string().min(1),
+  storagePath: z.string().min(1),
+  uploadDate: z.string().datetime().readonly().optional(),
+  userId: z.number().int(),
+})
+
 export const zUserDetailDto = z.object({
   id: z.number().int().readonly(),
   firstName: z.string().min(1),
@@ -206,6 +150,13 @@ export const zCarrierDetailDto = zUserDetailDto
     })
   )
 
+export const zCooperativeDto = z.object({
+  id: z.number().int().readonly(),
+  name: z.string().min(1),
+  creationDate: z.string().datetime(),
+  presidentId: z.number().int(),
+})
+
 export const zTraderDetailDto = zUserDetailDto.and(
   z.object({
     type: z.literal('TraderDetailDto'),
@@ -213,6 +164,34 @@ export const zTraderDetailDto = zUserDetailDto.and(
 )
 
 export const zExporterDetailDto = zTraderDetailDto
+
+export const zProducerDetailDto = z.object({
+  id: z.number().int().readonly(),
+  firstName: z.string().min(1),
+  lastName: z.string().min(1),
+  email: z.string().min(1),
+  registrationDate: z.string().datetime().readonly().optional(),
+  validationDate: z.string().datetime().readonly().optional(),
+  enabled: z.boolean().optional(),
+  phone: z
+    .string()
+    .regex(/^(?:\+229)?01\d{8}$/)
+    .optional(),
+  roles: z.array(zRoleDto).readonly().optional(),
+  language: zLanguageDto,
+  address: zAddressDto,
+  documents: z.array(zDocumentDto).optional(),
+  agriculturalIdentifier: z.string().min(1),
+  cooperative: zCooperativeDto.optional(),
+  type: z.enum([
+    'admin',
+    'producer',
+    'transformer',
+    'quality_inspector',
+    'exporter',
+    'carrier',
+  ]),
+})
 
 export const zQualityInspectorDetailDto = zUserDetailDto.and(
   z.object({
@@ -246,6 +225,20 @@ export const zTransformerDetailDto = z.object({
   ]),
 })
 
+export const zErrorDetail = z.object({
+  field: z.string().optional(),
+  code: z.string(),
+  message: z.string(),
+})
+
+export const zApiErrorResponse = z.object({
+  status: z.number().int(),
+  timestamp: z.string().datetime(),
+  path: z.string(),
+  code: z.string(),
+  errors: z.array(zErrorDetail),
+})
+
 export const zStoreDetailDto = z.object({
   id: z.number().int().readonly(),
   name: z.string(),
@@ -265,9 +258,8 @@ export const zQualityControlUpdateDto = z.object({
   korTest: z.number(),
   humidity: z.number(),
   qualityInspectorId: z.number().int(),
-  productId: z.number().int(),
   qualityId: z.number().int(),
-  documentId: z.number().int(),
+  documentId: z.number().int().optional(),
 })
 
 export const zUserMiniDto = z.object({
@@ -349,6 +341,13 @@ export const zTransformedProductUpdateDto = zProductUpdateDto
       transformerId: z.number().int(),
     })
   )
+
+export const zFieldDto = z.object({
+  id: z.number().int().readonly(),
+  identifier: z.string().optional(),
+  address: zAddressDto,
+  producer: zProducerDetailDto.optional(),
+})
 
 export const zProductDto = z.object({
   id: z.number().int().readonly(),
@@ -587,12 +586,6 @@ export const zApplicationDataDto = z.object({
   languages: z.array(zLanguageDto),
 })
 
-export const zDeleteFieldResponse = z.union([z.unknown(), z.void()])
-
-export const zGetFieldResponse = zFieldDto
-
-export const zUpdateFieldResponse = zFieldDto
-
 export const zDeleteUserResponse = z.void()
 
 export const zGetUserResponse = zUserDetailDto
@@ -632,6 +625,12 @@ export const zDeleteLanguageResponse = z.void()
 export const zGetLanguageResponse = zLanguageDto
 
 export const zUpdateLanguageResponse = zLanguageDto
+
+export const zDeleteFieldResponse = z.union([z.unknown(), z.void()])
+
+export const zGetFieldResponse = zFieldDto
+
+export const zUpdateFieldResponse = zFieldDto
 
 export const zDeleteDocumentResponse = z.union([z.unknown(), z.void()])
 
@@ -675,10 +674,6 @@ export const zListUsersResponse = z.array(zUserListDto)
 
 export const zCreateUserResponse = zUserDetailDto
 
-export const zListFieldsResponse = z.array(zFieldDto)
-
-export const zCreateFieldResponse = zFieldDto
-
 export const zAddRoleToUserResponse = zUserDetailDto
 
 export const zListStoresResponse = z.array(zStoreDetailDto)
@@ -696,6 +691,10 @@ export const zCreateProductResponse = zProductDto
 export const zListLanguagesResponse = z.array(zLanguageDto)
 
 export const zCreateLanguageResponse = zLanguageDto
+
+export const zListFieldsResponse = z.array(zFieldDto)
+
+export const zCreateFieldResponse = zFieldDto
 
 export const zCreateDocumentResponse = zDocumentDto
 

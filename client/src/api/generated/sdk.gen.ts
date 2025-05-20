@@ -243,76 +243,6 @@ export type Options<
 }
 
 /**
- * Supprimer un champ
- */
-export const deleteField = <ThrowOnError extends boolean = false>(
-  options: Options<DeleteFieldData, ThrowOnError>
-) => {
-  return (options.client ?? _heyApiClient).delete<
-    DeleteFieldResponse,
-    DeleteFieldError,
-    ThrowOnError
-  >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
-    url: '/api/users/{userId}/fields/{id}',
-    ...options,
-  })
-}
-
-/**
- * Obtenir un champ
- */
-export const getField = <ThrowOnError extends boolean = false>(
-  options: Options<GetFieldData, ThrowOnError>
-) => {
-  return (options.client ?? _heyApiClient).get<
-    GetFieldResponse,
-    GetFieldError,
-    ThrowOnError
-  >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
-    url: '/api/users/{userId}/fields/{id}',
-    ...options,
-  })
-}
-
-/**
- * Mettre à jour un champ
- */
-export const updateField = <ThrowOnError extends boolean = false>(
-  options: Options<UpdateFieldData, ThrowOnError>
-) => {
-  return (options.client ?? _heyApiClient).put<
-    UpdateFieldResponse,
-    UpdateFieldError,
-    ThrowOnError
-  >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
-    url: '/api/users/{userId}/fields/{id}',
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...options?.headers,
-    },
-  })
-}
-
-/**
  * Supprimer un utilisateur
  * Supprime un utilisateur en fonction de son identifiant.
  */
@@ -858,6 +788,76 @@ export const updateLanguage = <ThrowOnError extends boolean = false>(
 }
 
 /**
+ * Supprimer un champ
+ */
+export const deleteField = <ThrowOnError extends boolean = false>(
+  options: Options<DeleteFieldData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).delete<
+    DeleteFieldResponse,
+    DeleteFieldError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/fields/{id}',
+    ...options,
+  })
+}
+
+/**
+ * Obtenir un champ
+ */
+export const getField = <ThrowOnError extends boolean = false>(
+  options: Options<GetFieldData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).get<
+    GetFieldResponse,
+    GetFieldError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/fields/{id}',
+    ...options,
+  })
+}
+
+/**
+ * Mettre à jour un champ
+ */
+export const updateField = <ThrowOnError extends boolean = false>(
+  options: Options<UpdateFieldData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).put<
+    UpdateFieldResponse,
+    UpdateFieldError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/fields/{id}',
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options?.headers,
+    },
+  })
+}
+
+/**
  * Supprimer un document
  */
 export const deleteDocument = <ThrowOnError extends boolean = false>(
@@ -1394,54 +1394,6 @@ export const createUser = <ThrowOnError extends boolean = false>(
 }
 
 /**
- * Obtenir tous les champs d’un utilisateur
- */
-export const listFields = <ThrowOnError extends boolean = false>(
-  options: Options<ListFieldsData, ThrowOnError>
-) => {
-  return (options.client ?? _heyApiClient).get<
-    ListFieldsResponse,
-    unknown,
-    ThrowOnError
-  >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
-    url: '/api/users/{userId}/fields',
-    ...options,
-  })
-}
-
-/**
- * Créer un champ
- */
-export const createField = <ThrowOnError extends boolean = false>(
-  options: Options<CreateFieldData, ThrowOnError>
-) => {
-  return (options.client ?? _heyApiClient).post<
-    CreateFieldResponse,
-    CreateFieldError,
-    ThrowOnError
-  >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
-    url: '/api/users/{userId}/fields',
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...options?.headers,
-    },
-  })
-}
-
-/**
  * Ajouter un rôle à un utilisateur
  * Ajoute un rôle spécifique à l'utilisateur.
  */
@@ -1698,6 +1650,54 @@ export const createLanguage = <ThrowOnError extends boolean = false>(
       },
     ],
     url: '/api/languages',
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options?.headers,
+    },
+  })
+}
+
+/**
+ * Obtenir tous les champs
+ */
+export const listFields = <ThrowOnError extends boolean = false>(
+  options?: Options<ListFieldsData, ThrowOnError>
+) => {
+  return (options?.client ?? _heyApiClient).get<
+    ListFieldsResponse,
+    unknown,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/fields',
+    ...options,
+  })
+}
+
+/**
+ * Créer un champ
+ */
+export const createField = <ThrowOnError extends boolean = false>(
+  options: Options<CreateFieldData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).post<
+    CreateFieldResponse,
+    CreateFieldError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/fields',
     ...options,
     headers: {
       'Content-Type': 'application/json',

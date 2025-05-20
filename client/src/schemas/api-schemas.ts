@@ -54,8 +54,7 @@ const zTransformedProduct = zProductUpdateDto.extend({
   transformerId: z.number().int(),
 })
 
-const zProduct = z.discriminatedUnion('type', [
+export const zProduct = z.discriminatedUnion('type', [
   zHarvestProduct,
   zTransformedProduct,
 ])
-void zProduct // pour éviter un warning de ts
