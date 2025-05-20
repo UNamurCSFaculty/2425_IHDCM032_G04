@@ -11,3 +11,11 @@ export const ContactSchemaDefaultValues = {
   email: '',
   message: '',
 }
+
+export const ContratSchema = z.object({
+  quality: z.string(),
+  price: z.number(),
+  quantity: z.number(),
+  lastingMonth: z.number(),
+  lastingYear: z.number(),
+})
