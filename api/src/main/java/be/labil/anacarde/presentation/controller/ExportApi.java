@@ -46,4 +46,13 @@ public interface ExportApi {
 			@Parameter(description = "Date/heure de fin (inclus)") @RequestParam("end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
 
 			@Parameter(description = "true → ne renvoyer que les enchères terminées") @RequestParam(name = "onlyEnded", defaultValue = "false") boolean onlyEnded);
+
+	/* ------------------------------------------------------------------ */
+	/* 3. Toutes les enchères de la vue */
+	/* ------------------------------------------------------------------ */
+	@Operation(summary = "Lister toutes les enchères (aucun filtre)")
+	@GetMapping("/all")
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "Liste complète", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ExportAuctionDto.class))))})
+	ResponseEntity<List<ExportAuctionDto>> listAllAuctions();
 }

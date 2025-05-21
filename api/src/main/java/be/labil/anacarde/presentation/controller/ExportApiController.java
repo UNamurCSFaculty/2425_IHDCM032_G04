@@ -24,4 +24,9 @@ public class ExportApiController implements ExportApi {
 			LocalDateTime end, boolean onlyEnded) {
 		return ResponseEntity.ok(exportService.getAnalysesBetween(start, end, onlyEnded));
 	}
+
+	@Override
+	public ResponseEntity<List<ExportAuctionDto>> listAllAuctions() {
+		return ResponseEntity.ok(exportService.getAllAnalyses());
+	}
 }

@@ -11,6 +11,12 @@ import org.springframework.data.repository.query.Param;
 public interface ExportAuctionRepository extends Repository<ExportAuctionDto, Integer> {
 
 	/**
+	 * 0) Toutes les lignes de la vue (pas de filtre).
+	 */
+	@Query(value = "SELECT * FROM v_auction_bid_analysis", nativeQuery = true)
+	List<ExportAuctionDto> findAllView();
+
+	/**
 	 * 1) Ligne unique par ID (exemple déjà vu)
 	 */
 	@Query(value = """

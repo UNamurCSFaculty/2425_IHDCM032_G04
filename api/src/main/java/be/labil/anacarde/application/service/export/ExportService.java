@@ -9,6 +9,8 @@ import java.util.List;
  */
 public interface ExportService {
 
+	List<ExportAuctionDto> getAllAnalyses();
+
 	/**
 	 * Renvoie l’analyse complète d’une enchère.
 	 *

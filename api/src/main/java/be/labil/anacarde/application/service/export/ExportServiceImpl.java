@@ -17,6 +17,11 @@ public class ExportServiceImpl implements ExportService {
 	private final ExportAuctionRepository viewRepo;
 
 	@Override
+	public List<ExportAuctionDto> getAllAnalyses() {
+		return viewRepo.findAllView();
+	}
+
+	@Override
 	public ExportAuctionDto getAuctionById(Integer auctionId) {
 		return viewRepo.findByAuctionId(auctionId).orElseThrow(
 				() -> new ResourceNotFoundException("aucune vue pour id=" + auctionId));
