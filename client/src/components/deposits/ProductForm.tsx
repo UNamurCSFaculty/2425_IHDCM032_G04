@@ -294,10 +294,22 @@ export function ProductForm({
               name="qualityControl.qualityId"
               children={field => (
                 <field.SelectField
-                  options={qualities.map(quality => ({
-                    value: quality.id,
-                    label: quality.name,
-                  }))}
+                  options={qualities
+                    .filter(quality => {
+                      return (
+                        !productType ||
+                        (productType === ProductType.HARVEST &&
+                          quality.qualityType.name.toLowerCase() ==
+                            ProductType.HARVEST.toLowerCase()) ||
+                        (productType === ProductType.TRANSFORMED &&
+                          quality.qualityType.name.toLowerCase() ==
+                            ProductType.TRANSFORMED.toLowerCase())
+                      )
+                    })
+                    .map(quality => ({
+                      value: quality.id,
+                      label: quality.name,
+                    }))}
                   label="Qualité"
                 />
               )}

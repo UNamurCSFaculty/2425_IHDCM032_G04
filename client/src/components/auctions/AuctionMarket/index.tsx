@@ -39,7 +39,7 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import cities from '@/data/cities.json'
 import regions from '@/data/regions.json'
 import { useMediaQuery } from '@/hooks/use-mobile'
-import { formatDate } from '@/lib/utils'
+import { ProductType, formatDate } from '@/lib/utils'
 import dayjs from '@/utils/dayjs-config'
 import { formatPrice } from '@/utils/formatter'
 import {
@@ -121,10 +121,22 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
   onCityChange,
   resetFilters,
 }) => {
-  const qualityOptions = qualities.map(q => ({
-    id: q.id,
-    label: q.name,
-  }))
+  const qualityOptions = qualities
+    .filter(quality => {
+      return (
+        !productTypeId ||
+        (productTypeId === 1 &&
+          quality.qualityType.name.toLowerCase() ==
+            ProductType.HARVEST.toLowerCase()) ||
+        (productTypeId === 2 &&
+          quality.qualityType.name.toLowerCase() ==
+            ProductType.TRANSFORMED.toLowerCase())
+      )
+    })
+    .map(q => ({
+      id: q.id,
+      label: q.name,
+    }))
 
   return (
     <div>
