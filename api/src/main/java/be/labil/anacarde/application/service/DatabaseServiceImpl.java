@@ -64,6 +64,10 @@ public class DatabaseServiceImpl implements DatabaseService {
 	private static final int MAX_AUCTION_DURATION_DAYS = 60;
 	private static final int MIN_HARVEST_PRODUCT_PER_TRANSFORMED_PRODUCT = 1;
 	private static final int MAX_HARVEST_PRODUCT_PER_TRANSFORMED_PRODUCT = 5;
+	private static final int MIN_PRODUCT_50KG_BAG = 1;
+	private static final int MAX_PRODUCT_50KG_BAG = 100;
+	private static final int MIN_AUCTION_INCREMENT = 1; // kCFA
+	private static final int MAX_AUCTION_INCREMENT = 5; // kCFA
 	private static final String DEFAULT_PASSWORD = "password";
 
 	private static final Map<Class<? extends UserUpdateDto>, String> DEFAULT_EMAILS = Map.of(
@@ -558,7 +562,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 				docDto.setContentType("application/" + docDto.getExtension());
 				docDto.setOriginalFilename(
 						faker.file().fileName(null, null, docDto.getExtension(), null));
-				docDto.setSize(faker.number().numberBetween(128, 4096));
+				docDto.setSize(faker.number().numberBetween(128, 4097));
 				docDto.setStoragePath("/documents/2025/harvest_" + faker.number().digits(10) + "."
 						+ docDto.getExtension());
 				docDto.setUploadDate(generateRandomDateTimeInPast());
@@ -569,9 +573,9 @@ public class DatabaseServiceImpl implements DatabaseService {
 				QualityControlUpdateDto qc = new QualityControlUpdateDto();
 				qc.setIdentifier(faker.number().digits(10));
 				qc.setControlDate(generateRandomDateTimeInPast());
-				qc.setGranularity((float) faker.number().numberBetween(150, 450));
-				qc.setKorTest((float) faker.number().numberBetween(10, 50));
-				qc.setHumidity((float) faker.number().numberBetween(0, 100));
+				qc.setGranularity((float) faker.number().numberBetween(150, 451));
+				qc.setKorTest((float) faker.number().numberBetween(10, 51));
+				qc.setHumidity((float) faker.number().numberBetween(0, 101));
 				qc.setQualityInspectorId(inspector.getId());
 				qc.setDocumentId(document.getId());
 				qc.setQualityId(quality.getId());
@@ -583,7 +587,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 				dto.setProducerId(producer.getId());
 				dto.setStoreId(store.getId());
 				dto.setFieldId(field.getId());
-				dto.setWeightKg((double) faker.number().numberBetween(1, 100) * 50);
+				dto.setWeightKg((double) faker.number().numberBetween(MIN_PRODUCT_50KG_BAG,
+						MAX_PRODUCT_50KG_BAG + 1) * 50);
 				dto.setDeliveryDate(generateRandomDateTimeInPast());
 				dto.setQualityControlId(qualityControl.getId());
 
@@ -629,7 +634,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 				docDto.setContentType("application/" + docDto.getExtension());
 				docDto.setOriginalFilename(
 						faker.file().fileName(null, null, docDto.getExtension(), null));
-				docDto.setSize(faker.number().numberBetween(128, 4096));
+				docDto.setSize(faker.number().numberBetween(128, 4097));
 				docDto.setStoragePath("/documents/2025/transformed_" + faker.number().digits(10)
 						+ "." + docDto.getExtension());
 				docDto.setUploadDate(generateRandomDateTimeInPast());
@@ -642,9 +647,9 @@ public class DatabaseServiceImpl implements DatabaseService {
 				QualityControlUpdateDto qc = new QualityControlUpdateDto();
 				qc.setIdentifier(faker.number().digits(10));
 				qc.setControlDate(generateRandomDateTimeInPast());
-				qc.setGranularity((float) faker.number().numberBetween(150, 450));
-				qc.setKorTest((float) faker.number().numberBetween(10, 50));
-				qc.setHumidity((float) faker.number().numberBetween(0, 100));
+				qc.setGranularity((float) faker.number().numberBetween(150, 451));
+				qc.setKorTest((float) faker.number().numberBetween(10, 51));
+				qc.setHumidity((float) faker.number().numberBetween(0, 101));
 				qc.setQualityInspectorId(inspector.getId());
 				qc.setDocumentId(document.getId());
 				qc.setQualityId(quality.getId());
@@ -656,7 +661,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 				dto.setTransformerId(transformer.getId());
 				dto.setStoreId(store.getId());
 				dto.setIdentifier("TRANS-" + faker.letterify("??????").toUpperCase());
-				dto.setWeightKg((double) faker.number().numberBetween(1, 100) * 50);
+				dto.setWeightKg((double) faker.number().numberBetween(MIN_PRODUCT_50KG_BAG,
+						MAX_PRODUCT_50KG_BAG + 1) * 50);
 				dto.setDeliveryDate(generateRandomDateTimeInPast());
 				dto.setQualityControlId(qualityControl.getId());
 
@@ -764,7 +770,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 		}
 
 		String qualityName = product.getQualityControl().getQuality().getName();
-		int quantity = faker.number().numberBetween(1, 100) * 50;
+		int quantity = faker.number().numberBetween(MIN_PRODUCT_50KG_BAG, MAX_PRODUCT_50KG_BAG + 1)
+				* 50;
 		double[] range = cashewPriceRanges.getOrDefault(qualityName, new double[]{500.0, 800.0});
 		double minPrice = range[0];
 		double maxPrice = range[1];
@@ -780,7 +787,9 @@ public class DatabaseServiceImpl implements DatabaseService {
 		opt.setShowPublic(true);
 		opt.setMinPriceKg(minPrice);
 		opt.setMaxPriceKg(maxPrice);
-		opt.setMinIncrement(faker.number().numberBetween(1, 5) * 1000);
+		opt.setMinIncrement(
+				faker.number().numberBetween(MIN_AUCTION_INCREMENT, MAX_AUCTION_INCREMENT + 1)
+						* 1000);
 
 		AuctionUpdateDto auctionDto = new AuctionUpdateDto();
 		auctionDto.setProductId(product.getId());
@@ -1081,7 +1090,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 		admin.setEnabled(true);
 		admin.setRegistrationDate(generateRandomDateTimeInPast());
 		admin.setValidationDate(
-				admin.getRegistrationDate().plusDays(faker.number().numberBetween(1, 5))); // Validated
+				admin.getRegistrationDate().plusDays(faker.number().numberBetween(1, 4))); // Validated
 		admin.setPhone(faker.phoneNumber().cellPhone());
 		admin.setLanguageId(langFr.getId()); // Default to French for now
 		return admin;
@@ -1097,7 +1106,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 		producer.setAddress(createRandomAddress());
 		producer.setRegistrationDate(generateRandomDateTimeInPast());
 		producer.setValidationDate(
-				producer.getRegistrationDate().plusDays(faker.number().numberBetween(1, 10)));
+				producer.getRegistrationDate().plusDays(faker.number().numberBetween(1, 4)));
 		producer.setPhone(faker.phoneNumber().cellPhone());
 		producer.setAgriculturalIdentifier(faker.number().digits(10));
 		producer.setLanguageId(random.nextBoolean() ? langFr.getId() : langEn.getId());
@@ -1114,7 +1123,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 		transformer.setAddress(createRandomAddress());
 		transformer.setRegistrationDate(generateRandomDateTimeInPast());
 		transformer.setValidationDate(
-				transformer.getRegistrationDate().plusDays(faker.number().numberBetween(1, 10)));
+				transformer.getRegistrationDate().plusDays(faker.number().numberBetween(1, 4)));
 		transformer.setPhone(faker.phoneNumber().cellPhone());
 		transformer.setLanguageId(random.nextBoolean() ? langFr.getId() : langEn.getId());
 		return transformer;
@@ -1130,7 +1139,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 		exporter.setAddress(createRandomAddress());
 		exporter.setRegistrationDate(generateRandomDateTimeInPast());
 		exporter.setValidationDate(
-				exporter.getRegistrationDate().plusDays(faker.number().numberBetween(1, 10)));
+				exporter.getRegistrationDate().plusDays(faker.number().numberBetween(1, 4)));
 		exporter.setPhone(faker.phoneNumber().cellPhone());
 		exporter.setLanguageId(random.nextBoolean() ? langFr.getId() : langEn.getId());
 		return exporter;
@@ -1147,7 +1156,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 		carrier.setPricePerKm(randomPricePerKm());
 		carrier.setRegistrationDate(generateRandomDateTimeInPast());
 		carrier.setValidationDate(
-				carrier.getRegistrationDate().plusDays(faker.number().numberBetween(1, 10)));
+				carrier.getRegistrationDate().plusDays(faker.number().numberBetween(1, 4)));
 		carrier.setPhone(faker.phoneNumber().cellPhone());
 		carrier.setLanguageId(random.nextBoolean() ? langFr.getId() : langEn.getId());
 		return carrier;
@@ -1163,7 +1172,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 		qualityInspector.setAddress(createRandomAddress());
 		qualityInspector.setRegistrationDate(generateRandomDateTimeInPast());
 		qualityInspector.setValidationDate(qualityInspector.getRegistrationDate()
-				.plusDays(faker.number().numberBetween(1, 10)));
+				.plusDays(faker.number().numberBetween(1, 4)));
 		qualityInspector.setPhone(faker.phoneNumber().cellPhone());
 		qualityInspector.setLanguageId(random.nextBoolean() ? langFr.getId() : langEn.getId());
 		return qualityInspector;

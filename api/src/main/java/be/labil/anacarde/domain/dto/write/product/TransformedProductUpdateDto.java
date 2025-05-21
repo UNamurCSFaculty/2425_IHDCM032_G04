@@ -2,6 +2,7 @@ package be.labil.anacarde.domain.dto.write.product;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -27,5 +28,5 @@ public class TransformedProductUpdateDto extends ProductUpdateDto {
 
 	/** Produits bruts dont est issu le produit transformé. */
 	@Schema(description = "Produits bruts d'origine")
-	private List<Integer> harvestProductIds;
+	private List<Integer> harvestProductIds = new ArrayList<>();
 }
