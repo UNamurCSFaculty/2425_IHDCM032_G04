@@ -97,8 +97,8 @@ interface FiltersPanelProps {
   selectedDate: Date | null
   onDateSelect: (date: Date | null) => void
   qualities: QualityDto[]
-  quality: string
-  onQualityChange: (q: string) => void
+  qualityId: number | null
+  onQualityChange: (q: number | null) => void
   productType: ProductTypeOption
   onTypeChange: (t: ProductTypeOption) => void
   regionId: number | null
@@ -116,7 +116,7 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
   selectedDate,
   onDateSelect,
   qualities,
-  quality,
+  qualityId,
   onQualityChange,
   productType,
   onTypeChange,
@@ -127,6 +127,11 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
   resetFilters,
 }) => {
   const { t } = useTranslation()
+
+  const qualityOptions = qualities.map(q => ({
+    id: q.id,
+    label: q.name,
+  }))
 
   return (
     <div>
@@ -201,23 +206,15 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
               </SelectContent>
             </Select>
           </div>
-          <div>
-            <label htmlFor="quality-select" className="text-sm font-medium">
-              Qualité
-            </label>
-            <Select value={quality} onValueChange={v => onQualityChange(v)}>
-              <SelectTrigger id="quality-select">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {qualities.map(q => (
-                  <SelectItem key={q.id} value={q.name}>
-                    {q.name === 'All' ? 'Toutes' : q.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+
+          <VirtualizedSelect
+            id="quality-select"
+            label="Qualité"
+            placeholder="Toutes les qualités"
+            options={qualityOptions}
+            value={qualityId}
+            onChange={onQualityChange}
+          />
 
           {/* Region / City */}
           <VirtualizedSelect
@@ -310,7 +307,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
   const [search, setSearch] = useState('')
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 5_000_000])
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
-  const [quality, setQuality] = useState<string>('All')
+  const [qualityId, setQualityId] = useState<number | null>(null)
   const [productType, setProductType] = useState<ProductTypeOption>('All')
   const [regionId, setRegionId] = useState<number | null>(null)
   const [cityId, setCityId] = useState<number | null>(null)
@@ -335,10 +332,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
           dayjs(a.expirationDate).isAfter(dayjs(selectedDate).endOf('day'))
         )
           return false
-        if (
-          quality !== 'All' &&
-          a.product.qualityControl?.quality.name !== quality
-        )
+        if (qualityId && a.product.qualityControl?.quality.id !== qualityId)
           return false
         if (productType !== 'All' && a.product.type !== productType)
           return false
@@ -352,7 +346,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
       search,
       priceRange,
       selectedDate,
-      quality,
+      qualityId,
       productType,
       regionId,
       cityId,
@@ -391,14 +385,14 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
 
   useEffect(
     () => setCurrentPage(1),
-    [search, priceRange, selectedDate, quality, productType, regionId, cityId]
+    [search, priceRange, selectedDate, qualityId, productType, regionId, cityId]
   )
 
   const resetFilters = () => {
     setSearch('')
     setPriceRange([0, 5_000_000])
     setSelectedDate(null)
-    setQuality('All')
+    setQualityId(null)
     setProductType('All')
     setRegionId(null)
     setCityId(null)
@@ -523,8 +517,8 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                       selectedDate={selectedDate}
                       onDateSelect={setSelectedDate}
                       qualities={qualities}
-                      quality={quality}
-                      onQualityChange={setQuality}
+                      qualityId={qualityId}
+                      onQualityChange={setQualityId}
                       productType={productType}
                       onTypeChange={setProductType}
                       regionId={regionId}
@@ -552,8 +546,8 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
               selectedDate={selectedDate}
               onDateSelect={setSelectedDate}
               qualities={qualities}
-              quality={quality}
-              onQualityChange={setQuality}
+              qualityId={qualityId}
+              onQualityChange={setQualityId}
               productType={productType}
               onTypeChange={setProductType}
               regionId={regionId}
