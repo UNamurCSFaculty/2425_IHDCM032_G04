@@ -57,6 +57,7 @@ services:
     depends_on:
       db: { condition: service_healthy }
     environment:
+      #SPRING_PROFILES_ACTIVE: prod
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/anacarde
       SPRING_DATASOURCE_USERNAME: anacarde
       SPRING_DATASOURCE_PASSWORD: S5mhPe(+6CvWZbhj
@@ -64,6 +65,8 @@ services:
       SPRING_MAIL_PORT: 1025
     ports:
       - "8080:8080" 
+    volumes:
+      - uploads:/opt/anacarde/uploads
 
   client:
     build:
@@ -77,3 +80,4 @@ services:
 volumes:
   anacarde-database:
   mailpit-data:
+  uploads:

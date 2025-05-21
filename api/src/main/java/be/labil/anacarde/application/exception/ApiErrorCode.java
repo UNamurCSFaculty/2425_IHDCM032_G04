@@ -20,6 +20,7 @@ public enum ApiErrorCode {
 	NO_HANDLER_FOUND("no_handler_found"),
 	RESOURCE_NOT_FOUND("resource.not_found"),
 	STALE_OBJECT("stale.object"),
+	STORAGE_ERROR("storage.error"),
 	VALIDATION_ERROR("validation.error");
 
 	private final String code;

@@ -1,14 +1,15 @@
 package be.labil.anacarde.application.service;
 
 import be.labil.anacarde.application.exception.*;
+import be.labil.anacarde.application.service.storage.StorageService;
 import be.labil.anacarde.domain.dto.db.user.UserDetailDto;
 import be.labil.anacarde.domain.dto.db.user.UserListDto;
 import be.labil.anacarde.domain.dto.write.user.ProducerUpdateDto;
 import be.labil.anacarde.domain.dto.write.user.UserUpdateDto;
 import be.labil.anacarde.domain.mapper.UserDetailMapper;
 import be.labil.anacarde.domain.mapper.UserListMapper;
-import be.labil.anacarde.domain.model.Role;
-import be.labil.anacarde.domain.model.User;
+import be.labil.anacarde.domain.model.*;
+import be.labil.anacarde.infrastructure.persistence.DocumentRepository;
 import be.labil.anacarde.infrastructure.persistence.RoleRepository;
 import be.labil.anacarde.infrastructure.persistence.user.ProducerRepository;
 import be.labil.anacarde.infrastructure.persistence.user.UserRepository;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -25,20 +27,26 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Transactional
 @AllArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserDetailsService, UserService {
 
 	private final RoleRepository roleRepository;
 	private final ProducerRepository producerRepository;
 	private final UserRepository userRepository;
 	private final UserDetailMapper userDetailMapper;
+	private final StorageService storage;
+	private final GeoService geoService;
 
 	private final UserListMapper userListMapper;
 	private final PasswordEncoder bCryptPasswordEncoder;
 	private final PersistenceHelper persistenceHelper;
+
+	private final DocumentRepository docRepo;
 
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -47,7 +55,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	}
 
 	@Override
-	public UserDetailDto createUser(UserUpdateDto dto) throws BadRequestException {
+	public UserDetailDto createUser(UserUpdateDto dto, List<MultipartFile> files) {
 		dto.setPassword(bCryptPasswordEncoder.encode(dto.getPassword()));
 
 		boolean emailExists = userRepository.findByEmail(dto.getEmail()).isPresent();
@@ -78,7 +86,21 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 		}
 
 		User user = userDetailMapper.toEntity(dto);
+		City city = geoService.findCityById(user.getAddress().getCity().getId());
+		user.getAddress().setCity(city);
+		user.getAddress().setRegion(geoService.findRegionByCityId(city));
+		user = userRepository.save(user);
+		// persistenceHelper.saveAndReload(userRepository, user, User::getId);
+
+		// 2. stockage des documents
+		if (files != null && !files.isEmpty()) {
+			List<Document> saved = storage.storeAll(user, files);
+			docRepo.saveAll(saved);
+			user.getDocuments().addAll(saved);
+		}
+
 		User full = persistenceHelper.saveAndReload(userRepository, user, User::getId);
+
 		return userDetailMapper.toDto(full);
 	}
 
@@ -102,13 +124,16 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 		User existingUser = userRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé"));
 		// Mets uniquement à jour les champs non nuls du DTO
-		User updatedUser = userDetailMapper.partialUpdate(userDetailDto, existingUser);
+		User user = userDetailMapper.partialUpdate(userDetailDto, existingUser);
+		City city = geoService.findCityById(user.getAddress().getCity().getId());
+		user.getAddress().setCity(city);
+		user.getAddress().setRegion(geoService.findRegionByCityId(city));
 
 		if (userDetailDto.getPassword() != null && !userDetailDto.getPassword().isBlank()) {
-			updatedUser.setPassword(bCryptPasswordEncoder.encode(userDetailDto.getPassword()));
+			user.setPassword(bCryptPasswordEncoder.encode(userDetailDto.getPassword()));
 		}
 
-		User full = persistenceHelper.saveAndReload(userRepository, updatedUser, User::getId);
+		User full = persistenceHelper.saveAndReload(userRepository, user, User::getId);
 		return userDetailMapper.toDto(full);
 	}
 

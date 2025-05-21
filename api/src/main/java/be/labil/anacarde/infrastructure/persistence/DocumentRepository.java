@@ -2,6 +2,7 @@ package be.labil.anacarde.infrastructure.persistence;
 
 import be.labil.anacarde.domain.model.Document;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -20,4 +21,7 @@ public interface DocumentRepository extends JpaRepository<Document, Integer> {
 	 */
 	List<Document> findByUserId(Integer userId);
 
+	Optional<Document> findByIdAndUserId(Integer id, Integer ownerId);
+
+	boolean existsByIdAndUserId(Integer docId, Integer userId);
 }

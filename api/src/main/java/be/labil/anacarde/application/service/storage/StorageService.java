@@ -1,7 +1,8 @@
 package be.labil.anacarde.application.service.storage;
 
 import be.labil.anacarde.domain.model.Document;
-import java.io.IOException;
+import be.labil.anacarde.domain.model.User;
+import java.io.InputStream;
 import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,10 +12,16 @@ public interface StorageService {
 	/**
 	 * Enregistre les fichiers puis renvoie la liste d’entités {@link Document} à persister.
 	 *
-	 * @param userId
+	 * @param user
 	 *            identifiant de l’utilisateur propriétaire
 	 * @param files
 	 *            fichiers uploadés (peut être vide)
 	 */
-	List<Document> storeAll(Integer userId, List<MultipartFile> files) throws IOException;
+	List<Document> storeAll(User user, List<MultipartFile> files);
+
+	/** Retourne le flux du document (contrôle d’accès déjà fait). */
+	InputStream get(Document doc);
+
+	/** Supprime physiquement le document. */
+	void delete(Document doc);
 }
