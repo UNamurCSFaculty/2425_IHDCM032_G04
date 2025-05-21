@@ -46,6 +46,7 @@ import type {
   CreateQualityControlResponse,
   CreateQualityData,
   CreateQualityError,
+  CreateQualityResponse,
   CreateStoreData,
   CreateStoreError,
   CreateStoreResponse,
@@ -134,6 +135,7 @@ import type {
   GetQualityControlResponse,
   GetQualityData,
   GetQualityError,
+  GetQualityResponse,
   GetRegionData,
   GetRegionError,
   GetRegionResponse,
@@ -163,7 +165,7 @@ import type {
   ListProductsData,
   ListProductsResponse,
   ListQualitiesData,
-  ListQualitiesError,
+  ListQualitiesResponse,
   ListQualityControlsData,
   ListQualityControlsResponse,
   ListRegionsData,
@@ -206,6 +208,7 @@ import type {
   UpdateQualityControlResponse,
   UpdateQualityData,
   UpdateQualityError,
+  UpdateQualityResponse,
   UpdateRegionData,
   UpdateRegionError,
   UpdateRegionResponse,
@@ -604,7 +607,7 @@ export const getQuality = <ThrowOnError extends boolean = false>(
   options: Options<GetQualityData, ThrowOnError>
 ) => {
   return (options.client ?? _heyApiClient).get<
-    unknown,
+    GetQualityResponse,
     GetQualityError,
     ThrowOnError
   >({
@@ -626,7 +629,7 @@ export const updateQuality = <ThrowOnError extends boolean = false>(
   options: Options<UpdateQualityData, ThrowOnError>
 ) => {
   return (options.client ?? _heyApiClient).put<
-    unknown,
+    UpdateQualityResponse,
     UpdateQualityError,
     ThrowOnError
   >({
@@ -1450,8 +1453,8 @@ export const listQualities = <ThrowOnError extends boolean = false>(
   options?: Options<ListQualitiesData, ThrowOnError>
 ) => {
   return (options?.client ?? _heyApiClient).get<
+    ListQualitiesResponse,
     unknown,
-    ListQualitiesError,
     ThrowOnError
   >({
     security: [
@@ -1472,7 +1475,7 @@ export const createQuality = <ThrowOnError extends boolean = false>(
   options: Options<CreateQualityData, ThrowOnError>
 ) => {
   return (options.client ?? _heyApiClient).post<
-    unknown,
+    CreateQualityResponse,
     CreateQualityError,
     ThrowOnError
   >({

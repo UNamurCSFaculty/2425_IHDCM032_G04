@@ -5,7 +5,7 @@ import type {
   HarvestProductUpdateDto,
   QualityDto,
   StoreDetailDto,
-  UserDetailDto,
+  UserListDto,
 } from '@/api/generated'
 import {
   createProductMutation,
@@ -28,7 +28,7 @@ import { useTranslation } from 'react-i18next'
 import z from 'zod'
 
 interface ProductFormProps {
-  users: UserDetailDto[]
+  users: UserListDto[]
   stores: StoreDetailDto[]
   qualities: QualityDto[]
   fields: FieldDto[]

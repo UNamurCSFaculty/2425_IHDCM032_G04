@@ -1,7 +1,7 @@
 import AuctionCard from './AuctionCard'
 import AuctionMap from './AuctionMap'
 import EmptyState from './EmptyState'
-import type { AuctionDto } from '@/api/generated'
+import type { AuctionDto, QualityDto } from '@/api/generated'
 import PaginationControls from '@/components/PaginationControls'
 import VirtualizedSelect from '@/components/VirtualizedSelect'
 import AuctionDetails from '@/components/auctions/AuctionMarket/AuctionDetails'
@@ -54,19 +54,12 @@ import {
   X,
 } from 'lucide-react'
 import React, { useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 export type ViewMode = 'cards' | 'table' | 'map'
 export type UserRole = 'buyer' | 'seller'
 
 export const AUCTION_STATUS_OPEN_LABEL = 'Ouvert'
-
-export const qualityOptions = [
-  'All',
-  'Premium',
-  'Industrial',
-  'Standard',
-] as const
-export type QualityOption = (typeof qualityOptions)[number]
 
 export const productTypeOptions = [
   'All',
@@ -103,8 +96,9 @@ interface FiltersPanelProps {
   onPriceChange: (range: [number, number]) => void
   selectedDate: Date | null
   onDateSelect: (date: Date | null) => void
-  quality: QualityOption
-  onQualityChange: (q: QualityOption) => void
+  qualities: QualityDto[]
+  quality: string
+  onQualityChange: (q: string) => void
   productType: ProductTypeOption
   onTypeChange: (t: ProductTypeOption) => void
   regionId: number | null
@@ -113,6 +107,7 @@ interface FiltersPanelProps {
   onCityChange: (id: number | null) => void
   resetFilters: () => void
 }
+
 const FiltersPanel: React.FC<FiltersPanelProps> = ({
   search,
   onSearch,
@@ -120,6 +115,7 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
   onPriceChange,
   selectedDate,
   onDateSelect,
+  qualities,
   quality,
   onQualityChange,
   productType,
@@ -129,115 +125,65 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
   cityId,
   onCityChange,
   resetFilters,
-}) => (
-  <div>
-    <div className="flex justify-between items-center p-4 border-b">
-      <h3 className="font-semibold text-lg">Filtres</h3>
-      <Button variant="ghost" size="sm" onClick={resetFilters}>
-        Reset
-      </Button>
-    </div>
-    <div className="p-4">
-      <div className="space-y-6 p-4 lg:p-0">
-        {/* Search */}
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-          <Input
-            placeholder="Rechercher…"
-            className="pl-10"
-            value={search}
-            onChange={e => onSearch(e.target.value)}
-          />
-          {search && (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7"
-              onClick={() => onSearch('')}
-            >
-              <X className="size-4" />
-            </Button>
-          )}
-        </div>
+}) => {
+  const { t } = useTranslation()
 
-        {/* Price */}
-        <div className="space-y-2">
-          <div className="flex justify-between text-sm font-medium">
-            <span>Prix</span>
-            <span>
-              {formatPrice.format(priceRange[0])} –{' '}
-              {formatPrice.format(priceRange[1])}
-            </span>
-          </div>
-          <Slider
-            value={priceRange}
-            onValueChange={v => onPriceChange(v as [number, number])}
-            min={0}
-            max={5_000_000}
-            step={500}
-          />
-        </div>
-
-        {/* Date picker */}
-        <div className="space-y-2">
-          <label
-            htmlFor="expiration-date-picker"
-            className="text-sm font-medium"
-          >
-            Expire avant
-          </label>
-          <Popover>
-            <PopoverTrigger asChild>
+  return (
+    <div>
+      <div className="flex justify-between items-center p-4 border-b">
+        <h3 className="font-semibold text-lg">Filtres</h3>
+        <Button variant="ghost" size="sm" onClick={resetFilters}>
+          Reset
+        </Button>
+      </div>
+      <div className="p-4">
+        <div className="space-y-6 p-4 lg:p-0">
+          {/* Search */}
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+            <Input
+              placeholder="Rechercher…"
+              className="pl-10"
+              value={search}
+              onChange={e => onSearch(e.target.value)}
+            />
+            {search && (
               <Button
-                id="expiration-date-picker"
-                variant="outline"
-                className="w-full justify-between"
+                variant="ghost"
+                size="icon"
+                className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7"
+                onClick={() => onSearch('')}
               >
-                {selectedDate
-                  ? formatDate(selectedDate.toISOString())
-                  : 'Choisir…'}
-                <ChevronDown className="size-4 opacity-50" />
+                <X className="size-4" />
               </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-              <Calendar
-                mode="single"
-                selected={selectedDate ?? undefined}
-                onSelect={d => onDateSelect(d ?? null)}
-                disabled={d => d < dayjs().startOf('day').toDate()}
-              />
-            </PopoverContent>
-          </Popover>
-        </div>
-
-        {/* Quality / Type */}
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label htmlFor="quality-select" className="text-sm font-medium">
-              Qualité
-            </label>
-            <Select
-              value={quality}
-              onValueChange={v => onQualityChange(v as QualityOption)}
-            >
-              <SelectTrigger id="quality-select">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {qualityOptions.map(q => (
-                  <SelectItem key={q} value={q}>
-                    {q === 'All' ? 'Toutes' : q}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            )}
           </div>
+
+          {/* Price */}
+          <div className="space-y-2">
+            <div className="flex justify-between text-sm font-medium">
+              <span>Prix</span>
+              <span>
+                {formatPrice.format(priceRange[0])} –{' '}
+                {formatPrice.format(priceRange[1])}
+              </span>
+            </div>
+            <Slider
+              value={priceRange}
+              onValueChange={v => onPriceChange(v as [number, number])}
+              min={0}
+              max={5_000_000}
+              step={500}
+            />
+          </div>
+
+          {/* Quality / Type */}
           <div>
             <label
               htmlFor="product-type-select"
               className="text-sm font-medium"
             >
-              Type
+              Marchandise
             </label>
             <Select
               value={productType}
@@ -247,41 +193,91 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {productTypeOptions.map(t => (
-                  <SelectItem key={t} value={t}>
-                    {t === 'All' ? 'Tous' : t}
+                {productTypeOptions.map(type => (
+                  <SelectItem key={type} value={type}>
+                    {type === 'All' ? 'Tous' : t('database.' + type)}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
-        </div>
+          <div>
+            <label htmlFor="quality-select" className="text-sm font-medium">
+              Qualité
+            </label>
+            <Select value={quality} onValueChange={v => onQualityChange(v)}>
+              <SelectTrigger id="quality-select">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {qualities.map(q => (
+                  <SelectItem key={q.id} value={q.name}>
+                    {q.name === 'All' ? 'Toutes' : q.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
 
-        {/* Region / City */}
-        <VirtualizedSelect
-          id="region-select"
-          label="Région"
-          placeholder="Toutes les régions"
-          options={regionOptions}
-          value={regionId}
-          onChange={onRegionChange}
-        />
-        <VirtualizedSelect
-          id="city-select"
-          label="Ville"
-          placeholder="Toutes les villes"
-          options={cityOptions}
-          value={cityId}
-          onChange={onCityChange}
-        />
+          {/* Region / City */}
+          <VirtualizedSelect
+            id="region-select"
+            label="Région"
+            placeholder="Toutes les régions"
+            options={regionOptions}
+            value={regionId}
+            onChange={onRegionChange}
+          />
+          <VirtualizedSelect
+            id="city-select"
+            label="Ville"
+            placeholder="Toutes les villes"
+            options={cityOptions}
+            value={cityId}
+            onChange={onCityChange}
+          />
+
+          {/* Date picker */}
+          <div className="space-y-2">
+            <label
+              htmlFor="expiration-date-picker"
+              className="text-sm font-medium"
+            >
+              Expire avant
+            </label>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  id="expiration-date-picker"
+                  variant="outline"
+                  className="w-full justify-between"
+                >
+                  {selectedDate
+                    ? formatDate(selectedDate.toISOString())
+                    : 'Choisir…'}
+                  <ChevronDown className="size-4 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={selectedDate ?? undefined}
+                  onSelect={d => onDateSelect(d ?? null)}
+                  disabled={d => d < dayjs().startOf('day').toDate()}
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-)
+  )
+}
 
 // ------------------------------------- Main Component -------------------------------------
 interface MarketplaceProps {
   auctions: AuctionDto[]
+  qualities: QualityDto[]
   userRole: UserRole
   onMakeBid?: (id: number) => void
   onBuyNow?: (id: number) => void
@@ -295,6 +291,7 @@ interface MarketplaceProps {
 
 const AuctionMarketplace: React.FC<MarketplaceProps> = ({
   auctions,
+  qualities,
   userRole,
   onMakeBid,
   onBuyNow,
@@ -313,7 +310,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
   const [search, setSearch] = useState('')
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 5_000_000])
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
-  const [quality, setQuality] = useState<QualityOption>('All')
+  const [quality, setQuality] = useState<string>('All')
   const [productType, setProductType] = useState<ProductTypeOption>('All')
   const [regionId, setRegionId] = useState<number | null>(null)
   const [cityId, setCityId] = useState<number | null>(null)
@@ -525,6 +522,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                       onPriceChange={setPriceRange}
                       selectedDate={selectedDate}
                       onDateSelect={setSelectedDate}
+                      qualities={qualities}
                       quality={quality}
                       onQualityChange={setQuality}
                       productType={productType}
@@ -553,6 +551,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
               onPriceChange={setPriceRange}
               selectedDate={selectedDate}
               onDateSelect={setSelectedDate}
+              qualities={qualities}
               quality={quality}
               onQualityChange={setQuality}
               productType={productType}

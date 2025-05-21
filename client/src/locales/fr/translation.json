@@ -166,8 +166,8 @@
     "required": "Ce champ est requis"
   },
   "database": {
-    "harvest": "noix de cajou",
-    "transformed": "amandes",
+    "harvest": "Brut",
+    "transformed": "Transformé",
     "AdminListDto": "admin",
     "ProducerListDto": "producteur",
     "TransformerListDto": "transformateur",

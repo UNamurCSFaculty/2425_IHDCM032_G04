@@ -702,29 +702,6 @@ export type QualityUpdateDto = {
   qualityTypeId: number
 }
 
-export type ApiError = {
-  /**
-   * human-readable error message
-   */
-  message?: string
-  errors?: Array<ApiErrorErrors>
-}
-
-export type ApiErrorErrors = {
-  /**
-   * For input validation errors, identifies where in the  JSON request body the error occurred.
-   */
-  path?: string
-  /**
-   * Human-readable error message.
-   */
-  message?: string
-  /**
-   * Code indicating error type.
-   */
-  errorCode?: string
-}
-
 /**
  * Objet de transfert de données pour les produits récoltés.
  */
@@ -1194,6 +1171,29 @@ export type BidUpdateDto = {
    * Statut de l'offre
    */
   statusId?: number
+}
+
+export type ApiError = {
+  /**
+   * human-readable error message
+   */
+  message?: string
+  errors?: Array<ApiErrorErrors>
+}
+
+export type ApiErrorErrors = {
+  /**
+   * For input validation errors, identifies where in the  JSON request body the error occurred.
+   */
+  path?: string
+  /**
+   * Human-readable error message.
+   */
+  message?: string
+  /**
+   * Code indicating error type.
+   */
+  errorCode?: string
 }
 
 /**
@@ -1918,27 +1918,21 @@ export type GetQualityData = {
 
 export type GetQualityErrors = {
   /**
-   * Unauthorized
-   */
-  401: ApiError
-  /**
-   * Forbidden
-   */
-  403: ApiError
-  /**
    * Not Found
    */
-  404: ApiError
+  404: ApiErrorResponse
 }
 
 export type GetQualityError = GetQualityErrors[keyof GetQualityErrors]
 
 export type GetQualityResponses = {
   /**
-   * Success
+   * OK
    */
-  200: unknown
+  200: QualityDto
 }
+
+export type GetQualityResponse = GetQualityResponses[keyof GetQualityResponses]
 
 export type UpdateQualityData = {
   body: QualityUpdateDto
@@ -1956,29 +1950,24 @@ export type UpdateQualityErrors = {
   /**
    * Bad Request
    */
-  400: ApiError
+  400: ApiErrorResponse
   /**
-   * Unauthorized
+   * Conflict
    */
-  401: ApiError
-  /**
-   * Forbidden
-   */
-  403: ApiError
-  /**
-   * Not Found
-   */
-  404: ApiError
+  409: ApiErrorResponse
 }
 
 export type UpdateQualityError = UpdateQualityErrors[keyof UpdateQualityErrors]
 
 export type UpdateQualityResponses = {
   /**
-   * Updated successfully
+   * Created
    */
-  200: unknown
+  201: QualityDto
 }
+
+export type UpdateQualityResponse =
+  UpdateQualityResponses[keyof UpdateQualityResponses]
 
 export type DeleteProductData = {
   body?: never
@@ -3106,29 +3095,15 @@ export type ListQualitiesData = {
   url: '/api/qualities'
 }
 
-export type ListQualitiesErrors = {
-  /**
-   * Unauthorized
-   */
-  401: ApiError
-  /**
-   * Forbidden
-   */
-  403: ApiError
-  /**
-   * Not Found
-   */
-  404: ApiError
-}
-
-export type ListQualitiesError = ListQualitiesErrors[keyof ListQualitiesErrors]
-
 export type ListQualitiesResponses = {
   /**
-   * Success
+   * Liste récupérée avec succès
    */
-  200: unknown
+  200: Array<QualityDto>
 }
+
+export type ListQualitiesResponse =
+  ListQualitiesResponses[keyof ListQualitiesResponses]
 
 export type CreateQualityData = {
   body: QualityUpdateDto
@@ -3141,15 +3116,11 @@ export type CreateQualityErrors = {
   /**
    * Bad Request
    */
-  400: ApiError
+  400: ApiErrorResponse
   /**
-   * Unauthorized
+   * Conflict
    */
-  401: ApiError
-  /**
-   * Forbidden
-   */
-  403: ApiError
+  409: ApiErrorResponse
 }
 
 export type CreateQualityError = CreateQualityErrors[keyof CreateQualityErrors]
@@ -3158,8 +3129,11 @@ export type CreateQualityResponses = {
   /**
    * Created
    */
-  201: unknown
+  201: QualityDto
 }
+
+export type CreateQualityResponse =
+  CreateQualityResponses[keyof CreateQualityResponses]
 
 export type ListProductsData = {
   body?: never

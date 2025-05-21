@@ -29,6 +29,7 @@ import {
   UserCircle2,
 } from 'lucide-react'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 
 export type CardLayout = 'grid' | 'row'
 export type UserRole = 'buyer' | 'seller'
@@ -48,6 +49,8 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
   isDetail = false,
   onDetails,
 }) => {
+  const { t } = useTranslation()
+
   const bestBid = auction.bids.reduce(
     (max, b) => (b.amount > max ? b.amount : max),
     0
@@ -124,8 +127,7 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
     >
       <CardHeader className="pb-2">
         <CardTitle className="text-base font-semibold flex items-center gap-2 truncate">
-          {auction.product.type === 'harvest' ? 'Brut' : 'Transformé'} · lot{' '}
-          {auction.product.id}
+          {t('database.' + auction.product.type)} · lot {auction.product.id}
           <Badge
             variant={auction.bids.length ? 'default' : 'outline'}
             className="ml-auto shrink-0"

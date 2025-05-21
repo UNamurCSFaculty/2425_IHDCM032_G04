@@ -296,17 +296,6 @@ export const zQualityUpdateDto = z.object({
   qualityTypeId: z.number().int(),
 })
 
-export const zApiErrorErrors = z.object({
-  path: z.string().optional(),
-  message: z.string().optional(),
-  errorCode: z.string().optional(),
-})
-
-export const zApiError = z.object({
-  message: z.string().optional(),
-  errors: z.array(zApiErrorErrors).optional(),
-})
-
 export const zProductUpdateDto = z.object({
   id: z.number().int().readonly(),
   deliveryDate: z.string().datetime().optional(),
@@ -484,6 +473,17 @@ export const zBidUpdateDto = z.object({
   statusId: z.number().int().optional(),
 })
 
+export const zApiErrorErrors = z.object({
+  path: z.string().optional(),
+  message: z.string().optional(),
+  errorCode: z.string().optional(),
+})
+
+export const zApiError = z.object({
+  message: z.string().optional(),
+  errors: z.array(zApiErrorErrors).optional(),
+})
+
 export const zContactRequestDto = z.object({
   name: z.string().min(1),
   email: z.string().min(1),
@@ -614,6 +614,10 @@ export const zUpdateQualityControlResponse = zQualityControlDto
 
 export const zDeleteQualityResponse = z.union([z.unknown(), z.void()])
 
+export const zGetQualityResponse = zQualityDto
+
+export const zUpdateQualityResponse = zQualityDto
+
 export const zDeleteProductResponse = z.union([z.unknown(), z.void()])
 
 export const zGetProductResponse = zProductDto
@@ -677,6 +681,10 @@ export const zCreateStoreResponse = zStoreDetailDto
 export const zListQualityControlsResponse = z.array(zQualityControlDto)
 
 export const zCreateQualityControlResponse = zQualityControlDto
+
+export const zListQualitiesResponse = z.array(zQualityDto)
+
+export const zCreateQualityResponse = zQualityDto
 
 export const zListProductsResponse = z.array(zProductDto)
 

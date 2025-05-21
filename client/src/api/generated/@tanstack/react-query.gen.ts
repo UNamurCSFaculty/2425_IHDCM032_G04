@@ -129,6 +129,7 @@ import type {
   CreateQualityControlResponse,
   CreateQualityData,
   CreateQualityError,
+  CreateQualityResponse,
   CreateStoreData,
   CreateStoreError,
   CreateStoreResponse,
@@ -242,6 +243,7 @@ import type {
   UpdateQualityControlResponse,
   UpdateQualityData,
   UpdateQualityError,
+  UpdateQualityResponse,
   UpdateRegionData,
   UpdateRegionError,
   UpdateRegionResponse,
@@ -651,12 +653,12 @@ export const getQualityOptions = (options: Options<GetQualityData>) => {
 export const updateQualityMutation = (
   options?: Partial<Options<UpdateQualityData>>
 ): UseMutationOptions<
-  unknown,
+  UpdateQualityResponse,
   UpdateQualityError,
   Options<UpdateQualityData>
 > => {
   const mutationOptions: UseMutationOptions<
-    unknown,
+    UpdateQualityResponse,
     UpdateQualityError,
     Options<UpdateQualityData>
   > = {
@@ -1545,12 +1547,12 @@ export const createQualityOptions = (options: Options<CreateQualityData>) => {
 export const createQualityMutation = (
   options?: Partial<Options<CreateQualityData>>
 ): UseMutationOptions<
-  unknown,
+  CreateQualityResponse,
   CreateQualityError,
   Options<CreateQualityData>
 > => {
   const mutationOptions: UseMutationOptions<
-    unknown,
+    CreateQualityResponse,
     CreateQualityError,
     Options<CreateQualityData>
   > = {
