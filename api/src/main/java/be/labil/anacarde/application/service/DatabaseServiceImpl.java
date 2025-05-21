@@ -296,12 +296,11 @@ public class DatabaseServiceImpl implements DatabaseService {
 			          a.strategy_id, ast.name,
 			          a.min_price_kg, a.max_price_kg, a.buy_now_price, a.show_public, a.min_increment,
 			          p.id, p.weight_kg, p.delivery_date, p.transformed_product_id,
-			          qc.quality_inspector_id, q.name, qt.name,                               -- NEW
+			          qc.quality_inspector_id, q.name, qt.name,
 			          st.id, st.name, su.first_name, su.last_name, stc.name, str.name,
 			          tr.id, u.first_name, u.last_name, sc.name, sr.name, co.name,
 			          w.winning_bid_amount, w.winner_trader_id,
 			          wu.first_name, wu.last_name, wc.name, wr.name;
-
 			""";
 
 	@Override
