@@ -1,40 +1,36 @@
 package be.labil.anacarde.infrastructure.persistence.view;
 
-import be.labil.anacarde.domain.dto.db.view.ExportAuctionDto;
+import be.labil.anacarde.domain.model.ExportAuction;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
 
-public interface ExportAuctionRepository extends Repository<ExportAuctionDto, Integer> {
+/**
+ * Accès en lecture seule à la vue SQL <code>v_auction_bid_analysis</code>. Les requêtes natives
+ * retournent l’entité <code>ExportAuction</code>.
+ */
+public interface ExportAuctionRepository extends JpaRepository<ExportAuction, Integer> {
 
-	/**
-	 * 0) Toutes les lignes de la vue (pas de filtre).
-	 */
+	/** Toutes les lignes de la vue, sans filtre */
 	@Query(value = "SELECT * FROM v_auction_bid_analysis", nativeQuery = true)
-	List<ExportAuctionDto> findAllView();
+	List<ExportAuction> findAllView();
 
-	/**
-	 * 1) Ligne unique par ID (exemple déjà vu)
-	 */
 	@Query(value = """
 			SELECT *
 			FROM   v_auction_bid_analysis
 			WHERE  auction_id = :id
 			""", nativeQuery = true)
-	Optional<ExportAuctionDto> findByAuctionId(@Param("id") Integer id);
+	Optional<ExportAuction> findByAuctionId(@Param("id") Integer id);
 
-	/**
-	 * 2) Intervalle de dates + filtre « terminées » optionnel
-	 */
 	@Query(value = """
 			SELECT *
 			FROM   v_auction_bid_analysis
 			WHERE  auction_start_date BETWEEN :start AND :end
 			  AND  (:onlyEnded = false OR auction_ended = true)
 			""", nativeQuery = true)
-	List<ExportAuctionDto> findAllByStartDateBetween(@Param("start") LocalDateTime start,
+	List<ExportAuction> findAllByStartDateBetween(@Param("start") LocalDateTime start,
 			@Param("end") LocalDateTime end, @Param("onlyEnded") boolean onlyEnded);
 }
