@@ -58,7 +58,6 @@ public class DatabaseServiceImpl implements DatabaseService {
 	private static final int MAX_PRODUCTS_PER_PRODUCER = 10;
 	private static final int MIN_PRODUCTS_PER_TRANSFORMER = 5;
 	private static final int MAX_PRODUCTS_PER_TRANSFORMER = 15;
-	private static final int NUM_AUCTIONS = 1000;
 	private static final int MIN_BIDS_PER_FINISHED_AUCTION = 0;
 	private static final int MAX_BIDS_PER_FINISHED_AUCTION = 10;
 	private static final int MIN_AUCTION_DURATION_DAYS = 15;
