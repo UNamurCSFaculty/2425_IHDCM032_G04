@@ -1,7 +1,6 @@
 package be.labil.anacarde.application.service.export;
 
 import be.labil.anacarde.domain.dto.db.view.ExportAuctionDto;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -10,21 +9,25 @@ import java.util.List;
  */
 public interface ExportService {
 
-    /**
-     * Renvoie l’analyse complète d’une enchère.
-     *
-     * @param auctionId id de l’enchère
-     * @return DTO projeté sur la vue
-     */
-    ExportAuctionDto getAuctionById(Integer auctionId);
+	/**
+	 * Renvoie l’analyse complète d’une enchère.
+	 *
+	 * @param auctionId
+	 *            id de l’enchère
+	 * @return DTO projeté sur la vue
+	 */
+	ExportAuctionDto getAuctionById(Integer auctionId);
 
-    /**
-     * Renvoie toutes les enchères démarrées entre {@code start} et {@code end}.
-     * @param start       borne incluse
-     * @param end         borne incluse
-     * @param onlyEnded   {@code true} → ne garder que les enchères terminées
-     */
-    List<ExportAuctionDto> getAnalysesBetween(LocalDateTime start,
-                                              LocalDateTime end,
-                                              boolean onlyEnded);
+	/**
+	 * Renvoie toutes les enchères démarrées entre {@code start} et {@code end}.
+	 * 
+	 * @param start
+	 *            borne incluse
+	 * @param end
+	 *            borne incluse
+	 * @param onlyEnded
+	 *            {@code true} → ne garder que les enchères terminées
+	 */
+	List<ExportAuctionDto> getAnalysesBetween(LocalDateTime start, LocalDateTime end,
+			boolean onlyEnded);
 }
