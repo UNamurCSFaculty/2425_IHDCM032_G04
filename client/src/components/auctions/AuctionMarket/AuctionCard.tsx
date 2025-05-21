@@ -70,7 +70,7 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
     return (
       <TableRow className="h-10 hover:bg-muted/50" key={auction.id}>
         <TableCell className="font-medium truncate">
-          {auction.product.type === 'harvest' ? 'Récolte' : 'Transformé'}
+          {t('database.' + auction.product.type)}
         </TableCell>
         <TableCell>
           <CountdownTimer endDate={expires.toDate()} />

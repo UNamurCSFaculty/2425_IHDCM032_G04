@@ -3,7 +3,7 @@ import AuctionMap from './AuctionMap'
 import EmptyState from './EmptyState'
 import type { AuctionDto, QualityDto } from '@/api/generated'
 import PaginationControls from '@/components/PaginationControls'
-import VirtualizedSelect from '@/components/VirtualizedSelect'
+import VirtualizedSelect, { type Option } from '@/components/VirtualizedSelect'
 import AuctionDetails from '@/components/auctions/AuctionMarket/AuctionDetails'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
@@ -39,7 +39,7 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import cities from '@/data/cities.json'
 import regions from '@/data/regions.json'
 import { useMediaQuery } from '@/hooks/use-mobile'
-import { ProductType, formatDate } from '@/lib/utils'
+import { formatDate } from '@/lib/utils'
 import dayjs from '@/utils/dayjs-config'
 import { formatPrice } from '@/utils/formatter'
 import {
@@ -60,13 +60,6 @@ export type ViewMode = 'cards' | 'table' | 'map'
 export type UserRole = 'buyer' | 'seller'
 
 export const AUCTION_STATUS_OPEN_LABEL = 'Ouvert'
-
-export const productTypeOptions = [
-  'All',
-  ProductType.HARVEST,
-  ProductType.TRANSFORMED,
-] as const
-export type ProductTypeOption = (typeof productTypeOptions)[number]
 
 export const sortOptions = [
   { value: 'endDate-asc', label: 'Expiration ⬆' },
@@ -99,8 +92,9 @@ interface FiltersPanelProps {
   qualities: QualityDto[]
   qualityId: number | null
   onQualityChange: (q: number | null) => void
-  productType: ProductTypeOption
-  onTypeChange: (t: ProductTypeOption) => void
+  productTypes: Option[]
+  productTypeId: number | null
+  onTypeChange: (t: number | null) => void
   regionId: number | null
   onRegionChange: (id: number | null) => void
   cityId: number | null
@@ -118,7 +112,8 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
   qualities,
   qualityId,
   onQualityChange,
-  productType,
+  productTypes,
+  productTypeId,
   onTypeChange,
   regionId,
   onRegionChange,
@@ -126,8 +121,6 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
   onCityChange,
   resetFilters,
 }) => {
-  const { t } = useTranslation()
-
   const qualityOptions = qualities.map(q => ({
     id: q.id,
     label: q.name,
@@ -182,31 +175,17 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
             />
           </div>
 
-          {/* Quality / Type */}
-          <div>
-            <label
-              htmlFor="product-type-select"
-              className="text-sm font-medium"
-            >
-              Marchandise
-            </label>
-            <Select
-              value={productType}
-              onValueChange={v => onTypeChange(v as ProductTypeOption)}
-            >
-              <SelectTrigger id="product-type-select">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {productTypeOptions.map(type => (
-                  <SelectItem key={type} value={type}>
-                    {type === 'All' ? 'Tous' : t('database.' + type)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          {/* Type */}
+          <VirtualizedSelect
+            id="product-type-select"
+            label="Marchandise"
+            placeholder="Tous les types"
+            options={productTypes}
+            value={productTypeId}
+            onChange={onTypeChange}
+          />
 
+          {/* Quality */}
           <VirtualizedSelect
             id="quality-select"
             label="Qualité"
@@ -275,6 +254,7 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
 interface MarketplaceProps {
   auctions: AuctionDto[]
   qualities: QualityDto[]
+  productTypes: Option[]
   userRole: UserRole
   onMakeBid?: (id: number) => void
   onBuyNow?: (id: number) => void
@@ -289,6 +269,7 @@ interface MarketplaceProps {
 const AuctionMarketplace: React.FC<MarketplaceProps> = ({
   auctions,
   qualities,
+  productTypes,
   userRole,
   onMakeBid,
   onBuyNow,
@@ -308,12 +289,14 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 5_000_000])
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [qualityId, setQualityId] = useState<number | null>(null)
-  const [productType, setProductType] = useState<ProductTypeOption>('All')
+  const [productTypeId, setProductTypeId] = useState<number | null>(null)
   const [regionId, setRegionId] = useState<number | null>(null)
   const [cityId, setCityId] = useState<number | null>(null)
   const [sort, setSort] = useState<SortOptionValue>('endDate-asc')
 
   useEffect(() => setCityId(null), [regionId])
+
+  const { t } = useTranslation()
 
   // Filtering & Sorting
   const filtered = useMemo(
@@ -334,20 +317,27 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
           return false
         if (qualityId && a.product.qualityControl?.quality.id !== qualityId)
           return false
-        if (productType !== 'All' && a.product.type !== productType)
+        if (
+          productTypeId &&
+          t('database.' + a.product.type) !==
+            productTypes[productTypeId - 1].label
+        )
           return false
         if (regionId && a.product.store.address.regionId !== regionId)
           return false
         if (cityId && a.product.store.address.cityId !== cityId) return false
+
         return a.status.name === AUCTION_STATUS_OPEN_LABEL
       }),
     [
       auctions,
+      productTypes,
+      t,
       search,
       priceRange,
       selectedDate,
       qualityId,
-      productType,
+      productTypeId,
       regionId,
       cityId,
     ]
@@ -385,7 +375,15 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
 
   useEffect(
     () => setCurrentPage(1),
-    [search, priceRange, selectedDate, qualityId, productType, regionId, cityId]
+    [
+      search,
+      priceRange,
+      selectedDate,
+      qualityId,
+      productTypeId,
+      regionId,
+      cityId,
+    ]
   )
 
   const resetFilters = () => {
@@ -393,7 +391,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
     setPriceRange([0, 5_000_000])
     setSelectedDate(null)
     setQualityId(null)
-    setProductType('All')
+    setProductTypeId(null)
     setRegionId(null)
     setCityId(null)
   }
@@ -519,8 +517,9 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                       qualities={qualities}
                       qualityId={qualityId}
                       onQualityChange={setQualityId}
-                      productType={productType}
-                      onTypeChange={setProductType}
+                      productTypes={productTypes}
+                      productTypeId={productTypeId}
+                      onTypeChange={setProductTypeId}
                       regionId={regionId}
                       onRegionChange={setRegionId}
                       cityId={cityId}
@@ -548,8 +547,9 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
               qualities={qualities}
               qualityId={qualityId}
               onQualityChange={setQualityId}
-              productType={productType}
-              onTypeChange={setProductType}
+              productTypes={productTypes}
+              productTypeId={productTypeId}
+              onTypeChange={setProductTypeId}
               regionId={regionId}
               onRegionChange={setRegionId}
               cityId={cityId}
