@@ -2,6 +2,7 @@ package be.labil.anacarde.domain.dto.write.product;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -23,4 +24,8 @@ public class TransformedProductUpdateDto extends ProductUpdateDto {
 	/** Transformateur associé au produit transformé. */
 	@Schema(description = "Transformateur associé", requiredMode = Schema.RequiredMode.REQUIRED)
 	private Integer transformerId;
+
+	/** Produits bruts dont est issu le produit transformé. */
+	@Schema(description = "Produits bruts d'origine")
+	private List<Integer> harvestProductIds;
 }

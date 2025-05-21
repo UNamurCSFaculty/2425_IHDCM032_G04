@@ -26,4 +26,8 @@ public class HarvestProductDto extends ProductDto {
 	@NotNull(message = "Le champ est requis")
 	@Schema(description = "Champ associé au produit récolté", requiredMode = Schema.RequiredMode.REQUIRED)
 	private FieldDto field;
+
+	/** Produit transformé issu du produit brut. */
+	@Schema(description = "Produits transformé correspondant")
+	private TransformedProductDto transformedProduct;
 }

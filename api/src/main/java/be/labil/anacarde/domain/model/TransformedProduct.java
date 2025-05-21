@@ -1,6 +1,7 @@
 package be.labil.anacarde.domain.model;
 
 import jakarta.persistence.*;
+import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,4 +21,7 @@ public class TransformedProduct extends Product {
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "transformer_id", nullable = false)
 	private Transformer transformer;
+
+	@OneToMany(mappedBy = "transformedProduct", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<HarvestProduct> harvestProducts;
 }

@@ -61,6 +61,10 @@ public class DatabaseServiceImpl implements DatabaseService {
 	private static final int NUM_AUCTIONS = 1000;
 	private static final int MIN_BIDS_PER_FINISHED_AUCTION = 0;
 	private static final int MAX_BIDS_PER_FINISHED_AUCTION = 10;
+	private static final int MIN_AUCTION_DURATION_DAYS = 15;
+	private static final int MAX_AUCTION_DURATION_DAYS = 60;
+	private static final int MIN_HARVEST_PRODUCT_PER_TRANSFORMED_PRODUCT = 1;
+	private static final int MAX_HARVEST_PRODUCT_PER_TRANSFORMED_PRODUCT = 5;
 	private static final String DEFAULT_PASSWORD = "password";
 
 	private static final Map<Class<? extends UserUpdateDto>, String> DEFAULT_EMAILS = Map.of(
@@ -105,16 +109,14 @@ public class DatabaseServiceImpl implements DatabaseService {
 
 	// --- Internal State ---
 	private final Faker faker = new Faker(Locale.of("fr")); // Use French Faker locale
-	private final GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326); // SRID
-																										// for//
-																										// WGS84
+	private final GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
+
 	private final Random random = new Random();
 	private final QualityTypeRepository qualityTypeRepository;
 	private final DocumentMapper documentMapper;
 	private final QualityControlMapper qualityControlMapper;
 	private final QualityMapper qualityMapper;
 	private LocalDateTime generationTime; // Timestamp when generation starts
-	// juste après 'private final Random random = new Random();'
 	private final Set<String> generatedEmails = new HashSet<>();
 	private final List<AuctionDto> createdAuctions = new ArrayList<>(); // Reset list for this run
 	private static final double[] regionWeights = {0.006, // ID 1
@@ -161,6 +163,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 	private List<ProductDto> createdProducts = new ArrayList<>();
 	private List<QualityDto> anacardeQualities = new ArrayList<>();
 	private List<QualityDto> amandeQualities = new ArrayList<>();
+	private final Map<Integer, List<Integer>> transformerWonHarvestProductsMap = new HashMap<>();
+	private final Set<Integer> auctionsWithBids = new HashSet<>();
 
 	@Override
 	public boolean isInitialized() {
@@ -198,6 +202,9 @@ public class DatabaseServiceImpl implements DatabaseService {
 		languageRepository.deleteAllInBatch();
 	}
 
+	/* ================================================================ */
+	/* ================ Create DataBase =============================== */
+	/* ================================================================ */
 	@Override
 	@Transactional
 	public void createDatabase() throws IOException {
@@ -211,15 +218,24 @@ public class DatabaseServiceImpl implements DatabaseService {
 		createCooperativesAndAssignMembers();
 		createStores();
 		createFields();
-		createProducts();
-		createAuctions();
+
+		// 1. Harvest products → auctions → bids (remplit la map)
+		createHarvestProducts();
+		createAuctions(false); // sur récoltes uniquement
+		createBidsForFinishedAuctions();
+
+		// 2. Transformed products (basés sur les récoltes gagnées) → auctions → bids
+		createTransformedProducts(); // utilise la map
+		createAuctions(true); // onlyTransformed = true
 		createBidsForFinishedAuctions();
 
 		entityManager.flush();
 		log.info("Database creation complete for {} target year.", TARGET_YEAR);
 	}
 
-	// --- Step 1: Base Lookups ---
+	/* ================================================================ */
+	/* ================ Step 1: Base Lookups ========================== */
+	/* ================================================================ */
 	private void createBaseLookups() {
 		log.debug("Creating base lookups...");
 		// Languages
@@ -300,7 +316,9 @@ public class DatabaseServiceImpl implements DatabaseService {
 		}
 	}
 
-	// --- Step 2: Regions and Cities ---
+	/* ================================================================ */
+	/* ================ Step 2: Regions and Cities ==================== */
+	/* ================================================================ */
 	private void createRegionsAndCities() throws IOException {
 
 		/* ---------- 1) Régions ---------- */
@@ -317,7 +335,9 @@ public class DatabaseServiceImpl implements DatabaseService {
 		}
 	}
 
-	// --- Step 3: Users ---
+	/* ================================================================ */
+	/* ================ Step 3: Users ================================= */
+	/* ================================================================ */
 	private void createUsers() {
 
 		createdAdmins = createUsersOfType(AdminUpdateDto.class, this::createRandomAdminDto,
@@ -384,7 +404,9 @@ public class DatabaseServiceImpl implements DatabaseService {
 		return list;
 	}
 
-	// --- Step 4: Cooperatives ---
+	/* ================================================================ */
+	/* ================ Step 4: Cooperatives ========================== */
+	/* ================================================================ */
 	private void createCooperativesAndAssignMembers() {
 		if (createdProducers.isEmpty()) {
 			log.warn("No producers available to create cooperatives.");
@@ -429,8 +451,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 
 			for (int j = 0; j < numMembers; j++) {
 				ProducerDetailDto memberDto = membersPool.removeFirst(); // retire du pool pour
-																			// éviter
-																			// doublons
+																			// éviter doublons
 				userRepository.findById(memberDto.getId()).ifPresent(user -> {
 					if (user instanceof Producer p) {
 						p.setCooperative(
@@ -445,7 +466,9 @@ public class DatabaseServiceImpl implements DatabaseService {
 		log.info("Cooperatives created, presidents and members assigned.");
 	}
 
-	// --- Step 5: Stores ---
+	/* ================================================================ */
+	/* ================ Step 5: Stores ================================ */
+	/* ================================================================ */
 	private void createStores() {
 		if (createdProducers.isEmpty() && createdTransformers.isEmpty()) {
 			log.warn("No Producers or Transformers available to manage stores.");
@@ -472,7 +495,9 @@ public class DatabaseServiceImpl implements DatabaseService {
 		log.info("Stores created.");
 	}
 
-	// --- Step 6: Fields ---
+	/* ================================================================ */
+	/* ================ Step 6: Fields ================================ */
+	/* ================================================================ */
 	private void createFields() {
 		if (createdProducers.isEmpty()) {
 			log.warn("No producers available to create fields.");
@@ -501,24 +526,23 @@ public class DatabaseServiceImpl implements DatabaseService {
 		log.info("Fields created.");
 	}
 
-	// --- Step 7 : Products ---
-	private void createProducts() {
-		if (createdProducers.isEmpty() && createdTransformers.isEmpty()) {
-			log.warn("No producers or transformers to create products.");
+	/* ================================================================ */
+	/* ================ Step 7a : Harvest Products ==================== */
+	/* ================================================================ */
+	private void createHarvestProducts() {
+		if (createdProducers.isEmpty()) {
+			log.warn("No producers to create harvest products.");
 			return;
 		}
-		log.info("Creating Products...");
-		createdProducts = new ArrayList<>();
+		log.info("Creating Harvest Products…");
 
-		/* -------- Récoltes -------- */
 		for (ProducerDetailDto producer : createdProducers) {
 			List<FieldDto> fields = producerFieldsMap.getOrDefault(producer.getId(),
 					Collections.emptyList());
 			if (fields.isEmpty() || createdStores.isEmpty()) continue;
 
-			int numProducts = random
-					.nextInt(MAX_PRODUCTS_PER_PRODUCER - MIN_PRODUCTS_PER_PRODUCER + 1)
-					+ MIN_PRODUCTS_PER_PRODUCER;
+			int numProducts = faker.number().numberBetween(MIN_PRODUCTS_PER_PRODUCER,
+					MAX_PRODUCTS_PER_PRODUCER + 1);
 
 			for (int i = 0; i < numProducts; i++) {
 				StoreDetailDto store = createdStores.get(random.nextInt(createdStores.size()));
@@ -528,7 +552,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 				QualityDto quality = anacardeQualities
 						.get(random.nextInt(anacardeQualities.size()));
 
-				// --- Création du document associé ---
+				// --- Document
 				DocumentUpdateDto docDto = new DocumentUpdateDto();
 				String[] extensions = {"pdf", "docx", "xlsx", "jpg", "png"};
 				docDto.setExtension(faker.options().option(extensions));
@@ -536,17 +560,15 @@ public class DatabaseServiceImpl implements DatabaseService {
 				docDto.setOriginalFilename(
 						faker.file().fileName(null, null, docDto.getExtension(), null));
 				docDto.setSize(faker.number().numberBetween(128, 4096));
-				docDto.setStoragePath("/documents/2025/"
-						+ faker.file().fileName(null, null, docDto.getExtension(), null));
-				docDto.setStoragePath(
-						"/documents/2025/harvest_" + faker.number().digits(8) + ".pdf");
+				docDto.setStoragePath("/documents/2025/harvest_" + faker.number().digits(10) + "."
+						+ docDto.getExtension());
 				docDto.setUploadDate(generateRandomDateTimeInPast());
 				docDto.setUserId(producer.getId());
 				Document document = documentRepository.save(documentMapper.toEntity(docDto));
 
-				// --- Création du contrôle qualité associé ---
+				// --- Quality control
 				QualityControlUpdateDto qc = new QualityControlUpdateDto();
-				qc.setIdentifier(faker.number().digits(6));
+				qc.setIdentifier(faker.number().digits(10));
 				qc.setControlDate(generateRandomDateTimeInPast());
 				qc.setGranularity((float) faker.number().numberBetween(150, 450));
 				qc.setKorTest((float) faker.number().numberBetween(10, 50));
@@ -557,17 +579,17 @@ public class DatabaseServiceImpl implements DatabaseService {
 				QualityControl qualityControl = qualityControlRepository
 						.save(qualityControlMapper.toEntity(qc));
 
-				// --- Création du produit ---
+				// --- Product
 				HarvestProductUpdateDto dto = new HarvestProductUpdateDto();
 				dto.setProducerId(producer.getId());
 				dto.setStoreId(store.getId());
 				dto.setFieldId(field.getId());
-				dto.setWeightKg(faker.number().randomDouble(2, 500, 8000));
+				dto.setWeightKg((double) faker.number().numberBetween(1, 100) * 50);
 				dto.setDeliveryDate(generateRandomDateTimeInPast());
 				dto.setQualityControlId(qualityControl.getId());
 
 				try {
-					ProductDto created = productService.createProduct(dto); // compile désormais
+					ProductDto created = productService.createProduct(dto);
 					createdProducts.add(created);
 				} catch (Exception e) {
 					log.error("Failed to create harvest product for producer {}: {}",
@@ -575,19 +597,33 @@ public class DatabaseServiceImpl implements DatabaseService {
 				}
 			}
 		}
+		log.info("Harvest products created ({}).", createdProducts.size());
+	}
 
-		// Transformed Products
+	/* ================================================================ */
+	/* ================ Step 7b : Transformed Products ================ */
+	/* ================================================================ */
+	private void createTransformedProducts() {
+		if (createdTransformers.isEmpty()) {
+			log.warn("No transformers available to create transformed products.");
+			return;
+		}
+		log.info("Creating Transformed Products…");
+
 		for (TransformerDetailDto transformer : createdTransformers) {
-			if (createdStores.isEmpty()) continue;
+			// Liste des HP gagnés par ce transformeur
+			List<Integer> pool = transformerWonHarvestProductsMap.getOrDefault(transformer.getId(),
+					Collections.emptyList());
+
 			int numProducts = random
 					.nextInt(MAX_PRODUCTS_PER_TRANSFORMER - MIN_PRODUCTS_PER_TRANSFORMER + 1)
 					+ MIN_PRODUCTS_PER_TRANSFORMER;
 
 			for (int i = 0; i < numProducts; i++) {
 				StoreDetailDto store = createdStores.get(random.nextInt(createdStores.size()));
-				QualityDto quality = amandeQualities.get(random.nextInt(anacardeQualities.size()));
+				QualityDto quality = amandeQualities.get(random.nextInt(amandeQualities.size()));
 
-				// --- Création du document associé ---
+				// --- Document associé
 				DocumentUpdateDto docDto = new DocumentUpdateDto();
 				String[] extensions = {"pdf", "docx", "xlsx", "jpg", "png"};
 				docDto.setExtension(faker.options().option(extensions));
@@ -595,19 +631,17 @@ public class DatabaseServiceImpl implements DatabaseService {
 				docDto.setOriginalFilename(
 						faker.file().fileName(null, null, docDto.getExtension(), null));
 				docDto.setSize(faker.number().numberBetween(128, 4096));
-				docDto.setStoragePath("/documents/2025/"
-						+ faker.file().fileName(null, null, docDto.getExtension(), null));
-				docDto.setStoragePath(
-						"/documents/2025/harvest_" + faker.number().digits(8) + ".pdf");
+				docDto.setStoragePath("/documents/2025/transformed_" + faker.number().digits(10)
+						+ "." + docDto.getExtension());
 				docDto.setUploadDate(generateRandomDateTimeInPast());
-				docDto.setUserId(transformer.getId()); // Le transformeur est l'utilisateur associé
+				docDto.setUserId(transformer.getId());
 				Document document = documentRepository.save(documentMapper.toEntity(docDto));
 
-				// --- Création du contrôle qualité associé ---
+				// --- Quality control
 				QualityInspectorDetailDto inspector = createdQualityInspectors
 						.get(random.nextInt(createdQualityInspectors.size()));
 				QualityControlUpdateDto qc = new QualityControlUpdateDto();
-				qc.setIdentifier(faker.number().digits(6));
+				qc.setIdentifier(faker.number().digits(10));
 				qc.setControlDate(generateRandomDateTimeInPast());
 				qc.setGranularity((float) faker.number().numberBetween(150, 450));
 				qc.setKorTest((float) faker.number().numberBetween(10, 50));
@@ -618,278 +652,305 @@ public class DatabaseServiceImpl implements DatabaseService {
 				QualityControl qualityControl = qualityControlRepository
 						.save(qualityControlMapper.toEntity(qc));
 
-				// --- Création du produit transformé ---
+				// --- Produit transformé
 				TransformedProductUpdateDto dto = new TransformedProductUpdateDto();
 				dto.setTransformerId(transformer.getId());
 				dto.setStoreId(store.getId());
 				dto.setIdentifier("TRANS-" + faker.letterify("??????").toUpperCase());
-				dto.setWeightKg(faker.number().randomDouble(2, 200, 5000));
+				dto.setWeightKg((double) faker.number().numberBetween(1, 100) * 50);
 				dto.setDeliveryDate(generateRandomDateTimeInPast());
-				dto.setQualityControlId(qualityControl.getId()); // Lien contrôle qualité
+				dto.setQualityControlId(qualityControl.getId());
+
+				// harvest product IDs – uniquement ceux gagnés par ce transformeur
+				int nbHarvestProducts = faker.number().numberBetween(
+						MIN_HARVEST_PRODUCT_PER_TRANSFORMED_PRODUCT,
+						MAX_HARVEST_PRODUCT_PER_TRANSFORMED_PRODUCT + 1);
+				if (!pool.isEmpty()) {
+					List<Integer> shuffled = new ArrayList<>(pool);
+					Collections.shuffle(shuffled, random);
+					List<Integer> harvestProductIds = new ArrayList<>(
+							shuffled.subList(0, Math.min(nbHarvestProducts, shuffled.size())));
+					dto.setHarvestProductIds(harvestProductIds);
+				}
 
 				try {
-					createdProducts.add(productService.createProduct(dto));
+					ProductDto created = productService.createProduct(dto);
+					createdProducts.add(created);
 				} catch (Exception e) {
 					log.error("Failed to create transformed product for transformer {}: {}",
 							transformer.getId(), e.getMessage());
 				}
 			}
 		}
-		log.info("Products created (Total: {}).", createdProducts.size());
+		log.info("Transformed products created (total products list size: {}).",
+				createdProducts.size());
 	}
 
-	// --- Step 8: Auctions ---
-	private void createAuctions() {
-		if (createdProducts.isEmpty()
-				|| (createdProducers.isEmpty() && createdTransformers.isEmpty())) {
-			log.warn("Not enough data (products/traders) to create auctions.");
+	/* ================================================================ */
+	/* ================ Step 8a : Auctions ============================ */
+	/* ================================================================ */
+	private void createAuctions(boolean onlyTransformed) {
+		if (createdProducts.isEmpty()) {
+			log.warn("No products available to create auctions.");
 			return;
 		}
-		log.info("Creating {} Auctions spread across {}...", NUM_AUCTIONS, TARGET_YEAR);
-		// Store created auctions
-		List<TraderDetailDto> allTraders = new ArrayList<>();
-		allTraders.addAll(createdProducers);
-		allTraders.addAll(createdTransformers);
-		// Add Exporters if they can trade: allTraders.addAll(createdExporters);
 
-		for (int i = 0; i < NUM_AUCTIONS; i++) {
-			ProductDto product = createdProducts.get(random.nextInt(createdProducts.size()));
-			TraderDetailDto trader;
+		/*
+		 * 1) Produits concernés
+		 */
+		List<ProductDto> productsForAuction = createdProducts.stream()
+				.filter(p -> onlyTransformed
+						? p instanceof TransformedProductDto
+						: p instanceof HarvestProductDto)
+				.toList();
+		if (productsForAuction.isEmpty()) {
+			log.warn("No products matching onlyTransformed={}", onlyTransformed);
+			return;
+		}
 
-			// Determine trader based on product type
-			if (product instanceof HarvestProductDto) {
-				// Find the producer DTO associated with this product
-				Integer producerId = ((HarvestProductDto) product).getProducer().getId();
-				trader = createdProducers.stream().filter(p -> p.getId().equals(producerId))
-						.findFirst().orElse(null);
-				if (trader == null) { // Fallback if producer not found in list
-					log.warn(
-							"Producer {} for HarvestProduct {} not found in created list, selecting random producer.",
-							producerId, product.getId());
-					if (createdProducers.isEmpty()) continue; // Skip if no producers exist at all
-					trader = createdProducers.get(random.nextInt(createdProducers.size()));
+		/*
+		 * 2) Pool de vendeurs valides
+		 */
+		List<TraderDetailDto> sellerPool = onlyTransformed
+				? new ArrayList<>(createdTransformers)
+				: new ArrayList<>(createdProducers);
+		if (sellerPool.isEmpty()) {
+			log.warn("No sellers available for onlyTransformed={}", onlyTransformed);
+			return;
+		}
+
+		log.info("Creating auctions – type={}, sellers={}, items={} (1 per product)",
+				onlyTransformed ? "TRANSFORMED" : "HARVEST", sellerPool.size(),
+				productsForAuction.size());
+
+		/*
+		 * 3) Parcours de chaque vendeur et de ses produits
+		 */
+		for (TraderDetailDto seller : sellerPool) {
+			// Sous-ensemble des produits appartenant à ce vendeur
+			List<ProductDto> sellerProducts = productsForAuction.stream().filter(p -> {
+				if (p instanceof HarvestProductDto hp) {
+					return hp.getProducer().getId().equals(seller.getId());
+				} else if (p instanceof TransformedProductDto tp) {
+					return tp.getTransformer().getId().equals(seller.getId());
 				}
-			} else if (product instanceof TransformedProductDto) {
-				Integer transformerId = ((TransformedProductDto) product).getTransformer().getId();
-				trader = createdTransformers.stream().filter(t -> t.getId().equals(transformerId))
-						.findFirst().orElse(null);
-				if (trader == null) {
-					log.warn(
-							"Transformer {} for TransformedProduct {} not found in created list, selecting random transformer.",
-							transformerId, product.getId());
-					if (createdTransformers.isEmpty()) continue; // Skip if no transformers exist
-					trader = createdTransformers.get(random.nextInt(createdTransformers.size()));
-				}
-			} else {
-				log.warn("Unknown product type for auction creation: {}",
-						product.getClass().getSimpleName());
-				// Fallback: Assign a random trader? Or skip?
-				if (allTraders.isEmpty()) continue;
-				trader = allTraders.get(random.nextInt(allTraders.size()));
-			}
+				return false;
+			}).toList();
 
-			// Generate dates
-			LocalDateTime creationDate = generateRandomDateTimeInPast();
-			LocalDateTime expirationDate = creationDate
-					.plusDays(faker.number().numberBetween(15, 90));
-
-			// Determine Status based on creationDate vs now
-			TradeStatusDto status;
-			boolean isActive;
-			if (expirationDate.isAfter(generationTime)) {
-				status = statusOpen; // Future auction
-				isActive = true;
-			} else {
-				// Past auction - choose a finished status
-				int statusChoice = random.nextInt(10); // 0-9
-				if (statusChoice < 8)
-					status = statusConcluded; // 80% chance conclue
-				else status = statusExpired; // 20% chance Concluded
-				isActive = false; // Finished auctions are inactive
-			}
-
-			// --- Détermination du nom de la qualité et la quantité du produit ---
-			String qualityName = product.getQualityControl().getQuality().getName();
-			int quantity = faker.number().numberBetween(1, 100) * 50;
-			// --- Récupération de la fourchette correspondante ---
-			double[] range;
-			if (cashewPriceRanges.containsKey(qualityName)) {
-				range = cashewPriceRanges.get(qualityName);
-			} else {
-				range = new double[]{500.0, 800.0};
-			}
-			double minPrice = range[0];
-			double maxPrice = range[1];
-
-			// --- Génération aléatoire du price dans [minPrice,maxPrice] ---
-			double price = minPrice + random.nextDouble() * (maxPrice - minPrice) / 2;
-			BigDecimal total = BigDecimal.valueOf(price * quantity);
-			BigDecimal hundred = BigDecimal.valueOf(100);
-			BigDecimal roundedDownToHundred = total.divide(hundred, 0, RoundingMode.FLOOR)
-					.multiply(hundred);
-			price = roundedDownToHundred.doubleValue();
-
-			// Create AuctionOptions
-			AuctionOptionsUpdateDto opt = new AuctionOptionsUpdateDto();
-			opt.setStrategyId(strategyOffer.getId());
-			opt.setBuyNowPrice(maxPrice * quantity);
-			opt.setShowPublic(true);
-			opt.setStrategyId(strategyOffer.getId());
-			opt.setMinPriceKg(minPrice);
-			opt.setMaxPriceKg(maxPrice);
-
-			AuctionUpdateDto auctionDto = new AuctionUpdateDto();
-			auctionDto.setProductId(product.getId());
-			auctionDto.setTraderId(trader.getId());
-			auctionDto.setProductQuantity(quantity); // Example quantity
-			auctionDto.setPrice(price);
-			auctionDto.setActive(isActive);
-			auctionDto.setExpirationDate(expirationDate);
-			auctionDto.setStatusId(status.getId());
-			auctionDto.setOptions(opt);
-
-			try {
-				AuctionDto createdAuctionDto = auctionService.createAuction(auctionDto);
-				createdAuctionDto.setCreationDate(creationDate);
-				createdAuctions.add(createdAuctionDto);
-				auctionRepository.overrideCreationDateNative(createdAuctionDto.getId(),
-						creationDate);
-			} catch (Exception e) {
-				log.error("Failed to create auction for trader {}: {}", trader.getId(),
-						e.getMessage());
+			for (ProductDto product : sellerProducts) {
+				createSingleAuction(product, seller);
 			}
 		}
-		log.info("Auctions created (Total: {}).", createdAuctions.size());
+
+		log.info("Auctions created (Total list size: {}).", createdAuctions.size());
 	}
 
-	// --- Step 9: Bids ---
+	/* ================================================================ */
+	/* ================ Step 8b : Auction ============================= */
+	/* ================================================================ */
+	private void createSingleAuction(ProductDto product, TraderDetailDto seller) {
+		LocalDateTime creationDate = generateRandomDateTimeInPast();
+		LocalDateTime expirationDate = creationDate.plusDays(
+				faker.number().numberBetween(MIN_AUCTION_DURATION_DAYS, MAX_AUCTION_DURATION_DAYS));
+
+		TradeStatusDto status;
+		boolean isActive;
+		if (expirationDate.isAfter(generationTime)) {
+			status = statusOpen;
+			isActive = true;
+		} else {
+			int statusChoice = random.nextInt(10);
+			status = statusChoice < 8 ? statusConcluded : statusExpired;
+			isActive = false;
+		}
+
+		String qualityName = product.getQualityControl().getQuality().getName();
+		int quantity = faker.number().numberBetween(1, 100) * 50;
+		double[] range = cashewPriceRanges.getOrDefault(qualityName, new double[]{500.0, 800.0});
+		double minPrice = range[0];
+		double maxPrice = range[1];
+		double price = minPrice + random.nextDouble() * (maxPrice - minPrice) / 2;
+		BigDecimal total = BigDecimal.valueOf(price * quantity);
+		BigDecimal roundedTo100 = total.divide(BigDecimal.valueOf(100), 0, RoundingMode.FLOOR)
+				.multiply(BigDecimal.valueOf(100));
+		price = roundedTo100.doubleValue();
+
+		AuctionOptionsUpdateDto opt = new AuctionOptionsUpdateDto();
+		opt.setStrategyId(strategyOffer.getId());
+		opt.setBuyNowPrice(maxPrice * quantity);
+		opt.setShowPublic(true);
+		opt.setMinPriceKg(minPrice);
+		opt.setMaxPriceKg(maxPrice);
+		opt.setMinIncrement(faker.number().numberBetween(1, 5) * 1000);
+
+		AuctionUpdateDto auctionDto = new AuctionUpdateDto();
+		auctionDto.setProductId(product.getId());
+		auctionDto.setTraderId(seller.getId());
+		auctionDto.setProductQuantity(quantity);
+		auctionDto.setPrice(price);
+		auctionDto.setActive(isActive);
+		auctionDto.setExpirationDate(expirationDate);
+		auctionDto.setStatusId(status.getId());
+		auctionDto.setOptions(opt);
+
+		try {
+			AuctionDto created = auctionService.createAuction(auctionDto);
+			created.setCreationDate(creationDate);
+			createdAuctions.add(created);
+			auctionRepository.overrideCreationDateNative(created.getId(), creationDate);
+		} catch (Exception e) {
+			log.error("Failed to create auction for trader {}: {}", seller.getId(), e.getMessage());
+		}
+	}
+
+	/* ================================================================ */
+	/* ================ Step 9: Bids ================================== */
+	/* ================================================================ */
 	private void createBidsForFinishedAuctions() {
-		log.info("Creating Bids on all Auctions…");
+		log.info("Generating bids (context‑aware buyers)…");
 
-		// 1) Candidats à l’enchère ------------------------------------------------
-		List<TraderDetailDto> potentialBidders = new ArrayList<>();
-		potentialBidders.addAll(createdProducers);
-		potentialBidders.addAll(createdTransformers);
-		potentialBidders.addAll(createdExporters);
-
-		if (potentialBidders.isEmpty()) {
-			log.warn("No potential bidders available.");
-			return;
-		}
-
-		int bidsCreatedCount = 0;
-
-		// 2) Parcours de chaque vente --------------------------------------------
+		int bidsCreated = 0;
 		for (AuctionDto auction : createdAuctions) {
+			// éviter de dupliquer les offres si on passe plusieurs fois
+			if (auctionsWithBids.contains(auction.getId())) continue;
 
-			/* nombre d'offres à créer pour cette auction */
+			/*
+			 * 1) Sélection dynamique du pool d’acheteurs
+			 */
+			List<TraderDetailDto> potentialBidders;
+			if (auction.getProduct() instanceof HarvestProductDto) {
+				// Acheteurs possibles : transformeurs + exportateurs
+				potentialBidders = new ArrayList<>();
+				potentialBidders.addAll(createdTransformers);
+				potentialBidders.addAll(createdExporters);
+			} else if (auction.getProduct() instanceof TransformedProductDto) {
+				// Acheteurs possibles : uniquement exportateurs
+				potentialBidders = new ArrayList<>(createdExporters);
+			} else {
+				continue; // Produit inattendu
+			}
+			if (potentialBidders.isEmpty()) continue;
+
+			/*
+			 * 2) Exclure le vendeur courant
+			 */
+			Integer ownerId = auction.getTrader().getId();
+			potentialBidders = potentialBidders.stream().filter(t -> !t.getId().equals(ownerId))
+					.toList();
+			if (potentialBidders.isEmpty()) continue;
+
+			/*
+			 * 3) Nombre d’offres à générer pour cette vente
+			 */
 			int numBids = random
 					.nextInt(MAX_BIDS_PER_FINISHED_AUCTION - MIN_BIDS_PER_FINISHED_AUCTION + 1)
 					+ MIN_BIDS_PER_FINISHED_AUCTION;
-			if (numBids == 0) continue;
-
-			/* on exclut le propriétaire de la vente des enchérisseurs */
-			final Integer ownerId = auction.getTrader().getId();
-			List<TraderDetailDto> bidders = potentialBidders.stream()
-					.filter(t -> !t.getId().equals(ownerId)).toList();
-			if (bidders.isEmpty()) continue;
+			if (numBids == 0) {
+				auctionsWithBids.add(auction.getId());
+				continue;
+			}
 
 			boolean auctionFinished = !auction.getStatus().getId().equals(statusOpen.getId());
 			boolean auctionConcluded = auction.getStatus().getId().equals(statusConcluded.getId());
 
 			BigDecimal currentHighest = BigDecimal.valueOf(auction.getPrice());
 			LocalDateTime lastBidTime = auction.getCreationDate();
-
 			List<BidUpdateDto> bids = new ArrayList<>();
 
-			// 3) Génération des bids ---------------------------------------------
 			for (int i = 0; i < numBids; i++) {
+				TraderDetailDto bidder = potentialBidders
+						.get(random.nextInt(potentialBidders.size()));
 
-				TraderDetailDto bidder = bidders.get(random.nextInt(bidders.size()));
-
-				/* fenêtre temporelle pour la date d'offre */
+				// borne temporelle max pour cette offre
 				LocalDateTime maxBidTime = auction.getExpirationDate().isBefore(generationTime)
 						? auction.getExpirationDate()
 						: generationTime;
 
-				// On ajuste lastBidTime s'il est trop proche de maxBidTime
 				if (lastBidTime.isAfter(maxBidTime.minusMinutes(1))) {
 					lastBidTime = maxBidTime.minusMinutes(1);
 				}
-				if (lastBidTime.equals(maxBidTime)) {
-					break;
-				}
+				if (lastBidTime.equals(maxBidTime)) break;
 
-				// Bornes en millisecondes UTC
 				long startMillis = lastBidTime.plusSeconds(1).atZone(ZoneId.systemDefault())
 						.toInstant().toEpochMilli();
 				long endMillis = maxBidTime.atZone(ZoneId.systemDefault()).toInstant()
 						.toEpochMilli();
 				if (startMillis >= endMillis) break;
 
-				// ----- Tirage biaisé vers le début -----
-				double u = random.nextDouble(); // uniforme [0,1[
-				double biasPow = 2.0; // >1 → plus près du début
-				long offset = (long) ((endMillis - startMillis) * Math.pow(u, biasPow));
-				long bidMillis = startMillis + offset;
-
-				LocalDateTime bidCreationDate = Instant.ofEpochMilli(bidMillis)
+				// tirage biaisé vers le début
+				double u = random.nextDouble();
+				double pow = 2.0;
+				long offset = (long) ((endMillis - startMillis) * Math.pow(u, pow));
+				long bidTime = startMillis + offset;
+				LocalDateTime bidCreation = Instant.ofEpochMilli(bidTime)
 						.atZone(ZoneId.systemDefault()).toLocalDateTime();
-				lastBidTime = bidCreationDate;
-				// ------------------------------------------------------------
+				lastBidTime = bidCreation;
 
 				BidUpdateDto bid = new BidUpdateDto();
 				bid.setAuctionId(auction.getId());
 				bid.setTraderId(bidder.getId());
-				bid.setCreationDate(bidCreationDate);
+				bid.setCreationDate(bidCreation);
 
-				/* montant = +0-5 % au-dessus de l'offre courante */
 				BigDecimal raw = currentHighest
 						.multiply(BigDecimal.valueOf(1 + random.nextDouble() * 0.05));
-				BigDecimal hundred = BigDecimal.valueOf(100);
-				BigDecimal amount = raw.divide(hundred, 0, RoundingMode.FLOOR).multiply(hundred);
+				BigDecimal minInc = BigDecimal.valueOf(auction.getOptions().getMinIncrement());
+				BigDecimal amount = raw.divide(minInc, 0, RoundingMode.FLOOR).multiply(minInc);
+				BigDecimal buyNowTotal = BigDecimal.valueOf(auction.getOptions().getBuyNowPrice());
 
-				if (amount.compareTo(
-						BigDecimal.valueOf(auction.getOptions().getBuyNowPrice())) >= 0) {
+				if (amount.compareTo(buyNowTotal) >= 0) {
 					if (auctionConcluded) {
 						bid.setStatusId(statusAccepted.getId());
-						bid.setAmount(BigDecimal.valueOf(auction.getOptions().getBuyNowPrice()));
+						bid.setAmount(buyNowTotal);
 						bids.add(bid);
 					}
 					break;
 				} else {
 					currentHighest = amount;
-					// statut provisoire : Ouvert si l'auction l'est encore, sinon Expiré
 					bid.setStatusId(auctionFinished ? statusRejected.getId() : statusOpen.getId());
 					bid.setAmount(amount);
 					bids.add(bid);
 				}
 			}
 
-			// 4) Si la vente est terminée, on accepte la meilleure enchère --------
+			/*
+			 * 4) Acceptation de la meilleure offre si vente conclue
+			 */
 			if (auctionFinished && auctionConcluded && !bids.isEmpty()) {
 				BidUpdateDto winner = bids.stream()
 						.max(Comparator.comparing(BidUpdateDto::getAmount)).orElseThrow();
 				winner.setStatusId(statusAccepted.getId());
+
+				// Si un transformeur a gagné une récolte, on l’ajoute à la map
+				if (auction.getProduct() instanceof HarvestProductDto hp && createdTransformers
+						.stream().anyMatch(t -> t.getId().equals(winner.getTraderId()))) {
+					transformerWonHarvestProductsMap
+							.computeIfAbsent(winner.getTraderId(), k -> new ArrayList<>())
+							.add(hp.getId());
+				}
 			}
 
-			// 5) Persistance ------------------------------------------------------
+			/*
+			 * 5) Persistance
+			 */
 			for (BidUpdateDto dto : bids) {
 				try {
-					BidDto createdBidDto = bidService.createBid(dto);
-					bidRepository.overrideCreationDateNative(createdBidDto.getId(),
+					BidDto created = bidService.createBid(dto);
+					bidRepository.overrideCreationDateNative(created.getId(),
 							dto.getCreationDate());
-					bidsCreatedCount++;
+					bidsCreated++;
 				} catch (Exception e) {
-					log.error("Failed to create bid for auction {}: {}", auction.getId(),
+					log.error("Error creating bid for auction {}: {}", auction.getId(),
 							e.getMessage());
 				}
 			}
+			auctionsWithBids.add(auction.getId());
 		}
-		log.info("Bids created (Total: {}).", bidsCreatedCount);
+		log.info("Bids generated: {}", bidsCreated);
 	}
 
-	// --- Helper Methods ---
+	/* ================================================================ */
+	/* ================ Helper Methods ================================ */
+	/* ================================================================ */
 
 	/** Génère une adresse email unique pour tout le run */
 	private String uniqueEmail() {
@@ -1017,15 +1078,11 @@ public class DatabaseServiceImpl implements DatabaseService {
 		admin.setLastName(faker.name().lastName());
 		admin.setEmail(uniqueEmail());
 		admin.setPassword(DEFAULT_PASSWORD);
-		Region randomRegion = regions.get(faker.number().numberBetween(0, regions.size()));
 		admin.setAddress(createRandomAddress());
 		admin.setEnabled(true);
 		admin.setRegistrationDate(generateRandomDateTimeInPast());
 		admin.setValidationDate(
 				admin.getRegistrationDate().plusDays(faker.number().numberBetween(1, 5))); // Validated
-		// shortly
-		// after
-		// registration
 		admin.setPhone(faker.phoneNumber().cellPhone());
 		admin.setLanguageId(langFr.getId()); // Default to French for now
 		return admin;
@@ -1043,7 +1100,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 		producer.setValidationDate(
 				producer.getRegistrationDate().plusDays(faker.number().numberBetween(1, 10)));
 		producer.setPhone(faker.phoneNumber().cellPhone());
-		producer.setAgriculturalIdentifier(faker.number().digits(9));
+		producer.setAgriculturalIdentifier(faker.number().digits(10));
 		producer.setLanguageId(random.nextBoolean() ? langFr.getId() : langEn.getId());
 		return producer;
 	}
@@ -1055,7 +1112,6 @@ public class DatabaseServiceImpl implements DatabaseService {
 		transformer.setEmail(uniqueEmail());
 		transformer.setPassword(DEFAULT_PASSWORD);
 		transformer.setEnabled(true);
-		Region randomRegion = regions.get(faker.number().numberBetween(0, regions.size()));
 		transformer.setAddress(createRandomAddress());
 		transformer.setRegistrationDate(generateRandomDateTimeInPast());
 		transformer.setValidationDate(
@@ -1072,7 +1128,6 @@ public class DatabaseServiceImpl implements DatabaseService {
 		exporter.setEmail(uniqueEmail());
 		exporter.setPassword(DEFAULT_PASSWORD);
 		exporter.setEnabled(true);
-		Region randomRegion = regions.get(faker.number().numberBetween(0, regions.size()));
 		exporter.setAddress(createRandomAddress());
 		exporter.setRegistrationDate(generateRandomDateTimeInPast());
 		exporter.setValidationDate(
