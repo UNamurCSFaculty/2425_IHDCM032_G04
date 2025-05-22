@@ -24,12 +24,16 @@
       "title": "Bienvenue"
     },
     "auctions_sales": {
-      "title": "Enchères et ventes",
+      "title": "Mes ventes",
       "subtitle": "Vendez vos produits en ligne et consultez les offres sur vos enchères."
     },
     "auctions_new_sale": {
       "title": "Nouvelle vente",
       "subtitle": "Créez une nouvelle vente aux enchères pour votre produit."
+    },
+    "auctions_buys": {
+      "title": "Mes achats",
+      "subtitle": "Consultez vos enchères remportées jusqu'à présent."
     },
     "deposits_new_product": {
       "title": "Nouveau produit",
@@ -167,12 +171,6 @@
   },
   "database": {
     "harvest": "Brut",
-    "transformed": "Transformé",
-    "AdminListDto": "admin",
-    "ProducerListDto": "producteur",
-    "TransformerListDto": "transformateur",
-    "QualityInspectorListDto": "qualiticien",
-    "ExporterListDto": "exportateur",
-    "CarrierListDto": "transporteur"
+    "transformed": "Transformé"
   }
 }

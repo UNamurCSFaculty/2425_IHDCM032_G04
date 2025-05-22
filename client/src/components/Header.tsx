@@ -55,12 +55,6 @@ const menu: MenuItem[] = [
     items: [
       {
         title: 'Acheter un produit',
-        description: "Créer une nouvelle offre d'achat",
-        icon: <ShoppingCart className="size-5 shrink-0" />,
-        url: '/achats/nouvelle-enchere',
-      },
-      {
-        title: 'Acheter un produit v. Fab.',
         description: 'Acheter un produit à la vente directe',
         icon: <ShoppingCart className="size-5 shrink-0" />,
         url: '/achats/marche',
