@@ -1,20 +1,31 @@
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardTitle } from '@/components/ui/card'
+import { cn } from '@/lib/utils'
 import { Package } from 'lucide-react'
 import React from 'react'
 
-const EmptyState: React.FC<{ onReset: () => void }> = ({ onReset }) => (
-  <Card className="min-h-[300px] flex flex-col items-center justify-center text-center bg-background">
-    <CardHeader>
-      <Package className="size-16 text-muted-foreground mb-2" />
-      <CardTitle>Aucune enchère trouvée</CardTitle>
-    </CardHeader>
+interface EmptyStateProps {
+  onReset: () => void
+  className?: string
+}
+
+const EmptyState: React.FC<EmptyStateProps> = ({ onReset, className }) => (
+  <Card
+    className={cn(
+      'min-h-[300px] flex flex-col items-center justify-center text-center bg-background',
+      className
+    )}
+  >
     <CardContent>
+      <div className="flex flex-col items-center justify-center mb-4">
+        <Package className="size-16 text-muted-foreground mb-2" />
+        <CardTitle>Aucune enchère trouvée</CardTitle>
+      </div>
+
       <p className="text-muted-foreground max-w-xs">
         Essayez d’ajuster vos filtres ou
         <Button variant="link" className="p-0 h-auto inline" onClick={onReset}>
-          {' '}
-          réinitialiser la recherche
+          Réinitialiser la recherche
         </Button>
         .
       </p>

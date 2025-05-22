@@ -12,7 +12,7 @@ export const InfoTile: React.FC<{
       className={`w-full rounded-lg bg-white/50  shadow-xs  p-2 text-center flex items-center justify-center flex-col`}
     >
       <div
-        className={`flex items-center justify-center gap-1 text-muted-foreground ${labelSize}`}
+        className={`flex items-center justify-center gap-1 text-neutral-700 ${labelSize}`}
       >
         {icon}
         {label}

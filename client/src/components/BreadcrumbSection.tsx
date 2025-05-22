@@ -48,7 +48,7 @@ export function BreadcrumbSection({
   return (
     <section
       className={cn(
-        'bg-gradient-to-br from-green-50 to-yellow-50 py-10',
+        'bg-gradient-to-br from-green-50 to-yellow-50 py-5',
         className
       )}
     >

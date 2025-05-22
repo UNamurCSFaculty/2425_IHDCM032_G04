@@ -30,7 +30,7 @@ services:
         condition: service_healthy
     volumes:
       - ./servers.json:/pgadmin4/servers.json
-      - ./pgadmin_data:/var/lib/pgadmin
+      - ./data/pgadmin_data:/var/lib/pgadmin
 
   mailpit:
     image: axllent/mailpit:latest

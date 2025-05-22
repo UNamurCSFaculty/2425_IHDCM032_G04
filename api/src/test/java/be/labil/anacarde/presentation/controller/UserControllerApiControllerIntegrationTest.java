@@ -15,7 +15,15 @@ import be.labil.anacarde.domain.dto.write.user.UserUpdateDto;
 import be.labil.anacarde.domain.model.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Stream;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -27,6 +35,18 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 
 	private @Autowired ObjectMapper objectMapper;
 	private @Autowired BCryptPasswordEncoder bCryptPasswordEncoder;
+
+	@AfterEach
+	public void cleanUploadDir() {
+		Path uploadDir = Paths.get("build/test-uploads");
+		if (Files.exists(uploadDir)) {
+			try (Stream<Path> paths = Files.walk(uploadDir)) {
+				paths.sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
+			} catch (IOException e) {
+				System.err.println("Impossible de nettoyer build/test-uploads : " + e.getMessage());
+			}
+		}
+	}
 
 	/**
 	 * Teste la récupération d'un utilisa teur existant.
@@ -41,10 +61,11 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 	}
 
 	/**
-	 * Teste la création d'un nouvel utilisateur.
+	 * Teste la création d'un nouvel utilisateur (avec au moins un document téléversé).
 	 */
 	@Test
 	public void testCreateUser() throws Exception {
+		// ---------- partie JSON "user" ----------
 		ProducerUpdateDto newUser = new ProducerUpdateDto();
 		newUser.setFirstName("Alice");
 		newUser.setLastName("Smith");
@@ -57,20 +78,34 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 		newUser.setAgriculturalIdentifier("TS450124");
 		newUser.setCooperativeId(getMainTestCooperative().getId());
 
-		byte[] json = objectMapper.writeValueAsBytes(newUser);
-		MockMultipartFile userPart = new MockMultipartFile("user", "user.json",
-				MediaType.APPLICATION_JSON_VALUE, json);
+		byte[] userJson = objectMapper.writeValueAsBytes(newUser);
+		MockMultipartFile userPart = new MockMultipartFile("user", // nom de la part
+				"user.json", MediaType.APPLICATION_JSON_VALUE, userJson);
 
-		mockMvc.perform(multipart("/api/users").file(userPart).with(jwtAndCsrf())
-				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isCreated())
-				.andExpect(jsonPath("$.address").exists())
+		// ---------- partie binaire "documents" ----------
+		byte[] pdf = "dummy pdf content".getBytes();
+		MockMultipartFile documentPart = new MockMultipartFile("documents", // même nom que dans
+																			// l’API (liste
+																			// MultipartFile)
+				"doc1.pdf", "application/pdf", pdf);
+
+		// ---------- appel ----------
+		mockMvc.perform(multipart("/api/users").file(userPart).file(documentPart) // au moins un
+																					// document
+				.characterEncoding("UTF-8").with(jwtAndCsrf()).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isCreated()).andExpect(jsonPath("$.address").exists())
 				.andExpect(jsonPath("$.address.street").value("Rue de la paix"))
 				.andExpect(jsonPath("$.address.cityId").value(1))
 				.andExpect(jsonPath("$.address.regionId").value(1))
 				.andExpect(jsonPath("$.email").value("alice.smith@example.com"))
 				.andExpect(jsonPath("$.firstName").value("Alice"))
-				.andExpect(jsonPath("$.lastName").value("Smith"));
+				.andExpect(jsonPath("$.lastName").value("Smith"))
+				.andExpect(jsonPath("$.documents").isArray())
+				.andExpect(jsonPath("$.documents.length()").value(1))
+				.andExpect(jsonPath("$.documents[0].originalFilename").value("doc1.pdf"))
+				.andExpect(jsonPath("$.documents[0].contentType").value("application/pdf"));
 
+		// ---------- vérifications en base ----------
 		User createdUser = userRepository.findByEmail("alice.smith@example.com")
 				.orElseThrow(() -> new AssertionError("Utilisateur non trouvé"));
 		assertTrue(bCryptPasswordEncoder.matches("secret!!!", createdUser.getPassword()),

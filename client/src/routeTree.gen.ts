@@ -116,7 +116,7 @@ const AuthenticatedEncheresIndexRoute = AuthenticatedEncheresIndexImport.update(
     id: '/encheres/',
     path: '/encheres/',
     getParentRoute: () => AuthenticatedRoute,
-  } as any
+  } as any,
 )
 
 const AdminUsersNewRoute = AdminUsersNewImport.update({
@@ -157,7 +157,7 @@ const AuthenticatedEncheresCajouRoute = AuthenticatedEncheresCajouImport.update(
     id: '/encheres/cajou',
     path: '/encheres/cajou',
     getParentRoute: () => AuthenticatedRoute,
-  } as any
+  } as any,
 )
 
 const AuthenticatedEncheresAutresRoute =
@@ -407,7 +407,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
-  AuthenticatedRouteChildren
+  AuthenticatedRouteChildren,
 )
 
 interface AdminRouteChildren {

@@ -15,6 +15,7 @@ import { getCookie } from './utils/cookies.ts'
 import { setDayjsLocale } from './utils/dayjs-config.ts'
 import '/node_modules/react-leaflet-markercluster/dist/styles.min.css'
 import { client } from '@/api/generated/client.gen.ts'
+import { Toaster } from '@/components/ui/sonner'
 import { useAppStore } from '@/store/appStore.tsx'
 import '@/utils/zod-config.ts'
 import {
@@ -114,6 +115,7 @@ root.render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <AppWithProvider />
+      <Toaster richColors position="top-center" />
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   </StrictMode>
