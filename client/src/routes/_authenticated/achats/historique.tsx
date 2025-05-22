@@ -48,6 +48,7 @@ export function RouteComponent() {
           auctions={auctionsData}
           qualities={qualitiesData}
           userRole="buyer"
+          showAuctionStatusFilter={true}
         />
       </div>
     </>
