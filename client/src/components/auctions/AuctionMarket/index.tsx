@@ -423,7 +423,8 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
       <div className="flex flex-wrap flex-col sm:flex-row items-center justify-center lg:justify-between gap-4 mb-6 w-full">
         <div className="text-md  text-muted-foreground w-full lg:w-[260px] ">
           <div className="text-center lg:text-left lg:pl-4">
-            Résultat(s): {filtered.length} enchère{filtered.length !== 1 && 's'}
+            Résultat(s) : {filtered.length} enchère
+            {filtered.length !== 1 && 's'}
           </div>
         </div>
         <div className={`flex items-center ${cssCard} lg:pl-11`}>
