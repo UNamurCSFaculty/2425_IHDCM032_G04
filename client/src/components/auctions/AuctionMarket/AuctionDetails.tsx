@@ -1,5 +1,9 @@
 import type { AuctionDto, BidDto } from '@/api/generated'
-import { createBidMutation } from '@/api/generated/@tanstack/react-query.gen'
+import {
+  acceptAuctionMutation,
+  acceptBidMutation,
+  createBidMutation,
+} from '@/api/generated/@tanstack/react-query.gen'
 import { CountdownTimer } from '@/components/CountDownTimer'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -51,8 +55,6 @@ const AuctionDetailsPanel: React.FC<Props> = ({
   showDetails = false,
   role,
   onBidAction,
-  onMakeBid,
-  onBuyNow,
 }) => {
   const [amount, setAmount] = useState('')
   const [buyOpen, setBuyOpen] = useState(false)
@@ -71,8 +73,31 @@ const AuctionDetailsPanel: React.FC<Props> = ({
 
   const createBidRequest = useMutation({
     ...createBidMutation(),
+    onSuccess() {
+      console.log('Create Bid - Success')
+    },
     onError(error) {
-      console.error('Invalid request ', error)
+      console.error('Create Bid - Invalid request ', error)
+    },
+  })
+
+  const acceptBidRequest = useMutation({
+    ...acceptBidMutation(),
+    onSuccess() {
+      console.log('Accept Bid - Success')
+    },
+    onError(error) {
+      console.error('Accept Bid - Invalid request ', error)
+    },
+  })
+
+  const acceptAuctionRequest = useMutation({
+    ...acceptAuctionMutation(),
+    onSuccess() {
+      console.log('Accept Auction - Success')
+    },
+    onError(error) {
+      console.error('Accept Auction - Invalid request ', error)
     },
   })
 
@@ -91,9 +116,32 @@ const AuctionDetailsPanel: React.FC<Props> = ({
       },
     })
 
-    onMakeBid?.(auction.id, value)
     setAmount('')
     setBidOpen(false)
+  }
+
+  const handleSubmitBuyNow = async (buyNowPrice: number | undefined) => {
+    if (!buyNowPrice) return
+
+    // The "buy now" action consists of adding a new bid and
+    // accepting it
+
+    const newBid = await createBidRequest.mutateAsync({
+      path: { auctionId: auction.id },
+      body: {
+        amount: buyNowPrice,
+        auctionId: auction.id,
+        traderId: user.id,
+      },
+    })
+
+    acceptBidRequest.mutate({
+      path: { auctionId: auction.id, bidId: newBid.id },
+    })
+
+    acceptAuctionRequest.mutate({ path: { id: auction.id } })
+
+    setBuyOpen(false)
   }
 
   // Position map
@@ -231,8 +279,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                         <Button
                           size="sm"
                           onClick={() => {
-                            onBuyNow?.(auction.id)
-                            setBuyOpen(false)
+                            handleSubmitBuyNow(auction.options?.buyNowPrice)
                           }}
                         >
                           Confirmer
