@@ -6,6 +6,7 @@ import be.labil.anacarde.domain.dto.db.ValidationGroups;
 import be.labil.anacarde.domain.dto.write.BidUpdateDto;
 import be.labil.anacarde.presentation.controller.annotations.ApiValidId;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -22,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Validated
 @SecurityRequirement(name = "jwt")
-@RequestMapping(value = "/api/auctions/{auctionId}/bids/", produces = "application/json")
+@RequestMapping(value = "/api/bids", produces = "application/json")
 @Tag(name = "bids", description = "Opérations relatives aux offres")
 public interface BidApi {
 
@@ -31,8 +32,7 @@ public interface BidApi {
 	@ApiResponses({
 			@ApiResponse(responseCode = "200", description = "", content = @Content(schema = @Schema(implementation = BidDto.class))),
 			@ApiResponse(responseCode = "404", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
-	ResponseEntity<BidDto> getBid(@ApiValidId @PathVariable("auctionId") Integer auctionId,
-			@ApiValidId @PathVariable("bidId") Integer bidId);
+	ResponseEntity<BidDto> getBid(@ApiValidId @PathVariable("bidId") Integer bidId);
 
 	@Operation(summary = "Créer une offre")
 	@PostMapping
@@ -40,9 +40,8 @@ public interface BidApi {
 			@ApiResponse(responseCode = "201", description = "", content = @Content(schema = @Schema(implementation = BidDto.class))),
 			@ApiResponse(responseCode = "400", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
 			@ApiResponse(responseCode = "409", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
-	ResponseEntity<BidDto> createBid(@ApiValidId @PathVariable("auctionId") Integer auctionId,
-			@Validated({Default.class,
-					ValidationGroups.Create.class}) @RequestBody BidUpdateDto bidDto);
+	ResponseEntity<BidDto> createBid(@Validated({Default.class,
+			ValidationGroups.Create.class}) @RequestBody BidUpdateDto bidDto);
 
 	@Operation(summary = "Mettre à jour une offre")
 	@PutMapping(value = "/{bidId}")
@@ -50,31 +49,29 @@ public interface BidApi {
 			@ApiResponse(responseCode = "201", description = "", content = @Content(schema = @Schema(implementation = BidDto.class))),
 			@ApiResponse(responseCode = "400", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
 			@ApiResponse(responseCode = "409", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
-	ResponseEntity<BidDto> updateBid(@ApiValidId @PathVariable("auctionId") Integer auctionId,
-			@ApiValidId @PathVariable("bidId") Integer bidId, @Validated({Default.class,
-					ValidationGroups.Update.class}) @RequestBody BidUpdateDto bidDto);
+	ResponseEntity<BidDto> updateBid(@ApiValidId @PathVariable("bidId") Integer bidId, @Validated({
+			Default.class, ValidationGroups.Update.class}) @RequestBody BidUpdateDto bidDto);
 
 	@Operation(summary = "Accepter une offre")
 	@PutMapping(value = "/{bidId}/accept")
 	@ApiResponses({
 			@ApiResponse(responseCode = "200", description = "", content = @Content(schema = @Schema(implementation = BidDto.class))),
 			@ApiResponse(responseCode = "404", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
-	ResponseEntity<BidDto> acceptBid(@ApiValidId @PathVariable("auctionId") Integer auctionId,
-			@ApiValidId @PathVariable("bidId") Integer bidId);
+	ResponseEntity<BidDto> acceptBid(@ApiValidId @PathVariable("bidId") Integer bidId);
 
 	@Operation(summary = "Rejeter une offre")
 	@PutMapping(value = "/{bidId}/reject")
 	@ApiResponses({
 			@ApiResponse(responseCode = "200", description = "", content = @Content(schema = @Schema(implementation = BidDto.class))),
 			@ApiResponse(responseCode = "404", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
-	ResponseEntity<BidDto> rejectBid(@ApiValidId @PathVariable("auctionId") Integer auctionId,
-			@ApiValidId @PathVariable("bidId") Integer bidId);
+	ResponseEntity<BidDto> rejectBid(@ApiValidId @PathVariable("bidId") Integer bidId);
 
 	@Operation(summary = "Obtenir toutes les offres")
 	@GetMapping
 	@ApiResponses({
 			@ApiResponse(responseCode = "200", description = "Liste récupérée avec succès", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = BidDto.class))))})
-	ResponseEntity<List<BidDto>> listBids(@ApiValidId @PathVariable("auctionId") Integer auctionId);
+	ResponseEntity<List<BidDto>> listBids(
+			@Parameter(description = "ID de l'enchère contenant les offres") @RequestParam(value = "auctionId", required = false) Integer auctionId);
 
 	@Operation(summary = "Supprimer une offre")
 	@DeleteMapping("/{bidId}")
@@ -82,6 +79,5 @@ public interface BidApi {
 	@ApiResponses({
 			@ApiResponse(responseCode = "200", description = "", content = @Content(schema = @Schema())),
 			@ApiResponse(responseCode = "404", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
-	ResponseEntity<Void> deleteBid(@ApiValidId @PathVariable("auctionId") Integer auctionId,
-			@ApiValidId @PathVariable("bidId") Integer bidId);
+	ResponseEntity<Void> deleteBid(@ApiValidId @PathVariable("bidId") Integer bidId);
 }
