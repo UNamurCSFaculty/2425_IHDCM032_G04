@@ -129,6 +129,7 @@ import type {
   CreateQualityControlResponse,
   CreateQualityData,
   CreateQualityError,
+  CreateQualityResponse,
   CreateStoreData,
   CreateStoreError,
   CreateStoreResponse,
@@ -242,6 +243,7 @@ import type {
   UpdateQualityControlResponse,
   UpdateQualityData,
   UpdateQualityError,
+  UpdateQualityResponse,
   UpdateRegionData,
   UpdateRegionError,
   UpdateRegionResponse,
@@ -651,12 +653,12 @@ export const getQualityOptions = (options: Options<GetQualityData>) => {
 export const updateQualityMutation = (
   options?: Partial<Options<UpdateQualityData>>
 ): UseMutationOptions<
-  unknown,
+  UpdateQualityResponse,
   UpdateQualityError,
   Options<UpdateQualityData>
 > => {
   const mutationOptions: UseMutationOptions<
-    unknown,
+    UpdateQualityResponse,
     UpdateQualityError,
     Options<UpdateQualityData>
   > = {
@@ -1005,96 +1007,6 @@ export const updateContractOfferMutation = (
   return mutationOptions
 }
 
-export const deleteAuctionMutation = (
-  options?: Partial<Options<DeleteAuctionData>>
-): UseMutationOptions<
-  DeleteAuctionResponse,
-  DeleteAuctionError,
-  Options<DeleteAuctionData>
-> => {
-  const mutationOptions: UseMutationOptions<
-    DeleteAuctionResponse,
-    DeleteAuctionError,
-    Options<DeleteAuctionData>
-  > = {
-    mutationFn: async localOptions => {
-      const { data } = await deleteAuction({
-        ...options,
-        ...localOptions,
-        throwOnError: true,
-      })
-      return data
-    },
-  }
-  return mutationOptions
-}
-
-export const getAuctionQueryKey = (options: Options<GetAuctionData>) =>
-  createQueryKey('getAuction', options)
-
-export const getAuctionOptions = (options: Options<GetAuctionData>) => {
-  return queryOptions({
-    queryFn: async ({ queryKey, signal }) => {
-      const { data } = await getAuction({
-        ...options,
-        ...queryKey[0],
-        signal,
-        throwOnError: true,
-      })
-      return data
-    },
-    queryKey: getAuctionQueryKey(options),
-  })
-}
-
-export const updateAuctionMutation = (
-  options?: Partial<Options<UpdateAuctionData>>
-): UseMutationOptions<
-  UpdateAuctionResponse,
-  UpdateAuctionError,
-  Options<UpdateAuctionData>
-> => {
-  const mutationOptions: UseMutationOptions<
-    UpdateAuctionResponse,
-    UpdateAuctionError,
-    Options<UpdateAuctionData>
-  > = {
-    mutationFn: async localOptions => {
-      const { data } = await updateAuction({
-        ...options,
-        ...localOptions,
-        throwOnError: true,
-      })
-      return data
-    },
-  }
-  return mutationOptions
-}
-
-export const acceptAuctionMutation = (
-  options?: Partial<Options<AcceptAuctionData>>
-): UseMutationOptions<
-  AcceptAuctionResponse,
-  AcceptAuctionError,
-  Options<AcceptAuctionData>
-> => {
-  const mutationOptions: UseMutationOptions<
-    AcceptAuctionResponse,
-    AcceptAuctionError,
-    Options<AcceptAuctionData>
-  > = {
-    mutationFn: async localOptions => {
-      const { data } = await acceptAuction({
-        ...options,
-        ...localOptions,
-        throwOnError: true,
-      })
-      return data
-    },
-  }
-  return mutationOptions
-}
-
 export const deleteBidMutation = (
   options?: Partial<Options<DeleteBidData>>
 ): UseMutationOptions<
@@ -1199,6 +1111,96 @@ export const acceptBidMutation = (
   > = {
     mutationFn: async localOptions => {
       const { data } = await acceptBid({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+export const deleteAuctionMutation = (
+  options?: Partial<Options<DeleteAuctionData>>
+): UseMutationOptions<
+  DeleteAuctionResponse,
+  DeleteAuctionError,
+  Options<DeleteAuctionData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    DeleteAuctionResponse,
+    DeleteAuctionError,
+    Options<DeleteAuctionData>
+  > = {
+    mutationFn: async localOptions => {
+      const { data } = await deleteAuction({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+export const getAuctionQueryKey = (options: Options<GetAuctionData>) =>
+  createQueryKey('getAuction', options)
+
+export const getAuctionOptions = (options: Options<GetAuctionData>) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getAuction({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: getAuctionQueryKey(options),
+  })
+}
+
+export const updateAuctionMutation = (
+  options?: Partial<Options<UpdateAuctionData>>
+): UseMutationOptions<
+  UpdateAuctionResponse,
+  UpdateAuctionError,
+  Options<UpdateAuctionData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    UpdateAuctionResponse,
+    UpdateAuctionError,
+    Options<UpdateAuctionData>
+  > = {
+    mutationFn: async localOptions => {
+      const { data } = await updateAuction({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+export const acceptAuctionMutation = (
+  options?: Partial<Options<AcceptAuctionData>>
+): UseMutationOptions<
+  AcceptAuctionResponse,
+  AcceptAuctionError,
+  Options<AcceptAuctionData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    AcceptAuctionResponse,
+    AcceptAuctionError,
+    Options<AcceptAuctionData>
+  > = {
+    mutationFn: async localOptions => {
+      const { data } = await acceptAuction({
         ...options,
         ...localOptions,
         throwOnError: true,
@@ -1545,12 +1547,12 @@ export const createQualityOptions = (options: Options<CreateQualityData>) => {
 export const createQualityMutation = (
   options?: Partial<Options<CreateQualityData>>
 ): UseMutationOptions<
-  unknown,
+  CreateQualityResponse,
   CreateQualityError,
   Options<CreateQualityData>
 > => {
   const mutationOptions: UseMutationOptions<
-    unknown,
+    CreateQualityResponse,
     CreateQualityError,
     Options<CreateQualityData>
   > = {
@@ -1986,6 +1988,66 @@ export const sendContactMessageMutation = (
   return mutationOptions
 }
 
+export const listBidsQueryKey = (options?: Options<ListBidsData>) =>
+  createQueryKey('listBids', options)
+
+export const listBidsOptions = (options?: Options<ListBidsData>) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await listBids({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: listBidsQueryKey(options),
+  })
+}
+
+export const createBidQueryKey = (options: Options<CreateBidData>) =>
+  createQueryKey('createBid', options)
+
+export const createBidOptions = (options: Options<CreateBidData>) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await createBid({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: createBidQueryKey(options),
+  })
+}
+
+export const createBidMutation = (
+  options?: Partial<Options<CreateBidData>>
+): UseMutationOptions<
+  CreateBidResponse,
+  CreateBidError,
+  Options<CreateBidData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    CreateBidResponse,
+    CreateBidError,
+    Options<CreateBidData>
+  > = {
+    mutationFn: async localOptions => {
+      const { data } = await createBid({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
 export const logoutQueryKey = (options?: Options<LogoutData>) =>
   createQueryKey('logout', options)
 
@@ -2119,66 +2181,6 @@ export const createAuctionMutation = (
   > = {
     mutationFn: async localOptions => {
       const { data } = await createAuction({
-        ...options,
-        ...localOptions,
-        throwOnError: true,
-      })
-      return data
-    },
-  }
-  return mutationOptions
-}
-
-export const listBidsQueryKey = (options: Options<ListBidsData>) =>
-  createQueryKey('listBids', options)
-
-export const listBidsOptions = (options: Options<ListBidsData>) => {
-  return queryOptions({
-    queryFn: async ({ queryKey, signal }) => {
-      const { data } = await listBids({
-        ...options,
-        ...queryKey[0],
-        signal,
-        throwOnError: true,
-      })
-      return data
-    },
-    queryKey: listBidsQueryKey(options),
-  })
-}
-
-export const createBidQueryKey = (options: Options<CreateBidData>) =>
-  createQueryKey('createBid', options)
-
-export const createBidOptions = (options: Options<CreateBidData>) => {
-  return queryOptions({
-    queryFn: async ({ queryKey, signal }) => {
-      const { data } = await createBid({
-        ...options,
-        ...queryKey[0],
-        signal,
-        throwOnError: true,
-      })
-      return data
-    },
-    queryKey: createBidQueryKey(options),
-  })
-}
-
-export const createBidMutation = (
-  options?: Partial<Options<CreateBidData>>
-): UseMutationOptions<
-  CreateBidResponse,
-  CreateBidError,
-  Options<CreateBidData>
-> => {
-  const mutationOptions: UseMutationOptions<
-    CreateBidResponse,
-    CreateBidError,
-    Options<CreateBidData>
-  > = {
-    mutationFn: async localOptions => {
-      const { data } = await createBid({
         ...options,
         ...localOptions,
         throwOnError: true,

@@ -702,29 +702,6 @@ export type QualityUpdateDto = {
   qualityTypeId: number
 }
 
-export type ApiError = {
-  /**
-   * human-readable error message
-   */
-  message?: string
-  errors?: Array<ApiErrorErrors>
-}
-
-export type ApiErrorErrors = {
-  /**
-   * For input validation errors, identifies where in the  JSON request body the error occurred.
-   */
-  path?: string
-  /**
-   * Human-readable error message.
-   */
-  message?: string
-  /**
-   * Code indicating error type.
-   */
-  errorCode?: string
-}
-
 /**
  * Objet de transfert de données pour les produits récoltés.
  */
@@ -953,6 +930,76 @@ export type ContractOfferDto = {
 }
 
 /**
+ * Objet de transfert pour créer ou mettre à jour une offres.
+ */
+export type BidUpdateDto = {
+  /**
+   * Montant de l'offre
+   */
+  amount: number
+  /**
+   * Date de création de l'offre
+   */
+  readonly creationDate?: string
+  /**
+   * Identifiant de l'enchère associée à l'offre
+   */
+  auctionId: number
+  /**
+   * Trader ayant passé l'offre
+   */
+  traderId: number
+  /**
+   * Statut de l'offre
+   */
+  statusId?: number
+}
+
+/**
+ * Objet de transfert de données pour les offres d'achat (Bid).
+ */
+export type BidDto = {
+  /**
+   * Identifiant unique
+   */
+  readonly id: number
+  /**
+   * Montant de l'offre
+   */
+  amount: number
+  /**
+   * Date de création de l'offre
+   */
+  readonly creationDate: string
+  /**
+   * Identifiant de l'enchère associée à l'offre
+   */
+  auctionId: number
+  /**
+   * Trader ayant passé l'offre
+   */
+  trader: UserMiniDto
+  /**
+   * Statut de l'offre
+   */
+  status: TradeStatusDto
+}
+
+/**
+ * Objet de transfert de données pour le statut d'une offre d'achat.
+ */
+export type TradeStatusDto = {
+  /**
+   * Identifiant unique
+   */
+  readonly id: number
+  /**
+   * Nom du statut
+   */
+  name: string
+}
+
+/**
  * Mise à jour des options d'enchère
  */
 export type AuctionOptionsUpdateDto = {
@@ -1126,74 +1173,27 @@ export type AuctionStrategyDto = {
   name: string
 }
 
-/**
- * Objet de transfert de données pour les offres d'achat (Bid).
- */
-export type BidDto = {
+export type ApiError = {
   /**
-   * Identifiant unique
+   * human-readable error message
    */
-  readonly id: number
-  /**
-   * Montant de l'offre
-   */
-  amount: number
-  /**
-   * Date de création de l'offre
-   */
-  readonly creationDate: string
-  /**
-   * Identifiant de l'enchère associée à l'offre
-   */
-  auctionId: number
-  /**
-   * Trader ayant passé l'offre
-   */
-  trader: UserMiniDto
-  /**
-   * Statut de l'offre
-   */
-  status: TradeStatusDto
+  message?: string
+  errors?: Array<ApiErrorErrors>
 }
 
-/**
- * Objet de transfert de données pour le statut d'une offre d'achat.
- */
-export type TradeStatusDto = {
+export type ApiErrorErrors = {
   /**
-   * Identifiant unique
+   * For input validation errors, identifies where in the  JSON request body the error occurred.
    */
-  readonly id: number
+  path?: string
   /**
-   * Nom du statut
+   * Human-readable error message.
    */
-  name: string
-}
-
-/**
- * Objet de transfert pour créer ou mettre à jour une offres.
- */
-export type BidUpdateDto = {
+  message?: string
   /**
-   * Montant de l'offre
+   * Code indicating error type.
    */
-  amount: number
-  /**
-   * Date de création de l'offre
-   */
-  readonly creationDate?: string
-  /**
-   * Identifiant de l'enchère associée à l'offre
-   */
-  auctionId: number
-  /**
-   * Trader ayant passé l'offre
-   */
-  traderId: number
-  /**
-   * Statut de l'offre
-   */
-  statusId?: number
+  errorCode?: string
 }
 
 /**
@@ -1918,27 +1918,21 @@ export type GetQualityData = {
 
 export type GetQualityErrors = {
   /**
-   * Unauthorized
-   */
-  401: ApiError
-  /**
-   * Forbidden
-   */
-  403: ApiError
-  /**
    * Not Found
    */
-  404: ApiError
+  404: ApiErrorResponse
 }
 
 export type GetQualityError = GetQualityErrors[keyof GetQualityErrors]
 
 export type GetQualityResponses = {
   /**
-   * Success
+   * OK
    */
-  200: unknown
+  200: QualityDto
 }
+
+export type GetQualityResponse = GetQualityResponses[keyof GetQualityResponses]
 
 export type UpdateQualityData = {
   body: QualityUpdateDto
@@ -1956,29 +1950,24 @@ export type UpdateQualityErrors = {
   /**
    * Bad Request
    */
-  400: ApiError
+  400: ApiErrorResponse
   /**
-   * Unauthorized
+   * Conflict
    */
-  401: ApiError
-  /**
-   * Forbidden
-   */
-  403: ApiError
-  /**
-   * Not Found
-   */
-  404: ApiError
+  409: ApiErrorResponse
 }
 
 export type UpdateQualityError = UpdateQualityErrors[keyof UpdateQualityErrors]
 
 export type UpdateQualityResponses = {
   /**
-   * Updated successfully
+   * Created
    */
-  200: unknown
+  201: QualityDto
 }
+
+export type UpdateQualityResponse =
+  UpdateQualityResponses[keyof UpdateQualityResponses]
 
 export type DeleteProductData = {
   body?: never
@@ -2495,6 +2484,164 @@ export type UpdateContractOfferResponses = {
 export type UpdateContractOfferResponse =
   UpdateContractOfferResponses[keyof UpdateContractOfferResponses]
 
+export type DeleteBidData = {
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    bidId: number
+  }
+  query?: never
+  url: '/api/bids/{bidId}'
+}
+
+export type DeleteBidErrors = {
+  /**
+   * Not Found
+   */
+  404: ApiErrorResponse
+}
+
+export type DeleteBidError = DeleteBidErrors[keyof DeleteBidErrors]
+
+export type DeleteBidResponses = {
+  /**
+   * OK
+   */
+  200: unknown
+  /**
+   * No Content
+   */
+  204: void
+}
+
+export type DeleteBidResponse = DeleteBidResponses[keyof DeleteBidResponses]
+
+export type GetBidData = {
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    bidId: number
+  }
+  query?: never
+  url: '/api/bids/{bidId}'
+}
+
+export type GetBidErrors = {
+  /**
+   * Not Found
+   */
+  404: ApiErrorResponse
+}
+
+export type GetBidError = GetBidErrors[keyof GetBidErrors]
+
+export type GetBidResponses = {
+  /**
+   * OK
+   */
+  200: BidDto
+}
+
+export type GetBidResponse = GetBidResponses[keyof GetBidResponses]
+
+export type UpdateBidData = {
+  body: BidUpdateDto
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    bidId: number
+  }
+  query?: never
+  url: '/api/bids/{bidId}'
+}
+
+export type UpdateBidErrors = {
+  /**
+   * Bad Request
+   */
+  400: ApiErrorResponse
+  /**
+   * Conflict
+   */
+  409: ApiErrorResponse
+}
+
+export type UpdateBidError = UpdateBidErrors[keyof UpdateBidErrors]
+
+export type UpdateBidResponses = {
+  /**
+   * Created
+   */
+  201: BidDto
+}
+
+export type UpdateBidResponse = UpdateBidResponses[keyof UpdateBidResponses]
+
+export type RejectBidData = {
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    bidId: number
+  }
+  query?: never
+  url: '/api/bids/{bidId}/reject'
+}
+
+export type RejectBidErrors = {
+  /**
+   * Not Found
+   */
+  404: ApiErrorResponse
+}
+
+export type RejectBidError = RejectBidErrors[keyof RejectBidErrors]
+
+export type RejectBidResponses = {
+  /**
+   * OK
+   */
+  200: BidDto
+}
+
+export type RejectBidResponse = RejectBidResponses[keyof RejectBidResponses]
+
+export type AcceptBidData = {
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    bidId: number
+  }
+  query?: never
+  url: '/api/bids/{bidId}/accept'
+}
+
+export type AcceptBidErrors = {
+  /**
+   * Not Found
+   */
+  404: ApiErrorResponse
+}
+
+export type AcceptBidError = AcceptBidErrors[keyof AcceptBidErrors]
+
+export type AcceptBidResponses = {
+  /**
+   * OK
+   */
+  200: BidDto
+}
+
+export type AcceptBidResponse = AcceptBidResponses[keyof AcceptBidResponses]
+
 export type DeleteAuctionData = {
   body?: never
   path: {
@@ -2625,184 +2772,6 @@ export type AcceptAuctionResponses = {
 
 export type AcceptAuctionResponse =
   AcceptAuctionResponses[keyof AcceptAuctionResponses]
-
-export type DeleteBidData = {
-  body?: never
-  path: {
-    /**
-     * Identifiant de la ressource
-     */
-    auctionId: number
-    /**
-     * Identifiant de la ressource
-     */
-    bidId: number
-  }
-  query?: never
-  url: '/api/auctions/{auctionId}/bids/{bidId}'
-}
-
-export type DeleteBidErrors = {
-  /**
-   * Not Found
-   */
-  404: ApiErrorResponse
-}
-
-export type DeleteBidError = DeleteBidErrors[keyof DeleteBidErrors]
-
-export type DeleteBidResponses = {
-  /**
-   * OK
-   */
-  200: unknown
-  /**
-   * No Content
-   */
-  204: void
-}
-
-export type DeleteBidResponse = DeleteBidResponses[keyof DeleteBidResponses]
-
-export type GetBidData = {
-  body?: never
-  path: {
-    /**
-     * Identifiant de la ressource
-     */
-    auctionId: number
-    /**
-     * Identifiant de la ressource
-     */
-    bidId: number
-  }
-  query?: never
-  url: '/api/auctions/{auctionId}/bids/{bidId}'
-}
-
-export type GetBidErrors = {
-  /**
-   * Not Found
-   */
-  404: ApiErrorResponse
-}
-
-export type GetBidError = GetBidErrors[keyof GetBidErrors]
-
-export type GetBidResponses = {
-  /**
-   * OK
-   */
-  200: BidDto
-}
-
-export type GetBidResponse = GetBidResponses[keyof GetBidResponses]
-
-export type UpdateBidData = {
-  body: BidUpdateDto
-  path: {
-    /**
-     * Identifiant de la ressource
-     */
-    auctionId: number
-    /**
-     * Identifiant de la ressource
-     */
-    bidId: number
-  }
-  query?: never
-  url: '/api/auctions/{auctionId}/bids/{bidId}'
-}
-
-export type UpdateBidErrors = {
-  /**
-   * Bad Request
-   */
-  400: ApiErrorResponse
-  /**
-   * Conflict
-   */
-  409: ApiErrorResponse
-}
-
-export type UpdateBidError = UpdateBidErrors[keyof UpdateBidErrors]
-
-export type UpdateBidResponses = {
-  /**
-   * Created
-   */
-  201: BidDto
-}
-
-export type UpdateBidResponse = UpdateBidResponses[keyof UpdateBidResponses]
-
-export type RejectBidData = {
-  body?: never
-  path: {
-    /**
-     * Identifiant de la ressource
-     */
-    auctionId: number
-    /**
-     * Identifiant de la ressource
-     */
-    bidId: number
-  }
-  query?: never
-  url: '/api/auctions/{auctionId}/bids/{bidId}/reject'
-}
-
-export type RejectBidErrors = {
-  /**
-   * Not Found
-   */
-  404: ApiErrorResponse
-}
-
-export type RejectBidError = RejectBidErrors[keyof RejectBidErrors]
-
-export type RejectBidResponses = {
-  /**
-   * OK
-   */
-  200: BidDto
-}
-
-export type RejectBidResponse = RejectBidResponses[keyof RejectBidResponses]
-
-export type AcceptBidData = {
-  body?: never
-  path: {
-    /**
-     * Identifiant de la ressource
-     */
-    auctionId: number
-    /**
-     * Identifiant de la ressource
-     */
-    bidId: number
-  }
-  query?: never
-  url: '/api/auctions/{auctionId}/bids/{bidId}/accept'
-}
-
-export type AcceptBidErrors = {
-  /**
-   * Not Found
-   */
-  404: ApiErrorResponse
-}
-
-export type AcceptBidError = AcceptBidErrors[keyof AcceptBidErrors]
-
-export type AcceptBidResponses = {
-  /**
-   * OK
-   */
-  200: BidDto
-}
-
-export type AcceptBidResponse = AcceptBidResponses[keyof AcceptBidResponses]
 
 export type DeleteAuctionStrategyData = {
   body?: never
@@ -3106,29 +3075,15 @@ export type ListQualitiesData = {
   url: '/api/qualities'
 }
 
-export type ListQualitiesErrors = {
-  /**
-   * Unauthorized
-   */
-  401: ApiError
-  /**
-   * Forbidden
-   */
-  403: ApiError
-  /**
-   * Not Found
-   */
-  404: ApiError
-}
-
-export type ListQualitiesError = ListQualitiesErrors[keyof ListQualitiesErrors]
-
 export type ListQualitiesResponses = {
   /**
-   * Success
+   * Liste récupérée avec succès
    */
-  200: unknown
+  200: Array<QualityDto>
 }
+
+export type ListQualitiesResponse =
+  ListQualitiesResponses[keyof ListQualitiesResponses]
 
 export type CreateQualityData = {
   body: QualityUpdateDto
@@ -3141,15 +3096,11 @@ export type CreateQualityErrors = {
   /**
    * Bad Request
    */
-  400: ApiError
+  400: ApiErrorResponse
   /**
-   * Unauthorized
+   * Conflict
    */
-  401: ApiError
-  /**
-   * Forbidden
-   */
-  403: ApiError
+  409: ApiErrorResponse
 }
 
 export type CreateQualityError = CreateQualityErrors[keyof CreateQualityErrors]
@@ -3158,8 +3109,11 @@ export type CreateQualityResponses = {
   /**
    * Created
    */
-  201: unknown
+  201: QualityDto
 }
+
+export type CreateQualityResponse =
+  CreateQualityResponses[keyof CreateQualityResponses]
 
 export type ListProductsData = {
   body?: never
@@ -3506,6 +3460,56 @@ export type SendContactMessageResponses = {
   200: unknown
 }
 
+export type ListBidsData = {
+  body?: never
+  path?: never
+  query?: {
+    /**
+     * ID de l'enchère contenant les offres
+     */
+    auctionId?: number
+  }
+  url: '/api/bids'
+}
+
+export type ListBidsResponses = {
+  /**
+   * Liste récupérée avec succès
+   */
+  200: Array<BidDto>
+}
+
+export type ListBidsResponse = ListBidsResponses[keyof ListBidsResponses]
+
+export type CreateBidData = {
+  body: BidUpdateDto
+  path?: never
+  query?: never
+  url: '/api/bids'
+}
+
+export type CreateBidErrors = {
+  /**
+   * Bad Request
+   */
+  400: ApiErrorResponse
+  /**
+   * Conflict
+   */
+  409: ApiErrorResponse
+}
+
+export type CreateBidError = CreateBidErrors[keyof CreateBidErrors]
+
+export type CreateBidResponses = {
+  /**
+   * Created
+   */
+  201: BidDto
+}
+
+export type CreateBidResponse = CreateBidResponses[keyof CreateBidResponses]
+
 export type LogoutData = {
   body?: never
   path?: never
@@ -3610,61 +3614,6 @@ export type CreateAuctionResponses = {
 
 export type CreateAuctionResponse =
   CreateAuctionResponses[keyof CreateAuctionResponses]
-
-export type ListBidsData = {
-  body?: never
-  path: {
-    /**
-     * Identifiant de la ressource
-     */
-    auctionId: number
-  }
-  query?: never
-  url: '/api/auctions/{auctionId}/bids/'
-}
-
-export type ListBidsResponses = {
-  /**
-   * Liste récupérée avec succès
-   */
-  200: Array<BidDto>
-}
-
-export type ListBidsResponse = ListBidsResponses[keyof ListBidsResponses]
-
-export type CreateBidData = {
-  body: BidUpdateDto
-  path: {
-    /**
-     * Identifiant de la ressource
-     */
-    auctionId: number
-  }
-  query?: never
-  url: '/api/auctions/{auctionId}/bids/'
-}
-
-export type CreateBidErrors = {
-  /**
-   * Bad Request
-   */
-  400: ApiErrorResponse
-  /**
-   * Conflict
-   */
-  409: ApiErrorResponse
-}
-
-export type CreateBidError = CreateBidErrors[keyof CreateBidErrors]
-
-export type CreateBidResponses = {
-  /**
-   * Created
-   */
-  201: BidDto
-}
-
-export type CreateBidResponse = CreateBidResponses[keyof CreateBidResponses]
 
 export type ListAuctionStrategiesData = {
   body?: never

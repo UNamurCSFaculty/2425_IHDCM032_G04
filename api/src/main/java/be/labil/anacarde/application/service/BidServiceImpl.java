@@ -51,7 +51,12 @@ public class BidServiceImpl implements BidService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<BidDto> listBids(Integer auctionId) {
-		List<Bid> bids = bidRepository.findByAuctionId(auctionId);
+		List<Bid> bids;
+		if (auctionId != null) {
+			bids = bidRepository.findByAuctionId(auctionId);
+		} else {
+			bids = bidRepository.findAll();
+		}
 		return bids.stream().map(bidMapper::toDto).collect(Collectors.toList());
 	}
 

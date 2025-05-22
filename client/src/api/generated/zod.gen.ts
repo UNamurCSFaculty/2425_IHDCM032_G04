@@ -296,17 +296,6 @@ export const zQualityUpdateDto = z.object({
   qualityTypeId: z.number().int(),
 })
 
-export const zApiErrorErrors = z.object({
-  path: z.string().optional(),
-  message: z.string().optional(),
-  errorCode: z.string().optional(),
-})
-
-export const zApiError = z.object({
-  message: z.string().optional(),
-  errors: z.array(zApiErrorErrors).optional(),
-})
-
 export const zProductUpdateDto = z.object({
   id: z.number().int().readonly(),
   deliveryDate: z.string().datetime().optional(),
@@ -411,6 +400,28 @@ export const zContractOfferDto = z.object({
   quality: zQualityDto,
 })
 
+export const zBidUpdateDto = z.object({
+  amount: z.number(),
+  creationDate: z.string().datetime().readonly().optional(),
+  auctionId: z.number().int(),
+  traderId: z.number().int(),
+  statusId: z.number().int().optional(),
+})
+
+export const zTradeStatusDto = z.object({
+  id: z.number().int().readonly(),
+  name: z.string().min(1),
+})
+
+export const zBidDto = z.object({
+  id: z.number().int().readonly(),
+  amount: z.number(),
+  creationDate: z.string().datetime().readonly(),
+  auctionId: z.number().int(),
+  trader: zUserMiniDto,
+  status: zTradeStatusDto,
+})
+
 export const zAuctionOptionsUpdateDto = z.object({
   strategyId: z.number().int().optional(),
   fixedPriceKg: z.number().optional(),
@@ -431,20 +442,6 @@ export const zAuctionUpdateDto = z.object({
   traderId: z.number().int(),
   statusId: z.number().int().optional(),
   options: zAuctionOptionsUpdateDto.optional(),
-})
-
-export const zTradeStatusDto = z.object({
-  id: z.number().int().readonly(),
-  name: z.string().min(1),
-})
-
-export const zBidDto = z.object({
-  id: z.number().int().readonly(),
-  amount: z.number(),
-  creationDate: z.string().datetime().readonly(),
-  auctionId: z.number().int(),
-  trader: zUserMiniDto,
-  status: zTradeStatusDto,
 })
 
 export const zAuctionStrategyDto = z.object({
@@ -476,12 +473,15 @@ export const zAuctionDto = z.object({
   options: zAuctionOptionsDto.optional(),
 })
 
-export const zBidUpdateDto = z.object({
-  amount: z.number(),
-  creationDate: z.string().datetime().readonly().optional(),
-  auctionId: z.number().int(),
-  traderId: z.number().int(),
-  statusId: z.number().int().optional(),
+export const zApiErrorErrors = z.object({
+  path: z.string().optional(),
+  message: z.string().optional(),
+  errorCode: z.string().optional(),
+})
+
+export const zApiError = z.object({
+  message: z.string().optional(),
+  errors: z.array(zApiErrorErrors).optional(),
 })
 
 export const zContactRequestDto = z.object({
@@ -614,6 +614,10 @@ export const zUpdateQualityControlResponse = zQualityControlDto
 
 export const zDeleteQualityResponse = z.union([z.unknown(), z.void()])
 
+export const zGetQualityResponse = zQualityDto
+
+export const zUpdateQualityResponse = zQualityDto
+
 export const zDeleteProductResponse = z.union([z.unknown(), z.void()])
 
 export const zGetProductResponse = zProductDto
@@ -644,14 +648,6 @@ export const zGetContractOfferResponse = zContractOfferDto
 
 export const zUpdateContractOfferResponse = zContractOfferDto
 
-export const zDeleteAuctionResponse = z.union([z.unknown(), z.void()])
-
-export const zGetAuctionResponse = zAuctionDto
-
-export const zUpdateAuctionResponse = zAuctionUpdateDto
-
-export const zAcceptAuctionResponse = zAuctionDto
-
 export const zDeleteBidResponse = z.union([z.unknown(), z.void()])
 
 export const zGetBidResponse = zBidDto
@@ -661,6 +657,14 @@ export const zUpdateBidResponse = zBidDto
 export const zRejectBidResponse = zBidDto
 
 export const zAcceptBidResponse = zBidDto
+
+export const zDeleteAuctionResponse = z.union([z.unknown(), z.void()])
+
+export const zGetAuctionResponse = zAuctionDto
+
+export const zUpdateAuctionResponse = zAuctionUpdateDto
+
+export const zAcceptAuctionResponse = zAuctionDto
 
 export const zDeleteAuctionStrategyResponse = z.union([z.unknown(), z.void()])
 
@@ -677,6 +681,10 @@ export const zCreateStoreResponse = zStoreDetailDto
 export const zListQualityControlsResponse = z.array(zQualityControlDto)
 
 export const zCreateQualityControlResponse = zQualityControlDto
+
+export const zListQualitiesResponse = z.array(zQualityDto)
+
+export const zCreateQualityResponse = zQualityDto
 
 export const zListProductsResponse = z.array(zProductDto)
 
@@ -702,15 +710,15 @@ export const zListContractOffersResponse = z.array(zContractOfferDto)
 
 export const zCreateContractOfferResponse = zContractOfferDto
 
+export const zListBidsResponse = z.array(zBidDto)
+
+export const zCreateBidResponse = zBidDto
+
 export const zAuthenticateUserResponse = zUserDetailDto
 
 export const zListAuctionsResponse = z.array(zAuctionDto)
 
 export const zCreateAuctionResponse = zAuctionUpdateDto
-
-export const zListBidsResponse = z.array(zBidDto)
-
-export const zCreateBidResponse = zBidDto
 
 export const zListRegionsResponse = z.array(zRegionDto)
 
