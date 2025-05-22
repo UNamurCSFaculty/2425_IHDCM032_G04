@@ -40,18 +40,13 @@ public class QualityControlUpdateDto {
 	@Schema(description = "Inspecteur qualité associé", requiredMode = Schema.RequiredMode.REQUIRED)
 	private Integer qualityInspectorId;
 
-	/** Produit associé au contrôle qualité. */
-	@NotNull(message = "Le produit est requis")
-	@Schema(description = "Produit associé", requiredMode = Schema.RequiredMode.REQUIRED)
-	private Integer productId;
-
 	/** Qualité du produit mesurée. */
 	@NotNull(message = "La qualité est requise")
 	@Schema(description = "Qualité associée", requiredMode = Schema.RequiredMode.REQUIRED)
 	private Integer qualityId;
 
 	/** Document associé au contrôle qualité. */
-	@NotNull(message = "Le document est requis")
+	// TODO add NotNull
 	@Schema(description = "Document associé au contrôle qualité")
 	private Integer documentId;
 }

@@ -94,6 +94,9 @@ import type {
   DeleteUserData,
   DeleteUserError,
   DeleteUserResponse,
+  DownloadDocumentData,
+  DownloadDocumentError,
+  DownloadDocumentResponse,
   GetApplicationDataData,
   GetApplicationDataError,
   GetApplicationDataResponse,
@@ -151,6 +154,7 @@ import type {
   ListCooperativesData,
   ListCooperativesResponse,
   ListDocumentsByUserData,
+  ListDocumentsByUserError,
   ListDocumentsByUserResponse,
   ListFieldsData,
   ListFieldsResponse,
@@ -188,9 +192,6 @@ import type {
   UpdateCooperativeData,
   UpdateCooperativeError,
   UpdateCooperativeResponse,
-  UpdateDocumentData,
-  UpdateDocumentError,
-  UpdateDocumentResponse,
   UpdateFieldData,
   UpdateFieldError,
   UpdateFieldResponse,
@@ -240,76 +241,6 @@ export type Options<
    * used to access values that aren't defined as part of the SDK function.
    */
   meta?: Record<string, unknown>
-}
-
-/**
- * Supprimer un champ
- */
-export const deleteField = <ThrowOnError extends boolean = false>(
-  options: Options<DeleteFieldData, ThrowOnError>
-) => {
-  return (options.client ?? _heyApiClient).delete<
-    DeleteFieldResponse,
-    DeleteFieldError,
-    ThrowOnError
-  >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
-    url: '/api/users/{userId}/fields/{id}',
-    ...options,
-  })
-}
-
-/**
- * Obtenir un champ
- */
-export const getField = <ThrowOnError extends boolean = false>(
-  options: Options<GetFieldData, ThrowOnError>
-) => {
-  return (options.client ?? _heyApiClient).get<
-    GetFieldResponse,
-    GetFieldError,
-    ThrowOnError
-  >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
-    url: '/api/users/{userId}/fields/{id}',
-    ...options,
-  })
-}
-
-/**
- * Mettre à jour un champ
- */
-export const updateField = <ThrowOnError extends boolean = false>(
-  options: Options<UpdateFieldData, ThrowOnError>
-) => {
-  return (options.client ?? _heyApiClient).put<
-    UpdateFieldResponse,
-    UpdateFieldError,
-    ThrowOnError
-  >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
-    url: '/api/users/{userId}/fields/{id}',
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...options?.headers,
-    },
-  })
 }
 
 /**
@@ -858,14 +789,14 @@ export const updateLanguage = <ThrowOnError extends boolean = false>(
 }
 
 /**
- * Supprimer un document
+ * Supprimer un champ
  */
-export const deleteDocument = <ThrowOnError extends boolean = false>(
-  options: Options<DeleteDocumentData, ThrowOnError>
+export const deleteField = <ThrowOnError extends boolean = false>(
+  options: Options<DeleteFieldData, ThrowOnError>
 ) => {
   return (options.client ?? _heyApiClient).delete<
-    DeleteDocumentResponse,
-    DeleteDocumentError,
+    DeleteFieldResponse,
+    DeleteFieldError,
     ThrowOnError
   >({
     security: [
@@ -874,20 +805,20 @@ export const deleteDocument = <ThrowOnError extends boolean = false>(
         type: 'http',
       },
     ],
-    url: '/api/documents/{id}',
+    url: '/api/fields/{id}',
     ...options,
   })
 }
 
 /**
- * Obtenir un document
+ * Obtenir un champ
  */
-export const getDocument = <ThrowOnError extends boolean = false>(
-  options: Options<GetDocumentData, ThrowOnError>
+export const getField = <ThrowOnError extends boolean = false>(
+  options: Options<GetFieldData, ThrowOnError>
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetDocumentResponse,
-    GetDocumentError,
+    GetFieldResponse,
+    GetFieldError,
     ThrowOnError
   >({
     security: [
@@ -896,20 +827,20 @@ export const getDocument = <ThrowOnError extends boolean = false>(
         type: 'http',
       },
     ],
-    url: '/api/documents/{id}',
+    url: '/api/fields/{id}',
     ...options,
   })
 }
 
 /**
- * Mettre à jour un document
+ * Mettre à jour un champ
  */
-export const updateDocument = <ThrowOnError extends boolean = false>(
-  options: Options<UpdateDocumentData, ThrowOnError>
+export const updateField = <ThrowOnError extends boolean = false>(
+  options: Options<UpdateFieldData, ThrowOnError>
 ) => {
   return (options.client ?? _heyApiClient).put<
-    UpdateDocumentResponse,
-    UpdateDocumentError,
+    UpdateFieldResponse,
+    UpdateFieldError,
     ThrowOnError
   >({
     security: [
@@ -918,7 +849,7 @@ export const updateDocument = <ThrowOnError extends boolean = false>(
         type: 'http',
       },
     ],
-    url: '/api/documents/{id}',
+    url: '/api/fields/{id}',
     ...options,
     headers: {
       'Content-Type': 'application/json',
@@ -1394,54 +1325,6 @@ export const createUser = <ThrowOnError extends boolean = false>(
 }
 
 /**
- * Obtenir tous les champs d’un utilisateur
- */
-export const listFields = <ThrowOnError extends boolean = false>(
-  options: Options<ListFieldsData, ThrowOnError>
-) => {
-  return (options.client ?? _heyApiClient).get<
-    ListFieldsResponse,
-    unknown,
-    ThrowOnError
-  >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
-    url: '/api/users/{userId}/fields',
-    ...options,
-  })
-}
-
-/**
- * Créer un champ
- */
-export const createField = <ThrowOnError extends boolean = false>(
-  options: Options<CreateFieldData, ThrowOnError>
-) => {
-  return (options.client ?? _heyApiClient).post<
-    CreateFieldResponse,
-    CreateFieldError,
-    ThrowOnError
-  >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
-    url: '/api/users/{userId}/fields',
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...options?.headers,
-    },
-  })
-}
-
-/**
  * Ajouter un rôle à un utilisateur
  * Ajoute un rôle spécifique à l'utilisateur.
  */
@@ -1707,7 +1590,71 @@ export const createLanguage = <ThrowOnError extends boolean = false>(
 }
 
 /**
- * Créer un document
+ * Obtenir tous les champs
+ */
+export const listFields = <ThrowOnError extends boolean = false>(
+  options?: Options<ListFieldsData, ThrowOnError>
+) => {
+  return (options?.client ?? _heyApiClient).get<
+    ListFieldsResponse,
+    unknown,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/fields',
+    ...options,
+  })
+}
+
+/**
+ * Créer un champ
+ */
+export const createField = <ThrowOnError extends boolean = false>(
+  options: Options<CreateFieldData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).post<
+    CreateFieldResponse,
+    CreateFieldError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/fields',
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options?.headers,
+    },
+  })
+}
+
+/**
+ * Lister les documents d’un utilisateur
+ */
+export const listDocumentsByUser = <ThrowOnError extends boolean = false>(
+  options: Options<ListDocumentsByUserData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).get<
+    ListDocumentsByUserResponse,
+    ListDocumentsByUserError,
+    ThrowOnError
+  >({
+    url: '/api/documents/users/{userId}',
+    ...options,
+  })
+}
+
+/**
+ * Créer un document et téléverser un fichier
  */
 export const createDocument = <ThrowOnError extends boolean = false>(
   options: Options<CreateDocumentData, ThrowOnError>
@@ -1717,16 +1664,11 @@ export const createDocument = <ThrowOnError extends boolean = false>(
     CreateDocumentError,
     ThrowOnError
   >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
-    url: '/api/documents',
+    ...formDataBodySerializer,
+    url: '/api/documents/users/{userId}',
     ...options,
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': null,
       ...options?.headers,
     },
   })
@@ -2054,23 +1996,49 @@ export const listRegions = <ThrowOnError extends boolean = false>(
 }
 
 /**
- * Lister les documents par utilisateur
+ * Supprimer un document
  */
-export const listDocumentsByUser = <ThrowOnError extends boolean = false>(
-  options: Options<ListDocumentsByUserData, ThrowOnError>
+export const deleteDocument = <ThrowOnError extends boolean = false>(
+  options: Options<DeleteDocumentData, ThrowOnError>
 ) => {
-  return (options.client ?? _heyApiClient).get<
-    ListDocumentsByUserResponse,
-    unknown,
+  return (options.client ?? _heyApiClient).delete<
+    DeleteDocumentResponse,
+    DeleteDocumentError,
     ThrowOnError
   >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
-    url: '/api/documents/users/{userId}',
+    url: '/api/documents/{id}',
+    ...options,
+  })
+}
+
+/**
+ * Obtenir un document
+ */
+export const getDocument = <ThrowOnError extends boolean = false>(
+  options: Options<GetDocumentData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).get<
+    GetDocumentResponse,
+    GetDocumentError,
+    ThrowOnError
+  >({
+    url: '/api/documents/{id}',
+    ...options,
+  })
+}
+
+/**
+ * Télécharger le fichier brut d’un document
+ */
+export const downloadDocument = <ThrowOnError extends boolean = false>(
+  options: Options<DownloadDocumentData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).get<
+    DownloadDocumentResponse,
+    DownloadDocumentError,
+    ThrowOnError
+  >({
+    url: '/api/documents/{id}/download',
     ...options,
   })
 }

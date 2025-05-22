@@ -14,7 +14,7 @@ export const Route = createFileRoute('/_authenticated/ventes/nouvelle-enchere')(
 function RouteComponent() {
   const user = useAuthUser()
 
-  const { data } = useSuspenseQuery({
+  const { data: productsData } = useSuspenseQuery({
     ...listProductsOptions({ query: { traderId: user.id } }),
     staleTime: 10_000,
   })
@@ -30,9 +30,7 @@ function RouteComponent() {
         ]}
         className="border-b border-gray-200 dark:border-gray-700"
       />
-      <div className="container mx-auto px-4 py-8">
-        <AuctionForm mode="create" products={data} />
-      </div>
+      <AuctionForm products={productsData} />
     </>
   )
 }

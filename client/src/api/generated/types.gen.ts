@@ -23,6 +23,165 @@ export type AddressDto = {
 }
 
 /**
+ * Objet de transfert de données pour les administrateurs.
+ */
+export type AdminUpdateDto = UserUpdateDto & {
+  type: 'admin'
+}
+
+/**
+ * Objet de transfert de données pour les transporteurs.
+ */
+export type CarrierUpdateDto = UserUpdateDto & {
+  type: 'carrier'
+} & {
+  /**
+   * Prix par kilomètre facturé par le transporteur
+   */
+  pricePerKm: number
+  /**
+   * Liste des identifiants des régions desservies par le transporteur
+   */
+  regionIds: Array<number>
+}
+
+/**
+ * Objet de transfert de données pour les exportateurs.
+ */
+export type ExporterUpdateDto = UserUpdateDto & {
+  type: 'exporter'
+}
+
+/**
+ * Objet de transfert de données pour les producteurs.
+ */
+export type ProducerUpdateDto = UserUpdateDto & {
+  type: 'producer'
+} & {
+  /**
+   * Identifiant agricole
+   */
+  agriculturalIdentifier: string
+  /**
+   * Coopérative du producteur
+   */
+  cooperativeId?: number
+}
+
+/**
+ * Objet de transfert de données pour les inspecteurs qualité.
+ */
+export type QualityInspectorUpdateDto = UserUpdateDto & {
+  type: 'quality_inspector'
+}
+
+/**
+ * Objet de transfert de données pour les rôles.
+ */
+export type RoleDto = {
+  /**
+   * Identifiant unique
+   */
+  readonly id: number
+  /**
+   * Nom du rôle
+   */
+  name: string
+}
+
+/**
+ * Objet de transfert de données pour les traders.
+ */
+export type TraderUpdateDto = UserUpdateDto & {
+  type: 'trader'
+}
+
+/**
+ * Objet de transfert de données pour les transformateurs.
+ */
+export type TransformerUpdateDto = UserUpdateDto & {
+  type: 'transformer'
+}
+
+/**
+ * Objet de transfert pour créer ou mettre à jour un utilisateur.
+ */
+export type UserUpdateDto = {
+  /**
+   * Prénom de l'utilisateur
+   */
+  firstName: string
+  /**
+   * Nom de famille de l'utilisateur
+   */
+  lastName: string
+  /**
+   * Adresse email de l'utilisateur
+   */
+  email: string
+  /**
+   * Date d'enregistrement
+   */
+  readonly registrationDate?: string
+  /**
+   * Date de validation
+   */
+  readonly validationDate?: string
+  /**
+   * Compte activé
+   */
+  enabled?: boolean
+  /**
+   * Numéro de téléphone (Bénin, format local à 10 chiffres débutant par 01, ou +229...)
+   */
+  phone?: string
+  /**
+   * Mot de passe de l'utilisateur
+   */
+  password?: string
+  /**
+   * Liste des rôles de l'utilisateur
+   */
+  roles?: Array<RoleDto>
+  /**
+   * Identifiant de la langue préférée
+   */
+  languageId: number
+  /**
+   * Adresse de l'utilisateur
+   */
+  address: AddressDto
+  /**
+   * Fichiers à uploader
+   */
+  documents?: Array<unknown>
+  type: string
+}
+
+/**
+ * Objet de transfert de données pour les administrateurs.
+ */
+export type AdminDetailDto = UserDetailDto & {
+  type: 'admin'
+}
+
+/**
+ * Objet de transfert de données pour les transporteurs.
+ */
+export type CarrierDetailDto = UserDetailDto & {
+  type: 'carrier'
+} & {
+  /**
+   * Prix par kilomètre facturé par le transporteur
+   */
+  pricePerKm: number
+  /**
+   * Liste des identifiants des régions desservies par le transporteur
+   */
+  regionIds: Array<number>
+}
+
+/**
  * Représente une coopérative.
  */
 export type CooperativeDto = {
@@ -83,26 +242,9 @@ export type DocumentDto = {
 }
 
 /**
- * Objet de transfert de données pour les champs.
+ * Objet de transfert de données pour les exportateurs.
  */
-export type FieldDto = {
-  /**
-   * Identifiant unique
-   */
-  readonly id: number
-  /**
-   * Identifiant du champ (code unique)
-   */
-  identifier?: string
-  /**
-   * Adresse du champ
-   */
-  address: AddressDto
-  /**
-   * Producteur associé au champ.
-   */
-  producer?: ProducerDetailDto
-}
+export type ExporterDetailDto = TraderDetailDto
 
 /**
  * Objet de transfert de données pour une langue.
@@ -195,218 +337,18 @@ export type ProducerDetailDto = {
 }
 
 /**
- * Objet de transfert de données pour les rôles.
- */
-export type RoleDto = {
-  /**
-   * Identifiant unique
-   */
-  readonly id: number
-  /**
-   * Nom du rôle
-   */
-  name: string
-}
-
-/**
- * Réponse d'erreur standardisée
- */
-export type ApiErrorResponse = {
-  /**
-   * Code HTTP de la réponse
-   */
-  status: number
-  /**
-   * Horodatage de l'erreur
-   */
-  timestamp: string
-  /**
-   * Chemin de la requête ayant provoqué l'erreur
-   */
-  path: string
-  /**
-   * Code global d'erreur
-   */
-  code: string
-  /**
-   * Liste des erreurs détaillées
-   */
-  errors: Array<ErrorDetail>
-}
-
-/**
- * Détail d'une erreur individuelle
- */
-export type ErrorDetail = {
-  /**
-   * Nom du champ en erreur (absent pour erreurs globales)
-   */
-  field?: string
-  /**
-   * Code d'erreur détaillé
-   */
-  code: string
-  /**
-   * Message décrivant l'erreur
-   */
-  message: string
-}
-
-/**
- * Objet de transfert de données pour les administrateurs.
- */
-export type AdminUpdateDto = UserUpdateDto & {
-  type: 'admin'
-}
-
-/**
- * Objet de transfert de données pour les transporteurs.
- */
-export type CarrierUpdateDto = UserUpdateDto & {
-  type: 'carrier'
-} & {
-  /**
-   * Prix par kilomètre facturé par le transporteur
-   */
-  pricePerKm: number
-  /**
-   * Liste des identifiants des régions desservies par le transporteur
-   */
-  regionIds: Array<number>
-}
-
-/**
- * Objet de transfert de données pour les exportateurs.
- */
-export type ExporterUpdateDto = UserUpdateDto & {
-  type: 'exporter'
-}
-
-/**
- * Objet de transfert de données pour les producteurs.
- */
-export type ProducerUpdateDto = UserUpdateDto & {
-  type: 'producer'
-} & {
-  /**
-   * Identifiant agricole
-   */
-  agriculturalIdentifier: string
-  /**
-   * Coopérative du producteur
-   */
-  cooperativeId?: number
-}
-
-/**
  * Objet de transfert de données pour les inspecteurs qualité.
  */
-export type QualityInspectorUpdateDto = UserUpdateDto & {
+export type QualityInspectorDetailDto = UserDetailDto & {
   type: 'quality_inspector'
 }
 
 /**
  * Objet de transfert de données pour les traders.
  */
-export type TraderUpdateDto = UserUpdateDto & {
+export type TraderDetailDto = UserDetailDto & {
   type: 'trader'
 }
-
-/**
- * Objet de transfert de données pour les transformateurs.
- */
-export type TransformerUpdateDto = UserUpdateDto & {
-  type: 'transformer'
-}
-
-/**
- * Objet de transfert pour créer ou mettre à jour un utilisateur.
- */
-export type UserUpdateDto = {
-  /**
-   * Prénom de l'utilisateur
-   */
-  firstName: string
-  /**
-   * Nom de famille de l'utilisateur
-   */
-  lastName: string
-  /**
-   * Adresse email de l'utilisateur
-   */
-  email: string
-  /**
-   * Date d'enregistrement
-   */
-  readonly registrationDate?: string
-  /**
-   * Date de validation
-   */
-  readonly validationDate?: string
-  /**
-   * Compte activé
-   */
-  enabled?: boolean
-  /**
-   * Numéro de téléphone (Bénin, format local à 10 chiffres débutant par 01, ou +229...)
-   */
-  phone?: string
-  /**
-   * Mot de passe de l'utilisateur
-   */
-  password?: string
-  /**
-   * Liste des rôles de l'utilisateur
-   */
-  roles?: Array<RoleDto>
-  /**
-   * Identifiant de la langue préférée
-   */
-  languageId: number
-  /**
-   * Adresse de l'utilisateur
-   */
-  address: AddressDto
-  /**
-   * Fichiers à uploader
-   */
-  documents?: Array<unknown>
-  type: string
-}
-
-/**
- * Objet de transfert de données pour les administrateurs.
- */
-export type AdminDetailDto = UserDetailDto
-
-/**
- * Objet de transfert de données pour les transporteurs.
- */
-export type CarrierDetailDto = UserDetailDto & {
-  /**
-   * Prix par kilomètre facturé par le transporteur
-   */
-  pricePerKm: number
-  /**
-   * Liste des identifiants des régions desservies par le transporteur
-   */
-  regionIds: Array<number>
-}
-
-/**
- * Objet de transfert de données pour les exportateurs.
- */
-export type ExporterDetailDto = TraderDetailDto
-
-/**
- * Objet de transfert de données pour les inspecteurs qualité.
- */
-export type QualityInspectorDetailDto = UserDetailDto
-
-/**
- * Objet de transfert de données pour les traders.
- */
-export type TraderDetailDto = UserDetailDto
 
 /**
  * Objet de transfert de données pour les transformateurs.
@@ -473,7 +415,7 @@ export type TransformerDetailDto = {
 }
 
 /**
- * Data Transfer Object pour un utilisateur avec toutes les informations
+ * Data Transfer Object pour un utilisateur
  */
 export type UserDetailDto = {
   /**
@@ -534,6 +476,50 @@ export type UserDetailDto = {
     | 'quality_inspector'
     | 'exporter'
     | 'carrier'
+}
+
+/**
+ * Réponse d'erreur standardisée
+ */
+export type ApiErrorResponse = {
+  /**
+   * Code HTTP de la réponse
+   */
+  status: number
+  /**
+   * Horodatage de l'erreur
+   */
+  timestamp: string
+  /**
+   * Chemin de la requête ayant provoqué l'erreur
+   */
+  path: string
+  /**
+   * Code global d'erreur
+   */
+  code: string
+  /**
+   * Liste des erreurs détaillées
+   */
+  errors: Array<ErrorDetail>
+}
+
+/**
+ * Détail d'une erreur individuelle
+ */
+export type ErrorDetail = {
+  /**
+   * Nom du champ en erreur (absent pour erreurs globales)
+   */
+  field?: string
+  /**
+   * Code d'erreur détaillé
+   */
+  code: string
+  /**
+   * Message décrivant l'erreur
+   */
+  message: string
 }
 
 /**
@@ -601,17 +587,13 @@ export type QualityControlUpdateDto = {
    */
   qualityInspectorId: number
   /**
-   * Produit associé
-   */
-  productId: number
-  /**
    * Qualité associée
    */
   qualityId: number
   /**
    * Document associé au contrôle qualité
    */
-  documentId: number
+  documentId?: number
 }
 
 /**
@@ -797,6 +779,28 @@ export type TransformedProductUpdateDto = ProductUpdateDto & {
    * Transformateur associé
    */
   transformerId: number
+}
+
+/**
+ * Objet de transfert de données pour les champs.
+ */
+export type FieldDto = {
+  /**
+   * Identifiant unique
+   */
+  readonly id: number
+  /**
+   * Identifiant du champ (code unique)
+   */
+  identifier?: string
+  /**
+   * Adresse du champ
+   */
+  address: AddressDto
+  /**
+   * Producteur associé au champ.
+   */
+  producer?: ProducerDetailDto
 }
 
 /**
@@ -1219,6 +1223,122 @@ export type LoginRequest = {
 }
 
 /**
+ * Objet de transfert de données pour les administrateurs.
+ */
+export type AdminListDto = UserListDto & {
+  type: 'admin'
+}
+
+/**
+ * Objet de transfert de données pour les transporteurs.
+ */
+export type CarrierListDto = UserListDto & {
+  type: 'carrier'
+} & {
+  /**
+   * Prix par kilomètre facturé par le transporteur
+   */
+  pricePerKm: number
+}
+
+/**
+ * Objet de transfert de données pour les exportateurs.
+ */
+export type ExporterListDto = {
+  /**
+   * Identifiant unique
+   */
+  readonly id: number
+  /**
+   * Prénom de l'utilisateur
+   */
+  firstName: string
+  /**
+   * Nom de famille de l'utilisateur
+   */
+  lastName: string
+  /**
+   * Adresse email de l'utilisateur
+   */
+  email: string
+  /**
+   * Date d'enregistrement
+   */
+  readonly registrationDate?: string
+  /**
+   * Date de validation
+   */
+  readonly validationDate?: string
+  /**
+   * Compte activé
+   */
+  enabled?: boolean
+  /**
+   * Numéro de téléphone (Bénin, format local à 10 chiffres débutant par 01, ou +229...)
+   */
+  phone?: string
+  /**
+   * Liste des rôles de l'utilisateur
+   */
+  readonly roles?: Array<RoleDto>
+  /**
+   * Identifiant de la langue préférée
+   */
+  language: LanguageDto
+  /**
+   * Adresse de l'utilisateur
+   */
+  address: AddressDto
+  /**
+   * Détails complets d’un utilisateur
+   */
+  documents?: Array<DocumentDto>
+  /**
+   * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
+   */
+  type:
+    | 'admin'
+    | 'producer'
+    | 'transformer'
+    | 'quality_inspector'
+    | 'exporter'
+    | 'carrier'
+}
+
+/**
+ * Objet de transfert de données pour les producteurs.
+ */
+export type ProducerListDto = TraderListDto & {
+  /**
+   * Identifiant agricole
+   */
+  agriculturalIdentifier: string
+  /**
+   * Coopérative du producteur
+   */
+  cooperative: CooperativeDto
+}
+
+/**
+ * Objet de transfert de données pour les inspecteurs qualité.
+ */
+export type QualityInspectorListDto = UserListDto & {
+  type: 'quality_inspector'
+}
+
+/**
+ * Objet de transfert de données pour les traders.
+ */
+export type TraderListDto = UserListDto & {
+  type: 'trader'
+}
+
+/**
+ * Objet de transfert de données pour les transformateurs.
+ */
+export type TransformerListDto = TraderListDto
+
+/**
  * Data Transfer Object pour un utilisateur
  */
 export type UserListDto = {
@@ -1275,126 +1395,6 @@ export type ApplicationDataDto = {
    */
   languages: Array<LanguageDto>
 }
-
-export type DeleteFieldData = {
-  body?: never
-  path: {
-    /**
-     * Identifiant de la ressource
-     */
-    userId: number
-    /**
-     * Identifiant de la ressource
-     */
-    id: number
-  }
-  query?: never
-  url: '/api/users/{userId}/fields/{id}'
-}
-
-export type DeleteFieldErrors = {
-  /**
-   * Unauthorized
-   */
-  401: ApiError
-  /**
-   * Forbidden
-   */
-  403: ApiError
-  /**
-   * Not Found
-   */
-  404: ApiError
-}
-
-export type DeleteFieldError = DeleteFieldErrors[keyof DeleteFieldErrors]
-
-export type DeleteFieldResponses = {
-  /**
-   * OK
-   */
-  200: unknown
-  /**
-   * Deleted successfully
-   */
-  204: void
-}
-
-export type DeleteFieldResponse =
-  DeleteFieldResponses[keyof DeleteFieldResponses]
-
-export type GetFieldData = {
-  body?: never
-  path: {
-    /**
-     * Identifiant de la ressource
-     */
-    userId: number
-    /**
-     * Identifiant de la ressource
-     */
-    id: number
-  }
-  query?: never
-  url: '/api/users/{userId}/fields/{id}'
-}
-
-export type GetFieldErrors = {
-  /**
-   * Not Found
-   */
-  404: ApiErrorResponse
-}
-
-export type GetFieldError = GetFieldErrors[keyof GetFieldErrors]
-
-export type GetFieldResponses = {
-  /**
-   * OK
-   */
-  200: FieldDto
-}
-
-export type GetFieldResponse = GetFieldResponses[keyof GetFieldResponses]
-
-export type UpdateFieldData = {
-  body: FieldDto
-  path: {
-    /**
-     * Identifiant de la ressource
-     */
-    userId: number
-    /**
-     * Identifiant de la ressource
-     */
-    id: number
-  }
-  query?: never
-  url: '/api/users/{userId}/fields/{id}'
-}
-
-export type UpdateFieldErrors = {
-  /**
-   * Bad Request
-   */
-  400: ApiErrorResponse
-  /**
-   * Conflict
-   */
-  409: ApiErrorResponse
-}
-
-export type UpdateFieldError = UpdateFieldErrors[keyof UpdateFieldErrors]
-
-export type UpdateFieldResponses = {
-  /**
-   * Created
-   */
-  201: FieldDto
-}
-
-export type UpdateFieldResponse =
-  UpdateFieldResponses[keyof UpdateFieldResponses]
 
 export type DeleteUserData = {
   body?: never
@@ -2179,7 +2179,7 @@ export type UpdateLanguageResponses = {
 export type UpdateLanguageResponse =
   UpdateLanguageResponses[keyof UpdateLanguageResponses]
 
-export type DeleteDocumentData = {
+export type DeleteFieldData = {
   body?: never
   path: {
     /**
@@ -2188,34 +2188,41 @@ export type DeleteDocumentData = {
     id: number
   }
   query?: never
-  url: '/api/documents/{id}'
+  url: '/api/fields/{id}'
 }
 
-export type DeleteDocumentErrors = {
+export type DeleteFieldErrors = {
+  /**
+   * Unauthorized
+   */
+  401: ApiError
+  /**
+   * Forbidden
+   */
+  403: ApiError
   /**
    * Not Found
    */
-  404: ApiErrorResponse
+  404: ApiError
 }
 
-export type DeleteDocumentError =
-  DeleteDocumentErrors[keyof DeleteDocumentErrors]
+export type DeleteFieldError = DeleteFieldErrors[keyof DeleteFieldErrors]
 
-export type DeleteDocumentResponses = {
+export type DeleteFieldResponses = {
   /**
    * OK
    */
   200: unknown
   /**
-   * No Content
+   * Deleted successfully
    */
   204: void
 }
 
-export type DeleteDocumentResponse =
-  DeleteDocumentResponses[keyof DeleteDocumentResponses]
+export type DeleteFieldResponse =
+  DeleteFieldResponses[keyof DeleteFieldResponses]
 
-export type GetDocumentData = {
+export type GetFieldData = {
   body?: never
   path: {
     /**
@@ -2224,30 +2231,29 @@ export type GetDocumentData = {
     id: number
   }
   query?: never
-  url: '/api/documents/{id}'
+  url: '/api/fields/{id}'
 }
 
-export type GetDocumentErrors = {
+export type GetFieldErrors = {
   /**
    * Not Found
    */
   404: ApiErrorResponse
 }
 
-export type GetDocumentError = GetDocumentErrors[keyof GetDocumentErrors]
+export type GetFieldError = GetFieldErrors[keyof GetFieldErrors]
 
-export type GetDocumentResponses = {
+export type GetFieldResponses = {
   /**
    * OK
    */
-  200: DocumentDto
+  200: FieldDto
 }
 
-export type GetDocumentResponse =
-  GetDocumentResponses[keyof GetDocumentResponses]
+export type GetFieldResponse = GetFieldResponses[keyof GetFieldResponses]
 
-export type UpdateDocumentData = {
-  body: DocumentDto
+export type UpdateFieldData = {
+  body: FieldDto
   path: {
     /**
      * Identifiant de la ressource
@@ -2255,10 +2261,10 @@ export type UpdateDocumentData = {
     id: number
   }
   query?: never
-  url: '/api/documents/{id}'
+  url: '/api/fields/{id}'
 }
 
-export type UpdateDocumentErrors = {
+export type UpdateFieldErrors = {
   /**
    * Bad Request
    */
@@ -2269,18 +2275,17 @@ export type UpdateDocumentErrors = {
   409: ApiErrorResponse
 }
 
-export type UpdateDocumentError =
-  UpdateDocumentErrors[keyof UpdateDocumentErrors]
+export type UpdateFieldError = UpdateFieldErrors[keyof UpdateFieldErrors]
 
-export type UpdateDocumentResponses = {
+export type UpdateFieldResponses = {
   /**
    * Created
    */
-  201: DocumentDto
+  201: FieldDto
 }
 
-export type UpdateDocumentResponse =
-  UpdateDocumentResponses[keyof UpdateDocumentResponses]
+export type UpdateFieldResponse =
+  UpdateFieldResponses[keyof UpdateFieldResponses]
 
 export type DeleteCooperativeData = {
   body?: never
@@ -2961,59 +2966,6 @@ export type CreateUserResponses = {
 
 export type CreateUserResponse = CreateUserResponses[keyof CreateUserResponses]
 
-export type ListFieldsData = {
-  body?: never
-  path: {
-    userId: number
-  }
-  query?: never
-  url: '/api/users/{userId}/fields'
-}
-
-export type ListFieldsResponses = {
-  /**
-   * Liste récupérée avec succès
-   */
-  200: Array<FieldDto>
-}
-
-export type ListFieldsResponse = ListFieldsResponses[keyof ListFieldsResponses]
-
-export type CreateFieldData = {
-  body: FieldDto
-  path: {
-    /**
-     * Identifiant de la ressource
-     */
-    userId: number
-  }
-  query?: never
-  url: '/api/users/{userId}/fields'
-}
-
-export type CreateFieldErrors = {
-  /**
-   * Bad Request
-   */
-  400: ApiErrorResponse
-  /**
-   * Conflict
-   */
-  409: ApiErrorResponse
-}
-
-export type CreateFieldError = CreateFieldErrors[keyof CreateFieldErrors]
-
-export type CreateFieldResponses = {
-  /**
-   * Created
-   */
-  201: FieldDto
-}
-
-export type CreateFieldResponse =
-  CreateFieldResponses[keyof CreateFieldResponses]
-
 export type AddRoleToUserData = {
   body?: never
   path: {
@@ -3305,14 +3257,35 @@ export type CreateLanguageResponses = {
 export type CreateLanguageResponse =
   CreateLanguageResponses[keyof CreateLanguageResponses]
 
-export type CreateDocumentData = {
-  body: DocumentDto
+export type ListFieldsData = {
+  body?: never
   path?: never
-  query?: never
-  url: '/api/documents'
+  query?: {
+    /**
+     * ID du producteur possédant le champ
+     */
+    producerId?: number
+  }
+  url: '/api/fields'
 }
 
-export type CreateDocumentErrors = {
+export type ListFieldsResponses = {
+  /**
+   * Liste récupérée avec succès
+   */
+  200: Array<FieldDto>
+}
+
+export type ListFieldsResponse = ListFieldsResponses[keyof ListFieldsResponses]
+
+export type CreateFieldData = {
+  body: FieldDto
+  path?: never
+  query?: never
+  url: '/api/fields'
+}
+
+export type CreateFieldErrors = {
   /**
    * Bad Request
    */
@@ -3323,12 +3296,85 @@ export type CreateDocumentErrors = {
   409: ApiErrorResponse
 }
 
+export type CreateFieldError = CreateFieldErrors[keyof CreateFieldErrors]
+
+export type CreateFieldResponses = {
+  /**
+   * Created
+   */
+  201: FieldDto
+}
+
+export type CreateFieldResponse =
+  CreateFieldResponses[keyof CreateFieldResponses]
+
+export type ListDocumentsByUserData = {
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    userId: number
+  }
+  query?: never
+  url: '/api/documents/users/{userId}'
+}
+
+export type ListDocumentsByUserErrors = {
+  /**
+   * Utilisateur non trouvé
+   */
+  404: ApiErrorResponse
+}
+
+export type ListDocumentsByUserError =
+  ListDocumentsByUserErrors[keyof ListDocumentsByUserErrors]
+
+export type ListDocumentsByUserResponses = {
+  /**
+   * Liste récupérée
+   */
+  200: Array<DocumentDto>
+}
+
+export type ListDocumentsByUserResponse =
+  ListDocumentsByUserResponses[keyof ListDocumentsByUserResponses]
+
+export type CreateDocumentData = {
+  body: {
+    file?: Blob | File
+  }
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    userId: number
+  }
+  query?: never
+  url: '/api/documents/users/{userId}'
+}
+
+export type CreateDocumentErrors = {
+  /**
+   * Validation KO
+   */
+  400: ApiErrorResponse
+  /**
+   * Utilisateur non trouvé
+   */
+  404: ApiErrorResponse
+  /**
+   * Erreur stockage
+   */
+  500: ApiErrorResponse
+}
+
 export type CreateDocumentError =
   CreateDocumentErrors[keyof CreateDocumentErrors]
 
 export type CreateDocumentResponses = {
   /**
-   * Created
+   * Document créé
    */
   201: DocumentDto
 }
@@ -3703,27 +3749,104 @@ export type ListRegionsResponses = {
 export type ListRegionsResponse =
   ListRegionsResponses[keyof ListRegionsResponses]
 
-export type ListDocumentsByUserData = {
+export type DeleteDocumentData = {
   body?: never
   path: {
     /**
      * Identifiant de la ressource
      */
-    userId: number
+    id: number
   }
   query?: never
-  url: '/api/documents/users/{userId}'
+  url: '/api/documents/{id}'
 }
 
-export type ListDocumentsByUserResponses = {
+export type DeleteDocumentErrors = {
   /**
-   * Liste récupérée avec succès
+   * Document non trouvé
    */
-  200: Array<DocumentDto>
+  404: ApiErrorResponse
 }
 
-export type ListDocumentsByUserResponse =
-  ListDocumentsByUserResponses[keyof ListDocumentsByUserResponses]
+export type DeleteDocumentError =
+  DeleteDocumentErrors[keyof DeleteDocumentErrors]
+
+export type DeleteDocumentResponses = {
+  /**
+   * Document supprimé
+   */
+  204: void
+}
+
+export type DeleteDocumentResponse =
+  DeleteDocumentResponses[keyof DeleteDocumentResponses]
+
+export type GetDocumentData = {
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/documents/{id}'
+}
+
+export type GetDocumentErrors = {
+  /**
+   * Document non trouvé
+   */
+  404: ApiErrorResponse
+}
+
+export type GetDocumentError = GetDocumentErrors[keyof GetDocumentErrors]
+
+export type GetDocumentResponses = {
+  /**
+   * Document trouvé
+   */
+  200: DocumentDto
+}
+
+export type GetDocumentResponse =
+  GetDocumentResponses[keyof GetDocumentResponses]
+
+export type DownloadDocumentData = {
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/documents/{id}/download'
+}
+
+export type DownloadDocumentErrors = {
+  /**
+   * Document non trouvé
+   */
+  404: ApiErrorResponse
+  /**
+   * Erreur lecture document
+   */
+  500: ApiErrorResponse
+}
+
+export type DownloadDocumentError =
+  DownloadDocumentErrors[keyof DownloadDocumentErrors]
+
+export type DownloadDocumentResponses = {
+  /**
+   * Flux binaire renvoyé
+   */
+  200: Blob | File
+}
+
+export type DownloadDocumentResponse =
+  DownloadDocumentResponses[keyof DownloadDocumentResponses]
 
 export type GetCurrentUserData = {
   body?: never

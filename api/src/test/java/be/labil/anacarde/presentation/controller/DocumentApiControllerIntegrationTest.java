@@ -2,34 +2,49 @@ package be.labil.anacarde.presentation.controller;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.startsWith;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import be.labil.anacarde.domain.dto.db.DocumentDto;
-import be.labil.anacarde.infrastructure.persistence.DocumentRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.*;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
+import java.util.stream.Stream;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.TestPropertySource;
 
 /**
- * Tests d'intégration pour le contrôleur des documents.
+ * Tests d’intégration pour le contrôleur des documents.
  */
+@TestPropertySource(properties = {"storage.disk.root=build/test-uploads"})
 public class DocumentApiControllerIntegrationTest extends AbstractIntegrationTest {
 
-	private @Autowired ObjectMapper objectMapper;
-	private @Autowired DocumentRepository documentRepository;
+	@AfterEach
+	public void cleanUploadDir() {
+		Path uploadDir = Paths.get("build/test-uploads");
+		if (Files.exists(uploadDir)) {
+			try (Stream<Path> paths = Files.walk(uploadDir)) {
+				paths.sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
+			} catch (IOException e) {
+				System.err.println("Impossible de nettoyer build/test-uploads : " + e.getMessage());
+			}
+		}
+	}
 
-	/**
-	 * Teste la récupération d'un document existant via son ID.
-	 */
+	/* ---------- GET one ---------- */
+
 	@Test
 	public void testGetDocument() throws Exception {
 		String expectedDate = getMainTestDocument().getUploadDate()
 				.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-		mockMvc.perform(get("/api/documents/" + getMainTestDocument().getId())
+
+		mockMvc.perform(get("/api/documents/{id}", getMainTestDocument().getId())
+				.with(user(getProducerTestUser())) // authentification
 				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
 				.andExpect(jsonPath("$.id").value(getMainTestDocument().getId()))
 				.andExpect(jsonPath("$.storagePath").value(getMainTestDocument().getStoragePath()))
@@ -39,90 +54,46 @@ public class DocumentApiControllerIntegrationTest extends AbstractIntegrationTes
 				.andExpect(jsonPath("$.contentType").value(getMainTestDocument().getContentType()));
 	}
 
-	/**
-	 * Teste la création d’un nouveau document.
-	 */
+	/* ---------- POST create ---------- */
+
 	@Test
 	public void testCreateDocument() throws Exception {
-		DocumentDto documentDto = new DocumentDto();
-		documentDto.setContentType("ATTEST");
-		documentDto.setOriginalFilename("attestation.pdf");
-		documentDto.setSize(187);
-		documentDto.setExtension("PDF");
-		documentDto.setStoragePath("/test/path/created.pdf");
-		documentDto.setUploadDate(getMainTestDocument().getUploadDate());
-		documentDto.setUserId(getProducerTestUser().getId());
+		byte[] content = "Hello World".getBytes();
+		MockMultipartFile filePart = new MockMultipartFile("file", // nom de la part attendue
+				"attestation.pdf", "application/pdf", content);
 
-		ObjectNode node = objectMapper.valueToTree(documentDto);
-		String jsonContent = node.toString();
-
-		String expectedDate = getMainTestDocument().getUploadDate()
-				.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-
-		mockMvc.perform(
-				post("/api/documents").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
-				.andExpect(status().isCreated())
-				.andExpect(header().string("Location", containsString("/api/documents")))
-				.andExpect(jsonPath("$.contentType").value("ATTEST"))
+		mockMvc.perform(multipart("/api/documents/users/{userId}", getProducerTestUser().getId())
+				.file(filePart).characterEncoding("UTF-8").accept(MediaType.APPLICATION_JSON)
+				.with(user(getProducerTestUser()))).andExpect(status().isCreated())
+				.andExpect(header().string("Location", containsString("/api/documents/")))
 				.andExpect(jsonPath("$.originalFilename").value("attestation.pdf"))
-				.andExpect(jsonPath("$.size").value(187))
-				.andExpect(jsonPath("$.extension").value("PDF"))
-				.andExpect(jsonPath("$.storagePath").value("/test/path/created.pdf"))
-				.andExpect(jsonPath("$.uploadDate").value(startsWith(expectedDate)))
-				.andExpect(jsonPath("$.userId").value(getProducerTestUser().getId()));
+				.andExpect(jsonPath("$.contentType").value("application/pdf"))
+				.andExpect(jsonPath("$.extension").value("pdf"))
+				.andExpect(jsonPath("$.size").value(content.length))
+				.andExpect(jsonPath("$.userId").value(getProducerTestUser().getId()))
+				.andExpect(jsonPath("$.storagePath").value(startsWith("build/test-uploads/")));
 	}
 
-	/**
-	 * Teste la mise à jour d’un document existant.
-	 */
-	@Test
-	public void testUpdateDocument() throws Exception {
-		DocumentDto documentDto = new DocumentDto();
-		documentDto.setContentType("ATTEST");
-		documentDto.setOriginalFilename("attestation.pdf");
-		documentDto.setSize(187);
-		documentDto.setExtension("PDF");
-		documentDto.setStoragePath("/test/path/created.pdf");
-		documentDto.setUploadDate(getMainTestDocument().getUploadDate());
-		documentDto.setUserId(getProducerTestUser().getId());
+	/* ---------- DELETE ---------- */
 
-		ObjectNode node = objectMapper.valueToTree(documentDto);
-		String jsonContent = node.toString();
-		String expectedDate = getMainTestDocument().getUploadDate()
-				.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-
-		mockMvc.perform(put("/api/documents/" + getMainTestDocument().getId())
-				.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
-				.andExpect(status().isOk()).andExpect(jsonPath("$.contentType").value("ATTEST"))
-				.andExpect(jsonPath("$.originalFilename").value("attestation.pdf"))
-				.andExpect(jsonPath("$.size").value(187))
-				.andExpect(jsonPath("$.extension").value("PDF"))
-				.andExpect(jsonPath("$.storagePath").value("/test/path/created.pdf"))
-				.andExpect(jsonPath("$.uploadDate").value(startsWith(expectedDate)))
-				.andExpect(jsonPath("$.userId").value(getProducerTestUser().getId()));
-	}
-
-	/**
-	 * Teste la suppression d’un document existant.
-	 */
 	@Test
 	public void testDeleteDocument() throws Exception {
-		// TODO résoudre conflit
-		// mockMvc.perform(delete("/api/documents/" + getMainTestDocument().getId()))
-		// .andExpect(status().isNoContent());
-		//
-		// mockMvc.perform(get("/api/documents/" + getMainTestDocument().getId()))
-		// .andExpect(status().isNotFound());
+		mockMvc.perform(delete("/api/documents/{id}", getMainTestDocument().getId())
+				.with(user(getProducerTestUser()))).andExpect(status().isNoContent());
+
+		mockMvc.perform(get("/api/documents/{id}", getMainTestDocument().getId())
+				.with(user(getProducerTestUser()))).andExpect(status().isNotFound());
 	}
 
-	/**
-	 * Teste la récupération de tous les documents associés à un utilisateur.
-	 */
+	/* ---------- LIST by user ---------- */
+
 	@Test
 	public void testListDocumentsForAUser() throws Exception {
-		mockMvc.perform(get("/api/documents/users/" + getMainTestDocument().getUser().getId())
-				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
-				.andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(2))
+		mockMvc.perform(
+				get("/api/documents/users/{userId}", getMainTestDocument().getUser().getId())
+						.with(user(getProducerTestUser())).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()).andExpect(jsonPath("$").isArray())
+				.andExpect(jsonPath("$.length()").value(2))
 				.andExpect(jsonPath("$[1].id").value(getMainTestDocument().getId()));
 	}
 }

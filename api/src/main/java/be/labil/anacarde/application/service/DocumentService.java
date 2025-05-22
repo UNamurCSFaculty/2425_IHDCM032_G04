@@ -1,67 +1,76 @@
 package be.labil.anacarde.application.service;
 
+import be.labil.anacarde.application.exception.DocumentStorageException;
+import be.labil.anacarde.application.exception.ResourceNotFoundException;
 import be.labil.anacarde.domain.dto.db.DocumentDto;
+import java.io.InputStream;
 import java.util.List;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
- * Ce service offre des méthodes permettant de créer, récupérer, mettre à jour, supprimer et lister
- * des documents selon différents critères.
+ * Service métier pour gérer les documents.
+ *
+ * - CRUD des métadonnées via {@link DocumentDto}. - Streaming du contenu brut.
  */
 public interface DocumentService {
 
 	/**
-	 * Crée un nouveau document dans le système en utilisant le DocumentDto fourni.
+	 * Crée un nouveau document en même temps que son upload.
 	 *
-	 * @param documentDto
-	 *            Le DocumentDto contenant les informations du nouveau document.
-	 * @return Un DocumentDto représentant le document créé.
+	 * @param userId
+	 *            Identifiant de l'utilisateur propriétaire du document.
+	 * @param file
+	 *            Le fichier à téléverser.
+	 * @return Le DocumentDto complet (id, uploadDate, storagePath, etc.).
 	 */
-	DocumentDto createDocument(DocumentDto documentDto);
+	@PreAuthorize("@authz.isAdmin(principal) or #userId == principal.id")
+	DocumentDto createDocument(Integer userId, MultipartFile file);
 
 	/**
-	 * Retourne le document correspondant à l'ID fourni.
+	 * Recherche les méta-infos d’un document.
 	 *
 	 * @param id
-	 *            L'identifiant unique du document.
-	 * @return Un DocumentDto représentant le document avec l'ID spécifié.
+	 *            Identifiant du document.
+	 * @return Les données du document.
+	 * @throws ResourceNotFoundException
+	 *             si l’ID n’existe pas.
 	 */
+	@PreAuthorize("@authz.isAdmin(principal) or @docSecurity.isOwner(#id, principal.id)")
 	DocumentDto getDocumentById(Integer id);
 
 	/**
-	 * Met à jour le document identifié par l'ID donné avec les informations fournies dans le
-	 * DocumentDto.
+	 * Supprime un document : - supprime le fichier via StorageService, - supprime la ligne en base.
 	 *
 	 * @param id
-	 *            L'identifiant unique du document à mettre à jour.
-	 * @param documentDto
-	 *            Le DocumentDto contenant les informations mises à jour.
-	 * @return Un DocumentDto représentant le document mis à jour.
+	 *            Identifiant du document.
+	 * @throws ResourceNotFoundException
+	 *             si l’ID n’existe pas.
 	 */
-	DocumentDto updateDocument(Integer id, DocumentDto documentDto);
-
-	/**
-	 * Supprime le document identifié par l'ID donné du système.
-	 *
-	 * @param id
-	 *            L'identifiant unique du document à supprimer.
-	 */
+	@PreAuthorize("@authz.isAdmin(principal) or @docSecurity.isOwner(#id, principal.id)")
 	void deleteDocument(Integer id);
 
-	// /**
-	// * Récupère tous les documents associés à un contrôle qualité donné.
-	// *
-	// * @param qualityControlId
-	// * L'identifiant du contrôle qualité.
-	// * @return Une liste de DocumentDto correspondant aux documents liés à ce contrôle qualité.
-	// */
-	// List<DocumentDto> listDocumentsByQualityControl(Integer qualityControlId);
-
 	/**
-	 * Récupère tous les documents associés à un utilisateur donné.
+	 * Liste tous les documents d’un utilisateur.
 	 *
 	 * @param userId
-	 *            L'identifiant de l'utilisateur.
-	 * @return Une liste de DocumentDto correspondant aux documents liés à cet utilisateur.
+	 *            Identifiant du propriétaire.
+	 * @return Liste de DocumentDto.
 	 */
+	@PreAuthorize("@authz.isAdmin(principal) or #userId == principal.id")
 	List<DocumentDto> listDocumentsByUser(Integer userId);
+
+	/**
+	 * Fournit un flux {@link InputStream} sur le contenu brut du document.
+	 *
+	 * @param id
+	 *            Identifiant du document.
+	 * @return Flux du fichier.
+	 * @throws ResourceNotFoundException
+	 *             si l’ID n’existe pas.
+	 * @throws DocumentStorageException
+	 *             si la lecture du fichier échoue.
+	 */
+	@PreAuthorize("@authz.isAdmin(principal) or @docSecurity.isOwner(#id, principal.id)")
+	InputStream streamDocumentContent(Integer id) throws DocumentStorageException;
 }

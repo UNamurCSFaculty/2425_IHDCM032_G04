@@ -1,3 +1,4 @@
+import { NumberField } from './number-field'
 import { AddressField } from '@/components/form/adress-fields'
 import { CheckboxField } from '@/components/form/checkbox-field'
 import { DateTimePickerField } from '@/components/form/datetime-field'
@@ -21,6 +22,7 @@ export const { useAppForm } = createFormHook({
     DateTimePickerField,
     FileUploadField,
     AddressField,
+    NumberField,
   },
   formComponents: {
     SubmitButton,

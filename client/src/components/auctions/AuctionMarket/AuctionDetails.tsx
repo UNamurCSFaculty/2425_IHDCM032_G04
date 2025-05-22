@@ -1,4 +1,5 @@
 import type { AuctionDto, BidDto } from '@/api/generated'
+import { CountdownTimer } from '@/components/CountDownTimer'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -11,12 +12,16 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { TradeStatus, wktToLatLon } from '@/lib/utils'
 import dayjs from '@/utils/dayjs-config'
-import { formatPrice } from '@/utils/formatter'
+import { formatPrice, formatWeight } from '@/utils/formatter'
 import 'leaflet/dist/leaflet.css'
 import {
   CheckCircle,
+  Clock,
+  DollarSign,
+  Package,
   PlusCircle,
   ShoppingCart,
+  TrendingUp,
   UserCircle2,
   XCircle,
 } from 'lucide-react'
@@ -28,6 +33,7 @@ export type UserRole = 'buyer' | 'seller'
 interface Props {
   auction: AuctionDto
   role: UserRole
+  showDetails?: boolean
   onBidAction?: (
     auctionId: number,
     bidId: number,
@@ -39,6 +45,7 @@ interface Props {
 
 const AuctionDetailsPanel: React.FC<Props> = ({
   auction,
+  showDetails = false,
   role,
   onBidAction,
   onMakeBid,
@@ -54,6 +61,10 @@ const AuctionDetailsPanel: React.FC<Props> = ({
   )
   const isOpen = auction.status.name === TradeStatus.OPEN
   const canBid = role === 'buyer' && isOpen
+  const bestBid = auction.bids.reduce(
+    (max, b) => (b.amount > max ? b.amount : max),
+    0
+  )
 
   const handleSubmitBid = () => {
     const value = Number(amount)
@@ -66,7 +77,8 @@ const AuctionDetailsPanel: React.FC<Props> = ({
   // Position map
   const coords = wktToLatLon(auction.product.store.address.location)
   const mapCenter = (coords ?? [0, 0]) as [number, number]
-
+  const endsIn = new Date(auction.expirationDate)
+  const ended = endsIn < new Date()
   return (
     <div className="flex flex-col gap-6 w-full mx-auto p-4">
       {/* Header */}
@@ -80,42 +92,86 @@ const AuctionDetailsPanel: React.FC<Props> = ({
             <UserCircle2 className="size-4" />
             {auction.trader.firstName} {auction.trader.lastName}
           </span>
-          <span className="flex items-center gap-1">
-            <ShoppingCart className="size-4" />
-            {auction.product.store.name}
-          </span>
         </div>
       </div>
 
       {/* Map */}
       {coords && (
-        <div className="h-48 w-full rounded-md overflow-hidden">
-          <MapContainer
-            center={mapCenter}
-            zoom={13}
-            scrollWheelZoom={false}
-            className="h-full w-full"
-          >
-            <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution="© OpenStreetMap"
-            />
-            <Marker position={mapCenter}>
-              <Popup>
-                <div className="text-sm">
-                  <div className="font-medium">
+        <div className="flex flex-col gap-4 w-full">
+          {showDetails && (
+            <Card className="bg-white shadow rounded-lg gap-0 py-3">
+              <CardHeader>
+                <CardTitle className="text-lg">Détails de l’enchère</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap gap-2">
+                  <Badge variant="outline" className="flex items-center gap-1">
+                    <Clock />
+                    Expire dans&nbsp;
+                    <span className="font-semibold">
+                      <CountdownTimer endDate={endsIn} />
+                    </span>
+                  </Badge>
+
+                  <Badge variant="default" className="flex items-center gap-1">
+                    <Package className="size-4" />
+                    Quantité&nbsp;
+                    <span className="font-semibold">
+                      {formatWeight(auction.productQuantity)}
+                    </span>
+                  </Badge>
+
+                  <Badge variant="default" className="flex items-center gap-1">
+                    <DollarSign className="size-4" />
+                    Prix demandé&nbsp;
+                    <span className="font-semibold">
+                      {formatPrice.format(auction.price)}
+                    </span>
+                  </Badge>
+
+                  {bestBid > 0 && (
+                    <Badge
+                      variant="default"
+                      className="flex items-center gap-1"
+                    >
+                      <TrendingUp className="size-4" />
+                      Meilleure offre&nbsp;
+                      <span className="font-semibold">
+                        {formatPrice.format(bestBid)}
+                      </span>
+                    </Badge>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* 2. La map en dessous */}
+          <div className="h-48 w-full rounded-md overflow-hidden">
+            <MapContainer
+              center={mapCenter}
+              zoom={12}
+              scrollWheelZoom={false}
+              className="h-full w-full"
+            >
+              <TileLayer
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution="© OpenStreetMap"
+              />
+              <Marker position={mapCenter}>
+                <Popup>
+                  <div className="text-sm font-medium">
                     {auction.product.store.name}
                   </div>
-                </div>
-              </Popup>
-            </Marker>
-          </MapContainer>
+                </Popup>
+              </Marker>
+            </MapContainer>
+          </div>
         </div>
       )}
-
       <div className="flex flex-col lg:flex-row gap-4">
         {/* Left column: actions */}
-        {role === 'buyer' && (
+        {role === 'buyer' && !ended && (
           <div className="flex-1 flex flex-col gap-6">
             <Card className="p-4 bg-neutral-100 rounded-lg shadow">
               {/* Achat immédiat */}
@@ -222,7 +278,21 @@ const AuctionDetailsPanel: React.FC<Props> = ({
             </Card>
           </div>
         )}
-
+        {role === 'buyer' && ended && (
+          <div>
+            <Card className="p-4 bg-neutral-100 rounded-lg shadow">
+              <div className="flex flex-col items-center text-center">
+                <span className="text-base font-medium text-gray-700 mb-2">
+                  Enchère terminée
+                </span>
+                <div className="text-sm text-gray-500">
+                  Cette enchère est maintenant terminée.
+                </div>
+              </div>
+            </Card>
+          </div>
+        )}
+        {/* Separator */}
         {/* Right column: liste des bids */}
         <div className="flex-2">
           <Card className="overflow-hidden">

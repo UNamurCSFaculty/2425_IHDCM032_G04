@@ -5,6 +5,7 @@ import be.labil.anacarde.domain.dto.db.user.UserDetailDto;
 import be.labil.anacarde.domain.dto.db.user.UserListDto;
 import be.labil.anacarde.domain.dto.write.user.UserUpdateDto;
 import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Ce service offre des méthodes permettant de créer, récupérer, mettre à jour et supprimer des
@@ -15,11 +16,11 @@ public interface UserService {
 	/**
 	 * Crée un nouvel utilisateur dans le système en utilisant le UserDto fourni.
 	 *
-	 * @param userDetailDto
+	 * @param dto
 	 *            Le UserDto contenant les informations du nouvel utilisateur.
 	 * @return Un UserDto représentant l'utilisateur créé.
 	 */
-	UserDetailDto createUser(UserUpdateDto userDetailDto);
+	UserDetailDto createUser(UserUpdateDto dto, List<MultipartFile> files);
 
 	/**
 	 * Retourne l'utilisateur correspondant à l'ID fourni.

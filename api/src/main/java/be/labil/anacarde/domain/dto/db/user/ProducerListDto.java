@@ -1,6 +1,7 @@
 package be.labil.anacarde.domain.dto.db.user;
 
 import be.labil.anacarde.domain.dto.db.CooperativeDto;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -15,6 +16,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Schema(description = "Objet de transfert de données pour les producteurs.")
+@JsonTypeName("producer")
 public class ProducerListDto extends TraderListDto {
 
 	/** Identifiant agricole du producteur. */

@@ -11,8 +11,18 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as SignupImport } from './routes/signup'
-import { Route as LoginImport } from './routes/login'
+import { Route as AuthenticatedImport } from './routes/_authenticated'
+import { Route as AuthenticatedAchatsHistoriqueImport } from './routes/_authenticated/achats/historique'
+import { Route as AuthenticatedAchatsMarcheImport } from './routes/_authenticated/achats/marche'
+import { Route as AuthenticatedAchatsNouvelleEnchereImport } from './routes/_authenticated/achats/nouvelle-enchere'
+import { Route as AuthenticatedDepotsNouveauProduitImport } from './routes/_authenticated/depots/nouveau-produit'
+import { Route as AuthenticatedEncheresAutresImport } from './routes/_authenticated/encheres/autres'
+import { Route as AuthenticatedEncheresCajouImport } from './routes/_authenticated/encheres/cajou'
+import { Route as AuthenticatedEncheresDetailIdImport } from './routes/_authenticated/encheres/detail/$id'
+import { Route as AuthenticatedEncheresIndexImport } from './routes/_authenticated/encheres/index'
+import { Route as AuthenticatedVentesHistoriqueImport } from './routes/_authenticated/ventes/historique'
+import { Route as AuthenticatedVentesMesEncheresImport } from './routes/_authenticated/ventes/mes-encheres'
+import { Route as AuthenticatedVentesNouvelleEnchereImport } from './routes/_authenticated/ventes/nouvelle-enchere'
 import { Route as AdminImport } from './routes/admin'
 import { Route as AuthenticatedImport } from './routes/_authenticated'
 import { Route as IndexImport } from './routes/index'
@@ -172,6 +182,13 @@ const AuthenticatedEncheresAutresRoute =
     getParentRoute: () => AuthenticatedRoute,
   } as any)
 
+const AuthenticatedDepotsNouveauProduitRoute =
+  AuthenticatedDepotsNouveauProduitImport.update({
+    id: '/depots/nouveau-produit',
+    path: '/depots/nouveau-produit',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+
 const AuthenticatedAchatsNouvelleEnchereRoute =
   AuthenticatedAchatsNouvelleEnchereImport.update({
     id: '/achats/nouvelle-enchere',
@@ -294,6 +311,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAchatsNouvelleEnchereImport
       parentRoute: typeof AuthenticatedImport
     }
+    '/_authenticated/depots/nouveau-produit': {
+      id: '/_authenticated/depots/nouveau-produit'
+      path: '/depots/nouveau-produit'
+      fullPath: '/depots/nouveau-produit'
+      preLoaderRoute: typeof AuthenticatedDepotsNouveauProduitImport
+      parentRoute: typeof AuthenticatedImport
+    }
     '/_authenticated/encheres/autres': {
       id: '/_authenticated/encheres/autres'
       path: '/encheres/autres'
@@ -387,6 +411,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedAchatsHistoriqueRoute: typeof AuthenticatedAchatsHistoriqueRoute
   AuthenticatedAchatsMarcheRoute: typeof AuthenticatedAchatsMarcheRoute
   AuthenticatedAchatsNouvelleEnchereRoute: typeof AuthenticatedAchatsNouvelleEnchereRoute
+  AuthenticatedDepotsNouveauProduitRoute: typeof AuthenticatedDepotsNouveauProduitRoute
   AuthenticatedEncheresAutresRoute: typeof AuthenticatedEncheresAutresRoute
   AuthenticatedEncheresCajouRoute: typeof AuthenticatedEncheresCajouRoute
   AuthenticatedVentesHistoriqueRoute: typeof AuthenticatedVentesHistoriqueRoute
@@ -401,6 +426,8 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAchatsMarcheRoute: AuthenticatedAchatsMarcheRoute,
   AuthenticatedAchatsNouvelleEnchereRoute:
     AuthenticatedAchatsNouvelleEnchereRoute,
+  AuthenticatedDepotsNouveauProduitRoute:
+    AuthenticatedDepotsNouveauProduitRoute,
   AuthenticatedEncheresAutresRoute: AuthenticatedEncheresAutresRoute,
   AuthenticatedEncheresCajouRoute: AuthenticatedEncheresCajouRoute,
   AuthenticatedVentesHistoriqueRoute: AuthenticatedVentesHistoriqueRoute,
@@ -453,6 +480,7 @@ export interface FileRoutesByFullPath {
   '/achats/historique': typeof AuthenticatedAchatsHistoriqueRoute
   '/achats/marche': typeof AuthenticatedAchatsMarcheRoute
   '/achats/nouvelle-enchere': typeof AuthenticatedAchatsNouvelleEnchereRoute
+  '/depots/nouveau-produit': typeof AuthenticatedDepotsNouveauProduitRoute
   '/encheres/autres': typeof AuthenticatedEncheresAutresRoute
   '/encheres/cajou': typeof AuthenticatedEncheresCajouRoute
   '/ventes/historique': typeof AuthenticatedVentesHistoriqueRoute
@@ -480,6 +508,7 @@ export interface FileRoutesByTo {
   '/achats/historique': typeof AuthenticatedAchatsHistoriqueRoute
   '/achats/marche': typeof AuthenticatedAchatsMarcheRoute
   '/achats/nouvelle-enchere': typeof AuthenticatedAchatsNouvelleEnchereRoute
+  '/depots/nouveau-produit': typeof AuthenticatedDepotsNouveauProduitRoute
   '/encheres/autres': typeof AuthenticatedEncheresAutresRoute
   '/encheres/cajou': typeof AuthenticatedEncheresCajouRoute
   '/ventes/historique': typeof AuthenticatedVentesHistoriqueRoute
@@ -509,6 +538,7 @@ export interface FileRoutesById {
   '/_authenticated/achats/historique': typeof AuthenticatedAchatsHistoriqueRoute
   '/_authenticated/achats/marche': typeof AuthenticatedAchatsMarcheRoute
   '/_authenticated/achats/nouvelle-enchere': typeof AuthenticatedAchatsNouvelleEnchereRoute
+  '/_authenticated/depots/nouveau-produit': typeof AuthenticatedDepotsNouveauProduitRoute
   '/_authenticated/encheres/autres': typeof AuthenticatedEncheresAutresRoute
   '/_authenticated/encheres/cajou': typeof AuthenticatedEncheresCajouRoute
   '/_authenticated/ventes/historique': typeof AuthenticatedVentesHistoriqueRoute
@@ -539,6 +569,7 @@ export interface FileRouteTypes {
     | '/achats/historique'
     | '/achats/marche'
     | '/achats/nouvelle-enchere'
+    | '/depots/nouveau-produit'
     | '/encheres/autres'
     | '/encheres/cajou'
     | '/ventes/historique'
@@ -565,6 +596,7 @@ export interface FileRouteTypes {
     | '/achats/historique'
     | '/achats/marche'
     | '/achats/nouvelle-enchere'
+    | '/depots/nouveau-produit'
     | '/encheres/autres'
     | '/encheres/cajou'
     | '/ventes/historique'
@@ -592,6 +624,7 @@ export interface FileRouteTypes {
     | '/_authenticated/achats/historique'
     | '/_authenticated/achats/marche'
     | '/_authenticated/achats/nouvelle-enchere'
+    | '/_authenticated/depots/nouveau-produit'
     | '/_authenticated/encheres/autres'
     | '/_authenticated/encheres/cajou'
     | '/_authenticated/ventes/historique'
@@ -655,6 +688,7 @@ export const routeTree = rootRoute
         "/_authenticated/achats/historique",
         "/_authenticated/achats/marche",
         "/_authenticated/achats/nouvelle-enchere",
+        "/_authenticated/depots/nouveau-produit",
         "/_authenticated/encheres/autres",
         "/_authenticated/encheres/cajou",
         "/_authenticated/ventes/historique",
@@ -711,6 +745,10 @@ export const routeTree = rootRoute
     },
     "/_authenticated/achats/nouvelle-enchere": {
       "filePath": "_authenticated/achats/nouvelle-enchere.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/depots/nouveau-produit": {
+      "filePath": "_authenticated/depots/nouveau-produit.tsx",
       "parent": "/_authenticated"
     },
     "/_authenticated/encheres/autres": {
