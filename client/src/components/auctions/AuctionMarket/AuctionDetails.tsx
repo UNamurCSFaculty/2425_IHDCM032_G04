@@ -3,6 +3,7 @@ import {
   acceptAuctionMutation,
   acceptBidMutation,
   createBidMutation,
+  listAuctionsQueryKey,
 } from '@/api/generated/@tanstack/react-query.gen'
 import { CountdownTimer } from '@/components/CountDownTimer'
 import { Badge } from '@/components/ui/badge'
@@ -19,7 +20,7 @@ import { TradeStatus, wktToLatLon } from '@/lib/utils'
 import { useAuthUser } from '@/store/userStore'
 import dayjs from '@/utils/dayjs-config'
 import { formatPrice, formatWeight } from '@/utils/formatter'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import 'leaflet/dist/leaflet.css'
 import {
   CheckCircle,
@@ -33,6 +34,7 @@ import {
   XCircle,
 } from 'lucide-react'
 import React, { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
 
 export type UserRole = 'buyer' | 'seller'
@@ -60,6 +62,8 @@ const AuctionDetailsPanel: React.FC<Props> = ({
   const [buyOpen, setBuyOpen] = useState(false)
   const [bidOpen, setBidOpen] = useState(false)
 
+  const { t } = useTranslation()
+
   const sortedBids = useMemo<BidDto[]>(
     () => [...auction.bids].sort((a, b) => b.amount - a.amount),
     [auction.bids]
@@ -75,6 +79,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
     ...createBidMutation(),
     onSuccess() {
       console.log('Create Bid - Success')
+      queryClient.invalidateQueries({ queryKey: listAuctionsQueryKey() })
     },
     onError(error) {
       console.error('Create Bid - Invalid request ', error)
@@ -95,6 +100,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
     ...acceptAuctionMutation(),
     onSuccess() {
       console.log('Accept Auction - Success')
+      queryClient.invalidateQueries({ queryKey: listAuctionsQueryKey() })
     },
     onError(error) {
       console.error('Accept Auction - Invalid request ', error)
@@ -102,6 +108,8 @@ const AuctionDetailsPanel: React.FC<Props> = ({
   })
 
   const user = useAuthUser()
+
+  const queryClient = useQueryClient()
 
   const handleSubmitBid = () => {
     const value = Number(amount)
@@ -152,8 +160,8 @@ const AuctionDetailsPanel: React.FC<Props> = ({
       {/* Header */}
       <div className="space-y-1 flex flex-wrap">
         <h2 className="text-2xl font-semibold flex items-center gap-2">
-          {auction.product.type === 'harvest' ? 'Récolte' : 'Transformé'} · lot
-          #{auction.product.id}
+          Produit {t('database.' + auction.product.type)} · lot n°
+          {auction.product.id} · enchère n°{auction.id}
         </h2>
         <div className="flex flex-wrap gap-4 text-sm text-muted-foreground ml-4">
           <span className="flex items-center gap-1">
