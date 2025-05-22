@@ -9,6 +9,11 @@ import java.util.List;
  */
 public interface ExportService {
 
+	/**
+	 * Renvoie la liste complète des enchères.
+	 *
+	 * @return Liste de tous les DTO projeté sur la vue
+	 */
 	List<ExportAuctionDto> getAllAnalyses();
 
 	/**
