@@ -139,17 +139,10 @@ export function Header() {
       url: '#',
       items: [
         {
-          titleKey: 'header.menu.contracts.items.create_contract.title',
-          descriptionKey:
-            'header.menu.contracts.items.create_contract.description',
-          icon: <FileText className="size-5 shrink-0" />,
-          url: '/contrats',
-        },
-        {
           titleKey: 'header.menu.contracts.items.history.title',
           descriptionKey: 'header.menu.contracts.items.history.description',
           icon: <History className="size-5 shrink-0" />,
-          url: '/contrats',
+          url: '/contrats/mes-contrats',
         },
       ],
     },

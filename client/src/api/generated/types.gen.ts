@@ -3504,7 +3504,12 @@ export type CreateCooperativeResponse =
 export type ListContractOffersData = {
   body?: never
   path?: never
-  query?: never
+  query?: {
+    /**
+     * ID du trader pour filtrer les enchères
+     */
+    traderId?: number
+  }
   url: '/api/contracts'
 }
 

@@ -84,6 +84,17 @@ public class ContractOfferApiControllerIntegrationTest extends AbstractIntegrati
 	}
 
 	/**
+	 * Teste la récupération de la liste des contrats d'un utilisateur.
+	 *
+	 */
+	@Test
+	public void testListContractOffersByUser() throws Exception {
+		mockMvc.perform(get("/api/contracts?traderId=" + getProducerTestUser().getId())
+				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+				.andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(1));
+	}
+
+	/**
 	 * Teste la mise à jour d'un contrat.
 	 * 
 	 */
