@@ -21,6 +21,7 @@ import { useAuthUser } from '@/store/userStore'
 import dayjs from '@/utils/dayjs-config'
 import { formatPrice, formatWeight } from '@/utils/formatter'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useNavigate } from '@tanstack/react-router'
 import 'leaflet/dist/leaflet.css'
 import {
   CheckCircle,
@@ -88,19 +89,19 @@ const AuctionDetailsPanel: React.FC<Props> = ({
 
   const acceptBidRequest = useMutation({
     ...acceptBidMutation(),
-    onSuccess() {
-      console.log('Accept Bid - Success')
-    },
+    onSuccess() {},
     onError(error) {
       console.error('Accept Bid - Invalid request ', error)
     },
   })
 
+  const navigate = useNavigate()
+
   const acceptAuctionRequest = useMutation({
     ...acceptAuctionMutation(),
     onSuccess() {
-      console.log('Accept Auction - Success')
       queryClient.invalidateQueries({ queryKey: listAuctionsQueryKey() })
+      navigate({ to: '/achats/historique' })
     },
     onError(error) {
       console.error('Accept Auction - Invalid request ', error)

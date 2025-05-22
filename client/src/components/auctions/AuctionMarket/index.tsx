@@ -3,7 +3,7 @@ import AuctionMap from './AuctionMap'
 import EmptyState from './EmptyState'
 import type { AuctionDto, QualityDto } from '@/api/generated'
 import PaginationControls from '@/components/PaginationControls'
-import VirtualizedSelect, { type Option } from '@/components/VirtualizedSelect'
+import VirtualizedSelect from '@/components/VirtualizedSelect'
 import AuctionDetails from '@/components/auctions/AuctionMarket/AuctionDetails'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
@@ -39,7 +39,7 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import cities from '@/data/cities.json'
 import regions from '@/data/regions.json'
 import { useMediaQuery } from '@/hooks/use-mobile'
-import { ProductType, formatDate } from '@/lib/utils'
+import { ProductType, formatDate, productTypes } from '@/lib/utils'
 import dayjs from '@/utils/dayjs-config'
 import { formatPrice } from '@/utils/formatter'
 import {
@@ -58,8 +58,6 @@ import { useTranslation } from 'react-i18next'
 
 export type ViewMode = 'cards' | 'table' | 'map'
 export type UserRole = 'buyer' | 'seller'
-
-export const AUCTION_STATUS_OPEN_LABEL = 'Ouvert'
 
 export const sortOptions = [
   { value: 'endDate-asc', label: 'Expiration ⬆' },
@@ -92,7 +90,6 @@ interface FiltersPanelProps {
   qualities: QualityDto[]
   qualityId: number | null
   onQualityChange: (q: number | null) => void
-  productTypes: Option[]
   productTypeId: number | null
   onTypeChange: (t: number | null) => void
   regionId: number | null
@@ -112,7 +109,6 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
   qualities,
   qualityId,
   onQualityChange,
-  productTypes,
   productTypeId,
   onTypeChange,
   regionId,
@@ -121,6 +117,13 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
   onCityChange,
   resetFilters,
 }) => {
+  const { t } = useTranslation()
+
+  const productTypeOptions = productTypes.map((n, i) => ({
+    id: i + 1,
+    label: t('database.' + n),
+  }))
+
   const qualityOptions = qualities
     .filter(quality => {
       return (
@@ -187,12 +190,12 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
             />
           </div>
 
-          {/* Type */}
+          {/* Product Type */}
           <VirtualizedSelect
             id="product-type-select"
             label="Marchandise"
             placeholder="Tous les types"
-            options={productTypes}
+            options={productTypeOptions}
             value={productTypeId}
             onChange={onTypeChange}
           />
@@ -266,7 +269,6 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
 interface MarketplaceProps {
   auctions: AuctionDto[]
   qualities: QualityDto[]
-  productTypes: Option[]
   userRole: UserRole
   onMakeBid?: (id: number) => void
   onBuyNow?: (id: number) => void
@@ -281,7 +283,6 @@ interface MarketplaceProps {
 const AuctionMarketplace: React.FC<MarketplaceProps> = ({
   auctions,
   qualities,
-  productTypes,
   userRole,
   onMakeBid,
   onBuyNow,
@@ -329,17 +330,13 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
           return false
         if (qualityId && a.product.qualityControl?.quality.id !== qualityId)
           return false
-        if (
-          productTypeId &&
-          t('database.' + a.product.type) !==
-            productTypes[productTypeId - 1].label
-        )
+        if (productTypeId && a.product.type !== productTypes[productTypeId - 1])
           return false
         if (regionId && a.product.store.address.regionId !== regionId)
           return false
         if (cityId && a.product.store.address.cityId !== cityId) return false
 
-        return a.status.name === AUCTION_STATUS_OPEN_LABEL
+        return true
       }),
     [
       auctions,
@@ -474,11 +471,11 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
               >
                 <ToggleGroupItem
                   value="cards"
-                  aria-label="Cartes"
+                  aria-label="Grille"
                   className="flex items-center justify-center py-2 hover:bg-muted data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
                 >
                   <LayoutGrid className="size-4 mr-1" />
-                  Cartes
+                  Grille
                 </ToggleGroupItem>
                 <ToggleGroupItem
                   value="table"
@@ -530,7 +527,6 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                       qualities={qualities}
                       qualityId={qualityId}
                       onQualityChange={setQualityId}
-                      productTypes={productTypes}
                       productTypeId={productTypeId}
                       onTypeChange={setProductTypeId}
                       regionId={regionId}
@@ -560,7 +556,6 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
               qualities={qualities}
               qualityId={qualityId}
               onQualityChange={setQualityId}
-              productTypes={productTypes}
               productTypeId={productTypeId}
               onTypeChange={setProductTypeId}
               regionId={regionId}
@@ -633,15 +628,17 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                 <Table className="text-sm table-auto">
                   <TableHeader className="sticky top-0 backdrop-blur supports-[backdrop-filter]:bg-muted/60 z-10">
                     <TableRow className="h-9 bg-neutral-100">
-                      <TableHead>Type</TableHead>
-                      <TableHead>Expire le</TableHead>
+                      <TableHead>Marchandise</TableHead>
+                      <TableHead>Expiration</TableHead>
                       <TableHead>Région</TableHead>
                       <TableHead>Ville</TableHead>
                       <TableHead>Quantité</TableHead>
                       <TableHead>Qualité</TableHead>
                       <TableHead className="text-right">Prix</TableHead>
-                      <TableHead className="text-right">Offre max</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
+                      <TableHead className="text-right">
+                        Meilleure offre
+                      </TableHead>
+                      <TableHead></TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>

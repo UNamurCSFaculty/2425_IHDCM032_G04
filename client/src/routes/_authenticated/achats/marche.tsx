@@ -5,10 +5,9 @@ import {
 } from '@/api/generated/@tanstack/react-query.gen'
 import { BreadcrumbSection } from '@/components/BreadcrumbSection'
 import AuctionMarketplace from '@/components/auctions/AuctionMarket'
-import { ProductType, TradeStatus } from '@/lib/utils'
+import { TradeStatus } from '@/lib/utils'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
-import { useTranslation } from 'react-i18next'
 
 const listAuctionsQueryOptions = () => ({
   ...listAuctionsOptions({ query: { status: TradeStatus.OPEN } }),
@@ -29,13 +28,6 @@ export function RouteComponent() {
 
   const { data: qualitiesData } = useSuspenseQuery(listQualitiesOptions())
 
-  const { t } = useTranslation()
-
-  const productTypesData = [
-    { id: 1, label: t('database.' + ProductType.HARVEST) },
-    { id: 2, label: t('database.' + ProductType.TRANSFORMED) },
-  ]
-
   return (
     <>
       <BreadcrumbSection
@@ -50,7 +42,6 @@ export function RouteComponent() {
         <AuctionMarketplace
           auctions={auctionsData}
           qualities={qualitiesData}
-          productTypes={productTypesData}
           userRole="buyer"
         />
       </div>

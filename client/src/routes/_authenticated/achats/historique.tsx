@@ -1,35 +1,55 @@
-import { type AuctionDto } from '@/api/generated'
-import { listAuctionsOptions } from '@/api/generated/@tanstack/react-query.gen'
-import AuctionsTable from '@/components/auctions/AuctionsTable'
-import { useUserStore } from '@/store/userStore'
-import { useQuery } from '@tanstack/react-query'
+import {
+  listAuctionsOptions,
+  listQualitiesOptions,
+} from '@/api/generated/@tanstack/react-query.gen'
+import { BreadcrumbSection } from '@/components/BreadcrumbSection'
+import AuctionMarketplace from '@/components/auctions/AuctionMarket'
+import { TradeStatus } from '@/lib/utils'
+import { useAuthUser } from '@/store/userStore'
+import { useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 
 const listAuctionsQueryOptions = (userId: number) => ({
-  ...listAuctionsOptions({ query: { buyerId: userId, status: 'Accepté' } }),
+  ...listAuctionsOptions({
+    query: { buyerId: userId, status: TradeStatus.ACCEPTED },
+  }),
   staleTime: 10_000,
 })
 
 export const Route = createFileRoute('/_authenticated/achats/historique')({
   component: RouteComponent,
   loader: async ({ context: { queryClient, user } }) => {
-    return queryClient.ensureQueryData(listAuctionsQueryOptions(user!.id))
+    await queryClient.ensureQueryData(listAuctionsQueryOptions(user!.id))
+    await queryClient.ensureQueryData(listQualitiesOptions())
   },
 })
 
 export function RouteComponent() {
-  const { user } = useUserStore()
+  const user = useAuthUser()
 
-  const { data } = useQuery(listAuctionsQueryOptions(user!.id))
+  const { data: auctionsData } = useSuspenseQuery(
+    listAuctionsQueryOptions(user.id)
+  )
 
-  const historyAuctions = data as AuctionDto[]
+  const { data: qualitiesData } = useSuspenseQuery(listQualitiesOptions())
 
   return (
-    <AuctionsTable
-      tableTitle="Mes achats passés"
-      showColumnBidder={true}
-      showColumnBidderPrice={true}
-      auctions={historyAuctions}
-    />
+    <>
+      <BreadcrumbSection
+        titleKey="app.auctions_buys.title"
+        subtitleKey="app.auctions_buys.subtitle"
+        breadcrumbs={[
+          { labelKey: 'breadcrumb.buy' },
+          { labelKey: 'breadcrumb.marketplace' },
+        ]}
+      />
+      <div className="container mx-auto mt-16 mb-16">
+        <AuctionMarketplace
+          auctions={auctionsData}
+          qualities={qualitiesData}
+          userRole="buyer"
+        />
+      </div>
+    </>
   )
 }
