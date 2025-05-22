@@ -1,4 +1,5 @@
 import type { AuctionDto, BidDto } from '@/api/generated'
+import { createBidMutation } from '@/api/generated/@tanstack/react-query.gen'
 import { CountdownTimer } from '@/components/CountDownTimer'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -11,8 +12,10 @@ import {
 } from '@/components/ui/popover'
 import { Separator } from '@/components/ui/separator'
 import { TradeStatus, wktToLatLon } from '@/lib/utils'
+import { useAuthUser } from '@/store/userStore'
 import dayjs from '@/utils/dayjs-config'
 import { formatPrice, formatWeight } from '@/utils/formatter'
+import { useMutation } from '@tanstack/react-query'
 import 'leaflet/dist/leaflet.css'
 import {
   CheckCircle,
@@ -66,9 +69,28 @@ const AuctionDetailsPanel: React.FC<Props> = ({
     0
   )
 
+  const createBidRequest = useMutation({
+    ...createBidMutation(),
+    onError(error) {
+      console.error('Invalid request ', error)
+    },
+  })
+
+  const user = useAuthUser()
+
   const handleSubmitBid = () => {
     const value = Number(amount)
     if (!value || value <= 0) return
+
+    createBidRequest.mutate({
+      path: { auctionId: auction.id },
+      body: {
+        amount: value,
+        auctionId: auction.id,
+        traderId: user.id,
+      },
+    })
+
     onMakeBid?.(auction.id, value)
     setAmount('')
     setBidOpen(false)

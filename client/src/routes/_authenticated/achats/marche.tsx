@@ -51,7 +51,7 @@ export function RouteComponent() {
           auctions={auctionsData}
           qualities={qualitiesData}
           productTypes={productTypesData}
-          userRole="seller"
+          userRole="buyer"
         />
       </div>
     </>
