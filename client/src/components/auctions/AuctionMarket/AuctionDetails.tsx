@@ -108,7 +108,6 @@ const AuctionDetailsPanel: React.FC<Props> = ({
     if (!value || value <= 0) return
 
     createBidRequest.mutate({
-      path: { auctionId: auction.id },
       body: {
         amount: value,
         auctionId: auction.id,
@@ -127,7 +126,6 @@ const AuctionDetailsPanel: React.FC<Props> = ({
     // accepting it
 
     const newBid = await createBidRequest.mutateAsync({
-      path: { auctionId: auction.id },
       body: {
         amount: buyNowPrice,
         auctionId: auction.id,
@@ -136,7 +134,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
     })
 
     acceptBidRequest.mutate({
-      path: { auctionId: auction.id, bidId: newBid.id },
+      path: { bidId: newBid.id },
     })
 
     acceptAuctionRequest.mutate({ path: { id: auction.id } })

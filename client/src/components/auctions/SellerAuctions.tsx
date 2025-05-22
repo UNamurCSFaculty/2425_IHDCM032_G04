@@ -48,10 +48,10 @@ export const SellerAuctions: React.FC<SellerAuctionsProps> = ({ auctions }) => {
     action: 'accept' | 'reject'
   ) => {
     if (action == 'accept') {
-      acceptBid({ path: { auctionId, bidId } })
+      acceptBid({ path: { bidId } })
       acceptAuction({ path: { id: auctionId } })
     } else {
-      rejectBid({ path: { auctionId, bidId } })
+      rejectBid({ path: { bidId } })
     }
     queryClient.invalidateQueries({ queryKey: listAuctionsQueryKey() })
   }
