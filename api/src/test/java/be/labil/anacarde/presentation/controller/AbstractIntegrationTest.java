@@ -6,9 +6,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 import be.labil.anacarde.application.service.DatabaseService;
 import be.labil.anacarde.domain.dto.db.LanguageDto;
+import be.labil.anacarde.domain.dto.db.view.ExportAuctionDto;
+import be.labil.anacarde.domain.mapper.ExportAuctionMapper;
 import be.labil.anacarde.domain.model.*;
 import be.labil.anacarde.infrastructure.persistence.*;
 import be.labil.anacarde.infrastructure.persistence.user.UserRepository;
+import be.labil.anacarde.infrastructure.persistence.view.ExportAuctionRepository;
 import be.labil.anacarde.infrastructure.security.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import java.math.BigDecimal;
@@ -60,6 +63,8 @@ public abstract class AbstractIntegrationTest {
 	protected @Autowired ContractOfferRepository contractOfferRepository;
 	protected @Autowired QualityControlRepository qualityControlRepository;
 	protected @Autowired DatabaseService databaseService;
+	protected @Autowired ExportAuctionRepository exportAuctionRepository;
+	protected @Autowired ExportAuctionMapper exportAuctionMapper;
 
 	private Language mainLanguage;
 	private User mainTestUser;
@@ -90,10 +95,18 @@ public abstract class AbstractIntegrationTest {
 
 	@Getter
 	private Cookie jwtCookie;
-
 	protected @Autowired WebApplicationContext wac;
-
 	protected MockMvc mockMvc;
+
+	/**
+	 * Ligne « principale » de la vue v_auction_bid_analysis (celle correspondant à l’enchère créée
+	 * dans initUserDatabase()).
+	 */
+	protected ExportAuctionDto getMainExportAuction() {
+		return exportAuctionRepository.findByAuctionId(getTestAuction().getId())
+				.map(exportAuctionMapper::toDto).orElseThrow(() -> new IllegalStateException(
+						"aucune ligne dans la vue pour auction_id=" + getTestAuction().getId()));
+	}
 
 	@BeforeEach
 	public void setUp() {
@@ -580,7 +593,6 @@ public abstract class AbstractIntegrationTest {
 				.build();
 		mainTestContractOffer = contractOfferRepository.save(contractOffer);
 	}
-
 	/**
 	 * Génère un cookie JWT HTTP-only en utilisant les détails de l'utilisateur de test principal.
 	 */
