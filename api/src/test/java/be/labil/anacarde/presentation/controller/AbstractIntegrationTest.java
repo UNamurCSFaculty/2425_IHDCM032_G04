@@ -539,10 +539,13 @@ public abstract class AbstractIntegrationTest {
 
 		// An auction with a transformed product
 		Auction auction2 = Auction.builder().price(10000.0).productQuantity(1000).active(true)
-				.creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now())
-				.product(productTransform).options(auctionOptions).trader(producer)
-				.status(tradeStatusOpen).build();
+				.creationDate(LocalDateTime.of(2025, 1, 15, 0, 0))
+				.expirationDate(LocalDateTime.of(2025, 2, 15, 0, 0)).product(productTransform)
+				.options(auctionOptions).trader(producer).status(tradeStatusOpen).build();
 		auctionRepository.save(auction2);
+
+		auctionRepository.overrideCreationDateNative(auction2.getId(),
+				LocalDateTime.of(2025, 1, 15, 0, 0));
 
 		// An auction from another user
 		Auction auction3 = Auction.builder().price(777.0).productQuantity(777).active(true)
