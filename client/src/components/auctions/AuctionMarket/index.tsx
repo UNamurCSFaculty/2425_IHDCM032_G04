@@ -292,11 +292,6 @@ interface MarketplaceProps {
   onMakeBid?: (id: number) => void
   onBuyNow?: (id: number) => void
   onCreateAuction?: () => void
-  onBidAction?: (
-    auctionId: number,
-    bidId: number,
-    action: 'accept' | 'reject'
-  ) => void
 }
 
 const AuctionMarketplace: React.FC<MarketplaceProps> = ({
@@ -307,7 +302,6 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
   onMakeBid,
   onBuyNow,
   onCreateAuction,
-  onBidAction,
 }) => {
   const isDesktop = useMediaQuery('(min-width: 1024px)')
 
@@ -625,7 +619,6 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                     <AuctionDetails
                       auction={inlineAuction}
                       role={userRole}
-                      onBidAction={onBidAction}
                       onMakeBid={onMakeBid}
                       onBuyNow={onBuyNow}
                     />
@@ -724,7 +717,6 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
               auction={dialogAuction}
               role={userRole}
               showDetails={true}
-              onBidAction={onBidAction}
               onMakeBid={onMakeBid}
               onBuyNow={onBuyNow}
             />

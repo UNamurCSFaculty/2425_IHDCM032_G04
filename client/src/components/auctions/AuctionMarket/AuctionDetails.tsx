@@ -4,6 +4,7 @@ import {
   acceptBidMutation,
   createBidMutation,
   listAuctionsQueryKey,
+  rejectBidMutation,
 } from '@/api/generated/@tanstack/react-query.gen'
 import { CountdownTimer } from '@/components/CountDownTimer'
 import { Badge } from '@/components/ui/badge'
@@ -21,7 +22,6 @@ import { useAuthUser } from '@/store/userStore'
 import dayjs from '@/utils/dayjs-config'
 import { formatPrice, formatWeight } from '@/utils/formatter'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useNavigate } from '@tanstack/react-router'
 import 'leaflet/dist/leaflet.css'
 import {
   CheckCircle,
@@ -44,11 +44,6 @@ interface Props {
   auction: AuctionDto
   role: UserRole
   showDetails?: boolean
-  onBidAction?: (
-    auctionId: number,
-    bidId: number,
-    action: 'accept' | 'reject'
-  ) => void
   onMakeBid?: (auctionId: number, amount: number) => void
   onBuyNow?: (auctionId: number) => void
 }
@@ -57,7 +52,6 @@ const AuctionDetailsPanel: React.FC<Props> = ({
   auction,
   showDetails = false,
   role,
-  onBidAction,
 }) => {
   const [amount, setAmount] = useState('')
   const [buyOpen, setBuyOpen] = useState(false)
@@ -89,19 +83,31 @@ const AuctionDetailsPanel: React.FC<Props> = ({
 
   const acceptBidRequest = useMutation({
     ...acceptBidMutation(),
-    onSuccess() {},
+    onSuccess() {
+      console.log('Accept Bid - Success')
+      queryClient.invalidateQueries({ queryKey: listAuctionsQueryKey() })
+    },
     onError(error) {
       console.error('Accept Bid - Invalid request ', error)
     },
   })
 
-  const navigate = useNavigate()
+  const rejectBidRequest = useMutation({
+    ...rejectBidMutation(),
+    onSuccess() {
+      console.log('Reject Bid - Success')
+      queryClient.invalidateQueries({ queryKey: listAuctionsQueryKey() })
+    },
+    onError(error) {
+      console.error('Reject Bid - Invalid request ', error)
+    },
+  })
 
   const acceptAuctionRequest = useMutation({
     ...acceptAuctionMutation(),
     onSuccess() {
+      console.log('Accept Auction - Success')
       queryClient.invalidateQueries({ queryKey: listAuctionsQueryKey() })
-      navigate({ to: '/achats/historique' })
     },
     onError(error) {
       console.error('Accept Auction - Invalid request ', error)
@@ -142,13 +148,23 @@ const AuctionDetailsPanel: React.FC<Props> = ({
       },
     })
 
-    acceptBidRequest.mutate({
-      path: { bidId: newBid.id },
-    })
-
+    acceptBidRequest.mutate({ path: { bidId: newBid.id } })
     acceptAuctionRequest.mutate({ path: { id: auction.id } })
 
     setBuyOpen(false)
+  }
+
+  const handleBidAction = (
+    auctionId: number,
+    bidId: number,
+    action: 'accept' | 'reject'
+  ) => {
+    if (action == 'accept') {
+      acceptBidRequest.mutate({ path: { bidId: bidId } })
+      acceptAuctionRequest.mutate({ path: { id: auctionId } })
+    } else {
+      rejectBidRequest.mutate({ path: { bidId: bidId } })
+    }
   }
 
   // Position map
@@ -428,7 +444,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                                   <Button
                                     size="sm"
                                     onClick={() =>
-                                      onBidAction?.(
+                                      handleBidAction(
                                         auction.id,
                                         bid.id,
                                         'accept'
@@ -463,7 +479,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                                     size="sm"
                                     variant="destructive"
                                     onClick={() =>
-                                      onBidAction?.(
+                                      handleBidAction(
                                         auction.id,
                                         bid.id,
                                         'reject'
