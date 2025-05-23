@@ -289,8 +289,6 @@ interface MarketplaceProps {
   qualities: QualityDto[]
   userRole: UserRole
   showAuctionStatusFilter?: boolean
-  onMakeBid?: (id: number) => void
-  onBuyNow?: (id: number) => void
   onCreateAuction?: () => void
 }
 
@@ -299,8 +297,6 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
   qualities,
   userRole,
   showAuctionStatusFilter,
-  onMakeBid,
-  onBuyNow,
   onCreateAuction,
 }) => {
   const isDesktop = useMediaQuery('(min-width: 1024px)')
@@ -612,16 +608,9 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                     isDetail
                     role={userRole}
                     onDetails={() => {}}
-                    onMakeBid={onMakeBid}
-                    onBuyNow={onBuyNow}
                   />
                   <div className="col-span-full lg:col-span-2">
-                    <AuctionDetails
-                      auction={inlineAuction}
-                      role={userRole}
-                      onMakeBid={onMakeBid}
-                      onBuyNow={onBuyNow}
-                    />
+                    <AuctionDetails auction={inlineAuction} role={userRole} />
                   </div>
                 </>
               ) : filtered.length === 0 ? (
@@ -635,8 +624,6 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                       layout="grid"
                       role={userRole}
                       onDetails={() => setInlineAuction(a)}
-                      onMakeBid={onMakeBid}
-                      onBuyNow={onBuyNow}
                     />
                   ))}
                   {totalPages > 1 && (
@@ -681,8 +668,6 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                         layout="row"
                         role={userRole}
                         onDetails={() => setDialogAuction(a)}
-                        onMakeBid={onMakeBid}
-                        onBuyNow={onBuyNow}
                       />
                     ))}
                   </TableBody>
@@ -717,8 +702,6 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
               auction={dialogAuction}
               role={userRole}
               showDetails={true}
-              onMakeBid={onMakeBid}
-              onBuyNow={onBuyNow}
             />
             <DialogFooter>
               <Button variant="outline" onClick={() => setDialogAuction(null)}>

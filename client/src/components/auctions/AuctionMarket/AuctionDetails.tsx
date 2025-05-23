@@ -44,8 +44,6 @@ interface Props {
   auction: AuctionDto
   role: UserRole
   showDetails?: boolean
-  onMakeBid?: (auctionId: number, amount: number) => void
-  onBuyNow?: (auctionId: number) => void
 }
 
 const AuctionDetailsPanel: React.FC<Props> = ({
