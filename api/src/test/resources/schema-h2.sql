@@ -1,3 +1,6 @@
+/**
+  Création de la vue de l'export d'auctions dans la base de données H2 de test
+ */
 CREATE OR REPLACE VIEW v_auction_bid_analysis AS
 /* ---------- 1) UNION des produits concrets ---------- */
 WITH all_products AS (
