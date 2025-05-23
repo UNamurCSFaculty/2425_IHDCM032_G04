@@ -1,18 +1,10 @@
-import AuctionCard from './AuctionCard'
-import AuctionMap from './AuctionMap'
-import EmptyState from './EmptyState'
-import type { AuctionDto, QualityDto } from '@/api/generated'
+import EmptyState from '../EmptyState'
+import ProductCard from './ProductCard'
+import type { ProductDto, QualityDto } from '@/api/generated'
 import PaginationControls from '@/components/PaginationControls'
 import VirtualizedSelect from '@/components/VirtualizedSelect'
-import AuctionDetails from '@/components/auctions/AuctionMarket/AuctionDetails'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogTitle,
-} from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
@@ -49,8 +41,6 @@ import {
   ChevronDown,
   LayoutGrid,
   List as ListIcon,
-  Map as MapIcon,
-  Plus,
   Search,
   SlidersHorizontal,
   X,
@@ -59,13 +49,12 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 export type ViewMode = 'cards' | 'table' | 'map'
-export type UserRole = 'buyer' | 'seller'
 
 export const sortOptions = [
   { value: 'endDate-asc', label: 'Expiration ⬆' },
   { value: 'endDate-desc', label: 'Expiration ⬇' },
-  { value: 'price-asc', label: 'Prix ⬆' },
-  { value: 'price-desc', label: 'Prix ⬇' },
+  { value: 'weight-asc', label: 'Prix ⬆' },
+  { value: 'weight-desc', label: 'Prix ⬇' },
 ] as const
 export type SortOptionValue = (typeof sortOptions)[number]['value']
 
@@ -284,28 +273,18 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
 }
 
 // ------------------------------------- Main Component -------------------------------------
-interface MarketplaceProps {
-  auctions: AuctionDto[]
+interface ProductListProps {
+  products: ProductDto[]
   qualities: QualityDto[]
-  userRole: UserRole
-  showAuctionStatusFilter?: boolean
-  onCreateAuction?: () => void
 }
 
-const AuctionMarketplace: React.FC<MarketplaceProps> = ({
-  auctions,
-  qualities,
-  userRole,
-  showAuctionStatusFilter,
-  onCreateAuction,
-}) => {
+const ProductList: React.FC<ProductListProps> = ({ products, qualities }) => {
   const isDesktop = useMediaQuery('(min-width: 1024px)')
 
   // UI state
   const [viewMode, setViewMode] = useState<ViewMode>('cards')
   const [sheetOpen, setSheetOpen] = useState(false)
-  const [dialogAuction, setDialogAuction] = useState<AuctionDto | null>(null)
-  const [inlineAuction, setInlineAuction] = useState<AuctionDto | null>(null)
+  const [inlineProduct, setInlineProduct] = useState<ProductDto | null>(null)
 
   // Filters state
   const [search, setSearch] = useState('')
@@ -313,6 +292,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
     TradeStatus.OPEN
   )
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 5_000_000])
+  const [weightKg, setWeightKg] = useState<[number, number]>([0, 5_000_000])
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [qualityId, setQualityId] = useState<number | null>(null)
   const [productTypeId, setProductTypeId] = useState<number | null>(null)
@@ -325,58 +305,31 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
   // Filtering & Sorting
   const filtered = useMemo(
     () =>
-      auctions.filter(a => {
+      products.filter(p => {
         if (
           search &&
-          !`${a.product.type} ${a.product.store.name} ${a.id} ${a.trader.firstName} ${a.trader.lastName}`
+          !`${p.type} ${p.store.name} ${p.id}`
             .toLowerCase()
             .includes(search.toLowerCase())
         )
           return false
 
-        if (
-          auctionStatus === TradeStatus.OPEN &&
-          a.status.name !== TradeStatus.OPEN
-        )
-          return false
-        if (
-          auctionStatus !== TradeStatus.OPEN &&
-          a.status.name === TradeStatus.OPEN
-        )
+        if (p.weightKg < priceRange[0] || p.weightKg > priceRange[1])
           return false
 
-        if (a.price < priceRange[0] || a.price > priceRange[1]) return false
-
-        if (
-          selectedDate &&
-          dayjs(a.expirationDate).isAfter(dayjs(selectedDate).endOf('day'))
-        )
+        if (qualityId && p.qualityControl?.quality.id !== qualityId)
           return false
 
-        if (qualityId && a.product.qualityControl?.quality.id !== qualityId)
+        if (productTypeId && p.type !== productTypes[productTypeId - 1])
           return false
 
-        if (productTypeId && a.product.type !== productTypes[productTypeId - 1])
-          return false
+        if (regionId && p.store.address.regionId !== regionId) return false
 
-        if (regionId && a.product.store.address.regionId !== regionId)
-          return false
-
-        if (cityId && a.product.store.address.cityId !== cityId) return false
+        if (cityId && p.store.address.cityId !== cityId) return false
 
         return true
       }),
-    [
-      auctions,
-      search,
-      auctionStatus,
-      priceRange,
-      selectedDate,
-      qualityId,
-      productTypeId,
-      regionId,
-      cityId,
-    ]
+    [products, search, priceRange, qualityId, productTypeId, regionId, cityId]
   )
 
   const sorted = useMemo(() => {
@@ -385,18 +338,16 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
       case 'endDate-desc':
         return list.sort(
           (a, b) =>
-            dayjs(b.expirationDate).valueOf() -
-            dayjs(a.expirationDate).valueOf()
+            dayjs(b.deliveryDate).valueOf() - dayjs(a.deliveryDate).valueOf()
         )
-      case 'price-asc':
-        return list.sort((a, b) => a.price - b.price)
-      case 'price-desc':
-        return list.sort((a, b) => b.price - a.price)
+      case 'weight-asc':
+        return list.sort((a, b) => a.weightKg - b.weightKg)
+      case 'weight-desc':
+        return list.sort((a, b) => b.weightKg - a.weightKg)
       default:
         return list.sort(
           (a, b) =>
-            dayjs(a.expirationDate).valueOf() -
-            dayjs(b.expirationDate).valueOf()
+            dayjs(a.deliveryDate).valueOf() - dayjs(b.deliveryDate).valueOf()
         )
     }
   }, [filtered, sort])
@@ -411,15 +362,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
 
   useEffect(
     () => setCurrentPage(1),
-    [
-      search,
-      priceRange,
-      selectedDate,
-      qualityId,
-      productTypeId,
-      regionId,
-      cityId,
-    ]
+    [search, weightKg, selectedDate, qualityId, productTypeId, regionId, cityId]
   )
 
   const resetFilters = () => {
@@ -439,7 +382,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
   }
 
   // Render
-  const isInCardDetail = viewMode === 'cards' && inlineAuction
+  const isInCardDetail = viewMode === 'cards' && inlineProduct
   const cssCard = isInCardDetail ? 'lg:justify-start' : 'lg:justify-end'
 
   return (
@@ -448,7 +391,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
       <div className="flex flex-wrap flex-col sm:flex-row items-center justify-center lg:justify-between gap-4 mb-6 w-full">
         <div className="text-md  text-muted-foreground w-full lg:w-[260px] ">
           <div className="text-center lg:text-left lg:pl-4">
-            Résultat(s) : {filtered.length} enchère
+            Résultat(s) : {filtered.length} produit
             {filtered.length !== 1 && 's'}
           </div>
         </div>
@@ -458,7 +401,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
               <Button
                 variant="outline"
                 className="flex items-center gap-1 w-40"
-                onClick={() => setInlineAuction(null)}
+                onClick={() => setInlineProduct(null)}
               >
                 <ArrowLeft className="size-4" /> Retour
               </Button>
@@ -492,10 +435,9 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                 value={viewMode}
                 onValueChange={v => {
                   setViewMode(v as ViewMode)
-                  setInlineAuction(null)
-                  setDialogAuction(null)
+                  setInlineProduct(null)
                 }}
-                className="grid grid-cols-3 rounded-lg border bg-background overflow-hidden"
+                className="grid grid-cols-2 rounded-lg border bg-background overflow-hidden"
               >
                 <ToggleGroupItem
                   value="cards"
@@ -513,25 +455,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                   <ListIcon className="size-4 mr-1" />
                   Liste
                 </ToggleGroupItem>
-                <ToggleGroupItem
-                  value="map"
-                  aria-label="Carte"
-                  className="flex items-center justify-center py-2 hover:bg-muted data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
-                >
-                  <MapIcon className="size-4 mr-1" />
-                  Carte
-                </ToggleGroupItem>
               </ToggleGroup>
-              {/* Create Auction */}
-              {userRole === 'seller' && onCreateAuction && (
-                <Button
-                  className="bg-emerald-600 text-white"
-                  onClick={onCreateAuction}
-                >
-                  <Plus className="size-4 mr-2" />
-                  Nouvelle enchère
-                </Button>
-              )}
               {/* Mobile Filters */}
               {!isDesktop && (
                 <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
@@ -550,7 +474,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                       onSearch={setSearch}
                       auctionStatus={auctionStatus}
                       onAuctionStatusChange={setAuctionStatus}
-                      showAuctionStatusFilter={showAuctionStatusFilter}
+                      showAuctionStatusFilter={false}
                       priceRange={priceRange}
                       onPriceChange={setPriceRange}
                       selectedDate={selectedDate}
@@ -582,7 +506,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
               onSearch={setSearch}
               auctionStatus={auctionStatus}
               onAuctionStatusChange={setAuctionStatus}
-              showAuctionStatusFilter={showAuctionStatusFilter}
+              showAuctionStatusFilter={false}
               priceRange={priceRange}
               onPriceChange={setPriceRange}
               selectedDate={selectedDate}
@@ -605,30 +529,30 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
           {/* Cards */}
           {viewMode === 'cards' && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4">
-              {inlineAuction ? (
+              {inlineProduct ? (
                 <>
-                  <AuctionCard
-                    auction={inlineAuction}
+                  <ProductCard
+                    product={inlineProduct}
                     layout="grid"
                     isDetail
-                    role={userRole}
                     onDetails={() => {}}
                   />
                   <div className="col-span-full lg:col-span-2">
-                    <AuctionDetails auction={inlineAuction} role={userRole} />
+                    {/* <AuctionDetails auction={inlineProduct} /> */}
                   </div>
                 </>
               ) : filtered.length === 0 ? (
                 <EmptyState onReset={resetFilters} className="col-span-full" />
               ) : (
                 <>
-                  {paginated.map(a => (
-                    <AuctionCard
-                      key={a.id}
-                      auction={a}
+                  {paginated.map(p => (
+                    <ProductCard
+                      key={p.id}
+                      product={p}
                       layout="grid"
-                      role={userRole}
-                      onDetails={() => setInlineAuction(a)}
+                      onDetails={
+                        () => console.log('TODO') /*setInlineProduct(a)*/
+                      }
                     />
                   ))}
                   {totalPages > 1 && (
@@ -666,13 +590,13 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {paginated.map(a => (
-                      <AuctionCard
-                        key={a.id}
-                        auction={a}
+                    {paginated.map(p => (
+                      <ProductCard
+                        key={p.id}
+                        product={p}
                         layout="row"
-                        role={userRole}
-                        onDetails={() => setDialogAuction(a)}
+                        onDetails={() => console.log('DETAILS')}
+                        // onDetails={() => setDialogAuction(p)}
                       />
                     ))}
                   </TableBody>
@@ -692,32 +616,10 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
           )}
 
           {/* Map */}
-          {viewMode === 'map' && (
-            <AuctionMap auctions={sorted} onSelect={a => setDialogAuction(a)} />
-          )}
         </div>
       </div>
-
-      {/* Dialog */}
-      {dialogAuction && viewMode !== 'cards' && (
-        <Dialog open onOpenChange={open => !open && setDialogAuction(null)}>
-          <DialogTitle />
-          <DialogContent className="w-full max-w-[80vw]! max-h-[90vh] overflow-y-auto">
-            <AuctionDetails
-              auction={dialogAuction}
-              role={userRole}
-              showDetails={true}
-            />
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setDialogAuction(null)}>
-                Fermer
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      )}
     </>
   )
 }
 
-export default AuctionMarketplace
+export default ProductList

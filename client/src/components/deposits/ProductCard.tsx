@@ -1,4 +1,4 @@
-import { InfoTile } from './InfoTile'
+import { InfoTile } from '../InfoTile'
 import type {
   HarvestProductDto,
   ProductDto,

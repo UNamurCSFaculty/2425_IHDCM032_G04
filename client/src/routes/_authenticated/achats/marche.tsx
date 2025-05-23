@@ -4,7 +4,7 @@ import {
   listQualitiesOptions,
 } from '@/api/generated/@tanstack/react-query.gen'
 import { BreadcrumbSection } from '@/components/BreadcrumbSection'
-import AuctionMarketplace from '@/components/auctions/AuctionMarket'
+import AuctionMarketplace from '@/components/auctions/AuctionMarket/AuctionMarket'
 import { TradeStatus } from '@/lib/utils'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'

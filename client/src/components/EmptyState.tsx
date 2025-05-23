@@ -19,7 +19,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({ onReset, className }) => (
     <CardContent>
       <div className="flex flex-col items-center justify-center mb-4">
         <SearchX className="size-16 text-muted-foreground mb-2" />
-        <CardTitle>Aucune enchère trouvée</CardTitle>
+        <CardTitle>Aucun résultat trouvé</CardTitle>
       </div>
 
       <p className="text-muted-foreground max-w-xs">

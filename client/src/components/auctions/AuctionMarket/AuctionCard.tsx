@@ -1,4 +1,4 @@
-import { InfoTile } from './InfoTile'
+import { InfoTile } from '../../InfoTile'
 import type { AuctionDto } from '@/api/generated'
 import { CountdownTimer } from '@/components/CountDownTimer'
 import { Badge } from '@/components/ui/badge'
