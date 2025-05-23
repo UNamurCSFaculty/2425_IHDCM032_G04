@@ -492,18 +492,20 @@ public abstract class AbstractIntegrationTest {
 				.quality(quality).document(document).build();
 		qualityControlRepository.save(qualityControl3);
 
-		// A harvest product
-		Product productHarvest = HarvestProduct.builder().producer((Producer) producerTestUser)
-				.store(mainTestStore).deliveryDate(LocalDateTime.now()).weightKg(2000.0)
-				.field(mainTestField).qualityControl(qualityControl2).build();
-		testHarvestProduct = productRepository.save(productHarvest);
-
 		// A transformed product
-		Product productTransform = TransformedProduct.builder()
+		TransformedProduct productTransform = TransformedProduct.builder()
 				.transformer((Transformer) transformerTestUser).store(mainTestStore)
 				.deliveryDate(LocalDateTime.now()).identifier("XYZ").weightKg(2000.0)
 				.qualityControl(qualityControl3).build();
 		testTransformedProduct = productRepository.save(productTransform);
+
+		// A harvest product
+		HarvestProduct productHarvest = HarvestProduct.builder()
+				.producer((Producer) producerTestUser).store(mainTestStore)
+				.deliveryDate(LocalDateTime.now()).weightKg(2000.0).field(mainTestField)
+				.qualityControl(qualityControl2)
+				.transformedProduct((TransformedProduct) testTransformedProduct).build();
+		testHarvestProduct = productRepository.save(productHarvest);
 
 		AuctionStrategy strategy = AuctionStrategy.builder().name("Meilleure offre").build();
 		testAuctionStrategy = auctionStrategyRepository.save(strategy);

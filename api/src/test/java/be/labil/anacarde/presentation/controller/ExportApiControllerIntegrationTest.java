@@ -27,6 +27,8 @@ class ExportApiControllerIntegrationTest extends AbstractIntegrationTest {
 				.andExpect(jsonPath("$.auctionId").value(expected.getAuctionId()))
 				.andExpect(jsonPath("$.auctionStartPrice").value(expected.getAuctionStartPrice()))
 				.andExpect(jsonPath("$.sellerId").value(expected.getSellerId()))
+				.andExpect(jsonPath("$.transformedProductId")
+						.value(expected.getTransformedProductId()))
 				.andExpect(jsonPath("$.bidCount").value(expected.getBidCount()));
 	}
 
