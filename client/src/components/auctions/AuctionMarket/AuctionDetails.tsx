@@ -53,7 +53,9 @@ const AuctionDetailsPanel: React.FC<Props> = ({
 }) => {
   const [amount, setAmount] = useState('')
   const [buyOpen, setBuyOpen] = useState(false)
-  const [bidOpen, setBidOpen] = useState(false)
+  const [makeBidPopover, setMakeBidPopover] = useState(false)
+  const [acceptBidPopover, setAcceptBidPopover] = useState(false)
+  const [refuseBidPopover, setRefuseBidPopover] = useState(false)
 
   const { t } = useTranslation()
 
@@ -129,7 +131,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
     })
 
     setAmount('')
-    setBidOpen(false)
+    setMakeBidPopover(false)
   }
 
   const handleSubmitBuyNow = async (buyNowPrice: number | undefined) => {
@@ -160,8 +162,10 @@ const AuctionDetailsPanel: React.FC<Props> = ({
     if (action == 'accept') {
       acceptBidRequest.mutate({ path: { bidId: bidId } })
       acceptAuctionRequest.mutate({ path: { id: auctionId } })
+      setAcceptBidPopover(false)
     } else {
       rejectBidRequest.mutate({ path: { bidId: bidId } })
+      setRefuseBidPopover(false)
     }
   }
 
@@ -327,12 +331,15 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                     onChange={e => setAmount(e.target.value)}
                     className="mb-3 w-full bg-white"
                   />
-                  <Popover open={bidOpen} onOpenChange={setBidOpen}>
+                  <Popover
+                    open={makeBidPopover}
+                    onOpenChange={setMakeBidPopover}
+                  >
                     <PopoverTrigger asChild>
                       <Button
                         disabled={!amount}
                         className="w-full px-6"
-                        onClick={() => setBidOpen(true)}
+                        onClick={() => setMakeBidPopover(true)}
                       >
                         <PlusCircle className="size-4 mr-2" />
                         Placer l’offre
@@ -352,7 +359,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                           size="sm"
                           onClick={() => {
                             setAmount('')
-                            setBidOpen(false)
+                            setMakeBidPopover(false)
                           }}
                         >
                           Annuler
@@ -420,7 +427,10 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                         bid.status.name === TradeStatus.OPEN && (
                           <div className="flex gap-1">
                             {/* Accept */}
-                            <Popover>
+                            <Popover
+                              open={acceptBidPopover}
+                              onOpenChange={setAcceptBidPopover}
+                            >
                               <PopoverTrigger asChild>
                                 <Button
                                   size="sm"
@@ -436,7 +446,13 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                                   Accepter cette offre ?
                                 </p>
                                 <div className="flex justify-end gap-2">
-                                  <Button variant="ghost" size="sm">
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => {
+                                      setAcceptBidPopover(false)
+                                    }}
+                                  >
                                     Annuler
                                   </Button>
                                   <Button
@@ -455,7 +471,10 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                               </PopoverContent>
                             </Popover>
                             {/* Reject */}
-                            <Popover>
+                            <Popover
+                              open={refuseBidPopover}
+                              onOpenChange={setRefuseBidPopover}
+                            >
                               <PopoverTrigger asChild>
                                 <Button
                                   size="sm"
@@ -470,7 +489,13 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                                   Refuser cette offre ?
                                 </p>
                                 <div className="flex justify-end gap-2">
-                                  <Button variant="ghost" size="sm">
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => {
+                                      setRefuseBidPopover(false)
+                                    }}
+                                  >
                                     Annuler
                                   </Button>
                                   <Button
