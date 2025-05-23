@@ -96,7 +96,7 @@ const menu: MenuItem[] = [
         url: '/depots/nouveau-produit',
       },
       {
-        title: 'Mes depôts',
+        title: 'Mes produits',
         description: 'Consulter tous mes dépôts',
         icon: <History className="size-5 shrink-0" />,
         url: '/depots/mes-produits',
