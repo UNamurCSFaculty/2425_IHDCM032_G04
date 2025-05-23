@@ -343,23 +343,30 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
             .includes(search.toLowerCase())
         )
           return false
+
         if (
-          auctionStatus == TradeStatus.OPEN &&
-          a.status.name !== auctionStatus
+          (auctionStatus === TradeStatus.OPEN) !==
+          (a.status.name === TradeStatus.OPEN)
         )
           return false
+
         if (a.price < priceRange[0] || a.price > priceRange[1]) return false
+
         if (
           selectedDate &&
           dayjs(a.expirationDate).isAfter(dayjs(selectedDate).endOf('day'))
         )
           return false
+
         if (qualityId && a.product.qualityControl?.quality.id !== qualityId)
           return false
+
         if (productTypeId && a.product.type !== productTypes[productTypeId - 1])
           return false
+
         if (regionId && a.product.store.address.regionId !== regionId)
           return false
+
         if (cityId && a.product.store.address.cityId !== cityId) return false
 
         return true

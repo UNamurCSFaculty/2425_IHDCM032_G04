@@ -63,7 +63,7 @@ const menu: MenuItem[] = [
         title: 'Mes achats',
         description: 'Consulter tous mes achats',
         icon: <ArrowLeftRight className="size-5 shrink-0" />,
-        url: '/achats/historique',
+        url: '/achats/mes-encheres',
       },
     ],
   },

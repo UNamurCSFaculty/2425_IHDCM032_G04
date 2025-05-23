@@ -16,7 +16,7 @@ const listAuctionsQueryOptions = (userId: number) => ({
   staleTime: 10_000,
 })
 
-export const Route = createFileRoute('/_authenticated/achats/historique')({
+export const Route = createFileRoute('/_authenticated/achats/mes-encheres')({
   component: RouteComponent,
   loader: async ({ context: { queryClient, user } }) => {
     await queryClient.ensureQueryData(listAuctionsQueryOptions(user!.id))
