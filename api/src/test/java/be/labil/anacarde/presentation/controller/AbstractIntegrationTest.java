@@ -6,9 +6,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 import be.labil.anacarde.application.service.DatabaseService;
 import be.labil.anacarde.domain.dto.db.LanguageDto;
+import be.labil.anacarde.domain.dto.db.view.ExportAuctionDto;
+import be.labil.anacarde.domain.mapper.ExportAuctionMapper;
 import be.labil.anacarde.domain.model.*;
 import be.labil.anacarde.infrastructure.persistence.*;
 import be.labil.anacarde.infrastructure.persistence.user.UserRepository;
+import be.labil.anacarde.infrastructure.persistence.view.ExportAuctionRepository;
 import be.labil.anacarde.infrastructure.security.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import java.math.BigDecimal;
@@ -60,6 +63,8 @@ public abstract class AbstractIntegrationTest {
 	protected @Autowired ContractOfferRepository contractOfferRepository;
 	protected @Autowired QualityControlRepository qualityControlRepository;
 	protected @Autowired DatabaseService databaseService;
+	protected @Autowired ExportAuctionRepository exportAuctionRepository;
+	protected @Autowired ExportAuctionMapper exportAuctionMapper;
 
 	private Language mainLanguage;
 	private User mainTestUser;
@@ -90,10 +95,18 @@ public abstract class AbstractIntegrationTest {
 
 	@Getter
 	private Cookie jwtCookie;
-
 	protected @Autowired WebApplicationContext wac;
-
 	protected MockMvc mockMvc;
+
+	/**
+	 * Ligne « principale » de la vue v_auction_bid_analysis (celle correspondant à l’enchère créée
+	 * dans initUserDatabase()).
+	 */
+	protected ExportAuctionDto getMainExportAuction() {
+		return exportAuctionRepository.findByAuctionId(getTestAuction().getId())
+				.map(exportAuctionMapper::toDto).orElseThrow(() -> new IllegalStateException(
+						"aucune ligne dans la vue pour auction_id=" + getTestAuction().getId()));
+	}
 
 	@BeforeEach
 	public void setUp() {
@@ -479,18 +492,20 @@ public abstract class AbstractIntegrationTest {
 				.quality(quality).document(document).build();
 		qualityControlRepository.save(qualityControl3);
 
-		// A harvest product
-		Product productHarvest = HarvestProduct.builder().producer((Producer) producerTestUser)
-				.store(mainTestStore).deliveryDate(LocalDateTime.now()).weightKg(2000.0)
-				.field(mainTestField).qualityControl(qualityControl2).build();
-		testHarvestProduct = productRepository.save(productHarvest);
-
 		// A transformed product
-		Product productTransform = TransformedProduct.builder()
+		TransformedProduct productTransform = TransformedProduct.builder()
 				.transformer((Transformer) transformerTestUser).store(mainTestStore)
 				.deliveryDate(LocalDateTime.now()).identifier("XYZ").weightKg(2000.0)
 				.qualityControl(qualityControl3).build();
 		testTransformedProduct = productRepository.save(productTransform);
+
+		// A harvest product
+		HarvestProduct productHarvest = HarvestProduct.builder()
+				.producer((Producer) producerTestUser).store(mainTestStore)
+				.deliveryDate(LocalDateTime.now()).weightKg(2000.0).field(mainTestField)
+				.qualityControl(qualityControl2)
+				.transformedProduct((TransformedProduct) testTransformedProduct).build();
+		testHarvestProduct = productRepository.save(productHarvest);
 
 		AuctionStrategy strategy = AuctionStrategy.builder().name("Meilleure offre").build();
 		testAuctionStrategy = auctionStrategyRepository.save(strategy);
@@ -524,10 +539,13 @@ public abstract class AbstractIntegrationTest {
 
 		// An auction with a transformed product
 		Auction auction2 = Auction.builder().price(10000.0).productQuantity(1000).active(true)
-				.creationDate(LocalDateTime.now()).expirationDate(LocalDateTime.now())
-				.product(productTransform).options(auctionOptions).trader(producer)
-				.status(tradeStatusOpen).build();
+				.creationDate(LocalDateTime.of(2025, 1, 15, 0, 0))
+				.expirationDate(LocalDateTime.of(2025, 2, 15, 0, 0)).product(productTransform)
+				.options(auctionOptions).trader(producer).status(tradeStatusOpen).build();
 		auctionRepository.save(auction2);
+
+		auctionRepository.overrideCreationDateNative(auction2.getId(),
+				LocalDateTime.of(2025, 1, 15, 0, 0));
 
 		// An auction from another user
 		Auction auction3 = Auction.builder().price(777.0).productQuantity(777).active(true)
@@ -580,7 +598,6 @@ public abstract class AbstractIntegrationTest {
 				.build();
 		mainTestContractOffer = contractOfferRepository.save(contractOffer);
 	}
-
 	/**
 	 * Génère un cookie JWT HTTP-only en utilisant les détails de l'utilisateur de test principal.
 	 */

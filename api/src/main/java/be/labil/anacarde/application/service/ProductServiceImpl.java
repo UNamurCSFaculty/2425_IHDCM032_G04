@@ -3,6 +3,7 @@ package be.labil.anacarde.application.service;
 import be.labil.anacarde.application.exception.ResourceNotFoundException;
 import be.labil.anacarde.domain.dto.db.product.ProductDto;
 import be.labil.anacarde.domain.dto.write.product.ProductUpdateDto;
+import be.labil.anacarde.domain.dto.write.product.TransformedProductUpdateDto;
 import be.labil.anacarde.domain.mapper.ProductMapper;
 import be.labil.anacarde.domain.model.HarvestProduct;
 import be.labil.anacarde.domain.model.Product;
@@ -31,6 +32,15 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public ProductDto createProduct(ProductUpdateDto dto) {
 		Product product = productMapper.toEntity(dto);
+		if (dto instanceof TransformedProductUpdateDto tpDto
+				&& product instanceof TransformedProduct tp) {
+			List<HarvestProduct> harvests = harvestProductRepository
+					.findAllById(tpDto.getHarvestProductIds());
+			for (HarvestProduct hp : harvests) {
+				hp.setTransformedProduct(tp);
+			}
+			tp.setHarvestProducts(harvests);
+		}
 		Product full = persistenceHelper.saveAndReload(productRepository, product, Product::getId);
 		return productMapper.toDto(full);
 	}

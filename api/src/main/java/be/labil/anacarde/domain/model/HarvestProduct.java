@@ -21,4 +21,8 @@ public class HarvestProduct extends Product {
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
 	@JoinColumn(name = "field_id")
 	private Field field;
+
+	@ManyToOne
+	@JoinColumn(name = "transformed_product_id")
+	private TransformedProduct transformedProduct;
 }

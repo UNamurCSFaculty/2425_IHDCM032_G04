@@ -8,6 +8,8 @@ import be.labil.anacarde.domain.dto.write.product.ProductUpdateDto;
 import be.labil.anacarde.domain.dto.write.product.TransformedProductUpdateDto;
 import be.labil.anacarde.domain.model.*;
 import jakarta.persistence.EntityManager;
+import java.util.ArrayList;
+import java.util.List;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -28,6 +30,7 @@ public abstract class ProductMapper {
 	@Mapping(target = "producer", ignore = true)
 	@Mapping(target = "field", ignore = true)
 	@Mapping(target = "id", ignore = true)
+	@Mapping(target = "transformedProduct", ignore = true)
 	public abstract HarvestProduct toEntity(HarvestProductUpdateDto dto);
 
 	// Mapping vers l'entité
@@ -36,6 +39,7 @@ public abstract class ProductMapper {
 	@Mapping(target = "qualityControl", ignore = true)
 	@Mapping(target = "transformer", ignore = true)
 	@Mapping(target = "id", ignore = true)
+	@Mapping(target = "harvestProducts", ignore = true)
 	public abstract TransformedProduct toEntity(TransformedProductUpdateDto dto);
 
 	@AfterMapping
@@ -62,6 +66,15 @@ public abstract class ProductMapper {
 						transformed.getTransformerId());
 				((TransformedProduct) product).setTransformer(transformer);
 			}
+			if (transformed.getHarvestProductIds() != null) {
+				List<HarvestProduct> harvestProducts = new ArrayList<>();
+				for (Integer harvestProductId : transformed.getHarvestProductIds()) {
+					HarvestProduct harvestProduct = em.getReference(HarvestProduct.class,
+							harvestProductId);
+					harvestProducts.add(harvestProduct);
+				}
+				((TransformedProduct) product).setHarvestProducts(harvestProducts);
+			}
 		} else {
 			throw new IllegalArgumentException(
 					"Type de produit non supporté : " + dto.getClass().getName());
@@ -87,6 +100,7 @@ public abstract class ProductMapper {
 	@Mapping(source = "producer", target = "producer")
 	@Mapping(source = "field", target = "field")
 	@Mapping(source = "qualityControl", target = "qualityControl")
+	@Mapping(source = "transformedProduct", target = "transformedProduct")
 	public abstract HarvestProductDto toDto(HarvestProduct entity);
 
 	// Mapping inverse vers le DTO
@@ -94,6 +108,7 @@ public abstract class ProductMapper {
 	@Mapping(source = "identifier", target = "identifier")
 	@Mapping(source = "transformer", target = "transformer")
 	@Mapping(source = "qualityControl", target = "qualityControl")
+	@Mapping(source = "harvestProducts", target = "harvestProducts")
 	public abstract TransformedProductDto toDto(TransformedProduct entity);
 
 	public ProductDto toDto(Product entity) {
@@ -116,6 +131,7 @@ public abstract class ProductMapper {
 	@Mapping(target = "field", ignore = true)
 	@Mapping(target = "qualityControl", ignore = true)
 	@Mapping(target = "id", ignore = true)
+	@Mapping(target = "transformedProduct", ignore = true)
 	public abstract HarvestProduct partialUpdate(HarvestProductUpdateDto dto,
 			@MappingTarget HarvestProduct entity);
 
@@ -125,6 +141,7 @@ public abstract class ProductMapper {
 	@Mapping(target = "qualityControl", ignore = true)
 	@Mapping(target = "transformer", ignore = true)
 	@Mapping(target = "id", ignore = true)
+	@Mapping(target = "harvestProducts", ignore = true)
 	public abstract TransformedProduct partialUpdate(TransformedProductUpdateDto dto,
 			@MappingTarget TransformedProduct entity);
 
