@@ -4,19 +4,18 @@ import {
 } from '@/api/generated/@tanstack/react-query.gen'
 import { BreadcrumbSection } from '@/components/BreadcrumbSection'
 import AuctionMarketplace from '@/components/auctions/AuctionMarket'
-import { TradeStatus } from '@/lib/utils'
 import { useAuthUser } from '@/store/userStore'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 
 const listAuctionsQueryOptions = (userId: number) => ({
   ...listAuctionsOptions({
-    query: { buyerId: userId, status: TradeStatus.ACCEPTED },
+    query: { buyerId: userId },
   }),
   staleTime: 10_000,
 })
 
-export const Route = createFileRoute('/_authenticated/achats/historique')({
+export const Route = createFileRoute('/_authenticated/achats/mes-encheres')({
   component: RouteComponent,
   loader: async ({ context: { queryClient, user } }) => {
     await queryClient.ensureQueryData(listAuctionsQueryOptions(user!.id))
@@ -48,6 +47,7 @@ export function RouteComponent() {
           auctions={auctionsData}
           qualities={qualitiesData}
           userRole="buyer"
+          showAuctionStatusFilter={true}
         />
       </div>
     </>

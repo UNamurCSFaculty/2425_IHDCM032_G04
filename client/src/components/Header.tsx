@@ -50,7 +50,7 @@ const activeStyle = { style: { color: 'var(--anacarde-dark-green)' } }
 const menu: MenuItem[] = [
   { title: 'Accueil', url: '/' },
   {
-    title: 'Acheter',
+    title: 'Achats',
     url: '#',
     items: [
       {
@@ -63,12 +63,12 @@ const menu: MenuItem[] = [
         title: 'Mes achats',
         description: 'Consulter tous mes achats',
         icon: <ArrowLeftRight className="size-5 shrink-0" />,
-        url: '/achats/historique',
+        url: '/achats/mes-encheres',
       },
     ],
   },
   {
-    title: 'Vendre',
+    title: 'Ventes',
     url: '#',
     items: [
       {
@@ -96,8 +96,8 @@ const menu: MenuItem[] = [
         url: '/depots/nouveau-produit',
       },
       {
-        title: 'Mon historique',
-        description: 'Détails de mes dépôts passés',
+        title: 'Mes depôts',
+        description: 'Consulter tous mes dépôts',
         icon: <History className="size-5 shrink-0" />,
         url: '/depots/mes-produits',
       },

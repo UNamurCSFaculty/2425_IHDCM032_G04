@@ -14,11 +14,13 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import {
   Select,
   SelectContent,
@@ -39,7 +41,7 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import cities from '@/data/cities.json'
 import regions from '@/data/regions.json'
 import { useMediaQuery } from '@/hooks/use-mobile'
-import { ProductType, formatDate, productTypes } from '@/lib/utils'
+import { TradeStatus, formatDate, productTypes } from '@/lib/utils'
 import dayjs from '@/utils/dayjs-config'
 import { formatPrice } from '@/utils/formatter'
 import {
@@ -83,6 +85,9 @@ const regionOptions = regions.map((n, i) => ({
 interface FiltersPanelProps {
   search: string
   onSearch: (value: string) => void
+  auctionStatus: TradeStatus
+  onAuctionStatusChange: (status: TradeStatus) => void
+  showAuctionStatusFilter?: boolean
   priceRange: [number, number]
   onPriceChange: (range: [number, number]) => void
   selectedDate: Date | null
@@ -102,6 +107,9 @@ interface FiltersPanelProps {
 const FiltersPanel: React.FC<FiltersPanelProps> = ({
   search,
   onSearch,
+  auctionStatus,
+  onAuctionStatusChange,
+  showAuctionStatusFilter,
   priceRange,
   onPriceChange,
   selectedDate,
@@ -128,12 +136,8 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
     .filter(quality => {
       return (
         !productTypeId ||
-        (productTypeId === 1 &&
-          quality.qualityType.name.toLowerCase() ==
-            ProductType.HARVEST.toLowerCase()) ||
-        (productTypeId === 2 &&
-          quality.qualityType.name.toLowerCase() ==
-            ProductType.TRANSFORMED.toLowerCase())
+        quality.qualityType.name.toLowerCase() ==
+          productTypes[productTypeId - 1].toLowerCase()
       )
     })
     .map(q => ({
@@ -172,6 +176,24 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
             )}
           </div>
 
+          {/* Status */}
+          {showAuctionStatusFilter && (
+            <RadioGroup
+              value={auctionStatus}
+              defaultValue={TradeStatus.OPEN}
+              onValueChange={onAuctionStatusChange}
+            >
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value={TradeStatus.OPEN} id="r1" />
+                <Label htmlFor="r1">Enchères en cours</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value={TradeStatus.EXPIRED} id="r2" />
+                <Label htmlFor="r2">Enchères terminées</Label>
+              </div>
+            </RadioGroup>
+          )}
+
           {/* Price */}
           <div className="space-y-2">
             <div className="flex justify-between text-sm font-medium">
@@ -189,7 +211,6 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
               step={500}
             />
           </div>
-
           {/* Product Type */}
           <VirtualizedSelect
             id="product-type-select"
@@ -199,7 +220,6 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
             value={productTypeId}
             onChange={onTypeChange}
           />
-
           {/* Quality */}
           <VirtualizedSelect
             id="quality-select"
@@ -209,7 +229,6 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
             value={qualityId}
             onChange={onQualityChange}
           />
-
           {/* Region / City */}
           <VirtualizedSelect
             id="region-select"
@@ -227,7 +246,6 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
             value={cityId}
             onChange={onCityChange}
           />
-
           {/* Date picker */}
           <div className="space-y-2">
             <label
@@ -270,24 +288,16 @@ interface MarketplaceProps {
   auctions: AuctionDto[]
   qualities: QualityDto[]
   userRole: UserRole
-  onMakeBid?: (id: number) => void
-  onBuyNow?: (id: number) => void
+  showAuctionStatusFilter?: boolean
   onCreateAuction?: () => void
-  onBidAction?: (
-    auctionId: number,
-    bidId: number,
-    action: 'accept' | 'reject'
-  ) => void
 }
 
 const AuctionMarketplace: React.FC<MarketplaceProps> = ({
   auctions,
   qualities,
   userRole,
-  onMakeBid,
-  onBuyNow,
+  showAuctionStatusFilter,
   onCreateAuction,
-  onBidAction,
 }) => {
   const isDesktop = useMediaQuery('(min-width: 1024px)')
 
@@ -299,6 +309,9 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
 
   // Filters state
   const [search, setSearch] = useState('')
+  const [auctionStatus, setAuctionStatus] = useState<TradeStatus>(
+    TradeStatus.OPEN
+  )
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 5_000_000])
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [qualityId, setQualityId] = useState<number | null>(null)
@@ -309,40 +322,54 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
 
   useEffect(() => setCityId(null), [regionId])
 
-  const { t } = useTranslation()
-
   // Filtering & Sorting
   const filtered = useMemo(
     () =>
       auctions.filter(a => {
         if (
           search &&
-          !`${a.product.type} ${a.product.store.name} ${a.id}`
+          !`${a.product.type} ${a.product.store.name} ${a.id} ${a.trader.firstName} ${a.trader.lastName}`
             .toLowerCase()
             .includes(search.toLowerCase())
         )
           return false
+
+        if (
+          auctionStatus === TradeStatus.OPEN &&
+          a.status.name !== TradeStatus.OPEN
+        )
+          return false
+        if (
+          auctionStatus !== TradeStatus.OPEN &&
+          a.status.name === TradeStatus.OPEN
+        )
+          return false
+
         if (a.price < priceRange[0] || a.price > priceRange[1]) return false
+
         if (
           selectedDate &&
           dayjs(a.expirationDate).isAfter(dayjs(selectedDate).endOf('day'))
         )
           return false
+
         if (qualityId && a.product.qualityControl?.quality.id !== qualityId)
           return false
+
         if (productTypeId && a.product.type !== productTypes[productTypeId - 1])
           return false
+
         if (regionId && a.product.store.address.regionId !== regionId)
           return false
+
         if (cityId && a.product.store.address.cityId !== cityId) return false
 
         return true
       }),
     [
       auctions,
-      productTypes,
-      t,
       search,
+      auctionStatus,
       priceRange,
       selectedDate,
       qualityId,
@@ -397,6 +424,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
 
   const resetFilters = () => {
     setSearch('')
+    setAuctionStatus(TradeStatus.OPEN)
     setPriceRange([0, 5_000_000])
     setSelectedDate(null)
     setQualityId(null)
@@ -438,7 +466,6 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
           ) : (
             <div className="flex flex-col lg:flex-row flex-wrap gap-2 items-center justify-center lg:justify-end w-full">
               {/* Sorting */}
-
               {viewMode !== 'map' && (
                 <Select
                   value={sort}
@@ -457,6 +484,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                   </SelectContent>
                 </Select>
               )}
+
               {/* View Mode */}
               <ToggleGroup
                 size="sm"
@@ -520,6 +548,9 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                     <FiltersPanel
                       search={search}
                       onSearch={setSearch}
+                      auctionStatus={auctionStatus}
+                      onAuctionStatusChange={setAuctionStatus}
+                      showAuctionStatusFilter={showAuctionStatusFilter}
                       priceRange={priceRange}
                       onPriceChange={setPriceRange}
                       selectedDate={selectedDate}
@@ -549,6 +580,9 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
             <FiltersPanel
               search={search}
               onSearch={setSearch}
+              auctionStatus={auctionStatus}
+              onAuctionStatusChange={setAuctionStatus}
+              showAuctionStatusFilter={showAuctionStatusFilter}
               priceRange={priceRange}
               onPriceChange={setPriceRange}
               selectedDate={selectedDate}
@@ -579,17 +613,9 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                     isDetail
                     role={userRole}
                     onDetails={() => {}}
-                    onMakeBid={onMakeBid}
-                    onBuyNow={onBuyNow}
                   />
                   <div className="col-span-full lg:col-span-2">
-                    <AuctionDetails
-                      auction={inlineAuction}
-                      role={userRole}
-                      onBidAction={onBidAction}
-                      onMakeBid={onMakeBid}
-                      onBuyNow={onBuyNow}
-                    />
+                    <AuctionDetails auction={inlineAuction} role={userRole} />
                   </div>
                 </>
               ) : filtered.length === 0 ? (
@@ -603,8 +629,6 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                       layout="grid"
                       role={userRole}
                       onDetails={() => setInlineAuction(a)}
-                      onMakeBid={onMakeBid}
-                      onBuyNow={onBuyNow}
                     />
                   ))}
                   {totalPages > 1 && (
@@ -649,8 +673,6 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                         layout="row"
                         role={userRole}
                         onDetails={() => setDialogAuction(a)}
-                        onMakeBid={onMakeBid}
-                        onBuyNow={onBuyNow}
                       />
                     ))}
                   </TableBody>
@@ -685,9 +707,6 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
               auction={dialogAuction}
               role={userRole}
               showDetails={true}
-              onBidAction={onBidAction}
-              onMakeBid={onMakeBid}
-              onBuyNow={onBuyNow}
             />
             <DialogFooter>
               <Button variant="outline" onClick={() => setDialogAuction(null)}>

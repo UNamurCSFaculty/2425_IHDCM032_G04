@@ -39,8 +39,6 @@ interface AuctionCardProps {
   isDetail?: boolean
   role: UserRole
   onDetails: () => void
-  onMakeBid?: (id: number) => void
-  onBuyNow?: (id: number) => void
 }
 
 const AuctionCard: React.FC<AuctionCardProps> = ({
