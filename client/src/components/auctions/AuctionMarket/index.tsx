@@ -322,6 +322,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
 
   useEffect(() => setCityId(null), [regionId])
 
+  console.log(auctions)
   // Filtering & Sorting
   const filtered = useMemo(
     () =>
@@ -335,8 +336,13 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
           return false
 
         if (
-          (auctionStatus === TradeStatus.OPEN) !==
-          (a.status.name === TradeStatus.OPEN)
+          auctionStatus === TradeStatus.OPEN &&
+          a.status.name !== TradeStatus.OPEN
+        )
+          return false
+        if (
+          auctionStatus !== TradeStatus.OPEN &&
+          a.status.name === TradeStatus.OPEN
         )
           return false
 
