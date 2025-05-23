@@ -322,7 +322,6 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
 
   useEffect(() => setCityId(null), [regionId])
 
-  console.log(auctions)
   // Filtering & Sorting
   const filtered = useMemo(
     () =>
