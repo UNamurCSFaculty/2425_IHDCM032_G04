@@ -71,7 +71,7 @@ public class DocumentApiControllerIntegrationTest extends AbstractIntegrationTes
 				.andExpect(jsonPath("$.extension").value("pdf"))
 				.andExpect(jsonPath("$.size").value(content.length))
 				.andExpect(jsonPath("$.userId").value(getProducerTestUser().getId()))
-				.andExpect(jsonPath("$.storagePath").value(startsWith("build/test-uploads/")));
+				.andExpect(jsonPath("$.storagePath").value(startsWith("/build/test-uploads/")));
 	}
 
 	/* ---------- DELETE ---------- */
