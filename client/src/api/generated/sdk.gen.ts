@@ -46,6 +46,7 @@ import type {
   CreateQualityControlResponse,
   CreateQualityData,
   CreateQualityError,
+  CreateQualityResponse,
   CreateStoreData,
   CreateStoreError,
   CreateStoreResponse,
@@ -134,6 +135,7 @@ import type {
   GetQualityControlResponse,
   GetQualityData,
   GetQualityError,
+  GetQualityResponse,
   GetRegionData,
   GetRegionError,
   GetRegionResponse,
@@ -163,7 +165,7 @@ import type {
   ListProductsData,
   ListProductsResponse,
   ListQualitiesData,
-  ListQualitiesError,
+  ListQualitiesResponse,
   ListQualityControlsData,
   ListQualityControlsResponse,
   ListRegionsData,
@@ -206,6 +208,7 @@ import type {
   UpdateQualityControlResponse,
   UpdateQualityData,
   UpdateQualityError,
+  UpdateQualityResponse,
   UpdateRegionData,
   UpdateRegionError,
   UpdateRegionResponse,
@@ -604,7 +607,7 @@ export const getQuality = <ThrowOnError extends boolean = false>(
   options: Options<GetQualityData, ThrowOnError>
 ) => {
   return (options.client ?? _heyApiClient).get<
-    unknown,
+    GetQualityResponse,
     GetQualityError,
     ThrowOnError
   >({
@@ -626,7 +629,7 @@ export const updateQuality = <ThrowOnError extends boolean = false>(
   options: Options<UpdateQualityData, ThrowOnError>
 ) => {
   return (options.client ?? _heyApiClient).put<
-    unknown,
+    UpdateQualityResponse,
     UpdateQualityError,
     ThrowOnError
   >({
@@ -999,6 +1002,120 @@ export const updateContractOffer = <ThrowOnError extends boolean = false>(
 }
 
 /**
+ * Supprimer une offre
+ */
+export const deleteBid = <ThrowOnError extends boolean = false>(
+  options: Options<DeleteBidData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).delete<
+    DeleteBidResponse,
+    DeleteBidError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/bids/{bidId}',
+    ...options,
+  })
+}
+
+/**
+ * Obtenir une offre
+ */
+export const getBid = <ThrowOnError extends boolean = false>(
+  options: Options<GetBidData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).get<
+    GetBidResponse,
+    GetBidError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/bids/{bidId}',
+    ...options,
+  })
+}
+
+/**
+ * Mettre à jour une offre
+ */
+export const updateBid = <ThrowOnError extends boolean = false>(
+  options: Options<UpdateBidData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).put<
+    UpdateBidResponse,
+    UpdateBidError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/bids/{bidId}',
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options?.headers,
+    },
+  })
+}
+
+/**
+ * Rejeter une offre
+ */
+export const rejectBid = <ThrowOnError extends boolean = false>(
+  options: Options<RejectBidData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).put<
+    RejectBidResponse,
+    RejectBidError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/bids/{bidId}/reject',
+    ...options,
+  })
+}
+
+/**
+ * Accepter une offre
+ */
+export const acceptBid = <ThrowOnError extends boolean = false>(
+  options: Options<AcceptBidData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).put<
+    AcceptBidResponse,
+    AcceptBidError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/bids/{bidId}/accept',
+    ...options,
+  })
+}
+
+/**
  * Supprimer une enchère
  */
 export const deleteAuction = <ThrowOnError extends boolean = false>(
@@ -1086,120 +1203,6 @@ export const acceptAuction = <ThrowOnError extends boolean = false>(
       },
     ],
     url: '/api/auctions/{id}/accept',
-    ...options,
-  })
-}
-
-/**
- * Supprimer une offre
- */
-export const deleteBid = <ThrowOnError extends boolean = false>(
-  options: Options<DeleteBidData, ThrowOnError>
-) => {
-  return (options.client ?? _heyApiClient).delete<
-    DeleteBidResponse,
-    DeleteBidError,
-    ThrowOnError
-  >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
-    url: '/api/auctions/{auctionId}/bids/{bidId}',
-    ...options,
-  })
-}
-
-/**
- * Obtenir une offre
- */
-export const getBid = <ThrowOnError extends boolean = false>(
-  options: Options<GetBidData, ThrowOnError>
-) => {
-  return (options.client ?? _heyApiClient).get<
-    GetBidResponse,
-    GetBidError,
-    ThrowOnError
-  >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
-    url: '/api/auctions/{auctionId}/bids/{bidId}',
-    ...options,
-  })
-}
-
-/**
- * Mettre à jour une offre
- */
-export const updateBid = <ThrowOnError extends boolean = false>(
-  options: Options<UpdateBidData, ThrowOnError>
-) => {
-  return (options.client ?? _heyApiClient).put<
-    UpdateBidResponse,
-    UpdateBidError,
-    ThrowOnError
-  >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
-    url: '/api/auctions/{auctionId}/bids/{bidId}',
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...options?.headers,
-    },
-  })
-}
-
-/**
- * Rejeter une offre
- */
-export const rejectBid = <ThrowOnError extends boolean = false>(
-  options: Options<RejectBidData, ThrowOnError>
-) => {
-  return (options.client ?? _heyApiClient).put<
-    RejectBidResponse,
-    RejectBidError,
-    ThrowOnError
-  >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
-    url: '/api/auctions/{auctionId}/bids/{bidId}/reject',
-    ...options,
-  })
-}
-
-/**
- * Accepter une offre
- */
-export const acceptBid = <ThrowOnError extends boolean = false>(
-  options: Options<AcceptBidData, ThrowOnError>
-) => {
-  return (options.client ?? _heyApiClient).put<
-    AcceptBidResponse,
-    AcceptBidError,
-    ThrowOnError
-  >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
-    url: '/api/auctions/{auctionId}/bids/{bidId}/accept',
     ...options,
   })
 }
@@ -1450,8 +1453,8 @@ export const listQualities = <ThrowOnError extends boolean = false>(
   options?: Options<ListQualitiesData, ThrowOnError>
 ) => {
   return (options?.client ?? _heyApiClient).get<
+    ListQualitiesResponse,
     unknown,
-    ListQualitiesError,
     ThrowOnError
   >({
     security: [
@@ -1472,7 +1475,7 @@ export const createQuality = <ThrowOnError extends boolean = false>(
   options: Options<CreateQualityData, ThrowOnError>
 ) => {
   return (options.client ?? _heyApiClient).post<
-    unknown,
+    CreateQualityResponse,
     CreateQualityError,
     ThrowOnError
   >({
@@ -1792,6 +1795,54 @@ export const sendContactMessage = <ThrowOnError extends boolean = false>(
 }
 
 /**
+ * Obtenir toutes les offres
+ */
+export const listBids = <ThrowOnError extends boolean = false>(
+  options?: Options<ListBidsData, ThrowOnError>
+) => {
+  return (options?.client ?? _heyApiClient).get<
+    ListBidsResponse,
+    unknown,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/bids',
+    ...options,
+  })
+}
+
+/**
+ * Créer une offre
+ */
+export const createBid = <ThrowOnError extends boolean = false>(
+  options: Options<CreateBidData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).post<
+    CreateBidResponse,
+    CreateBidError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/bids',
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options?.headers,
+    },
+  })
+}
+
+/**
  * Déconnecter l'utilisateur
  * Supprime le cookie JWT pour déconnecter l'utilisateur
  */
@@ -1869,54 +1920,6 @@ export const createAuction = <ThrowOnError extends boolean = false>(
       },
     ],
     url: '/api/auctions',
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...options?.headers,
-    },
-  })
-}
-
-/**
- * Obtenir toutes les offres
- */
-export const listBids = <ThrowOnError extends boolean = false>(
-  options: Options<ListBidsData, ThrowOnError>
-) => {
-  return (options.client ?? _heyApiClient).get<
-    ListBidsResponse,
-    unknown,
-    ThrowOnError
-  >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
-    url: '/api/auctions/{auctionId}/bids/',
-    ...options,
-  })
-}
-
-/**
- * Créer une offre
- */
-export const createBid = <ThrowOnError extends boolean = false>(
-  options: Options<CreateBidData, ThrowOnError>
-) => {
-  return (options.client ?? _heyApiClient).post<
-    CreateBidResponse,
-    CreateBidError,
-    ThrowOnError
-  >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
-    url: '/api/auctions/{auctionId}/bids/',
     ...options,
     headers: {
       'Content-Type': 'application/json',

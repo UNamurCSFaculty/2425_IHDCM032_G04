@@ -16,7 +16,7 @@ public class BidApiController implements BidApi {
 	private final BidService bidService;
 
 	@Override
-	public ResponseEntity<BidDto> getBid(Integer auctionId, Integer bidId) {
+	public ResponseEntity<BidDto> getBid(Integer bidId) {
 		BidDto bid = bidService.getBidById(bidId);
 		return ResponseEntity.ok(bid);
 	}
@@ -28,7 +28,7 @@ public class BidApiController implements BidApi {
 	}
 
 	@Override
-	public ResponseEntity<BidDto> createBid(Integer auctionId, BidUpdateDto bidDto) {
+	public ResponseEntity<BidDto> createBid(BidUpdateDto bidDto) {
 		BidDto created = bidService.createBid(bidDto);
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(created.getId()).toUri();
@@ -36,25 +36,25 @@ public class BidApiController implements BidApi {
 	}
 
 	@Override
-	public ResponseEntity<BidDto> updateBid(Integer auctionId, Integer bidId, BidUpdateDto bidDto) {
+	public ResponseEntity<BidDto> updateBid(Integer bidId, BidUpdateDto bidDto) {
 		BidDto updated = bidService.updateBid(bidId, bidDto);
 		return ResponseEntity.ok(updated);
 	}
 
 	@Override
-	public ResponseEntity<BidDto> acceptBid(Integer auctionId, Integer bidId) {
+	public ResponseEntity<BidDto> acceptBid(Integer bidId) {
 		BidDto updated = bidService.acceptBid(bidId);
 		return ResponseEntity.ok(updated);
 	}
 
 	@Override
-	public ResponseEntity<BidDto> rejectBid(Integer auctionId, Integer bidId) {
+	public ResponseEntity<BidDto> rejectBid(Integer bidId) {
 		BidDto updated = bidService.rejectBid(bidId);
 		return ResponseEntity.ok(updated);
 	}
 
 	@Override
-	public ResponseEntity<Void> deleteBid(Integer auctionId, Integer id) {
+	public ResponseEntity<Void> deleteBid(Integer id) {
 		bidService.deleteBid(id);
 		return ResponseEntity.noContent().build();
 	}

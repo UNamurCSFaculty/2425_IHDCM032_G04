@@ -39,7 +39,7 @@ const BidsDialog: React.FC<BidsDialogProps> = ({
     isLoading,
     isError,
   } = useQuery({
-    ...listBidsOptions({ path: { auctionId: auctionId } }),
+    ...listBidsOptions({ query: { auctionId: auctionId } }),
     enabled: !!auctionId,
   })
 
@@ -47,7 +47,7 @@ const BidsDialog: React.FC<BidsDialogProps> = ({
   const { mutate: acceptBid } = useMutation(acceptBidMutation())
 
   const handleAcceptBid = (bidId: number) => {
-    acceptBid({ path: { auctionId, bidId } })
+    acceptBid({ path: { bidId } })
     acceptAuction({ path: { id: auctionId } })
     openChange(false)
   }

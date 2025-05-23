@@ -1,4 +1,13 @@
 import type { AuctionDto, BidDto } from '@/api/generated'
+import {
+  acceptAuctionMutation,
+  acceptBidMutation,
+  createBidMutation,
+  listAuctionsQueryKey,
+  listBidsOptions,
+  listBidsQueryKey,
+  rejectBidMutation,
+} from '@/api/generated/@tanstack/react-query.gen'
 import { CountdownTimer } from '@/components/CountDownTimer'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -11,8 +20,14 @@ import {
 } from '@/components/ui/popover'
 import { Separator } from '@/components/ui/separator'
 import { TradeStatus, wktToLatLon } from '@/lib/utils'
+import { useAuthUser } from '@/store/userStore'
 import dayjs from '@/utils/dayjs-config'
 import { formatPrice, formatWeight } from '@/utils/formatter'
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from '@tanstack/react-query'
 import 'leaflet/dist/leaflet.css'
 import {
   CheckCircle,
@@ -26,6 +41,7 @@ import {
   XCircle,
 } from 'lucide-react'
 import React, { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
 
 export type UserRole = 'buyer' | 'seller'
@@ -34,44 +50,131 @@ interface Props {
   auction: AuctionDto
   role: UserRole
   showDetails?: boolean
-  onBidAction?: (
-    auctionId: number,
-    bidId: number,
-    action: 'accept' | 'reject'
-  ) => void
-  onMakeBid?: (auctionId: number, amount: number) => void
-  onBuyNow?: (auctionId: number) => void
 }
 
 const AuctionDetailsPanel: React.FC<Props> = ({
   auction,
   showDetails = false,
   role,
-  onBidAction,
-  onMakeBid,
-  onBuyNow,
 }) => {
   const [amount, setAmount] = useState('')
-  const [buyOpen, setBuyOpen] = useState(false)
-  const [bidOpen, setBidOpen] = useState(false)
+  const [buyNowPopover, setBuyNowPopover] = useState(false)
+  const [makeBidPopover, setMakeBidPopover] = useState(false)
+  const [acceptBidPopoverIndex, setAcceptBidPopoverIndex] = useState(-1)
+  const [rejectBidPopoverIndex, setRejectBidPopoverIndex] = useState(-1)
+
+  const { t } = useTranslation()
+
+  const { data: bids } = useSuspenseQuery(
+    listBidsOptions({ query: { auctionId: auction.id } })
+  )
 
   const sortedBids = useMemo<BidDto[]>(
-    () => [...auction.bids].sort((a, b) => b.amount - a.amount),
-    [auction.bids]
+    () => [...bids].sort((a, b) => b.amount - a.amount),
+    [bids]
   )
-  const isOpen = auction.status.name === TradeStatus.OPEN
-  const canBid = role === 'buyer' && isOpen
+  const canBid = role === 'buyer' && auction.status.name === TradeStatus.OPEN
   const bestBid = auction.bids.reduce(
     (max, b) => (b.amount > max ? b.amount : max),
     0
   )
 
+  const createBidRequest = useMutation({
+    ...createBidMutation(),
+    onSuccess() {
+      console.log('Create Bid - Success')
+      queryClient.invalidateQueries({ queryKey: listBidsQueryKey() })
+      queryClient.invalidateQueries({ queryKey: listAuctionsQueryKey() })
+    },
+    onError(error) {
+      console.error('Create Bid - Invalid request ', error)
+    },
+  })
+
+  const acceptBidRequest = useMutation({
+    ...acceptBidMutation(),
+    onSuccess() {
+      console.log('Accept Bid - Success')
+      queryClient.invalidateQueries({ queryKey: listBidsQueryKey() })
+    },
+    onError(error) {
+      console.error('Accept Bid - Invalid request ', error)
+    },
+  })
+
+  const rejectBidRequest = useMutation({
+    ...rejectBidMutation(),
+    onSuccess() {
+      console.log('Reject Bid - Success')
+      queryClient.invalidateQueries({ queryKey: listBidsQueryKey() })
+    },
+    onError(error) {
+      console.error('Reject Bid - Invalid request ', error)
+    },
+  })
+
+  const acceptAuctionRequest = useMutation({
+    ...acceptAuctionMutation(),
+    onSuccess() {
+      console.log('Accept Auction - Success')
+      queryClient.invalidateQueries({ queryKey: listAuctionsQueryKey() })
+    },
+    onError(error) {
+      console.error('Accept Auction - Invalid request ', error)
+    },
+  })
+
+  const user = useAuthUser()
+
+  const queryClient = useQueryClient()
+
   const handleSubmitBid = () => {
     const value = Number(amount)
     if (!value || value <= 0) return
-    onMakeBid?.(auction.id, value)
+
+    createBidRequest.mutate({
+      body: {
+        amount: value,
+        auctionId: auction.id,
+        traderId: user.id,
+      },
+    })
+
     setAmount('')
-    setBidOpen(false)
+    setMakeBidPopover(false)
+  }
+
+  const handleSubmitBuyNow = async (buyNowPrice: number | undefined) => {
+    if (!buyNowPrice) return
+
+    const newBid = await createBidRequest.mutateAsync({
+      body: {
+        amount: buyNowPrice,
+        auctionId: auction.id,
+        traderId: user.id,
+      },
+    })
+
+    acceptBidRequest.mutate({ path: { bidId: newBid.id } })
+
+    acceptAuctionRequest.mutate({ path: { id: auction.id } })
+
+    setBuyNowPopover(false)
+  }
+
+  const handleBidAction = (
+    auctionId: number,
+    bidId: number,
+    action: 'accept' | 'reject'
+  ) => {
+    if (action == 'accept') {
+      acceptBidRequest.mutate({ path: { bidId: bidId } })
+      acceptAuctionRequest.mutate({ path: { id: auctionId } })
+      setAcceptBidPopoverIndex(-1)
+    } else {
+      rejectBidRequest.mutate({ path: { bidId: bidId } })
+      setRejectBidPopoverIndex(-1)
+    }
   }
 
   // Position map
@@ -84,8 +187,8 @@ const AuctionDetailsPanel: React.FC<Props> = ({
       {/* Header */}
       <div className="space-y-1 flex flex-wrap">
         <h2 className="text-2xl font-semibold flex items-center gap-2">
-          {auction.product.type === 'harvest' ? 'Récolte' : 'Transformé'} · lot
-          #{auction.product.id}
+          Produit {t('database.' + auction.product.type)} · lot n°
+          {auction.product.id} · enchère n°{auction.id}
         </h2>
         <div className="flex flex-wrap gap-4 text-sm text-muted-foreground ml-4">
           <span className="flex items-center gap-1">
@@ -180,11 +283,11 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                   <span className="text-base font-medium text-gray-700 mb-2">
                     Achat immédiat
                   </span>
-                  <Popover open={buyOpen} onOpenChange={setBuyOpen}>
+                  <Popover open={buyNowPopover} onOpenChange={setBuyNowPopover}>
                     <PopoverTrigger asChild>
                       <Button
                         className="bg-amber-600 hover:bg-amber-700 text-white px-6"
-                        onClick={() => setBuyOpen(true)}
+                        onClick={() => setBuyNowPopover(true)}
                       >
                         <ShoppingCart className="size-4 mr-2" />
                         {formatPrice.format(auction.options.buyNowPrice)}
@@ -202,15 +305,14 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => setBuyOpen(false)}
+                          onClick={() => setBuyNowPopover(false)}
                         >
                           Annuler
                         </Button>
                         <Button
                           size="sm"
                           onClick={() => {
-                            onBuyNow?.(auction.id)
-                            setBuyOpen(false)
+                            handleSubmitBuyNow(auction.options?.buyNowPrice)
                           }}
                         >
                           Confirmer
@@ -237,15 +339,18 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                     onChange={e => setAmount(e.target.value)}
                     className="mb-3 w-full bg-white"
                   />
-                  <Popover open={bidOpen} onOpenChange={setBidOpen}>
+                  <Popover
+                    open={makeBidPopover}
+                    onOpenChange={setMakeBidPopover}
+                  >
                     <PopoverTrigger asChild>
                       <Button
                         disabled={!amount}
                         className="w-full px-6"
-                        onClick={() => setBidOpen(true)}
+                        onClick={() => setMakeBidPopover(true)}
                       >
                         <PlusCircle className="size-4 mr-2" />
-                        Placer l’offre
+                        Placer l'offre
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-64 p-4">
@@ -262,7 +367,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                           size="sm"
                           onClick={() => {
                             setAmount('')
-                            setBidOpen(false)
+                            setMakeBidPopover(false)
                           }}
                         >
                           Annuler
@@ -326,16 +431,19 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                         {formatPrice.format(bid.amount)}
                       </span>
                       {role === 'seller' &&
-                        isOpen &&
+                        auction.status.name == TradeStatus.OPEN &&
                         bid.status.name === TradeStatus.OPEN && (
                           <div className="flex gap-1">
                             {/* Accept */}
-                            <Popover>
+                            <Popover open={acceptBidPopoverIndex == bid.id}>
                               <PopoverTrigger asChild>
                                 <Button
                                   size="sm"
                                   variant="outline"
                                   className="flex items-center px-2 py-1 bg-green-700 text-white border-green-200"
+                                  onClick={() => {
+                                    setAcceptBidPopoverIndex(bid.id)
+                                  }}
                                 >
                                   <CheckCircle className="h-3 w-3 mr-1" />{' '}
                                   Accepter
@@ -346,13 +454,19 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                                   Accepter cette offre ?
                                 </p>
                                 <div className="flex justify-end gap-2">
-                                  <Button variant="ghost" size="sm">
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => {
+                                      setAcceptBidPopoverIndex(-1)
+                                    }}
+                                  >
                                     Annuler
                                   </Button>
                                   <Button
                                     size="sm"
                                     onClick={() =>
-                                      onBidAction?.(
+                                      handleBidAction(
                                         auction.id,
                                         bid.id,
                                         'accept'
@@ -365,12 +479,15 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                               </PopoverContent>
                             </Popover>
                             {/* Reject */}
-                            <Popover>
+                            <Popover open={rejectBidPopoverIndex == bid.id}>
                               <PopoverTrigger asChild>
                                 <Button
                                   size="sm"
                                   variant="outline"
                                   className="flex items-center px-2 py-1 bg-red-600 text-white border-red-200"
+                                  onClick={() => {
+                                    setRejectBidPopoverIndex(bid.id)
+                                  }}
                                 >
                                   <XCircle className="h-3 w-3 mr-1" /> Refuser
                                 </Button>
@@ -380,14 +497,20 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                                   Refuser cette offre ?
                                 </p>
                                 <div className="flex justify-end gap-2">
-                                  <Button variant="ghost" size="sm">
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => {
+                                      setRejectBidPopoverIndex(-1)
+                                    }}
+                                  >
                                     Annuler
                                   </Button>
                                   <Button
                                     size="sm"
                                     variant="destructive"
                                     onClick={() =>
-                                      onBidAction?.(
+                                      handleBidAction(
                                         auction.id,
                                         bid.id,
                                         'reject'

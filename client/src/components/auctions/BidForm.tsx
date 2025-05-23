@@ -45,7 +45,6 @@ export function BidForm({
     onSubmit({ value }) {
       createBidRequest.mutate({
         body: value,
-        path: { auctionId: auctionId },
       })
     },
   })

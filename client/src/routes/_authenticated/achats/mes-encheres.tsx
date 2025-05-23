@@ -10,12 +10,12 @@ import { createFileRoute } from '@tanstack/react-router'
 
 const listAuctionsQueryOptions = (userId: number) => ({
   ...listAuctionsOptions({
-    query: { traderId: userId },
+    query: { buyerId: userId },
   }),
   staleTime: 10_000,
 })
 
-export const Route = createFileRoute('/_authenticated/ventes/mes-encheres')({
+export const Route = createFileRoute('/_authenticated/achats/mes-encheres')({
   component: RouteComponent,
   loader: async ({ context: { queryClient, user } }) => {
     await queryClient.ensureQueryData(listAuctionsQueryOptions(user!.id))
@@ -35,8 +35,8 @@ export function RouteComponent() {
   return (
     <>
       <BreadcrumbSection
-        titleKey="app.auctions_sales.title"
-        subtitleKey="app.auctions_sales.subtitle"
+        titleKey="app.auctions_buys.title"
+        subtitleKey="app.auctions_buys.subtitle"
         breadcrumbs={[
           { labelKey: 'breadcrumb.buy' },
           { labelKey: 'breadcrumb.marketplace' },
@@ -46,7 +46,7 @@ export function RouteComponent() {
         <AuctionMarketplace
           auctions={auctionsData}
           qualities={qualitiesData}
-          userRole="seller"
+          userRole="buyer"
           showAuctionStatusFilter={true}
         />
       </div>

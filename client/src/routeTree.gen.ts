@@ -7,14 +7,10 @@
 // Import Routes
 import { Route as rootRoute } from './routes/__root'
 import { Route as AuthenticatedImport } from './routes/_authenticated'
-import { Route as AuthenticatedAchatsHistoriqueImport } from './routes/_authenticated/achats/historique'
 import { Route as AuthenticatedAchatsMarcheImport } from './routes/_authenticated/achats/marche'
+import { Route as AuthenticatedAchatsMesEncheresImport } from './routes/_authenticated/achats/mes-encheres'
 import { Route as AuthenticatedAchatsNouvelleEnchereImport } from './routes/_authenticated/achats/nouvelle-enchere'
-import { Route as AuthenticatedEncheresAutresImport } from './routes/_authenticated/encheres/autres'
-import { Route as AuthenticatedEncheresCajouImport } from './routes/_authenticated/encheres/cajou'
-import { Route as AuthenticatedEncheresDetailIdImport } from './routes/_authenticated/encheres/detail/$id'
-import { Route as AuthenticatedEncheresIndexImport } from './routes/_authenticated/encheres/index'
-import { Route as AuthenticatedVentesHistoriqueImport } from './routes/_authenticated/ventes/historique'
+import { Route as AuthenticatedDepotsNouveauProduitImport } from './routes/_authenticated/depots/nouveau-produit'
 import { Route as AuthenticatedVentesMesEncheresImport } from './routes/_authenticated/ventes/mes-encheres'
 import { Route as AuthenticatedVentesNouvelleEnchereImport } from './routes/_authenticated/ventes/nouvelle-enchere'
 import { Route as AdminImport } from './routes/admin'
@@ -111,14 +107,6 @@ const AdminBlogIndexRoute = AdminBlogIndexImport.update({
   getParentRoute: () => AdminRoute,
 } as any)
 
-const AuthenticatedEncheresIndexRoute = AuthenticatedEncheresIndexImport.update(
-  {
-    id: '/encheres/',
-    path: '/encheres/',
-    getParentRoute: () => AuthenticatedRoute,
-  } as any
-)
-
 const AdminUsersNewRoute = AdminUsersNewImport.update({
   id: '/users/new',
   path: '/users/new',
@@ -145,25 +133,10 @@ const AuthenticatedVentesMesEncheresRoute =
     getParentRoute: () => AuthenticatedRoute,
   } as any)
 
-const AuthenticatedVentesHistoriqueRoute =
-  AuthenticatedVentesHistoriqueImport.update({
-    id: '/ventes/historique',
-    path: '/ventes/historique',
-    getParentRoute: () => AuthenticatedRoute,
-  } as any)
-
-const AuthenticatedEncheresCajouRoute = AuthenticatedEncheresCajouImport.update(
-  {
-    id: '/encheres/cajou',
-    path: '/encheres/cajou',
-    getParentRoute: () => AuthenticatedRoute,
-  } as any
-)
-
-const AuthenticatedEncheresAutresRoute =
-  AuthenticatedEncheresAutresImport.update({
-    id: '/encheres/autres',
-    path: '/encheres/autres',
+const AuthenticatedDepotsNouveauProduitRoute =
+  AuthenticatedDepotsNouveauProduitImport.update({
+    id: '/depots/nouveau-produit',
+    path: '/depots/nouveau-produit',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
 
@@ -174,25 +147,18 @@ const AuthenticatedAchatsNouvelleEnchereRoute =
     getParentRoute: () => AuthenticatedRoute,
   } as any)
 
+const AuthenticatedAchatsMesEncheresRoute =
+  AuthenticatedAchatsMesEncheresImport.update({
+    id: '/achats/mes-encheres',
+    path: '/achats/mes-encheres',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+
 const AuthenticatedAchatsMarcheRoute = AuthenticatedAchatsMarcheImport.update({
   id: '/achats/marche',
   path: '/achats/marche',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
-
-const AuthenticatedAchatsHistoriqueRoute =
-  AuthenticatedAchatsHistoriqueImport.update({
-    id: '/achats/historique',
-    path: '/achats/historique',
-    getParentRoute: () => AuthenticatedRoute,
-  } as any)
-
-const AuthenticatedEncheresDetailIdRoute =
-  AuthenticatedEncheresDetailIdImport.update({
-    id: '/encheres/detail/$id',
-    path: '/encheres/detail/$id',
-    getParentRoute: () => AuthenticatedRoute,
-  } as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -268,18 +234,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContactIndexImport
       parentRoute: typeof rootRoute
     }
-    '/_authenticated/achats/historique': {
-      id: '/_authenticated/achats/historique'
-      path: '/achats/historique'
-      fullPath: '/achats/historique'
-      preLoaderRoute: typeof AuthenticatedAchatsHistoriqueImport
-      parentRoute: typeof AuthenticatedImport
-    }
     '/_authenticated/achats/marche': {
       id: '/_authenticated/achats/marche'
       path: '/achats/marche'
       fullPath: '/achats/marche'
       preLoaderRoute: typeof AuthenticatedAchatsMarcheImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/achats/mes-encheres': {
+      id: '/_authenticated/achats/mes-encheres'
+      path: '/achats/mes-encheres'
+      fullPath: '/achats/mes-encheres'
+      preLoaderRoute: typeof AuthenticatedAchatsMesEncheresImport
       parentRoute: typeof AuthenticatedImport
     }
     '/_authenticated/achats/nouvelle-enchere': {
@@ -289,25 +255,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAchatsNouvelleEnchereImport
       parentRoute: typeof AuthenticatedImport
     }
-    '/_authenticated/encheres/autres': {
-      id: '/_authenticated/encheres/autres'
-      path: '/encheres/autres'
-      fullPath: '/encheres/autres'
-      preLoaderRoute: typeof AuthenticatedEncheresAutresImport
-      parentRoute: typeof AuthenticatedImport
-    }
-    '/_authenticated/encheres/cajou': {
-      id: '/_authenticated/encheres/cajou'
-      path: '/encheres/cajou'
-      fullPath: '/encheres/cajou'
-      preLoaderRoute: typeof AuthenticatedEncheresCajouImport
-      parentRoute: typeof AuthenticatedImport
-    }
-    '/_authenticated/ventes/historique': {
-      id: '/_authenticated/ventes/historique'
-      path: '/ventes/historique'
-      fullPath: '/ventes/historique'
-      preLoaderRoute: typeof AuthenticatedVentesHistoriqueImport
+    '/_authenticated/depots/nouveau-produit': {
+      id: '/_authenticated/depots/nouveau-produit'
+      path: '/depots/nouveau-produit'
+      fullPath: '/depots/nouveau-produit'
+      preLoaderRoute: typeof AuthenticatedDepotsNouveauProduitImport
       parentRoute: typeof AuthenticatedImport
     }
     '/_authenticated/ventes/mes-encheres': {
@@ -338,13 +290,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminUsersNewImport
       parentRoute: typeof AdminImport
     }
-    '/_authenticated/encheres/': {
-      id: '/_authenticated/encheres/'
-      path: '/encheres'
-      fullPath: '/encheres'
-      preLoaderRoute: typeof AuthenticatedEncheresIndexImport
-      parentRoute: typeof AuthenticatedImport
-    }
     '/admin/blog/': {
       id: '/admin/blog/'
       path: '/blog'
@@ -366,44 +311,30 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminUsersIndexImport
       parentRoute: typeof AdminImport
     }
-    '/_authenticated/encheres/detail/$id': {
-      id: '/_authenticated/encheres/detail/$id'
-      path: '/encheres/detail/$id'
-      fullPath: '/encheres/detail/$id'
-      preLoaderRoute: typeof AuthenticatedEncheresDetailIdImport
-      parentRoute: typeof AuthenticatedImport
-    }
   }
 }
 
 // Create and export the route tree
 
 interface AuthenticatedRouteChildren {
-  AuthenticatedAchatsHistoriqueRoute: typeof AuthenticatedAchatsHistoriqueRoute
   AuthenticatedAchatsMarcheRoute: typeof AuthenticatedAchatsMarcheRoute
+  AuthenticatedAchatsMesEncheresRoute: typeof AuthenticatedAchatsMesEncheresRoute
   AuthenticatedAchatsNouvelleEnchereRoute: typeof AuthenticatedAchatsNouvelleEnchereRoute
-  AuthenticatedEncheresAutresRoute: typeof AuthenticatedEncheresAutresRoute
-  AuthenticatedEncheresCajouRoute: typeof AuthenticatedEncheresCajouRoute
-  AuthenticatedVentesHistoriqueRoute: typeof AuthenticatedVentesHistoriqueRoute
+  AuthenticatedDepotsNouveauProduitRoute: typeof AuthenticatedDepotsNouveauProduitRoute
   AuthenticatedVentesMesEncheresRoute: typeof AuthenticatedVentesMesEncheresRoute
   AuthenticatedVentesNouvelleEnchereRoute: typeof AuthenticatedVentesNouvelleEnchereRoute
-  AuthenticatedEncheresIndexRoute: typeof AuthenticatedEncheresIndexRoute
-  AuthenticatedEncheresDetailIdRoute: typeof AuthenticatedEncheresDetailIdRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
-  AuthenticatedAchatsHistoriqueRoute: AuthenticatedAchatsHistoriqueRoute,
   AuthenticatedAchatsMarcheRoute: AuthenticatedAchatsMarcheRoute,
+  AuthenticatedAchatsMesEncheresRoute: AuthenticatedAchatsMesEncheresRoute,
   AuthenticatedAchatsNouvelleEnchereRoute:
     AuthenticatedAchatsNouvelleEnchereRoute,
-  AuthenticatedEncheresAutresRoute: AuthenticatedEncheresAutresRoute,
-  AuthenticatedEncheresCajouRoute: AuthenticatedEncheresCajouRoute,
-  AuthenticatedVentesHistoriqueRoute: AuthenticatedVentesHistoriqueRoute,
+  AuthenticatedDepotsNouveauProduitRoute:
+    AuthenticatedDepotsNouveauProduitRoute,
   AuthenticatedVentesMesEncheresRoute: AuthenticatedVentesMesEncheresRoute,
   AuthenticatedVentesNouvelleEnchereRoute:
     AuthenticatedVentesNouvelleEnchereRoute,
-  AuthenticatedEncheresIndexRoute: AuthenticatedEncheresIndexRoute,
-  AuthenticatedEncheresDetailIdRoute: AuthenticatedEncheresDetailIdRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
@@ -445,21 +376,17 @@ export interface FileRoutesByFullPath {
   '/contact/merci': typeof ContactMerciRoute
   '/admin/': typeof AdminIndexRoute
   '/contact': typeof ContactIndexRoute
-  '/achats/historique': typeof AuthenticatedAchatsHistoriqueRoute
   '/achats/marche': typeof AuthenticatedAchatsMarcheRoute
+  '/achats/mes-encheres': typeof AuthenticatedAchatsMesEncheresRoute
   '/achats/nouvelle-enchere': typeof AuthenticatedAchatsNouvelleEnchereRoute
-  '/encheres/autres': typeof AuthenticatedEncheresAutresRoute
-  '/encheres/cajou': typeof AuthenticatedEncheresCajouRoute
-  '/ventes/historique': typeof AuthenticatedVentesHistoriqueRoute
+  '/depots/nouveau-produit': typeof AuthenticatedDepotsNouveauProduitRoute
   '/ventes/mes-encheres': typeof AuthenticatedVentesMesEncheresRoute
   '/ventes/nouvelle-enchere': typeof AuthenticatedVentesNouvelleEnchereRoute
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
   '/admin/users/new': typeof AdminUsersNewRoute
-  '/encheres': typeof AuthenticatedEncheresIndexRoute
   '/admin/blog': typeof AdminBlogIndexRoute
   '/admin/cooperatives': typeof AdminCooperativesIndexRoute
   '/admin/users': typeof AdminUsersIndexRoute
-  '/encheres/detail/$id': typeof AuthenticatedEncheresDetailIdRoute
 }
 
 export interface FileRoutesByTo {
@@ -472,21 +399,17 @@ export interface FileRoutesByTo {
   '/contact/merci': typeof ContactMerciRoute
   '/admin': typeof AdminIndexRoute
   '/contact': typeof ContactIndexRoute
-  '/achats/historique': typeof AuthenticatedAchatsHistoriqueRoute
   '/achats/marche': typeof AuthenticatedAchatsMarcheRoute
+  '/achats/mes-encheres': typeof AuthenticatedAchatsMesEncheresRoute
   '/achats/nouvelle-enchere': typeof AuthenticatedAchatsNouvelleEnchereRoute
-  '/encheres/autres': typeof AuthenticatedEncheresAutresRoute
-  '/encheres/cajou': typeof AuthenticatedEncheresCajouRoute
-  '/ventes/historique': typeof AuthenticatedVentesHistoriqueRoute
+  '/depots/nouveau-produit': typeof AuthenticatedDepotsNouveauProduitRoute
   '/ventes/mes-encheres': typeof AuthenticatedVentesMesEncheresRoute
   '/ventes/nouvelle-enchere': typeof AuthenticatedVentesNouvelleEnchereRoute
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
   '/admin/users/new': typeof AdminUsersNewRoute
-  '/encheres': typeof AuthenticatedEncheresIndexRoute
   '/admin/blog': typeof AdminBlogIndexRoute
   '/admin/cooperatives': typeof AdminCooperativesIndexRoute
   '/admin/users': typeof AdminUsersIndexRoute
-  '/encheres/detail/$id': typeof AuthenticatedEncheresDetailIdRoute
 }
 
 export interface FileRoutesById {
@@ -501,21 +424,17 @@ export interface FileRoutesById {
   '/contact/merci': typeof ContactMerciRoute
   '/admin/': typeof AdminIndexRoute
   '/contact/': typeof ContactIndexRoute
-  '/_authenticated/achats/historique': typeof AuthenticatedAchatsHistoriqueRoute
   '/_authenticated/achats/marche': typeof AuthenticatedAchatsMarcheRoute
+  '/_authenticated/achats/mes-encheres': typeof AuthenticatedAchatsMesEncheresRoute
   '/_authenticated/achats/nouvelle-enchere': typeof AuthenticatedAchatsNouvelleEnchereRoute
-  '/_authenticated/encheres/autres': typeof AuthenticatedEncheresAutresRoute
-  '/_authenticated/encheres/cajou': typeof AuthenticatedEncheresCajouRoute
-  '/_authenticated/ventes/historique': typeof AuthenticatedVentesHistoriqueRoute
+  '/_authenticated/depots/nouveau-produit': typeof AuthenticatedDepotsNouveauProduitRoute
   '/_authenticated/ventes/mes-encheres': typeof AuthenticatedVentesMesEncheresRoute
   '/_authenticated/ventes/nouvelle-enchere': typeof AuthenticatedVentesNouvelleEnchereRoute
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
   '/admin/users/new': typeof AdminUsersNewRoute
-  '/_authenticated/encheres/': typeof AuthenticatedEncheresIndexRoute
   '/admin/blog/': typeof AdminBlogIndexRoute
   '/admin/cooperatives/': typeof AdminCooperativesIndexRoute
   '/admin/users/': typeof AdminUsersIndexRoute
-  '/_authenticated/encheres/detail/$id': typeof AuthenticatedEncheresDetailIdRoute
 }
 
 export interface FileRouteTypes {
@@ -531,21 +450,17 @@ export interface FileRouteTypes {
     | '/contact/merci'
     | '/admin/'
     | '/contact'
-    | '/achats/historique'
     | '/achats/marche'
+    | '/achats/mes-encheres'
     | '/achats/nouvelle-enchere'
-    | '/encheres/autres'
-    | '/encheres/cajou'
-    | '/ventes/historique'
+    | '/depots/nouveau-produit'
     | '/ventes/mes-encheres'
     | '/ventes/nouvelle-enchere'
     | '/admin/users/$userId'
     | '/admin/users/new'
-    | '/encheres'
     | '/admin/blog'
     | '/admin/cooperatives'
     | '/admin/users'
-    | '/encheres/detail/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -557,21 +472,17 @@ export interface FileRouteTypes {
     | '/contact/merci'
     | '/admin'
     | '/contact'
-    | '/achats/historique'
     | '/achats/marche'
+    | '/achats/mes-encheres'
     | '/achats/nouvelle-enchere'
-    | '/encheres/autres'
-    | '/encheres/cajou'
-    | '/ventes/historique'
+    | '/depots/nouveau-produit'
     | '/ventes/mes-encheres'
     | '/ventes/nouvelle-enchere'
     | '/admin/users/$userId'
     | '/admin/users/new'
-    | '/encheres'
     | '/admin/blog'
     | '/admin/cooperatives'
     | '/admin/users'
-    | '/encheres/detail/$id'
   id:
     | '__root__'
     | '/'
@@ -584,21 +495,17 @@ export interface FileRouteTypes {
     | '/contact/merci'
     | '/admin/'
     | '/contact/'
-    | '/_authenticated/achats/historique'
     | '/_authenticated/achats/marche'
+    | '/_authenticated/achats/mes-encheres'
     | '/_authenticated/achats/nouvelle-enchere'
-    | '/_authenticated/encheres/autres'
-    | '/_authenticated/encheres/cajou'
-    | '/_authenticated/ventes/historique'
+    | '/_authenticated/depots/nouveau-produit'
     | '/_authenticated/ventes/mes-encheres'
     | '/_authenticated/ventes/nouvelle-enchere'
     | '/admin/users/$userId'
     | '/admin/users/new'
-    | '/_authenticated/encheres/'
     | '/admin/blog/'
     | '/admin/cooperatives/'
     | '/admin/users/'
-    | '/_authenticated/encheres/detail/$id'
   fileRoutesById: FileRoutesById
 }
 
@@ -647,16 +554,12 @@ export const routeTree = rootRoute
     "/_authenticated": {
       "filePath": "_authenticated.tsx",
       "children": [
-        "/_authenticated/achats/historique",
         "/_authenticated/achats/marche",
+        "/_authenticated/achats/mes-encheres",
         "/_authenticated/achats/nouvelle-enchere",
-        "/_authenticated/encheres/autres",
-        "/_authenticated/encheres/cajou",
-        "/_authenticated/ventes/historique",
+        "/_authenticated/depots/nouveau-produit",
         "/_authenticated/ventes/mes-encheres",
-        "/_authenticated/ventes/nouvelle-enchere",
-        "/_authenticated/encheres/",
-        "/_authenticated/encheres/detail/$id"
+        "/_authenticated/ventes/nouvelle-enchere"
       ]
     },
     "/admin": {
@@ -696,28 +599,20 @@ export const routeTree = rootRoute
     "/contact/": {
       "filePath": "contact/index.tsx"
     },
-    "/_authenticated/achats/historique": {
-      "filePath": "_authenticated/achats/historique.tsx",
-      "parent": "/_authenticated"
-    },
     "/_authenticated/achats/marche": {
       "filePath": "_authenticated/achats/marche.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/achats/mes-encheres": {
+      "filePath": "_authenticated/achats/mes-encheres.tsx",
       "parent": "/_authenticated"
     },
     "/_authenticated/achats/nouvelle-enchere": {
       "filePath": "_authenticated/achats/nouvelle-enchere.tsx",
       "parent": "/_authenticated"
     },
-    "/_authenticated/encheres/autres": {
-      "filePath": "_authenticated/encheres/autres.tsx",
-      "parent": "/_authenticated"
-    },
-    "/_authenticated/encheres/cajou": {
-      "filePath": "_authenticated/encheres/cajou.tsx",
-      "parent": "/_authenticated"
-    },
-    "/_authenticated/ventes/historique": {
-      "filePath": "_authenticated/ventes/historique.tsx",
+    "/_authenticated/depots/nouveau-produit": {
+      "filePath": "_authenticated/depots/nouveau-produit.tsx",
       "parent": "/_authenticated"
     },
     "/_authenticated/ventes/mes-encheres": {
@@ -736,10 +631,6 @@ export const routeTree = rootRoute
       "filePath": "admin/users/new.tsx",
       "parent": "/admin"
     },
-    "/_authenticated/encheres/": {
-      "filePath": "_authenticated/encheres/index.tsx",
-      "parent": "/_authenticated"
-    },
     "/admin/blog/": {
       "filePath": "admin/blog/index.tsx",
       "parent": "/admin"
@@ -751,10 +642,6 @@ export const routeTree = rootRoute
     "/admin/users/": {
       "filePath": "admin/users/index.tsx",
       "parent": "/admin"
-    },
-    "/_authenticated/encheres/detail/$id": {
-      "filePath": "_authenticated/encheres/detail/$id.tsx",
-      "parent": "/_authenticated"
     }
   }
 }
