@@ -4,14 +4,13 @@ import {
 } from '@/api/generated/@tanstack/react-query.gen'
 import { BreadcrumbSection } from '@/components/BreadcrumbSection'
 import AuctionMarketplace from '@/components/auctions/AuctionMarket'
-import { TradeStatus } from '@/lib/utils'
 import { useAuthUser } from '@/store/userStore'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 
 const listAuctionsQueryOptions = (userId: number) => ({
   ...listAuctionsOptions({
-    query: { buyerId: userId, status: TradeStatus.ACCEPTED },
+    query: { buyerId: userId },
   }),
   staleTime: 10_000,
 })
