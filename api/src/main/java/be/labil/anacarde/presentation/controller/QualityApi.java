@@ -4,11 +4,9 @@ import be.labil.anacarde.application.exception.ApiErrorResponse;
 import be.labil.anacarde.domain.dto.db.QualityDto;
 import be.labil.anacarde.domain.dto.db.ValidationGroups;
 import be.labil.anacarde.domain.dto.write.QualityUpdateDto;
-import be.labil.anacarde.presentation.controller.annotations.ApiResponseGet;
-import be.labil.anacarde.presentation.controller.annotations.ApiResponsePost;
-import be.labil.anacarde.presentation.controller.annotations.ApiResponsePut;
 import be.labil.anacarde.presentation.controller.annotations.ApiValidId;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -30,25 +28,34 @@ public interface QualityApi {
 
 	@Operation(summary = "Obtenir une qualité")
 	@GetMapping("/{id}")
-	@ApiResponseGet
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "", content = @Content(schema = @Schema(implementation = QualityDto.class))),
+			@ApiResponse(responseCode = "404", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
 	ResponseEntity<QualityDto> getQuality(@ApiValidId @PathVariable("id") Integer id);
 
 	@Operation(summary = "Créer une qualité")
 	@PostMapping
-	@ApiResponsePost
+	@ApiResponses({
+			@ApiResponse(responseCode = "201", description = "", content = @Content(schema = @Schema(implementation = QualityDto.class))),
+			@ApiResponse(responseCode = "400", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
+			@ApiResponse(responseCode = "409", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
 	ResponseEntity<QualityDto> createQuality(@Validated({Default.class,
 			ValidationGroups.Create.class}) @RequestBody QualityUpdateDto qualityDto);
 
 	@Operation(summary = "Mettre à jour une qualité")
-	@ApiResponsePut
+	@ApiResponses({
+			@ApiResponse(responseCode = "201", description = "", content = @Content(schema = @Schema(implementation = QualityDto.class))),
+			@ApiResponse(responseCode = "400", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
+			@ApiResponse(responseCode = "409", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
 	@PutMapping(value = "/{id}", consumes = "application/json")
 	ResponseEntity<QualityDto> updateQuality(@ApiValidId @PathVariable("id") Integer id,
 			@Validated({Default.class,
 					ValidationGroups.Update.class}) @RequestBody QualityUpdateDto qualityDto);
 
 	@Operation(summary = "Obtenir toutes les qualités")
-	@ApiResponseGet
 	@GetMapping
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "Liste récupérée avec succès", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = QualityDto.class))))})
 	ResponseEntity<List<QualityDto>> listQualities();
 
 	@Operation(summary = "Supprimer une qualité")

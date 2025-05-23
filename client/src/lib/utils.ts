@@ -46,6 +46,9 @@ export function wktToLatLon(wkt?: string): [number, number] | null {
   return isNaN(lat) || isNaN(lon) ? null : [lat, lon]
 }
 
+// -----------------------------------------------------------------------------
+// Database enum types
+// -----------------------------------------------------------------------------
 export enum TradeStatus {
   OPEN = 'Ouvert',
   EXPIRED = 'Expiré',
@@ -57,3 +60,8 @@ export enum ProductType {
   HARVEST = 'harvest',
   TRANSFORMED = 'transformed',
 }
+
+export const productTypes: ProductType[] = [
+  ProductType.HARVEST,
+  ProductType.TRANSFORMED,
+]

@@ -29,6 +29,7 @@ import {
   UserCircle2,
 } from 'lucide-react'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 
 export type CardLayout = 'grid' | 'row'
 export type UserRole = 'buyer' | 'seller'
@@ -38,8 +39,6 @@ interface AuctionCardProps {
   isDetail?: boolean
   role: UserRole
   onDetails: () => void
-  onMakeBid?: (id: number) => void
-  onBuyNow?: (id: number) => void
 }
 
 const AuctionCard: React.FC<AuctionCardProps> = ({
@@ -48,6 +47,8 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
   isDetail = false,
   onDetails,
 }) => {
+  const { t } = useTranslation()
+
   const bestBid = auction.bids.reduce(
     (max, b) => (b.amount > max ? b.amount : max),
     0
@@ -67,7 +68,7 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
     return (
       <TableRow className="h-10 hover:bg-muted/50" key={auction.id}>
         <TableCell className="font-medium truncate">
-          {auction.product.type === 'harvest' ? 'Récolte' : 'Transformé'}
+          {t('database.' + auction.product.type)}
         </TableCell>
         <TableCell>
           <CountdownTimer endDate={expires.toDate()} />
@@ -124,8 +125,7 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
     >
       <CardHeader className="pb-2">
         <CardTitle className="text-base font-semibold flex items-center gap-2 truncate">
-          {auction.product.type === 'harvest' ? 'Brut' : 'Transformé'} · lot{' '}
-          {auction.product.id}
+          {t('database.' + auction.product.type)} · lot {auction.product.id}
           <Badge
             variant={auction.bids.length ? 'default' : 'outline'}
             className="ml-auto shrink-0"

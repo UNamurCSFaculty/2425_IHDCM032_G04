@@ -1,9 +1,3 @@
-import type {
-  FieldDto,
-  QualityDto,
-  StoreDetailDto,
-  UserDetailDto,
-} from '@/api/generated'
 import {
   listFieldsOptions,
   listQualitiesOptions,
@@ -61,10 +55,10 @@ function RouteComponent() {
         className="border-b border-gray-200 dark:border-gray-700"
       />
       <ProductForm
-        users={usersData as UserDetailDto[]}
-        stores={storesData as StoreDetailDto[]}
-        qualities={qualitiesData as QualityDto[]}
-        fields={fieldsData as FieldDto[]}
+        users={usersData}
+        stores={storesData}
+        qualities={qualitiesData}
+        fields={fieldsData}
       />
     </>
   )

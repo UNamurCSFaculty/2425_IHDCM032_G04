@@ -5,7 +5,7 @@ import type {
   HarvestProductUpdateDto,
   QualityDto,
   StoreDetailDto,
-  UserDetailDto,
+  UserListDto,
 } from '@/api/generated'
 import {
   createProductMutation,
@@ -28,7 +28,7 @@ import { useTranslation } from 'react-i18next'
 import z from 'zod'
 
 interface ProductFormProps {
-  users: UserDetailDto[]
+  users: UserListDto[]
   stores: StoreDetailDto[]
   qualities: QualityDto[]
   fields: FieldDto[]
@@ -294,10 +294,22 @@ export function ProductForm({
               name="qualityControl.qualityId"
               children={field => (
                 <field.SelectField
-                  options={qualities.map(quality => ({
-                    value: quality.id,
-                    label: quality.name,
-                  }))}
+                  options={qualities
+                    .filter(quality => {
+                      return (
+                        !productType ||
+                        (productType === ProductType.HARVEST &&
+                          quality.qualityType.name.toLowerCase() ==
+                            ProductType.HARVEST.toLowerCase()) ||
+                        (productType === ProductType.TRANSFORMED &&
+                          quality.qualityType.name.toLowerCase() ==
+                            ProductType.TRANSFORMED.toLowerCase())
+                      )
+                    })
+                    .map(quality => ({
+                      value: quality.id,
+                      label: quality.name,
+                    }))}
                   label="Qualité"
                 />
               )}

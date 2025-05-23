@@ -24,12 +24,16 @@
       "title": "Bienvenue"
     },
     "auctions_sales": {
-      "title": "Enchères et ventes",
+      "title": "Mes ventes",
       "subtitle": "Vendez vos produits en ligne et consultez les offres sur vos enchères."
     },
     "auctions_new_sale": {
       "title": "Nouvelle vente",
       "subtitle": "Créez une nouvelle vente aux enchères pour votre produit."
+    },
+    "auctions_buys": {
+      "title": "Mes achats",
+      "subtitle": "Consultez vos achats en cours et vos enchères remportées jusqu'à présent."
     },
     "deposits_new_product": {
       "title": "Nouveau produit",
@@ -166,13 +170,7 @@
     "required": "Ce champ est requis"
   },
   "database": {
-    "harvest": "noix de cajou",
-    "transformed": "amandes",
-    "AdminListDto": "admin",
-    "ProducerListDto": "producteur",
-    "TransformerListDto": "transformateur",
-    "QualityInspectorListDto": "qualiticien",
-    "ExporterListDto": "exportateur",
-    "CarrierListDto": "transporteur"
+    "harvest": "Brut",
+    "transformed": "Transformé"
   }
 }
