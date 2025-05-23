@@ -328,7 +328,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
       auctions.filter(a => {
         if (
           search &&
-          !`${a.product.type} ${a.product.store.name} ${a.id}`
+          !`${a.product.type} ${a.product.store.name} ${a.id} ${a.trader.firstName} ${a.trader.lastName}`
             .toLowerCase()
             .includes(search.toLowerCase())
         )
