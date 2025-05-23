@@ -39,9 +39,10 @@ public class ContractOfferServiceImpl implements ContractOfferService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<ContractOfferDto> listContractOffers() {
-		return contractOfferRepository.findAll().stream().map(contractOfferMapper::toDto)
-				.collect(Collectors.toList());
+	public List<ContractOfferDto> listContractOffers(Integer traderId) {
+		return contractOfferRepository.findBySellerOrBuyerId(traderId).stream()
+				.map(contractOfferMapper::toDto).collect(Collectors.toList());
+
 	}
 
 	@Override

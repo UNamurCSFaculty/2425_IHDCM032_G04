@@ -10,6 +10,7 @@ import { Route as AuthenticatedImport } from './routes/_authenticated'
 import { Route as AuthenticatedAchatsMarcheImport } from './routes/_authenticated/achats/marche'
 import { Route as AuthenticatedAchatsMesEncheresImport } from './routes/_authenticated/achats/mes-encheres'
 import { Route as AuthenticatedAchatsNouvelleEnchereImport } from './routes/_authenticated/achats/nouvelle-enchere'
+import { Route as AuthenticatedContratsMesContratsImport } from './routes/_authenticated/contrats/mes-contrats'
 import { Route as AuthenticatedDepotsNouveauProduitImport } from './routes/_authenticated/depots/nouveau-produit'
 import { Route as AuthenticatedVentesMesEncheresImport } from './routes/_authenticated/ventes/mes-encheres'
 import { Route as AuthenticatedVentesNouvelleEnchereImport } from './routes/_authenticated/ventes/nouvelle-enchere'
@@ -140,6 +141,13 @@ const AuthenticatedDepotsNouveauProduitRoute =
     getParentRoute: () => AuthenticatedRoute,
   } as any)
 
+const AuthenticatedContratsMesContratsRoute =
+  AuthenticatedContratsMesContratsImport.update({
+    id: '/contrats/mes-contrats',
+    path: '/contrats/mes-contrats',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+
 const AuthenticatedAchatsNouvelleEnchereRoute =
   AuthenticatedAchatsNouvelleEnchereImport.update({
     id: '/achats/nouvelle-enchere',
@@ -255,6 +263,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAchatsNouvelleEnchereImport
       parentRoute: typeof AuthenticatedImport
     }
+    '/_authenticated/contrats/mes-contrats': {
+      id: '/_authenticated/contrats/mes-contrats'
+      path: '/contrats/mes-contrats'
+      fullPath: '/contrats/mes-contrats'
+      preLoaderRoute: typeof AuthenticatedContratsMesContratsImport
+      parentRoute: typeof AuthenticatedImport
+    }
     '/_authenticated/depots/nouveau-produit': {
       id: '/_authenticated/depots/nouveau-produit'
       path: '/depots/nouveau-produit'
@@ -320,6 +335,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedAchatsMarcheRoute: typeof AuthenticatedAchatsMarcheRoute
   AuthenticatedAchatsMesEncheresRoute: typeof AuthenticatedAchatsMesEncheresRoute
   AuthenticatedAchatsNouvelleEnchereRoute: typeof AuthenticatedAchatsNouvelleEnchereRoute
+  AuthenticatedContratsMesContratsRoute: typeof AuthenticatedContratsMesContratsRoute
   AuthenticatedDepotsNouveauProduitRoute: typeof AuthenticatedDepotsNouveauProduitRoute
   AuthenticatedVentesMesEncheresRoute: typeof AuthenticatedVentesMesEncheresRoute
   AuthenticatedVentesNouvelleEnchereRoute: typeof AuthenticatedVentesNouvelleEnchereRoute
@@ -330,6 +346,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAchatsMesEncheresRoute: AuthenticatedAchatsMesEncheresRoute,
   AuthenticatedAchatsNouvelleEnchereRoute:
     AuthenticatedAchatsNouvelleEnchereRoute,
+  AuthenticatedContratsMesContratsRoute: AuthenticatedContratsMesContratsRoute,
   AuthenticatedDepotsNouveauProduitRoute:
     AuthenticatedDepotsNouveauProduitRoute,
   AuthenticatedVentesMesEncheresRoute: AuthenticatedVentesMesEncheresRoute,
@@ -379,6 +396,7 @@ export interface FileRoutesByFullPath {
   '/achats/marche': typeof AuthenticatedAchatsMarcheRoute
   '/achats/mes-encheres': typeof AuthenticatedAchatsMesEncheresRoute
   '/achats/nouvelle-enchere': typeof AuthenticatedAchatsNouvelleEnchereRoute
+  '/contrats/mes-contrats': typeof AuthenticatedContratsMesContratsRoute
   '/depots/nouveau-produit': typeof AuthenticatedDepotsNouveauProduitRoute
   '/ventes/mes-encheres': typeof AuthenticatedVentesMesEncheresRoute
   '/ventes/nouvelle-enchere': typeof AuthenticatedVentesNouvelleEnchereRoute
@@ -402,6 +420,7 @@ export interface FileRoutesByTo {
   '/achats/marche': typeof AuthenticatedAchatsMarcheRoute
   '/achats/mes-encheres': typeof AuthenticatedAchatsMesEncheresRoute
   '/achats/nouvelle-enchere': typeof AuthenticatedAchatsNouvelleEnchereRoute
+  '/contrats/mes-contrats': typeof AuthenticatedContratsMesContratsRoute
   '/depots/nouveau-produit': typeof AuthenticatedDepotsNouveauProduitRoute
   '/ventes/mes-encheres': typeof AuthenticatedVentesMesEncheresRoute
   '/ventes/nouvelle-enchere': typeof AuthenticatedVentesNouvelleEnchereRoute
@@ -427,6 +446,7 @@ export interface FileRoutesById {
   '/_authenticated/achats/marche': typeof AuthenticatedAchatsMarcheRoute
   '/_authenticated/achats/mes-encheres': typeof AuthenticatedAchatsMesEncheresRoute
   '/_authenticated/achats/nouvelle-enchere': typeof AuthenticatedAchatsNouvelleEnchereRoute
+  '/_authenticated/contrats/mes-contrats': typeof AuthenticatedContratsMesContratsRoute
   '/_authenticated/depots/nouveau-produit': typeof AuthenticatedDepotsNouveauProduitRoute
   '/_authenticated/ventes/mes-encheres': typeof AuthenticatedVentesMesEncheresRoute
   '/_authenticated/ventes/nouvelle-enchere': typeof AuthenticatedVentesNouvelleEnchereRoute
@@ -453,6 +473,7 @@ export interface FileRouteTypes {
     | '/achats/marche'
     | '/achats/mes-encheres'
     | '/achats/nouvelle-enchere'
+    | '/contrats/mes-contrats'
     | '/depots/nouveau-produit'
     | '/ventes/mes-encheres'
     | '/ventes/nouvelle-enchere'
@@ -475,6 +496,7 @@ export interface FileRouteTypes {
     | '/achats/marche'
     | '/achats/mes-encheres'
     | '/achats/nouvelle-enchere'
+    | '/contrats/mes-contrats'
     | '/depots/nouveau-produit'
     | '/ventes/mes-encheres'
     | '/ventes/nouvelle-enchere'
@@ -498,6 +520,7 @@ export interface FileRouteTypes {
     | '/_authenticated/achats/marche'
     | '/_authenticated/achats/mes-encheres'
     | '/_authenticated/achats/nouvelle-enchere'
+    | '/_authenticated/contrats/mes-contrats'
     | '/_authenticated/depots/nouveau-produit'
     | '/_authenticated/ventes/mes-encheres'
     | '/_authenticated/ventes/nouvelle-enchere'
@@ -557,6 +580,7 @@ export const routeTree = rootRoute
         "/_authenticated/achats/marche",
         "/_authenticated/achats/mes-encheres",
         "/_authenticated/achats/nouvelle-enchere",
+        "/_authenticated/contrats/mes-contrats",
         "/_authenticated/depots/nouveau-produit",
         "/_authenticated/ventes/mes-encheres",
         "/_authenticated/ventes/nouvelle-enchere"
@@ -609,6 +633,10 @@ export const routeTree = rootRoute
     },
     "/_authenticated/achats/nouvelle-enchere": {
       "filePath": "_authenticated/achats/nouvelle-enchere.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/contrats/mes-contrats": {
+      "filePath": "_authenticated/contrats/mes-contrats.tsx",
       "parent": "/_authenticated"
     },
     "/_authenticated/depots/nouveau-produit": {

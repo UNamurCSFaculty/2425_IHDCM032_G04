@@ -6,6 +6,7 @@ import be.labil.anacarde.domain.dto.db.ValidationGroups;
 import be.labil.anacarde.domain.dto.write.ContractOfferUpdateDto;
 import be.labil.anacarde.presentation.controller.annotations.ApiValidId;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -56,7 +57,8 @@ public interface ContractOfferApi {
 	@GetMapping
 	@ApiResponses({
 			@ApiResponse(responseCode = "200", description = "Liste récupérée avec succès", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ContractOfferDto.class))))})
-	ResponseEntity<List<ContractOfferDto>> listContractOffers();
+	ResponseEntity<List<ContractOfferDto>> listContractOffers(
+			@Parameter(description = "ID du trader pour filtrer les enchères", required = false) @RequestParam(value = "traderId", required = false) Integer traderId);
 
 	@Operation(summary = "Supprimer un contrat")
 	@DeleteMapping("/{id}")

@@ -108,16 +108,10 @@ const menu: MenuItem[] = [
     url: '#',
     items: [
       {
-        title: 'Créer un contrat',
-        description: 'Créer un nouveau contrat',
-        icon: <FileText className="size-5 shrink-0" />,
-        url: '/contrats',
-      },
-      {
         title: 'Historique',
         description: 'Détail mes contrats',
         icon: <History className="size-5 shrink-0" />,
-        url: '/contrats',
+        url: '/contrats/mes-contrats',
       },
     ],
   },
