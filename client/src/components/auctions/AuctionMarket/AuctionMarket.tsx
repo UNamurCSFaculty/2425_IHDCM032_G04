@@ -58,7 +58,7 @@ interface MarketplaceProps {
   auctions: AuctionDto[]
   qualities: QualityDto[]
   userRole: UserRole
-  showAuctionStatusFilter?: boolean
+  filterByAuctionStatus?: boolean
   onCreateAuction?: () => void
 }
 
@@ -66,7 +66,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
   auctions,
   qualities,
   userRole,
-  showAuctionStatusFilter,
+  filterByAuctionStatus,
   onCreateAuction,
 }) => {
   const isDesktop = useMediaQuery('(min-width: 1024px)')
@@ -315,8 +315,8 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                   >
                     <FiltersPanel
                       onFiltersChange={setFilters}
-                      showAuctionStatusFilter={showAuctionStatusFilter}
                       qualities={qualities}
+                      filterByAuctionStatus={filterByAuctionStatus}
                     />
                   </SheetContent>
                 </Sheet>
@@ -331,8 +331,8 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
           <div className="sticky top-20 border rounded-lg shadow-sm bg-background self-start">
             <FiltersPanel
               onFiltersChange={setFilters}
-              showAuctionStatusFilter={showAuctionStatusFilter}
               qualities={qualities}
+              filterByAuctionStatus={filterByAuctionStatus}
             />
           </div>
         )}

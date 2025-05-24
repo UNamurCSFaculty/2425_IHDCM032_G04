@@ -27,7 +27,7 @@ const regionOptions = regions.map((n, i) => ({
 }))
 
 interface FiltersPanelProps {
-  showAuctionStatusFilter?: boolean
+  filterByAuctionStatus?: boolean
   qualities: QualityDto[]
   onFiltersChange: (filters: {
     search: string
@@ -42,7 +42,7 @@ interface FiltersPanelProps {
 }
 
 const FiltersPanel: React.FC<FiltersPanelProps> = ({
-  showAuctionStatusFilter,
+  filterByAuctionStatus,
   qualities,
   onFiltersChange,
 }) => {
@@ -57,8 +57,11 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
   const [regionId, setRegionId] = useState<number | null>(null)
   const [cityId, setCityId] = useState<number | null>(null)
 
+  // Reset dependent filters
   useEffect(() => setCityId(null), [regionId])
+  useEffect(() => setQualityId(null), [productTypeId])
 
+  // Notify filters
   useEffect(() => {
     onFiltersChange({
       search,
@@ -145,7 +148,7 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
           </div>
 
           {/* Status */}
-          {showAuctionStatusFilter && (
+          {filterByAuctionStatus && (
             <RadioGroup
               value={auctionStatus}
               defaultValue={TradeStatus.OPEN}
