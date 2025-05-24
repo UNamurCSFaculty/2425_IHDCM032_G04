@@ -30,7 +30,6 @@ import { LanguageSwitcher } from '@/components/LanguageSwitcher' // MODIFICATION
 import {
   ArrowLeftRight,
   CircleDollarSign,
-  FileText,
   History,
   Menu as MenuIcon,
   Package,
