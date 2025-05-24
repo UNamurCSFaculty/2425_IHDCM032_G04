@@ -76,81 +76,91 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
   const [sheetOpen, setSheetOpen] = useState(false)
   const [dialogAuction, setDialogAuction] = useState<AuctionDto | null>(null)
   const [inlineAuction, setInlineAuction] = useState<AuctionDto | null>(null)
-
-  // Filters state
-  const [search, setSearch] = useState('')
-  const [auctionStatus, setAuctionStatus] = useState<TradeStatus>(
-    TradeStatus.OPEN
-  )
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 5_000_000])
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null)
-  const [qualityId, setQualityId] = useState<number | null>(null)
-  const [productTypeId, setProductTypeId] = useState<number | null>(null)
-  const [regionId, setRegionId] = useState<number | null>(null)
-  const [cityId, setCityId] = useState<number | null>(null)
   const [sort, setSort] = useState<SortOptionValue>('endDate-asc')
 
-  useEffect(() => setCityId(null), [regionId])
-
   // Filtering & Sorting
-  const filtered = useMemo(
+  const [filters, setFilters] = useState({
+    search: '',
+    auctionStatus: TradeStatus.OPEN,
+    priceRange: [0, 5_000_000] as [number, number],
+    selectedDate: null as Date | null,
+    qualityId: null as number | null,
+    productTypeId: null as number | null,
+    regionId: null as number | null,
+    cityId: null as number | null,
+  })
+
+  const filteredAuctions = useMemo(
     () =>
       auctions.filter(a => {
         if (
-          search &&
+          filters.search &&
           !`${a.product.type} ${a.product.store.name} ${a.id} ${a.trader.firstName} ${a.trader.lastName}`
             .toLowerCase()
-            .includes(search.toLowerCase())
+            .includes(filters.search.toLowerCase())
         )
           return false
 
         if (
-          auctionStatus === TradeStatus.OPEN &&
+          filters.auctionStatus === TradeStatus.OPEN &&
           a.status.name !== TradeStatus.OPEN
         )
           return false
         if (
-          auctionStatus !== TradeStatus.OPEN &&
+          filters.auctionStatus !== TradeStatus.OPEN &&
           a.status.name === TradeStatus.OPEN
         )
           return false
 
-        if (a.price < priceRange[0] || a.price > priceRange[1]) return false
+        if (a.price < filters.priceRange[0] || a.price > filters.priceRange[1])
+          return false
 
         if (
-          selectedDate &&
-          dayjs(a.expirationDate).isAfter(dayjs(selectedDate).endOf('day'))
+          filters.selectedDate &&
+          dayjs(a.expirationDate).isAfter(
+            dayjs(filters.selectedDate).endOf('day')
+          )
         )
           return false
 
-        if (qualityId && a.product.qualityControl?.quality.id !== qualityId)
+        if (
+          filters.qualityId &&
+          a.product.qualityControl?.quality.id !== filters.qualityId
+        )
           return false
 
-        if (productTypeId && a.product.type !== productTypes[productTypeId - 1])
+        if (
+          filters.productTypeId &&
+          a.product.type !== productTypes[filters.productTypeId - 1]
+        )
           return false
 
-        if (regionId && a.product.store.address.regionId !== regionId)
+        if (
+          filters.regionId &&
+          a.product.store.address.regionId !== filters.regionId
+        )
           return false
 
-        if (cityId && a.product.store.address.cityId !== cityId) return false
+        if (filters.cityId && a.product.store.address.cityId !== filters.cityId)
+          return false
 
         return true
       }),
     [
       auctions,
-      search,
-      auctionStatus,
-      priceRange,
-      selectedDate,
-      qualityId,
-      productTypeId,
-      regionId,
-      cityId,
+      filters.search,
+      filters.auctionStatus,
+      filters.priceRange,
+      filters.selectedDate,
+      filters.qualityId,
+      filters.productTypeId,
+      filters.regionId,
+      filters.cityId,
     ]
   )
 
   const sorted = useMemo(() => {
-    const list = [...filtered]
+    const list = [...filteredAuctions]
     switch (sort) {
       case 'endDate-desc':
         return list.sort(
@@ -169,7 +179,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
             dayjs(b.expirationDate).valueOf()
         )
     }
-  }, [filtered, sort])
+  }, [filteredAuctions, sort])
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1)
@@ -182,25 +192,26 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
   useEffect(
     () => setCurrentPage(1),
     [
-      search,
-      priceRange,
-      selectedDate,
-      qualityId,
-      productTypeId,
-      regionId,
-      cityId,
+      filters.search,
+      filters.priceRange,
+      filters.selectedDate,
+      filters.qualityId,
+      filters.productTypeId,
+      filters.regionId,
+      filters.cityId,
     ]
   )
 
   const resetFilters = () => {
-    setSearch('')
-    setAuctionStatus(TradeStatus.OPEN)
-    setPriceRange([0, 5_000_000])
-    setSelectedDate(null)
-    setQualityId(null)
-    setProductTypeId(null)
-    setRegionId(null)
-    setCityId(null)
+    console.log('TODO resetFilteres')
+    // setSearch('')
+    // setAuctionStatus(TradeStatus.OPEN)
+    // setPriceRange([0, 5_000_000])
+    // setSelectedDate(null)
+    // setQualityId(null)
+    // setProductTypeId(null)
+    // setRegionId(null)
+    // setCityId(null)
   }
 
   const handlePageChange = (page: number) => {
@@ -218,8 +229,8 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
       <div className="flex flex-wrap flex-col sm:flex-row items-center justify-center lg:justify-between gap-4 mb-6 w-full">
         <div className="text-md  text-muted-foreground w-full lg:w-[260px] ">
           <div className="text-center lg:text-left lg:pl-4">
-            Résultat(s) : {filtered.length} enchère
-            {filtered.length !== 1 && 's'}
+            Résultat(s) : {filteredAuctions.length} enchère
+            {filteredAuctions.length !== 1 && 's'}
           </div>
         </div>
         <div className={`flex items-center ${cssCard} lg:pl-11`}>
@@ -316,25 +327,9 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                     className="w-[300px] sm:w-[380px] p-0 overflow-y-auto"
                   >
                     <FiltersPanel
-                      search={search}
-                      onSearch={setSearch}
-                      auctionStatus={auctionStatus}
-                      onAuctionStatusChange={setAuctionStatus}
+                      onFiltersChange={setFilters}
                       showAuctionStatusFilter={showAuctionStatusFilter}
-                      priceRange={priceRange}
-                      onPriceChange={setPriceRange}
-                      selectedDate={selectedDate}
-                      onDateSelect={setSelectedDate}
                       qualities={qualities}
-                      qualityId={qualityId}
-                      onQualityChange={setQualityId}
-                      productTypeId={productTypeId}
-                      onTypeChange={setProductTypeId}
-                      regionId={regionId}
-                      onRegionChange={setRegionId}
-                      cityId={cityId}
-                      onCityChange={setCityId}
-                      resetFilters={resetFilters}
                     />
                   </SheetContent>
                 </Sheet>
@@ -348,25 +343,9 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
         {isDesktop && (
           <div className="sticky top-20 border rounded-lg shadow-sm bg-background self-start">
             <FiltersPanel
-              search={search}
-              onSearch={setSearch}
-              auctionStatus={auctionStatus}
-              onAuctionStatusChange={setAuctionStatus}
+              onFiltersChange={setFilters}
               showAuctionStatusFilter={showAuctionStatusFilter}
-              priceRange={priceRange}
-              onPriceChange={setPriceRange}
-              selectedDate={selectedDate}
-              onDateSelect={setSelectedDate}
               qualities={qualities}
-              qualityId={qualityId}
-              onQualityChange={setQualityId}
-              productTypeId={productTypeId}
-              onTypeChange={setProductTypeId}
-              regionId={regionId}
-              onRegionChange={setRegionId}
-              cityId={cityId}
-              onCityChange={setCityId}
-              resetFilters={resetFilters}
             />
           </div>
         )}
@@ -388,7 +367,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                     <AuctionDetails auction={inlineAuction} role={userRole} />
                   </div>
                 </>
-              ) : filtered.length === 0 ? (
+              ) : filteredAuctions.length === 0 ? (
                 <EmptyState onReset={resetFilters} className="col-span-full" />
               ) : (
                 <>

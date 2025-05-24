@@ -13,6 +13,7 @@ import { TradeStatus, productTypes } from '@/lib/utils'
 import { formatDate, formatPrice } from '@/utils/formatter'
 import dayjs from 'dayjs'
 import { ChevronDown, Search, X } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 const cityOptions = cities.map((n, i) => ({
@@ -26,48 +27,61 @@ const regionOptions = regions.map((n, i) => ({
 }))
 
 interface FiltersPanelProps {
-  search: string
-  onSearch: (value: string) => void
-  auctionStatus: TradeStatus
-  onAuctionStatusChange: (status: TradeStatus) => void
   showAuctionStatusFilter?: boolean
-  priceRange: [number, number]
-  onPriceChange: (range: [number, number]) => void
-  selectedDate: Date | null
-  onDateSelect: (date: Date | null) => void
   qualities: QualityDto[]
-  qualityId: number | null
-  onQualityChange: (q: number | null) => void
-  productTypeId: number | null
-  onTypeChange: (t: number | null) => void
-  regionId: number | null
-  onRegionChange: (id: number | null) => void
-  cityId: number | null
-  onCityChange: (id: number | null) => void
-  resetFilters: () => void
+  onFiltersChange: (filters: {
+    search: string
+    auctionStatus: TradeStatus
+    priceRange: [number, number]
+    selectedDate: Date | null
+    qualityId: number | null
+    productTypeId: number | null
+    regionId: number | null
+    cityId: number | null
+  }) => void
 }
 
 const FiltersPanel: React.FC<FiltersPanelProps> = ({
-  search,
-  onSearch,
-  auctionStatus,
-  onAuctionStatusChange,
   showAuctionStatusFilter,
-  priceRange,
-  onPriceChange,
-  selectedDate,
-  onDateSelect,
   qualities,
-  qualityId,
-  onQualityChange,
-  productTypeId,
-  onTypeChange,
-  regionId,
-  onRegionChange,
-  cityId,
-  onCityChange,
-  resetFilters,
+  onFiltersChange,
 }) => {
+  const [search, setSearch] = useState('')
+  const [auctionStatus, setAuctionStatus] = useState<TradeStatus>(
+    TradeStatus.OPEN
+  )
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 5_000_000])
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null)
+  const [qualityId, setQualityId] = useState<number | null>(null)
+  const [productTypeId, setProductTypeId] = useState<number | null>(null)
+  const [regionId, setRegionId] = useState<number | null>(null)
+  const [cityId, setCityId] = useState<number | null>(null)
+
+  useEffect(() => setCityId(null), [regionId])
+
+  useEffect(() => {
+    onFiltersChange({
+      search,
+      auctionStatus,
+      priceRange,
+      selectedDate,
+      qualityId,
+      productTypeId,
+      regionId,
+      cityId,
+    })
+  }, [
+    onFiltersChange,
+    search,
+    auctionStatus,
+    priceRange,
+    selectedDate,
+    qualityId,
+    productTypeId,
+    regionId,
+    cityId,
+  ])
+
   const { t } = useTranslation()
 
   const productTypeOptions = productTypes.map((n, i) => ({
@@ -88,6 +102,17 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
       label: q.name,
     }))
 
+  const resetFilters = () => {
+    setSearch('')
+    setAuctionStatus(TradeStatus.OPEN)
+    setPriceRange([0, 5_000_000])
+    setSelectedDate(null)
+    setQualityId(null)
+    setProductTypeId(null)
+    setRegionId(null)
+    setCityId(null)
+  }
+
   return (
     <div>
       <div className="flex justify-between items-center p-4 border-b">
@@ -105,14 +130,14 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
               placeholder="Rechercher…"
               className="pl-10"
               value={search}
-              onChange={e => onSearch(e.target.value)}
+              onChange={e => setSearch(e.target.value)}
             />
             {search && (
               <Button
                 variant="ghost"
                 size="icon"
                 className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7"
-                onClick={() => onSearch('')}
+                onClick={() => setSearch('')}
               >
                 <X className="size-4" />
               </Button>
@@ -124,7 +149,7 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
             <RadioGroup
               value={auctionStatus}
               defaultValue={TradeStatus.OPEN}
-              onValueChange={onAuctionStatusChange}
+              onValueChange={v => setAuctionStatus(v as TradeStatus)}
             >
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value={TradeStatus.OPEN} id="r1" />
@@ -148,7 +173,7 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
             </div>
             <Slider
               value={priceRange}
-              onValueChange={v => onPriceChange(v as [number, number])}
+              onValueChange={v => setPriceRange(v as [number, number])}
               min={0}
               max={5_000_000}
               step={500}
@@ -161,7 +186,7 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
             placeholder="Tous les types"
             options={productTypeOptions}
             value={productTypeId}
-            onChange={onTypeChange}
+            onChange={v => setProductTypeId(v as number)}
           />
           {/* Quality */}
           <VirtualizedSelect
@@ -170,7 +195,7 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
             placeholder="Toutes les qualités"
             options={qualityOptions}
             value={qualityId}
-            onChange={onQualityChange}
+            onChange={v => setQualityId(v as number)}
           />
           {/* Region / City */}
           <VirtualizedSelect
@@ -179,7 +204,7 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
             placeholder="Toutes les régions"
             options={regionOptions}
             value={regionId}
-            onChange={onRegionChange}
+            onChange={v => setRegionId(v as number)}
           />
           <VirtualizedSelect
             id="city-select"
@@ -187,7 +212,7 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
             placeholder="Toutes les villes"
             options={cityOptions}
             value={cityId}
-            onChange={onCityChange}
+            onChange={v => setCityId(v as number)}
           />
           {/* Date picker */}
           <div className="space-y-2">
@@ -214,7 +239,7 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
                 <Calendar
                   mode="single"
                   selected={selectedDate ?? undefined}
-                  onSelect={d => onDateSelect(d ?? null)}
+                  onSelect={d => setSelectedDate(d ?? null)}
                   disabled={d => d < dayjs().startOf('day').toDate()}
                 />
               </PopoverContent>
