@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useUserStore } from '@/store/userStore'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import z from 'zod'
+import z from 'zod/v4'
 
 export const Route = createFileRoute('/login')({
   component: RouteComponent,

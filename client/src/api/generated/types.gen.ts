@@ -11,11 +11,11 @@ export type AddressDto = {
   /**
    * Coordonnées géographiques du store (au format GeoJSON, WKT ou équivalent)
    */
-  location?: string
+  location: string
   /**
    * Id de la ville
    */
-  cityId?: number
+  cityId: number
   /**
    * Id de la région
    */
@@ -151,10 +151,6 @@ export type UserUpdateDto = {
    * Adresse de l'utilisateur
    */
   address: AddressDto
-  /**
-   * Fichiers à uploader
-   */
-  documents?: Array<unknown>
   type: string
 }
 
@@ -3678,6 +3674,45 @@ export type CreateAuctionStrategyResponses = {
    */
   201: unknown
 }
+
+export type CheckPhoneData = {
+  body?: never
+  path?: never
+  query: {
+    /**
+     * Téléphone à tester
+     */
+    phone: string
+  }
+  url: '/api/users/check/phone'
+}
+
+export type CheckPhoneResponses = {
+  /**
+   * Résultat de la vérification
+   */
+  200: boolean
+}
+
+export type CheckPhoneResponse = CheckPhoneResponses[keyof CheckPhoneResponses]
+
+export type CheckEmailData = {
+  body?: never
+  path?: never
+  query: {
+    email: string
+  }
+  url: '/api/users/check/email'
+}
+
+export type CheckEmailResponses = {
+  /**
+   * Résultat de la vérification
+   */
+  200: boolean
+}
+
+export type CheckEmailResponse = CheckEmailResponses[keyof CheckEmailResponses]
 
 export type ListRegionsData = {
   body?: never

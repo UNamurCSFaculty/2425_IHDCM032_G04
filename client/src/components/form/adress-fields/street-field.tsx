@@ -3,7 +3,6 @@ import type { AddressReactForm } from './types'
 import { zAddressDto } from '@/api/generated/zod.gen'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { useTranslation } from 'react-i18next'
 
 const streetSchema = zAddressDto.pick({ street: true }).shape.street
 
@@ -13,16 +12,11 @@ interface Props {
 }
 
 export const StreetField = ({ form, required }: Props) => {
-  const { t } = useTranslation()
-
   return (
     <form.Field
       name="address.street"
       validators={{
-        onChange: ({ value }) =>
-          streetSchema.safeParse(value ?? '').success
-            ? undefined
-            : t('validation.required'),
+        onChange: streetSchema,
       }}
     >
       {field => (

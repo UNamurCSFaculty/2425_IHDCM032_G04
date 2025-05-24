@@ -32,13 +32,13 @@ function AdminUsersListComponent() {
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+              <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
                 Nom
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+              <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
                 Email
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+              <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
                 Actions
               </th>
             </tr>
@@ -46,9 +46,9 @@ function AdminUsersListComponent() {
           <tbody className="divide-y divide-gray-200 bg-white">
             {users.map(user => (
               <tr key={user.id}>
-                <td className="whitespace-nowrap px-6 py-4">{user.name}</td>
-                <td className="whitespace-nowrap px-6 py-4">{user.email}</td>
-                <td className="whitespace-nowrap px-6 py-4 text-sm font-medium">
+                <td className="px-6 py-4 whitespace-nowrap">{user.name}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{user.email}</td>
+                <td className="px-6 py-4 text-sm font-medium whitespace-nowrap">
                   <Link
                     to="/admin/users/$userId"
                     params={{ userId: user.id }}

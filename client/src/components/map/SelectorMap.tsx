@@ -11,7 +11,7 @@ import { useDebounce } from '@/hooks/useDebounce'
 import type { GeoPointString } from '@/utils/geo-utils'
 import L, { LatLng, type LatLngExpression } from 'leaflet'
 import 'leaflet/dist/leaflet.css'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import {
   MapContainer,
   Marker,
@@ -50,6 +50,7 @@ export interface BeninPointSelectorMapProps {
   defaultCenter?: LatLngExpression
   defaultZoom?: number
   mapHeight?: string
+  showSearch?: boolean
 }
 
 function parseGeoPoint(point?: string | null) {
@@ -77,6 +78,7 @@ export const SelectorMap: React.FC<BeninPointSelectorMapProps> = ({
   defaultCenter = [9.3077, 2.3158],
   defaultZoom = 7,
   mapHeight = '400px',
+  showSearch = true,
 }) => {
   const [selectedPosition, setSelectedPosition] = useState<LatLng | null>(
     () => {
@@ -84,7 +86,7 @@ export const SelectorMap: React.FC<BeninPointSelectorMapProps> = ({
       return p ? new LatLng(p.lat, p.lng) : null
     }
   )
-
+  // const inputRef = useRef<HTMLInputElement>(null)
   const [addressInfo, setAddressInfo] = useState<NominatimAddress | null>(null)
   const [loadingAddress, setLoadingAddress] = useState(false)
 
@@ -128,17 +130,6 @@ export const SelectorMap: React.FC<BeninPointSelectorMapProps> = ({
         const geoPointString = `POINT(${lng} ${lat})` as GeoPointString
         const fetchedAddress = await fetchAddress(lat, lng)
         onPositionChange(geoPointString, fetchedAddress)
-
-        const q = `[out:json][timeout:25];
-        area["ISO3166-1"="BJ"]->.a;
-        (
-          node["place"~"city|town|village"](area.a);
-        );
-        out body;
-        `
-        const url = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(q)}`
-        const cities = await fetch(url).then(r => r.json())
-        console.log('Fetched cities:', cities)
       },
     })
     return null
@@ -152,7 +143,7 @@ export const SelectorMap: React.FC<BeninPointSelectorMapProps> = ({
     }
     setLoadingSearch(true)
     fetch(
-      `https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=5&q=${encodeURIComponent(
+      `https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=5&countrycodes=bj&q=${encodeURIComponent(
         debounced
       )}`
     )
@@ -191,33 +182,47 @@ export const SelectorMap: React.FC<BeninPointSelectorMapProps> = ({
     }
   }, [initialPosition, fetchAddress])
 
+  const [isFocused, setIsFocused] = useState(false)
+  const inputRef = useRef<HTMLInputElement>(null)
   return (
-    <div>
+    <div className="relative">
       {/* ShadCN Command for search */}
-      <div className="mb-4">
-        <Command>
-          <CommandInput
-            placeholder="Rechercher une adresse…"
-            value={search}
-            onValueChange={setSearch}
-          />
-          <CommandList>
-            {loadingSearch && <CommandEmpty>Chargement…</CommandEmpty>}
-            {!loadingSearch && suggestions.length === 0 && debounced && (
-              <CommandEmpty>Aucune suggestion</CommandEmpty>
-            )}
-            {suggestions.map(s => (
-              <CommandItem
-                key={s.place_id}
-                onSelect={() => selectSuggestion(s)}
-              >
-                {s.display_name}
-              </CommandItem>
-            ))}
-          </CommandList>
-        </Command>
-      </div>
-
+      {showSearch && (
+        <div className="absolute top-2 right-15 left-15 z-30">
+          <Command>
+            <CommandInput
+              ref={inputRef}
+              placeholder="Rechercher une adresse…"
+              value={search}
+              onValueChange={setSearch}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+            />
+            {
+              <CommandList>
+                {loadingSearch && <CommandEmpty>Chargement…</CommandEmpty>}
+                {!loadingSearch &&
+                  suggestions.length === 0 &&
+                  debounced &&
+                  isFocused && <CommandEmpty>Aucune suggestion</CommandEmpty>}
+                {suggestions.map(s => (
+                  <CommandItem
+                    key={s.place_id}
+                    onSelect={() => {
+                      selectSuggestion(s)
+                      setSearch('')
+                      inputRef.current?.blur()
+                      setIsFocused(false)
+                    }}
+                  >
+                    {s.display_name}
+                  </CommandItem>
+                ))}
+              </CommandList>
+            }
+          </Command>
+        </div>
+      )}
       {/* Leaflet Map */}
       <MapContainer
         center={selectedPosition || defaultCenter}

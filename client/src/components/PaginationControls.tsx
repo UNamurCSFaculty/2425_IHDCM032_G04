@@ -1,5 +1,3 @@
-'use client'
-
 import { Button } from './ui/button'
 import React from 'react'
 
@@ -51,7 +49,7 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
   const pages = getPages()
 
   return (
-    <div className="flex justify-center items-center gap-1 pt-4 flex-wrap w-full">
+    <div className="flex w-full flex-wrap items-center justify-center gap-1 pt-4">
       <Button
         size="sm"
         variant="outline"
@@ -65,7 +63,7 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
         p === '...' ? (
           <span
             key={`ell-${idx}`}
-            className="inline-flex w-8 h-8 items-center justify-center text-sm text-muted-foreground"
+            className="text-muted-foreground inline-flex h-8 w-8 items-center justify-center text-sm"
           >
             …
           </span>
@@ -74,7 +72,7 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
             key={p}
             size="sm"
             variant={current === p ? 'default' : 'outline'}
-            className="w-8 h-8 p-0"
+            className="h-8 w-8 p-0"
             onClick={() => onChange(p)}
           >
             {p}

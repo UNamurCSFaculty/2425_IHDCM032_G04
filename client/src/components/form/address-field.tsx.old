@@ -14,7 +14,7 @@ import { useFieldContext } from '.'; // Ne pas importer useFormContext si vous n
 import type { ReactFormExtendedApi } from '@tanstack/react-form';
 import { FixedSizeList, type ListChildComponentProps } from 'react-window';
 import { zAddressDto } from '@/api/generated/zod.gen';
-import z from 'zod';
+import z  from 'zod/v4';
 import { DebugFieldErrors } from './DebugFieldErrors';
 import { FieldErrors } from './field-errors';
 import { useTranslation } from 'react-i18next';

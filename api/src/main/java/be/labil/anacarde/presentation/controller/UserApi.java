@@ -35,6 +35,19 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping(value = "/api/users", produces = "application/json")
 public interface UserApi {
 
+	@Operation(summary = "Vérifier la disponibilité d’un e-mail", description = "204 si libre, 409 s’il existe déjà")
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "Résultat de la vérification", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(type = "boolean")))})
+	@GetMapping("/check/email")
+	ResponseEntity<Boolean> checkEmail(@RequestParam("email") @NotNull String email);
+
+	@Operation(summary = "Vérifier la disponibilité d’un numéro de téléphone", description = "Renvoie `true` si le numéro existe déjà, `false` sinon.")
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "Résultat de la vérification", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(type = "boolean")))})
+	@GetMapping("/check/phone")
+	ResponseEntity<Boolean> checkPhone(
+			@Parameter(description = "Téléphone à tester", required = true) @RequestParam("phone") String phone);
+
 	/**
 	 * Récupère les informations détaillées d'un utilisateur à partir de son identifiant.
 	 *

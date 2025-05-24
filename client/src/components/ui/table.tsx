@@ -57,7 +57,7 @@ function TableRow({ className, ...props }: React.ComponentProps<'tr'>) {
       data-slot="table-row"
       // hauteur réduite, moins de padding vertical
       className={cn(
-        'hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors h-8',
+        'hover:bg-muted/50 data-[state=selected]:bg-muted h-8 border-b transition-colors',
         className
       )}
       {...props}

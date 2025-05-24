@@ -1,6 +1,9 @@
+import { PhoneField } from './PhoneField'
+import { VirtualizedSelectField } from './VirtualizedSelectField'
 import { NumberField } from './number-field'
+import { RadioGroupField } from './RadioGroupField'
+import { CheckboxField } from '@/components/form/CheckboxField'
 import { AddressField } from '@/components/form/adress-fields'
-import { CheckboxField } from '@/components/form/checkbox-field'
 import { DateTimePickerField } from '@/components/form/datetime-field'
 import { FileUploadField } from '@/components/form/file-upload-field'
 import { ResetButton } from '@/components/form/reset-button'
@@ -23,6 +26,9 @@ export const { useAppForm } = createFormHook({
     FileUploadField,
     AddressField,
     NumberField,
+    PhoneField,
+    VirtualizedSelectField,
+    RadioGroupField,
   },
   formComponents: {
     SubmitButton,

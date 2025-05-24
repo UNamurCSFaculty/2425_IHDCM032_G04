@@ -79,4 +79,17 @@ public class UserControllerApiController implements UserApi {
 		UserDetailDto updated = userService.updateUserRoles(id, roleNames);
 		return ResponseEntity.ok(updated);
 	}
+
+	// Vérification de l'existence de l'email et du téléphone
+	@Override // new
+	public ResponseEntity<Boolean> checkEmail(String email) {
+		boolean exists = userService.emailExists(email);
+		return ResponseEntity.ok(exists);
+	}
+
+	@Override
+	public ResponseEntity<Boolean> checkPhone(String phone) {
+		boolean exists = userService.phoneExists(phone);
+		return ResponseEntity.ok(exists);
+	}
 }

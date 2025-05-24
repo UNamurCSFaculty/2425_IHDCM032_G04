@@ -15,9 +15,11 @@ import {
 import { cn } from '@/lib/utils'
 import { Check, ChevronDown } from 'lucide-react'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Virtuoso, type VirtuosoHandle } from 'react-virtuoso'
 
 export interface Option {
+  // Le placeholder ayant un id `null`, on garde ce type.
   id: number | null
   label: string
 }
@@ -25,54 +27,106 @@ export interface Option {
 interface Props {
   id: string
   label: string
-  options: Option[] // List of options without placeholder
-  placeholder: string // Placeholder label, treated as option id null
-  value: number | null // Selected id or null
+  options: Option[] // Assure que les options ont un id de type number
+  placeholder?: string
+  value: number | null // La valeur peut être un id ou null pour le placeholder
   onChange: (val: number | null) => void
+  /**
+   * Détermine si le placeholder est une option sélectionnable.
+   * @default false
+   */
+  placeholderSelectable?: boolean
 }
 
+// Constantes pour la virtualisation
 const ITEM_HEIGHT = 40
-const MAX_VISIBLE = 5
+const MAX_VISIBLE_ITEMS = 5
 
 const VirtualizedSelect: React.FC<Props> = ({
   id,
   label,
   options,
-  placeholder,
+  placeholder = '',
   value,
   onChange,
+  placeholderSelectable = false,
 }) => {
   const [open, setOpen] = useState(false)
   const [search, setSearch] = useState('')
   const [activeIndex, setActiveIndex] = useState(0)
   const virtuosoRef = useRef<VirtuosoHandle>(null)
+  const { t } = useTranslation()
 
-  // Combine placeholder with options
-  const allOptions = useMemo(
-    () => [{ id: null, label: placeholder }, ...options],
-    [options, placeholder]
+  // 1. On crée une liste unique d'options incluant toujours le placeholder.
+  //    Sa sélection sera gérée au niveau de l'item.
+  const allOptions = useMemo<Option[]>(
+    () =>
+      placeholderSelectable
+        ? [{ id: null, label: placeholder }, ...options]
+        : options,
+    [options, placeholder, placeholderSelectable]
   )
 
-  // Filter options by search
-  const filtered = useMemo(() => {
+  // 2. On filtre cette liste complète en fonction de la recherche.
+  const filteredOptions = useMemo(() => {
+    if (!search) return allOptions
     const q = search.toLowerCase()
-    return q
-      ? allOptions.filter(o => o.label.toLowerCase().includes(q))
-      : allOptions
+    return allOptions.filter(o => o.label.toLowerCase().includes(q))
   }, [allOptions, search])
 
-  // Reset activeIndex on filtered change
+  // 3. On trouve le label à afficher dans le bouton.
+  //    Si la valeur est `null`, on affiche le placeholder, sinon le label correspondant.
+  const displayLabel = useMemo(() => {
+    return allOptions.find(o => o.id === value)?.label ?? placeholder
+  }, [allOptions, value, placeholder])
+
+  // Reset l'index actif quand le filtre change
   useEffect(() => {
     setActiveIndex(0)
     virtuosoRef.current?.scrollToIndex({ index: 0, align: 'start' })
-  }, [filtered])
+  }, [filteredOptions])
 
-  // Compute list height
+  // Calcule la hauteur de la liste pour éviter les sauts de layout
   const height =
-    Math.min(filtered.length, MAX_VISIBLE) * ITEM_HEIGHT || ITEM_HEIGHT
+    Math.min(filteredOptions.length, MAX_VISIBLE_ITEMS) * ITEM_HEIGHT ||
+    ITEM_HEIGHT
 
-  // Display currently selected label
-  const display = allOptions.find(o => o.id === value)?.label ?? placeholder
+  const handleSelect = (option: Option) => {
+    const isPlaceholder = option.id === null
+    if (isPlaceholder && !placeholderSelectable) {
+      return // Ne fait rien si le placeholder n'est pas sélectionnable
+    }
+    onChange(option.id)
+    setOpen(false)
+    setSearch('')
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    const total = filteredOptions.length
+    if (!total) return
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault()
+      const nextIndex = (activeIndex + 1) % total
+      setActiveIndex(nextIndex)
+      virtuosoRef.current?.scrollToIndex({ index: nextIndex, align: 'center' })
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault()
+      const prevIndex = (activeIndex - 1 + total) % total
+      setActiveIndex(prevIndex)
+      virtuosoRef.current?.scrollToIndex({ index: prevIndex, align: 'center' })
+    } else if (e.key === 'Enter') {
+      e.preventDefault()
+      const selectedOption = filteredOptions[activeIndex]
+      if (selectedOption) {
+        handleSelect(selectedOption)
+      }
+    }
+  }
+
+  if (!placeholder) {
+    placeholder = t('form.select.placeholder')
+  }
 
   return (
     <div className="space-y-2">
@@ -83,84 +137,67 @@ const VirtualizedSelect: React.FC<Props> = ({
       <Popover
         open={open}
         onOpenChange={openState => {
-          if (!openState) setSearch('')
+          if (!openState) setSearch('') // Réinitialise la recherche à la fermeture
           setOpen(openState)
         }}
       >
         <PopoverTrigger asChild>
           <Button id={id} variant="outline" className="w-full justify-between">
-            {display}
-            <ChevronDown className="size-4 opacity-50" />
+            <span className="truncate">{displayLabel}</span>
+            <ChevronDown className="size-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
 
-        <PopoverContent className="p-0 w-64" align="start">
+        <PopoverContent
+          className="w-[var(--radix-popover-trigger-width)] p-0"
+          align="start"
+        >
           <Command>
             <CommandInput
               placeholder="Rechercher…"
               value={search}
               onValueChange={setSearch}
-              onKeyDown={e => {
-                if (e.key === 'ArrowDown') {
-                  e.preventDefault()
-                  const next = Math.min(activeIndex + 1, filtered.length - 1)
-                  setActiveIndex(next)
-                  virtuosoRef.current?.scrollToIndex({
-                    index: next,
-                    align: 'center',
-                  })
-                } else if (e.key === 'ArrowUp') {
-                  e.preventDefault()
-                  const prev = Math.max(activeIndex - 1, 0)
-                  setActiveIndex(prev)
-                  virtuosoRef.current?.scrollToIndex({
-                    index: prev,
-                    align: 'center',
-                  })
-                } else if (e.key === 'Enter') {
-                  e.preventDefault()
-                  const opt = filtered[activeIndex]
-                  if (opt) {
-                    onChange(opt.id)
-                    setOpen(false)
-                    setSearch('')
-                  }
-                }
-              }}
+              onKeyDown={handleKeyDown}
             />
 
             <CommandList>
               <CommandEmpty>Aucun résultat</CommandEmpty>
-              {filtered.length > 0 && (
+              {filteredOptions.length > 0 && (
                 <CommandGroup>
                   <div style={{ height }}>
                     <Virtuoso
                       ref={virtuosoRef}
-                      data={filtered}
-                      itemContent={(index, opt) => (
-                        <CommandItem
-                          key={opt.id ?? 'placeholder'}
-                          className={cn(
-                            'cursor-pointer',
-                            index === activeIndex && 'bg-muted'
-                          )}
-                          value={opt.label}
-                          onMouseEnter={() => setActiveIndex(index)}
-                          onSelect={() => {
-                            onChange(opt.id)
-                            setOpen(false)
-                            setSearch('')
-                          }}
-                        >
-                          <Check
+                      data={filteredOptions}
+                      itemContent={(index, option) => {
+                        const isPlaceholder = option.id === null
+                        const isDisabled =
+                          isPlaceholder && !placeholderSelectable
+
+                        return (
+                          <CommandItem
+                            key={option.id ?? 'placeholder'}
                             className={cn(
-                              'mr-2 h-4 w-4',
-                              value === opt.id ? 'opacity-100' : 'opacity-0'
+                              'cursor-pointer',
+                              index === activeIndex && 'bg-muted',
+                              isDisabled && 'text-muted-foreground opacity-60'
                             )}
-                          />
-                          {opt.label}
-                        </CommandItem>
-                      )}
+                            value={option.label}
+                            disabled={isDisabled}
+                            onMouseEnter={() => setActiveIndex(index)}
+                            onSelect={() => handleSelect(option)}
+                          >
+                            <Check
+                              className={cn(
+                                'mr-2 h-4 w-4',
+                                value === option.id
+                                  ? 'opacity-100'
+                                  : 'opacity-0'
+                              )}
+                            />
+                            {option.label}
+                          </CommandItem>
+                        )
+                      }}
                     />
                   </div>
                 </CommandGroup>

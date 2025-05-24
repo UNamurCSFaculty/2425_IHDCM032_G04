@@ -3,7 +3,7 @@ import {
   zProductUpdateDto,
   zUserUpdateDto,
 } from '@/api/generated/zod.gen'
-import z from 'zod'
+import z from 'zod/v4'
 
 const zProducer = zUserUpdateDto.extend({
   type: z.literal('producer'),

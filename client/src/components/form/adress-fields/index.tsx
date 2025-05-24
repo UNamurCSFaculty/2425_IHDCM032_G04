@@ -23,11 +23,12 @@ export function AddressField({
   const form = parent.form as AddressReactForm
 
   return (
-    <div className="space-y-3 p-4 border rounded-md">
+    <div className="space-y-3 rounded-md border p-4">
       <Label className="text-lg font-semibold">{label}</Label>
 
       <CityField form={form} required={required} />
-      <StreetField form={form} required={required} />
+
+      <StreetField form={form} required={false} />
       {withMap && (
         <LocationField form={form} required={required} mapHeight={mapHeight} />
       )}

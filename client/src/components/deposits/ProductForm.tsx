@@ -26,7 +26,7 @@ import { useNavigate } from '@tanstack/react-router'
 import { AlertCircle } from 'lucide-react'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import z from 'zod'
+import z from 'zod/v4'
 
 interface ProductFormProps {
   users: UserListDto[]

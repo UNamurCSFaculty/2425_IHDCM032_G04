@@ -61,7 +61,7 @@ export function SelectField<T extends string | number>({
             {required && <span className="text-red-500">*</span>}
           </Label>
           {hint && (
-            <span className="font-semibold text-xs text-gray-500">{hint}</span>
+            <span className="text-xs font-semibold text-gray-500">{hint}</span>
           )}
         </div>
         <Select

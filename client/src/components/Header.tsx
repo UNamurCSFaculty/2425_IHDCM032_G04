@@ -168,7 +168,7 @@ export function Header() {
                         {item.title}
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
-                        <ul className="grid w-[400px] gap-3 p-4 lg:w-[500px] lg:grid-cols-2 lg:w-[600px]">
+                        <ul className="grid w-[400px] gap-3 p-4 lg:w-[500px] lg:w-[600px] lg:grid-cols-2">
                           {item.items.map(subItem => (
                             <ListItem
                               key={subItem.title}
@@ -251,16 +251,16 @@ export function Header() {
             </SheetTrigger>
 
             <SheetContent side="right" className="w-[300px] sm:w-[350px]">
-              <SheetHeader className="pb-5 w-full flex items-center justify-center">
+              <SheetHeader className="flex w-full items-center justify-center pb-5">
                 <Link
                   to="/"
-                  className="flex items-center gap-2 w-full justify-center"
+                  className="flex w-full items-center justify-center gap-2"
                 >
                   <img src={logo} alt="Logo e-Anacarde" className="h-16" />
                 </Link>
               </SheetHeader>
 
-              <nav className="flex flex-col space-y-4 pl-5 pr-5">
+              <nav className="flex flex-col space-y-4 pr-5 pl-5">
                 {menu.map(item => (
                   <div key={item.title} className="py-1">
                     {item.items ? (
@@ -292,7 +292,7 @@ export function Header() {
                                   <div className="font-medium">
                                     {subItem.title}
                                   </div>
-                                  <div className="text-sm text-muted-foreground">
+                                  <div className="text-muted-foreground text-sm">
                                     {subItem.description}
                                   </div>
                                 </div>
@@ -345,17 +345,17 @@ const ListItem = React.forwardRef<
       <a
         ref={ref}
         className={cn(
-          'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
+          'hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground block space-y-1 rounded-md p-3 leading-none no-underline transition-colors outline-none select-none',
           className
         )}
         {...props}
       >
         <div className="flex items-center gap-2">
           {icon}
-          <div className="text-sm font-medium leading-none">{title}</div>
+          <div className="text-sm leading-none font-medium">{title}</div>
         </div>
         {children && (
-          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground mt-1">
+          <p className="text-muted-foreground mt-1 line-clamp-2 text-sm leading-snug">
             {children}
           </p>
         )}

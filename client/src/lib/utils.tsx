@@ -1,0 +1,115 @@
+import { type ClassValue, clsx } from 'clsx'
+import { decimalToSexagesimal } from 'geolib'
+import type { TFunction } from 'i18next'
+import { FileIcon, FileText } from 'lucide-react'
+import { twMerge } from 'tailwind-merge'
+
+// Tailwind helper
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}
+
+// -----------------------------------------------------------------------------
+// Date & coords formatters
+// -----------------------------------------------------------------------------
+export const formatDate = (dateString: string | undefined): string => {
+  if (!dateString) return '—'
+  return new Date(dateString).toLocaleString('fr-FR', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  })
+}
+
+export const formatCoordinates = (wktString: string): string => {
+  const match = wktString.match(
+    /^POINT\s*\(\s*([+-]?\d+(?:\.\d+)?)\s+([+-]?\d+(?:\.\d+)?)\s*\)$/
+  )
+  if (!match) return wktString
+  const lon = parseFloat(match[1])
+  const lat = parseFloat(match[2])
+  if (isNaN(lon) || isNaN(lat)) return wktString
+  const latDMS = decimalToSexagesimal(lat)
+  const lonDMS = decimalToSexagesimal(lon)
+  return `${latDMS} ${lat >= 0 ? 'N' : 'S'} ${lonDMS} ${lon >= 0 ? 'E' : 'W'}`
+}
+
+// -----------------------------------------------------------------------------
+// WKT helpers
+// -----------------------------------------------------------------------------
+export function wktToLatLon(wkt?: string): [number, number] | null {
+  if (!wkt) return null
+  const m = wkt.match(/^POINT\s*\(\s*([+-]?[\d.]+)\s+([+-]?[\d.]+)\s*\)$/)
+  if (!m) return null
+  const lon = parseFloat(m[1])
+  const lat = parseFloat(m[2])
+  return isNaN(lat) || isNaN(lon) ? null : [lat, lon]
+}
+
+export function getFileIcon(file: File) {
+  const ext = file.name.split('.').pop()?.toLowerCase() ?? ''
+  if (['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'].includes(ext))
+    return <FileIcon className="h-5 w-5 text-blue-500" />
+  if (ext === 'pdf') return <FileIcon className="h-5 w-5 text-red-500" />
+  if (['doc', 'docx'].includes(ext))
+    return <FileIcon className="h-5 w-5 text-blue-700" />
+  if (['xls', 'xlsx'].includes(ext))
+    return <FileIcon className="h-5 w-5 text-green-600" />
+  return <FileText className="h-5 w-5 text-gray-500" />
+}
+
+export function acceptedFileTypes(accept: string, t: TFunction): string[] {
+  if (!accept) return []
+  return accept
+    .split(',')
+    .map(type => type.trim())
+    .map(type => _acceptedFileTypeToLabel(type, t))
+    .filter(label => label !== '')
+}
+
+function _acceptedFileTypeToLabel(type: string, t: TFunction): string {
+  if (type === 'image/*') return t('form.file_type.image')
+  if (type === 'application/pdf') return t('form.file_type.pdf')
+  if (type.startsWith('application/vnd.openxmlformats-officedocument')) {
+    return t('form.file_type.office_document')
+  }
+  if (type.startsWith('application/msword')) {
+    return t('form.file_type.word_document')
+  }
+  if (type.startsWith('application/vnd.ms-excel')) {
+    return t('form.file_type.excel_spreadsheet')
+  }
+  return type
+}
+
+export enum TradeStatus {
+  OPEN = 'Ouvert',
+  EXPIRED = 'Expiré',
+  ACCEPTED = 'Accepté',
+  REJECTED = 'Refusé',
+}
+
+export enum ProductType {
+  HARVEST = 'harvest',
+  TRANSFORMED = 'transformed',
+}
+
+//export type DeepPartial<T> = {
+//  [K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> : T[K]
+//}
+
+export type DeepPartial<T> = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [K in keyof T]?: T[K] extends (...args: any[]) => any // Si c'est une fonction, garde-la telle quelle
+    ? T[K]
+    : // Si c'est un tableau, transforme-le en tableau d'éléments draftés
+      T[K] extends Array<infer U>
+      ? Array<DeepPartial<U>>
+      : // Si c'est un objet (autre qu'un tableau ou une fonction), descends dedans récursivement
+        T[K] extends object
+        ? DeepPartial<T[K]>
+        : // Sinon (primitif), garde le type d'origine
+          T[K]
+}

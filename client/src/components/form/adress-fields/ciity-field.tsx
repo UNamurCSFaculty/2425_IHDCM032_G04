@@ -1,3 +1,4 @@
+import { zAddressDto } from '@/api/generated/zod.gen'
 import { FieldErrors } from '../field-errors'
 import { CityList, type CityOption } from './city-list'
 import type { AddressReactForm } from './types'
@@ -36,6 +37,8 @@ interface Props {
   required: boolean
 }
 
+const CitySchema = zAddressDto.pick({ cityId: true }).shape.cityId
+
 export const CityField = ({ form, required }: Props) => {
   const { t } = useTranslation()
 
@@ -60,7 +63,7 @@ export const CityField = ({ form, required }: Props) => {
     <form.Field
       name="address.cityId"
       validators={{
-        onChange: ({ value }) => (value ? undefined : t('validation.required')),
+        onChange: CitySchema,
       }}
     >
       {field => (
@@ -97,7 +100,7 @@ export const CityField = ({ form, required }: Props) => {
             </PopoverTrigger>
 
             {/* ------------------- contenu -------------------------- */}
-            <PopoverContent className="p-0 w-[--radix-popover-trigger-width]">
+            <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
               <Command>
                 <CommandInput
                   placeholder={t('form.placeholder.search')}

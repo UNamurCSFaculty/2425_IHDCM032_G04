@@ -55,7 +55,8 @@ public abstract class UserUpdateDto {
 	private String lastName;
 
 	/** User's email address. */
-	@Schema(description = "Adresse email de l'utilisateur", example = "john.doe@example.com", requiredMode = Schema.RequiredMode.REQUIRED)
+	@Schema(description = "Adresse email de l'utilisateur", example = "john.doe@example.com", requiredMode = Schema.RequiredMode.REQUIRED, type = "string", format = "email")
+	@NotBlank(message = "L'adresse email est requise")
 	@NotBlank(message = "L'adresse email est requise")
 	@Email(message = "Invalid email format")
 	private String email;
@@ -100,7 +101,13 @@ public abstract class UserUpdateDto {
 	@NotNull(message = "L'adresse est requise")
 	private AddressDto address;
 
-	@ArraySchema(schema = @Schema(type = "string", format = "binary", description = "Fichiers à uploader"))
-	@Schema(description = "Fichiers à uploader", implementation = MultipartFile[].class)
-	private List<MultipartFile> documents;
+	/*
+	@ArraySchema(schema = @Schema(type = "string", format = "binary", description = "Fichiers à uploader", implementation = MultipartFile.class, requiredMode = Schema.RequiredMode.REQUIRED), minItems = 1)
+	@NotNull(message = "La liste des documents est requise.")
+	@Size(min = 1, message = "Au moins un document doit être fourni.")
+	private List<MultipartFile> documents;*/
+
+	public String getEmail() {
+		return email != null ? email.trim().toLowerCase() : null;
+	}
 }

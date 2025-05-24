@@ -105,11 +105,11 @@ export function AdminAppSidebar({
           <SidebarMenuItem>
             <SidebarMenuButton
               asChild
-              className="data-[slot=sidebar-menu-button]:!p-1.5 h-20 relative"
+              className="relative h-20 data-[slot=sidebar-menu-button]:!p-1.5"
             >
               <Link
                 to="/admin/dashboard"
-                className="flex items-center gap-2 flex-wrap justify-center"
+                className="flex flex-wrap items-center justify-center gap-2"
               >
                 <img src={logo} alt="Logo e‑Anacarde" className="" />
               </Link>

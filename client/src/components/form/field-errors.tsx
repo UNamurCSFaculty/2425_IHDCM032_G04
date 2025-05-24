@@ -1,5 +1,8 @@
 // src/components/form/FieldErrors.tsx
 import type { AnyFieldMeta } from '@tanstack/react-form'
+import type { TFunction } from 'i18next'
+import { useTranslation } from 'react-i18next'
+import type { $ZodRawIssue } from 'zod/v4/core'
 
 interface FieldErrorsProps {
   meta: AnyFieldMeta
@@ -11,7 +14,8 @@ interface FieldErrorsProps {
 }
 
 export const FieldErrors = ({ meta, always = false }: FieldErrorsProps) => {
-  console.log('FIELD ERRORS', meta)
+  const { t } = useTranslation()
+
   // Pas de meta ou pas d’erreurs → rien
   if (!meta || !meta.errors?.length) return null
 
@@ -19,15 +23,10 @@ export const FieldErrors = ({ meta, always = false }: FieldErrorsProps) => {
   if (!always && !meta.isTouched && !meta.isBlurred) return null
 
   // Helper pour extraire un message quel que soit le format
-  const getMessage = (err: unknown): string => {
-    if (typeof err === 'string') return err // message brut
-    if (err && typeof err === 'object' && 'message' in err) {
-      return String((err as { message?: unknown }).message) // ZodIssue ou objet custom
-    }
-    return JSON.stringify(err) // fallback
+  const getMessage = (issue: $ZodRawIssue | string): string => {
+    if (typeof issue === 'string') return issue // message brut (champ multiple comme addresse)
+    return translateIssue(issue, t)
   }
-
-  console.log(meta.errors)
 
   return (
     <>
@@ -38,4 +37,44 @@ export const FieldErrors = ({ meta, always = false }: FieldErrorsProps) => {
       ))}
     </>
   )
+}
+
+function translateIssue(issue: $ZodRawIssue, t: TFunction): string {
+  console.debug(issue, issue.message, issue.code)
+  switch (issue.code) {
+    case 'too_small': {
+      const min = issue.minimum as number
+      // si c'est un minLength à 1 → champ requis
+      return min === 1
+        ? t('validation.required')
+        : t('validation.minLength', { count: min })
+    }
+    case 'too_big': {
+      const max = issue.maximum as number
+      return t('validation.maxLength', { count: max })
+    }
+    case 'invalid_type': {
+      if (issue.message?.endsWith('received undefined')) {
+        return t('validation.required')
+      }
+      return t('validation.invalidType')
+    }
+    case 'invalid_format': {
+      // pour la validation regex ou autre format string
+      if (issue.format === 'regex') {
+        // chemin de l'erreur (ex: 'postalCode')
+        if (issue.pattern === '/^(?:\\+229)?01\\d{8}$/') {
+          return t('validation.phone')
+        }
+      }
+      return t(`validation.${issue.format}`)
+    }
+    case 'custom': {
+      // clé custom selon le champ
+      const pathKey = issue.path?.join('.') ?? ''
+      return t(`validation.${pathKey}`)
+    }
+    default:
+      return t('validation.default')
+  }
 }

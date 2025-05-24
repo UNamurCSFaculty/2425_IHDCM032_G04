@@ -1,6 +1,6 @@
 import { zAddressDto } from '@/api/generated/zod.gen'
 import type { ReactFormExtendedApi } from '@tanstack/react-form'
-import { z } from 'zod'
+import z from 'zod/v4'
 
 /* Schéma Zod du wrapper { address: AddressDto } */
 export const zAddressFieldWrapper = z.object({

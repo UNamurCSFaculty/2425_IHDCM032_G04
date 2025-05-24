@@ -1,3 +1,4 @@
+import { zAddressDto } from '@/api/generated/zod.gen'
 import { FieldErrors } from '../field-errors'
 import type { AddressReactForm } from './types'
 import {
@@ -15,11 +16,13 @@ interface Props {
   mapHeight: string
 }
 
+const locationSchema = zAddressDto.pick({ location: true }).shape.location
+
 export const LocationField = ({ form, required, mapHeight }: Props) => (
   <form.Field
     name="address.location"
     validators={{
-      onChange: ({ value }) => (!value ? 'validation.required' : undefined),
+      onChange: locationSchema,
     }}
   >
     {field => (
