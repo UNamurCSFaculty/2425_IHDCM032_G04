@@ -33,9 +33,9 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import cities from '@/data/cities.json'
 import regions from '@/data/regions.json'
 import { useMediaQuery } from '@/hooks/use-mobile'
-import { TradeStatus, formatDate, productTypes } from '@/lib/utils'
+import { TradeStatus, productTypes } from '@/lib/utils'
 import dayjs from '@/utils/dayjs-config'
-import { formatPrice } from '@/utils/formatter'
+import { formatDate, formatPrice } from '@/utils/formatter'
 import {
   ArrowLeft,
   ChevronDown,
@@ -51,10 +51,10 @@ import { useTranslation } from 'react-i18next'
 export type ViewMode = 'cards' | 'table' | 'map'
 
 export const sortOptions = [
-  { value: 'endDate-asc', label: 'Expiration ⬆' },
-  { value: 'endDate-desc', label: 'Expiration ⬇' },
-  { value: 'weight-asc', label: 'Prix ⬆' },
-  { value: 'weight-desc', label: 'Prix ⬇' },
+  { value: 'deliveryDate-asc', label: 'date ⬆' },
+  { value: 'deliveryDate-desc', label: 'date ⬇' },
+  { value: 'weight-asc', label: 'poids ⬆' },
+  { value: 'weight-desc', label: 'poids ⬇' },
 ] as const
 export type SortOptionValue = (typeof sortOptions)[number]['value']
 
@@ -298,7 +298,7 @@ const ProductList: React.FC<ProductListProps> = ({ products, qualities }) => {
   const [productTypeId, setProductTypeId] = useState<number | null>(null)
   const [regionId, setRegionId] = useState<number | null>(null)
   const [cityId, setCityId] = useState<number | null>(null)
-  const [sort, setSort] = useState<SortOptionValue>('endDate-asc')
+  const [sort, setSort] = useState<SortOptionValue>('deliveryDate-desc')
 
   useEffect(() => setCityId(null), [regionId])
 
@@ -335,7 +335,7 @@ const ProductList: React.FC<ProductListProps> = ({ products, qualities }) => {
   const sorted = useMemo(() => {
     const list = [...filtered]
     switch (sort) {
-      case 'endDate-desc':
+      case 'deliveryDate-desc':
         return list.sort(
           (a, b) =>
             dayjs(b.deliveryDate).valueOf() - dayjs(a.deliveryDate).valueOf()

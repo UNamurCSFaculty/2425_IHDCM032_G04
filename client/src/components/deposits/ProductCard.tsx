@@ -16,8 +16,8 @@ import { TableCell, TableRow } from '@/components/ui/table'
 // Simple JSON import (no async fetch) -----------------------------------------
 import cities from '@/data/cities.json'
 import regions from '@/data/regions.json'
-import { ProductType, cn, formatDate } from '@/lib/utils'
-import { formatWeight } from '@/utils/formatter'
+import { ProductType, cn } from '@/lib/utils'
+import { formatDate, formatWeight } from '@/utils/formatter'
 import {
   Clock,
   Earth,
