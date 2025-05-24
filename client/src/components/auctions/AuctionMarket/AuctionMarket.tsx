@@ -82,16 +82,16 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
   const sorted = useMemo(() => {
     const list = [...filteredAuctions]
     switch (sort) {
+      case 'price-asc':
+        return list.sort((a, b) => a.price - b.price)
+      case 'price-desc':
+        return list.sort((a, b) => b.price - a.price)
       case 'endDate-desc':
         return list.sort(
           (a, b) =>
             dayjs(b.expirationDate).valueOf() -
             dayjs(a.expirationDate).valueOf()
         )
-      case 'price-asc':
-        return list.sort((a, b) => a.price - b.price)
-      case 'price-desc':
-        return list.sort((a, b) => b.price - a.price)
       default:
         return list.sort(
           (a, b) =>
@@ -230,6 +230,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                         setFilteredAuctions(e as AuctionDto[])
                       }
                       filterByAuctionStatus={filterByAuctionStatus}
+                      filterByPrice={true}
                     />
                   </SheetContent>
                 </Sheet>
@@ -247,6 +248,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
               filterDataType="auction"
               onFilteredDataChange={e => setFilteredAuctions(e as AuctionDto[])}
               filterByAuctionStatus={filterByAuctionStatus}
+              filterByPrice={true}
             />
           </div>
         )}

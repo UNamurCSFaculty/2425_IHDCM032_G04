@@ -33,8 +33,9 @@ interface FiltersPanelProps {
   filterData: (AuctionDto | ProductDto)[]
   onFilteredDataChange: (filteredData: (AuctionDto | ProductDto)[]) => void
 
-  // Optional filters
+  // Optional filters. All the other filters are always available.
   filterByAuctionStatus?: boolean
+  filterByPrice?: boolean
 }
 
 const FiltersPanel: React.FC<FiltersPanelProps> = ({
@@ -42,6 +43,7 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
   filterData,
   onFilteredDataChange,
   filterByAuctionStatus,
+  filterByPrice,
 }) => {
   const [search, setSearch] = useState('')
   const [auctionStatus, setAuctionStatus] = useState<TradeStatus>(
@@ -222,22 +224,25 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
           )}
 
           {/* Price */}
-          <div className="space-y-2">
-            <div className="flex justify-between text-sm font-medium">
-              <span>Prix</span>
-              <span>
-                {formatPrice.format(priceRange[0])} –{' '}
-                {formatPrice.format(priceRange[1])}
-              </span>
+          {filterByPrice && (
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm font-medium">
+                <span>Prix</span>
+                <span>
+                  {formatPrice.format(priceRange[0])} –{' '}
+                  {formatPrice.format(priceRange[1])}
+                </span>
+              </div>
+              <Slider
+                value={priceRange}
+                onValueChange={v => setPriceRange(v as [number, number])}
+                min={0}
+                max={5_000_000}
+                step={500}
+              />
             </div>
-            <Slider
-              value={priceRange}
-              onValueChange={v => setPriceRange(v as [number, number])}
-              min={0}
-              max={5_000_000}
-              step={500}
-            />
-          </div>
+          )}
+
           {/* Product Type */}
           <VirtualizedSelect
             id="product-type-select"

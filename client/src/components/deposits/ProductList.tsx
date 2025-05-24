@@ -62,15 +62,15 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
   const sorted = useMemo(() => {
     const list = [...filteredProducts]
     switch (sort) {
+      case 'weight-asc':
+        return list.sort((a, b) => a.weightKg - b.weightKg)
+      case 'weight-desc':
+        return list.sort((a, b) => b.weightKg - a.weightKg)
       case 'deliveryDate-desc':
         return list.sort(
           (a, b) =>
             dayjs(b.deliveryDate).valueOf() - dayjs(a.deliveryDate).valueOf()
         )
-      case 'weight-asc':
-        return list.sort((a, b) => a.weightKg - b.weightKg)
-      case 'weight-desc':
-        return list.sort((a, b) => b.weightKg - a.weightKg)
       default:
         return list.sort(
           (a, b) =>
