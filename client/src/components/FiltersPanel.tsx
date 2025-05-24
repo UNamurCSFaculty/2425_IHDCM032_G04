@@ -6,6 +6,7 @@ import { Label } from './ui/label'
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
 import { RadioGroup, RadioGroupItem } from './ui/radio-group'
 import { Slider } from './ui/slider'
+import type { AuctionDto, ProductDto } from '@/api/generated'
 import { listQualitiesOptions } from '@/api/generated/@tanstack/react-query.gen'
 import cities from '@/data/cities.json'
 import regions from '@/data/regions.json'
@@ -28,22 +29,19 @@ const regionOptions = regions.map((n, i) => ({
 }))
 
 interface FiltersPanelProps {
+  filterDataType: 'auction' | 'product'
+  filterData: (AuctionDto | ProductDto)[]
+  onFilteredDataChange: (filteredData: (AuctionDto | ProductDto)[]) => void
+
+  // Optional filters
   filterByAuctionStatus?: boolean
-  onFiltersChange: (filters: {
-    search: string
-    auctionStatus: TradeStatus
-    priceRange: [number, number]
-    selectedDate: Date | null
-    qualityId: number | null
-    productTypeId: number | null
-    regionId: number | null
-    cityId: number | null
-  }) => void
 }
 
 const FiltersPanel: React.FC<FiltersPanelProps> = ({
+  filterDataType,
+  filterData,
+  onFilteredDataChange,
   filterByAuctionStatus,
-  onFiltersChange,
 }) => {
   const [search, setSearch] = useState('')
   const [auctionStatus, setAuctionStatus] = useState<TradeStatus>(
@@ -60,28 +58,85 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
   useEffect(() => setCityId(null), [regionId])
   useEffect(() => setQualityId(null), [productTypeId])
 
-  // Notify filters
+  // Apply filters
+  const filterAuctions = (a: AuctionDto) => {
+    if (
+      search &&
+      !`${a.product.type} ${a.product.store.name} ${a.id} ${a.trader.firstName} ${a.trader.lastName}`
+        .toLowerCase()
+        .includes(search.toLowerCase())
+    )
+      return false
+    if (
+      auctionStatus === TradeStatus.OPEN &&
+      a.status.name !== TradeStatus.OPEN
+    )
+      return false
+    if (
+      auctionStatus !== TradeStatus.OPEN &&
+      a.status.name === TradeStatus.OPEN
+    )
+      return false
+    if (a.price < priceRange[0] || a.price > priceRange[1]) return false
+    if (
+      selectedDate &&
+      dayjs(a.expirationDate).isAfter(dayjs(selectedDate).endOf('day'))
+    )
+      return false
+    if (qualityId && a.product.qualityControl?.quality.id !== qualityId)
+      return false
+    if (productTypeId && a.product.type !== productTypes[productTypeId - 1])
+      return false
+    if (regionId && a.product.store.address.regionId !== regionId) return false
+    if (cityId && a.product.store.address.cityId !== cityId) return false
+
+    return true
+  }
+
+  const filterProducts = (p: ProductDto) => {
+    if (
+      search &&
+      !`${p.type} ${p.store.name} ${p.id}`
+        .toLowerCase()
+        .includes(search.toLowerCase())
+    )
+      return false
+
+    if (p.weightKg < priceRange[0] || p.weightKg > priceRange[1]) return false
+    if (qualityId && p.qualityControl?.quality.id !== qualityId) return false
+    if (productTypeId && p.type !== productTypes[productTypeId - 1])
+      return false
+    if (regionId && p.store.address.regionId !== regionId) return false
+    if (cityId && p.store.address.cityId !== cityId) return false
+
+    return true
+  }
+
   useEffect(() => {
-    onFiltersChange({
-      search,
-      auctionStatus,
-      priceRange,
-      selectedDate,
-      qualityId,
-      productTypeId,
-      regionId,
-      cityId,
+    const filtered = filterData.filter(item => {
+      if (filterDataType === 'auction') {
+        return filterAuctions(item as AuctionDto)
+      } else if (filterDataType === 'product') {
+        return filterProducts(item as ProductDto)
+      } else {
+        return true
+      }
     })
+
+    onFilteredDataChange(filtered)
   }, [
-    onFiltersChange,
     search,
-    auctionStatus,
     priceRange,
+    productTypeId,
+    auctionStatus,
     selectedDate,
     qualityId,
-    productTypeId,
     regionId,
     cityId,
+    filterData,
+    filterDataType,
+    filterAuctions,
+    filterProducts,
   ])
 
   const { t } = useTranslation()

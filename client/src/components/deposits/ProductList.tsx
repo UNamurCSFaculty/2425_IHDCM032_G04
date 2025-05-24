@@ -21,7 +21,6 @@ import {
 } from '@/components/ui/table'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { useMediaQuery } from '@/hooks/use-mobile'
-import { TradeStatus, productTypes } from '@/lib/utils'
 import dayjs from '@/utils/dayjs-config'
 import {
   ArrowLeft,
@@ -56,66 +55,10 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
   const [inlineProduct, setInlineProduct] = useState<ProductDto | null>(null)
   const [sort, setSort] = useState<SortOptionValue>('deliveryDate-asc')
 
-  // Filtering & Sorting
-  const [filters, setFilters] = useState({
-    search: '',
-    auctionStatus: TradeStatus.OPEN,
-    priceRange: [0, 5_000_000] as [number, number],
-    selectedDate: null as Date | null,
-    qualityId: null as number | null,
-    productTypeId: null as number | null,
-    regionId: null as number | null,
-    cityId: null as number | null,
-  })
+  // Filtering
+  const [filteredProducts, setFilteredProducts] = useState<ProductDto[]>([])
 
-  const filteredProducts = useMemo(
-    () =>
-      products.filter(p => {
-        if (
-          filters.search &&
-          !`${p.type} ${p.store.name} ${p.id}`
-            .toLowerCase()
-            .includes(filters.search.toLowerCase())
-        )
-          return false
-
-        if (
-          p.weightKg < filters.priceRange[0] ||
-          p.weightKg > filters.priceRange[1]
-        )
-          return false
-
-        if (
-          filters.qualityId &&
-          p.qualityControl?.quality.id !== filters.qualityId
-        )
-          return false
-
-        if (
-          filters.productTypeId &&
-          p.type !== productTypes[filters.productTypeId - 1]
-        )
-          return false
-
-        if (filters.regionId && p.store.address.regionId !== filters.regionId)
-          return false
-
-        if (filters.cityId && p.store.address.cityId !== filters.cityId)
-          return false
-
-        return true
-      }),
-    [
-      products,
-      filters.search,
-      filters.priceRange,
-      filters.qualityId,
-      filters.productTypeId,
-      filters.regionId,
-      filters.cityId,
-    ]
-  )
-
+  // Sorting
   const sorted = useMemo(() => {
     const list = [...filteredProducts]
     switch (sort) {
@@ -144,18 +87,8 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
     [sorted, currentPage]
   )
 
-  useEffect(
-    () => setCurrentPage(1),
-    [
-      filters.search,
-      filters.priceRange,
-      filters.selectedDate,
-      filters.qualityId,
-      filters.productTypeId,
-      filters.regionId,
-      filters.cityId,
-    ]
-  )
+  useEffect(() => setCurrentPage(1), [filteredProducts])
+
   const handlePageChange = (page: number) => {
     setCurrentPage(page)
     window.scrollTo({ top: 200, behavior: 'smooth' })
@@ -249,7 +182,13 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
                     side="left"
                     className="w-[300px] sm:w-[380px] p-0 overflow-y-auto"
                   >
-                    <FiltersPanel onFiltersChange={setFilters} />
+                    <FiltersPanel
+                      filterData={products}
+                      filterDataType="product"
+                      onFilteredDataChange={e =>
+                        setFilteredProducts(e as ProductDto[])
+                      }
+                    />
                   </SheetContent>
                 </Sheet>
               )}
@@ -261,7 +200,11 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
       <div className="grid lg:grid-cols-[260px_1fr] gap-6 items-start">
         {isDesktop && (
           <div className="sticky top-20 border rounded-lg shadow-sm bg-background self-start">
-            <FiltersPanel onFiltersChange={setFilters} />
+            <FiltersPanel
+              filterData={products}
+              filterDataType="product"
+              onFilteredDataChange={e => setFilteredProducts(e as ProductDto[])}
+            />
           </div>
         )}
 
