@@ -3,8 +3,10 @@ package be.labil.anacarde.presentation.controller;
 import be.labil.anacarde.application.exception.ApiErrorResponse;
 import be.labil.anacarde.domain.dto.db.view.ExportAuctionDto;
 import be.labil.anacarde.presentation.controller.annotations.ApiValidId;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -15,11 +17,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @SecurityRequirement(name = "jwt")
-@RequestMapping(value = "/api/export/auctions", produces = "application/json")
+@RequestMapping(value = "/api/export/auctions", produces = {MediaType.APPLICATION_JSON_VALUE,
+		"text/csv"})
 @Tag(name = "export-auctions", description = "Vue analytique des enchères pour l’export")
 public interface ExportApi {
 
@@ -50,9 +54,15 @@ public interface ExportApi {
 	/* ------------------------------------------------------------------ */
 	/* 3. Toutes les enchères de la vue */
 	/* ------------------------------------------------------------------ */
-	@Operation(summary = "Lister toutes les enchères (aucun filtre)")
-	@GetMapping("/all")
+	@Operation(summary = "Lister toutes les enchères (aucun filtre)", parameters = {
+			@Parameter(name = "format", in = ParameterIn.QUERY, description = "`json` (défaut) ou `csv`", schema = @Schema(type = "string", allowableValues = {
+					"json", "csv"}))})
 	@ApiResponses({
-			@ApiResponse(responseCode = "200", description = "Liste complète", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ExportAuctionDto.class))))})
-	ResponseEntity<List<ExportAuctionDto>> listAllAuctions();
+			@ApiResponse(responseCode = "200", description = "Liste complète en JSON", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, array = @ArraySchema(schema = @Schema(implementation = ExportAuctionDto.class)))),
+			@ApiResponse(responseCode = "200", description = "Liste complète en CSV", content = @Content(mediaType = "text/csv")),
+			@ApiResponse(responseCode = "500", description = "Erreur interne", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
+	@GetMapping("/all")
+	ResponseEntity<?> listAllAuctions(
+			@RequestParam(name = "format", defaultValue = "json") String format)
+			throws JsonProcessingException;
 }
