@@ -57,14 +57,12 @@ interface MarketplaceProps {
   auctions: AuctionDto[]
   userRole: UserRole
   filterByAuctionStatus?: boolean
-  onCreateAuction?: () => void
 }
 
 const AuctionMarketplace: React.FC<MarketplaceProps> = ({
   auctions,
   userRole,
   filterByAuctionStatus,
-  onCreateAuction,
 }) => {
   const isDesktop = useMediaQuery('(min-width: 1024px)')
 
@@ -200,16 +198,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                   Carte
                 </ToggleGroupItem>
               </ToggleGroup>
-              {/* Create Auction */}
-              {userRole === 'seller' && onCreateAuction && (
-                <Button
-                  className="bg-emerald-600 text-white"
-                  onClick={onCreateAuction}
-                >
-                  <Plus className="size-4 mr-2" />
-                  Nouvelle enchère
-                </Button>
-              )}
+
               {/* Mobile Filters */}
               {!isDesktop && (
                 <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
