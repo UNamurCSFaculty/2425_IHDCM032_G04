@@ -5,7 +5,6 @@ import type {
   TransformedProductDto,
 } from '@/api/generated'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -21,9 +20,10 @@ import { ProductType, cn, formatDate } from '@/lib/utils'
 import { formatWeight } from '@/utils/formatter'
 import {
   Clock,
+  Earth,
   MapPin,
-  NotebookText,
   Package,
+  ShieldCheck,
   ShoppingCart,
   TrendingUp,
   UserCircle2,
@@ -40,11 +40,7 @@ interface ProductCardProps {
   onDetails: () => void
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({
-  product,
-  layout,
-  onDetails,
-}) => {
+const ProductCard: React.FC<ProductCardProps> = ({ product, layout }) => {
   const { t } = useTranslation()
 
   const regionLabel = product.store.address.regionId
@@ -61,18 +57,22 @@ const ProductCard: React.FC<ProductCardProps> = ({
         <TableCell className="font-medium truncate">
           {t('database.' + product.type)}
         </TableCell>
-        <TableCell>Brol</TableCell>
-        <TableCell className="truncate">{regionLabel}</TableCell>
-        <TableCell className="truncate">{cityLabel}</TableCell>
+        <TableCell>
+          {(() => {
+            const { firstName, lastName } =
+              product.type === ProductType.HARVEST
+                ? (product as HarvestProductDto).producer
+                : (product as TransformedProductDto).transformer
+            return `${firstName} ${lastName}`
+          })()}
+        </TableCell>
         <TableCell>{formatWeight(product.weightKg)}</TableCell>
         <TableCell>{product.qualityControl?.quality.name ?? 'N/A'}</TableCell>
-        <TableCell className="text-right">brol</TableCell>
-        <TableCell className="text-right">brol</TableCell>
-        <TableCell className="text-right space-x-1">
-          <Button size="sm" variant="outline" onClick={onDetails}>
-            Détails
-          </Button>
-        </TableCell>
+        <TableCell>N/A</TableCell>
+        <TableCell>{formatDate(product.deliveryDate)}</TableCell>
+        <TableCell className="truncate">{cityLabel}</TableCell>
+        <TableCell className="truncate">{regionLabel}</TableCell>
+        <TableCell>{product.store.name}</TableCell>
       </TableRow>
     )
   }
@@ -128,13 +128,13 @@ const ProductCard: React.FC<ProductCardProps> = ({
           </InfoTile>
         </div>
         <div className="grid grid-cols-2 gap-3 text-sm">
-          <InfoTile icon={<NotebookText className="size-4" />} label="Qualité">
+          <InfoTile icon={<ShieldCheck className="size-4" />} label="Qualité">
             {product.qualityControl?.quality.name ?? 'N/A'}
           </InfoTile>
           <InfoTile icon={<Package className="size-4" />} label="Quantité">
             {formatWeight(product.weightKg)}
           </InfoTile>
-          <InfoTile icon={<ShoppingCart className="size-4" />} label="Origine">
+          <InfoTile icon={<Earth className="size-4" />} label="Origine">
             {product.type === ProductType.HARVEST
               ? 'N/A' // (product as HarvestProductDto).field.id
               : 'N/A'}

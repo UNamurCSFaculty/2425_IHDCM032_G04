@@ -577,16 +577,14 @@ const ProductList: React.FC<ProductListProps> = ({ products, qualities }) => {
                   <TableHeader className="sticky top-0 backdrop-blur supports-[backdrop-filter]:bg-muted/60 z-10">
                     <TableRow className="h-9 bg-neutral-100">
                       <TableHead>Marchandise</TableHead>
-                      <TableHead>Expiration</TableHead>
-                      <TableHead>Région</TableHead>
-                      <TableHead>Ville</TableHead>
+                      <TableHead>Propriétaire</TableHead>
                       <TableHead>Quantité</TableHead>
                       <TableHead>Qualité</TableHead>
-                      <TableHead className="text-right">Prix</TableHead>
-                      <TableHead className="text-right">
-                        Meilleure offre
-                      </TableHead>
-                      <TableHead></TableHead>
+                      <TableHead>Origine</TableHead>
+                      <TableHead>Date de dépôt</TableHead>
+                      <TableHead>Ville</TableHead>
+                      <TableHead>Région</TableHead>
+                      <TableHead>Entrepôt</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
