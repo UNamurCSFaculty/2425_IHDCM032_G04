@@ -1,6 +1,7 @@
 package be.labil.anacarde.presentation.controller;
 
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -8,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -36,9 +38,25 @@ class ExportApiControllerIntegrationTest extends AbstractIntegrationTest {
 	/* ---------- 2. GET /api/export/auctions/all ---------- */
 	@Test
 	void listAllAuctions_returns_at_least_one_row() throws Exception {
-		mockMvc.perform(get("/api/export/auctions/all").with(user(getProducerTestUser()))
-				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
-				.andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(4));
+		mockMvc.perform(get("/api/export/auctions/all?format=json")
+				.with(user(getProducerTestUser())).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()).andExpect(jsonPath("$").isArray())
+				.andExpect(jsonPath("$.length()").value(4));
+	}
+
+	@Test
+	void listAllAuctions_returns_csv_with_header_and_data_rows() throws Exception {
+		mockMvc.perform(get("/api/export/auctions/all?format=csv").with(user(getProducerTestUser()))
+				.accept("text/csv")).andExpect(status().isOk())
+				.andExpect(content().contentType("text/csv"))
+				.andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION,
+						"attachment; filename=\"auctions.csv\""))
+				.andExpect(content().string(startsWith("auctionEndDate;auctionEnded;auctionId")))
+				.andExpect(result -> {
+					String csv = result.getResponse().getContentAsString();
+					long lines = csv.split("\\r?\\n").length;
+					assertEquals(5, lines, "Doit y avoir 5 lignes CSV (header + 4 données)");
+				});
 	}
 
 	/* ---------- 3. GET /api/export/auctions?start=…&end=… ---------- */

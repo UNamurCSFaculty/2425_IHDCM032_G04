@@ -202,7 +202,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 			           b.trader_id   AS winner_trader_id,
 			           b.status_id
 			    FROM   bid b
-			    WHERE  b.status_id = 2
+			    JOIN   trade_status ts_status    ON   ts_status.id = b.status_id
+			    WHERE  ts_status.name = 'Accepté'
 			    ORDER  BY b.auction_id, b.amount DESC, b.creation_date DESC
 			)
 			/* ---------- 3) Résultat final ---------- */
