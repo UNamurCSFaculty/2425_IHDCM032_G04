@@ -1,3 +1,4 @@
+import { MultiSelectField } from './multi-select-field'
 import { NumberField } from './number-field'
 import { AddressField } from '@/components/form/adress-fields'
 import { CheckboxField } from '@/components/form/checkbox-field'
@@ -18,6 +19,7 @@ export const { useAppForm } = createFormHook({
     TextField,
     CheckboxField,
     SelectField,
+    MultiSelectField,
     TextAreaField,
     DateTimePickerField,
     FileUploadField,

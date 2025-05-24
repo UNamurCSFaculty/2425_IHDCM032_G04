@@ -37,6 +37,7 @@ import {
   downloadDocument,
   getApplicationData,
   getAuction,
+  getAuction1,
   getAuctionStrategy,
   getBid,
   getContractOffer,
@@ -51,8 +52,10 @@ import {
   getRegion,
   getStore,
   getUser,
+  listAllAuctions,
   listAuctionStrategies,
   listAuctions,
+  listAuctions1,
   listBids,
   listContractOffers,
   listCooperatives,
@@ -180,6 +183,7 @@ import type {
   DeleteUserResponse,
   DownloadDocumentData,
   GetApplicationDataData,
+  GetAuction1Data,
   GetAuctionData,
   GetAuctionStrategyData,
   GetBidData,
@@ -195,7 +199,10 @@ import type {
   GetRegionData,
   GetStoreData,
   GetUserData,
+  ListAllAuctionsData,
   ListAuctionStrategiesData,
+  ListAuctions1Data,
+  ListAuctions1Response,
   ListAuctionsData,
   ListBidsData,
   ListContractOffersData,
@@ -259,7 +266,9 @@ import type {
 } from '../types.gen'
 import {
   type DefaultError,
+  type InfiniteData,
   type UseMutationOptions,
+  infiniteQueryOptions,
   queryOptions,
 } from '@tanstack/react-query'
 
@@ -2272,6 +2281,145 @@ export const listRegionsOptions = (options?: Options<ListRegionsData>) => {
       return data
     },
     queryKey: listRegionsQueryKey(options),
+  })
+}
+
+export const listAuctions1QueryKey = (options: Options<ListAuctions1Data>) =>
+  createQueryKey('listAuctions1', options)
+
+export const listAuctions1Options = (options: Options<ListAuctions1Data>) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await listAuctions1({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: listAuctions1QueryKey(options),
+  })
+}
+
+const createInfiniteParams = <
+  K extends Pick<QueryKey<Options>[0], 'body' | 'headers' | 'path' | 'query'>,
+>(
+  queryKey: QueryKey<Options>,
+  page: K
+) => {
+  const params = queryKey[0]
+  if (page.body) {
+    params.body = {
+      ...(queryKey[0].body as any),
+      ...(page.body as any),
+    }
+  }
+  if (page.headers) {
+    params.headers = {
+      ...queryKey[0].headers,
+      ...page.headers,
+    }
+  }
+  if (page.path) {
+    params.path = {
+      ...(queryKey[0].path as any),
+      ...(page.path as any),
+    }
+  }
+  if (page.query) {
+    params.query = {
+      ...(queryKey[0].query as any),
+      ...(page.query as any),
+    }
+  }
+  return params as unknown as typeof page
+}
+
+export const listAuctions1InfiniteQueryKey = (
+  options: Options<ListAuctions1Data>
+): QueryKey<Options<ListAuctions1Data>> =>
+  createQueryKey('listAuctions1', options, true)
+
+export const listAuctions1InfiniteOptions = (
+  options: Options<ListAuctions1Data>
+) => {
+  return infiniteQueryOptions<
+    ListAuctions1Response,
+    DefaultError,
+    InfiniteData<ListAuctions1Response>,
+    QueryKey<Options<ListAuctions1Data>>,
+    | string
+    | Pick<
+        QueryKey<Options<ListAuctions1Data>>[0],
+        'body' | 'headers' | 'path' | 'query'
+      >
+  >(
+    // @ts-ignore
+    {
+      queryFn: async ({ pageParam, queryKey, signal }) => {
+        // @ts-ignore
+        const page: Pick<
+          QueryKey<Options<ListAuctions1Data>>[0],
+          'body' | 'headers' | 'path' | 'query'
+        > =
+          typeof pageParam === 'object'
+            ? pageParam
+            : {
+                query: {
+                  start: pageParam,
+                },
+              }
+        const params = createInfiniteParams(queryKey, page)
+        const { data } = await listAuctions1({
+          ...options,
+          ...params,
+          signal,
+          throwOnError: true,
+        })
+        return data
+      },
+      queryKey: listAuctions1InfiniteQueryKey(options),
+    }
+  )
+}
+
+export const getAuction1QueryKey = (options: Options<GetAuction1Data>) =>
+  createQueryKey('getAuction1', options)
+
+export const getAuction1Options = (options: Options<GetAuction1Data>) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getAuction1({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: getAuction1QueryKey(options),
+  })
+}
+
+export const listAllAuctionsQueryKey = (
+  options?: Options<ListAllAuctionsData>
+) => createQueryKey('listAllAuctions', options)
+
+export const listAllAuctionsOptions = (
+  options?: Options<ListAllAuctionsData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await listAllAuctions({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: listAllAuctionsQueryKey(options),
   })
 }
 

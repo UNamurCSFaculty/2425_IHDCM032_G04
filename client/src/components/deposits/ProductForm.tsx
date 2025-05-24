@@ -2,6 +2,7 @@ import FormContainer from '../FormContainer'
 import FormSectionTitle from '../FormSectionTitle'
 import type {
   FieldDto,
+  HarvestProductDto,
   HarvestProductUpdateDto,
   QualityDto,
   StoreDetailDto,
@@ -33,6 +34,7 @@ interface ProductFormProps {
   stores: StoreDetailDto[]
   qualities: QualityDto[]
   fields: FieldDto[]
+  harvestProducts: HarvestProductDto[]
 }
 
 export function ProductForm({
@@ -40,6 +42,7 @@ export function ProductForm({
   stores,
   qualities,
   fields,
+  harvestProducts,
 }: ProductFormProps): React.ReactElement<'div'> {
   const navigate = useNavigate()
   const { t } = useTranslation()
@@ -242,6 +245,30 @@ export function ProductForm({
                   )
                 }}
               />
+            )}
+
+            {productType == ProductType.TRANSFORMED && (
+              <>
+                <form.AppField
+                  name="product.harvestProductIds"
+                  children={field => (
+                    <field.MultiSelectField
+                      placeholder="Sélectionner les lots"
+                      options={harvestProducts.map(product => ({
+                        value: product.id,
+                        label:
+                          'Lot n°' +
+                          product.id +
+                          ' - ' +
+                          t('database.' + product.type) +
+                          ' ' +
+                          product.qualityControl.quality.name,
+                      }))}
+                      label="Matières premières"
+                    />
+                  )}
+                />
+              </>
             )}
 
             <form.AppField

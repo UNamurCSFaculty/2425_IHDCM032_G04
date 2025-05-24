@@ -32,7 +32,8 @@ public class QualityControl extends BaseEntity {
 	@Column(nullable = false)
 	private Float humidity;
 
-	@ManyToOne(optional = false, fetch = FetchType.LAZY)
+	// TODO EAGER
+	@ManyToOne(optional = false, fetch = FetchType.EAGER)
 	@JoinColumn(name = "qualityInspector_id", nullable = false)
 	private QualityInspector qualityInspector;
 

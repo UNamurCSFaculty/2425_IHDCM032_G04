@@ -25,8 +25,8 @@ import {
   Package,
   ShieldCheck,
   ShoppingCart,
-  TrendingUp,
   UserCircle2,
+  UserSearch,
 } from 'lucide-react'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
@@ -106,13 +106,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, layout }) => {
           <div className="flex items-center gap-1">
             <Badge variant="outline">
               <UserCircle2 className="size-3.5" />
-              {product.type === ProductType.HARVEST
-                ? (product as HarvestProductDto).producer.firstName +
-                  ' ' +
-                  (product as HarvestProductDto).producer.lastName
-                : (product as TransformedProductDto).transformer.firstName +
-                  ' ' +
-                  (product as TransformedProductDto).transformer.lastName}
+              {(() => {
+                if (product.type === ProductType.HARVEST) {
+                  const hp = product as HarvestProductDto
+                  return `${hp.producer.firstName} ${hp.producer.lastName}`
+                } else {
+                  const tp = product as TransformedProductDto
+                  return `${tp.transformer.firstName} ${tp.transformer.lastName}`
+                }
+              })()}
             </Badge>
           </div>
         </CardDescription>
@@ -134,13 +136,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, layout }) => {
           <InfoTile icon={<Package className="size-4" />} label="Quantité">
             {formatWeight(product.weightKg)}
           </InfoTile>
-          <InfoTile icon={<Earth className="size-4" />} label="Origine">
-            {product.type === ProductType.HARVEST
-              ? 'N/A' // (product as HarvestProductDto).field.id
-              : 'N/A'}
-          </InfoTile>
           <InfoTile
-            icon={<TrendingUp className="size-4" />}
+            icon={<UserSearch className="size-4" />}
             label="Qualiticien"
           >
             {!product.qualityControl.qualityInspector
@@ -148,6 +145,19 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, layout }) => {
               : product.qualityControl.qualityInspector.firstName +
                 ' ' +
                 product.qualityControl.qualityInspector.lastName}
+          </InfoTile>
+          <InfoTile icon={<Earth className="size-4" />} label="Origine">
+            {(() => {
+              if (product.type === ProductType.HARVEST) {
+                const hp = product as HarvestProductDto
+                return hp.field.identifier
+              } else if (product.type === ProductType.TRANSFORMED) {
+                const tp = product as TransformedProductDto
+                return tp.harvestProducts?.length
+              } else {
+                return 'N/A'
+              }
+            })()}
           </InfoTile>
         </div>
       </CardContent>

@@ -22,6 +22,7 @@ public class TransformedProduct extends Product {
 	@JoinColumn(name = "transformer_id", nullable = false)
 	private Transformer transformer;
 
-	@OneToMany(mappedBy = "transformedProduct", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	// TODO EAGER
+	@OneToMany(mappedBy = "transformedProduct", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<HarvestProduct> harvestProducts;
 }

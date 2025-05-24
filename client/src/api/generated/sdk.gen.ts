@@ -101,6 +101,9 @@ import type {
   GetApplicationDataData,
   GetApplicationDataError,
   GetApplicationDataResponse,
+  GetAuction1Data,
+  GetAuction1Error,
+  GetAuction1Response,
   GetAuctionData,
   GetAuctionError,
   GetAuctionResponse,
@@ -145,8 +148,12 @@ import type {
   GetUserData,
   GetUserError,
   GetUserResponse,
+  ListAllAuctionsData,
+  ListAllAuctionsResponse,
   ListAuctionStrategiesData,
   ListAuctionStrategiesError,
+  ListAuctions1Data,
+  ListAuctions1Response,
   ListAuctionsData,
   ListAuctionsResponse,
   ListBidsData,
@@ -1994,6 +2001,72 @@ export const listRegions = <ThrowOnError extends boolean = false>(
       },
     ],
     url: '/api/regions',
+    ...options,
+  })
+}
+
+/**
+ * Lister les enchères entre deux dates (optionnellement terminées)
+ */
+export const listAuctions1 = <ThrowOnError extends boolean = false>(
+  options: Options<ListAuctions1Data, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).get<
+    ListAuctions1Response,
+    unknown,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/export/auctions',
+    ...options,
+  })
+}
+
+/**
+ * Obtenir l’analyse d’une enchère
+ */
+export const getAuction1 = <ThrowOnError extends boolean = false>(
+  options: Options<GetAuction1Data, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).get<
+    GetAuction1Response,
+    GetAuction1Error,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/export/auctions/{id}',
+    ...options,
+  })
+}
+
+/**
+ * Lister toutes les enchères (aucun filtre)
+ */
+export const listAllAuctions = <ThrowOnError extends boolean = false>(
+  options?: Options<ListAllAuctionsData, ThrowOnError>
+) => {
+  return (options?.client ?? _heyApiClient).get<
+    ListAllAuctionsResponse,
+    unknown,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/export/auctions/all',
     ...options,
   })
 }

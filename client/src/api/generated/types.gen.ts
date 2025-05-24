@@ -716,6 +716,10 @@ export type HarvestProductUpdateDto = ProductUpdateDto & {
    * Champ associé au produit récolté
    */
   fieldId: number
+  /**
+   * Produits transformé correspondant
+   */
+  transformedProductId?: number
 }
 
 /**
@@ -756,6 +760,10 @@ export type TransformedProductUpdateDto = ProductUpdateDto & {
    * Transformateur associé
    */
   transformerId: number
+  /**
+   * Produits bruts d'origine
+   */
+  harvestProductIds?: Array<number>
 }
 
 /**
@@ -794,6 +802,10 @@ export type HarvestProductDto = ProductDto & {
    * Champ associé au produit récolté
    */
   field: FieldDto
+  /**
+   * Produits transformé correspondant
+   */
+  transformedProduct?: TransformedProductDto
 }
 
 /**
@@ -837,6 +849,10 @@ export type TransformedProductDto = ProductDto & {
    * Transformateur associé
    */
   transformer: TransformerDetailDto
+  /**
+   * Produits bruts d'origine
+   */
+  harvestProducts?: Array<HarvestProductDto>
 }
 
 /**
@@ -1384,6 +1400,45 @@ export type UserListDto = {
     | 'quality_inspector'
     | 'exporter'
     | 'carrier'
+}
+
+export type ExportAuctionDto = {
+  auctionId?: number
+  auctionStartDate?: string
+  auctionEndDate?: string
+  auctionStartPrice?: number
+  auctionEnded?: boolean
+  auctionStatus?: string
+  strategyName?: string
+  optionMinPriceKg?: number
+  optionMaxPriceKg?: number
+  optionBuyNowPrice?: number
+  optionShowPublic?: boolean
+  optionMinIncrement?: number
+  productId?: number
+  productWeightKg?: number
+  productDepositDate?: string
+  transformedProductId?: number
+  qualityInspectorId?: number
+  productQuality?: string
+  productType?: string
+  storeId?: number
+  storeName?: string
+  storeCity?: string
+  storeRegion?: string
+  sellerId?: number
+  sellerCity?: string
+  sellerRegion?: string
+  sellerCooperative?: string
+  bidCount?: number
+  bidMax?: number
+  bidMin?: number
+  bidAvg?: number
+  bidSum?: number
+  winnerTraderId?: number
+  bidWinningAmount?: number
+  winnerCity?: string
+  winnerRegion?: string
 }
 
 /**
@@ -3697,6 +3752,84 @@ export type ListRegionsResponses = {
 
 export type ListRegionsResponse =
   ListRegionsResponses[keyof ListRegionsResponses]
+
+export type ListAuctions1Data = {
+  body?: never
+  path?: never
+  query: {
+    /**
+     * Date/heure de début (inclus)
+     */
+    start: string
+    /**
+     * Date/heure de fin (inclus)
+     */
+    end: string
+    /**
+     * true → ne renvoyer que les enchères terminées
+     */
+    onlyEnded?: boolean
+  }
+  url: '/api/export/auctions'
+}
+
+export type ListAuctions1Responses = {
+  /**
+   * Liste récupérée
+   */
+  200: Array<ExportAuctionDto>
+}
+
+export type ListAuctions1Response =
+  ListAuctions1Responses[keyof ListAuctions1Responses]
+
+export type GetAuction1Data = {
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/export/auctions/{id}'
+}
+
+export type GetAuction1Errors = {
+  /**
+   * Not Found
+   */
+  404: ApiErrorResponse
+}
+
+export type GetAuction1Error = GetAuction1Errors[keyof GetAuction1Errors]
+
+export type GetAuction1Responses = {
+  /**
+   * OK
+   */
+  200: ExportAuctionDto
+}
+
+export type GetAuction1Response =
+  GetAuction1Responses[keyof GetAuction1Responses]
+
+export type ListAllAuctionsData = {
+  body?: never
+  path?: never
+  query?: never
+  url: '/api/export/auctions/all'
+}
+
+export type ListAllAuctionsResponses = {
+  /**
+   * Liste complète
+   */
+  200: Array<ExportAuctionDto>
+}
+
+export type ListAllAuctionsResponse =
+  ListAllAuctionsResponses[keyof ListAllAuctionsResponses]
 
 export type DeleteDocumentData = {
   body?: never

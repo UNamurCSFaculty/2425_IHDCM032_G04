@@ -284,7 +284,11 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
               htmlFor="expiration-date-picker"
               className="text-sm font-medium"
             >
-              Expire avant
+              {filterDataType === 'auction'
+                ? 'Expire avant'
+                : filterDataType === 'product'
+                  ? 'Déposé avant'
+                  : 'Date'}
             </label>
             <Popover>
               <PopoverTrigger asChild>

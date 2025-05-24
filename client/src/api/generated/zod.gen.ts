@@ -315,6 +315,7 @@ export const zHarvestProductUpdateDto = zProductUpdateDto
     z.object({
       producerId: z.number().int(),
       fieldId: z.number().int(),
+      transformedProductId: z.number().int().optional(),
     })
   )
 
@@ -328,6 +329,7 @@ export const zTransformedProductUpdateDto = zProductUpdateDto
     z.object({
       identifier: z.string().min(1),
       transformerId: z.number().int(),
+      harvestProductIds: z.array(z.number().int()).optional(),
     })
   )
 
@@ -347,20 +349,7 @@ export const zProductDto = z.object({
   type: z.enum(['harvest', 'transformed']),
 })
 
-export const zHarvestProductDto = zProductDto
-  .and(
-    z.object({
-      type: z.literal('harvest'),
-    })
-  )
-  .and(
-    z.object({
-      producer: zProducerDetailDto,
-      field: zFieldDto,
-    })
-  )
-
-export const zTransformedProductDto = zProductDto
+export const zTransformedProductDto: z.ZodTypeAny = zProductDto
   .and(
     z.object({
       type: z.literal('transformed'),
@@ -370,6 +359,27 @@ export const zTransformedProductDto = zProductDto
     z.object({
       identifier: z.string().min(1),
       transformer: zTransformerDetailDto,
+      harvestProducts: z
+        .array(
+          z.lazy(() => {
+            return zHarvestProductDto
+          })
+        )
+        .optional(),
+    })
+  )
+
+export const zHarvestProductDto: z.ZodTypeAny = zProductDto
+  .and(
+    z.object({
+      type: z.literal('harvest'),
+    })
+  )
+  .and(
+    z.object({
+      producer: zProducerDetailDto,
+      field: zFieldDto,
+      transformedProduct: zTransformedProductDto.optional(),
     })
   )
 
@@ -582,6 +592,45 @@ export const zQualityInspectorListDto = zUserListDto.and(
 
 export const zTransformerListDto = zTraderListDto
 
+export const zExportAuctionDto = z.object({
+  auctionId: z.number().int().optional(),
+  auctionStartDate: z.string().datetime().optional(),
+  auctionEndDate: z.string().datetime().optional(),
+  auctionStartPrice: z.number().optional(),
+  auctionEnded: z.boolean().optional(),
+  auctionStatus: z.string().optional(),
+  strategyName: z.string().optional(),
+  optionMinPriceKg: z.number().optional(),
+  optionMaxPriceKg: z.number().optional(),
+  optionBuyNowPrice: z.number().optional(),
+  optionShowPublic: z.boolean().optional(),
+  optionMinIncrement: z.number().int().optional(),
+  productId: z.number().int().optional(),
+  productWeightKg: z.number().optional(),
+  productDepositDate: z.string().datetime().optional(),
+  transformedProductId: z.number().int().optional(),
+  qualityInspectorId: z.number().int().optional(),
+  productQuality: z.string().optional(),
+  productType: z.string().optional(),
+  storeId: z.number().int().optional(),
+  storeName: z.string().optional(),
+  storeCity: z.string().optional(),
+  storeRegion: z.string().optional(),
+  sellerId: z.number().int().optional(),
+  sellerCity: z.string().optional(),
+  sellerRegion: z.string().optional(),
+  sellerCooperative: z.string().optional(),
+  bidCount: z.coerce.bigint().optional(),
+  bidMax: z.number().optional(),
+  bidMin: z.number().optional(),
+  bidAvg: z.number().optional(),
+  bidSum: z.number().optional(),
+  winnerTraderId: z.number().int().optional(),
+  bidWinningAmount: z.number().optional(),
+  winnerCity: z.string().optional(),
+  winnerRegion: z.string().optional(),
+})
+
 export const zApplicationDataDto = z.object({
   languages: z.array(zLanguageDto),
 })
@@ -721,6 +770,12 @@ export const zListAuctionsResponse = z.array(zAuctionDto)
 export const zCreateAuctionResponse = zAuctionUpdateDto
 
 export const zListRegionsResponse = z.array(zRegionDto)
+
+export const zListAuctions1Response = z.array(zExportAuctionDto)
+
+export const zGetAuction1Response = zExportAuctionDto
+
+export const zListAllAuctionsResponse = z.array(zExportAuctionDto)
 
 export const zDeleteDocumentResponse = z.void()
 
