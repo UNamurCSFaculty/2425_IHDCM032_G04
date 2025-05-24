@@ -1,4 +1,4 @@
-import { InfoTile } from './InfoTile'
+import { InfoTile } from '../../InfoTile'
 import type { AuctionDto } from '@/api/generated'
 import { CountdownTimer } from '@/components/CountDownTimer'
 import { Badge } from '@/components/ui/badge'
@@ -22,8 +22,8 @@ import {
   Clock,
   DollarSign,
   MapPin,
-  NotebookText,
   Package,
+  ShieldCheck,
   ShoppingCart,
   TrendingUp,
   UserCircle2,
@@ -164,7 +164,7 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
           </InfoTile>
         </div>
         <div className="grid grid-cols-2 gap-3 text-sm">
-          <InfoTile icon={<NotebookText className="size-4" />} label="Qualité">
+          <InfoTile icon={<ShieldCheck className="size-4" />} label="Qualité">
             {auction.product.qualityControl?.quality.name ?? 'N/A'}
           </InfoTile>
           <InfoTile icon={<Package className="size-4" />} label="Quantité">

@@ -39,6 +39,10 @@
       "title": "Nouveau produit",
       "subtitle": "Déposez un nouveau produit en magasin."
     },
+    "deposits_list_products": {
+      "title": "Mes produits",
+      "subtitle": "Consultez tous vos produits déposés et disponibles pour la vente."
+    },
     "marketplace": {
       "title": "Marché des enchères",
       "subtitle": "Achetez des produits en ligne."

@@ -187,8 +187,8 @@ const AuctionDetailsPanel: React.FC<Props> = ({
       {/* Header */}
       <div className="space-y-1 flex flex-wrap">
         <h2 className="text-2xl font-semibold flex items-center gap-2">
-          Produit {t('database.' + auction.product.type)} · lot n°
-          {auction.product.id} · enchère n°{auction.id}
+          Produit {t('database.' + auction.product.type)} · Lot n°
+          {auction.product.id} · Enchère n°{auction.id}
         </h2>
         <div className="flex flex-wrap gap-4 text-sm text-muted-foreground ml-4">
           <span className="flex items-center gap-1">
@@ -404,7 +404,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
             <CardHeader>
               <CardTitle className="text-lg text-center">
                 {sortedBids.length}{' '}
-                {sortedBids.length <= 1 ? 'offre reçue' : 'offres reçues'}
+                {sortedBids.length <= 1 ? 'offre ' : 'offres '} pour le lot
               </CardTitle>
             </CardHeader>
             <CardContent className="max-h-80 overflow-y-auto divide-y bg-neutral-100 p-2">
