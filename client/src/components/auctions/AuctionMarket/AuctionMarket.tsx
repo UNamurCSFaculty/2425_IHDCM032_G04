@@ -1,7 +1,7 @@
 import EmptyState from '../../EmptyState'
 import AuctionCard from './AuctionCard'
 import AuctionMap from './AuctionMap'
-import type { AuctionDto, QualityDto } from '@/api/generated'
+import type { AuctionDto } from '@/api/generated'
 import FiltersPanel from '@/components/FiltersPanel'
 import PaginationControls from '@/components/PaginationControls'
 import AuctionDetails from '@/components/auctions/AuctionMarket/AuctionDetails'
@@ -56,7 +56,6 @@ export const perPage = 12
 
 interface MarketplaceProps {
   auctions: AuctionDto[]
-  qualities: QualityDto[]
   userRole: UserRole
   filterByAuctionStatus?: boolean
   onCreateAuction?: () => void
@@ -64,7 +63,6 @@ interface MarketplaceProps {
 
 const AuctionMarketplace: React.FC<MarketplaceProps> = ({
   auctions,
-  qualities,
   userRole,
   filterByAuctionStatus,
   onCreateAuction,
@@ -315,7 +313,6 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                   >
                     <FiltersPanel
                       onFiltersChange={setFilters}
-                      qualities={qualities}
                       filterByAuctionStatus={filterByAuctionStatus}
                     />
                   </SheetContent>
@@ -331,7 +328,6 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
           <div className="sticky top-20 border rounded-lg shadow-sm bg-background self-start">
             <FiltersPanel
               onFiltersChange={setFilters}
-              qualities={qualities}
               filterByAuctionStatus={filterByAuctionStatus}
             />
           </div>

@@ -6,11 +6,12 @@ import { Label } from './ui/label'
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
 import { RadioGroup, RadioGroupItem } from './ui/radio-group'
 import { Slider } from './ui/slider'
-import type { QualityDto } from '@/api/generated'
+import { listQualitiesOptions } from '@/api/generated/@tanstack/react-query.gen'
 import cities from '@/data/cities.json'
 import regions from '@/data/regions.json'
 import { TradeStatus, productTypes } from '@/lib/utils'
 import { formatDate, formatPrice } from '@/utils/formatter'
+import { useSuspenseQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import { ChevronDown, Search, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
@@ -28,7 +29,6 @@ const regionOptions = regions.map((n, i) => ({
 
 interface FiltersPanelProps {
   filterByAuctionStatus?: boolean
-  qualities: QualityDto[]
   onFiltersChange: (filters: {
     search: string
     auctionStatus: TradeStatus
@@ -43,7 +43,6 @@ interface FiltersPanelProps {
 
 const FiltersPanel: React.FC<FiltersPanelProps> = ({
   filterByAuctionStatus,
-  qualities,
   onFiltersChange,
 }) => {
   const [search, setSearch] = useState('')
@@ -92,7 +91,9 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
     label: t('database.' + n),
   }))
 
-  const qualityOptions = qualities
+  const { data: qualitiesData } = useSuspenseQuery(listQualitiesOptions())
+
+  const qualityOptions = qualitiesData
     .filter(quality => {
       return (
         !productTypeId ||

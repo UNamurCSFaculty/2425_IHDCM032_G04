@@ -32,8 +32,6 @@ export function RouteComponent() {
     listProductsQueryOptions(user.id)
   )
 
-  const { data: qualitiesData } = useSuspenseQuery(listQualitiesOptions())
-
   return (
     <>
       <BreadcrumbSection
@@ -45,7 +43,7 @@ export function RouteComponent() {
         ]}
       />
       <div className="container mx-auto mt-16 mb-16">
-        <ProductList products={productsData} qualities={qualitiesData} />
+        <ProductList products={productsData} />
       </div>
     </>
   )

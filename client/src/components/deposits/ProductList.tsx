@@ -1,7 +1,7 @@
 import EmptyState from '../EmptyState'
 import FiltersPanel from '../FiltersPanel'
 import ProductCard from './ProductCard'
-import type { ProductDto, QualityDto } from '@/api/generated'
+import type { ProductDto } from '@/api/generated'
 import PaginationControls from '@/components/PaginationControls'
 import { Button } from '@/components/ui/button'
 import {
@@ -45,10 +45,9 @@ export const perPage = 12
 
 interface ProductListProps {
   products: ProductDto[]
-  qualities: QualityDto[]
 }
 
-const ProductList: React.FC<ProductListProps> = ({ products, qualities }) => {
+const ProductList: React.FC<ProductListProps> = ({ products }) => {
   const isDesktop = useMediaQuery('(min-width: 1024px)')
 
   // UI state
@@ -250,10 +249,7 @@ const ProductList: React.FC<ProductListProps> = ({ products, qualities }) => {
                     side="left"
                     className="w-[300px] sm:w-[380px] p-0 overflow-y-auto"
                   >
-                    <FiltersPanel
-                      onFiltersChange={setFilters}
-                      qualities={qualities}
-                    />
+                    <FiltersPanel onFiltersChange={setFilters} />
                   </SheetContent>
                 </Sheet>
               )}
@@ -265,7 +261,7 @@ const ProductList: React.FC<ProductListProps> = ({ products, qualities }) => {
       <div className="grid lg:grid-cols-[260px_1fr] gap-6 items-start">
         {isDesktop && (
           <div className="sticky top-20 border rounded-lg shadow-sm bg-background self-start">
-            <FiltersPanel onFiltersChange={setFilters} qualities={qualities} />
+            <FiltersPanel onFiltersChange={setFilters} />
           </div>
         )}
 
