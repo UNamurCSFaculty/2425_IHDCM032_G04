@@ -29,7 +29,6 @@ import { Link, useNavigate } from '@tanstack/react-router'
 import {
   ArrowLeftRight,
   CircleDollarSign,
-  FileText,
   History,
   Menu as MenuIcon,
   Package,
