@@ -55,7 +55,7 @@ const ProductList: React.FC<ProductListProps> = ({ products, qualities }) => {
   const [viewMode, setViewMode] = useState<ViewMode>('cards')
   const [sheetOpen, setSheetOpen] = useState(false)
   const [inlineProduct, setInlineProduct] = useState<ProductDto | null>(null)
-  const [sort, setSort] = useState<SortOptionValue>('deliveryDate-desc')
+  const [sort, setSort] = useState<SortOptionValue>('deliveryDate-asc')
 
   // Filtering & Sorting
   const [filters, setFilters] = useState({
@@ -69,7 +69,7 @@ const ProductList: React.FC<ProductListProps> = ({ products, qualities }) => {
     cityId: null as number | null,
   })
 
-  const filtered = useMemo(
+  const filteredProducts = useMemo(
     () =>
       products.filter(p => {
         if (
@@ -118,7 +118,7 @@ const ProductList: React.FC<ProductListProps> = ({ products, qualities }) => {
   )
 
   const sorted = useMemo(() => {
-    const list = [...filtered]
+    const list = [...filteredProducts]
     switch (sort) {
       case 'deliveryDate-desc':
         return list.sort(
@@ -135,7 +135,7 @@ const ProductList: React.FC<ProductListProps> = ({ products, qualities }) => {
             dayjs(a.deliveryDate).valueOf() - dayjs(b.deliveryDate).valueOf()
         )
     }
-  }, [filtered, sort])
+  }, [filteredProducts, sort])
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1)
@@ -172,8 +172,8 @@ const ProductList: React.FC<ProductListProps> = ({ products, qualities }) => {
       <div className="flex flex-wrap flex-col sm:flex-row items-center justify-center lg:justify-between gap-4 mb-6 w-full">
         <div className="text-md  text-muted-foreground w-full lg:w-[260px] ">
           <div className="text-center lg:text-left lg:pl-4">
-            Résultat(s) : {filtered.length} produit
-            {filtered.length !== 1 && 's'}
+            Résultat(s) : {filteredProducts.length} produit
+            {filteredProducts.length !== 1 && 's'}
           </div>
         </div>
         <div className={`flex items-center ${cssCard} lg:pl-11`}>
@@ -285,7 +285,7 @@ const ProductList: React.FC<ProductListProps> = ({ products, qualities }) => {
                     {/* <AuctionDetails auction={inlineProduct} /> */}
                   </div>
                 </>
-              ) : filtered.length === 0 ? (
+              ) : filteredProducts.length === 0 ? (
                 <EmptyState className="col-span-full" />
               ) : (
                 <>

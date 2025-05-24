@@ -37,11 +37,11 @@ export function RouteComponent() {
   return (
     <>
       <BreadcrumbSection
-        titleKey="app.deposits.title"
-        subtitleKey="app.deposits.subtitle"
+        titleKey="app.deposits_list_products.title"
+        subtitleKey="app.deposits_list_products.subtitle"
         breadcrumbs={[
-          { labelKey: 'breadcrumb.buy' },
-          { labelKey: 'breadcrumb.marketplace' },
+          { labelKey: 'breadcrumb.deposits' },
+          { labelKey: 'breadcrumb.my_deposits' },
         ]}
       />
       <div className="container mx-auto mt-16 mb-16">
