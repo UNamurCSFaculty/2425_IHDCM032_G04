@@ -1,15 +1,13 @@
-import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardTitle } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import { SearchX } from 'lucide-react'
 import React from 'react'
 
 interface EmptyStateProps {
-  onReset: () => void
   className?: string
 }
 
-const EmptyState: React.FC<EmptyStateProps> = ({ onReset, className }) => (
+const EmptyState: React.FC<EmptyStateProps> = ({ className }) => (
   <Card
     className={cn(
       'min-h-[300px] flex flex-col items-center justify-center text-center bg-background',
@@ -23,11 +21,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({ onReset, className }) => (
       </div>
 
       <p className="text-muted-foreground max-w-xs">
-        Ajustez vos filtres ou
-        <Button variant="link" className="p-0 h-auto inline" onClick={onReset}>
-          réinitialisez la recherche
-        </Button>
-        .
+        Ajustez vos filtres ou réinitialisez la recherche.
       </p>
     </CardContent>
   </Card>

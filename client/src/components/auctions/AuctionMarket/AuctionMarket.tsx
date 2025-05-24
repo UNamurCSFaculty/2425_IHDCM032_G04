@@ -201,19 +201,6 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
       filters.cityId,
     ]
   )
-
-  const resetFilters = () => {
-    console.log('TODO resetFilteres')
-    // setSearch('')
-    // setAuctionStatus(TradeStatus.OPEN)
-    // setPriceRange([0, 5_000_000])
-    // setSelectedDate(null)
-    // setQualityId(null)
-    // setProductTypeId(null)
-    // setRegionId(null)
-    // setCityId(null)
-  }
-
   const handlePageChange = (page: number) => {
     setCurrentPage(page)
     window.scrollTo({ top: 200, behavior: 'smooth' })
@@ -368,7 +355,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                   </div>
                 </>
               ) : filteredAuctions.length === 0 ? (
-                <EmptyState onReset={resetFilters} className="col-span-full" />
+                <EmptyState className="col-span-full" />
               ) : (
                 <>
                   {paginated.map(a => (
@@ -434,9 +421,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                   onChange={setCurrentPage}
                 />
               )}
-              {paginated.length === 0 && (
-                <EmptyState onReset={resetFilters} className="col-span-3" />
-              )}
+              {paginated.length === 0 && <EmptyState className="col-span-3" />}
             </>
           )}
 

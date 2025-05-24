@@ -542,7 +542,7 @@ const ProductList: React.FC<ProductListProps> = ({ products, qualities }) => {
                   </div>
                 </>
               ) : filtered.length === 0 ? (
-                <EmptyState onReset={resetFilters} className="col-span-full" />
+                <EmptyState className="col-span-full" />
               ) : (
                 <>
                   {paginated.map(p => (
@@ -607,9 +607,7 @@ const ProductList: React.FC<ProductListProps> = ({ products, qualities }) => {
                   onChange={setCurrentPage}
                 />
               )}
-              {paginated.length === 0 && (
-                <EmptyState onReset={resetFilters} className="col-span-3" />
-              )}
+              {paginated.length === 0 && <EmptyState className="col-span-3" />}
             </>
           )}
 
