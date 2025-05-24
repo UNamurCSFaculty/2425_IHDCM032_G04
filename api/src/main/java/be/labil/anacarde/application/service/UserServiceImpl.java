@@ -2,6 +2,7 @@ package be.labil.anacarde.application.service;
 
 import be.labil.anacarde.application.exception.*;
 import be.labil.anacarde.application.service.storage.StorageService;
+import be.labil.anacarde.domain.dto.db.AddressDto;
 import be.labil.anacarde.domain.dto.db.FieldDto;
 import be.labil.anacarde.domain.dto.db.user.UserDetailDto;
 import be.labil.anacarde.domain.dto.db.user.UserListDto;
@@ -20,6 +21,8 @@ import be.labil.anacarde.infrastructure.util.PersistenceHelper;
 import be.labil.anacarde.infrastructure.util.SecurityHelper;
 import be.labil.anacarde.presentation.controller.enums.UserType;
 import jakarta.persistence.EntityManager;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +56,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	private final AuctionRepository auctionRepository;
 	private final StorageService storage;
 	private final GeoService geoService;
+	private final GoogleAuthServiceImpl googleAuthServiceImpl;
 
 	private final UserListMapper userListMapper;
 	private final PasswordEncoder bCryptPasswordEncoder;
@@ -133,19 +137,26 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 			user.setValidationDate(LocalDateTime.now());
 		}
 		City city = geoService.findCityById(user.getAddress().getCity().getId());
+		Region region = geoService.findRegionByCityId(city);
 		user.getAddress().setCity(city);
-		user.getAddress().setRegion(geoService.findRegionByCityId(city));
+		user.getAddress().setRegion(region);
 		user = userRepository.save(user);
 
 		// création et association d'un champ à la même adresse
 		if (dto instanceof ProducerCreateDto producerDto) {
 			FieldDto fieldDto = new FieldDto();
 			fieldDto.setIdentifier("FIELD-" + user.getId().toString() + "001");
-			fieldDto.setAddress(producerDto.getAddress());
+			AddressDto addressDto = AddressDto.builder().cityId(city.getId())
+					.regionId(region.getId()).street(user.getAddress().getStreet()).build();
+			fieldDto.setAddress(addressDto);
 			Producer producer = (Producer) user;
 			fieldDto.setProducer(userDetailMapper.toDto(producer));
 			fieldService.createField(fieldDto);
 		}
+
+		// org.hibernate.TransientPropertyValueException: Not-null property references a transient
+		// value - transient instance must be saved before current operation:
+		// be.labil.anacarde.domain.model.Field.region -> be.labil.anacarde.domain.model.Region
 
 		// stockage des documents
 		if (files != null && !files.isEmpty()) {
@@ -281,5 +292,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	@Override
 	public boolean phoneExists(String phone) {
 		return userRepository.existsByPhone(phone);
+	}
+
+	@Override
+	public User authenticateWithGoogle(String googleToken)
+			throws GeneralSecurityException, IOException {
+		return googleAuthServiceImpl.processGoogleRegistration(googleToken);
 	}
 }

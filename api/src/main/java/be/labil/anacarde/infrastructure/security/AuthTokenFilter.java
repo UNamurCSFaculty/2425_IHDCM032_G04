@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
@@ -58,6 +59,11 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 			if (jwt != null) {
 				String username = jwtUtil.extractUsername(jwt);
 				UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+				if (!userDetails.isEnabled()) {
+					clearJwtCookie(response);
+					throw new AuthenticationCredentialsNotFoundException(
+							"Compte utilisateur désactivé");
+				}
 				if (!jwtUtil.validateToken(jwt, userDetails)) {
 					clearJwtCookie(response);
 					throw new BadCredentialsException("Token JWT invalide ou expiré");

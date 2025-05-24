@@ -83,6 +83,7 @@ import {
   createBid,
   logout,
   authenticateUser,
+  authenticateWithGoogle,
   listAuctions,
   createAuction,
   listAuctionStrategies,
@@ -296,6 +297,9 @@ import type {
   AuthenticateUserData,
   AuthenticateUserError,
   AuthenticateUserResponse,
+  AuthenticateWithGoogleData,
+  AuthenticateWithGoogleError,
+  AuthenticateWithGoogleResponse,
   ListAuctionsData,
   CreateAuctionData,
   CreateAuctionError,
@@ -2561,6 +2565,51 @@ export const authenticateUserMutation = (
   > = {
     mutationFn: async localOptions => {
       const { data } = await authenticateUser({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+export const authenticateWithGoogleQueryKey = (
+  options: Options<AuthenticateWithGoogleData>
+) => createQueryKey('authenticateWithGoogle', options)
+
+export const authenticateWithGoogleOptions = (
+  options: Options<AuthenticateWithGoogleData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await authenticateWithGoogle({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: authenticateWithGoogleQueryKey(options),
+  })
+}
+
+export const authenticateWithGoogleMutation = (
+  options?: Partial<Options<AuthenticateWithGoogleData>>
+): UseMutationOptions<
+  AuthenticateWithGoogleResponse,
+  AuthenticateWithGoogleError,
+  Options<AuthenticateWithGoogleData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    AuthenticateWithGoogleResponse,
+    AuthenticateWithGoogleError,
+    Options<AuthenticateWithGoogleData>
+  > = {
+    mutationFn: async localOptions => {
+      const { data } = await authenticateWithGoogle({
         ...options,
         ...localOptions,
         throwOnError: true,

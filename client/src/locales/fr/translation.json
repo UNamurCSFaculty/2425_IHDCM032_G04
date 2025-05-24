@@ -600,7 +600,9 @@
     "email.invalid": "Format d'e-mail invalide",
     "email.taken": "Cet e-mail est déjà utilisé",
     "phone.taken": "Ce numéro de téléphone est déjà utilisé",
-    "server.unreachable": "Le serveur est inaccessible"
+    "server.unreachable": "Le serveur est inaccessible",
+    "invalid_google_token": "Jeton Google invalide",
+    "gmail_account_not_found": "Aucun compte utilisateur associé à cette adresse email. Veuillez vous enregistrer d'abord."
   },
   "password_indicator": {
     "strength": "Force du mot de passe",
@@ -857,6 +859,7 @@
   },
   "login": {
     "title_description": "Connectez-vous à votre compte e-Anacarde",
+    "success_google": "Connexion réussie avec Google",
     "forgot_password": "Mot de passe oublié ?",
     "continue_with_separator": "Ou continuer avec",
     "social": {

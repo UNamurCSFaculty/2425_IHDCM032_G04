@@ -1,5 +1,6 @@
 package be.labil.anacarde.presentation.controller;
 
+import be.labil.anacarde.application.service.UserService;
 import be.labil.anacarde.domain.dto.db.user.UserDetailDto;
 import be.labil.anacarde.domain.mapper.UserDetailMapper;
 import be.labil.anacarde.domain.model.User;
@@ -7,6 +8,8 @@ import be.labil.anacarde.infrastructure.security.JwtUtil;
 import be.labil.anacarde.presentation.payload.LoginRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.time.Duration;
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +20,10 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -29,9 +34,31 @@ public class AuthenticationApiController implements AuthenticationApi {
 	private final JwtUtil jwtUtil;
 	private final Environment environment;
 	private final UserDetailMapper userDetailMapper;
+	private final UserService userService;
 
 	@Value("${jwt.token.validity.months}")
 	private int tokenValidityMonths;
+
+	private ResponseEntity<UserDetailDto> buildAuthenticatedResponse(UserDetails userDetails,
+			HttpServletResponse response) {
+		String jwt = jwtUtil.generateToken(userDetails);
+
+		boolean isProd = Arrays.stream(environment.getActiveProfiles())
+				.anyMatch(p -> p.equalsIgnoreCase("prod"));
+
+		ResponseCookie jwtCookie = ResponseCookie.from("jwt", jwt).httpOnly(true).secure(isProd)
+				.path("/").maxAge(Duration.ofDays(tokenValidityMonths * 30L)) // Correction:
+																				// Duration.ofDays
+																				// prend un long
+				.sameSite("Strict").build();
+		response.addHeader(HttpHeaders.SET_COOKIE, jwtCookie.toString());
+
+		// Assurez-vous que userDetails peut être casté en User ou que userDetailMapper peut gérer
+		// UserDetails
+		// Si votre User implémente UserDetails, le cast est sûr.
+		UserDetailDto dto = userDetailMapper.toDto((User) userDetails);
+		return ResponseEntity.ok(dto);
+	}
 
 	@Override
 	public ResponseEntity<UserDetailDto> authenticateUser(LoginRequest loginRequest,
@@ -39,19 +66,20 @@ public class AuthenticationApiController implements AuthenticationApi {
 		Authentication auth = authenticationManager
 				.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),
 						loginRequest.getPassword()));
+		// Le principal de l'authentification est déjà un UserDetails
+		return buildAuthenticatedResponse((UserDetails) auth.getPrincipal(), response);
+	}
 
-		String jwt = jwtUtil.generateToken(
-				(org.springframework.security.core.userdetails.UserDetails) auth.getPrincipal());
+	@Override
+	public ResponseEntity<UserDetailDto> authenticateWithGoogle(String token,
+			HttpServletResponse response) throws GeneralSecurityException, IOException {
+		User user = userService.authenticateWithGoogle(token);
 
-		boolean isProd = Arrays.stream(environment.getActiveProfiles())
-				.anyMatch(p -> p.equalsIgnoreCase("prod"));
+		if (!user.isEnabled()) {
+			throw new DisabledException("User is disabled");
+		}
 
-		ResponseCookie jwtCookie = ResponseCookie.from("jwt", jwt).httpOnly(true).secure(isProd)
-				.path("/").maxAge(Duration.ofDays(tokenValidityMonths)).sameSite("Strict").build();
-		response.addHeader(HttpHeaders.SET_COOKIE, jwtCookie.toString());
-
-		UserDetailDto dto = userDetailMapper.toDto((User) auth.getPrincipal());
-		return ResponseEntity.ok(dto);
+		return buildAuthenticatedResponse(user, response);
 	}
 
 	@Override
@@ -60,7 +88,6 @@ public class AuthenticationApiController implements AuthenticationApi {
 		if (currentUser == null) {
 			throw new AuthenticationCredentialsNotFoundException("Current user is null");
 		}
-		// Le cookie XSRF-TOKEN a déjà été émis par le filtre Spring CSRF
 		UserDetailDto dto = userDetailMapper.toDto(currentUser);
 		return ResponseEntity.ok(dto);
 	}
