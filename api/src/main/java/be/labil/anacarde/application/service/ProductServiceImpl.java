@@ -36,9 +36,10 @@ public class ProductServiceImpl implements ProductService {
 				&& product instanceof TransformedProduct tp) {
 			List<HarvestProduct> harvests = harvestProductRepository
 					.findAllById(tpDto.getHarvestProductIds());
-			for (HarvestProduct hp : harvests) {
-				hp.setTransformedProduct(tp);
-			}
+			// TODO stackoverflow error
+			//	for (HarvestProduct hp : harvests) {
+			//  hp.setTransformedProduct(tp);
+			//			}
 			tp.setHarvestProducts(harvests);
 		}
 		Product full = persistenceHelper.saveAndReload(productRepository, product, Product::getId);
@@ -57,11 +58,11 @@ public class ProductServiceImpl implements ProductService {
 	@Transactional(readOnly = true)
 	public List<ProductDto> listProducts(Integer traderId) {
 		if (traderId != null) {
-			List<HarvestProduct> harvests = harvestProductRepository.findByProducerId(traderId);
+			List<HarvestProduct> harvest = harvestProductRepository.findByProducerId(traderId);
 			List<TransformedProduct> transformed = transformedRepository
 					.findByTransformerId(traderId);
 			return Stream
-					.concat(harvests.stream().map(productMapper::toDto),
+					.concat(harvest.stream().map(productMapper::toDto),
 							transformed.stream().map(productMapper::toDto))
 					.collect(Collectors.toList());
 		} else {

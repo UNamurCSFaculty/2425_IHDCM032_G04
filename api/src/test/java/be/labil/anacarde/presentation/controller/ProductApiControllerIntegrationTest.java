@@ -12,6 +12,9 @@ import be.labil.anacarde.infrastructure.persistence.ProductRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -118,6 +121,49 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 				.andExpect(jsonPath("$.transformer.id").value(transformerId))
 				.andExpect(jsonPath("$.store.id").value(storeId))
 				.andExpect(jsonPath("$.qualityControl.id").value(qualityControlId));
+
+		Product createdProduct = productRepository.findAll().stream()
+				.filter(product -> product.getWeightKg().equals(1234567.0)).findFirst()
+				.orElseThrow(() -> new AssertionError("Product non trouvé"));
+	}
+
+	/**
+	 * Teste la création d'un nouveau produit transformé, qui référence une liste
+	 * de produits bruts.
+	 *
+	 */
+	@Test
+	public void testCreateTransformedProductWithReferencedHarvestIds() throws Exception {
+		Integer storeId = getMainTestStore().getId();
+		Integer transformerId = getTransformerTestUser().getId();
+		Integer qualityControlId = getMainTestQualityControl().getId();
+
+		TransformedProductUpdateDto newProduct = new TransformedProductUpdateDto();
+		newProduct.setTransformerId(transformerId);
+		newProduct.setWeightKg(1234567.0);
+		newProduct.setIdentifier("TP001");
+		newProduct.setDeliveryDate(LocalDateTime.now().minusDays(1));
+		newProduct.setStoreId(storeId);
+		newProduct.setQualityControlId(qualityControlId);
+
+		List<Integer> harvestIds = new ArrayList<>(getTestHarvestProduct().getId());
+		harvestIds.add(getTestHarvestProduct().getId());
+		newProduct.setHarvestProductIds(harvestIds);
+
+		ObjectNode node = objectMapper.valueToTree(newProduct);
+		String jsonContent = node.toString();
+
+		mockMvc.perform(
+						post("/api/products").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				.andExpect(status().isCreated())
+				.andExpect(header().string("Location", containsString("/api/products/")))
+				.andExpect(jsonPath("$.type").value("transformed"))
+				.andExpect(jsonPath("$.weightKg").value("1234567.0"))
+				.andExpect(jsonPath("$.transformer.id").value(transformerId))
+				.andExpect(jsonPath("$.store.id").value(storeId))
+				.andExpect(jsonPath("$.qualityControl.id").value(qualityControlId))
+				.andExpect(jsonPath("$.harvestProducts").isArray())
+				.andExpect(jsonPath("$.harvestProducts.length()").value(1));
 
 		Product createdProduct = productRepository.findAll().stream()
 				.filter(product -> product.getWeightKg().equals(1234567.0)).findFirst()
