@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { formatDate } from '@/lib/utils'
+import { formatDate } from '@/utils/formatter'
 import { MapPin } from 'lucide-react'
 import React, { useState } from 'react'
 

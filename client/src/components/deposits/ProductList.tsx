@@ -292,7 +292,7 @@ const ProductList: React.FC<ProductListProps> = ({ products, qualities }) => {
     TradeStatus.OPEN
   )
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 5_000_000])
-  const [weightKg, setWeightKg] = useState<[number, number]>([0, 5_000_000])
+  const [weightKg] = useState<[number, number]>([0, 5_000_000])
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [qualityId, setQualityId] = useState<number | null>(null)
   const [productTypeId, setProductTypeId] = useState<number | null>(null)
