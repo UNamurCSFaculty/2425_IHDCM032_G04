@@ -1,5 +1,6 @@
 import logoSvg from '@/assets/logo.svg'
 import { Link } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
 
 interface MenuItem {
   title: string
@@ -26,54 +27,62 @@ interface FooterProps {
 }
 
 const Footer = ({
-  logo = {
+  logo: logoProp,
+  tagline: taglineProp,
+  menuItems: menuItemsProp,
+  copyright: copyrightProp,
+  bottomLinks: bottomLinksProp,
+}: FooterProps) => {
+  const { t } = useTranslation()
+
+  const logo = logoProp ?? {
     url: '/',
     src: logoSvg,
-    alt: 'Logo Cashew Auction Bénin',
-    title: 'Cashew Auction Bénin',
-  },
-  tagline = "Votre plateforme d'enchères de noix de cajou au Bénin — matières premières et produits transformés",
-  menuItems = [
+    alt: t('footer.logo.alt'),
+    title: t('footer.logo.title'),
+  }
+  const tagline = taglineProp ?? t('footer.tagline')
+  const menuItems = menuItemsProp ?? [
     {
-      title: 'Enchères',
+      title: t('footer.menu.auctions.title'),
       links: [
-        { text: 'Matières premières', url: '#' },
-        { text: 'Produits transformés', url: '#' },
-        { text: 'Mes offres', url: '#' },
+        { text: t('footer.menu.auctions.links.raw_materials'), url: '#' },
+        { text: t('footer.menu.auctions.links.processed_products'), url: '#' },
+        { text: t('footer.menu.auctions.links.my_offers'), url: '#' },
       ],
     },
     {
-      title: 'Entreprise',
+      title: t('footer.menu.company.title'),
       links: [
-        { text: 'À propos de nous', url: '#' },
-        { text: 'Équipe', url: '#' },
-        { text: 'Carrières', url: '#' },
-        { text: 'Contact', url: '#' },
+        { text: t('footer.menu.company.links.about_us'), url: '#' },
+        { text: t('footer.menu.company.links.team'), url: '#' },
+        { text: t('footer.menu.company.links.careers'), url: '#' },
+        { text: t('footer.menu.company.links.contact'), url: '#' },
       ],
     },
     {
-      title: 'Ressources',
+      title: t('footer.menu.resources.title'),
       links: [
-        { text: 'FAQ', url: '#' },
-        { text: 'Support', url: '#' },
-        { text: 'Blog', url: '#' },
+        { text: t('footer.menu.resources.links.faq'), url: '#' },
+        { text: t('footer.menu.resources.links.support'), url: '#' },
+        { text: t('footer.menu.resources.links.blog'), url: '#' },
       ],
     },
     {
-      title: 'Réseaux sociaux',
+      title: t('footer.menu.social_media.title'),
       links: [
-        { text: 'Facebook', url: '#' },
-        { text: 'Twitter', url: '#' },
-        { text: 'LinkedIn', url: '#' },
+        { text: t('footer.menu.social_media.links.facebook'), url: '#' },
+        { text: t('footer.menu.social_media.links.twitter'), url: '#' },
+        { text: t('footer.menu.social_media.links.linkedin'), url: '#' },
       ],
     },
-  ],
-  copyright = '© 2025 Groupe 4 - Laboratoire d’Ingénierie Logicielle, Université de Namur.',
-  bottomLinks = [
-    { text: 'Conditions générales', url: '#' },
-    { text: 'Politique de confidentialité', url: '#' },
-  ],
-}: FooterProps) => {
+  ]
+  const copyright = copyrightProp ?? t('footer.copyright')
+  const bottomLinks = bottomLinksProp ?? [
+    { text: t('footer.bottom_links.terms'), url: '#' },
+    { text: t('footer.bottom_links.privacy_policy'), url: '#' },
+  ]
+
   return (
     <section className="py-14">
       <div className="container mx-auto px-4">

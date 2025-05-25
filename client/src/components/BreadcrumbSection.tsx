@@ -13,20 +13,15 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 
 type Crumb = {
-  /** Clé de traduction pour le libellé */
   labelKey: string
-  /** URL de navigation ou route key pour TanStack Router */
   href?: string
-  /** Icône optionnelle à afficher avant le label */
+
   icon?: LucideIcon
 }
 
 type BreadcrumbSectionProps = {
-  /** Clé de traduction pour le titre */
   titleKey: string
-  /** Clé de traduction pour le sous-titre (optionnel) */
   subtitleKey?: string
-  /** Liste des crumbs supplémentaires (sans Home) */
   breadcrumbs?: Crumb[]
   className?: string
 }
@@ -53,7 +48,7 @@ export function BreadcrumbSection({
       )}
     >
       <Breadcrumb className="mb-6">
-        <BreadcrumbList className="flex justify-center items-center space-x-2">
+        <BreadcrumbList className="flex items-center justify-center space-x-2">
           {items.map((crumb, idx) => (
             <React.Fragment key={idx}>
               <BreadcrumbItem>
@@ -69,7 +64,7 @@ export function BreadcrumbSection({
                 ) : (
                   <BreadcrumbPage>
                     {crumb.icon && (
-                      <crumb.icon className="inline-block h-4 w-4 mr-1" />
+                      <crumb.icon className="mr-1 inline-block h-4 w-4" />
                     )}
                     {t(crumb.labelKey)}
                   </BreadcrumbPage>

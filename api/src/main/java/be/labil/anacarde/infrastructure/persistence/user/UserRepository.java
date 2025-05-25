@@ -38,4 +38,21 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	@EntityGraph(attributePaths = {"roles", "documents", "address", "address.city",
 			"address.region", "language"})
 	Optional<User> findById(@NonNull Integer id);
+
+	/**
+	 * Vérifie si un utilisateur existe avec l'adresse e-mail fournie.
+	 *
+	 * @param email
+	 *            L'adresse e-mail à vérifier.
+	 * @return true si un utilisateur existe avec cette adresse e-mail, false sinon.
+	 */
+	boolean existsByEmail(String email);
+
+	/**
+	 * Vérifie si un utilisateur existe avec le numéro de téléphone fourni.
+	 * 
+	 * @param phone
+	 * @return true si un utilisateur existe avec ce numéro de téléphone, false sinon.
+	 */
+	boolean existsByPhone(String phone);
 }

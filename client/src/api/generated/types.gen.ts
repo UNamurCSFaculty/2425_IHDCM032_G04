@@ -11,11 +11,11 @@ export type AddressDto = {
   /**
    * Coordonnées géographiques du store (au format GeoJSON, WKT ou équivalent)
    */
-  location?: string
+  location: string
   /**
    * Id de la ville
    */
-  cityId?: number
+  cityId: number
   /**
    * Id de la région
    */
@@ -40,9 +40,9 @@ export type CarrierUpdateDto = UserUpdateDto & {
    */
   pricePerKm: number
   /**
-   * Liste des identifiants des régions desservies par le transporteur
+   * Rayon d'action du transporteur en kilomètres
    */
-  regionIds: Array<number>
+  radius: number
 }
 
 /**
@@ -138,7 +138,7 @@ export type UserUpdateDto = {
   /**
    * Mot de passe de l'utilisateur
    */
-  password?: string
+  password: string
   /**
    * Liste des rôles de l'utilisateur
    */
@@ -151,10 +151,6 @@ export type UserUpdateDto = {
    * Adresse de l'utilisateur
    */
   address: AddressDto
-  /**
-   * Fichiers à uploader
-   */
-  documents?: Array<unknown>
   type: string
 }
 
@@ -176,9 +172,9 @@ export type CarrierDetailDto = UserDetailDto & {
    */
   pricePerKm: number
   /**
-   * Liste des identifiants des régions desservies par le transporteur
+   * Rayon d'action du transporteur en kilomètres
    */
-  regionIds: Array<number>
+  radius: number
 }
 
 /**
@@ -1263,6 +1259,10 @@ export type CarrierListDto = UserListDto & {
    * Prix par kilomètre facturé par le transporteur
    */
   pricePerKm: number
+  /**
+   * Rayon d'action du transporteur en kilomètres
+   */
+  radius: number
 }
 
 /**
@@ -1695,38 +1695,6 @@ export type UpdateStoreResponses = {
 
 export type UpdateStoreResponse =
   UpdateStoreResponses[keyof UpdateStoreResponses]
-
-export type AddCarrierData = {
-  body?: never
-  path: {
-    /**
-     * Identifiant de la ressource
-     */
-    carrierId: number
-    /**
-     * Identifiant de la ressource
-     */
-    regionId: number
-  }
-  query?: never
-  url: '/api/regions/{regionId}/carriers/{carrierId}'
-}
-
-export type AddCarrierErrors = {
-  /**
-   * Not Found
-   */
-  404: ApiErrorResponse
-}
-
-export type AddCarrierError = AddCarrierErrors[keyof AddCarrierErrors]
-
-export type AddCarrierResponses = {
-  /**
-   * OK
-   */
-  200: unknown
-}
 
 export type DeleteRegionData = {
   body?: never
@@ -3754,12 +3722,49 @@ export type CreateAuctionStrategyResponses = {
   201: unknown
 }
 
+export type CheckPhoneData = {
+  body?: never
+  path?: never
+  query: {
+    /**
+     * Téléphone à tester
+     */
+    phone: string
+  }
+  url: '/api/users/check/phone'
+}
+
+export type CheckPhoneResponses = {
+  /**
+   * Résultat de la vérification
+   */
+  200: boolean
+}
+
+export type CheckPhoneResponse = CheckPhoneResponses[keyof CheckPhoneResponses]
+
+export type CheckEmailData = {
+  body?: never
+  path?: never
+  query: {
+    email: string
+  }
+  url: '/api/users/check/email'
+}
+
+export type CheckEmailResponses = {
+  /**
+   * Résultat de la vérification
+   */
+  200: boolean
+}
+
+export type CheckEmailResponse = CheckEmailResponses[keyof CheckEmailResponses]
+
 export type ListRegionsData = {
   body?: never
   path?: never
-  query?: {
-    carrierId?: number
-  }
+  query?: never
   url: '/api/regions'
 }
 

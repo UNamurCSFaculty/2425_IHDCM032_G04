@@ -1,0 +1,644 @@
+{
+  "app": {
+    "accueil": {
+      "subtitle": "Únase a la plataforma de subastas en tiempo real de anacardos y sus productos procesados en Benín. Supervise, supere ofertas y apoye a los productores locales con confianza.",
+      "title": "Subastas y Mercado de Anacardos",
+      "image_alt_cashew_nuts": "Ilustración de anacardos"
+    },
+    "contact": {
+      "title": "Contáctenos",
+      "subtitle": "Estamos aquí para ayudar. Envíenos un mensaje y le responderemos lo antes posible."
+    },
+    "loading": "Cargando…",
+    "networkError": "No se puede conectar al servidor",
+    "signup": {
+      "subtitle": "Su registro será validado dentro de las 48 horas posteriores al envío del formulario.",
+      "title": "Registrarse"
+    },
+    "statut": {
+      "connection": "Conectando...",
+      "log_in": "Iniciar Sesión"
+    },
+    "title": "Mi Súper Aplicación",
+    "welcome": {
+      "message": "¿Listo/a para sus próximas subastas?",
+      "title": "Bienvenido/a"
+    },
+    "auctions_sales": {
+      "title": "Mis Ventas",
+      "subtitle": "Venda sus productos en línea y consulte las ofertas en sus subastas."
+    },
+    "auctions_new_sale": {
+      "title": "Nueva Venta",
+      "subtitle": "Cree una nueva subasta para su producto."
+    },
+    "auctions_buys": {
+      "title": "Mis Compras",
+      "subtitle": "Consulte sus compras actuales y las subastas ganadas hasta ahora."
+    },
+    "deposits_new_product": {
+      "title": "Nuevo Producto",
+      "subtitle": "Deposite un nuevo producto en la tienda."
+    },
+    "deposits_list_products": {
+      "title": "Mis Productos",
+      "subtitle": "Consulte todos sus productos depositados y disponibles para la venta."
+    },
+    "marketplace": {
+      "title": "Mercado de Subastas",
+      "subtitle": "Compre productos en línea."
+    },
+    "signup_success": {
+      "title": "¡Registro Exitoso!",
+      "description_line1": "Su solicitud de registro ha sido registrada correctamente.",
+      "description_line2": "Su cuenta está pendiente de validación por un administrador.",
+      "email_notification": "Recibirá un correo electrónico una vez que su cuenta esté activada.",
+      "go_to_login": "Ir a la página de inicio de sesión"
+    }
+  },
+  "homepage": {
+    "features": {
+      "section_title_prefix": "¿Por qué elegir ",
+      "section_title_brand": "e-Anacarde",
+      "section_title_suffix": "?",
+      "section_subtitle": "Descubra cómo nuestra plataforma revoluciona las subastas de anacardos con tecnología, seguridad e impacto social.",
+      "items": {
+        "real_time": {
+          "title": "Subastas en Tiempo Real",
+          "description": "Siga cada subasta y no pierda ninguna oportunidad de superar la oferta."
+        },
+        "secure_transactions": {
+          "title": "Transacciones Seguras",
+          "description": "Gestión integral de pagos y entregas para su tranquilidad."
+        },
+        "industry_support": {
+          "title": "Apoyo al Sector",
+          "description": "Valore a los productores locales y contribuya al desarrollo sostenible."
+        }
+      }
+    },
+    "blog": {
+      "title": "Nuestro Blog",
+      "subtitle": "Descubra las últimas noticias, normativas y consejos para optimizar sus subastas de anacardos en Benín.",
+      "article1": {
+        "category": "Tutorial",
+        "date": "hace 3 días",
+        "title": "Cómo dominar las subastas de anacardos en e-Anacarde",
+        "description": "Siga nuestra guía paso a paso para comprender el proceso de subasta, establecer sus reservas y maximizar sus ingresos en la principal plataforma de subastas de anacardos de Benín.",
+        "author": "Aïssatou Adégbidi"
+      },
+      "article2": {
+        "category": "Noticias",
+        "date": "hace 7 días",
+        "title": "Nuevas normativas gubernamentales para la producción de anacardos",
+        "description": "El gobierno de Benín ha publicado nuevas directrices para mejorar la calidad y la trazabilidad de los anacardos. Descubra los requisitos y cómo cumplirlos.",
+        "author": "Kofi Mensah"
+      },
+      "author_avatar_alt": "Avatar del autor",
+      "read_more": "Leer más"
+    },
+    "hero": {
+      "heading": "Subastas en Línea de Anacardos",
+      "description": "Participe en subastas en tiempo real de anacardos y sus derivados en Benín. Supervise cada oferta, supere ofertas y apoye a los productores locales con confianza.",
+      "buttons": {
+        "primary_text": "Ver Subastas",
+        "secondary_text": "Saber Más"
+      },
+      "image_alt": "Logotipo de e-Anacarde, plataforma de subastas de anacardos"
+    },
+    "faq": {
+      "heading": "Preguntas Frecuentes",
+      "q1_question": "¿Qué es e-Anacarde?",
+      "q1_answer": "e-Anacarde es una plataforma de subastas en línea dedicada a los anacardos en Benín, que conecta directamente a productores y compradores para maximizar la transparencia y el valor de las transactions.",
+      "q2_question": "¿Cómo puedo registrarme como productor?",
+      "q2_answer_part1": "Para registrarse, complete el formulario con su información de producción y cargue los documentos requeridos para su verificación.",
+      "q3_question": "¿Cómo participar en una subasta?",
+      "q3_answer": "Una vez validada su cuenta, inicie sesión, vaya a la página de subastas, seleccione el lote de anacardos deseado y realice su oferta indicando la cantidad que está dispuesto a pagar.",
+      "q4_question": "¿Cuáles son las tarifas de servicio?",
+      "q4_answer": "e-Anacarde aplica una comisión del 2% sobre el monto final de cada subasta ganada, sin cargos ocultos para productores o compradores.",
+      "q5_question": "¿Cómo se realiza el pago y la entrega?",
+      "q5_answer": "Una vez ganada la subasta, el pago se realiza a través de nuestros socios de pago móvil (MoMo, Flooz) o transferencia bancaria. La entrega es organizada por transportistas autorizados, a cargo del comprador o según el acuerdo.",
+      "q6_question": "¿Qué normas de calidad debo cumplir?",
+      "q6_answer": "Debe cumplir con las nuevas directrices del gobierno de Benín sobre calibración, contenido de humedad y empaque de los anacardos. Consulte nuestro artículo 'Nuevas normativas gubernamentales para la producción de anacardos' para todos los detalles."
+    }
+  },
+  "breadcrumb": {
+    "about": "Acerca de",
+    "auctions": "Subastas",
+    "buy": "Comprar",
+    "home": "Inicio",
+    "contact": "Contacto",
+    "login": "Iniciar Sesión",
+    "marketplace": "Mercado de Subastas",
+    "privacy": "Política de Privacidad",
+    "profile": "Perfil",
+    "sell": "Vender",
+    "settings": "Configuración",
+    "signup": "Registrarse",
+    "terms": "Condiciones de Uso",
+    "vendre": "Vender",
+    "my_auctions": "Mis Subastas",
+    "new_auction": "Nueva Subasta",
+    "deposits": "Depósitos",
+    "my_deposits": "Mis Productos",
+    "new_deposit": "Nuevo Producto"
+  },
+  "buttons": {
+    "cancel": "Cancelar",
+    "connection": "Conexión",
+    "home_connection": "Comenzar Ahora",
+    "reinitialise": "Restablecer",
+    "submit": "Enviar",
+    "submitting": "Enviando...",
+    "subscribe": "Crear Cuenta",
+    "view_all_news": "Ver Todas las Noticias",
+    "details": "Detalles",
+    "buy": "Comprar",
+    "view_details": "Ver Detalles",
+    "confirm": "Confirmar",
+    "place_bid": "Hacer Oferta",
+    "accept": "Aceptar",
+    "reject": "Rechazar",
+    "back": "Atrás",
+    "reset": "Restablecer",
+    "delete": "Eliminar"
+  },
+  "common": {
+    "add": "Añadir",
+    "clear": "Limpiar",
+    "close": "Cerrar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "step": "Paso",
+    "error": "Error",
+    "info": "Información",
+    "loading": "Cargando...",
+    "no": "No",
+    "ok": "OK",
+    "save": "Guardar",
+    "search": "Buscar",
+    "select": "Seleccionar",
+    "success": "Éxito",
+    "view": "Ver",
+    "warning": "Advertencia",
+    "yes": "Sí"
+  },
+  "errors": {
+    "access.denied": "Acceso denegado: no tiene suficientes derechos.",
+    "access.disabled": "Su cuenta debe ser activada por un administrador antes de poder acceder a la plataforma.",
+    "access.forbidden": "Acceso prohibido",
+    "access.forbidden.csrf": "El token CSRF no coincide",
+    "access.forbidden.csrf.missing": "Falta el token CSRF",
+    "access.unauthorized": "Error de autenticación",
+    "agriculture_id.exists": "Este identificador agrícola ya está en uso",
+    "bad_request": "Solicitud incorrecta",
+    "default.error": "Violación de la integridad de los datos",
+    "email.exists": "Este correo electrónico ya está en uso",
+    "fields": {
+      "agriculturalIdentifier": "Identificador Agrícola",
+      "email": "Correo Electrónico",
+      "phone": "Teléfono"
+    },
+    "internal_error": "Se produjo un error interno. Póngase en contacto con el soporte si el problema persiste.",
+    "message.not_readable": "Mensaje HTTP ilegible",
+    "method.not_allowed": "Método no permitido",
+    "missing.path_variable": "Falta la variable de ruta",
+    "missing.request_param": "Falta el parámetro de solicitud",
+    "no_handler_found": "Ningún endpoint coincide con la URL solicitada",
+    "notFound": "Recurso no encontrado",
+    "phone.exists": "Este número de teléfono ya está en uso",
+    "resource.not_found": "Recurso no encontrado",
+    "serverError": "Error interno del servidor",
+    "stale.object": "El recurso ha sido modificado por otro usuario. Por favor, inténtelo de nuevo.",
+    "unauthorized": "No está autorizado para acceder a este recurso",
+    "validation.error": "Error de validación",
+    "email.invalid": "Formato de correo electrónico no válido",
+    "email.taken": "Este correo electrónico ya está en uso",
+    "phone.taken": "Este número de teléfono ya está en uso",
+    "server.unreachable": "El servidor es inaccesible"
+  },
+  "password_indicator": {
+    "strength": "Fortaleza de la Contraseña",
+    "very_weak": "Muy Débil",
+    "weak": "Débil",
+    "fair": "Regular",
+    "good": "Buena",
+    "strong": "Fuerte",
+    "very_strong": "Muy Fuerte"
+  },
+  "form": {
+    "carrier_details": "Detalles del Transportista",
+    "accept_terms": "Acepto las condiciones de uso",
+    "select.placeholder": "Elija una opción",
+    "address": "Dirección",
+    "price_per_km": "Precio por km",
+    "radius": "Radio de entrega en km",
+    "agricultural_identifier": "Identificador Agrícola",
+    "confirm_password": "Confirmar contraseña",
+    "first_name": "Nombre",
+    "language": "Idioma",
+    "last_name": "Apellido",
+    "mail": "Dirección de Correo Electrónico",
+    "city": "Ciudad",
+    "location": "Ubicación",
+    "street_quarter": "Barrio / Calle",
+    "message": "Mensaje",
+    "password": "Contraseña",
+    "phone": "Teléfono",
+    "coordinates_label": "Coordenadas:",
+    "placeholder": {
+      "date": "Seleccionar una fecha",
+      "no_city_found": "No se encontró ninguna ciudad",
+      "search": "Buscar",
+      "select_city": "Seleccionar una ciudad",
+      "language": "Seleccionar un idioma",
+      "price_per_km_example": "500",
+      "radius_example": "50",
+      "street_example": "Ej.: Calle Principal",
+      "email_example": "m@example.com",
+      "password_example": "••••••••••",
+      "bid_amount_cfa": "Monto CFA"
+    },
+    "tooltip": {
+      "price_per_km": "Precio por kilómetro recorrido para el transporte de productos",
+      "radius": "Radio de servicio en kilómetros para el transporte de productos",
+      "city": "Seleccione su ciudad para facilitar la localización. Si no está en la lista, seleccione la más cercana.",
+      "location": "Seleccione su posición en el mapa para facilitar la localización. Simplemente haga clic en el mapa para centrar la posición."
+    },
+    "type": "Soy",
+    "upload_accepted": "Formatos aceptados",
+    "upload_component": "Haga clic para cargar o arrastrar y soltar",
+    "upload_limit": "El tamaño máximo de carga es de {{max}} MB",
+    "upload_too_big": "El archivo es demasiado grande, máximo {{max}} MB",
+    "upload_all": "Se aceptan todos los archivos",
+    "upload_click_or_drag": "Haga clic para cargar o arrastrar y soltar",
+    "upload_invalid_type": "Tipo de archivo no válido",
+    "upload_files": "Archivos",
+    "documents": "Documentos",
+    "file_type": {
+      "image": "Imagen",
+      "pdf": "PDF",
+      "text": "Texto",
+      "video": "Video",
+      "audio": "Audio",
+      "zip": "Archivo ZIP"
+    },
+    "identifier_label": "identificador: {{id}}",
+    "gps_label": "gps: {{gps}}"
+  },
+  "languages": {
+    "en": "Inglés",
+    "fr": "Francés",
+    "ar": "Árabe",
+    "zh-CN": "Mandarín",
+    "es": "Español"
+  },
+  "language_switcher": {
+    "label": "Idioma",
+    "aria_label": "Cambiar idioma"
+  },
+  "pagination": {
+    "all": "Todo",
+    "entries": "entradas",
+    "next": "Siguiente",
+    "no_entries": "No se encontraron entradas",
+    "of": "de",
+    "page": "Página",
+    "previous": "Anterior",
+    "showing": "Mostrando",
+    "to": "a"
+  },
+  "validation": {
+    "acceptTerms": "Debe aceptar las condiciones de uso",
+    "email": "Formato de correo electrónico no válido",
+    "max": "El campo debe ser como máximo {{count}}",
+    "maxLength": "El campo debe tener como máximo {{count}} carácter",
+    "maxLength_plural": "El campo debe tener como máximo {{count}} caracteres",
+    "min": "El campo debe ser como mínimo {{count}}",
+    "minLength": "El campo debe tener como mínimo {{count}} carácter",
+    "minLength_plural": "El campo debe tener como mínimo {{count}} caracteres",
+    "invalidType": "Tipo de campo no válido",
+    "password": "La contraseña debe contener al menos una minúscula, una mayúscula, un dígito y un carácter especial",
+    "passwordValidation": "Las contraseñas no coinciden",
+    "phone": "Número de Benín no válido",
+    "required": "Este campo es obligatorio",
+    "number_min": "El valor debe ser mayor o igual a {{count}}"
+  },
+  "database": {
+    "harvest": "Crudo",
+    "transformed": "Procesado",
+    "AdminListDto": "administrador",
+    "ProducerListDto": "productor",
+    "TransformerListDto": "procesador",
+    "QualityInspectorListDto": "inspector de calidad",
+    "ExporterListDto": "exportador",
+    "CarrierListDto": "transportista"
+  },
+  "auction": {
+    "lot_label": "lote {{id}}",
+    "lot_label_short": "lote #{{id}}",
+    "bid_count_zero": "{{count}} oferta",
+    "bid_count_one": "{{count}} oferta",
+    "bid_count_other": "{{count}} ofertas",
+    "bid_count": "{{count}} oferta",
+    "bid_count_plural": "{{count}} ofertas",
+    "expires_in": "Expira en",
+    "asking_price": "Precio de Salida",
+    "best_bid": "Mejor Oferta",
+    "details_title_full": "Producto {{productType}} Lote #{{productId}} Subasta #{{auctionId}}",
+    "auction_details_title": "Detalles de la Subasta",
+    "buy_now_label": "Comprar Ahora",
+    "buy_now_price": "Comprar Ahora {{price}}",
+    "confirm_buy_now_prompt": "¿Confirmar comprar ahora {{price}}?",
+    "add_bid_label": "Añadir una Oferta",
+    "confirm_bid_prompt": "¿Confirmar su oferta de {{amount}}?",
+    "status": {
+      "ended_title": "Subasta Terminada",
+      "ended_message": "Esta subasta ha terminado."
+    },
+    "bid_count_for_lot_zero": "{{count}} oferta por el lote",
+    "bid_count_for_lot_one": "{{count}} oferta por el lote",
+    "bid_count_for_lot_other": "{{count}} ofertas por el lote",
+    "bid_count_for_lot": "{{count}} oferta por el lote",
+    "bid_count_for_lot_plural": "{{count}} ofertas por el lote",
+    "no_bids_yet": "Aún no hay ofertas.",
+    "accept_bid_prompt": "¿Aceptar esta oferta?",
+    "reject_bid_prompt": "¿Rechazar esta oferta?",
+    "seller_label": "Vendedor",
+    "no_bids_message": "Sin ofertas",
+    "time_remaining_label": "Tiempo restante",
+    "click_to_see_details_prompt": "Haga clic para ver detalles →",
+    "expiration_label": "Expiración",
+    "form": {
+      "title": "Entrada de Subasta",
+      "section_settings_title": "Configuración de Venta",
+      "submit_button": "Abrir Venta"
+    },
+    "expiration_date_label": "Expiración de la Subasta",
+    "table": {
+      "no_auctions": "No hay subastas listadas.",
+      "transactions_list_message": "La lista de transacciones se puede ver a continuación.",
+      "start_date_header": "Inicio de Subasta",
+      "end_date_header": "Fin de Subasta",
+      "status_header": "Estado",
+      "obtained_price_header": "Precio Obtenido",
+      "buyer_header": "Comprador",
+      "view_bids_button": "Ver Ofertas",
+      "make_bid_button": "Hacer Oferta",
+      "propose_contract_button": "Proponer Contrato"
+    }
+  },
+  "product": {
+    "quality_label": "Calidad",
+    "quantity_label": "Cantidad",
+    "type_label": "Tipo",
+    "merchandise_label": "Mercancía",
+    "price_label": "Precio",
+    "product_label": "Producto",
+    "quantity_in_kg_label": "Cantidad (kg)",
+    "price_in_cfa_label": "Precio (CFA)",
+    "info_title": "Información del Producto",
+    "lot_number_label": "Número de Lote",
+    "deposited_quantity_label": "Cantidad Depositada",
+    "deposit_date_label": "Fecha de Depósito",
+    "store_label": "Tienda",
+    "lot_label": "Lote #{{id}}",
+    "product_type_label": "Producto {{type}}",
+    "origin_label": "Origen",
+    "quality_inspector_label": "Inspector de Calidad",
+    "results_count_zero": "Resultado: {{count}} producto",
+    "results_count_one": "Resultado: {{count}} producto",
+    "results_count_other": "Resultados: {{count}} productos",
+    "results_count": "Resultado: {{count}} producto",
+    "results_count_plural": "Resultados: {{count}} productos",
+    "owner_label": "Propietario",
+    "warehouse_label": "Almacén",
+    "form": {
+      "title": "Entrada de Producto",
+      "section_deposit_settings_title": "Configuración de Depósito",
+      "cultivated_field_label": "Campo Cultivado",
+      "submit_button": "Guardar Producto",
+      "section_quality_control_title": "Control de Calidad",
+      "control_date_label": "Fecha de Control",
+      "certificate_label": "Certificado (Foto o PDF)"
+    },
+    "weight_in_kg_label": "Peso (kg)"
+  },
+  "sort": {
+    "expiration_asc": "Expiración ⬆",
+    "expiration_desc": "Expiración ⬇",
+    "price_asc": "Precio ⬆",
+    "price_desc": "Precio ⬇",
+    "label_prefix": "Ordenar por ",
+    "date_asc": "fecha ⬆",
+    "date_desc": "fecha ⬇",
+    "weight_asc": "peso ⬆",
+    "weight_desc": "peso ⬇"
+  },
+  "marketplace": {
+    "title": "Mercado de Subastas",
+    "subtitle": "Compre productos en línea.",
+    "results_count_zero": "Resultado: {{count}} subasta",
+    "results_count_one": "Resultado: {{count}} subasta",
+    "results_count_other": "Resultados: {{count}} subastas",
+    "results_count": "Resultado: {{count}} subasta",
+    "results_count_plural": "Resultados: {{count}} subastas"
+  },
+  "view_mode": {
+    "grid_label": "Cuadrícula",
+    "list_label": "Lista",
+    "map_label": "Mapa"
+  },
+  "filters": {
+    "panel_title": "Filtros",
+    "auctions_in_progress_label": "Subastas en Curso",
+    "auctions_ended_label": "Subastas Terminadas",
+    "all_types_placeholder": "Todos los Tipos",
+    "all_qualities_placeholder": "Todas las Calidades",
+    "all_regions_placeholder": "Todas las Regiones",
+    "all_cities_placeholder": "Todas las Ciudades",
+    "expires_before_label": "Expira antes de",
+    "choose_date_placeholder": "Elegir…"
+  },
+  "address": {
+    "region_label": "Región"
+  },
+  "types": {
+    "admin": "Administrador",
+    "producer": "Productor",
+    "transformer": "Procesador",
+    "carrier": "Transportista",
+    "exporter": "Exportador",
+    "quality_inspector": "Inspector de Calidad"
+  },
+  "header": {
+    "logo_alt": "Logotipo de e-Anacarde",
+    "menu": {
+      "home": "Inicio",
+      "purchases": {
+        "title": "Compras",
+        "items": {
+          "buy_product": {
+            "title": "Comprar un Producto",
+            "description": "Comprar un producto mediante venta directa"
+          },
+          "my_purchases": {
+            "title": "Mis Compras",
+            "description": "Ver todas mis compras"
+          }
+        }
+      },
+      "sales": {
+        "title": "Ventas",
+        "items": {
+          "sell_product": {
+            "title": "Vender un Producto",
+            "description": "Crear una nueva oferta de venta"
+          },
+          "my_sales": {
+            "title": "Mis Ventas",
+            "description": "Ver todas mis ventas"
+          }
+        }
+      },
+      "deposits": {
+        "title": "Depósitos",
+        "items": {
+          "deposit_product": {
+            "title": "Depositar un Producto",
+            "description": "Registrar un depósito en tienda"
+          },
+          "my_products": {
+            "title": "Mis Productos",
+            "description": "Ver todos mis depósitos"
+          }
+        }
+      },
+      "contracts": {
+        "title": "Contratos",
+        "items": {
+          "create_contract": {
+            "title": "Crear un Contrato",
+            "description": "Crear un nuevo contrato"
+          },
+          "history": {
+            "title": "Historial",
+            "description": "Detalles de mis contratos"
+          }
+        }
+      },
+      "contact": "Contacto"
+    },
+    "auth": {
+      "login": "Iniciar Sesión",
+      "profile": "Perfil",
+      "settings": "Configuración",
+      "logout": "Cerrar Sesión"
+    },
+    "mobile": {
+      "toggle_menu_sr": "Abrir menú principal"
+    }
+  },
+  "login": {
+    "title_description": "Inicie sesión en su cuenta de e-Anacarde",
+    "forgot_password": "¿Olvidó su contraseña?",
+    "continue_with_separator": "O continuar con",
+    "social": {
+      "apple_sr": "Iniciar sesión con Apple",
+      "google_sr": "Iniciar sesión con Google",
+      "meta_sr": "Iniciar sesión con Meta"
+    },
+    "signup_prompt": "¿No tiene una cuenta?",
+    "terms_prefix": "Al hacer clic en Continuar, acepta nuestros ",
+    "terms_separator": " y nuestra ",
+    "terms_suffix": "."
+  },
+  "footer_cta": {
+    "title": "¡Únase a e-Anacarde hoy y optimice la venta de sus anacardos!",
+    "button_signup": "Registrarse"
+  },
+  "footer": {
+    "logo": {
+      "alt": "Logotipo de Subasta de Anacardos Benín",
+      "title": "Subasta de Anacardos Benín"
+    },
+    "tagline": "Su plataforma de subastas de anacardos en Benín — materias primas y productos procesados",
+    "menu": {
+      "auctions": {
+        "title": "Subastas",
+        "links": {
+          "raw_materials": "Materias Primas",
+          "processed_products": "Productos Procesados",
+          "my_offers": "Mis Ofertas"
+        }
+      },
+      "company": {
+        "title": "Empresa",
+        "links": {
+          "about_us": "Sobre Nosotros",
+          "team": "Equipo",
+          "careers": "Carreras",
+          "contact": "Contacto"
+        }
+      },
+      "resources": {
+        "title": "Recursos",
+        "links": {
+          "faq": "Preguntas Frecuentes",
+          "support": "Soporte",
+          "blog": "Blog"
+        }
+      },
+      "social_media": {
+        "title": "Redes Sociales",
+        "links": {
+          "facebook": "Facebook",
+          "twitter": "Twitter",
+          "linkedin": "LinkedIn"
+        }
+      }
+    },
+    "copyright": "© 2025 Grupo 4 - Laboratorio de Ingeniería de Software, Universidad de Namur.",
+    "bottom_links": {
+      "terms": "Condiciones Generales",
+      "privacy_policy": "Política de Privacidad"
+    }
+  },
+  "not_found": {
+    "error_code": "404",
+    "title": "Página No Encontrada",
+    "message": "Lo sentimos, no pudimos encontrar la página que está buscando.",
+    "button_home": "Volver al Inicio",
+    "button_contact_support": "Contactar Soporte"
+  },
+  "error_boundary": {
+    "title": "Ocurrió un Error",
+    "message": "Lo sentimos, algo salió mal. Por favor, inténtelo de nuevo más tarde o vuelva al inicio.",
+    "button_home": "Volver al Inicio"
+  },
+  "empty_state": {
+    "title": "No se Encontraron Resultados",
+    "message": "Ajuste sus filtros o restablezca la búsqueda."
+  },
+  "countdown_timer": {
+    "auction_ended": "Subasta Terminada",
+    "days_one": "{{count}} día",
+    "days_other": "{{count}} días",
+    "hours_one": "{{count}} hora",
+    "hours_other": "{{count}} horas",
+    "minutes_one": "{{count}} minuto",
+    "minutes_other": "{{count}} minutos",
+    "seconds_one": "{{count}} segundo",
+    "seconds_other": "{{count}} segundos"
+  },
+  "contract": {
+    "modal_title": "Propuesta de Contrato",
+    "avatar_alt": "Avatar",
+    "guaranteed_price_cfa_kg_label": "Precio Garantizado (CFA/kg)",
+    "minimum_quantity_kg_label": "Cantidad Mínima (kg)",
+    "duration_label": "Duración del Contrato",
+    "duration_years_label": "(Años)",
+    "duration_months_label": "(Meses)",
+    "ends_on_date_label": "Termina el {{date}}"
+  }
+}

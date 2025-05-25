@@ -9,7 +9,7 @@ export const InfoTile: React.FC<{
 
   return (
     <div
-      className={`w-full rounded-lg bg-white/50  shadow-xs  p-2 text-left flex items-center justify-center flex-col`}
+      className={`flex w-full flex-col items-center justify-center rounded-lg bg-white/50 p-2 text-center shadow-xs`}
     >
       <div
         className={`flex items-center justify-center gap-1 text-neutral-700 ${labelSize}`}
@@ -17,7 +17,7 @@ export const InfoTile: React.FC<{
         {icon}
         {label}
       </div>
-      <div className={`font-semibold mt-1 leading-tight ${contentSize}`}>
+      <div className={`mt-1 leading-tight font-semibold ${contentSize}`}>
         {children}
       </div>
     </div>

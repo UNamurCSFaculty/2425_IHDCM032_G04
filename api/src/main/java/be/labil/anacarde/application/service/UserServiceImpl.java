@@ -176,4 +176,14 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 		User savedUser = userRepository.save(user);
 		return userDetailMapper.toDto(savedUser);
 	}
+
+	@Override
+	public boolean emailExists(String email) {
+		return userRepository.existsByEmail(email.trim().toLowerCase());
+	}
+
+	@Override
+	public boolean phoneExists(String phone) {
+		return userRepository.existsByPhone(phone);
+	}
 }

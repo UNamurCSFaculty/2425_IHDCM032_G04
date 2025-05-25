@@ -50,7 +50,7 @@ function RouteComponent() {
                 <div className="flex flex-col justify-center sm:flex-row sm:gap-4 lg:justify-start">
                   <Link to="/login">
                     <Button size="lg">
-                      {t('buttons.connection')}{' '}
+                      {t('buttons.home_connection')}{' '}
                       <ArrowUpRight className="!h-5 !w-5" />
                     </Button>
                   </Link>
@@ -71,7 +71,7 @@ function RouteComponent() {
             <div className="relative mt-12 animate-spin duration-[120s] before:absolute before:inset-0 before:rounded-full before:bg-white/50 before:blur-2xl before:content-[''] lg:mt-0 lg:flex-shrink-0">
               <img
                 src={imgNoix}
-                alt="Illustration noix de cajou"
+                alt={t('app.accueil.image_alt_cashew_nuts')}
                 className="mx-auto w-full max-w-md drop-shadow-2xl lg:mx-0"
               />
             </div>

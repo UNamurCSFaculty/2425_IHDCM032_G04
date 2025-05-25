@@ -8,6 +8,7 @@ import {
   SelectValue,
 } from '../ui/select'
 import { FieldErrors } from './field-errors'
+import SimpleTooltip from '../SimpleTooltip'
 
 type SelectOption<T> = {
   value: T
@@ -19,6 +20,7 @@ type SelectFieldProps<T extends string | number> = {
   hint?: string
   options: SelectOption<T>[]
   placeholder?: string
+  tooltip?: string
   className?: string
   required?: boolean
   disabled?: boolean
@@ -36,6 +38,7 @@ export function SelectField<T extends string | number>({
   options,
   placeholder,
   className = 'w-full',
+  tooltip,
   required = true,
   disabled = false,
   parseValue,
@@ -59,9 +62,10 @@ export function SelectField<T extends string | number>({
           <Label htmlFor={field.name}>
             {label}
             {required && <span className="text-red-500">*</span>}
+            {tooltip && <SimpleTooltip content={tooltip} />}
           </Label>
           {hint && (
-            <span className="font-semibold text-xs text-gray-500">{hint}</span>
+            <span className="text-xs font-semibold text-gray-500">{hint}</span>
           )}
         </div>
         <Select

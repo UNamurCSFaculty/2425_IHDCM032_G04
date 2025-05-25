@@ -28,15 +28,16 @@ import {
   List as ListIcon,
   SlidersHorizontal,
 } from 'lucide-react'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 export type ViewMode = 'cards' | 'table' | 'map'
 
 export const sortOptions = [
-  { value: 'deliveryDate-asc', label: 'date ⬆' },
-  { value: 'deliveryDate-desc', label: 'date ⬇' },
-  { value: 'weight-asc', label: 'poids ⬆' },
-  { value: 'weight-desc', label: 'poids ⬇' },
+  { value: 'deliveryDate-asc', label: 'sort.date_asc' },
+  { value: 'deliveryDate-desc', label: 'sort.date_desc' },
+  { value: 'weight-asc', label: 'sort.weight_asc' },
+  { value: 'weight-desc', label: 'sort.weight_desc' },
 ] as const
 export type SortOptionValue = (typeof sortOptions)[number]['value']
 
@@ -48,17 +49,15 @@ interface ProductListProps {
 
 const ProductList: React.FC<ProductListProps> = ({ products }) => {
   const isDesktop = useMediaQuery('(min-width: 1024px)')
+  const { t } = useTranslation()
 
-  // UI state
   const [viewMode, setViewMode] = useState<ViewMode>('cards')
   const [sheetOpen, setSheetOpen] = useState(false)
   const [inlineProduct, setInlineProduct] = useState<ProductDto | null>(null)
   const [sort, setSort] = useState<SortOptionValue>('deliveryDate-asc')
 
-  // Filtering
   const [filteredProducts, setFilteredProducts] = useState<ProductDto[]>([])
 
-  // Sorting
   const sorted = useMemo(() => {
     const list = [...filteredProducts]
     switch (sort) {
@@ -79,7 +78,6 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
     }
   }, [filteredProducts, sort])
 
-  // Pagination
   const [currentPage, setCurrentPage] = useState(1)
   const totalPages = Math.max(1, Math.ceil(sorted.length / perPage))
   const paginated = useMemo(
@@ -94,18 +92,22 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
     window.scrollTo({ top: 200, behavior: 'smooth' })
   }
 
-  // Render
+  const handleFilteredDataChange = useCallback(
+    (newFilteredData: ProductDto[]) => {
+      setFilteredProducts(newFilteredData)
+    },
+    []
+  )
+
   const isInCardDetail = viewMode === 'cards' && inlineProduct
   const cssCard = isInCardDetail ? 'lg:justify-start' : 'lg:justify-end'
 
   return (
     <>
-      {/* Header */}
-      <div className="flex flex-wrap flex-col sm:flex-row items-center justify-center lg:justify-between gap-4 mb-6 w-full">
-        <div className="text-md  text-muted-foreground w-full lg:w-[260px] ">
-          <div className="text-center lg:text-left lg:pl-4">
-            Résultat(s) : {filteredProducts.length} produit
-            {filteredProducts.length !== 1 && 's'}
+      <div className="mb-6 flex w-full flex-col flex-wrap items-center justify-center gap-4 sm:flex-row lg:justify-between">
+        <div className="text-md text-muted-foreground w-full lg:w-[260px]">
+          <div className="text-center lg:pl-4 lg:text-left">
+            {t('product.results_count', { count: filteredProducts.length })}
           </div>
         </div>
         <div className={`flex items-center ${cssCard} lg:pl-11`}>
@@ -113,15 +115,14 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
             <div className="pl-4">
               <Button
                 variant="outline"
-                className="flex items-center gap-1 w-40"
+                className="flex w-40 items-center gap-1"
                 onClick={() => setInlineProduct(null)}
               >
-                <ArrowLeft className="size-4" /> Retour
+                <ArrowLeft className="size-4" /> {t('buttons.back')}
               </Button>
             </div>
           ) : (
-            <div className="flex flex-col lg:flex-row flex-wrap gap-2 items-center justify-center lg:justify-end w-full">
-              {/* Sorting */}
+            <div className="flex w-full flex-col flex-wrap items-center justify-center gap-2 lg:flex-row lg:justify-end">
               {viewMode !== 'map' && (
                 <Select
                   value={sort}
@@ -135,13 +136,12 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
                       <SelectItem
                         key={o.value}
                         value={o.value}
-                      >{`Tri par ${o.label}`}</SelectItem>
+                      >{`${t('sort.label_prefix')}${t(o.label)}`}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               )}
 
-              {/* View Mode */}
               <ToggleGroup
                 size="sm"
                 type="single"
@@ -150,44 +150,41 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
                   setViewMode(v as ViewMode)
                   setInlineProduct(null)
                 }}
-                className="grid grid-cols-2 rounded-lg border bg-background overflow-hidden"
+                className="bg-background grid grid-cols-2 overflow-hidden rounded-lg border"
               >
                 <ToggleGroupItem
                   value="cards"
-                  aria-label="Grille"
-                  className="flex items-center justify-center py-2 hover:bg-muted data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
+                  aria-label={t('view_mode.grid_label')}
+                  className="hover:bg-muted data-[state=on]:bg-primary data-[state=on]:text-primary-foreground flex items-center justify-center py-2"
                 >
-                  <LayoutGrid className="size-4 mr-1" />
-                  Grille
+                  <LayoutGrid className="mr-1 size-4" />
+                  {t('view_mode.grid_label')}
                 </ToggleGroupItem>
                 <ToggleGroupItem
                   value="table"
-                  aria-label="Liste"
-                  className="flex items-center justify-center py-2 hover:bg-muted data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
+                  aria-label={t('view_mode.list_label')}
+                  className="hover:bg-muted data-[state=on]:bg-primary data-[state=on]:text-primary-foreground flex items-center justify-center py-2"
                 >
-                  <ListIcon className="size-4 mr-1" />
-                  Liste
+                  <ListIcon className="mr-1 size-4" />
+                  {t('view_mode.list_label')}
                 </ToggleGroupItem>
               </ToggleGroup>
-              {/* Mobile Filters */}
               {!isDesktop && (
                 <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
                   <SheetTrigger asChild>
                     <Button variant="outline">
-                      <SlidersHorizontal className="size-4 mr-2" />
-                      Filtres
+                      <SlidersHorizontal className="mr-2 size-4" />
+                      {t('filters.panel_title')}
                     </Button>
                   </SheetTrigger>
                   <SheetContent
                     side="left"
-                    className="w-[300px] sm:w-[380px] p-0 overflow-y-auto"
+                    className="w-[300px] overflow-y-auto py-7 sm:w-[380px]"
                   >
                     <FiltersPanel
                       filterData={products}
                       filterDataType="product"
-                      onFilteredDataChange={e =>
-                        setFilteredProducts(e as ProductDto[])
-                      }
+                      onFilteredDataChange={handleFilteredDataChange}
                     />
                   </SheetContent>
                 </Sheet>
@@ -197,21 +194,20 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-[260px_1fr] gap-6 items-start">
+      <div className="grid items-start gap-6 lg:grid-cols-[260px_1fr]">
         {isDesktop && (
-          <div className="sticky top-20 border rounded-lg shadow-sm bg-background self-start">
+          <div className="bg-background sticky top-20 self-start rounded-lg border shadow-sm">
             <FiltersPanel
               filterData={products}
               filterDataType="product"
-              onFilteredDataChange={e => setFilteredProducts(e as ProductDto[])}
+              onFilteredDataChange={handleFilteredDataChange}
             />
           </div>
         )}
 
         <div className="relative w-full min-w-0">
-          {/* Cards */}
           {viewMode === 'cards' && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
               {inlineProduct ? (
                 <>
                   <ProductCard
@@ -220,9 +216,7 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
                     isDetail
                     onDetails={() => {}}
                   />
-                  <div className="col-span-full lg:col-span-2">
-                    {/* <AuctionDetails auction={inlineProduct} /> */}
-                  </div>
+                  <div className="col-span-full lg:col-span-2"></div>
                 </>
               ) : filteredProducts.length === 0 ? (
                 <EmptyState className="col-span-full" />
@@ -233,9 +227,7 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
                       key={p.id}
                       product={p}
                       layout="grid"
-                      onDetails={
-                        () => console.log('TODO') /*setInlineProduct(a)*/
-                      }
+                      onDetails={() => console.log('TODO')}
                     />
                   ))}
                   {totalPages > 1 && (
@@ -252,22 +244,21 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
             </div>
           )}
 
-          {/* Table */}
           {viewMode === 'table' && (
             <>
-              <div className="border rounded-lg bg-background overflow-x-auto">
-                <Table className="text-sm table-auto">
-                  <TableHeader className="sticky top-0 backdrop-blur supports-[backdrop-filter]:bg-muted/60 z-10">
+              <div className="bg-background overflow-x-auto rounded-lg border">
+                <Table className="table-auto text-sm">
+                  <TableHeader className="supports-[backdrop-filter]:bg-muted/60 sticky top-0 z-10 backdrop-blur">
                     <TableRow className="h-9 bg-neutral-100">
-                      <TableHead>Marchandise</TableHead>
-                      <TableHead>Propriétaire</TableHead>
-                      <TableHead>Quantité</TableHead>
-                      <TableHead>Qualité</TableHead>
-                      <TableHead>Origine</TableHead>
-                      <TableHead>Date de dépôt</TableHead>
-                      <TableHead>Ville</TableHead>
-                      <TableHead>Région</TableHead>
-                      <TableHead>Entrepôt</TableHead>
+                      <TableHead>{t('product.merchandise_label')}</TableHead>
+                      <TableHead>{t('product.owner_label')}</TableHead>
+                      <TableHead>{t('product.quantity_label')}</TableHead>
+                      <TableHead>{t('product.quality_label')}</TableHead>
+                      <TableHead>{t('product.origin_label')}</TableHead>
+                      <TableHead>{t('product.deposit_date_label')}</TableHead>
+                      <TableHead>{t('form.city')}</TableHead>
+                      <TableHead>{t('address.region_label')}</TableHead>
+                      <TableHead>{t('product.warehouse_label')}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -277,7 +268,6 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
                         product={p}
                         layout="row"
                         onDetails={() => console.log('DETAILS')}
-                        // onDetails={() => setDialogAuction(p)}
                       />
                     ))}
                   </TableBody>
@@ -293,8 +283,6 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
               {paginated.length === 0 && <EmptyState className="col-span-3" />}
             </>
           )}
-
-          {/* Map */}
         </div>
       </div>
     </>

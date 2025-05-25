@@ -9,14 +9,17 @@ import { cn } from '@/lib/utils'
 import { enUS, fr } from 'date-fns/locale'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import SimpleTooltip from '../SimpleTooltip'
 
 type DateTimePickerFieldProps = {
   label: string
+  tooltip?: string
   required?: boolean
 } & Omit<DateTimePickerProps, 'value' | 'onChange'>
 
 export const DateTimePickerField = ({
   label,
+  tooltip,
   required = true,
   className,
   ...restProps
@@ -47,6 +50,7 @@ export const DateTimePickerField = ({
         <Label htmlFor={field.name}>
           {label}
           {required && <span className="text-red-500">*</span>}
+          {tooltip && <SimpleTooltip content={tooltip} />}
         </Label>
         <DateTimePicker
           value={dateValue}

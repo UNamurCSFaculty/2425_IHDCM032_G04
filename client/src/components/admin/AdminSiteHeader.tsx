@@ -10,9 +10,9 @@ export function AdminSiteHeader() {
         <SidebarTrigger className="-ml-1" />
         <Separator
           orientation="vertical"
-          className="mx-2 data-[orientation=vertical]:h-4 pt-6 pb-6"
+          className="mx-2 pt-6 pb-6 data-[orientation=vertical]:h-4"
         />
-        <h1 className="font-bold text-2xl text-green-600">Administration</h1>
+        <h1 className="text-2xl font-bold text-green-600">Administration</h1>
         <div className="ml-auto flex items-center gap-2">
           <Button variant="ghost" asChild size="sm" className="hidden sm:flex">
             <Link to="/" className="dark:text-foreground">

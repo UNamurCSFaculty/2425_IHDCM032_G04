@@ -183,14 +183,17 @@ const AuctionDetailsPanel: React.FC<Props> = ({
   const endsIn = new Date(auction.expirationDate)
   const ended = endsIn < new Date()
   return (
-    <div className="flex flex-col gap-6 w-full mx-auto p-4">
+    <div className="mx-auto flex w-full flex-col gap-6 p-4">
       {/* Header */}
-      <div className="space-y-1 flex flex-wrap">
-        <h2 className="text-2xl font-semibold flex items-center gap-2">
-          Produit {t('database.' + auction.product.type)} · Lot n°
-          {auction.product.id} · Enchère n°{auction.id}
+      <div className="flex flex-wrap space-y-1">
+        <h2 className="flex items-center gap-2 text-2xl font-semibold">
+          {t('auction.details_title_full', {
+            productType: t('database.' + auction.product.type),
+            productId: auction.product.id,
+            auctionId: auction.id,
+          })}
         </h2>
-        <div className="flex flex-wrap gap-4 text-sm text-muted-foreground ml-4">
+        <div className="text-muted-foreground ml-4 flex flex-wrap gap-4 text-sm">
           <span className="flex items-center gap-1">
             <UserCircle2 className="size-4" />
             {auction.trader.firstName} {auction.trader.lastName}
@@ -200,17 +203,19 @@ const AuctionDetailsPanel: React.FC<Props> = ({
 
       {/* Map */}
       {coords && (
-        <div className="flex flex-col gap-4 w-full">
+        <div className="flex w-full flex-col gap-4">
           {showDetails && (
-            <Card className="bg-white shadow rounded-lg gap-0 py-3">
+            <Card className="gap-0 rounded-lg bg-white py-3 shadow">
               <CardHeader>
-                <CardTitle className="text-lg">Détails de l’enchère</CardTitle>
+                <CardTitle className="text-lg">
+                  {t('auction.auction_details_title')}
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="flex flex-wrap gap-2">
                   <Badge variant="outline" className="flex items-center gap-1">
                     <Clock />
-                    Expire dans&nbsp;
+                    {t('auction.expires_in')}&nbsp;
                     <span className="font-semibold">
                       <CountdownTimer endDate={endsIn} />
                     </span>
@@ -218,7 +223,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
 
                   <Badge variant="default" className="flex items-center gap-1">
                     <Package className="size-4" />
-                    Quantité&nbsp;
+                    {t('product.quantity_label')}&nbsp;
                     <span className="font-semibold">
                       {formatWeight(auction.productQuantity)}
                     </span>
@@ -226,7 +231,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
 
                   <Badge variant="default" className="flex items-center gap-1">
                     <DollarSign className="size-4" />
-                    Prix demandé&nbsp;
+                    {t('auction.asking_price')}&nbsp;
                     <span className="font-semibold">
                       {formatPrice.format(auction.price)}
                     </span>
@@ -238,7 +243,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                       className="flex items-center gap-1"
                     >
                       <TrendingUp className="size-4" />
-                      Meilleure offre&nbsp;
+                      {t('auction.best_bid')}&nbsp;
                       <span className="font-semibold">
                         {formatPrice.format(bestBid)}
                       </span>
@@ -250,7 +255,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
           )}
 
           {/* 2. La map en dessous */}
-          <div className="h-48 w-full rounded-md overflow-hidden">
+          <div className="h-48 w-full overflow-hidden rounded-md">
             <MapContainer
               center={mapCenter}
               zoom={12}
@@ -272,34 +277,34 @@ const AuctionDetailsPanel: React.FC<Props> = ({
           </div>
         </div>
       )}
-      <div className="flex flex-col lg:flex-row gap-4">
+      <div className="flex flex-col gap-4 lg:flex-row">
         {/* Left column: actions */}
         {role === 'buyer' && !ended && (
-          <div className="flex-1 flex flex-col gap-6">
-            <Card className="p-4 bg-neutral-100 rounded-lg shadow">
+          <div className="flex flex-1 flex-col gap-6">
+            <Card className="rounded-lg bg-neutral-100 p-4 shadow">
               {/* Achat immédiat */}
               {auction.options?.buyNowPrice && (
                 <div className="flex flex-col items-center text-center">
-                  <span className="text-base font-medium text-gray-700 mb-2">
-                    Achat immédiat
+                  <span className="mb-2 text-base font-medium text-gray-700">
+                    {t('auction.buy_now_label')}
                   </span>
                   <Popover open={buyNowPopover} onOpenChange={setBuyNowPopover}>
                     <PopoverTrigger asChild>
                       <Button
-                        className="bg-amber-600 hover:bg-amber-700 text-white px-6"
+                        className="bg-amber-600 px-6 text-white hover:bg-amber-700"
                         onClick={() => setBuyNowPopover(true)}
                       >
-                        <ShoppingCart className="size-4 mr-2" />
+                        <ShoppingCart className="mr-2 size-4" />
                         {formatPrice.format(auction.options.buyNowPrice)}
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-64 p-4">
-                      <p className="text-center text-sm mb-4">
-                        Confirmer l’achat immédiat&nbsp;
-                        <span className="font-semibold">
-                          {formatPrice.format(auction.options.buyNowPrice)}
-                        </span>
-                        &nbsp;?
+                      <p className="mb-4 text-center text-sm">
+                        {t('auction.confirm_buy_now_prompt', {
+                          price: formatPrice.format(
+                            auction.options.buyNowPrice
+                          ),
+                        })}
                       </p>
                       <div className="flex justify-end gap-2">
                         <Button
@@ -307,7 +312,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                           size="sm"
                           onClick={() => setBuyNowPopover(false)}
                         >
-                          Annuler
+                          {t('buttons.cancel')}
                         </Button>
                         <Button
                           size="sm"
@@ -315,7 +320,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                             handleSubmitBuyNow(auction.options?.buyNowPrice)
                           }}
                         >
-                          Confirmer
+                          {t('buttons.confirm')}
                         </Button>
                       </div>
                     </PopoverContent>
@@ -325,16 +330,15 @@ const AuctionDetailsPanel: React.FC<Props> = ({
 
               <Separator />
 
-              {/* Ajouter une enchère */}
               {canBid && (
                 <div className="flex flex-col items-center text-center">
-                  <span className="text-base font-medium text-gray-700 mb-2">
-                    Ajouter une enchère
+                  <span className="mb-2 text-base font-medium text-gray-700">
+                    {t('auction.add_bid_label')}
                   </span>
                   <Input
                     type="number"
                     min="1"
-                    placeholder="Montant CFA"
+                    placeholder={t('form.placeholder.bid_amount_cfa')}
                     value={amount}
                     onChange={e => setAmount(e.target.value)}
                     className="mb-3 w-full bg-white"
@@ -349,17 +353,15 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                         className="w-full px-6"
                         onClick={() => setMakeBidPopover(true)}
                       >
-                        <PlusCircle className="size-4 mr-2" />
-                        Placer l'offre
+                        <PlusCircle className="mr-2 size-4" />
+                        {t('buttons.place_bid')}
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-64 p-4">
-                      <p className="text-center text-sm mb-4">
-                        Confirmer votre offre de&nbsp;
-                        <span className="font-semibold">
-                          {formatPrice.format(Number(amount) || 0)}
-                        </span>
-                        &nbsp;?
+                      <p className="mb-4 text-center text-sm">
+                        {t('auction.confirm_bid_prompt', {
+                          amount: formatPrice.format(Number(amount) || 0),
+                        })}
                       </p>
                       <div className="flex justify-end gap-2">
                         <Button
@@ -370,10 +372,10 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                             setMakeBidPopover(false)
                           }}
                         >
-                          Annuler
+                          {t('buttons.cancel')}
                         </Button>
                         <Button size="sm" onClick={handleSubmitBid}>
-                          Confirmer
+                          {t('buttons.confirm')}
                         </Button>
                       </div>
                     </PopoverContent>
@@ -385,32 +387,29 @@ const AuctionDetailsPanel: React.FC<Props> = ({
         )}
         {role === 'buyer' && ended && (
           <div>
-            <Card className="p-4 bg-neutral-100 rounded-lg shadow">
+            <Card className="rounded-lg bg-neutral-100 p-4 shadow">
               <div className="flex flex-col items-center text-center">
-                <span className="text-base font-medium text-gray-700 mb-2">
-                  Enchère terminée
+                <span className="mb-2 text-base font-medium text-gray-700">
+                  {t('auction.status.ended_title')}
                 </span>
                 <div className="text-sm text-gray-500">
-                  Cette enchère est maintenant terminée.
+                  {t('auction.status.ended_message')}
                 </div>
               </div>
             </Card>
           </div>
         )}
-        {/* Separator */}
-        {/* Right column: liste des bids */}
         <div className="flex-2">
           <Card className="overflow-hidden">
             <CardHeader>
-              <CardTitle className="text-lg text-center">
-                {sortedBids.length}{' '}
-                {sortedBids.length <= 1 ? 'offre ' : 'offres '} pour le lot
+              <CardTitle className="text-center text-lg">
+                {t('auction.bid_count_for_lot', { count: sortedBids.length })}
               </CardTitle>
             </CardHeader>
-            <CardContent className="max-h-80 overflow-y-auto divide-y bg-neutral-100 p-2">
+            <CardContent className="max-h-80 divide-y overflow-y-auto bg-neutral-100 p-2">
               {sortedBids.length === 0 ? (
-                <div className="text-center py-8 text-gray-500">
-                  Aucune offre pour le moment.
+                <div className="py-8 text-center text-gray-500">
+                  {t('auction.no_bids_yet')}
                 </div>
               ) : (
                 sortedBids.map(bid => (
@@ -440,18 +439,18 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                                 <Button
                                   size="sm"
                                   variant="outline"
-                                  className="flex items-center px-2 py-1 bg-green-700 text-white border-green-200"
+                                  className="flex items-center border-green-200 bg-green-700 px-2 py-1 text-white"
                                   onClick={() => {
                                     setAcceptBidPopoverIndex(bid.id)
                                   }}
                                 >
-                                  <CheckCircle className="h-3 w-3 mr-1" />{' '}
-                                  Accepter
+                                  <CheckCircle className="mr-1 h-3 w-3" />{' '}
+                                  {t('buttons.accept')}
                                 </Button>
                               </PopoverTrigger>
                               <PopoverContent className="w-48 p-2">
-                                <p className="text-sm text-center mb-2">
-                                  Accepter cette offre ?
+                                <p className="mb-2 text-center text-sm">
+                                  {t('auction.accept_bid_prompt')}
                                 </p>
                                 <div className="flex justify-end gap-2">
                                   <Button
@@ -461,7 +460,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                                       setAcceptBidPopoverIndex(-1)
                                     }}
                                   >
-                                    Annuler
+                                    {t('buttons.cancel')}
                                   </Button>
                                   <Button
                                     size="sm"
@@ -473,7 +472,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                                       )
                                     }
                                   >
-                                    Oui
+                                    {t('common.yes')}
                                   </Button>
                                 </div>
                               </PopoverContent>
@@ -484,17 +483,18 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                                 <Button
                                   size="sm"
                                   variant="outline"
-                                  className="flex items-center px-2 py-1 bg-red-600 text-white border-red-200"
+                                  className="flex items-center border-red-200 bg-red-600 px-2 py-1 text-white"
                                   onClick={() => {
                                     setRejectBidPopoverIndex(bid.id)
                                   }}
                                 >
-                                  <XCircle className="h-3 w-3 mr-1" /> Refuser
+                                  <XCircle className="mr-1 h-3 w-3" />{' '}
+                                  {t('buttons.reject')}
                                 </Button>
                               </PopoverTrigger>
                               <PopoverContent className="w-48 p-2">
-                                <p className="text-sm text-center mb-2">
-                                  Refuser cette offre ?
+                                <p className="mb-2 text-center text-sm">
+                                  {t('auction.reject_bid_prompt')}
                                 </p>
                                 <div className="flex justify-end gap-2">
                                   <Button
@@ -504,7 +504,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                                       setRejectBidPopoverIndex(-1)
                                     }}
                                   >
-                                    Annuler
+                                    {t('buttons.cancel')}
                                   </Button>
                                   <Button
                                     size="sm"
@@ -517,7 +517,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                                       )
                                     }
                                   >
-                                    Oui
+                                    {t('common.yes')}
                                   </Button>
                                 </div>
                               </PopoverContent>

@@ -35,7 +35,7 @@ export const Route = createFileRoute('/admin/')({
 
 function AdminDashboardComponent() {
   return (
-    <div className="flex flex-1 flex-col gap-4 @container/main md:gap-6">
+    <div className="@container/main flex flex-1 flex-col gap-4 md:gap-6">
       {/* SectionCards nécessitera des données ou une logique appropriée */}
       <SectionCards />
       <div className="px-0 lg:px-0">

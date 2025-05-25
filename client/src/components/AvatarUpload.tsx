@@ -53,7 +53,7 @@ export function AvatarUpload({ className, onChange }: AvatarUploadProps) {
       <div className="relative">
         {preview ? (
           <div className="relative">
-            <div className="h-32 w-32 rounded-full overflow-hidden border-2 border-border">
+            <div className="border-border h-32 w-32 overflow-hidden rounded-full border-2">
               <img
                 src={preview || '/placeholder.svg'}
                 alt="Avatar preview"
@@ -63,7 +63,7 @@ export function AvatarUpload({ className, onChange }: AvatarUploadProps) {
             <button
               type="button"
               onClick={handleRemove}
-              className="absolute top-0 right-0 bg-destructive text-destructive-foreground rounded-full p-1 transform translate-x-1/3 -translate-y-1/3 shadow-sm"
+              className="bg-destructive text-destructive-foreground absolute top-0 right-0 translate-x-1/3 -translate-y-1/3 transform rounded-full p-1 shadow-sm"
               aria-label="Remove image"
             >
               <X className="h-4 w-4" />
@@ -71,7 +71,7 @@ export function AvatarUpload({ className, onChange }: AvatarUploadProps) {
           </div>
         ) : (
           <div
-            className="h-32 w-32 rounded-full bg-muted flex items-center justify-center border-2 border-dashed border-border cursor-pointer"
+            className="bg-muted border-border flex h-32 w-32 cursor-pointer items-center justify-center rounded-full border-2 border-dashed"
             onClick={handleClick}
             onKeyDown={handleKeyDown}
             role="button"

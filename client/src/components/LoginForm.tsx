@@ -6,7 +6,7 @@ import logo from '@/assets/logo.svg'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
-import { Route as LoginRoute } from '@/routes/login'
+import { Route as LoginRoute } from '@/routes/connexion'
 import { LoginSchema } from '@/schemas/login-schemas.ts'
 import { useUserStore } from '@/store/userStore'
 import { useStore } from '@tanstack/react-form'
@@ -59,9 +59,9 @@ export function LoginForm() {
             <div className="flex flex-col gap-6">
               {/* Header */}
               <div className="flex flex-col items-center text-center">
-                <img src={logo} alt="Logo e-Annacarde" className="h-20" />
+                <img src={logo} alt={t('header.logo_alt')} className="h-20" />
                 <p className="text-muted-foreground text-balance">
-                  Connectez-vous à votre compte e-Annacarde
+                  {t('login.title_description')}
                 </p>
               </div>
 
@@ -71,10 +71,10 @@ export function LoginForm() {
                   name="username"
                   children={field => (
                     <field.TextField
-                      label="Adresse e-mail"
+                      label={t('form.mail')}
                       type="email"
                       endIcon={UserIcon}
-                      placeholder="m@example.com"
+                      placeholder={t('form.placeholder.email_example')}
                       disabled={isPending}
                     />
                   )}
@@ -87,10 +87,10 @@ export function LoginForm() {
                   name="password"
                   children={field => (
                     <field.TextField
-                      label="Mot de passe"
+                      label={t('form.password')}
                       type="password"
                       endIcon={LockIcon}
-                      placeholder="••••••••••"
+                      placeholder={t('form.placeholder.password_example')}
                       disabled={isPending}
                     />
                   )}
@@ -100,7 +100,7 @@ export function LoginForm() {
                     to="/recover-password"
                     className="ml-auto text-sm underline-offset-2 hover:underline"
                   >
-                    Mot de passe oublié ?
+                    {t('login.forgot_password')}
                   </Link>
                 </div>
               </div>
@@ -109,7 +109,7 @@ export function LoginForm() {
               {loginMutation.error && (
                 <Alert
                   variant="destructive"
-                  className="border-red-300 bg-red-50 mt-4 mb-4"
+                  className="mt-4 mb-4 border-red-300 bg-red-50"
                 >
                   <AlertCircle className="h-4 w-4" />
                   <AlertDescription>
@@ -132,7 +132,7 @@ export function LoginForm() {
               {/* Séparateur */}
               <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
                 <span className="bg-background text-muted-foreground relative z-10 px-2">
-                  Ou continuer avec
+                  {t('login.continue_with_separator')}
                 </span>
               </div>
 
@@ -145,7 +145,7 @@ export function LoginForm() {
                       fill="currentColor"
                     />
                   </svg>
-                  <span className="sr-only">Connexion avec Apple</span>
+                  <span className="sr-only">{t('login.social.apple_sr')}</span>
                 </Button>
                 <Button variant="outline" className="w-full">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -154,7 +154,7 @@ export function LoginForm() {
                       fill="currentColor"
                     />
                   </svg>
-                  <span className="sr-only">Connexion avec Google</span>
+                  <span className="sr-only">{t('login.social.google_sr')}</span>
                 </Button>
                 <Button variant="outline" className="w-full">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -163,15 +163,18 @@ export function LoginForm() {
                       fill="currentColor"
                     />
                   </svg>
-                  <span className="sr-only">Connexion avec Meta</span>
+                  <span className="sr-only">{t('login.social.meta_sr')}</span>
                 </Button>
               </div>
 
               {/* Inscription */}
-              <div className="text-center text-sm">
-                Vous n’avez pas de compte ?{' '}
-                <Link to="/signup" className="underline underline-offset-4">
-                  Inscrivez-vous
+              <div className="text-center text-lg">
+                {t('login.signup_prompt')}{' '}
+                <Link
+                  to="/inscription"
+                  className="underline underline-offset-4"
+                >
+                  {t('breadcrumb.signup')}
                 </Link>
               </div>
             </div>
@@ -181,15 +184,15 @@ export function LoginForm() {
 
       {/* Mentions légales */}
       <div className="text-muted-foreground hover:[&_a]:text-primary text-center text-xs text-balance [&_a]:underline [&_a]:underline-offset-4">
-        En cliquant sur Continuer, vous acceptez nos{' '}
+        {t('login.terms_prefix')}
         <Link to="/terms" className="underline underline-offset-4">
-          Conditions d’utilisation
-        </Link>{' '}
-        et notre{' '}
-        <Link to="/privacy" className="underline underline-offset-4">
-          Politique de confidentialité
+          {t('breadcrumb.terms')}
         </Link>
-        .
+        {t('login.terms_separator')}
+        <Link to="/privacy" className="underline underline-offset-4">
+          {t('breadcrumb.privacy')}
+        </Link>
+        {t('login.terms_suffix')}
       </div>
     </div>
   )

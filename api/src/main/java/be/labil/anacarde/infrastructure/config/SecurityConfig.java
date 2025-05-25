@@ -99,8 +99,9 @@ public class SecurityConfig {
 		http.authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.POST, "/api/users")
 				.permitAll().requestMatchers(HttpMethod.GET, "/api/app").permitAll()
 				.requestMatchers(HttpMethod.POST, "/api/contact").permitAll()
-				.requestMatchers("/api/auth/**", "/v3/api-docs**", "/swagger-ui/**").permitAll()
-				.anyRequest().authenticated());
+				.requestMatchers("/api/auth/**", "/v3/api-docs**", "/swagger-ui/**",
+						"/api/users/check/**")
+				.permitAll().anyRequest().authenticated());
 
 		// Filtres
 		http.addFilterBefore(originFilter, CsrfFilter.class);

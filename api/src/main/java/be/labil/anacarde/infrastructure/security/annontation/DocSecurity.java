@@ -1,4 +1,4 @@
-package be.labil.anacarde.infrastructure.security;
+package be.labil.anacarde.infrastructure.security.annontation;
 
 import be.labil.anacarde.infrastructure.persistence.DocumentRepository;
 import lombok.RequiredArgsConstructor;

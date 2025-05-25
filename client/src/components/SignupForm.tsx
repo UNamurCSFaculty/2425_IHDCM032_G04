@@ -1,98 +1,200 @@
-import { Alert, AlertDescription, AlertTitle } from './ui/alert'
-import { createUserMutation } from '@/api/generated/@tanstack/react-query.gen.ts'
-import { BreadcrumbSection } from '@/components/BreadcrumbSection.tsx'
+import Stepper from './Stepper'
+import { checkEmail, checkPhone } from '@/api/generated'
+import { createUserMutation } from '@/api/generated/@tanstack/react-query.gen'
+import { zAddressDto, zUserUpdateDto } from '@/api/generated/zod.gen' // zAddressDto a été ajouté
+import { BreadcrumbSection } from '@/components/BreadcrumbSection'
 import { useAppForm } from '@/components/form'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { calculatePasswordStrength, cn, type DeepPartial } from '@/lib/utils'
 import { zUser } from '@/schemas/api-schemas'
 import { useAppData } from '@/store/appStore'
 import { useStore } from '@tanstack/react-form'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
-import { AlertCircle } from 'lucide-react'
-import React, { useEffect } from 'react'
+import { AlertCircle, ArrowRight, Loader2 } from 'lucide-react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import z from 'zod'
+import { z } from 'zod/v4'
+import { PasswordStrengthIndicator } from './PasswordStrengthIndicator'
 
-export const zUserRegistration = zUser
+const zUserRegistration = zUser
   .and(
     z.object({
-      passwordValidation: z.string(),
+      password: z.string().min(8),
+      passwordValidation: z.string().min(8),
+      acceptTerms: z
+        .boolean()
+        .refine(v => v === true, { message: 'errors.accept_terms' }),
+      documents: z.array(z.file()).min(1),
     })
   )
   .refine(data => data.password === data.passwordValidation, {
     path: ['passwordValidation'],
+    message: 'errors.password_mismatch',
   })
 
 export type UserRegistration = z.infer<typeof zUserRegistration>
+type UserRegistrationDraft = DeepPartial<UserRegistration>
+type StepField =
+  | keyof UserRegistration
+  | 'agriculturalIdentifier'
+  | 'address.cityId'
+  | 'address.street'
+  | 'address.location'
+  | 'pricePerKm'
+  | 'radius'
+
+const StepPanel: React.FC<{
+  index: number
+  current: number
+  children: React.ReactNode
+}> = ({ index, current, children }) => {
+  const isActive = index === current
+  return (
+    <div
+      className={cn(
+        'w-full transition-all duration-300',
+        isActive
+          ? 'relative translate-x-0 opacity-100'
+          : 'pointer-events-none absolute opacity-0'
+      )}
+    >
+      {children}
+    </div>
+  )
+}
 
 export const SignupForm: React.FC = () => {
   const navigate = useNavigate()
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const appData = useAppData()
+  const containerRef = useRef<HTMLDivElement>(null)
 
-  const signinMutation = useMutation({
+  const [step, setStep] = useState(1)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const mutation = useMutation({
     ...createUserMutation(),
-    onSuccess() {
-      navigate({ to: '/login' })
-    },
-    onError(error) {
-      console.error('Requête invalide :', error)
-    },
+    onSuccess: () => navigate({ to: '/inscription-succes' }),
   })
+  const { isError, error } = mutation
 
-  const { isPending, isError, error } = signinMutation
-
-  const form = useAppForm<
-    UserRegistration, // TFormData
-    undefined, // TOnMount
-    typeof zUserRegistration, // TOnChange
-    undefined, // TOnChangeAsync
-    undefined, // TOnBlur
-    undefined, // TOnBlurAsync
-    undefined, // TOnSubmit
-    undefined, // TOnSubmitAsync
-    undefined, // TOnServer
-    undefined // TSubmitMeta
-  >({
+  const form = useAppForm({
     validators: { onChange: zUserRegistration },
     defaultValues: {
       documents: [],
-      type: 'producer',
+      type: undefined,
       firstName: '',
       lastName: '',
       email: '',
       phone: '+22901',
-      address: {
-        cityId: 0,
-        street: '',
-      },
+      address: {},
       password: '',
       passwordValidation: '',
       languageId: appData.languages[0].id,
       agriculturalIdentifier: '',
-    },
-    onSubmit({ value }) {
-      console.log('Form submitted:', value)
-      const { documents = [], ...user } = value
-      /*
-      const formData = new FormData()
-      formData.append(
-        'user', // nom de la part JSON
-        new Blob([JSON.stringify(user)], {
-          type: 'application/json',
-        })
-      )
-      documents.forEach(f => formData.append('documents', f))
-      */
-
-      signinMutation.mutate({ body: { user, documents } })
+      acceptTerms: false,
+      radius: 0,
+      pricePerKm: 0,
+    } as UserRegistrationDraft,
+    async onSubmit({ value }) {
+      const userRegistration = value as UserRegistration
+      zUserRegistration.parse(userRegistration)
+      const { documents = [], ...user } = userRegistration
+      setIsSubmitting(true)
+      try {
+        await mutation.mutateAsync({ body: { user, documents } })
+      } finally {
+        setIsSubmitting(false)
+      }
     },
   })
 
-  useEffect(() => {
-    form.validate('change')
-  }, [i18n.language, form])
+  const values = useStore(form.store, s => s.values)
 
-  const type = useStore(form.store, state => state.values.type)
+  const stepFields: Record<number, StepField[]> = {
+    1: [
+      'type',
+      'firstName',
+      'lastName',
+      'languageId',
+      'email',
+      'phone',
+      'agriculturalIdentifier',
+    ],
+    2: [
+      'address.cityId',
+      'address.street',
+      'address.location',
+      'pricePerKm',
+      'radius',
+    ],
+    3: ['documents', 'password', 'passwordValidation', 'acceptTerms'],
+  }
+
+  /** Valide tous les champs du step et renvoie true s’ils sont OK */
+  const validateStep = async (stepToValidate: number): Promise<boolean> => {
+    const fieldsForStep = stepFields[stepToValidate]
+    if (!fieldsForStep) return true // Aucune configuration de champ pour cette étape
+
+    let hasErrorInStep = false
+    for (const fieldName of fieldsForStep) {
+      const fieldNameTyped = fieldName as keyof UserRegistration
+      // Déclencher la validation pour 'change' et 'blur' pour afficher les erreurs
+      const changeErrors = await form.validateField(fieldNameTyped, 'change')
+      if (changeErrors && changeErrors.length > 0) {
+        hasErrorInStep = true
+      }
+
+      const blurErrors = await form.validateField(fieldNameTyped, 'blur')
+      if (blurErrors && blurErrors.length > 0) {
+        hasErrorInStep = true
+      }
+    }
+    return !hasErrorInStep
+  }
+
+  const nextStep = async () => {
+    if (await validateStep(step)) {
+      setStep(s => s + 1)
+    }
+  }
+  const prevStep = () => setStep(s => s - 1)
+
+  const handleStepClick = async (targetStep: number) => {
+    if (targetStep === step) return // Ne rien faire si on clique sur l'étape actuelle
+
+    if (targetStep < step) {
+      setStep(targetStep)
+    } else {
+      // targetStep > step
+      let allPreviousStepsValid = true
+      // Valider toutes les étapes de l'actuelle (step) jusqu'à targetStep - 1
+      for (let i = step; i < targetStep; i++) {
+        const isStepValid = await validateStep(i)
+        if (!isStepValid) {
+          allPreviousStepsValid = false
+          setStep(i) // Afficher l'étape qui a échoué la validation
+          break
+        }
+      }
+
+      if (allPreviousStepsValid) {
+        setStep(targetStep)
+      }
+    }
+  }
+  useEffect(() => {
+    containerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }, [step])
 
   return (
     <section className="body-font relative text-gray-600">
@@ -101,191 +203,311 @@ export const SignupForm: React.FC = () => {
         subtitleKey="app.signup.subtitle"
         breadcrumbs={[{ labelKey: 'breadcrumb.signup' }]}
       />
-      <div className="container mx-auto px-5 py-24">
-        <div className="mx-auto">
-          <form
-            onSubmit={e => {
-              e.preventDefault()
-              e.stopPropagation()
-              form.handleSubmit()
-            }}
-            className="-m-2 flex flex-wrap"
-          >
-            <div className="w-1/2 p-2">
-              <form.AppField
-                name="type"
-                children={field => (
-                  <field.SelectField
-                    options={[
-                      { value: 'exporter', label: 'Exportateur' },
-                      { value: 'quality_inspector', label: 'Qualiticien' },
-                      { value: 'producer', label: 'Producteur' },
-                      { value: 'transformer', label: 'Transformateur' },
-                      { value: 'carrier', label: 'Transporteur' },
-                    ]}
-                    disabled={isPending}
-                    label={t('form.type')}
-                  />
-                )}
-              />
-            </div>
-            <div className="w-1/2 p-2">
-              <form.AppField
-                name="lastName"
-                children={field => (
-                  <field.TextField
-                    label={t('form.last_name')}
-                    disabled={isPending}
-                  />
-                )}
-              />
-            </div>
-            <div className="w-1/2 p-2">
-              <form.AppField
-                name="firstName"
-                children={field => (
-                  <field.TextField
-                    label={t('form.first_name')}
-                    disabled={isPending}
-                  />
-                )}
-              />
-            </div>
-            <div className="w-1/2 p-2">
-              <form.AppField
-                name="languageId"
-                children={field => (
-                  <field.SelectField
-                    options={appData.languages.map(lang => ({
-                      value: lang.id,
-                      label: t('languages.' + lang.code),
-                    }))}
-                    label={t('form.language')}
-                  />
-                )}
-              />
-            </div>
-            <div className="w-1/2 p-2">
-              <form.AppField
-                name="email"
-                children={field => (
-                  <field.TextField
-                    type="email"
-                    label={t('form.mail')}
-                    disabled={isPending}
-                  />
-                )}
-              />
-            </div>
-            <div className="w-1/2 p-2">
-              <form.AppField
-                name="address"
-                children={field => (
-                  <field.AddressField
-                    withMap={true}
-                    label={t('form.address')}
-                  />
-                )}
-              />
-            </div>
-            <div className="w-1/2 p-2">
-              <form.AppField
-                name="phone"
-                children={field => (
-                  <field.TextField
-                    label={t('form.phone')}
-                    disabled={isPending}
-                    value={field.state.value}
-                    onChange={e => {
-                      field.handleChange(e.target.value.replace(/\s+/g, ''))
+
+      <div
+        ref={containerRef}
+        className="container mx-auto max-w-3xl px-5 py-24"
+      >
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-xl">{t('app.signup.title')}</CardTitle>
+            <CardDescription>{t('app.signup.subtitle')}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Stepper step={step} onStepClick={handleStepClick} totalSteps={3} />
+
+            <form
+              onSubmit={e => {
+                e.preventDefault()
+                form.handleSubmit()
+              }}
+              className="relative h-fit space-y-6"
+            >
+              <StepPanel index={1} current={step}>
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <form.AppField name="type">
+                    {f => (
+                      <f.RadioGroupField
+                        className="md:col-span-2"
+                        direction="row"
+                        choices={[
+                          { value: 'producer', label: t('types.producer') },
+                          {
+                            value: 'transformer',
+                            label: t('types.transformer'),
+                          },
+                          { value: 'exporter', label: t('types.exporter') },
+                          { value: 'carrier', label: t('types.carrier') },
+                        ]}
+                        label={t('form.type')}
+                      />
+                    )}
+                  </form.AppField>
+
+                  <form.AppField name="lastName">
+                    {f => <f.TextField label={t('form.last_name')} />}
+                  </form.AppField>
+                  <form.AppField name="firstName">
+                    {f => <f.TextField label={t('form.first_name')} />}
+                  </form.AppField>
+
+                  <form.AppField
+                    name="email"
+                    validators={{
+                      onChange: zUserUpdateDto.shape.email,
+                      onBlurAsync: async ({ value }) => {
+                        if (!value) return
+                        const exists = await checkEmail({
+                          query: { email: value },
+                        })
+                        return exists.data
+                          ? t('errors.email.exists')
+                          : undefined
+                      },
                     }}
-                  />
-                )}
-              />
-            </div>
-            {type === 'producer' ? (
-              <div className="w-1/2 p-2">
-                <form.AppField
-                  name="agriculturalIdentifier"
-                  children={field => (
-                    <field.TextField
-                      label={t('form.agricultural_identifier')}
-                      disabled={isPending}
+                  >
+                    {f => <f.TextField type="email" label={t('form.mail')} />}
+                  </form.AppField>
+
+                  <form.AppField
+                    name="phone"
+                    validators={{
+                      onChange: zUserUpdateDto.shape.phone,
+                      onBlurAsync: async ({ value }) => {
+                        if (!value) return
+                        const exists = await checkPhone({
+                          query: { phone: value },
+                        })
+                        return exists.data
+                          ? t('errors.phone.exists')
+                          : undefined
+                      },
+                    }}
+                  >
+                    {f => <f.PhoneField label={t('form.phone')} required />}
+                  </form.AppField>
+
+                  <form.AppField name="languageId">
+                    {f => (
+                      <f.VirtualizedSelectField
+                        placeholder={t('form.placeholder.language')}
+                        options={appData.languages.map(l => ({
+                          id: l.id,
+                          label: t('languages.' + l.code),
+                        }))}
+                        label={t('form.language')}
+                      />
+                    )}
+                  </form.AppField>
+
+                  {values.type === 'producer' ? (
+                    <form.AppField name="agriculturalIdentifier">
+                      {f => (
+                        <f.TextField
+                          label={t('form.agricultural_identifier')}
+                        />
+                      )}
+                    </form.AppField>
+                  ) : (
+                    <div aria-hidden="true" />
+                  )}
+                </div>
+              </StepPanel>
+
+              <StepPanel index={2} current={step}>
+                <div className="grid grid-cols-1 gap-4">
+                  {values.type === 'carrier' && (
+                    <fieldset className="space-y-3 rounded-md border-2 border-gray-200 p-4">
+                      <legend className="px-2 text-lg font-semibold">
+                        {t('form.carrier_details')}
+                      </legend>
+                      <div className="grid grid-cols-2 gap-4">
+                        <form.AppField name="pricePerKm">
+                          {f => (
+                            <f.TextField<number>
+                              label={t('form.price_per_km')}
+                              fieldType="number"
+                              tooltip={t('form.tooltip.price_per_km')}
+                              type="number"
+                              required={false}
+                              placeholder={t(
+                                'form.placeholder.price_per_km_example'
+                              )}
+                            />
+                          )}
+                        </form.AppField>
+
+                        <form.AppField name="radius">
+                          {f => (
+                            <f.TextField<number>
+                              label={t('form.radius')}
+                              type="number"
+                              tooltip={t('form.tooltip.radius')}
+                              fieldType="number"
+                              required={false}
+                              placeholder={t('form.placeholder.radius_example')}
+                            />
+                          )}
+                        </form.AppField>
+                      </div>
+                    </fieldset>
+                  )}
+
+                  <fieldset className="space-y-3 rounded-md border-2 border-gray-200 p-4">
+                    <legend className="px-2 text-lg font-semibold">
+                      {t('form.address')}
+                    </legend>
+                    <form.AppField
+                      name="address.cityId"
+                      validators={{ onChange: zAddressDto.shape.cityId }}
+                    >
+                      {f => (
+                        <f.CityField
+                          label={t('form.city')}
+                          tooltip={t('form.tooltip.city')}
+                          required
+                        />
+                      )}
+                    </form.AppField>
+
+                    <form.AppField name="address.street">
+                      {f => (
+                        <f.TextField
+                          label={t('form.street_quarter')}
+                          required={false}
+                          placeholder={t('form.placeholder.street_example')}
+                        />
+                      )}
+                    </form.AppField>
+
+                    <form.AppField
+                      name="address.location"
+                      validators={{
+                        onChange: zAddressDto.shape.location,
+                      }}
+                    >
+                      {f => (
+                        <f.LocationField
+                          label={t('form.location')}
+                          mapHeight="280px"
+                          tooltip={t('form.tooltip.location')}
+                          radius={
+                            values.type === 'carrier' && values.radius
+                              ? values.radius * 1000
+                              : 0
+                          }
+                          required
+                        />
+                      )}
+                    </form.AppField>
+                  </fieldset>
+                </div>
+              </StepPanel>
+
+              <StepPanel index={3} current={step}>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <form.AppField name="password">
+                    {f => (
+                      <f.TextField type="password" label={t('form.password')} />
+                    )}
+                  </form.AppField>
+                  <form.AppField name="passwordValidation">
+                    {f => (
+                      <f.TextField
+                        type="password"
+                        label={t('form.confirm_password')}
+                      />
+                    )}
+                  </form.AppField>
+                  {values.password && (
+                    <PasswordStrengthIndicator
+                      className="col-span-full"
+                      strength={calculatePasswordStrength(values.password)}
                     />
                   )}
-                />
-              </div>
-            ) : (
-              <div className="w-1/2 p-2" aria-hidden="true" />
-            )}
-            <div className="w-1/2 p-2">
-              <form.AppField
-                name="password"
-                children={field => (
-                  <field.TextField
-                    type="password"
-                    label={t('form.password')}
-                    disabled={isPending}
-                  />
-                )}
-              />
-            </div>
-            <div className="w-1/2 p-2">
-              <form.AppField
-                name="passwordValidation"
-                children={field => (
-                  <field.TextField
-                    type="password"
-                    label={t('form.confirm_password')}
-                    disabled={isPending}
-                  />
-                )}
-              />
-            </div>
-            {isError && error?.errors?.length > 0 && (
-              <Alert
-                variant="destructive"
-                className="border-red-300 bg-red-50 mt-4 mb-4"
-              >
-                <AlertCircle className="h-4 w-4" />
-                <AlertTitle>{t('common.error')}</AlertTitle>
-                <AlertDescription>
-                  <ul className="list-disc">
-                    {error.errors.map((err, idx) => (
-                      <li key={idx} className="mb-1">
-                        {err.field
-                          ? `${t('errors.fields.' + err.field)}: `
-                          : ''}
-                        {t('errors.' + err.code)}
-                      </li>
-                    ))}
-                  </ul>
-                </AlertDescription>
-              </Alert>
-            )}
+                  <form.AppField name="documents">
+                    {f => (
+                      <f.FileUploadField
+                        className="col-span-full"
+                        label={t('form.documents')}
+                        accept="application/pdf,image/*"
+                        maxFiles={5}
+                        maxSize={5}
+                      />
+                    )}
+                  </form.AppField>
+                  <form.AppField name="acceptTerms">
+                    {f => (
+                      <f.CheckboxField
+                        className="col-span-full"
+                        label={t('form.accept_terms')}
+                        required
+                      />
+                    )}
+                  </form.AppField>
+                </div>
+              </StepPanel>
 
-            <form.AppField
-              name="documents"
-              children={field => (
-                <field.FileUploadField
-                  label={t('form.documents')}
-                  accept="application/pdf,image/*"
-                  maxFiles={5}
-                  maxSize={5}
-                />
+              {isError && error?.errors?.length > 0 && (
+                <Alert
+                  variant="destructive"
+                  className="mt-4 border-red-300 bg-red-50"
+                >
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertTitle>{t('common.error')}</AlertTitle>
+                  <AlertDescription>
+                    <ul className="list-disc pl-4">
+                      {error.errors.map((err, i) => (
+                        <li key={i}>
+                          {err.field
+                            ? `${t('errors.fields.' + err.field)}: `
+                            : ''}
+                          {t('errors.' + err.code)}
+                        </li>
+                      ))}
+                    </ul>
+                  </AlertDescription>
+                </Alert>
               )}
-            />
 
-            <div className="flex w-full items-center justify-center gap-4 p-2">
-              <form.AppForm>
-                <form.SubmitButton disabled={isPending}>
-                  {t('buttons.submit')}
-                </form.SubmitButton>
-                <form.ResetButton>{t('buttons.reinitialise')}</form.ResetButton>
-              </form.AppForm>
-            </div>
-          </form>
-        </div>
+              <div className="flex justify-between">
+                {step > 1 ? (
+                  <Button type="button" variant="outline" onClick={prevStep}>
+                    {t('pagination.previous')}
+                  </Button>
+                ) : (
+                  <span /> // Pour maintenir l'alignement si le bouton précédent n'est pas là
+                )}
+
+                {/* Le bouton "Suivant" est toujours dans le DOM, masqué à la dernière étape */}
+                <Button
+                  type="button"
+                  onClick={nextStep}
+                  className={cn(step >= 3 && 'hidden')} // Masqué si à l'étape 3 ou plus
+                >
+                  {t('pagination.next')}
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+
+                {/* Le bouton "Soumettre" est toujours dans le DOM, visible uniquement à la dernière étape */}
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className={cn(step < 3 && 'hidden')} // Masqué si avant l'étape 3
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      {t('buttons.submitting')}
+                    </>
+                  ) : (
+                    t('buttons.submit')
+                  )}
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
       </div>
     </section>
   )

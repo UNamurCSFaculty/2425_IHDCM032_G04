@@ -79,4 +79,20 @@ public interface UserService {
 	 * @return Un UserDto représentant l'utilisateur mis à jour.
 	 */
 	UserDetailDto updateUserRoles(Integer userId, List<String> roleNames);
+
+	/**
+	 * Vérifie si un utilisateur existe déjà dans le système en fonction de son adresse e-mail.
+	 * 
+	 * @param email
+	 * @return true si l'adresse e-mail existe déjà, false sinon.
+	 */
+	boolean emailExists(String email);
+
+	/**
+	 * Vérifie si un numéro de téléphone existe déjà dans le système.
+	 *
+	 * @param phone
+	 * @return true si le numéro de téléphone existe déjà, false sinon.
+	 */
+	boolean phoneExists(String phone);
 }
