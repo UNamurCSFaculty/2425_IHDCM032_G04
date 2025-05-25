@@ -185,8 +185,8 @@ const AuctionDetailsPanel: React.FC<Props> = ({
   return (
     <div className="mx-auto flex w-full flex-col gap-6 p-4">
       {/* Header */}
-      <div className="space-y-1 flex flex-wrap">
-        <h2 className="text-2xl font-semibold flex items-center gap-2">
+      <div className="flex flex-wrap space-y-1">
+        <h2 className="flex items-center gap-2 text-2xl font-semibold">
           Produit {t('database.' + auction.product.type)} · Lot n°
           {auction.product.id} · Enchère n°{auction.id}
         </h2>

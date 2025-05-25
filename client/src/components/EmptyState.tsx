@@ -15,8 +15,8 @@ const EmptyState: React.FC<EmptyStateProps> = ({ className }) => (
     )}
   >
     <CardContent>
-      <div className="flex flex-col items-center justify-center mb-4">
-        <SearchX className="size-16 text-muted-foreground mb-2" />
+      <div className="mb-4 flex flex-col items-center justify-center">
+        <SearchX className="text-muted-foreground mb-2 size-16" />
         <CardTitle>Aucun résultat trouvé</CardTitle>
       </div>
 
