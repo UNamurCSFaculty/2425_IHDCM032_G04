@@ -1,0 +1,644 @@
+{
+  "app": {
+    "accueil": {
+      "subtitle": "انضم إلى منصة المزاد العلني في الوقت الفعلي للكاجو ومنتجاته المصنعة في بنين. راقب، زايد، وادعم المنتجين المحليين بثقة.",
+      "title": "مزادات وسوق الكاجو",
+      "image_alt_cashew_nuts": "رسم توضيحي للكاجو"
+    },
+    "contact": {
+      "title": "اتصل بنا",
+      "subtitle": "نحن هنا للمساعدة. أرسل لنا رسالة وسنرد عليك في أقرب وقت ممكن."
+    },
+    "loading": "جار التحميل…",
+    "networkError": "تعذر الوصول إلى الخادم",
+    "signup": {
+      "subtitle": "سيتم التحقق من تسجيلك في غضون 48 ساعة بعد إرسال النموذج.",
+      "title": "اشتراك"
+    },
+    "statut": {
+      "connection": "جار الاتصال...",
+      "log_in": "تسجيل الدخول"
+    },
+    "title": "تطبيقي الرائع",
+    "welcome": {
+      "message": "هل أنت مستعد لمزاداتك القادمة؟",
+      "title": "مرحباً"
+    },
+    "auctions_sales": {
+      "title": "مبيعاتي",
+      "subtitle": "بع منتجاتك عبر الإنترنت وتحقق من العروض على مزاداتك."
+    },
+    "auctions_new_sale": {
+      "title": "بيع جديد",
+      "subtitle": "أنشئ مزادًا جديدًا لمنتجك."
+    },
+    "auctions_buys": {
+      "title": "مشترياتي",
+      "subtitle": "تحقق من مشترياتك الحالية والمزادات التي فزت بها حتى الآن."
+    },
+    "deposits_new_product": {
+      "title": "منتج جديد",
+      "subtitle": "إيداع منتج جديد في المتجر."
+    },
+    "deposits_list_products": {
+      "title": "منتجاتي",
+      "subtitle": "عرض جميع منتجاتك المودعة المتاحة للبيع."
+    },
+    "marketplace": {
+      "title": "سوق المزادات",
+      "subtitle": "شراء المنتجات عبر الإنترنت."
+    },
+    "signup_success": {
+      "title": "تم التسجيل بنجاح!",
+      "description_line1": "تم تسجيل طلب التسجيل الخاص بك بنجاح.",
+      "description_line2": "حسابك قيد التحقق من قبل المسؤول.",
+      "email_notification": "ستتلقى رسالة بريد إلكتروني بمجرد تفعيل حسابك.",
+      "go_to_login": "اذهب إلى صفحة تسجيل الدخول"
+    }
+  },
+  "homepage": {
+    "features": {
+      "section_title_prefix": "لماذا تختار ",
+      "section_title_brand": "e-Anacarde",
+      "section_title_suffix": "؟",
+      "section_subtitle": "اكتشف كيف تُحدث منصتنا ثورة في مزادات الكاجو بالتكنولوجيا والأمان والتأثير الاجتماعي.",
+      "items": {
+        "real_time": {
+          "title": "مزادات في الوقت الفعلي",
+          "description": "تابع كل مزاد ولا تفوت فرصة للمزايدة."
+        },
+        "secure_transactions": {
+          "title": "معاملات آمنة",
+          "description": "إدارة دفع وتسليم شاملة لراحة بالك."
+        },
+        "industry_support": {
+          "title": "دعم الصناعة",
+          "description": "ادعم المنتجين المحليين وساهم في التنمية المستدامة."
+        }
+      }
+    },
+    "blog": {
+      "title": "مدونتنا",
+      "subtitle": "اكتشف آخر الأخبار والمعايير والنصائح لتحسين مزادات الكاجو الخاصة بك في بنين.",
+      "article1": {
+        "category": "برنامج تعليمي",
+        "date": "منذ 3 أيام",
+        "title": "كيف تتقن مزادات الكاجو على e-Anacarde",
+        "description": "اتبع دليلنا خطوة بخطوة لفهم عملية المزاد، وتحديد احتياطياتك، وزيادة دخلك على منصة مزادات الكاجو الرائدة في بنين.",
+        "author": "عائشاتو أديغبيدي"
+      },
+      "article2": {
+        "category": "أخبار",
+        "date": "منذ 7 أيام",
+        "title": "معايير حكومية جديدة لإنتاج الكاجو",
+        "description": "أصدرت حكومة بنين مبادئ توجيهية جديدة لتحسين جودة الكاجو وإمكانية تتبعه. اكتشف المتطلبات وكيفية الامتثال لها.",
+        "author": "كوفي مينساه"
+      },
+      "author_avatar_alt": "الصورة الرمزية للمؤلف",
+      "read_more": "اقرأ المزيد"
+    },
+    "hero": {
+      "heading": "مزادات الكاجو عبر الإنترنت",
+      "description": "شارك في مزادات الكاجو ومشتقاته في الوقت الفعلي في بنين. راقب كل عرض، زايد، وادعم المنتجين المحليين بثقة.",
+      "buttons": {
+        "primary_text": "عرض المزادات",
+        "secondary_text": "اعرف المزيد"
+      },
+      "image_alt": "شعار e-Anacarde، منصة مزادات الكاجو"
+    },
+    "faq": {
+      "heading": "أسئلة مكررة",
+      "q1_question": "ما هو e-Anacarde؟",
+      "q1_answer": "e-Anacarde هي منصة مزادات عبر الإنترنت مخصصة للكاجو في بنين، تربط المنتجين والمشترين مباشرة لزيادة الشفافية وقيمة المعاملات.",
+      "q2_question": "كيف يمكنني التسجيل كمنتج؟",
+      "q2_answer_part1": "للتسجيل، املأ النموذج بمعلومات الإنتاج الخاصة بك وقم بتحميل المستندات المطلوبة للتحقق.",
+      "q3_question": "كيف أشارك في مزاد؟",
+      "q3_answer": "بعد التحقق من حسابك، قم بتسجيل الدخول، وانتقل إلى صفحة المزاد، وحدد دفعة الكاجو المطلوبة، وقدم عرضك مع الإشارة إلى المبلغ الذي ترغب في دفعه.",
+      "q4_question": "ما هي رسوم الخدمة؟",
+      "q4_answer": "تطبق e-Anacarde عمولة بنسبة 2٪ على المبلغ النهائي لكل مزاد فائز، بدون رسوم خفية للمنتجين أو المشترين.",
+      "q5_question": "كيف يتم الدفع والتسليم؟",
+      "q5_answer": "بمجرد الفوز بالمزاد، يتم الدفع عبر شركائنا في الدفع عبر الهاتف المحمول (MoMo، Flooz) أو التحويل المصرفي. يتم تنظيم التسليم من قبل شركات نقل معتمدة، على نفقة المشتري أو وفقًا للاتفاقية.",
+      "q6_question": "ما هي معايير الجودة التي يجب أن ألتزم بها؟",
+      "q6_answer": "يجب أن تمتثل للمبادئ التوجيهية الحكومية الجديدة في بنين بشأن معايرة الكاجو ومحتوى الرطوبة والتعبئة والتغليف. تحقق من مقالتنا 'معايير حكومية جديدة لإنتاج الكاجو' للحصول على جميع التفاصيل."
+    }
+  },
+  "breadcrumb": {
+    "about": "عنا",
+    "auctions": "المزادات",
+    "buy": "شراء",
+    "home": "الرئيسية",
+    "contact": "اتصال",
+    "login": "تسجيل الدخول",
+    "marketplace": "سوق المزادات",
+    "privacy": "سياسة الخصوصية",
+    "profile": "الملف الشخصي",
+    "sell": "بيع",
+    "settings": "الإعدادات",
+    "signup": "اشتراك",
+    "terms": "شروط الاستخدام",
+    "vendre": "بيع",
+    "my_auctions": "مزاداتي",
+    "new_auction": "مزاد جديد",
+    "deposits": "الودائع",
+    "my_deposits": "منتجاتي",
+    "new_deposit": "منتج جديد"
+  },
+  "buttons": {
+    "cancel": "إلغاء",
+    "connection": "تسجيل الدخول",
+    "home_connection": "ابدأ الآن",
+    "reinitialise": "إعادة تعيين",
+    "submit": "إرسال",
+    "submitting": "جار الإرسال...",
+    "subscribe": "إنشاء حساب",
+    "view_all_news": "عرض جميع الأخبار",
+    "details": "تفاصيل",
+    "buy": "شراء",
+    "view_details": "عرض التفاصيل",
+    "confirm": "تأكيد",
+    "place_bid": "تقديم عرض",
+    "accept": "قبول",
+    "reject": "رفض",
+    "back": "رجوع",
+    "reset": "إعادة تعيين",
+    "delete": "حذف"
+  },
+  "common": {
+    "add": "إضافة",
+    "clear": "مسح",
+    "close": "إغلاق",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "step": "خطوة",
+    "error": "خطأ",
+    "info": "معلومات",
+    "loading": "جار التحميل...",
+    "no": "لا",
+    "ok": "موافق",
+    "save": "حفظ",
+    "search": "بحث",
+    "select": "تحديد",
+    "success": "نجاح",
+    "view": "عرض",
+    "warning": "تحذير",
+    "yes": "نعم"
+  },
+  "errors": {
+    "access.denied": "تم رفض الوصول: ليس لديك الحقوق الكافية.",
+    "access.disabled": "يجب تفعيل حسابك من قبل مسؤول قبل أن تتمكن من الوصول إلى المنصة.",
+    "access.forbidden": "الوصول محظور",
+    "access.forbidden.csrf": "رمز CSRF غير متطابق",
+    "access.forbidden.csrf.missing": "رمز CSRF مفقود",
+    "access.unauthorized": "فشل المصادقة",
+    "agriculture_id.exists": "معرف الزراعة هذا مستخدم بالفعل",
+    "bad_request": "طلب غير صالح",
+    "default.error": "انتهاك سلامة البيانات",
+    "email.exists": "هذا البريد الإلكتروني مستخدم بالفعل",
+    "fields": {
+      "agriculturalIdentifier": "معرف الزراعة",
+      "email": "البريد الإلكتروني",
+      "phone": "الهاتف"
+    },
+    "internal_error": "حدث خطأ داخلي. اتصل بالدعم إذا استمرت المشكلة.",
+    "message.not_readable": "رسالة HTTP غير قابلة للقراءة",
+    "method.not_allowed": "الطريقة غير مسموح بها",
+    "missing.path_variable": "متغير المسار مفقود",
+    "missing.request_param": "معلمة الطلب مفقودة",
+    "no_handler_found": "لا يوجد نقطة نهاية تطابق عنوان URL المطلوب",
+    "notFound": "المورد غير موجود",
+    "phone.exists": "رقم الهاتف هذا مستخدم بالفعل",
+    "resource.not_found": "المورد غير موجود",
+    "serverError": "خطأ داخلي في الخادم",
+    "stale.object": "تم تعديل المورد من قبل مستخدم آخر. يرجى المحاولة مرة أخرى.",
+    "unauthorized": "غير مصرح لك بالوصول إلى هذا المورد",
+    "validation.error": "خطأ في التحقق",
+    "email.invalid": "تنسيق البريد الإلكتروني غير صالح",
+    "email.taken": "هذا البريد الإلكتروني مستخدم بالفعل",
+    "phone.taken": "رقم الهاتف هذا مستخدم بالفعل",
+    "server.unreachable": "الخادم غير قابل للوصول"
+  },
+  "password_indicator": {
+    "strength": "قوة كلمة المرور",
+    "very_weak": "ضعيفة جدا",
+    "weak": "ضعيفة",
+    "fair": "مقبولة",
+    "good": "جيدة",
+    "strong": "قوية",
+    "very_strong": "قوية جدا"
+  },
+  "form": {
+    "carrier_details": "تفاصيل الناقل",
+    "accept_terms": "أوافق على شروط الاستخدام",
+    "select.placeholder": "اختر خيارًا",
+    "address": "العنوان",
+    "price_per_km": "السعر لكل كيلومتر",
+    "radius": "نطاق التسليم بالكيلومتر",
+    "agricultural_identifier": "معرف الزراعة",
+    "confirm_password": "تأكيد كلمة المرور",
+    "first_name": "الاسم الأول",
+    "language": "اللغة",
+    "last_name": "اسم العائلة",
+    "mail": "عنوان البريد الإلكتروني",
+    "city": "المدينة",
+    "location": "الموقع",
+    "street_quarter": "الحي / الشارع",
+    "message": "رسالة",
+    "password": "كلمة المرور",
+    "phone": "الهاتف",
+    "coordinates_label": "الإحداثيات:",
+    "placeholder": {
+      "date": "حدد تاريخًا",
+      "no_city_found": "لم يتم العثور على مدينة",
+      "search": "بحث",
+      "select_city": "حدد مدينة",
+      "language": "حدد لغة",
+      "price_per_km_example": "500",
+      "radius_example": "50",
+      "street_example": "مثال: الشارع الرئيسي",
+      "email_example": "m@example.com",
+      "password_example": "••••••••••",
+      "bid_amount_cfa": "المبلغ بالفرنك الأفريقي"
+    },
+    "tooltip": {
+      "price_per_km": "السعر لكل كيلومتر يتم قطعه لنقل المنتجات",
+      "radius": "نطاق الخدمة بالكيلومتر لنقل المنتجات",
+      "city": "حدد مدينتك لتسهيل تحديد الموقع. إذا لم تكن في القائمة، فحدد الأقرب.",
+      "location": "حدد موقعك على الخريطة لتسهيل تحديد الموقع. ما عليك سوى النقر على الخريطة لتوسيط الموقع."
+    },
+    "type": "أنا",
+    "upload_accepted": "التنسيقات المقبولة",
+    "upload_component": "انقر للتحميل أو السحب والإفلات",
+    "upload_limit": "الحد الأقصى لحجم التحميل هو {{max}} ميغابايت",
+    "upload_too_big": "الملف كبير جدًا، الحد الأقصى {{max}} ميغابايت",
+    "upload_all": "جميع الملفات مقبولة",
+    "upload_click_or_drag": "انقر للتحميل أو السحب والإفلات",
+    "upload_invalid_type": "نوع ملف غير صالح",
+    "upload_files": "الملفات",
+    "documents": "المستندات",
+    "file_type": {
+      "image": "صورة",
+      "pdf": "PDF",
+      "text": "نص",
+      "video": "فيديو",
+      "audio": "صوت",
+      "zip": "أرشيف ZIP"
+    },
+    "identifier_label": "المعرف: {{id}}",
+    "gps_label": "GPS: {{gps}}"
+  },
+  "languages": {
+    "en": "الإنجليزية",
+    "fr": "الفرنسية",
+    "ar": "العربية",
+    "zh-CN": "الماندرين",
+    "es": "الإسبانية"
+  },
+  "language_switcher": {
+    "label": "اللغة",
+    "aria_label": "تغيير اللغة"
+  },
+  "pagination": {
+    "all": "الكل",
+    "entries": "إدخالات",
+    "next": "التالي",
+    "no_entries": "لم يتم العثور على إدخالات",
+    "of": "من",
+    "page": "صفحة",
+    "previous": "السابق",
+    "showing": "عرض",
+    "to": "إلى"
+  },
+  "validation": {
+    "acceptTerms": "يجب أن توافق على شروط الاستخدام",
+    "email": "تنسيق البريد الإلكتروني غير صالح",
+    "max": "يجب أن يكون الحقل {{count}} على الأكثر",
+    "maxLength": "يجب أن يحتوي الحقل على {{count}} حرف على الأكثر",
+    "maxLength_plural": "يجب أن يحتوي الحقل على {{count}} أحرف على الأكثر",
+    "min": "يجب أن يكون الحقل {{count}} على الأقل",
+    "minLength": "يجب أن يحتوي الحقل على {{count}} حرف على الأقل",
+    "minLength_plural": "يجب أن يحتوي الحقل على {{count}} أحرف على الأقل",
+    "invalidType": "نوع الحقل غير صالح",
+    "password": "يجب أن تحتوي كلمة المرور على حرف صغير واحد على الأقل، وحرف كبير واحد، ورقم واحد، وحرف خاص واحد",
+    "passwordValidation": "كلمات المرور غير متطابقة",
+    "phone": "رقم بنيني غير صالح",
+    "required": "هذا الحقل مطلوب",
+    "number_min": "يجب أن تكون القيمة أكبر من أو تساوي {{count}}"
+  },
+  "database": {
+    "harvest": "خام",
+    "transformed": "معالج",
+    "AdminListDto": "مسؤول",
+    "ProducerListDto": "منتج",
+    "TransformerListDto": "معالج",
+    "QualityInspectorListDto": "مفتش جودة",
+    "ExporterListDto": "مصدر",
+    "CarrierListDto": "ناقل"
+  },
+  "auction": {
+    "lot_label": "دفعة {{id}}",
+    "lot_label_short": "دفعة #{{id}}",
+    "bid_count_zero": "{{count}} عرض",
+    "bid_count_one": "{{count}} عرض",
+    "bid_count_other": "{{count}} عروض",
+    "bid_count": "{{count}} عرض",
+    "bid_count_plural": "{{count}} عروض",
+    "expires_in": "ينتهي في",
+    "asking_price": "السعر المطلوب",
+    "best_bid": "أفضل عرض",
+    "details_title_full": "منتج {{productType}} دفعة #{{productId}} مزاد #{{auctionId}}",
+    "auction_details_title": "تفاصيل المزاد",
+    "buy_now_label": "اشتر الآن",
+    "buy_now_price": "اشتر الآن {{price}}",
+    "confirm_buy_now_prompt": "تأكيد الشراء الآن {{price}}؟",
+    "add_bid_label": "إضافة عرض",
+    "confirm_bid_prompt": "تأكيد عرضك بمبلغ {{amount}}؟",
+    "status": {
+      "ended_title": "انتهى المزاد",
+      "ended_message": "انتهى هذا المزاد الآن."
+    },
+    "bid_count_for_lot_zero": "{{count}} عرض للدفعة",
+    "bid_count_for_lot_one": "{{count}} عرض للدفعة",
+    "bid_count_for_lot_other": "{{count}} عروض للدفعة",
+    "bid_count_for_lot": "{{count}} عرض للدفعة",
+    "bid_count_for_lot_plural": "{{count}} عروض للدفعة",
+    "no_bids_yet": "لا توجد عروض حتى الآن.",
+    "accept_bid_prompt": "هل تقبل هذا العرض؟",
+    "reject_bid_prompt": "هل ترفض هذا العرض؟",
+    "seller_label": "البائع",
+    "no_bids_message": "لا توجد عروض",
+    "time_remaining_label": "الوقت المتبقي",
+    "click_to_see_details_prompt": "انقر لرؤية التفاصيل ←",
+    "expiration_label": "انتهاء الصلاحية",
+    "form": {
+      "title": "إدخال المزاد",
+      "section_settings_title": "إعدادات البيع",
+      "submit_button": "فتح البيع"
+    },
+    "expiration_date_label": "انتهاء صلاحية المزاد",
+    "table": {
+      "no_auctions": "لا توجد مزادات مدرجة.",
+      "transactions_list_message": "يمكن الاطلاع على قائمة المعاملات أدناه.",
+      "start_date_header": "بدء المزاد",
+      "end_date_header": "انتهاء المزاد",
+      "status_header": "الحالة",
+      "obtained_price_header": "السعر المحصل",
+      "buyer_header": "المشتري",
+      "view_bids_button": "عرض العروض",
+      "make_bid_button": "تقديم عرض",
+      "propose_contract_button": "اقتراح عقد"
+    }
+  },
+  "product": {
+    "quality_label": "الجودة",
+    "quantity_label": "الكمية",
+    "type_label": "النوع",
+    "merchandise_label": "البضائع",
+    "price_label": "السعر",
+    "product_label": "المنتج",
+    "quantity_in_kg_label": "الكمية (كجم)",
+    "price_in_cfa_label": "السعر (فرنك أفريقي)",
+    "info_title": "معلومات المنتج",
+    "lot_number_label": "رقم الدفعة",
+    "deposited_quantity_label": "الكمية المودعة",
+    "deposit_date_label": "تاريخ الإيداع",
+    "store_label": "المتجر",
+    "lot_label": "دفعة #{{id}}",
+    "product_type_label": "منتج {{type}}",
+    "origin_label": "الأصل",
+    "quality_inspector_label": "مفتش الجودة",
+    "results_count_zero": "النتيجة: {{count}} منتج",
+    "results_count_one": "النتيجة: {{count}} منتج",
+    "results_count_other": "النتائج: {{count}} منتجات",
+    "results_count": "النتيجة: {{count}} منتج",
+    "results_count_plural": "النتائج: {{count}} منتجات",
+    "owner_label": "المالك",
+    "warehouse_label": "المستودع",
+    "form": {
+      "title": "إدخال المنتج",
+      "section_deposit_settings_title": "إعدادات الإيداع",
+      "cultivated_field_label": "الحقل المزروع",
+      "submit_button": "حفظ المنتج",
+      "section_quality_control_title": "مراقبة الجودة",
+      "control_date_label": "تاريخ المراقبة",
+      "certificate_label": "شهادة (صورة أو PDF)"
+    },
+    "weight_in_kg_label": "الوزن (كجم)"
+  },
+  "sort": {
+    "expiration_asc": "انتهاء الصلاحية ⬆",
+    "expiration_desc": "انتهاء الصلاحية ⬇",
+    "price_asc": "السعر ⬆",
+    "price_desc": "السعر ⬇",
+    "label_prefix": "فرز حسب ",
+    "date_asc": "التاريخ ⬆",
+    "date_desc": "التاريخ ⬇",
+    "weight_asc": "الوزن ⬆",
+    "weight_desc": "الوزن ⬇"
+  },
+  "marketplace": {
+    "title": "سوق المزادات",
+    "subtitle": "شراء المنتجات عبر الإنترنت.",
+    "results_count_zero": "النتيجة: {{count}} مزاد",
+    "results_count_one": "النتيجة: {{count}} مزاد",
+    "results_count_other": "النتائج: {{count}} مزادات",
+    "results_count": "النتيجة: {{count}} مزاد",
+    "results_count_plural": "النتائج: {{count}} مزادات"
+  },
+  "view_mode": {
+    "grid_label": "شبكة",
+    "list_label": "قائمة",
+    "map_label": "خريطة"
+  },
+  "filters": {
+    "panel_title": "مرشحات",
+    "auctions_in_progress_label": "المزادات الجارية",
+    "auctions_ended_label": "المزادات المنتهية",
+    "all_types_placeholder": "جميع الأنواع",
+    "all_qualities_placeholder": "جميع الصفات",
+    "all_regions_placeholder": "جميع المناطق",
+    "all_cities_placeholder": "جميع المدن",
+    "expires_before_label": "ينتهي قبل",
+    "choose_date_placeholder": "اختر…"
+  },
+  "address": {
+    "region_label": "المنطقة"
+  },
+  "types": {
+    "admin": "مسؤول",
+    "producer": "منتج",
+    "transformer": "معالج",
+    "carrier": "ناقل",
+    "exporter": "مصدر",
+    "quality_inspector": "مفتش جودة"
+  },
+  "header": {
+    "logo_alt": "شعار e-Anacarde",
+    "menu": {
+      "home": "الرئيسية",
+      "purchases": {
+        "title": "المشتريات",
+        "items": {
+          "buy_product": {
+            "title": "شراء منتج",
+            "description": "شراء منتج من خلال البيع المباشر"
+          },
+          "my_purchases": {
+            "title": "مشترياتي",
+            "description": "عرض جميع مشترياتي"
+          }
+        }
+      },
+      "sales": {
+        "title": "المبيعات",
+        "items": {
+          "sell_product": {
+            "title": "بيع منتج",
+            "description": "إنشاء عرض بيع جديد"
+          },
+          "my_sales": {
+            "title": "مبيعاتي",
+            "description": "عرض جميع مبيعاتي"
+          }
+        }
+      },
+      "deposits": {
+        "title": "الودائع",
+        "items": {
+          "deposit_product": {
+            "title": "إيداع منتج",
+            "description": "تسجيل إيداع في المتجر"
+          },
+          "my_products": {
+            "title": "منتجاتي",
+            "description": "عرض جميع ودائعي"
+          }
+        }
+      },
+      "contracts": {
+        "title": "العقود",
+        "items": {
+          "create_contract": {
+            "title": "إنشاء عقد",
+            "description": "إنشاء عقد جديد"
+          },
+          "history": {
+            "title": "السجل",
+            "description": "تفاصيل عقودي"
+          }
+        }
+      },
+      "contact": "اتصال"
+    },
+    "auth": {
+      "login": "تسجيل الدخول",
+      "profile": "الملف الشخصي",
+      "settings": "الإعدادات",
+      "logout": "تسجيل الخروج"
+    },
+    "mobile": {
+      "toggle_menu_sr": "فتح القائمة الرئيسية"
+    }
+  },
+  "login": {
+    "title_description": "تسجيل الدخول إلى حساب e-Anacarde الخاص بك",
+    "forgot_password": "هل نسيت كلمة المرور؟",
+    "continue_with_separator": "أو المتابعة باستخدام",
+    "social": {
+      "apple_sr": "تسجيل الدخول باستخدام Apple",
+      "google_sr": "تسجيل الدخول باستخدام Google",
+      "meta_sr": "تسجيل الدخول باستخدام Meta"
+    },
+    "signup_prompt": "ليس لديك حساب؟",
+    "terms_prefix": "بالنقر على متابعة، فإنك توافق على ",
+    "terms_separator": " و ",
+    "terms_suffix": " الخاصة بنا."
+  },
+  "footer_cta": {
+    "title": "انضم إلى e-Anacarde اليوم وحسّن مبيعات الكاجو الخاصة بك!",
+    "button_signup": "اشتراك"
+  },
+  "footer": {
+    "logo": {
+      "alt": "شعار مزاد الكاجو في بنين",
+      "title": "مزاد الكاجو في بنين"
+    },
+    "tagline": "منصتك لمزادات الكاجو في بنين — المواد الخام والمنتجات المصنعة",
+    "menu": {
+      "auctions": {
+        "title": "المزادات",
+        "links": {
+          "raw_materials": "المواد الخام",
+          "processed_products": "المنتجات المصنعة",
+          "my_offers": "عروضي"
+        }
+      },
+      "company": {
+        "title": "الشركة",
+        "links": {
+          "about_us": "عنا",
+          "team": "الفريق",
+          "careers": "وظائف",
+          "contact": "اتصال"
+        }
+      },
+      "resources": {
+        "title": "الموارد",
+        "links": {
+          "faq": "الأسئلة الشائعة",
+          "support": "الدعم",
+          "blog": "المدونة"
+        }
+      },
+      "social_media": {
+        "title": "وسائل التواصل الاجتماعي",
+        "links": {
+          "facebook": "فيسبوك",
+          "twitter": "تويتر",
+          "linkedin": "لينكد إن"
+        }
+      }
+    },
+    "copyright": "© 2025 المجموعة 4 - مختبر هندسة البرمجيات، جامعة نامور.",
+    "bottom_links": {
+      "terms": "الشروط العامة",
+      "privacy_policy": "سياسة الخصوصية"
+    }
+  },
+  "not_found": {
+    "error_code": "404",
+    "title": "الصفحة غير موجودة",
+    "message": "عذرًا، لم نتمكن من العثور على الصفحة التي تبحث عنها.",
+    "button_home": "العودة إلى الرئيسية",
+    "button_contact_support": "اتصل بالدعم"
+  },
+  "error_boundary": {
+    "title": "حدث خطأ",
+    "message": "عذرًا، حدث خطأ ما. يرجى المحاولة مرة أخرى لاحقًا أو العودة إلى الصفحة الرئيسية.",
+    "button_home": "العودة إلى الرئيسية"
+  },
+  "empty_state": {
+    "title": "لم يتم العثور على نتائج",
+    "message": "اضبط عوامل التصفية أو أعد تعيين البحث."
+  },
+  "countdown_timer": {
+    "auction_ended": "انتهى المزاد",
+    "days_one": "{{count}} يوم",
+    "days_other": "{{count}} أيام",
+    "hours_one": "{{count}} ساعة",
+    "hours_other": "{{count}} ساعات",
+    "minutes_one": "{{count}} دقيقة",
+    "minutes_other": "{{count}} دقائق",
+    "seconds_one": "{{count}} ثانية",
+    "seconds_other": "{{count}} ثواني"
+  },
+  "contract": {
+    "modal_title": "اقتراح عقد",
+    "avatar_alt": "الصورة الرمزية",
+    "guaranteed_price_cfa_kg_label": "السعر المضمون (فرنك أفريقي/كجم)",
+    "minimum_quantity_kg_label": "الكمية الدنيا (كجم)",
+    "duration_label": "مدة العقد",
+    "duration_years_label": "(سنوات)",
+    "duration_months_label": "(أشهر)",
+    "ends_on_date_label": "ينتهي في {{date}}"
+  }
+}

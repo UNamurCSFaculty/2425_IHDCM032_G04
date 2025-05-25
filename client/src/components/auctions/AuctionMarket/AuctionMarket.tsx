@@ -38,15 +38,16 @@ import {
   SlidersHorizontal,
 } from 'lucide-react'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 export type ViewMode = 'cards' | 'table' | 'map'
 export type UserRole = 'buyer' | 'seller'
 
 export const sortOptions = [
-  { value: 'endDate-asc', label: 'Expiration ⬆' },
-  { value: 'endDate-desc', label: 'Expiration ⬇' },
-  { value: 'price-asc', label: 'Prix ⬆' },
-  { value: 'price-desc', label: 'Prix ⬇' },
+  { value: 'endDate-asc', label: 'sort.expiration_asc' },
+  { value: 'endDate-desc', label: 'sort.expiration_desc' },
+  { value: 'price-asc', label: 'sort.price_asc' },
+  { value: 'price-desc', label: 'sort.price_desc' },
 ] as const
 export type SortOptionValue = (typeof sortOptions)[number]['value']
 
@@ -64,6 +65,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
   filterByAuctionStatus,
 }) => {
   const isDesktop = useMediaQuery('(min-width: 1024px)')
+  const { t } = useTranslation()
 
   // UI state
   const [viewMode, setViewMode] = useState<ViewMode>('cards')
@@ -130,8 +132,9 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
       <div className="mb-6 flex w-full flex-col flex-wrap items-center justify-center gap-4 sm:flex-row lg:justify-between">
         <div className="text-md text-muted-foreground w-full lg:w-[260px]">
           <div className="text-center lg:pl-4 lg:text-left">
-            Résultat(s) : {filteredAuctions.length} enchère
-            {filteredAuctions.length !== 1 && 's'}
+            {t('marketplace.results_count', {
+              count: filteredAuctions.length,
+            })}
           </div>
         </div>
         <div className={`flex items-center ${cssCard} lg:pl-11`}>
@@ -142,7 +145,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                 className="flex w-40 items-center gap-1"
                 onClick={() => setInlineAuction(null)}
               >
-                <ArrowLeft className="size-4" /> Retour
+                <ArrowLeft className="size-4" /> {t('buttons.back')}
               </Button>
             </div>
           ) : (
@@ -161,7 +164,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                       <SelectItem
                         key={o.value}
                         value={o.value}
-                      >{`Tri par ${o.label}`}</SelectItem>
+                      >{`${t('sort.label_prefix')}${t(o.label)}`}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -185,7 +188,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                   className="hover:bg-muted data-[state=on]:bg-primary data-[state=on]:text-primary-foreground flex items-center justify-center py-2"
                 >
                   <LayoutGrid className="mr-1 size-4" />
-                  Grille
+                  {t('view_mode.grid_label')}
                 </ToggleGroupItem>
                 <ToggleGroupItem
                   value="table"
@@ -193,7 +196,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                   className="hover:bg-muted data-[state=on]:bg-primary data-[state=on]:text-primary-foreground flex items-center justify-center py-2"
                 >
                   <ListIcon className="mr-1 size-4" />
-                  Liste
+                  {t('view_mode.list_label')}
                 </ToggleGroupItem>
                 <ToggleGroupItem
                   value="map"
@@ -201,7 +204,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                   className="hover:bg-muted data-[state=on]:bg-primary data-[state=on]:text-primary-foreground flex items-center justify-center py-2"
                 >
                   <MapIcon className="mr-1 size-4" />
-                  Carte
+                  {t('view_mode.map_label')}
                 </ToggleGroupItem>
               </ToggleGroup>
 
@@ -211,12 +214,12 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                   <SheetTrigger asChild>
                     <Button variant="outline">
                       <SlidersHorizontal className="mr-2 size-4" />
-                      Filtres
+                      {t('filters.panel_title')}
                     </Button>
                   </SheetTrigger>
                   <SheetContent
                     side="left"
-                    className="w-[300px] overflow-y-auto p-0 sm:w-[380px]"
+                    className="w-[300px] overflow-y-auto py-7 sm:w-[380px]"
                   >
                     <FiltersPanel
                       filterData={auctions}
@@ -297,15 +300,17 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                 <Table className="table-auto text-sm">
                   <TableHeader className="supports-[backdrop-filter]:bg-muted/60 sticky top-0 z-10 backdrop-blur">
                     <TableRow className="h-9 bg-neutral-100">
-                      <TableHead>Marchandise</TableHead>
-                      <TableHead>Expiration</TableHead>
-                      <TableHead>Région</TableHead>
-                      <TableHead>Ville</TableHead>
-                      <TableHead>Quantité</TableHead>
-                      <TableHead>Qualité</TableHead>
-                      <TableHead className="text-right">Prix</TableHead>
+                      <TableHead>{t('product.merchandise_label')}</TableHead>
+                      <TableHead>{t('auction.expiration_label')}</TableHead>
+                      <TableHead>{t('address.region_label')}</TableHead>
+                      <TableHead>{t('form.city')}</TableHead>
+                      <TableHead>{t('product.quantity_label')}</TableHead>
+                      <TableHead>{t('product.quality_label')}</TableHead>
                       <TableHead className="text-right">
-                        Meilleure offre
+                        {t('product.price_label')}
+                      </TableHead>
+                      <TableHead className="text-right">
+                        {t('auction.best_bid')}
                       </TableHead>
                       <TableHead></TableHead>
                     </TableRow>
@@ -353,7 +358,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
             />
             <DialogFooter>
               <Button variant="outline" onClick={() => setDialogAuction(null)}>
-                Fermer
+                {t('common.close')}
               </Button>
             </DialogFooter>
           </DialogContent>

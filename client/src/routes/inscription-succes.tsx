@@ -9,7 +9,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { CheckCircle, Mail } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-export const Route = createFileRoute('/signup-success')({
+export const Route = createFileRoute('/inscription-succes')({
   component: SignupSuccessComponent,
 })
 

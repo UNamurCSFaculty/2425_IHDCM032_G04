@@ -6,6 +6,8 @@ import {
 import { Label } from '../ui/label'
 import { FieldErrors } from './field-errors'
 import cityNamesJson from '@/data/cities.json'
+import SimpleTooltip from '../SimpleTooltip'
+import { useTranslation } from 'react-i18next'
 
 const cityOptions = cityNamesJson.map((n, i) => ({ id: i + 1, label: n }))
 
@@ -13,19 +15,21 @@ interface LocationFieldProps {
   label: string
   required?: boolean
   mapHeight?: string
+  tooltip?: string
   radius?: number
 }
 
 export function LocationField({
   label,
   required = true,
+  tooltip,
   mapHeight = '300px',
   radius = 0,
 }: LocationFieldProps) {
-  const field = useFieldContext<string>() // Le champ contient la coordonnée POINT(...)
+  const field = useFieldContext<string>()
+  const { t } = useTranslation()
 
   const onPositionChange = (point: string, addr?: NominatimAddress) => {
-    // Si l'adresse de la carte contient une ville, on met à jour le champ cityId
     if (addr?.city) {
       const match = cityOptions.find(
         c =>
@@ -46,6 +50,7 @@ export function LocationField({
       <Label>
         {label}
         {required && <span className="text-red-500">*</span>}
+        {tooltip && <SimpleTooltip content={tooltip} />}
       </Label>
       <SelectorMap
         mapHeight={mapHeight}
@@ -55,7 +60,7 @@ export function LocationField({
       />
       {field.state.value && (
         <p className="text-xs text-gray-500">
-          Coordonnée : {field.state.value}
+          {t('form.coordinates_label')} {field.state.value}
         </p>
       )}
       <FieldErrors meta={field.state.meta} />

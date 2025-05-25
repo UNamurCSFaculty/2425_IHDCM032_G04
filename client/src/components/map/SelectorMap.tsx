@@ -1,4 +1,3 @@
-// src/components/map/SelectorMap.tsx
 import {
   MapContainer,
   Marker,

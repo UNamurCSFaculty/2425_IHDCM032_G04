@@ -1,12 +1,21 @@
 import { Button } from './ui/button'
 import { Link } from '@tanstack/react-router'
 import { Component, type ErrorInfo, type ReactNode } from 'react'
+import { withTranslation, type WithTranslation } from 'react-i18next'
 
-export class ErrorBoundary extends Component<
-  { children: ReactNode },
-  { hasError: boolean }
+interface ErrorBoundaryProps extends WithTranslation {
+  children: ReactNode
+}
+
+interface ErrorBoundaryState {
+  hasError: boolean
+}
+
+class ErrorBoundaryComponent extends Component<
+  ErrorBoundaryProps,
+  ErrorBoundaryState
 > {
-  constructor(props: { children: ReactNode }) {
+  constructor(props: ErrorBoundaryProps) {
     super(props)
     this.state = { hasError: false }
   }
@@ -20,20 +29,20 @@ export class ErrorBoundary extends Component<
   }
 
   render() {
+    const { t } = this.props
     if (this.state.hasError) {
       return (
         <main className="grid min-h-full place-items-center bg-white px-6 py-24 sm:py-32 lg:px-8">
           <div className="text-center">
             <h1 className="text-3xl font-semibold text-red-600">
-              Une erreur est survenue
+              {t('error_boundary.title')}
             </h1>
             <p className="mt-4 text-lg text-gray-500">
-              Désolé, un problème est survenu. Veuillez réessayer plus tard ou
-              retourner à l’accueil.
+              {t('error_boundary.message')}
             </p>
             <div className="mt-6">
               <Link to="/">
-                <Button size="lg">Retour à l’accueil</Button>
+                <Button size="lg">{t('error_boundary.button_home')}</Button>
               </Link>
             </div>
           </div>
@@ -43,3 +52,5 @@ export class ErrorBoundary extends Component<
     return this.props.children
   }
 }
+
+export const ErrorBoundary = withTranslation()(ErrorBoundaryComponent)

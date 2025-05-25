@@ -11,9 +11,9 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as SignupSuccessImport } from './routes/signup-success'
-import { Route as SignupImport } from './routes/signup'
-import { Route as LoginImport } from './routes/login'
+import { Route as InscriptionSuccesImport } from './routes/inscription-succes'
+import { Route as InscriptionImport } from './routes/inscription'
+import { Route as ConnexionImport } from './routes/connexion'
 import { Route as AdminImport } from './routes/admin'
 import { Route as AuthenticatedImport } from './routes/_authenticated'
 import { Route as IndexImport } from './routes/index'
@@ -36,21 +36,21 @@ import { Route as AuthenticatedAchatsMarcheImport } from './routes/_authenticate
 
 // Create/Update Routes
 
-const SignupSuccessRoute = SignupSuccessImport.update({
-  id: '/signup-success',
-  path: '/signup-success',
+const InscriptionSuccesRoute = InscriptionSuccesImport.update({
+  id: '/inscription-succes',
+  path: '/inscription-succes',
   getParentRoute: () => rootRoute,
 } as any)
 
-const SignupRoute = SignupImport.update({
-  id: '/signup',
-  path: '/signup',
+const InscriptionRoute = InscriptionImport.update({
+  id: '/inscription',
+  path: '/inscription',
   getParentRoute: () => rootRoute,
 } as any)
 
-const LoginRoute = LoginImport.update({
-  id: '/login',
-  path: '/login',
+const ConnexionRoute = ConnexionImport.update({
+  id: '/connexion',
+  path: '/connexion',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -197,25 +197,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminImport
       parentRoute: typeof rootRoute
     }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginImport
+    '/connexion': {
+      id: '/connexion'
+      path: '/connexion'
+      fullPath: '/connexion'
+      preLoaderRoute: typeof ConnexionImport
       parentRoute: typeof rootRoute
     }
-    '/signup': {
-      id: '/signup'
-      path: '/signup'
-      fullPath: '/signup'
-      preLoaderRoute: typeof SignupImport
+    '/inscription': {
+      id: '/inscription'
+      path: '/inscription'
+      fullPath: '/inscription'
+      preLoaderRoute: typeof InscriptionImport
       parentRoute: typeof rootRoute
     }
-    '/signup-success': {
-      id: '/signup-success'
-      path: '/signup-success'
-      fullPath: '/signup-success'
-      preLoaderRoute: typeof SignupSuccessImport
+    '/inscription-succes': {
+      id: '/inscription-succes'
+      path: '/inscription-succes'
+      fullPath: '/inscription-succes'
+      preLoaderRoute: typeof InscriptionSuccesImport
       parentRoute: typeof rootRoute
     }
     '/admin/analytics': {
@@ -387,9 +387,9 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '': typeof AuthenticatedRouteWithChildren
   '/admin': typeof AdminRouteWithChildren
-  '/login': typeof LoginRoute
-  '/signup': typeof SignupRoute
-  '/signup-success': typeof SignupSuccessRoute
+  '/connexion': typeof ConnexionRoute
+  '/inscription': typeof InscriptionRoute
+  '/inscription-succes': typeof InscriptionSuccesRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/contact/merci': typeof ContactMerciRoute
@@ -411,9 +411,9 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '': typeof AuthenticatedRouteWithChildren
-  '/login': typeof LoginRoute
-  '/signup': typeof SignupRoute
-  '/signup-success': typeof SignupSuccessRoute
+  '/connexion': typeof ConnexionRoute
+  '/inscription': typeof InscriptionRoute
+  '/inscription-succes': typeof InscriptionSuccesRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/contact/merci': typeof ContactMerciRoute
@@ -437,9 +437,9 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/admin': typeof AdminRouteWithChildren
-  '/login': typeof LoginRoute
-  '/signup': typeof SignupRoute
-  '/signup-success': typeof SignupSuccessRoute
+  '/connexion': typeof ConnexionRoute
+  '/inscription': typeof InscriptionRoute
+  '/inscription-succes': typeof InscriptionSuccesRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/contact/merci': typeof ContactMerciRoute
@@ -464,9 +464,9 @@ export interface FileRouteTypes {
     | '/'
     | ''
     | '/admin'
-    | '/login'
-    | '/signup'
-    | '/signup-success'
+    | '/connexion'
+    | '/inscription'
+    | '/inscription-succes'
     | '/admin/analytics'
     | '/admin/settings'
     | '/contact/merci'
@@ -487,9 +487,9 @@ export interface FileRouteTypes {
   to:
     | '/'
     | ''
-    | '/login'
-    | '/signup'
-    | '/signup-success'
+    | '/connexion'
+    | '/inscription'
+    | '/inscription-succes'
     | '/admin/analytics'
     | '/admin/settings'
     | '/contact/merci'
@@ -511,9 +511,9 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/admin'
-    | '/login'
-    | '/signup'
-    | '/signup-success'
+    | '/connexion'
+    | '/inscription'
+    | '/inscription-succes'
     | '/admin/analytics'
     | '/admin/settings'
     | '/contact/merci'
@@ -537,9 +537,9 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AdminRoute: typeof AdminRouteWithChildren
-  LoginRoute: typeof LoginRoute
-  SignupRoute: typeof SignupRoute
-  SignupSuccessRoute: typeof SignupSuccessRoute
+  ConnexionRoute: typeof ConnexionRoute
+  InscriptionRoute: typeof InscriptionRoute
+  InscriptionSuccesRoute: typeof InscriptionSuccesRoute
   ContactMerciRoute: typeof ContactMerciRoute
   ContactIndexRoute: typeof ContactIndexRoute
 }
@@ -548,9 +548,9 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AdminRoute: AdminRouteWithChildren,
-  LoginRoute: LoginRoute,
-  SignupRoute: SignupRoute,
-  SignupSuccessRoute: SignupSuccessRoute,
+  ConnexionRoute: ConnexionRoute,
+  InscriptionRoute: InscriptionRoute,
+  InscriptionSuccesRoute: InscriptionSuccesRoute,
   ContactMerciRoute: ContactMerciRoute,
   ContactIndexRoute: ContactIndexRoute,
 }
@@ -568,9 +568,9 @@ export const routeTree = rootRoute
         "/",
         "/_authenticated",
         "/admin",
-        "/login",
-        "/signup",
-        "/signup-success",
+        "/connexion",
+        "/inscription",
+        "/inscription-succes",
         "/contact/merci",
         "/contact/"
       ]
@@ -602,14 +602,14 @@ export const routeTree = rootRoute
         "/admin/users/"
       ]
     },
-    "/login": {
-      "filePath": "login.tsx"
+    "/connexion": {
+      "filePath": "connexion.tsx"
     },
-    "/signup": {
-      "filePath": "signup.tsx"
+    "/inscription": {
+      "filePath": "inscription.tsx"
     },
-    "/signup-success": {
-      "filePath": "signup-success.tsx"
+    "/inscription-succes": {
+      "filePath": "inscription-succes.tsx"
     },
     "/admin/analytics": {
       "filePath": "admin/analytics.tsx",

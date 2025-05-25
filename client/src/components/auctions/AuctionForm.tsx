@@ -7,7 +7,7 @@ import { useAppForm } from '@/components/form'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
 import { useAuthUser } from '@/store/userStore'
-import { formatDate } from '@/utils/formatter'
+import { formatDate, formatWeight } from '@/utils/formatter'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { AlertCircle } from 'lucide-react'
@@ -63,10 +63,13 @@ export function AuctionForm({
   const handleProductChange = (productId: number) => {
     const product = products.find(p => p.id === productId)
     setSelectedProduct(product || null)
+    if (product) {
+      form.setFieldValue('productQuantity', product.weightKg)
+    }
   }
 
   return (
-    <FormContainer title="Saisie de l'enchère">
+    <FormContainer title={t('auction.form.title')}>
       <form
         onSubmit={e => {
           e.preventDefault()
@@ -76,7 +79,7 @@ export function AuctionForm({
       >
         <div className="flex flex-row gap-10">
           <div className="flex w-1/2 flex-col gap-6">
-            <FormSectionTitle text="Paramètres de la vente" />
+            <FormSectionTitle text={t('auction.form.section_settings_title')} />
 
             <form.AppField
               name="productId"
@@ -85,16 +88,15 @@ export function AuctionForm({
                   options={products.map(product => ({
                     value: product.id,
                     label:
-                      'Lot n°' +
-                      product.id +
+                      t('auction.lot_label', { id: product.id }) +
                       ' - ' +
                       t('database.' + product.type) +
                       ' ' +
-                      product.weightKg +
-                      ' kg @ ' +
+                      formatWeight(product.weightKg) +
+                      ' @ ' +
                       product.store.name,
                   }))}
-                  label="Produit"
+                  label={t('product.product_label')}
                   onChange={productId => {
                     handleProductChange(productId)
                   }}
@@ -107,7 +109,7 @@ export function AuctionForm({
                 name="productQuantity"
                 children={field => (
                   <field.TextField
-                    label="Quantité (kg)"
+                    label={t('product.quantity_in_kg_label')}
                     type="quantity"
                     placeholder="0.0"
                     fieldType="number"
@@ -119,7 +121,7 @@ export function AuctionForm({
                 name="price"
                 children={field => (
                   <field.TextField
-                    label="Prix (CFA)"
+                    label={t('product.price_in_cfa_label')}
                     type="price"
                     placeholder="0.0"
                     fieldType="number"
@@ -131,7 +133,9 @@ export function AuctionForm({
             <form.AppField
               name="expirationDate"
               children={field => (
-                <field.DateTimePickerField label="Expiration de l'enchère" />
+                <field.DateTimePickerField
+                  label={t('auction.expiration_date_label')}
+                />
               )}
             />
             {isError && error?.errors?.length > 0 && (
@@ -158,21 +162,21 @@ export function AuctionForm({
 
             <form.AppForm>
               <form.SubmitButton className="w-full">
-                Ouvrir la vente
+                {t('auction.form.submit_button')}
               </form.SubmitButton>
             </form.AppForm>
           </div>
 
           <div className="flex w-1/2 flex-col gap-6">
-            <FormSectionTitle text="Informations du produit" />
+            <FormSectionTitle text={t('product.info_title')} />
             <Table>
               <TableBody>
                 <TableRow>
-                  <TableCell>Numéro du lot</TableCell>
+                  <TableCell>{t('product.lot_number_label')}</TableCell>
                   <TableCell>{selectedProduct?.id || 'N/A'}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell>Marchandise</TableCell>
+                  <TableCell>{t('product.merchandise_label')}</TableCell>
                   <TableCell>
                     {selectedProduct
                       ? t('database.' + selectedProduct.type)
@@ -180,19 +184,21 @@ export function AuctionForm({
                   </TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell>Qualité</TableCell>
+                  <TableCell>{t('product.quality_label')}</TableCell>
                   <TableCell>
                     {selectedProduct?.qualityControl.quality.name || 'N/A'}
                   </TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell>Quantité déposée</TableCell>
+                  <TableCell>{t('product.deposited_quantity_label')}</TableCell>
                   <TableCell>
-                    {selectedProduct ? selectedProduct.weightKg + ' kg' : 'N/A'}
+                    {selectedProduct
+                      ? formatWeight(selectedProduct.weightKg)
+                      : 'N/A'}
                   </TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell>Date de dépôt</TableCell>
+                  <TableCell>{t('product.deposit_date_label')}</TableCell>
                   <TableCell>
                     {selectedProduct
                       ? formatDate(selectedProduct.deliveryDate)
@@ -200,7 +206,7 @@ export function AuctionForm({
                   </TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell>Magasin</TableCell>
+                  <TableCell>{t('product.store_label')}</TableCell>
                   <TableCell>{selectedProduct?.store.name || 'N/A'}</TableCell>
                 </TableRow>
               </TableBody>

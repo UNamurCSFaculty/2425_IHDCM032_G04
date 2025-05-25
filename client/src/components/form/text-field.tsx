@@ -1,4 +1,5 @@
 import { useFieldContext } from '.'
+import SimpleTooltip from '../SimpleTooltip'
 import { Input } from '../ui/input'
 import { Label } from '../ui/label'
 import { FieldErrors } from './field-errors'
@@ -13,6 +14,7 @@ type TextFieldProps = {
   required?: boolean
   castNumber?: boolean
   fieldType?: 'string' | 'number'
+  tooltip?: string
   type?: React.HTMLInputTypeAttribute
 } & React.InputHTMLAttributes<HTMLInputElement>
 
@@ -23,6 +25,7 @@ export function TextField<T extends string | number>({
   className,
   required = true,
   fieldType = 'string',
+  tooltip,
   type = 'text',
   ...restProps
 }: TextFieldProps) {
@@ -60,6 +63,7 @@ export function TextField<T extends string | number>({
         <Label htmlFor={field.name}>
           {label}
           {required && <span className="text-red-500">*</span>}
+          {tooltip && <SimpleTooltip content={tooltip} />}
         </Label>
         <Input
           id={field.name}

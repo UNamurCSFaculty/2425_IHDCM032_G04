@@ -2,15 +2,19 @@ import { useFieldContext } from '.'
 import { FileUpload, type FileUploadProps } from '@/components/FileUpload'
 import { FieldErrors } from './field-errors'
 import { cn } from '@/lib/utils'
+import SimpleTooltip from '../SimpleTooltip'
+import { Label } from '../ui/label'
 
 type FileUploadFieldProps = {
   /** Libellé affiché au-dessus du champ */
   label: string
+  tooltip?: string
   className?: string
 } & Omit<FileUploadProps, 'onChange' | 'className'>
 
 export function FileUploadField({
   label,
+  tooltip,
   className = '',
   ...uploadProps
 }: FileUploadFieldProps) {
@@ -18,7 +22,11 @@ export function FileUploadField({
 
   return (
     <div className={cn('space-y-2', className)}>
-      <label className="block text-sm font-medium">{label}</label>
+      <Label className="block text-sm font-medium">
+        {label}
+
+        {tooltip && <SimpleTooltip content={tooltip} />}
+      </Label>
 
       <FileUpload
         {...uploadProps}

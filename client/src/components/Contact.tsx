@@ -26,7 +26,6 @@ export const ContactForm: React.FC = () => {
     },
   })
 
-  // on initialise le formulaire avec Zod et useAppForm
   const form = useAppForm({
     defaultValues: ContactSchemaDefaultValues,
     validators: { onChange: ContactSchema },
@@ -39,7 +38,6 @@ export const ContactForm: React.FC = () => {
     form.validate('change')
   }, [i18n.language, form])
 
-  // états d'affichage
   const { isPending, isError, error } = mutation
 
   return (
@@ -59,19 +57,17 @@ export const ContactForm: React.FC = () => {
             }}
             className="-m-2 flex flex-wrap"
           >
-            {/* Nom */}
             <div className="w-1/2 p-2">
               <form.AppField name="name">
                 {field => (
                   <field.TextField
-                    label={t('form.last_name')} // ajustez la clé si besoin
+                    label={t('form.last_name')}
                     disabled={isPending}
                   />
                 )}
               </form.AppField>
             </div>
 
-            {/* Email */}
             <div className="w-1/2 p-2">
               <form.AppField name="email">
                 {field => (
@@ -84,7 +80,6 @@ export const ContactForm: React.FC = () => {
               </form.AppField>
             </div>
 
-            {/* Message */}
             <div className="w-full p-2">
               <form.AppField name="message">
                 {field => (
@@ -96,8 +91,6 @@ export const ContactForm: React.FC = () => {
                 )}
               </form.AppField>
             </div>
-
-            {/* Erreurs serveur éventuelles */}
 
             {isError && error?.errors?.length > 0 && (
               <Alert
@@ -120,7 +113,6 @@ export const ContactForm: React.FC = () => {
                 </AlertDescription>
               </Alert>
             )}
-            {/* Boutons */}
             <div className="flex w-full items-center justify-center gap-4 p-2">
               <form.AppForm>
                 <form.SubmitButton disabled={isPending}>

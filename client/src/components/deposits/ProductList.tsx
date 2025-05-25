@@ -29,14 +29,15 @@ import {
   SlidersHorizontal,
 } from 'lucide-react'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 export type ViewMode = 'cards' | 'table' | 'map'
 
 export const sortOptions = [
-  { value: 'deliveryDate-asc', label: 'date ⬆' },
-  { value: 'deliveryDate-desc', label: 'date ⬇' },
-  { value: 'weight-asc', label: 'poids ⬆' },
-  { value: 'weight-desc', label: 'poids ⬇' },
+  { value: 'deliveryDate-asc', label: 'sort.date_asc' },
+  { value: 'deliveryDate-desc', label: 'sort.date_desc' },
+  { value: 'weight-asc', label: 'sort.weight_asc' },
+  { value: 'weight-desc', label: 'sort.weight_desc' },
 ] as const
 export type SortOptionValue = (typeof sortOptions)[number]['value']
 
@@ -48,17 +49,15 @@ interface ProductListProps {
 
 const ProductList: React.FC<ProductListProps> = ({ products }) => {
   const isDesktop = useMediaQuery('(min-width: 1024px)')
+  const { t } = useTranslation()
 
-  // UI state
   const [viewMode, setViewMode] = useState<ViewMode>('cards')
   const [sheetOpen, setSheetOpen] = useState(false)
   const [inlineProduct, setInlineProduct] = useState<ProductDto | null>(null)
   const [sort, setSort] = useState<SortOptionValue>('deliveryDate-asc')
 
-  // Filtering
   const [filteredProducts, setFilteredProducts] = useState<ProductDto[]>([])
 
-  // Sorting
   const sorted = useMemo(() => {
     const list = [...filteredProducts]
     switch (sort) {
@@ -79,7 +78,6 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
     }
   }, [filteredProducts, sort])
 
-  // Pagination
   const [currentPage, setCurrentPage] = useState(1)
   const totalPages = Math.max(1, Math.ceil(sorted.length / perPage))
   const paginated = useMemo(
@@ -101,18 +99,15 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
     []
   )
 
-  // Render
   const isInCardDetail = viewMode === 'cards' && inlineProduct
   const cssCard = isInCardDetail ? 'lg:justify-start' : 'lg:justify-end'
 
   return (
     <>
-      {/* Header */}
       <div className="mb-6 flex w-full flex-col flex-wrap items-center justify-center gap-4 sm:flex-row lg:justify-between">
         <div className="text-md text-muted-foreground w-full lg:w-[260px]">
           <div className="text-center lg:pl-4 lg:text-left">
-            Résultat(s) : {filteredProducts.length} produit
-            {filteredProducts.length !== 1 && 's'}
+            {t('product.results_count', { count: filteredProducts.length })}
           </div>
         </div>
         <div className={`flex items-center ${cssCard} lg:pl-11`}>
@@ -123,12 +118,11 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
                 className="flex w-40 items-center gap-1"
                 onClick={() => setInlineProduct(null)}
               >
-                <ArrowLeft className="size-4" /> Retour
+                <ArrowLeft className="size-4" /> {t('buttons.back')}
               </Button>
             </div>
           ) : (
             <div className="flex w-full flex-col flex-wrap items-center justify-center gap-2 lg:flex-row lg:justify-end">
-              {/* Sorting */}
               {viewMode !== 'map' && (
                 <Select
                   value={sort}
@@ -142,13 +136,12 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
                       <SelectItem
                         key={o.value}
                         value={o.value}
-                      >{`Tri par ${o.label}`}</SelectItem>
+                      >{`${t('sort.label_prefix')}${t(o.label)}`}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               )}
 
-              {/* View Mode */}
               <ToggleGroup
                 size="sm"
                 type="single"
@@ -161,33 +154,32 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
               >
                 <ToggleGroupItem
                   value="cards"
-                  aria-label="Grille"
+                  aria-label={t('view_mode.grid_label')}
                   className="hover:bg-muted data-[state=on]:bg-primary data-[state=on]:text-primary-foreground flex items-center justify-center py-2"
                 >
                   <LayoutGrid className="mr-1 size-4" />
-                  Grille
+                  {t('view_mode.grid_label')}
                 </ToggleGroupItem>
                 <ToggleGroupItem
                   value="table"
-                  aria-label="Liste"
+                  aria-label={t('view_mode.list_label')}
                   className="hover:bg-muted data-[state=on]:bg-primary data-[state=on]:text-primary-foreground flex items-center justify-center py-2"
                 >
                   <ListIcon className="mr-1 size-4" />
-                  Liste
+                  {t('view_mode.list_label')}
                 </ToggleGroupItem>
               </ToggleGroup>
-              {/* Mobile Filters */}
               {!isDesktop && (
                 <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
                   <SheetTrigger asChild>
                     <Button variant="outline">
                       <SlidersHorizontal className="mr-2 size-4" />
-                      Filtres
+                      {t('filters.panel_title')}
                     </Button>
                   </SheetTrigger>
                   <SheetContent
                     side="left"
-                    className="w-[300px] overflow-y-auto p-0 sm:w-[380px]"
+                    className="w-[300px] overflow-y-auto py-7 sm:w-[380px]"
                   >
                     <FiltersPanel
                       filterData={products}
@@ -214,7 +206,6 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
         )}
 
         <div className="relative w-full min-w-0">
-          {/* Cards */}
           {viewMode === 'cards' && (
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
               {inlineProduct ? (
@@ -225,9 +216,7 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
                     isDetail
                     onDetails={() => {}}
                   />
-                  <div className="col-span-full lg:col-span-2">
-                    {/* <AuctionDetails auction={inlineProduct} /> */}
-                  </div>
+                  <div className="col-span-full lg:col-span-2"></div>
                 </>
               ) : filteredProducts.length === 0 ? (
                 <EmptyState className="col-span-full" />
@@ -238,9 +227,7 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
                       key={p.id}
                       product={p}
                       layout="grid"
-                      onDetails={
-                        () => console.log('TODO') /*setInlineProduct(a)*/
-                      }
+                      onDetails={() => console.log('TODO')}
                     />
                   ))}
                   {totalPages > 1 && (
@@ -257,22 +244,21 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
             </div>
           )}
 
-          {/* Table */}
           {viewMode === 'table' && (
             <>
               <div className="bg-background overflow-x-auto rounded-lg border">
                 <Table className="table-auto text-sm">
                   <TableHeader className="supports-[backdrop-filter]:bg-muted/60 sticky top-0 z-10 backdrop-blur">
                     <TableRow className="h-9 bg-neutral-100">
-                      <TableHead>Marchandise</TableHead>
-                      <TableHead>Propriétaire</TableHead>
-                      <TableHead>Quantité</TableHead>
-                      <TableHead>Qualité</TableHead>
-                      <TableHead>Origine</TableHead>
-                      <TableHead>Date de dépôt</TableHead>
-                      <TableHead>Ville</TableHead>
-                      <TableHead>Région</TableHead>
-                      <TableHead>Entrepôt</TableHead>
+                      <TableHead>{t('product.merchandise_label')}</TableHead>
+                      <TableHead>{t('product.owner_label')}</TableHead>
+                      <TableHead>{t('product.quantity_label')}</TableHead>
+                      <TableHead>{t('product.quality_label')}</TableHead>
+                      <TableHead>{t('product.origin_label')}</TableHead>
+                      <TableHead>{t('product.deposit_date_label')}</TableHead>
+                      <TableHead>{t('form.city')}</TableHead>
+                      <TableHead>{t('address.region_label')}</TableHead>
+                      <TableHead>{t('product.warehouse_label')}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -282,7 +268,6 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
                         product={p}
                         layout="row"
                         onDetails={() => console.log('DETAILS')}
-                        // onDetails={() => setDialogAuction(p)}
                       />
                     ))}
                   </TableBody>
@@ -298,8 +283,6 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
               {paginated.length === 0 && <EmptyState className="col-span-3" />}
             </>
           )}
-
-          {/* Map */}
         </div>
       </div>
     </>

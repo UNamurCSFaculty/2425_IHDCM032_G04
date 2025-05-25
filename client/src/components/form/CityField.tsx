@@ -1,5 +1,3 @@
-// src/components/form/CityField.tsx
-
 import { useFieldContext } from '.'
 import { Button } from '../ui/button'
 import {
@@ -17,6 +15,7 @@ import { ChevronsUpDown } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CityList, type CityOption } from './CityList'
+import SimpleTooltip from '../SimpleTooltip'
 
 const cityOptions: CityOption[] = cityNamesJson.map((n, i) => ({
   id: i + 1,
@@ -25,10 +24,11 @@ const cityOptions: CityOption[] = cityNamesJson.map((n, i) => ({
 
 interface CityFieldProps {
   label: string
+  tooltip?: string
   required?: boolean
 }
 
-export function CityField({ label, required = true }: CityFieldProps) {
+export function CityField({ label, tooltip, required = true }: CityFieldProps) {
   const { t } = useTranslation()
   const field = useFieldContext<number>()
   const hasError =
@@ -85,6 +85,7 @@ export function CityField({ label, required = true }: CityFieldProps) {
       <Label htmlFor={`${field.name}-btn`}>
         {label}
         {required && <span className="text-red-500">*</span>}
+        {tooltip && <SimpleTooltip content={tooltip} />}
       </Label>
       <Popover
         open={open}

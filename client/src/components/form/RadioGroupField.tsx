@@ -4,6 +4,7 @@ import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { cn } from '@/lib/utils'
 import React from 'react'
+import SimpleTooltip from '../SimpleTooltip'
 
 /* -------------------------------------------------------------------------- */
 /* Types                                                                      */
@@ -18,6 +19,7 @@ export type Choice = { value: string; label: string }
 export interface RadioGroupFieldProps
   extends Omit<React.HTMLAttributes<HTMLFieldSetElement>, 'onChange'> {
   label: string
+  tooltip?: string
   choices: Choice[]
   direction?: 'row' | 'col'
   required?: boolean
@@ -34,6 +36,7 @@ type FieldValue = string
 export const RadioGroupField: React.FC<RadioGroupFieldProps> = ({
   label,
   required,
+  tooltip,
   choices,
   direction = 'col',
   className,
@@ -51,6 +54,7 @@ export const RadioGroupField: React.FC<RadioGroupFieldProps> = ({
       <legend className="mb-1 text-sm font-medium">
         {label}
         {required && <span className="ml-0.5 text-red-500">*</span>}
+        {tooltip && <SimpleTooltip content={tooltip} />}
       </legend>
 
       <RadioGroup

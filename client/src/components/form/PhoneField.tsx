@@ -1,7 +1,5 @@
-/* PhoneField.tsx --------------------------------------------------------- */
 import { useFieldContext } from '.'
 import { BeninPhoneInput } from '../BeninPhoneInput'
-// le context créé par createFormHook
 import { FieldErrors } from './field-errors'
 import { cn } from '@/lib/utils'
 import React from 'react'
@@ -9,10 +7,15 @@ import React from 'react'
 type PhoneFieldProps = Omit<
   React.ComponentProps<typeof BeninPhoneInput>,
   'value' | 'onChange' | 'id'
-> & { id?: string }
+> & { id?: string; tooltip?: string }
 
-export function PhoneField({ id, className, ...rest }: PhoneFieldProps) {
-  const field = useFieldContext<string>() // valeur string dans le store
+export function PhoneField({
+  id,
+  tooltip,
+  className,
+  ...rest
+}: PhoneFieldProps) {
+  const field = useFieldContext<string>()
   const hasError =
     field.state.meta.isTouched && field.state.meta.errors.length > 0
 
@@ -20,12 +23,11 @@ export function PhoneField({ id, className, ...rest }: PhoneFieldProps) {
     <div className="space-y-2">
       <div className="space-y-1">
         <BeninPhoneInput
-          /* value & onChange pilotés par TanStack Form */
           id={id ?? field.name}
           value={field.state.value ?? ''}
           onChange={v => field.handleChange(v)}
+          tooltip={tooltip}
           onBlur={field.handleBlur}
-          /* styling d’erreur éventuel */
           className={cn(className, hasError && 'ring-destructive ring-1')}
           {...rest}
         />

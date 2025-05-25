@@ -83,7 +83,7 @@ export const SignupForm: React.FC = () => {
 
   const mutation = useMutation({
     ...createUserMutation(),
-    onSuccess: () => navigate({ to: '/signup-success' }),
+    onSuccess: () => navigate({ to: '/inscription-succes' }),
   })
   const { isError, error } = mutation
 
@@ -290,7 +290,7 @@ export const SignupForm: React.FC = () => {
                   <form.AppField name="languageId">
                     {f => (
                       <f.VirtualizedSelectField
-                        placeholder="Sélectionnez une langue"
+                        placeholder={t('form.placeholder.language')}
                         options={appData.languages.map(l => ({
                           id: l.id,
                           label: t('languages.' + l.code),
@@ -327,9 +327,12 @@ export const SignupForm: React.FC = () => {
                             <f.TextField<number>
                               label={t('form.price_per_km')}
                               fieldType="number"
+                              tooltip={t('form.tooltip.price_per_km')}
                               type="number"
                               required={false}
-                              placeholder="500"
+                              placeholder={t(
+                                'form.placeholder.price_per_km_example'
+                              )}
                             />
                           )}
                         </form.AppField>
@@ -339,9 +342,10 @@ export const SignupForm: React.FC = () => {
                             <f.TextField<number>
                               label={t('form.radius')}
                               type="number"
+                              tooltip={t('form.tooltip.radius')}
                               fieldType="number"
                               required={false}
-                              placeholder="50"
+                              placeholder={t('form.placeholder.radius_example')}
                             />
                           )}
                         </form.AppField>
@@ -357,7 +361,13 @@ export const SignupForm: React.FC = () => {
                       name="address.cityId"
                       validators={{ onChange: zAddressDto.shape.cityId }}
                     >
-                      {f => <f.CityField label={t('form.city')} required />}
+                      {f => (
+                        <f.CityField
+                          label={t('form.city')}
+                          tooltip={t('form.tooltip.city')}
+                          required
+                        />
+                      )}
                     </form.AppField>
 
                     <form.AppField name="address.street">
@@ -365,7 +375,7 @@ export const SignupForm: React.FC = () => {
                         <f.TextField
                           label={t('form.street_quarter')}
                           required={false}
-                          placeholder="Ex. : Rue de la soif"
+                          placeholder={t('form.placeholder.street_example')}
                         />
                       )}
                     </form.AppField>
@@ -380,6 +390,7 @@ export const SignupForm: React.FC = () => {
                         <f.LocationField
                           label={t('form.location')}
                           mapHeight="280px"
+                          tooltip={t('form.tooltip.location')}
                           radius={
                             values.type === 'carrier' && values.radius
                               ? values.radius * 1000

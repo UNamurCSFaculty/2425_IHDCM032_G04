@@ -38,6 +38,8 @@ interface AuctionCardProps {
   layout: CardLayout
   isDetail?: boolean
   role: UserRole
+  // onBuyNow?: (auctionId: number) => void // TODO: implement buy now
+  // onMakeBid?: (auctionId: number) => void // TODO: implement make bid
   onDetails: () => void
 }
 
@@ -87,29 +89,8 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
         </TableCell>
         <TableCell className="space-x-1 text-right">
           <Button size="sm" variant="outline" onClick={onDetails}>
-            Détails
+            {t('buttons.details')}
           </Button>
-          {/*
-          {role === 'buyer' && onMakeBid && (
-            <Button
-              size="sm"
-              className="bg-emerald-600 text-white"
-              onClick={() => onMakeBid(auction.id)}
-            >
-              Enchérir
-            </Button>
-          )}
-        
-          {role === 'buyer' && auction.options?.buyNowPrice && (
-            <Button
-              size="sm"
-              className="bg-amber-600 text-white"
-              onClick={() => onBuyNow?.(auction.id)}
-            >
-              Acheter
-            </Button>
-          )}
-                */}
         </TableCell>
       </TableRow>
     )
@@ -125,12 +106,13 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
     >
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2 truncate text-base font-semibold">
-          {t('database.' + auction.product.type)} · lot {auction.product.id}
+          {t('database.' + auction.product.type)} ·{' '}
+          {t('auction.lot_label', { id: auction.product.id })}
           <Badge
             variant={auction.bids.length ? 'default' : 'outline'}
             className="ml-auto shrink-0"
           >
-            {auction.bids.length} offre{auction.bids.length === 1 ? '' : 's'}
+            {t('auction.bid_count', { count: auction.bids.length })}
           </Badge>
         </CardTitle>
         <CardDescription className="flex flex-col flex-wrap items-center justify-center gap-1.5 text-sm text-neutral-700">
@@ -157,52 +139,43 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
         <div className="flex items-center justify-between">
           <InfoTile
             icon={<Clock className="size-4" />}
-            label="Expire dans"
+            label={t('auction.expires_in')}
             size="lg"
           >
             <CountdownTimer endDate={expires.toDate()} />
           </InfoTile>
         </div>
         <div className="grid grid-cols-2 gap-3 text-sm">
-          <InfoTile icon={<ShieldCheck className="size-4" />} label="Qualité">
+          <InfoTile
+            icon={<ShieldCheck className="size-4" />}
+            label={t('product.quality_label')}
+          >
             {auction.product.qualityControl?.quality.name ?? 'N/A'}
           </InfoTile>
-          <InfoTile icon={<Package className="size-4" />} label="Quantité">
+          <InfoTile
+            icon={<Package className="size-4" />}
+            label={t('product.quantity_label')}
+          >
             {formatWeight(auction.productQuantity)}
           </InfoTile>
           <InfoTile
             icon={<DollarSign className="size-4" />}
-            label="Prix demandé"
+            label={t('auction.asking_price')}
           >
             {formatPrice.format(auction.price)}
           </InfoTile>
           <InfoTile
             icon={<TrendingUp className="size-4" />}
-            label="Meilleure offre"
+            label={t('auction.best_bid')}
           >
             {bestBid ? formatPrice.format(bestBid) : '—'}
           </InfoTile>
         </div>
       </CardContent>
       <CardFooter className="flex flex-col gap-2 pt-1 pb-1">
-        {/*
-        {role === 'buyer' && auction.options?.buyNowPrice && (
-          <Button
-            className="bg-amber-600 hover:bg-amber-700 text-white w-full"
-            onClick={() => onBuyNow?.(auction.id)}
-          >
-            Achat immédiat {formatPrice.format(auction.options.buyNowPrice)}
-          </Button>
-        )}
-        {role === 'buyer' && onMakeBid && (
-          <Button className="w-full" onClick={() => onMakeBid(auction.id)}>
-            Enchérir
-          </Button>
-        )}
-        */}
         {!isDetail && (
           <Button variant="default" className="w-full" onClick={onDetails}>
-            Voir détails
+            {t('buttons.view_details')}
           </Button>
         )}
       </CardFooter>
