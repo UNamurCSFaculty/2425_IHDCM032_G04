@@ -1,8 +1,9 @@
 import { InfoTile } from '../InfoTile'
-import type {
-  HarvestProductDto,
-  ProductDto,
-  TransformedProductDto,
+import {
+  type HarvestProductDto,
+  type ProductDto,
+  ProductType,
+  type TransformedProductDto,
 } from '@/api/generated'
 import { Badge } from '@/components/ui/badge'
 import {
@@ -15,7 +16,7 @@ import {
 import { TableCell, TableRow } from '@/components/ui/table'
 import cities from '@/data/cities.json'
 import regions from '@/data/regions.json'
-import { ProductType, cn } from '@/lib/utils'
+import { cn } from '@/lib/utils'
 import { formatDate, formatWeight } from '@/utils/formatter'
 import {
   Clock,

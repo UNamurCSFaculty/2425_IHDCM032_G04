@@ -1,12 +1,13 @@
 import FormContainer from '../FormContainer'
 import FormSectionTitle from '../FormSectionTitle'
-import type {
-  FieldDto,
-  HarvestProductDto,
-  HarvestProductUpdateDto,
-  QualityDto,
-  StoreDetailDto,
-  UserListDto,
+import {
+  type FieldDto,
+  type HarvestProductDto,
+  type HarvestProductUpdateDto,
+  ProductType,
+  type QualityDto,
+  type StoreDetailDto,
+  type UserListDto,
 } from '@/api/generated'
 import {
   createProductMutation,
@@ -19,7 +20,6 @@ import {
 } from '@/api/generated/zod.gen'
 import { useAppForm } from '@/components/form'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { ProductType } from '@/lib/utils'
 import { formatCoordinates } from '@/utils/formatter'
 import { useStore } from '@tanstack/react-form'
 import { useMutation } from '@tanstack/react-query'
