@@ -5,16 +5,13 @@ import be.labil.anacarde.domain.dto.db.RoleDto;
 import be.labil.anacarde.domain.dto.db.ValidationGroups;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.DiscriminatorMapping;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  * DTO pour l'entité User.
@@ -83,7 +80,7 @@ public abstract class UserUpdateDto {
 	 *
 	 * This field is only used during creation and is write-only.
 	 */
-	@Schema(description = "Mot de passe de l'utilisateur", accessMode = Schema.AccessMode.WRITE_ONLY, example = "p@ssw0rd")
+	@Schema(description = "Mot de passe de l'utilisateur", accessMode = Schema.AccessMode.WRITE_ONLY, example = "p@ssw0rd", requiredMode = Schema.RequiredMode.REQUIRED)
 	@NotBlank(groups = ValidationGroups.Create.class, message = "Le mot de passe est requis")
 	@Size(min = 8, message = "Le mot de passe doit contenir au moins {min} caractères", groups = ValidationGroups.Create.class)
 	private String password;
@@ -102,10 +99,15 @@ public abstract class UserUpdateDto {
 	private AddressDto address;
 
 	/*
-	@ArraySchema(schema = @Schema(type = "string", format = "binary", description = "Fichiers à uploader", implementation = MultipartFile.class, requiredMode = Schema.RequiredMode.REQUIRED), minItems = 1)
-	@NotNull(message = "La liste des documents est requise.")
-	@Size(min = 1, message = "Au moins un document doit être fourni.")
-	private List<MultipartFile> documents;*/
+	 * @ArraySchema(schema = @Schema(type = "string", format = "binary", description =
+	 * "Fichiers à uploader", implementation = MultipartFile.class, requiredMode =
+	 * Schema.RequiredMode.REQUIRED), minItems = 1)
+	 * 
+	 * @NotNull(message = "La liste des documents est requise.")
+	 * 
+	 * @Size(min = 1, message = "Au moins un document doit être fourni.") private
+	 * List<MultipartFile> documents;
+	 */
 
 	public String getEmail() {
 		return email != null ? email.trim().toLowerCase() : null;

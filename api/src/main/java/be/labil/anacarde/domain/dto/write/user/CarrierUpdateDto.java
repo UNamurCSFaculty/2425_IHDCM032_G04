@@ -1,9 +1,8 @@
 package be.labil.anacarde.domain.dto.write.user;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import java.math.BigDecimal;
-import java.util.Set;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -19,10 +18,13 @@ public class CarrierUpdateDto extends UserUpdateDto {
 
 	/** Prix par kilomètre facturé par le transporteur. */
 	@Schema(description = "Prix par kilomètre facturé par le transporteur", example = "1.50", requiredMode = Schema.RequiredMode.REQUIRED)
+	@Min(value = 1, message = "Le prix par kilomètre doit être supérieur ou égal à 1")
 	@NotNull(message = "Le prix par kilomètre est requis")
-	private BigDecimal pricePerKm;
+	private Double pricePerKm;
 
-	/** Liste des identifiants des régions desservies par le transporteur. */
-	@Schema(description = "Liste des identifiants des régions desservies par le transporteur", example = "[1, 2, 3]", requiredMode = Schema.RequiredMode.REQUIRED)
-	private Set<Integer> regionIds;
+	/** Prix par kilomètre facturé par le transporteur. */
+	@Schema(description = "Rayon d'action du transporteur en kilomètres", example = "50", requiredMode = Schema.RequiredMode.REQUIRED)
+	@Min(value = 1, message = "Le rayon d'action doit être supérieur ou égal à 1")
+	@NotNull(message = "Le rayon d'action est requis")
+	private Double radius;
 }

@@ -21,8 +21,8 @@ const zTransformer = zUserUpdateDto.extend({
 
 const zCarrier = zUserUpdateDto.extend({
   type: z.literal('carrier'),
-  pricePerKm: z.number().positive(),
-  regionIds: z.array(z.number().int()),
+  pricePerKm: z.number(),
+  radius: z.number(),
 })
 
 const zExporter = zUserUpdateDto.extend({

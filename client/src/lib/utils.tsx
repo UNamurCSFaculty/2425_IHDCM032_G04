@@ -96,6 +96,11 @@ export enum ProductType {
   TRANSFORMED = 'transformed',
 }
 
+export const productTypes: ProductType[] = [
+  ProductType.HARVEST,
+  ProductType.TRANSFORMED,
+]
+
 //export type DeepPartial<T> = {
 //  [K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> : T[K]
 //}
@@ -112,4 +117,27 @@ export type DeepPartial<T> = {
         ? DeepPartial<T[K]>
         : // Sinon (primitif), garde le type d'origine
           T[K]
+}
+
+export function capitalizeFirstLetter(str: string): string {
+  if (!str) return str
+  return str.charAt(0).toUpperCase() + str.slice(1)
+}
+
+export const calculatePasswordStrength = (password: string): number => {
+  if (!password) return 0
+
+  let strength = 0
+
+  // Length check
+  if (password.length >= 8) strength += 1
+  if (password.length >= 12) strength += 1
+
+  // Character type checks
+  if (/[A-Z]/.test(password)) strength += 1
+  if (/[a-z]/.test(password)) strength += 1
+  if (/[0-9]/.test(password)) strength += 1
+  if (/[^A-Za-z0-9]/.test(password)) strength += 1
+
+  return Math.min(5, strength)
 }

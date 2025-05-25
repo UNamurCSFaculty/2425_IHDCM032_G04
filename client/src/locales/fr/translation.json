@@ -74,6 +74,7 @@
     "connection": "Démarrer maintenant",
     "reinitialise": "Réinitialiser",
     "submit": "Envoyer",
+    "submitting": "Envoi en cours...",
     "subscribe": "Créer un compte"
   },
   "common": {
@@ -129,15 +130,31 @@
     "phone.taken": "Ce numéro de téléphone est déjà utilisé",
     "server.unreachable": "Le serveur est inaccessible"
   },
+  "password_indicator": {
+    "strength": "Force du mot de passe",
+    "very_weak": "Très faible",
+    "weak": "Faible",
+    "fair": "Moyenne",
+    "good": "Bonne",
+    "strong": "Forte",
+    "very_strong": "Très forte"
+  },
   "form": {
+    "carrier_details": "Détails du transporteur",
+    "accept_terms": "J’accepte les conditions d’utilisation",
     "select.placeholder": "Choisissez une option",
-    "address": "adresse",
+    "address": "Adresse",
+    "price_per_km": "Prix par km",
+    "radius": "Rayon de livraison en km",
     "agricultural_identifier": "Identifiant agricole",
     "confirm_password": "Valider le mot de passe",
     "first_name": "Prénom",
     "language": "Langue",
     "last_name": "Nom",
     "mail": "Adresse mail",
+    "city": "Ville",
+    "location": "Localisation",
+    "street_quarter": "Quartier / Rue",
     "message": "Message",
     "password": "Mot de passe",
     "phone": "Téléphone",
@@ -148,6 +165,7 @@
       "select_city": "Sélectionner une ville"
     },
     "type": "Je suis",
+    "upload_accepted": "Formats acceptés",
     "upload_component": "Cliquez pour télécharger ou glisser-déposer",
     "upload_limit": "La taille maximale de téléchargement est de {{max}} Mo",
     "upload_too_big": "Le fichier est trop volumineux, maximum {{max}} Mo",
@@ -181,6 +199,7 @@
     "to": "à"
   },
   "validation": {
+    "acceptTerms": "Vous devez accepter les conditions d’utilisation",
     "email": "Format d’email invalide",
     "max": "Le champ doit être au plus {{count}}",
     "maxLength": "Le champ doit avoir au plus {{count}} caractère",

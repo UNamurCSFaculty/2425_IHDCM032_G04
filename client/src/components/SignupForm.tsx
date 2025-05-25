@@ -1,7 +1,7 @@
 import Stepper from './Stepper'
 import { checkEmail, checkPhone } from '@/api/generated'
 import { createUserMutation } from '@/api/generated/@tanstack/react-query.gen'
-import { zUserUpdateDto } from '@/api/generated/zod.gen'
+import { zAddressDto, zUserUpdateDto } from '@/api/generated/zod.gen' // zAddressDto a été ajouté
 import { BreadcrumbSection } from '@/components/BreadcrumbSection'
 import { useAppForm } from '@/components/form'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
@@ -13,42 +13,36 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import type { DeepPartial } from '@/lib/utils'
+import { calculatePasswordStrength, cn, type DeepPartial } from '@/lib/utils'
 import { zUser } from '@/schemas/api-schemas'
 import { useAppData } from '@/store/appStore'
 import { useStore } from '@tanstack/react-form'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { AlertCircle, ArrowRight, Loader2 } from 'lucide-react'
-import React, { useEffect, useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod/v4'
+import { PasswordStrengthIndicator } from './PasswordStrengthIndicator'
 
-/* ------------------------------------------------------------------------ */
-/* Schema d’inscription                                                 */
-/* ------------------------------------------------------------------------ */
-
-export const zUserRegistration = zUser
+const zUserRegistration = zUser
   .and(
     z.object({
-      passwordValidation: z.string(),
-      acceptTerms: z.boolean().refine(v => v === true, {
-        message: 'errors.accept_terms',
-      }),
+      password: z.string().min(8),
+      passwordValidation: z.string().min(8),
+      acceptTerms: z
+        .boolean()
+        .refine(v => v === true, { message: 'errors.accept_terms' }),
       documents: z.array(z.file()).min(1),
     })
   )
-  .refine(d => d.password === d.passwordValidation, {
+  .refine(data => data.password === data.passwordValidation, {
     path: ['passwordValidation'],
+    message: 'errors.password_mismatch',
   })
 
 export type UserRegistration = z.infer<typeof zUserRegistration>
 type UserRegistrationDraft = DeepPartial<UserRegistration>
-
-/* ------------------------------------------------------------------------ */
-/*   Composant principal                                                  */
-/* ------------------------------------------------------------------------ */
-
 type StepField =
   | keyof UserRegistration
   | 'agriculturalIdentifier'
@@ -56,36 +50,62 @@ type StepField =
   | 'address.street'
   | 'address.location'
 
+const StepPanel: React.FC<{
+  index: number
+  current: number
+  children: React.ReactNode
+}> = ({ index, current, children }) => {
+  const isActive = index === current
+  return (
+    <div
+      className={cn(
+        'w-full transition-all duration-300',
+        isActive
+          ? 'relative translate-x-0 opacity-100'
+          : 'pointer-events-none absolute opacity-0'
+      )}
+    >
+      {children}
+    </div>
+  )
+}
+
 export const SignupForm: React.FC = () => {
   const navigate = useNavigate()
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const appData = useAppData()
+  const containerRef = useRef<HTMLDivElement>(null)
 
   const [step, setStep] = useState(2)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  /* ------------------------- Mutation API ------------------------------ */
   const mutation = useMutation({
     ...createUserMutation(),
     onSuccess: () => navigate({ to: '/login' }),
   })
   const { isError, error } = mutation
 
-  /* ------------------------ TanStack Form ------------------------------ */
   const form = useAppForm({
     validators: { onChange: zUserRegistration },
     defaultValues: {
       documents: [],
-
+      type: 'carrier',
+      firstName: '',
+      lastName: '',
       email: '',
+      phone: '+22901',
+      address: {},
       password: '',
       passwordValidation: '',
       languageId: appData.languages[0].id,
       agriculturalIdentifier: '',
       acceptTerms: false,
+      radius: 0,
+      pricePerKm: 0,
     } as UserRegistrationDraft,
     async onSubmit({ value }) {
       const userRegistration = value as UserRegistration
+      zUserRegistration.parse(userRegistration)
       const { documents = [], ...user } = userRegistration
       setIsSubmitting(true)
       try {
@@ -96,15 +116,8 @@ export const SignupForm: React.FC = () => {
     },
   })
 
-  /* Validation initiale (langue par défaut) */
-  useEffect(() => {
-    form.validate('change')
-  }, [i18n.language, form])
-
-  /* Données utiles pour les champs conditionnels */
   const values = useStore(form.store, s => s.values)
 
-  /* ------------------------- Gestion des steps ------------------------- */
   const stepFields: Record<number, StepField[]> = {
     1: [
       'type',
@@ -115,20 +128,14 @@ export const SignupForm: React.FC = () => {
       'phone',
       'agriculturalIdentifier',
     ],
-    2: ['address.cityId', 'address.street', 'address.location', 'documents'],
-    3: ['password', 'passwordValidation', 'acceptTerms'],
+    2: ['address.cityId', 'address.street', 'address.location'],
+    3: ['documents', 'password', 'passwordValidation', 'acceptTerms'],
   }
 
   /** Valide tous les champs du step et renvoie true s’ils sont OK */
-  const canGoToNext = async (): Promise<boolean> => {
+  const canGoToNext = async () => {
     const currentStepFields = stepFields[step]
     let hasErrorInStep = false
-
-    console.log(
-      `🔍 [canGoToNext] Validation pour l'étape ${step}. Champs:`,
-      currentStepFields
-    )
-
     for (const fieldName of currentStepFields) {
       const fieldNameTyped = fieldName as keyof UserRegistration // Assurez-vous que UserRegistration est bien typé
       const changeErrors = await form.validateField(fieldNameTyped, 'change')
@@ -142,11 +149,7 @@ export const SignupForm: React.FC = () => {
       }
     }
 
-    if (hasErrorInStep) {
-      return false
-    }
-
-    return true
+    return !hasErrorInStep
   }
 
   const nextStep = async () => {
@@ -154,7 +157,10 @@ export const SignupForm: React.FC = () => {
   }
   const prevStep = () => setStep(s => s - 1)
 
-  /* ----------------------------- UI ------------------------------------ */
+  useEffect(() => {
+    containerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }, [step])
+
   return (
     <section className="body-font relative text-gray-600">
       <BreadcrumbSection
@@ -163,7 +169,10 @@ export const SignupForm: React.FC = () => {
         breadcrumbs={[{ labelKey: 'breadcrumb.signup' }]}
       />
 
-      <div className="container mx-auto max-w-3xl px-5 py-24">
+      <div
+        ref={containerRef}
+        className="container mx-auto max-w-3xl px-5 py-24"
+      >
         <Card>
           <CardHeader>
             <CardTitle className="text-xl">{t('app.signup.title')}</CardTitle>
@@ -175,18 +184,14 @@ export const SignupForm: React.FC = () => {
             <form
               onSubmit={e => {
                 e.preventDefault()
-                e.stopPropagation()
                 form.handleSubmit()
               }}
-              className="space-y-6"
+              className="relative h-fit space-y-6"
             >
-              {/* ----------------------- Étape 1 ----------------------- */}
-              {step === 1 && (
+              <StepPanel index={1} current={step}>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                  {/* Type */}
-                  <form.AppField
-                    name="type"
-                    children={f => (
+                  <form.AppField name="type">
+                    {f => (
                       <f.RadioGroupField
                         className="md:col-span-2"
                         direction="row"
@@ -202,17 +207,15 @@ export const SignupForm: React.FC = () => {
                         label={t('form.type')}
                       />
                     )}
-                  />
-                  {/* Nom / Prénom */}
-                  <form.AppField
-                    name="lastName"
-                    children={f => <f.TextField label={t('form.last_name')} />}
-                  />
-                  <form.AppField
-                    name="firstName"
-                    children={f => <f.TextField label={t('form.first_name')} />}
-                  />
-                  {/* E-mail / Téléphone */}
+                  </form.AppField>
+
+                  <form.AppField name="lastName">
+                    {f => <f.TextField label={t('form.last_name')} />}
+                  </form.AppField>
+                  <form.AppField name="firstName">
+                    {f => <f.TextField label={t('form.first_name')} />}
+                  </form.AppField>
+
                   <form.AppField
                     name="email"
                     validators={{
@@ -222,16 +225,15 @@ export const SignupForm: React.FC = () => {
                         const exists = await checkEmail({
                           query: { email: value },
                         })
-
                         return exists.data
                           ? t('errors.email.exists')
                           : undefined
                       },
                     }}
-                    children={f => (
-                      <f.TextField type="email" label={t('form.mail')} />
-                    )}
-                  />
+                  >
+                    {f => <f.TextField type="email" label={t('form.mail')} />}
+                  </form.AppField>
+
                   <form.AppField
                     name="phone"
                     validators={{
@@ -241,21 +243,17 @@ export const SignupForm: React.FC = () => {
                         const exists = await checkPhone({
                           query: { phone: value },
                         })
-
                         return exists.data
                           ? t('errors.phone.exists')
                           : undefined
                       },
                     }}
-                    children={f => (
-                      <f.PhoneField label={t('form.phone')} required />
-                    )}
-                  />
+                  >
+                    {f => <f.PhoneField label={t('form.phone')} required />}
+                  </form.AppField>
 
-                  {/* Langue */}
-                  <form.AppField
-                    name="languageId"
-                    children={f => (
+                  <form.AppField name="languageId">
+                    {f => (
                       <f.VirtualizedSelectField
                         placeholder="Sélectionnez une langue"
                         options={appData.languages.map(l => ({
@@ -265,86 +263,145 @@ export const SignupForm: React.FC = () => {
                         label={t('form.language')}
                       />
                     )}
-                  />
+                  </form.AppField>
 
-                  {/* Identifiant agricole (producteur uniquement) */}
                   {values.type === 'producer' ? (
-                    <form.AppField
-                      name="agriculturalIdentifier"
-                      children={f => (
+                    <form.AppField name="agriculturalIdentifier">
+                      {f => (
                         <f.TextField
                           label={t('form.agricultural_identifier')}
                         />
                       )}
-                    />
+                    </form.AppField>
                   ) : (
                     <div aria-hidden="true" />
                   )}
                 </div>
-              )}
+              </StepPanel>
 
-              {/* ----------------------- Étape 2 ----------------------- */}
-              {step === 2 && (
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-1">
-                  {/* Adresse */}
-                  <form.AppField
-                    name="address"
-                    children={f => (
-                      <f.AddressField
-                        withMap={true}
-                        label={t('form.address')}
+              <StepPanel index={2} current={step}>
+                <div className="grid grid-cols-1 gap-4">
+                  {values.type === 'carrier' && (
+                    <fieldset className="space-y-3 rounded-md border-2 border-gray-200 p-4">
+                      <legend className="px-2 text-lg font-semibold">
+                        {t('form.carrier_details')}
+                      </legend>
+                      <div className="grid grid-cols-2 gap-4">
+                        <form.AppField name="pricePerKm">
+                          {f => (
+                            <f.TextField<number>
+                              label={t('form.price_per_km')}
+                              fieldType="number"
+                              type="number"
+                              required={false}
+                              placeholder="500"
+                            />
+                          )}
+                        </form.AppField>
+
+                        <form.AppField name="radius">
+                          {f => (
+                            <f.TextField<number>
+                              label={t('form.radius')}
+                              type="number"
+                              fieldType="number"
+                              required={false}
+                              placeholder="50"
+                            />
+                          )}
+                        </form.AppField>
+                      </div>
+                    </fieldset>
+                  )}
+
+                  <fieldset className="space-y-3 rounded-md border-2 border-gray-200 p-4">
+                    <legend className="px-2 text-lg font-semibold">
+                      {t('form.address')}
+                    </legend>
+                    <form.AppField
+                      name="address.cityId"
+                      validators={{ onChange: zAddressDto.shape.cityId }}
+                    >
+                      {f => <f.CityField label={t('form.city')} required />}
+                    </form.AppField>
+
+                    <form.AppField name="address.street">
+                      {f => (
+                        <f.TextField
+                          label={t('form.street_quarter')}
+                          required={false}
+                          placeholder="Ex. : Rue de la soif"
+                        />
+                      )}
+                    </form.AppField>
+
+                    <form.AppField
+                      name="address.location"
+                      validators={{
+                        onChange: zAddressDto.shape.location,
+                      }}
+                    >
+                      {f => (
+                        <f.LocationField
+                          label={t('form.location')}
+                          mapHeight="280px"
+                          radius={
+                            values.type === 'carrier' && values.radius
+                              ? values.radius * 1000
+                              : 0
+                          }
+                          required
+                        />
+                      )}
+                    </form.AppField>
+                  </fieldset>
+                </div>
+              </StepPanel>
+
+              <StepPanel index={3} current={step}>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <form.AppField name="password">
+                    {f => (
+                      <f.TextField type="password" label={t('form.password')} />
+                    )}
+                  </form.AppField>
+                  <form.AppField name="passwordValidation">
+                    {f => (
+                      <f.TextField
+                        type="password"
+                        label={t('form.confirm_password')}
                       />
                     )}
-                  />
-
-                  {/* Documents */}
-                  <form.AppField
-                    name="documents"
-                    children={f => (
+                  </form.AppField>
+                  {values.password && (
+                    <PasswordStrengthIndicator
+                      className="col-span-full"
+                      strength={calculatePasswordStrength(values.password)}
+                    />
+                  )}
+                  <form.AppField name="documents">
+                    {f => (
                       <f.FileUploadField
+                        className="col-span-full"
                         label={t('form.documents')}
                         accept="application/pdf,image/*"
                         maxFiles={5}
                         maxSize={5}
                       />
                     )}
-                  />
-                </div>
-              )}
-
-              {/* ----------------------- Étape 3 ----------------------- */}
-              {step === 3 && (
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  {/* MDP + confirmation */}
-                  <form.AppField
-                    name="password"
-                    children={f => (
-                      <f.TextField type="password" label={t('form.password')} />
-                    )}
-                  />
-                  <form.AppField
-                    name="passwordValidation"
-                    children={f => (
-                      <f.TextField
-                        type="password"
-                        label={t('form.confirm_password')}
-                      />
-                    )}
-                  />
-                  {/* Conditions générales */}
-                  <form.AppField
-                    name="acceptTerms"
-                    children={f => (
+                  </form.AppField>
+                  <form.AppField name="acceptTerms">
+                    {f => (
                       <f.CheckboxField
+                        className="col-span-full"
                         label={t('form.accept_terms')}
                         required
                       />
                     )}
-                  />
+                  </form.AppField>
                 </div>
-              )}
+              </StepPanel>
 
-              {/* ---------- Erreurs serveur ---------- */}
               {isError && error?.errors?.length > 0 && (
                 <Alert
                   variant="destructive"
@@ -367,7 +424,6 @@ export const SignupForm: React.FC = () => {
                 </Alert>
               )}
 
-              {/* ---------- Navigation ---------- */}
               <div className="flex justify-between">
                 {step > 1 ? (
                   <Button type="button" variant="outline" onClick={prevStep}>
@@ -379,7 +435,7 @@ export const SignupForm: React.FC = () => {
 
                 {step < 3 ? (
                   <Button type="button" onClick={nextStep}>
-                    {t('pagination.next')}{' '}
+                    {t('pagination.next')}
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 ) : (

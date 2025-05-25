@@ -153,6 +153,7 @@ export function FileUpload({
             {t('form.upload_click_or_drag')}
           </p>
           <p className="text-muted-foreground mb-2 text-xs">
+            {t('form.upload_accepted')} :{' '}
             {acceptedFileTypes(accept, t).join(', ')} ({maxSize}
             MB max)
           </p>
