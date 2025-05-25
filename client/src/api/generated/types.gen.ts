@@ -267,13 +267,14 @@ export type LanguageDto = {
 /**
  * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
  */
-export type Type =
-  | 'admin'
-  | 'producer'
-  | 'transformer'
-  | 'quality_inspector'
-  | 'exporter'
-  | 'carrier'
+export enum Type {
+  ADMIN = 'admin',
+  PRODUCER = 'producer',
+  TRANSFORMER = 'transformer',
+  QUALITY_INSPECTOR = 'quality_inspector',
+  EXPORTER = 'exporter',
+  CARRIER = 'carrier',
+}
 
 /**
  * Objet de transfert de données pour les producteurs.
@@ -3180,7 +3181,10 @@ export type CreateQualityResponse =
 /**
  * Type du produit
  */
-export type ProductType = 'HARVEST' | 'TRANSFORMED'
+export enum ProductType {
+  HARVEST = 'HARVEST',
+  TRANSFORMED = 'TRANSFORMED',
+}
 
 export type ListProductsData = {
   body?: never

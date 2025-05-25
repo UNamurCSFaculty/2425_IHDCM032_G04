@@ -30,6 +30,7 @@ public abstract class ProductMapper {
 	@Mapping(target = "producer", ignore = true)
 	@Mapping(target = "field", ignore = true)
 	@Mapping(target = "id", ignore = true)
+	@Mapping(target = "transformedProduct", ignore = true)
 	public abstract HarvestProduct toEntity(HarvestProductUpdateDto dto);
 
 	// Mapping vers l'entité
@@ -129,6 +130,7 @@ public abstract class ProductMapper {
 	@Mapping(target = "field", ignore = true)
 	@Mapping(target = "qualityControl", ignore = true)
 	@Mapping(target = "id", ignore = true)
+	@Mapping(target = "transformedProduct", ignore = true)
 	public abstract HarvestProduct partialUpdate(HarvestProductUpdateDto dto,
 			@MappingTarget HarvestProduct entity);
 

@@ -160,19 +160,29 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, layout }) => {
             })()}
           </InfoTile>
         </div>
-        {product.type === ProductType.TRANSFORMED && (
-          <InfoTile
-            icon={<Wheat className="size-4" />}
-            label="Matières premières"
-            size="sm"
-          >
-            <ul className="lg">
-              <li>Lot brut n°1 (Grade I)</li>
-              <li>Lot brut n°2 (Grade III)</li>
-              <li>Lot brut n°3 (Hors normes)</li>
-            </ul>
-          </InfoTile>
-        )}
+        {product.type === ProductType.TRANSFORMED &&
+          (() => {
+            const tp = product as TransformedProductDto
+            return (
+              <InfoTile
+                icon={<Wheat className="size-4" />}
+                label="Matières premières"
+                size="sm"
+              >
+                {tp.harvestProducts && tp.harvestProducts.length > 0 ? (
+                  <ul className="lg">
+                    {tp.harvestProducts.map((hp, index) => (
+                      <li key={index}>
+                        Lot n°{hp.id} ({hp.qualityControl.quality.name})
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  'N/A'
+                )}
+              </InfoTile>
+            )
+          })()}
       </CardContent>
       {/* <CardFooter className="pt-1 pb-1  flex flex-col gap-2"></CardFooter> */}
     </Card>
