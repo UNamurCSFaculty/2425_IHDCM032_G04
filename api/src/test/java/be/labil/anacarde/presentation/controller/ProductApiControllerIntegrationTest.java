@@ -1,6 +1,7 @@
 package be.labil.anacarde.presentation.controller;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -8,7 +9,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import be.labil.anacarde.domain.dto.write.product.HarvestProductUpdateDto;
 import be.labil.anacarde.domain.dto.write.product.TransformedProductUpdateDto;
 import be.labil.anacarde.domain.model.Product;
+import be.labil.anacarde.domain.model.TransformedProduct;
 import be.labil.anacarde.infrastructure.persistence.ProductRepository;
+import be.labil.anacarde.infrastructure.persistence.TransformedProductRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.time.LocalDateTime;
@@ -23,6 +26,7 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 
 	private @Autowired ObjectMapper objectMapper;
 	private @Autowired ProductRepository productRepository;
+	private @Autowired TransformedProductRepository transformedProductRepository;
 
 	/**
 	 * Teste la récupération d'un produit existant.
@@ -159,13 +163,19 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 				.andExpect(jsonPath("$.weightKg").value("1234567.0"))
 				.andExpect(jsonPath("$.transformer.id").value(transformerId))
 				.andExpect(jsonPath("$.store.id").value(storeId))
-				.andExpect(jsonPath("$.qualityControl.id").value(qualityControlId))
-				.andExpect(jsonPath("$.harvestProducts").isArray())
-				.andExpect(jsonPath("$.harvestProducts.length()").value(1));
+				.andExpect(jsonPath("$.qualityControl.id").value(qualityControlId));
 
 		Product createdProduct = productRepository.findAll().stream()
 				.filter(product -> product.getWeightKg().equals(1234567.0)).findFirst()
 				.orElseThrow(() -> new AssertionError("Product non trouvé"));
+
+		TransformedProduct transformedProduct = transformedProductRepository
+				.findWithHarvestProducts().stream()
+				.filter(tp -> tp.getId() == createdProduct.getId()).findFirst()
+				.orElseThrow(() -> new AssertionError("TransformedProduct non trouvé"));
+		assertEquals(transformedProduct.getHarvestProducts().size(), 1);
+		assertEquals(transformedProduct.getHarvestProducts().getFirst().getId(),
+				getTestHarvestProduct().getId());
 	}
 
 	/**
