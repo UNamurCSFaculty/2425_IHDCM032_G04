@@ -170,7 +170,7 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 				.orElseThrow(() -> new AssertionError("Product non trouvé"));
 
 		TransformedProduct transformedProduct = transformedProductRepository
-				.findWithHarvestProducts().stream()
+				.findByTransformerId(null).stream()
 				.filter(tp -> tp.getId() == createdProduct.getId()).findFirst()
 				.orElseThrow(() -> new AssertionError("TransformedProduct non trouvé"));
 		assertEquals(transformedProduct.getHarvestProducts().size(), 1);

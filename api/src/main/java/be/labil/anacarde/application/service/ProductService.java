@@ -3,6 +3,7 @@ package be.labil.anacarde.application.service;
 
 import be.labil.anacarde.domain.dto.db.product.ProductDto;
 import be.labil.anacarde.domain.dto.write.product.ProductUpdateDto;
+import be.labil.anacarde.presentation.controller.enums.ProductType;
 import java.util.List;
 
 /**
@@ -34,9 +35,11 @@ public interface ProductService {
 	 *
 	 * @param traderId
 	 *            L'identifiant du trader propriétaire des produits.
+	 * @param productType
+	 *            Le type de produit à récupérer.
 	 * @return Une List de ProductDto représentant tous les produits.
 	 */
-	List<ProductDto> listProducts(Integer traderId);
+	List<ProductDto> listProducts(Integer traderId, ProductType productType);
 
 	/**
 	 * Met à jour le produit identifié par l'ID donné avec les informations fournies dans le
