@@ -26,6 +26,7 @@ import {
 import { cn } from '@/lib/utils'
 import { useUserStore } from '@/store/userStore'
 import { Link, useNavigate } from '@tanstack/react-router'
+import { LanguageSwitcher } from '@/components/LanguageSwitcher' // MODIFICATION: Importer LanguageSwitcher
 import {
   ArrowLeftRight,
   CircleDollarSign,
@@ -199,30 +200,27 @@ export function Header() {
           </NavigationMenu>
         </div>
 
-        {/* Desktop User / Auth */}
-        <div className="hidden lg:block">
+        {/* Desktop User / Auth & Language Switcher */}
+        <div className="hidden items-center gap-0 lg:flex">
           {!isLoggedIn ? (
             <>
-              <Button asChild variant="outline" size="sm" className="mr-2">
+              <Button asChild size="sm" className="mr-2">
                 <Link to="/login">Connexion</Link>
-              </Button>
-              <Button asChild size="sm">
-                <Link to="/signup">Inscription</Link>
               </Button>
             </>
           ) : (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className="flex items-center gap-2">
-                  <span className="font-medium">
-                    {user?.firstName} {user?.lastName}
-                  </span>
                   <Avatar>
                     <AvatarFallback>
                       {user?.firstName?.[0]}
                       {user?.lastName?.[0]}
                     </AvatarFallback>
                   </Avatar>
+                  <span className="font-medium">
+                    {user?.firstName} {user?.lastName}
+                  </span>
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
@@ -237,7 +235,8 @@ export function Header() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          )}
+          )}{' '}
+          <LanguageSwitcher />
         </div>
 
         {/* Mobile Nav */}
@@ -312,15 +311,54 @@ export function Header() {
                     )}
                   </div>
                 ))}
+
+                <div className="mt-4 border-t pt-4">
+                  <LanguageSwitcher inMobileNav={true} />
+                </div>
+
                 {!isLoggedIn && (
                   <>
-                    <Button asChild variant="outline" size="sm">
-                      <Link to="/login">Connexion</Link>
-                    </Button>
-                    <Button asChild size="sm">
-                      <Link to="/signup">Inscription</Link>
+                    <Button asChild size="sm" className="w-full">
+                      <Link to="/login" onClick={handleMobileLinkClick}>
+                        Connexion
+                      </Link>
                     </Button>
                   </>
+                )}
+                {isLoggedIn && (
+                  <div className="mt-4 space-y-2 border-t pt-4">
+                    <div className="px-1 py-2">
+                      <div className="text-base font-medium">
+                        {user?.firstName} {user?.lastName}
+                      </div>
+                      <div className="text-muted-foreground text-sm">
+                        {user?.email}
+                      </div>
+                    </div>
+                    <Link
+                      to="/profil"
+                      className="hover:bg-accent block rounded-md px-1 py-2 text-base font-medium"
+                      onClick={handleMobileLinkClick}
+                    >
+                      Profil
+                    </Link>
+                    <Link
+                      to="/parametres"
+                      className="hover:bg-accent block rounded-md px-1 py-2 text-base font-medium"
+                      onClick={handleMobileLinkClick}
+                    >
+                      Paramètres
+                    </Link>
+                    <button
+                      onClick={() => {
+                        handleLogout()
+                        handleMobileLinkClick()
+                      }}
+                      className="hover:bg-accent block w-full rounded-md px-1 py-2 text-left text-base font-medium"
+                    >
+                      Déconnexion
+                    </button>
+                  </div>
                 )}
               </nav>
             </SheetContent>

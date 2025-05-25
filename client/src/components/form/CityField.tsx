@@ -70,6 +70,7 @@ export function CityField({ label, required = true }: CityFieldProps) {
             const point = `POINT(${bestResult.lon} ${bestResult.lat})`
             // Met à jour le champ de localisation, ce qui mettra à jour la carte
             field.form.setFieldValue('address.location', point)
+            field.form.validateField('address.location', 'change')
           }
         } catch {
           // Erreur réseau ou API, on ne fait rien pour ne pas bloquer l'utilisateur

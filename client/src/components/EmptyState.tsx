@@ -10,7 +10,7 @@ interface EmptyStateProps {
 const EmptyState: React.FC<EmptyStateProps> = ({ className }) => (
   <Card
     className={cn(
-      'min-h-[300px] flex flex-col items-center justify-center text-center bg-background',
+      'bg-background flex min-h-[300px] flex-col items-center justify-center text-center',
       className
     )}
   >

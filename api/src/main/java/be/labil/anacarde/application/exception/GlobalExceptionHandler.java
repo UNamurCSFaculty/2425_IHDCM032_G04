@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -334,6 +335,11 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(AuthenticationException.class)
 	public ResponseEntity<ApiErrorResponse> handleAuthenticationException(
 			AuthenticationException ex, HttpServletRequest req) {
+
+		if (ex instanceof DisabledException) {
+			return buildResponse(HttpStatus.UNAUTHORIZED, ApiErrorCode.ACCESS_DISABLED.code(),
+					"L'accès est désactivé pour cet utilisateur.", req);
+		}
 
 		return buildResponse(HttpStatus.UNAUTHORIZED, ApiErrorCode.ACCESS_UNAUTHORIZED.code(),
 				"Échec de l'authentification : " + ex.getMessage(), req);

@@ -45,7 +45,7 @@ const AuctionsTable: React.FC<AuctionsTableProps> = ({
     <div className="bg-muted flex flex-col p-6 md:p-10">
       <Card className="overflow-hidden">
         <CardContent>
-          <h2 className="text-2xl font-bold mb-4">{tableTitle}</h2>
+          <h2 className="mb-4 text-2xl font-bold">{tableTitle}</h2>
           {auctions === null || auctions.length == 0 ? (
             <p>Aucune vente aux enchères n'est répertoriée.</p>
           ) : (

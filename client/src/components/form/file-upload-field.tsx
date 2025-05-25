@@ -16,14 +16,6 @@ export function FileUploadField({
 }: FileUploadFieldProps) {
   const field = useFieldContext<File[]>()
 
-  console.debug(
-    'file uplload',
-    field,
-    field.state,
-    field.state.value,
-    field.state.meta
-  )
-
   return (
     <div className={cn('space-y-2', className)}>
       <label className="block text-sm font-medium">{label}</label>

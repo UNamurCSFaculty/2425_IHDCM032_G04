@@ -3,10 +3,11 @@ import { useTranslation } from 'react-i18next'
 
 interface StepperProps {
   step: number
-  totalSteps?: number
+  totalSteps: number
+  onStepClick?: (step: number) => void
 }
 
-const Stepper: React.FC<StepperProps> = ({ step, totalSteps = 3 }) => {
+const Stepper: React.FC<StepperProps> = ({ step, totalSteps, onStepClick }) => {
   const { t } = useTranslation()
 
   // 1) Génération dynamique du tableau des étapes
@@ -19,11 +20,19 @@ const Stepper: React.FC<StepperProps> = ({ step, totalSteps = 3 }) => {
           <React.Fragment key={stepNumber}>
             {/* Cercle de l'étape */}
             <div
+              role={onStepClick ? 'button' : undefined}
+              tabIndex={onStepClick ? 0 : undefined}
               className={`flex h-8 w-8 items-center justify-center rounded-full transition-colors duration-300 ${
                 step >= stepNumber
                   ? 'bg-primary text-primary-foreground'
-                  : 'border-muted bg-background text-muted-foreground border'
-              } `}
+                  : 'bg-background text-muted-foreground border border-neutral-400'
+              } ${onStepClick ? 'cursor-pointer' : ''}`} // Ajout de cursor-pointer
+              onClick={() => onStepClick?.(stepNumber)} // Appel de onStepClick
+              onKeyDown={e => {
+                if (onStepClick && (e.key === 'Enter' || e.key === ' ')) {
+                  onStepClick(stepNumber)
+                }
+              }}
             >
               {stepNumber}
             </div>

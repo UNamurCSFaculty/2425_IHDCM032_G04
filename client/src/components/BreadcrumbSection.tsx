@@ -53,7 +53,7 @@ export function BreadcrumbSection({
       )}
     >
       <Breadcrumb className="mb-6">
-        <BreadcrumbList className="flex justify-center items-center space-x-2">
+        <BreadcrumbList className="flex items-center justify-center space-x-2">
           {items.map((crumb, idx) => (
             <React.Fragment key={idx}>
               <BreadcrumbItem>
@@ -69,7 +69,7 @@ export function BreadcrumbSection({
                 ) : (
                   <BreadcrumbPage>
                     {crumb.icon && (
-                      <crumb.icon className="inline-block h-4 w-4 mr-1" />
+                      <crumb.icon className="mr-1 inline-block h-4 w-4" />
                     )}
                     {t(crumb.labelKey)}
                   </BreadcrumbPage>

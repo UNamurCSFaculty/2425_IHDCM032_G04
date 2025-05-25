@@ -66,8 +66,8 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
   /* -------------------- Table row layout -------------------- */
   if (layout === 'row') {
     return (
-      <TableRow className="h-10 hover:bg-muted/50" key={auction.id}>
-        <TableCell className="font-medium truncate">
+      <TableRow className="hover:bg-muted/50 h-10" key={auction.id}>
+        <TableCell className="truncate font-medium">
           {t('database.' + auction.product.type)}
         </TableCell>
         <TableCell>
@@ -85,7 +85,7 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
         <TableCell className="text-right">
           {bestBid ? formatPrice.format(bestBid) : '—'}
         </TableCell>
-        <TableCell className="text-right space-x-1">
+        <TableCell className="space-x-1 text-right">
           <Button size="sm" variant="outline" onClick={onDetails}>
             Détails
           </Button>
@@ -119,12 +119,12 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
   return (
     <Card
       className={cn(
-        'overflow-hidden shadow-sm gap-2 transition-all flex flex-col hover:shadow-lg bg-gradient-to-b to-yellow-50/50 from-green-50/50 hover:scale-102',
-        isEndingSoon && 'ring-2 ring-red-400 bg-red-50/50'
+        'flex flex-col gap-2 overflow-hidden bg-gradient-to-b from-green-50/50 to-yellow-50/50 shadow-sm transition-all hover:scale-102 hover:shadow-lg',
+        isEndingSoon && 'bg-red-50/50 ring-2 ring-red-400'
       )}
     >
       <CardHeader className="pb-2">
-        <CardTitle className="text-base font-semibold flex items-center gap-2 truncate">
+        <CardTitle className="flex items-center gap-2 truncate text-base font-semibold">
           {t('database.' + auction.product.type)} · lot {auction.product.id}
           <Badge
             variant={auction.bids.length ? 'default' : 'outline'}
@@ -133,8 +133,8 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
             {auction.bids.length} offre{auction.bids.length === 1 ? '' : 's'}
           </Badge>
         </CardTitle>
-        <CardDescription className="flex flex-wrap flex-col items-center gap-1.5 text-sm text-neutral-700 justify-center">
-          <div className="flex items-center gap-1 mt-2">
+        <CardDescription className="flex flex-col flex-wrap items-center justify-center gap-1.5 text-sm text-neutral-700">
+          <div className="mt-2 flex items-center gap-1">
             <Badge variant="outline">
               <MapPin className="size-3.5" /> {cityLabel}, {regionLabel}
             </Badge>
@@ -153,7 +153,7 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
           </div>
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-3 pt-0 flex-grow">
+      <CardContent className="flex-grow space-y-3 pt-0">
         <div className="flex items-center justify-between">
           <InfoTile
             icon={<Clock className="size-4" />}
@@ -184,7 +184,7 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
           </InfoTile>
         </div>
       </CardContent>
-      <CardFooter className="pt-1 pb-1  flex flex-col gap-2">
+      <CardFooter className="flex flex-col gap-2 pt-1 pb-1">
         {/*
         {role === 'buyer' && auction.options?.buyNowPrice && (
           <Button

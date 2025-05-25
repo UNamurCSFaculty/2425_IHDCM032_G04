@@ -48,7 +48,7 @@ const AuctionMap: React.FC<{
               >
                 <div className="pointer-events-auto">
                   <CardContent className="p-1 text-xs">
-                    <h3 className="font-semibold text-base mb-1">
+                    <h3 className="mb-1 text-base font-semibold">
                       {a.product.type === 'harvest' ? 'Récolte' : 'Transformé'}{' '}
                       · lot #{a.product.id}
                     </h3>
@@ -89,7 +89,7 @@ const AuctionMap: React.FC<{
                           </dd>
                         </div>
                       ) : (
-                        <div className="italic text-muted-foreground text-center">
+                        <div className="text-muted-foreground text-center italic">
                           Pas d’offres
                         </div>
                       )}

@@ -108,7 +108,7 @@ export const ContractModal: React.FC<ContractModalProps> = ({
             Proposition de contrat
           </Dialog.Title>
           <Dialog.Close asChild>
-            <button className="absolute right-4 top-4 text-gray-500 hover:text-gray-700">
+            <button className="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
               ✕
             </button>
           </Dialog.Close>
@@ -195,7 +195,7 @@ export const ContractModal: React.FC<ContractModalProps> = ({
               />
             </div>
 
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="mt-1 text-xs text-gray-500">
               Se termine le {endDateDisplay}
             </p>
 

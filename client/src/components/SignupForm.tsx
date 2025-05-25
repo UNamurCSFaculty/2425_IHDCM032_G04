@@ -49,6 +49,8 @@ type StepField =
   | 'address.cityId'
   | 'address.street'
   | 'address.location'
+  | 'pricePerKm'
+  | 'radius'
 
 const StepPanel: React.FC<{
   index: number
@@ -76,12 +78,12 @@ export const SignupForm: React.FC = () => {
   const appData = useAppData()
   const containerRef = useRef<HTMLDivElement>(null)
 
-  const [step, setStep] = useState(2)
+  const [step, setStep] = useState(1)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const mutation = useMutation({
     ...createUserMutation(),
-    onSuccess: () => navigate({ to: '/login' }),
+    onSuccess: () => navigate({ to: '/signup-success' }),
   })
   const { isError, error } = mutation
 
@@ -89,7 +91,7 @@ export const SignupForm: React.FC = () => {
     validators: { onChange: zUserRegistration },
     defaultValues: {
       documents: [],
-      type: 'carrier',
+      type: undefined,
       firstName: '',
       lastName: '',
       email: '',
@@ -128,16 +130,25 @@ export const SignupForm: React.FC = () => {
       'phone',
       'agriculturalIdentifier',
     ],
-    2: ['address.cityId', 'address.street', 'address.location'],
+    2: [
+      'address.cityId',
+      'address.street',
+      'address.location',
+      'pricePerKm',
+      'radius',
+    ],
     3: ['documents', 'password', 'passwordValidation', 'acceptTerms'],
   }
 
   /** Valide tous les champs du step et renvoie true s’ils sont OK */
-  const canGoToNext = async () => {
-    const currentStepFields = stepFields[step]
+  const validateStep = async (stepToValidate: number): Promise<boolean> => {
+    const fieldsForStep = stepFields[stepToValidate]
+    if (!fieldsForStep) return true // Aucune configuration de champ pour cette étape
+
     let hasErrorInStep = false
-    for (const fieldName of currentStepFields) {
-      const fieldNameTyped = fieldName as keyof UserRegistration // Assurez-vous que UserRegistration est bien typé
+    for (const fieldName of fieldsForStep) {
+      const fieldNameTyped = fieldName as keyof UserRegistration
+      // Déclencher la validation pour 'change' et 'blur' pour afficher les erreurs
       const changeErrors = await form.validateField(fieldNameTyped, 'change')
       if (changeErrors && changeErrors.length > 0) {
         hasErrorInStep = true
@@ -148,15 +159,39 @@ export const SignupForm: React.FC = () => {
         hasErrorInStep = true
       }
     }
-
     return !hasErrorInStep
   }
 
   const nextStep = async () => {
-    if (await canGoToNext()) setStep(s => s + 1)
+    if (await validateStep(step)) {
+      setStep(s => s + 1)
+    }
   }
   const prevStep = () => setStep(s => s - 1)
 
+  const handleStepClick = async (targetStep: number) => {
+    if (targetStep === step) return // Ne rien faire si on clique sur l'étape actuelle
+
+    if (targetStep < step) {
+      setStep(targetStep)
+    } else {
+      // targetStep > step
+      let allPreviousStepsValid = true
+      // Valider toutes les étapes de l'actuelle (step) jusqu'à targetStep - 1
+      for (let i = step; i < targetStep; i++) {
+        const isStepValid = await validateStep(i)
+        if (!isStepValid) {
+          allPreviousStepsValid = false
+          setStep(i) // Afficher l'étape qui a échoué la validation
+          break
+        }
+      }
+
+      if (allPreviousStepsValid) {
+        setStep(targetStep)
+      }
+    }
+  }
   useEffect(() => {
     containerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }, [step])
@@ -179,7 +214,7 @@ export const SignupForm: React.FC = () => {
             <CardDescription>{t('app.signup.subtitle')}</CardDescription>
           </CardHeader>
           <CardContent>
-            <Stepper step={step} />
+            <Stepper step={step} onStepClick={handleStepClick} totalSteps={3} />
 
             <form
               onSubmit={e => {
@@ -430,26 +465,34 @@ export const SignupForm: React.FC = () => {
                     {t('pagination.previous')}
                   </Button>
                 ) : (
-                  <span />
+                  <span /> // Pour maintenir l'alignement si le bouton précédent n'est pas là
                 )}
 
-                {step < 3 ? (
-                  <Button type="button" onClick={nextStep}>
-                    {t('pagination.next')}
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                ) : (
-                  <Button type="submit" disabled={isSubmitting}>
-                    {isSubmitting ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        {t('buttons.submitting')}
-                      </>
-                    ) : (
-                      t('buttons.submit')
-                    )}
-                  </Button>
-                )}
+                {/* Le bouton "Suivant" est toujours dans le DOM, masqué à la dernière étape */}
+                <Button
+                  type="button"
+                  onClick={nextStep}
+                  className={cn(step >= 3 && 'hidden')} // Masqué si à l'étape 3 ou plus
+                >
+                  {t('pagination.next')}
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+
+                {/* Le bouton "Soumettre" est toujours dans le DOM, visible uniquement à la dernière étape */}
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className={cn(step < 3 && 'hidden')} // Masqué si avant l'étape 3
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      {t('buttons.submitting')}
+                    </>
+                  ) : (
+                    t('buttons.submit')
+                  )}
+                </Button>
               </div>
             </form>
           </CardContent>

@@ -13,7 +13,7 @@ import org.locationtech.jts.geom.Point;
 @AllArgsConstructor
 @Builder
 public class Address {
-	@Column(name = "street", nullable = false)
+	@Column(name = "street")
 	private String street;
 
 	@JdbcTypeCode(SqlTypes.GEOMETRY)

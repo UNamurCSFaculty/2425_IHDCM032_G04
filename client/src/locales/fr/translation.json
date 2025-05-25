@@ -46,6 +46,13 @@
     "marketplace": {
       "title": "Marché des enchères",
       "subtitle": "Achetez des produits en ligne."
+    },
+    "signup_success": {
+      "title": "Inscription Réussie !",
+      "description_line1": "Votre demande d'inscription a bien été enregistrée.",
+      "description_line2": "Votre compte est en attente de validation par un administrateur.",
+      "email_notification": "Vous recevrez un e-mail une fois votre compte activé.",
+      "go_to_login": "Aller à la page de connexion"
     }
   },
   "breadcrumb": {
@@ -71,7 +78,8 @@
   },
   "buttons": {
     "cancel": "Annuler",
-    "connection": "Démarrer maintenant",
+    "connection": "Connexion",
+    "home_connection": "Démarrer maintenant",
     "reinitialise": "Réinitialiser",
     "submit": "Envoyer",
     "submitting": "Envoi en cours...",
@@ -99,6 +107,7 @@
   },
   "errors": {
     "access.denied": "Accès refusé : vous n’avez pas les droits suffisants.",
+    "access.disabled": "Votre compte doit être activé par un administrateur avant de pouvoir accéder à la plateforme.",
     "access.forbidden": "Accès interdit",
     "access.forbidden.csrf": "Le jeton CSRF ne correspond pas",
     "access.forbidden.csrf.missing": "Jeton CSRF manquant",
@@ -211,7 +220,8 @@
     "password": "Le mot de passe doit contenir au moins une minuscule, une majuscule, un chiffre et un caractère special",
     "passwordValidation": "Les mots de passe ne correspondent pas",
     "phone": "Numéro béninois invalide",
-    "required": "Ce champ est requis"
+    "required": "Ce champ est requis",
+    "number_min": "La valeur doit être supérieure ou égale à {{count}}"
   },
   "database": {
     "harvest": "Brut",

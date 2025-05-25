@@ -1,4 +1,3 @@
-// src/components/form/FieldErrors.tsx
 import type { AnyFieldMeta } from '@tanstack/react-form'
 import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
@@ -6,10 +5,6 @@ import type { $ZodRawIssue } from 'zod/v4/core'
 
 interface FieldErrorsProps {
   meta: AnyFieldMeta
-  /**
-   * Par défaut on n’affiche qu’après touche ou blur.
-   * Passez `always` à true pour forcer l’affichage.
-   */
   always?: boolean
 }
 
@@ -31,7 +26,7 @@ export const FieldErrors = ({ meta, always = false }: FieldErrorsProps) => {
   return (
     <>
       {meta.errors.map((err, idx) => (
-        <p key={idx} className="text-destructive text-sm font-medium">
+        <p key={idx} className="text-destructive text-xs font-medium">
           {getMessage(err)}
         </p>
       ))}
@@ -44,6 +39,10 @@ function translateIssue(issue: $ZodRawIssue, t: TFunction): string {
   switch (issue.code) {
     case 'too_small': {
       const min = issue.minimum as number
+
+      if (issue.origin === 'number') {
+        return t('validation.number_min', { count: min })
+      }
       // si c'est un minLength à 1 → champ requis
       return min === 1
         ? t('validation.required')

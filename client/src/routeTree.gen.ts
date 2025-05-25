@@ -11,6 +11,7 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as SignupSuccessImport } from './routes/signup-success'
 import { Route as SignupImport } from './routes/signup'
 import { Route as LoginImport } from './routes/login'
 import { Route as AdminImport } from './routes/admin'
@@ -34,6 +35,12 @@ import { Route as AuthenticatedAchatsMesEncheresImport } from './routes/_authent
 import { Route as AuthenticatedAchatsMarcheImport } from './routes/_authenticated/achats/marche'
 
 // Create/Update Routes
+
+const SignupSuccessRoute = SignupSuccessImport.update({
+  id: '/signup-success',
+  path: '/signup-success',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const SignupRoute = SignupImport.update({
   id: '/signup',
@@ -204,6 +211,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignupImport
       parentRoute: typeof rootRoute
     }
+    '/signup-success': {
+      id: '/signup-success'
+      path: '/signup-success'
+      fullPath: '/signup-success'
+      preLoaderRoute: typeof SignupSuccessImport
+      parentRoute: typeof rootRoute
+    }
     '/admin/analytics': {
       id: '/admin/analytics'
       path: '/analytics'
@@ -343,7 +357,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
-  AuthenticatedRouteChildren,
+  AuthenticatedRouteChildren
 )
 
 interface AdminRouteChildren {
@@ -376,6 +390,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/signup-success': typeof SignupSuccessRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/contact/merci': typeof ContactMerciRoute
@@ -399,6 +414,7 @@ export interface FileRoutesByTo {
   '': typeof AuthenticatedRouteWithChildren
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/signup-success': typeof SignupSuccessRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/contact/merci': typeof ContactMerciRoute
@@ -424,6 +440,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/signup-success': typeof SignupSuccessRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/contact/merci': typeof ContactMerciRoute
@@ -450,6 +467,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/login'
     | '/signup'
+    | '/signup-success'
     | '/admin/analytics'
     | '/admin/settings'
     | '/contact/merci'
@@ -472,6 +490,7 @@ export interface FileRouteTypes {
     | ''
     | '/login'
     | '/signup'
+    | '/signup-success'
     | '/admin/analytics'
     | '/admin/settings'
     | '/contact/merci'
@@ -495,6 +514,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/login'
     | '/signup'
+    | '/signup-success'
     | '/admin/analytics'
     | '/admin/settings'
     | '/contact/merci'
@@ -520,6 +540,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
+  SignupSuccessRoute: typeof SignupSuccessRoute
   ContactMerciRoute: typeof ContactMerciRoute
   ContactIndexRoute: typeof ContactIndexRoute
 }
@@ -530,6 +551,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
+  SignupSuccessRoute: SignupSuccessRoute,
   ContactMerciRoute: ContactMerciRoute,
   ContactIndexRoute: ContactIndexRoute,
 }
@@ -549,6 +571,7 @@ export const routeTree = rootRoute
         "/admin",
         "/login",
         "/signup",
+        "/signup-success",
         "/contact/merci",
         "/contact/"
       ]
@@ -585,6 +608,9 @@ export const routeTree = rootRoute
     },
     "/signup": {
       "filePath": "signup.tsx"
+    },
+    "/signup-success": {
+      "filePath": "signup-success.tsx"
     },
     "/admin/analytics": {
       "filePath": "admin/analytics.tsx",

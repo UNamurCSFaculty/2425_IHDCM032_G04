@@ -183,14 +183,14 @@ const AuctionDetailsPanel: React.FC<Props> = ({
   const endsIn = new Date(auction.expirationDate)
   const ended = endsIn < new Date()
   return (
-    <div className="flex flex-col gap-6 w-full mx-auto p-4">
+    <div className="mx-auto flex w-full flex-col gap-6 p-4">
       {/* Header */}
       <div className="space-y-1 flex flex-wrap">
         <h2 className="text-2xl font-semibold flex items-center gap-2">
           Produit {t('database.' + auction.product.type)} · Lot n°
           {auction.product.id} · Enchère n°{auction.id}
         </h2>
-        <div className="flex flex-wrap gap-4 text-sm text-muted-foreground ml-4">
+        <div className="text-muted-foreground ml-4 flex flex-wrap gap-4 text-sm">
           <span className="flex items-center gap-1">
             <UserCircle2 className="size-4" />
             {auction.trader.firstName} {auction.trader.lastName}
@@ -200,9 +200,9 @@ const AuctionDetailsPanel: React.FC<Props> = ({
 
       {/* Map */}
       {coords && (
-        <div className="flex flex-col gap-4 w-full">
+        <div className="flex w-full flex-col gap-4">
           {showDetails && (
-            <Card className="bg-white shadow rounded-lg gap-0 py-3">
+            <Card className="gap-0 rounded-lg bg-white py-3 shadow">
               <CardHeader>
                 <CardTitle className="text-lg">Détails de l’enchère</CardTitle>
               </CardHeader>
@@ -250,7 +250,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
           )}
 
           {/* 2. La map en dessous */}
-          <div className="h-48 w-full rounded-md overflow-hidden">
+          <div className="h-48 w-full overflow-hidden rounded-md">
             <MapContainer
               center={mapCenter}
               zoom={12}
@@ -272,29 +272,29 @@ const AuctionDetailsPanel: React.FC<Props> = ({
           </div>
         </div>
       )}
-      <div className="flex flex-col lg:flex-row gap-4">
+      <div className="flex flex-col gap-4 lg:flex-row">
         {/* Left column: actions */}
         {role === 'buyer' && !ended && (
-          <div className="flex-1 flex flex-col gap-6">
-            <Card className="p-4 bg-neutral-100 rounded-lg shadow">
+          <div className="flex flex-1 flex-col gap-6">
+            <Card className="rounded-lg bg-neutral-100 p-4 shadow">
               {/* Achat immédiat */}
               {auction.options?.buyNowPrice && (
                 <div className="flex flex-col items-center text-center">
-                  <span className="text-base font-medium text-gray-700 mb-2">
+                  <span className="mb-2 text-base font-medium text-gray-700">
                     Achat immédiat
                   </span>
                   <Popover open={buyNowPopover} onOpenChange={setBuyNowPopover}>
                     <PopoverTrigger asChild>
                       <Button
-                        className="bg-amber-600 hover:bg-amber-700 text-white px-6"
+                        className="bg-amber-600 px-6 text-white hover:bg-amber-700"
                         onClick={() => setBuyNowPopover(true)}
                       >
-                        <ShoppingCart className="size-4 mr-2" />
+                        <ShoppingCart className="mr-2 size-4" />
                         {formatPrice.format(auction.options.buyNowPrice)}
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-64 p-4">
-                      <p className="text-center text-sm mb-4">
+                      <p className="mb-4 text-center text-sm">
                         Confirmer l’achat immédiat&nbsp;
                         <span className="font-semibold">
                           {formatPrice.format(auction.options.buyNowPrice)}
@@ -328,7 +328,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
               {/* Ajouter une enchère */}
               {canBid && (
                 <div className="flex flex-col items-center text-center">
-                  <span className="text-base font-medium text-gray-700 mb-2">
+                  <span className="mb-2 text-base font-medium text-gray-700">
                     Ajouter une enchère
                   </span>
                   <Input
@@ -349,12 +349,12 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                         className="w-full px-6"
                         onClick={() => setMakeBidPopover(true)}
                       >
-                        <PlusCircle className="size-4 mr-2" />
+                        <PlusCircle className="mr-2 size-4" />
                         Placer l'offre
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-64 p-4">
-                      <p className="text-center text-sm mb-4">
+                      <p className="mb-4 text-center text-sm">
                         Confirmer votre offre de&nbsp;
                         <span className="font-semibold">
                           {formatPrice.format(Number(amount) || 0)}
@@ -385,9 +385,9 @@ const AuctionDetailsPanel: React.FC<Props> = ({
         )}
         {role === 'buyer' && ended && (
           <div>
-            <Card className="p-4 bg-neutral-100 rounded-lg shadow">
+            <Card className="rounded-lg bg-neutral-100 p-4 shadow">
               <div className="flex flex-col items-center text-center">
-                <span className="text-base font-medium text-gray-700 mb-2">
+                <span className="mb-2 text-base font-medium text-gray-700">
                   Enchère terminée
                 </span>
                 <div className="text-sm text-gray-500">
@@ -402,14 +402,14 @@ const AuctionDetailsPanel: React.FC<Props> = ({
         <div className="flex-2">
           <Card className="overflow-hidden">
             <CardHeader>
-              <CardTitle className="text-lg text-center">
+              <CardTitle className="text-center text-lg">
                 {sortedBids.length}{' '}
                 {sortedBids.length <= 1 ? 'offre ' : 'offres '} pour le lot
               </CardTitle>
             </CardHeader>
-            <CardContent className="max-h-80 overflow-y-auto divide-y bg-neutral-100 p-2">
+            <CardContent className="max-h-80 divide-y overflow-y-auto bg-neutral-100 p-2">
               {sortedBids.length === 0 ? (
-                <div className="text-center py-8 text-gray-500">
+                <div className="py-8 text-center text-gray-500">
                   Aucune offre pour le moment.
                 </div>
               ) : (
@@ -440,17 +440,17 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                                 <Button
                                   size="sm"
                                   variant="outline"
-                                  className="flex items-center px-2 py-1 bg-green-700 text-white border-green-200"
+                                  className="flex items-center border-green-200 bg-green-700 px-2 py-1 text-white"
                                   onClick={() => {
                                     setAcceptBidPopoverIndex(bid.id)
                                   }}
                                 >
-                                  <CheckCircle className="h-3 w-3 mr-1" />{' '}
+                                  <CheckCircle className="mr-1 h-3 w-3" />{' '}
                                   Accepter
                                 </Button>
                               </PopoverTrigger>
                               <PopoverContent className="w-48 p-2">
-                                <p className="text-sm text-center mb-2">
+                                <p className="mb-2 text-center text-sm">
                                   Accepter cette offre ?
                                 </p>
                                 <div className="flex justify-end gap-2">
@@ -484,16 +484,16 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                                 <Button
                                   size="sm"
                                   variant="outline"
-                                  className="flex items-center px-2 py-1 bg-red-600 text-white border-red-200"
+                                  className="flex items-center border-red-200 bg-red-600 px-2 py-1 text-white"
                                   onClick={() => {
                                     setRejectBidPopoverIndex(bid.id)
                                   }}
                                 >
-                                  <XCircle className="h-3 w-3 mr-1" /> Refuser
+                                  <XCircle className="mr-1 h-3 w-3" /> Refuser
                                 </Button>
                               </PopoverTrigger>
                               <PopoverContent className="w-48 p-2">
-                                <p className="text-sm text-center mb-2">
+                                <p className="mb-2 text-center text-sm">
                                   Refuser cette offre ?
                                 </p>
                                 <div className="flex justify-end gap-2">
