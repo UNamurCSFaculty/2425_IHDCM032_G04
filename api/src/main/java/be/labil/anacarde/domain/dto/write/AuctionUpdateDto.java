@@ -39,6 +39,7 @@ public class AuctionUpdateDto {
 	@Schema(description = "Statut de l'enchère")
 	private Integer statusId;
 
+	@NotNull(message = "Le trader est requis")
 	@Schema(description = "Options d'enchère")
 	private AuctionOptionsUpdateDto options;
 }
