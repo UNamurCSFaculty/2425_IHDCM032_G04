@@ -102,7 +102,7 @@ export const ContactForm: React.FC = () => {
             {isError && error?.errors?.length > 0 && (
               <Alert
                 variant="destructive"
-                className="border-red-300 bg-red-50 mt-4 mb-4"
+                className="mt-4 mb-4 border-red-300 bg-red-50"
               >
                 <AlertCircle className="h-4 w-4" />
                 <AlertTitle>{t('common.error')}</AlertTitle>

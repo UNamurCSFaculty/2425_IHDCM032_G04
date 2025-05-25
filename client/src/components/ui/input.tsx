@@ -5,10 +5,23 @@ import * as React from 'react'
 export interface InputProps extends React.ComponentProps<'input'> {
   startIcon?: LucideIcon
   endIcon?: LucideIcon
+  onStartIconClick?: () => void
+  onEndIconClick?: () => void
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, startIcon, endIcon, ...props }, ref) => {
+  (
+    {
+      className,
+      type,
+      startIcon,
+      endIcon,
+      onEndIconClick,
+      onStartIconClick,
+      ...props
+    },
+    ref
+  ) => {
     const StartIcon = startIcon
     const EndIcon = endIcon
 
@@ -16,7 +29,11 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       <div className="relative w-full">
         {StartIcon && (
           <div className="absolute top-1/2 left-1.5 -translate-y-1/2 transform">
-            <StartIcon size={18} className="text-muted-foreground" />
+            <StartIcon
+              size={18}
+              className="text-muted-foreground"
+              onClick={onStartIconClick || (() => {})} // Default to no-op if not provided
+            />
           </div>
         )}
         <input
@@ -32,7 +49,11 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         />
         {EndIcon && (
           <div className="absolute top-1/2 right-3 -translate-y-1/2 transform">
-            <EndIcon className="text-muted-foreground" size={18} />
+            <EndIcon
+              className="text-muted-foreground"
+              size={18}
+              onClick={onEndIconClick}
+            />
           </div>
         )}
       </div>

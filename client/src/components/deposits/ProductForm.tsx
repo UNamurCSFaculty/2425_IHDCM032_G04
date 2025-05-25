@@ -26,7 +26,7 @@ import { useNavigate } from '@tanstack/react-router'
 import { AlertCircle } from 'lucide-react'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import z from 'zod'
+import z from 'zod/v4'
 
 interface ProductFormProps {
   users: UserListDto[]
@@ -140,7 +140,7 @@ export function ProductForm({
         }}
       >
         <div className="flex flex-row gap-10">
-          <div className="flex flex-col gap-6 w-1/2">
+          <div className="flex w-1/2 flex-col gap-6">
             <FormSectionTitle text="Paramètres du dépôt" />
 
             <div className="flex gap-4">
@@ -262,7 +262,7 @@ export function ProductForm({
             {isError && error?.errors?.length > 0 && (
               <Alert
                 variant="destructive"
-                className="border-red-300 bg-red-50 mt-4 mb-4"
+                className="mt-4 mb-4 border-red-300 bg-red-50"
               >
                 <AlertCircle className="h-4 w-4" />
                 <AlertTitle>{t('common.error')}</AlertTitle>
@@ -288,7 +288,7 @@ export function ProductForm({
             </form.AppForm>
           </div>
 
-          <div className="flex flex-col gap-6 w-1/2">
+          <div className="flex w-1/2 flex-col gap-6">
             <FormSectionTitle text="Contrôle qualité" />
 
             <form.AppField

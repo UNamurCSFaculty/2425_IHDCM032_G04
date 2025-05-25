@@ -5,7 +5,7 @@ import { PlusCircle } from 'lucide-react'
 export const Route = createFileRoute('/admin/blog/')({
   component: () => (
     <div>
-      <div className="flex items-center justify-between mb-4">
+      <div className="mb-4 flex items-center justify-between">
         <h1 className="text-2xl font-semibold">Gestion du Blog</h1>
         <Button asChild>
           <Link to="/admin/blog/new">

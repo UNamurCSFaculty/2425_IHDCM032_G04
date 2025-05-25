@@ -37,7 +37,7 @@ import {
   Map as MapIcon,
   SlidersHorizontal,
 } from 'lucide-react'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 export type ViewMode = 'cards' | 'table' | 'map'
 export type UserRole = 'buyer' | 'seller'
@@ -113,6 +113,13 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
     window.scrollTo({ top: 200, behavior: 'smooth' })
   }
 
+  const handleFilteredDataChange = useCallback(
+    (newFilteredData: AuctionDto[]) => {
+      setFilteredAuctions(newFilteredData)
+    },
+    []
+  )
+
   // Render
   const isInCardDetail = viewMode === 'cards' && inlineAuction
   const cssCard = isInCardDetail ? 'lg:justify-start' : 'lg:justify-end'
@@ -120,9 +127,9 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
   return (
     <>
       {/* Header */}
-      <div className="flex flex-wrap flex-col sm:flex-row items-center justify-center lg:justify-between gap-4 mb-6 w-full">
-        <div className="text-md  text-muted-foreground w-full lg:w-[260px] ">
-          <div className="text-center lg:text-left lg:pl-4">
+      <div className="mb-6 flex w-full flex-col flex-wrap items-center justify-center gap-4 sm:flex-row lg:justify-between">
+        <div className="text-md text-muted-foreground w-full lg:w-[260px]">
+          <div className="text-center lg:pl-4 lg:text-left">
             Résultat(s) : {filteredAuctions.length} enchère
             {filteredAuctions.length !== 1 && 's'}
           </div>
@@ -132,14 +139,14 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
             <div className="pl-4">
               <Button
                 variant="outline"
-                className="flex items-center gap-1 w-40"
+                className="flex w-40 items-center gap-1"
                 onClick={() => setInlineAuction(null)}
               >
                 <ArrowLeft className="size-4" /> Retour
               </Button>
             </div>
           ) : (
-            <div className="flex flex-col lg:flex-row flex-wrap gap-2 items-center justify-center lg:justify-end w-full">
+            <div className="flex w-full flex-col flex-wrap items-center justify-center gap-2 lg:flex-row lg:justify-end">
               {/* Sorting */}
               {viewMode !== 'map' && (
                 <Select
@@ -170,30 +177,30 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                   setInlineAuction(null)
                   setDialogAuction(null)
                 }}
-                className="grid grid-cols-3 rounded-lg border bg-background overflow-hidden"
+                className="bg-background grid grid-cols-3 overflow-hidden rounded-lg border"
               >
                 <ToggleGroupItem
                   value="cards"
                   aria-label="Grille"
-                  className="flex items-center justify-center py-2 hover:bg-muted data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
+                  className="hover:bg-muted data-[state=on]:bg-primary data-[state=on]:text-primary-foreground flex items-center justify-center py-2"
                 >
-                  <LayoutGrid className="size-4 mr-1" />
+                  <LayoutGrid className="mr-1 size-4" />
                   Grille
                 </ToggleGroupItem>
                 <ToggleGroupItem
                   value="table"
                   aria-label="Liste"
-                  className="flex items-center justify-center py-2 hover:bg-muted data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
+                  className="hover:bg-muted data-[state=on]:bg-primary data-[state=on]:text-primary-foreground flex items-center justify-center py-2"
                 >
-                  <ListIcon className="size-4 mr-1" />
+                  <ListIcon className="mr-1 size-4" />
                   Liste
                 </ToggleGroupItem>
                 <ToggleGroupItem
                   value="map"
                   aria-label="Carte"
-                  className="flex items-center justify-center py-2 hover:bg-muted data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
+                  className="hover:bg-muted data-[state=on]:bg-primary data-[state=on]:text-primary-foreground flex items-center justify-center py-2"
                 >
-                  <MapIcon className="size-4 mr-1" />
+                  <MapIcon className="mr-1 size-4" />
                   Carte
                 </ToggleGroupItem>
               </ToggleGroup>
@@ -203,20 +210,18 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                 <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
                   <SheetTrigger asChild>
                     <Button variant="outline">
-                      <SlidersHorizontal className="size-4 mr-2" />
+                      <SlidersHorizontal className="mr-2 size-4" />
                       Filtres
                     </Button>
                   </SheetTrigger>
                   <SheetContent
                     side="left"
-                    className="w-[300px] sm:w-[380px] p-0 overflow-y-auto"
+                    className="w-[300px] overflow-y-auto p-0 sm:w-[380px]"
                   >
                     <FiltersPanel
                       filterData={auctions}
                       filterDataType="auction"
-                      onFilteredDataChange={e =>
-                        setFilteredAuctions(e as AuctionDto[])
-                      }
+                      onFilteredDataChange={handleFilteredDataChange}
                       filterByAuctionStatus={filterByAuctionStatus}
                       filterByPrice={true}
                     />
@@ -228,13 +233,13 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-[260px_1fr] gap-6 items-start">
+      <div className="grid items-start gap-6 lg:grid-cols-[260px_1fr]">
         {isDesktop && (
-          <div className="sticky top-20 border rounded-lg shadow-sm bg-background self-start">
+          <div className="bg-background sticky top-20 self-start rounded-lg border shadow-sm">
             <FiltersPanel
               filterData={auctions}
               filterDataType="auction"
-              onFilteredDataChange={e => setFilteredAuctions(e as AuctionDto[])}
+              onFilteredDataChange={handleFilteredDataChange}
               filterByAuctionStatus={filterByAuctionStatus}
               filterByPrice={true}
             />
@@ -244,7 +249,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
         <div className="relative w-full min-w-0">
           {/* Cards */}
           {viewMode === 'cards' && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
               {inlineAuction ? (
                 <>
                   <AuctionCard
@@ -288,9 +293,9 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
           {/* Table */}
           {viewMode === 'table' && (
             <>
-              <div className="border rounded-lg bg-background overflow-x-auto">
-                <Table className="text-sm table-auto">
-                  <TableHeader className="sticky top-0 backdrop-blur supports-[backdrop-filter]:bg-muted/60 z-10">
+              <div className="bg-background overflow-x-auto rounded-lg border">
+                <Table className="table-auto text-sm">
+                  <TableHeader className="supports-[backdrop-filter]:bg-muted/60 sticky top-0 z-10 backdrop-blur">
                     <TableRow className="h-9 bg-neutral-100">
                       <TableHead>Marchandise</TableHead>
                       <TableHead>Expiration</TableHead>
@@ -340,7 +345,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
       {dialogAuction && viewMode !== 'cards' && (
         <Dialog open onOpenChange={open => !open && setDialogAuction(null)}>
           <DialogTitle />
-          <DialogContent className="w-full max-w-[80vw]! max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-h-[90vh] w-full max-w-[80vw]! overflow-y-auto">
             <AuctionDetails
               auction={dialogAuction}
               role={userRole}

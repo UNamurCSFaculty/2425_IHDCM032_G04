@@ -50,7 +50,7 @@ function RouteComponent() {
                 <div className="flex flex-col justify-center sm:flex-row sm:gap-4 lg:justify-start">
                   <Link to="/login">
                     <Button size="lg">
-                      {t('buttons.connection')}{' '}
+                      {t('buttons.home_connection')}{' '}
                       <ArrowUpRight className="!h-5 !w-5" />
                     </Button>
                   </Link>

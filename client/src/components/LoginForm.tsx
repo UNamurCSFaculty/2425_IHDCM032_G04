@@ -109,7 +109,7 @@ export function LoginForm() {
               {loginMutation.error && (
                 <Alert
                   variant="destructive"
-                  className="border-red-300 bg-red-50 mt-4 mb-4"
+                  className="mt-4 mb-4 border-red-300 bg-red-50"
                 >
                   <AlertCircle className="h-4 w-4" />
                   <AlertDescription>
@@ -168,7 +168,7 @@ export function LoginForm() {
               </div>
 
               {/* Inscription */}
-              <div className="text-center text-sm">
+              <div className="text-center text-lg">
                 Vous n’avez pas de compte ?{' '}
                 <Link to="/signup" className="underline underline-offset-4">
                   Inscrivez-vous

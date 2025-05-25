@@ -1,5 +1,16 @@
-// src/components/leaflet/BeninPointSelectorMap.tsx
-// ShadCN/UI imports
+// src/components/map/SelectorMap.tsx
+import {
+  MapContainer,
+  Marker,
+  Popup,
+  TileLayer,
+  useMap,
+  useMapEvents,
+  Circle,
+} from 'react-leaflet'
+import L, { LatLng, type LatLngExpression } from 'leaflet'
+import 'leaflet/dist/leaflet.css'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import {
   Command,
   CommandEmpty,
@@ -9,23 +20,13 @@ import {
 } from '@/components/ui/command'
 import { useDebounce } from '@/hooks/useDebounce'
 import type { GeoPointString } from '@/utils/geo-utils'
-import L, { LatLng, type LatLngExpression } from 'leaflet'
-import 'leaflet/dist/leaflet.css'
-import React, { useCallback, useEffect, useState } from 'react'
-import {
-  MapContainer,
-  Marker,
-  Popup,
-  TileLayer,
-  useMap,
-  useMapEvents,
-} from 'react-leaflet'
 
-// Default Leaflet marker icon
+// --- icône par défaut Leaflet (+ retina) ---
 const iconMarker = new L.Icon({
   iconUrl: '/leaflet/marker-icon.png',
   iconRetinaUrl: '/leaflet/marker-icon-2x.png',
   iconSize: [25, 41],
+  iconAnchor: [13, 39],
 })
 
 export interface NominatimSearchResult {
@@ -39,17 +40,27 @@ export interface NominatimSearchResult {
 export interface NominatimAddress {
   display_name: string
   road?: string
+  quarter?: string // quartier
+  suburb?: string // banlieue / arrondissement
+  city_district?: string // arrondissement de la ville
   city?: string
-  state?: string
+  town?: string
+  village?: string
+  county?: string // département
+  state?: string // région (peut varier)
   country?: string
+  country_code?: string
 }
 
-export interface BeninPointSelectorMapProps {
+export interface SelectorMapProps {
   initialPosition?: string | null
-  onPositionChange: (point: string, address?: NominatimAddress) => void
+  onPositionChange: (point: GeoPointString, address?: NominatimAddress) => void
   defaultCenter?: LatLngExpression
   defaultZoom?: number
   mapHeight?: string
+  showSearch?: boolean
+  /** Rayon en mètres (optionnel) */
+  radius?: number
 }
 
 function parseGeoPoint(point?: string | null) {
@@ -71,12 +82,14 @@ const ChangeView: React.FC<{ center: LatLngExpression; minZoom: number }> = ({
   return null
 }
 
-export const SelectorMap: React.FC<BeninPointSelectorMapProps> = ({
+export const SelectorMap: React.FC<SelectorMapProps> = ({
   initialPosition,
   onPositionChange,
   defaultCenter = [9.3077, 2.3158],
   defaultZoom = 7,
   mapHeight = '400px',
+  showSearch = true,
+  radius = 0, // rayon par défaut en mètres
 }) => {
   const [selectedPosition, setSelectedPosition] = useState<LatLng | null>(
     () => {
@@ -84,16 +97,24 @@ export const SelectorMap: React.FC<BeninPointSelectorMapProps> = ({
       return p ? new LatLng(p.lat, p.lng) : null
     }
   )
-
   const [addressInfo, setAddressInfo] = useState<NominatimAddress | null>(null)
   const [loadingAddress, setLoadingAddress] = useState(false)
 
-  // Search state
+  // pour le champ de recherche
   const [search, setSearch] = useState('')
   const debounced = useDebounce(search, 500)
   const [suggestions, setSuggestions] = useState<NominatimSearchResult[]>([])
   const [loadingSearch, setLoadingSearch] = useState(false)
+  const inputRef = useRef<HTMLInputElement>(null)
+  const [isFocused, setIsFocused] = useState(false)
 
+  const centerIcon = new L.DivIcon({
+    className: 'bg-green-600 rounded-full w-3 h-3 opacity-75',
+    iconSize: [3, 3],
+    iconAnchor: [1.5, 1.5], // pour centrer l’icône sur le point
+  })
+
+  // reverse géocoding
   const fetchAddress = useCallback(async (lat: number, lng: number) => {
     setLoadingAddress(true)
     try {
@@ -119,32 +140,21 @@ export const SelectorMap: React.FC<BeninPointSelectorMapProps> = ({
     }
   }, [])
 
-  // Handle map click
+  // clic sur la carte
   const MapEvents = () => {
     useMapEvents({
-      async click(e) {
+      click: async e => {
         const { lat, lng } = e.latlng
         setSelectedPosition(e.latlng)
-        const geoPointString = `POINT(${lng} ${lat})` as GeoPointString
-        const fetchedAddress = await fetchAddress(lat, lng)
-        onPositionChange(geoPointString, fetchedAddress)
-
-        const q = `[out:json][timeout:25];
-        area["ISO3166-1"="BJ"]->.a;
-        (
-          node["place"~"city|town|village"](area.a);
-        );
-        out body;
-        `
-        const url = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(q)}`
-        const cities = await fetch(url).then(r => r.json())
-        console.log('Fetched cities:', cities)
+        const point = `POINT(${lng} ${lat})` as GeoPointString
+        const addr = await fetchAddress(lat, lng)
+        onPositionChange(point, addr)
       },
     })
     return null
   }
 
-  // Fetch suggestions
+  // suggestions Nominatim
   useEffect(() => {
     if (!debounced) {
       setSuggestions([])
@@ -152,7 +162,7 @@ export const SelectorMap: React.FC<BeninPointSelectorMapProps> = ({
     }
     setLoadingSearch(true)
     fetch(
-      `https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=5&q=${encodeURIComponent(
+      `https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=5&countrycodes=bj&q=${encodeURIComponent(
         debounced
       )}`
     )
@@ -179,9 +189,11 @@ export const SelectorMap: React.FC<BeninPointSelectorMapProps> = ({
     onPositionChange(`POINT(${lon} ${lat})`, simplified)
     setSuggestions([])
     setSearch(item.display_name)
+    inputRef.current?.blur()
+    setIsFocused(false)
   }
 
-  // Sync initialPosition
+  // sync initialPosition
   useEffect(() => {
     const p = parseGeoPoint(initialPosition)
     if (p) {
@@ -192,33 +204,38 @@ export const SelectorMap: React.FC<BeninPointSelectorMapProps> = ({
   }, [initialPosition, fetchAddress])
 
   return (
-    <div>
-      {/* ShadCN Command for search */}
-      <div className="mb-4">
-        <Command>
-          <CommandInput
-            placeholder="Rechercher une adresse…"
-            value={search}
-            onValueChange={setSearch}
-          />
-          <CommandList>
-            {loadingSearch && <CommandEmpty>Chargement…</CommandEmpty>}
-            {!loadingSearch && suggestions.length === 0 && debounced && (
-              <CommandEmpty>Aucune suggestion</CommandEmpty>
+    <div className="relative">
+      {showSearch && (
+        <div className="absolute top-2 right-2 left-11 z-30">
+          <Command>
+            <CommandInput
+              ref={inputRef}
+              placeholder="Rechercher une adresse…"
+              value={search}
+              onValueChange={setSearch}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+            />
+            {isFocused && (
+              <CommandList>
+                {loadingSearch && <CommandEmpty>Chargement…</CommandEmpty>}
+                {!loadingSearch && suggestions.length === 0 && debounced && (
+                  <CommandEmpty>Aucune suggestion</CommandEmpty>
+                )}
+                {suggestions.map(s => (
+                  <CommandItem
+                    key={s.place_id}
+                    onSelect={() => selectSuggestion(s)}
+                  >
+                    {s.display_name}
+                  </CommandItem>
+                ))}
+              </CommandList>
             )}
-            {suggestions.map(s => (
-              <CommandItem
-                key={s.place_id}
-                onSelect={() => selectSuggestion(s)}
-              >
-                {s.display_name}
-              </CommandItem>
-            ))}
-          </CommandList>
-        </Command>
-      </div>
+          </Command>
+        </div>
+      )}
 
-      {/* Leaflet Map */}
       <MapContainer
         center={selectedPosition || defaultCenter}
         zoom={defaultZoom}
@@ -232,16 +249,36 @@ export const SelectorMap: React.FC<BeninPointSelectorMapProps> = ({
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution="&copy; OpenStreetMap contributors"
         />
+
         {selectedPosition && (
-          <Marker position={selectedPosition} icon={iconMarker}>
-            <Popup>
-              {selectedPosition.lat.toFixed(5)},{' '}
-              {selectedPosition.lng.toFixed(5)}
-              {loadingAddress && <div>Chargement de l'adresse…</div>}
-              {addressInfo && <div>{addressInfo.display_name}</div>}
-            </Popup>
-          </Marker>
+          <>
+            {selectedPosition && (
+              <Marker position={selectedPosition} icon={centerIcon} />
+            )}
+            <Marker position={selectedPosition} icon={iconMarker}>
+              <Popup>
+                {selectedPosition.lat.toFixed(5)},{' '}
+                {selectedPosition.lng.toFixed(5)}
+                {loadingAddress && <div>Chargement de l'adresse…</div>}
+                {addressInfo && <div>{addressInfo.display_name}</div>}
+              </Popup>
+            </Marker>
+
+            {typeof radius === 'number' && radius > 0 && (
+              <Circle
+                center={selectedPosition}
+                radius={radius}
+                pathOptions={{
+                  color: '#00aa00',
+                  fillColor: '#00aa00',
+                  fillOpacity: 0.2,
+                  weight: 1,
+                }}
+              />
+            )}
+          </>
         )}
+
         <MapEvents />
       </MapContainer>
     </div>

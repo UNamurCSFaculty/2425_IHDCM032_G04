@@ -70,7 +70,8 @@
     "success": "Success",
     "view": "View",
     "warning": "Warning",
-    "yes": "Yes"
+    "yes": "Yes",
+    "step": "Step"
   },
   "errors": {
     "access.denied": "Access denied: you do not have sufficient permissions.",
@@ -96,9 +97,14 @@
     "phone.exists": "This phone number is already in use",
     "resource.not_found": "Resource not found",
     "stale.object": "The resource has been modified by another user. Please retry.",
-    "validation.error": "Validation failed"
+    "validation.error": "Validation failed",
+    "email.invalid": "Invalid email format",
+    "email.taken": "This email is already in use",
+    "phone.taken": "This phone number is already in use",
+    "server.unreachable": "The server is unreachable"
   },
   "form": {
+    "select.placeholder": "Choose an option",
     "address": "Address",
     "agricultural_identifier": "Agricultural identifier",
     "confirm_password": "Validate password",
@@ -113,7 +119,13 @@
       "date": "Pick a date"
     },
     "type": "I am",
-    "upload_component": "Click to upload or drag and drop"
+    "upload_component": "Click to upload or drag and drop",
+    "upload_limit": "The file is too large, maximum {{max}} MB",
+    "upload_too_big": "The file is too large, maximum {{max}} MB",
+    "upload_all": "Upload all",
+    "upload_click_or_drag": "Click to upload or drag and drop",
+    "upload_files": "Files",
+    "documents": "Documents"
   },
   "languages": {
     "en": "English",
@@ -143,5 +155,13 @@
     "passwordValidation": "Passwords doesn't match",
     "phone": "Invalid Benin phone number: expected +22901XXXXXXXX",
     "required": "This field is required"
+  },
+  "types": {
+    "producer": "Producer",
+    "transformer": "Transformer",
+    "carrier": "Carrier",
+    "exporter": "Exporter",
+    "quality_inspector": "Quality Inspector",
+    "admin": "Administrator"
   }
 }

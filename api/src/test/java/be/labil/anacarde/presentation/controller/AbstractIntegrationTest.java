@@ -16,8 +16,6 @@ import be.labil.anacarde.infrastructure.security.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 import lombok.Getter;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -414,13 +412,10 @@ public abstract class AbstractIntegrationTest {
 				.address(mainAddress).phone("+2290197000005").registrationDate(LocalDateTime.now())
 				.language(mainLanguage).enabled(true).build();
 
-		Set<Region> regions = new HashSet<>();
-		regions.add(mainTestRegion);
 		User carrier = Carrier.builder().firstName("Pierre").lastName("Verse")
 				.email("pierre@verse.com").password("$2a$10$abcdefghijklmnopqrstuv1234567890AB")
 				.address(mainAddress).registrationDate(LocalDateTime.now()).phone("+2290197000006")
-				.language(mainLanguage).enabled(true).regions(regions)
-				.pricePerKm(new BigDecimal(100)).build();
+				.language(mainLanguage).enabled(true).pricePerKm(100d).radius(30d).build();
 
 		Role userRole = Role.builder().name("ROLE_USER").build();
 		Role adminRole = Role.builder().name("ROLE_ADMIN").build();

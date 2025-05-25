@@ -3,7 +3,7 @@ import {
   zProductUpdateDto,
   zUserUpdateDto,
 } from '@/api/generated/zod.gen'
-import z from 'zod'
+import z from 'zod/v4'
 
 const zProducer = zUserUpdateDto.extend({
   type: z.literal('producer'),
@@ -21,8 +21,8 @@ const zTransformer = zUserUpdateDto.extend({
 
 const zCarrier = zUserUpdateDto.extend({
   type: z.literal('carrier'),
-  pricePerKm: z.number().positive(),
-  regionIds: z.array(z.number().int()),
+  pricePerKm: z.number().min(1),
+  radius: z.number().min(1),
 })
 
 const zExporter = zUserUpdateDto.extend({

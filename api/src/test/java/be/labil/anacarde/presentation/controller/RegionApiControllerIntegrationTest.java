@@ -30,27 +30,6 @@ public class RegionApiControllerIntegrationTest extends AbstractIntegrationTest 
 	}
 
 	/**
-	 * Teste la création d'une région.
-	 */
-	/*
-	 * @Test public void testCreateRegion() throws Exception { RegionDto newRegionDto = new
-	 * RegionDto(); newRegionDto.setName("Nouvelle Région");
-	 * 
-	 * ObjectNode node = objectMapper.valueToTree(newRegionDto); String jsonContent =
-	 * node.toString();
-	 * 
-	 * mockMvc.perform(
-	 * post("/api/regions").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
-	 * .andExpect(status().isCreated()) .andExpect(header().string("Location",
-	 * containsString("/api/regions/"))) .andExpect(jsonPath("$.id").isNumber())
-	 * .andExpect(jsonPath("$.name").value("Nouvelle Région"));
-	 * 
-	 * Region createdRegion = regionRepository.findAll().stream() .filter(r ->
-	 * "Nouvelle Région".equals(r.getName())).findFirst() .orElseThrow(() -> new
-	 * AssertionError("Région non trouvée")); }
-	 */
-
-	/**
 	 * Teste la récupération de la liste des régions.
 	 */
 	@Test
@@ -96,18 +75,5 @@ public class RegionApiControllerIntegrationTest extends AbstractIntegrationTest 
 		//
 		// mockMvc.perform(get("/api/regions/" + getMainTestRegion().getId()))
 		// .andExpect(status().isNotFound());
-	}
-
-	/**
-	 * Teste l'ajout d'un transporteur à une région.
-	 */
-	@Test
-	public void testAddCarrier() throws Exception {
-		Integer carrierId = getMainTestCarrier().getId();
-		Integer regionId = getMainTestRegion().getId();
-
-		mockMvc.perform(put("/api/regions/" + regionId + "/carriers/" + carrierId)
-				.contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
-				.andExpect(jsonPath("$").doesNotExist());
 	}
 }

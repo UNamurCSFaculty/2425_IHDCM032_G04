@@ -75,7 +75,7 @@ export function AuctionForm({
         }}
       >
         <div className="flex flex-row gap-10">
-          <div className="flex flex-col gap-6 w-1/2">
+          <div className="flex w-1/2 flex-col gap-6">
             <FormSectionTitle text="Paramètres de la vente" />
 
             <form.AppField
@@ -137,7 +137,7 @@ export function AuctionForm({
             {isError && error?.errors?.length > 0 && (
               <Alert
                 variant="destructive"
-                className="border-red-300 bg-red-50 mt-4 mb-4"
+                className="mt-4 mb-4 border-red-300 bg-red-50"
               >
                 <AlertCircle className="h-4 w-4" />
                 <AlertTitle>{t('common.error')}</AlertTitle>
@@ -163,7 +163,7 @@ export function AuctionForm({
             </form.AppForm>
           </div>
 
-          <div className="flex flex-col gap-6 w-1/2">
+          <div className="flex w-1/2 flex-col gap-6">
             <FormSectionTitle text="Informations du produit" />
             <Table>
               <TableBody>

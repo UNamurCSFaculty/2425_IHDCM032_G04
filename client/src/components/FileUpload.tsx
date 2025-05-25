@@ -1,5 +1,6 @@
-import { cn } from '@/lib/utils'
-import { FileIcon, FileText, Upload, X } from 'lucide-react'
+// src/components/leaflet/BeninPointSelectorMap.tsx
+import { acceptedFileTypes, cn, getFileIcon } from '@/lib/utils'
+import { Upload, X } from 'lucide-react'
 import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -24,23 +25,63 @@ export function FileUpload({
   const [isDragging, setIsDragging] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
+  /** Traduit la chaîne accept en tableau de patterns */
+  const parseAccept = (str: string) =>
+    str
+      .split(',')
+      .map(s => s.trim())
+      .filter(Boolean)
+
+  /** Vérifie si un fichier correspond à un pattern accept */
+  const matchesAccept = (file: File, patterns: string[]) => {
+    // pattern ".ext"
+    const name = file.name.toLowerCase()
+    const type = file.type.toLowerCase()
+    return patterns.some(pat => {
+      pat = pat.toLowerCase()
+      if (pat === '*/*') return true
+      if (pat.startsWith('.')) {
+        return name.endsWith(pat)
+      }
+      if (pat.endsWith('/*')) {
+        return type.startsWith(pat.replace('*', ''))
+      }
+      return type === pat
+    })
+  }
+
   /* ------------------------------------------------------------------ */
-  /* utilitaires partagés                                               */
+  /* ajout de fichiers avec validation de type, taille et nombre         */
   /* ------------------------------------------------------------------ */
   const addFiles = (incoming: File[]) => {
     setError(null)
 
+    // 1. Vérifier le type
+    const patterns = parseAccept(accept)
+    const invalidType = incoming.filter(f => !matchesAccept(f, patterns))
+    if (invalidType.length) {
+      setError(
+        t('form.upload_invalid_type', {
+          types: patterns.join(', '),
+        })
+      )
+      return
+    }
+
+    // 2. Vérifier le nombre max
     if (files.length + incoming.length > maxFiles) {
       setError(t('form.upload_limit', { max: maxFiles }))
       return
     }
 
+    // 3. Vérifier la taille max
     const oversized = incoming.filter(f => f.size > maxSize * 1024 * 1024)
     if (oversized.length) {
-      setError(t('form.upload_too_big', { size: maxSize }))
+      setError(t('form.upload_too_big', { max: maxSize }))
       return
     }
 
+    // 4. Tout est valide : on ajoute
     const merged = [...files, ...incoming]
     setFiles(merged)
     onChange?.(merged)
@@ -62,7 +103,7 @@ export function FileUpload({
   /* ------------------------------------------------------------------ */
   const handleFileChange: React.ChangeEventHandler<HTMLInputElement> = e => {
     if (e.target.files) addFiles(Array.from(e.target.files))
-    // réinitialiser pour permettre de sélectionner à nouveau le même fichier
+    // réinitialiser pour permettre de re-sélectionner le même fichier
     if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
@@ -76,7 +117,6 @@ export function FileUpload({
   }
   const handleDragLeave: React.DragEventHandler<HTMLDivElement> = () =>
     setIsDragging(false)
-
   const handleDrop: React.DragEventHandler<HTMLDivElement> = e => {
     e.preventDefault()
     setIsDragging(false)
@@ -104,19 +144,20 @@ export function FileUpload({
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
           className={cn(
-            'border-2 border-dashed rounded-lg p-6 flex flex-col items-center justify-center cursor-pointer transition-colors',
+            'flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed p-6 transition-colors',
             borderClass
           )}
         >
-          <Upload className="h-10 w-10 text-muted-foreground mb-2" />
-          <p className="text-sm font-medium mb-1">
+          <Upload className="text-muted-foreground mb-2 h-10 w-10" />
+          <p className="mb-1 text-sm font-medium">
             {t('form.upload_click_or_drag')}
           </p>
-          <p className="text-xs text-muted-foreground mb-2">
-            {accept.replace(/\*/g, t('form.upload_all'))} – {maxSize}
-            MB max
+          <p className="text-muted-foreground mb-2 text-xs">
+            {t('form.upload_accepted')} :{' '}
+            {acceptedFileTypes(accept, t).join(', ')} ({maxSize}
+            MB max)
           </p>
-          <p className="text-xs text-muted-foreground">
+          <p className="text-muted-foreground text-xs">
             {files.length}/{maxFiles} {t('form.upload_files')}
           </p>
         </div>
@@ -131,22 +172,22 @@ export function FileUpload({
           disabled={files.length >= maxFiles}
         />
 
-        {error && <p className="text-destructive text-sm mt-2">{error}</p>}
+        {error && <p className="text-destructive mt-2 text-sm">{error}</p>}
       </div>
 
       {files.length > 0 && (
-        <ul className="space-y-2 mt-4">
+        <ul className="mt-4 space-y-2">
           {files.map((file, idx) => (
             <li
               key={`${file.name}-${idx}`}
-              className="flex items-center justify-between p-3 bg-muted rounded-md"
+              className="bg-muted flex items-center justify-between rounded-md p-3"
             >
               <div className="flex items-center space-x-2 truncate">
-                {getIcon(file)}
-                <span className="text-sm truncate max-w-[200px]">
+                {getFileIcon(file)}
+                <span className="max-w-[200px] truncate text-sm">
                   {file.name}
                 </span>
-                <span className="text-xs text-muted-foreground">
+                <span className="text-muted-foreground text-xs">
                   {(file.size / 1_048_576).toFixed(2)} MB
                 </span>
               </div>
@@ -169,19 +210,4 @@ export function FileUpload({
       )}
     </div>
   )
-
-  /* ------------------------------------------------------------------ */
-  /* helpers                                                             */
-  /* ------------------------------------------------------------------ */
-  function getIcon(file: File) {
-    const ext = file.name.split('.').pop()?.toLowerCase() ?? ''
-    if (['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'].includes(ext))
-      return <FileIcon className="h-5 w-5 text-blue-500" />
-    if (ext === 'pdf') return <FileIcon className="h-5 w-5 text-red-500" />
-    if (['doc', 'docx'].includes(ext))
-      return <FileIcon className="h-5 w-5 text-blue-700" />
-    if (['xls', 'xlsx'].includes(ext))
-      return <FileIcon className="h-5 w-5 text-green-600" />
-    return <FileText className="h-5 w-5 text-gray-500" />
-  }
 }

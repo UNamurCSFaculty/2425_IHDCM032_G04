@@ -1145,12 +1145,6 @@ public class DatabaseServiceImpl implements DatabaseService {
 		return LocalDateTime.ofInstant(randomDate.toInstant(), ZoneId.systemDefault());
 	}
 
-	/** Prix au km aléatoire entre 0.50 € et 5.00 € */
-	private BigDecimal randomPricePerKm() {
-		return BigDecimal.valueOf(faker.number().randomDouble(2, 50, 500))
-				.divide(BigDecimal.valueOf(100));
-	}
-
 	private TradeStatusDto createTradeStatusDto(String name) {
 		TradeStatusDto status = new TradeStatusDto();
 		status.setName(name);
@@ -1308,7 +1302,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 		carrier.setPassword(DEFAULT_PASSWORD);
 		carrier.setEnabled(Math.random() >= 0.2);
 		carrier.setAddress(createRandomAddress());
-		carrier.setPricePerKm(randomPricePerKm());
+		carrier.setPricePerKm(faker.number().randomDouble(2, 50, 500) / 100.0);
+		carrier.setRadius(faker.number().randomDouble(0, 10, 100));
 		carrier.setRegistrationDate(generateRandomDateTimeInPast());
 		carrier.setValidationDate(
 				carrier.getRegistrationDate().plusDays(faker.number().numberBetween(1, 4)));

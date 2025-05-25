@@ -13,7 +13,7 @@ export function RouteComponent() {
   const navigate = useNavigate()
 
   return (
-    <section className="min-h-screen flex flex-col ">
+    <section className="flex min-h-screen flex-col">
       {/* Fil d'Ariane */}
       <BreadcrumbSection
         titleKey=""
@@ -26,12 +26,12 @@ export function RouteComponent() {
 
       {/* Contenu principal */}
       <div className="flex flex-1 flex-col items-center justify-center px-6 text-center">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">
+        <h1 className="mb-4 text-3xl font-bold text-gray-900">
           {t('contact.thank_you.title', {
             defaultValue: 'Merci pour votre message !',
           })}
         </h1>
-        <p className="text-lg text-gray-700 mb-8">
+        <p className="mb-8 text-lg text-gray-700">
           {t('contact.thank_you.subtitle', {
             defaultValue: 'Nous vous répondrons dans les plus brefs délais.',
           })}
