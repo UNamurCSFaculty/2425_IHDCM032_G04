@@ -42,6 +42,15 @@ export const zUser = z.discriminatedUnion('type', [
   zQualityInspector,
 ])
 
+export const zGoogleRegistration = zUser.and(
+  z.object({
+    /** Le JWT OIDC renvoyé par Google */
+    idToken: z.string().nonempty({ message: 'Le jeton Google est requis' }),
+  })
+)
+
+export type GoogleRegistration = z.infer<typeof zGoogleRegistration>
+
 const zHarvestProduct = zProductUpdateDto.extend({
   type: z.literal('harvest'),
   producerId: z.number().int(),
