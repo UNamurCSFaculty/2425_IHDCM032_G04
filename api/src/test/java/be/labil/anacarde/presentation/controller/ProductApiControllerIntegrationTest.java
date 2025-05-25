@@ -1,6 +1,7 @@
 package be.labil.anacarde.presentation.controller;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -8,10 +9,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import be.labil.anacarde.domain.dto.write.product.HarvestProductUpdateDto;
 import be.labil.anacarde.domain.dto.write.product.TransformedProductUpdateDto;
 import be.labil.anacarde.domain.model.Product;
+import be.labil.anacarde.domain.model.TransformedProduct;
 import be.labil.anacarde.infrastructure.persistence.ProductRepository;
+import be.labil.anacarde.infrastructure.persistence.TransformedProductRepository;
+import be.labil.anacarde.presentation.controller.enums.ProductType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -21,6 +27,7 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 
 	private @Autowired ObjectMapper objectMapper;
 	private @Autowired ProductRepository productRepository;
+	private @Autowired TransformedProductRepository transformedProductRepository;
 
 	/**
 	 * Teste la récupération d'un produit existant.
@@ -125,6 +132,54 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 	}
 
 	/**
+	 * Teste la création d'un nouveau produit transformé, qui référence une liste de produits bruts.
+	 *
+	 */
+	@Test
+	public void testCreateTransformedProductWithReferencedHarvestIds() throws Exception {
+		Integer storeId = getMainTestStore().getId();
+		Integer transformerId = getTransformerTestUser().getId();
+		Integer qualityControlId = getMainTestQualityControl().getId();
+
+		TransformedProductUpdateDto newProduct = new TransformedProductUpdateDto();
+		newProduct.setTransformerId(transformerId);
+		newProduct.setWeightKg(1234567.0);
+		newProduct.setIdentifier("TP001");
+		newProduct.setDeliveryDate(LocalDateTime.now().minusDays(1));
+		newProduct.setStoreId(storeId);
+		newProduct.setQualityControlId(qualityControlId);
+
+		List<Integer> harvestIds = new ArrayList<>(getTestHarvestProduct().getId());
+		harvestIds.add(getTestHarvestProduct().getId());
+		newProduct.setHarvestProductIds(harvestIds);
+
+		ObjectNode node = objectMapper.valueToTree(newProduct);
+		String jsonContent = node.toString();
+
+		mockMvc.perform(
+				post("/api/products").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				.andExpect(status().isCreated())
+				.andExpect(header().string("Location", containsString("/api/products/")))
+				.andExpect(jsonPath("$.type").value("transformed"))
+				.andExpect(jsonPath("$.weightKg").value("1234567.0"))
+				.andExpect(jsonPath("$.transformer.id").value(transformerId))
+				.andExpect(jsonPath("$.store.id").value(storeId))
+				.andExpect(jsonPath("$.qualityControl.id").value(qualityControlId));
+
+		Product createdProduct = productRepository.findAll().stream()
+				.filter(product -> product.getWeightKg().equals(1234567.0)).findFirst()
+				.orElseThrow(() -> new AssertionError("Product non trouvé"));
+
+		TransformedProduct transformedProduct = transformedProductRepository
+				.findByTransformerId(null).stream()
+				.filter(tp -> tp.getId() == createdProduct.getId()).findFirst()
+				.orElseThrow(() -> new AssertionError("TransformedProduct non trouvé"));
+		assertEquals(transformedProduct.getHarvestProducts().size(), 1);
+		assertEquals(transformedProduct.getHarvestProducts().getFirst().getId(),
+				getTestHarvestProduct().getId());
+	}
+
+	/**
 	 * Teste la récupération de la liste de tous les produits.
 	 * 
 	 */
@@ -136,6 +191,17 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 	}
 
 	/**
+	 * Teste la récupération de la liste de tous les produits harvest.
+	 *
+	 */
+	@Test
+	public void testListProductsByType() throws Exception {
+		mockMvc.perform(get("/api/products?productType=" + ProductType.HARVEST)
+				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+				.andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(1));
+	}
+
+	/**
 	 * Teste la récupération de la liste de tous les produits par utilisateur.
 	 *
 	 */
@@ -144,6 +210,19 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 		mockMvc.perform(get("/api/products?traderId=" + getTransformerTestUser().getId())
 				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
 				.andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(1))
+				.andExpect(jsonPath("$[0].type").value("transformed"));
+	}
+
+	/**
+	 * Teste la récupération de la liste de tous les produits par type et par utilisateur.
+	 *
+	 */
+	@Test
+	public void testListProductsByTypeAndTrader() throws Exception {
+		mockMvc.perform(get("/api/products?traderId=" + getTransformerTestUser().getId()
+				+ "&productType=" + ProductType.TRANSFORMED).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()).andExpect(jsonPath("$").isArray())
+				.andExpect(jsonPath("$.length()").value(1))
 				.andExpect(jsonPath("$[0].type").value("transformed"));
 	}
 

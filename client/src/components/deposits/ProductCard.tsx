@@ -24,8 +24,9 @@ import {
   Package,
   ShieldCheck,
   ShoppingCart,
-  TrendingUp,
   UserCircle2,
+  UserSearch,
+  Wheat,
 } from 'lucide-react'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
@@ -105,13 +106,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, layout }) => {
           <div className="flex items-center gap-1">
             <Badge variant="outline">
               <UserCircle2 className="size-3.5" />
-              {product.type === ProductType.HARVEST
-                ? (product as HarvestProductDto).producer.firstName +
-                  ' ' +
-                  (product as HarvestProductDto).producer.lastName
-                : (product as TransformedProductDto).transformer.firstName +
-                  ' ' +
-                  (product as TransformedProductDto).transformer.lastName}
+              {(() => {
+                if (product.type === ProductType.HARVEST) {
+                  const hp = product as HarvestProductDto
+                  return `${hp.producer.firstName} ${hp.producer.lastName}`
+                } else {
+                  const tp = product as TransformedProductDto
+                  return `${tp.transformer.firstName} ${tp.transformer.lastName}`
+                }
+              })()}
             </Badge>
           </div>
         </CardDescription>
@@ -121,7 +124,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, layout }) => {
           <InfoTile
             icon={<Clock className="size-4" />}
             label={t('product.deposit_date_label')}
-            size="lg"
+            size="sm"
           >
             {formatDate(product.deliveryDate)}
           </InfoTile>
@@ -139,14 +142,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, layout }) => {
           >
             {formatWeight(product.weightKg)}
           </InfoTile>
+
           <InfoTile
-            icon={<Earth className="size-4" />}
-            label={t('product.origin_label')}
-          >
-            {product.type === ProductType.HARVEST ? 'N/A' : 'N/A'}
-          </InfoTile>
-          <InfoTile
-            icon={<TrendingUp className="size-4" />}
+            icon={<UserSearch className="size-4" />}
             label={t('product.quality_inspector_label')}
           >
             {!product.qualityControl.qualityInspector
@@ -155,7 +153,45 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, layout }) => {
                 ' ' +
                 product.qualityControl.qualityInspector.lastName}
           </InfoTile>
+          <InfoTile
+            icon={<Earth className="size-4" />}
+            label={t('product.origin_label')}
+          >
+            {(() => {
+              if (product.type === ProductType.HARVEST) {
+                const hp = product as HarvestProductDto
+                return hp.field.identifier
+              } else if (product.type === ProductType.TRANSFORMED) {
+                return 'Anacardes'
+              } else {
+                return 'N/A'
+              }
+            })()}
+          </InfoTile>
         </div>
+        {product.type === ProductType.TRANSFORMED &&
+          (() => {
+            const tp = product as TransformedProductDto
+            return (
+              <InfoTile
+                icon={<Wheat className="size-4" />}
+                label="Matières premières"
+                size="sm"
+              >
+                {tp.harvestProducts && tp.harvestProducts.length > 0 ? (
+                  <ul className="lg">
+                    {tp.harvestProducts.map((hp, index) => (
+                      <li key={index}>
+                        Lot n°{hp.id} ({hp.qualityControl.quality.name})
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  'N/A'
+                )}
+              </InfoTile>
+            )
+          })()}
       </CardContent>
     </Card>
   )

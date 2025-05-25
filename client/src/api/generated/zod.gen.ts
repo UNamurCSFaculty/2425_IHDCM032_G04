@@ -348,27 +348,7 @@ export const zProductDto = z.object({
   type: z.enum(['harvest', 'transformed']),
 })
 
-export const zTransformedProductDto: z.ZodTypeAny = zProductDto
-  .and(
-    z.object({
-      type: z.literal('transformed'),
-    })
-  )
-  .and(
-    z.object({
-      identifier: z.string().min(1),
-      transformer: zTransformerDetailDto,
-      harvestProducts: z
-        .array(
-          z.lazy(() => {
-            return zHarvestProductDto
-          })
-        )
-        .optional(),
-    })
-  )
-
-export const zHarvestProductDto: z.ZodTypeAny = zProductDto
+export const zHarvestProductDto = zProductDto
   .and(
     z.object({
       type: z.literal('harvest'),
@@ -378,7 +358,20 @@ export const zHarvestProductDto: z.ZodTypeAny = zProductDto
     z.object({
       producer: zProducerDetailDto,
       field: zFieldDto,
-      transformedProduct: zTransformedProductDto.optional(),
+    })
+  )
+
+export const zTransformedProductDto = zProductDto
+  .and(
+    z.object({
+      type: z.literal('transformed'),
+    })
+  )
+  .and(
+    z.object({
+      identifier: z.string().min(1),
+      transformer: zTransformerDetailDto,
+      harvestProducts: z.array(zHarvestProductDto).optional(),
     })
   )
 

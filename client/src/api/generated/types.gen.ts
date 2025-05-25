@@ -261,6 +261,18 @@ export type LanguageDto = {
 }
 
 /**
+ * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
+ */
+export enum Type {
+  ADMIN = 'admin',
+  PRODUCER = 'producer',
+  TRANSFORMER = 'transformer',
+  QUALITY_INSPECTOR = 'quality_inspector',
+  EXPORTER = 'exporter',
+  CARRIER = 'carrier',
+}
+
+/**
  * Objet de transfert de données pour les producteurs.
  */
 export type ProducerDetailDto = {
@@ -798,10 +810,6 @@ export type HarvestProductDto = ProductDto & {
    * Champ associé au produit récolté
    */
   field: FieldDto
-  /**
-   * Produits transformé correspondant
-   */
-  transformedProduct?: TransformedProductDto
 }
 
 /**
@@ -3138,6 +3146,14 @@ export type CreateQualityResponses = {
 export type CreateQualityResponse =
   CreateQualityResponses[keyof CreateQualityResponses]
 
+/**
+ * Type du produit
+ */
+export enum ProductType {
+  HARVEST = 'HARVEST',
+  TRANSFORMED = 'TRANSFORMED',
+}
+
 export type ListProductsData = {
   body?: never
   path?: never
@@ -3146,6 +3162,10 @@ export type ListProductsData = {
      * ID du propriétaire des produits
      */
     traderId?: number
+    /**
+     * Type du produit
+     */
+    productType?: 'HARVEST' | 'TRANSFORMED'
   }
   url: '/api/products'
 }

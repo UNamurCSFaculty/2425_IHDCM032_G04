@@ -2,6 +2,7 @@ import FormContainer from '../FormContainer'
 import FormSectionTitle from '../FormSectionTitle'
 import type {
   FieldDto,
+  HarvestProductDto,
   HarvestProductUpdateDto,
   QualityDto,
   StoreDetailDto,
@@ -24,7 +25,7 @@ import { useStore } from '@tanstack/react-form'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { AlertCircle } from 'lucide-react'
-import React from 'react'
+import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import z from 'zod/v4'
 
@@ -33,6 +34,7 @@ interface ProductFormProps {
   stores: StoreDetailDto[]
   qualities: QualityDto[]
   fields: FieldDto[]
+  harvestProducts: HarvestProductDto[]
 }
 
 export function ProductForm({
@@ -40,13 +42,21 @@ export function ProductForm({
   stores,
   qualities,
   fields,
+  harvestProducts,
 }: ProductFormProps): React.ReactElement<'div'> {
   const navigate = useNavigate()
+
   const { t } = useTranslation()
+
+  // TODO: this should be handled internally by the form, this is a hack
+  const [selectedHarvestProductsIds, setSelectedHarvestProductsIds] = useState<
+    number[]
+  >([])
 
   const createProductRequest = useMutation({
     ...createProductMutation(),
     onSuccess() {
+      console.log('Product created successfully')
       navigate({ to: '/depots/mes-produits' })
     },
     onError(error) {
@@ -71,13 +81,28 @@ export function ProductForm({
   type ProductRegistration = z.infer<typeof productSchema>
 
   const handleSaveProduct = async (value: ProductRegistration) => {
+    console.log('Saving product with values:', value)
     try {
       const qc = await createQualityControlRequest.mutateAsync({
         body: value.qualityControl,
       })
-      createProductRequest.mutate({
-        body: { ...value.product, qualityControlId: qc.id },
-      })
+
+      if (value.product.type === ProductType.TRANSFORMED) {
+        createProductRequest.mutate({
+          body: {
+            ...value.product,
+            qualityControlId: qc.id,
+            harvestProductIds: selectedHarvestProductsIds,
+          },
+        })
+      } else if (value.product.type === ProductType.HARVEST) {
+        createProductRequest.mutate({
+          body: {
+            ...value.product,
+            qualityControlId: qc.id,
+          },
+        })
+      }
     } catch (error) {
       console.error('Save product failed with error:', error)
     }
@@ -105,6 +130,7 @@ export function ProductForm({
         type: ProductType.TRANSFORMED,
         transformerId: -1,
         identifier: 'TR-000',
+        harvestProductIds: [],
       },
       qualityControl: {
         identifier: 'QC-000',
@@ -244,6 +270,36 @@ export function ProductForm({
                   )
                 }}
               />
+            )}
+
+            {productType == ProductType.TRANSFORMED && (
+              <>
+                <form.AppField
+                  name="product.harvestProductIds"
+                  children={field => (
+                    <field.MultiSelectField
+                      placeholder="Sélectionner les lots"
+                      options={harvestProducts.map(product => ({
+                        value: product.id,
+                        label:
+                          'Lot n°' +
+                          product.id +
+                          ' - ' +
+                          t('database.' + product.type) +
+                          ' (' +
+                          product.qualityControl.quality.name +
+                          ')',
+                      }))}
+                      label="Mati�res premi�res"
+                      maxCount={2}
+                      onChange={values => {
+                        console.log('Selected harvest product IDs:', values)
+                        setSelectedHarvestProductsIds(values as number[])
+                      }}
+                    />
+                  )}
+                />
+              </>
             )}
 
             <form.AppField

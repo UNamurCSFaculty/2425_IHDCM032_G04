@@ -18,7 +18,7 @@ public class HarvestProduct extends Product {
 	@JoinColumn(name = "producer_id", nullable = false)
 	private Producer producer;
 
-	@ManyToOne(optional = false, fetch = FetchType.LAZY)
+	@ManyToOne(optional = false, fetch = FetchType.EAGER)
 	@JoinColumn(name = "field_id")
 	private Field field;
 

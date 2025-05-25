@@ -3,6 +3,7 @@ package be.labil.anacarde.presentation.controller;
 import be.labil.anacarde.application.service.ProductService;
 import be.labil.anacarde.domain.dto.db.product.ProductDto;
 import be.labil.anacarde.domain.dto.write.product.ProductUpdateDto;
+import be.labil.anacarde.presentation.controller.enums.ProductType;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +23,9 @@ public class ProductApiController implements ProductApi {
 	}
 
 	@Override
-	public ResponseEntity<List<? extends ProductDto>> listProducts(Integer traderId) {
-		List<ProductDto> products = productService.listProducts(traderId);
+	public ResponseEntity<List<? extends ProductDto>> listProducts(Integer traderId,
+			ProductType productType) {
+		List<ProductDto> products = productService.listProducts(traderId, productType);
 		return ResponseEntity.ok(products);
 	}
 

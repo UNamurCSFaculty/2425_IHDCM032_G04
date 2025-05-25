@@ -6,7 +6,8 @@ import { Label } from './ui/label'
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
 import { RadioGroup, RadioGroupItem } from './ui/radio-group'
 import { Slider } from './ui/slider'
-import type { AuctionDto, ProductDto, QualityDto } from '@/api/generated' // QualityDto peut être nécessaire pour qualitiesData
+import type { AuctionDto, ProductDto, QualityDto } from '@/api/generated'
+// QualityDto peut être nécessaire pour qualitiesData
 import { listQualitiesOptions } from '@/api/generated/@tanstack/react-query.gen'
 import cities from '@/data/cities.json'
 import regions from '@/data/regions.json'
@@ -15,7 +16,7 @@ import { formatDate, formatPrice } from '@/utils/formatter'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import { ChevronDown, Search, X } from 'lucide-react'
-import { useEffect, useState, useCallback } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 const cityOptions = cities.map((n, i) => ({
@@ -63,6 +64,7 @@ const FiltersPanel = <T extends AuctionDto | ProductDto>({
     (item: T): boolean => {
       if (filterDataType === 'auction') {
         const a = item as AuctionDto
+
         if (
           search &&
           !`${a.product.type} ${a.product.store.name} ${a.id} ${a.trader.firstName} ${a.trader.lastName}`
@@ -70,28 +72,27 @@ const FiltersPanel = <T extends AuctionDto | ProductDto>({
             .includes(search.toLowerCase())
         )
           return false
-        if (filterByAuctionStatus) {
-          if (
-            auctionStatus === TradeStatus.OPEN &&
-            a.status.name !== TradeStatus.OPEN
-          )
-            return false
-          if (
-            auctionStatus !== TradeStatus.OPEN &&
-            a.status.name === TradeStatus.OPEN
-          )
-            return false
-        }
+
         if (
-          filterByPrice &&
-          (a.price < priceRange[0] || a.price > priceRange[1])
+          auctionStatus === TradeStatus.OPEN &&
+          a.status.name !== TradeStatus.OPEN
         )
           return false
+
+        if (
+          auctionStatus !== TradeStatus.OPEN &&
+          a.status.name === TradeStatus.OPEN
+        )
+          return false
+
+        if (a.price < priceRange[0] || a.price > priceRange[1]) return false
+
         if (
           selectedDate &&
           dayjs(a.expirationDate).isAfter(dayjs(selectedDate).endOf('day'))
         )
           return false
+
         if (qualityId && a.product.qualityControl?.quality.id !== qualityId)
           return false
         if (productTypeId && a.product.type !== productTypes[productTypeId - 1])
@@ -99,9 +100,11 @@ const FiltersPanel = <T extends AuctionDto | ProductDto>({
         if (regionId && a.product.store.address.regionId !== regionId)
           return false
         if (cityId && a.product.store.address.cityId !== cityId) return false
+
         return true
       } else if (filterDataType === 'product') {
         const p = item as ProductDto
+
         if (
           search &&
           !`${p.type} ${p.store.name} ${p.id}`
@@ -109,17 +112,20 @@ const FiltersPanel = <T extends AuctionDto | ProductDto>({
             .includes(search.toLowerCase())
         )
           return false
+
         if (
-          filterByPrice &&
-          (p.weightKg < priceRange[0] || p.weightKg > priceRange[1])
+          selectedDate &&
+          dayjs(p.deliveryDate).isAfter(dayjs(selectedDate).endOf('day'))
         )
           return false
+
         if (qualityId && p.qualityControl?.quality.id !== qualityId)
           return false
         if (productTypeId && p.type !== productTypes[productTypeId - 1])
           return false
         if (regionId && p.store.address.regionId !== regionId) return false
         if (cityId && p.store.address.cityId !== cityId) return false
+
         return true
       }
       return true // Should not be reached if filterDataType is correctly 'auction' or 'product'
@@ -133,8 +139,6 @@ const FiltersPanel = <T extends AuctionDto | ProductDto>({
       productTypeId,
       regionId,
       cityId,
-      filterByPrice,
-      filterByAuctionStatus,
       filterDataType,
     ]
   )

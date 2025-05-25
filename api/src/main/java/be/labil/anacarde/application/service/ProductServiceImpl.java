@@ -12,6 +12,8 @@ import be.labil.anacarde.infrastructure.persistence.HarvestProductRepository;
 import be.labil.anacarde.infrastructure.persistence.ProductRepository;
 import be.labil.anacarde.infrastructure.persistence.TransformedProductRepository;
 import be.labil.anacarde.infrastructure.util.PersistenceHelper;
+import be.labil.anacarde.presentation.controller.enums.ProductType;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -55,19 +57,26 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<ProductDto> listProducts(Integer traderId) {
-		if (traderId != null) {
-			List<HarvestProduct> harvests = harvestProductRepository.findByProducerId(traderId);
-			List<TransformedProduct> transformed = transformedRepository
-					.findByTransformerId(traderId);
-			return Stream
-					.concat(harvests.stream().map(productMapper::toDto),
-							transformed.stream().map(productMapper::toDto))
-					.collect(Collectors.toList());
+	public List<ProductDto> listProducts(Integer traderId, ProductType productType) {
+		List<HarvestProduct> harvestList = new ArrayList<>();
+		List<TransformedProduct> transformedList = new ArrayList<>();
+
+		if (productType == null) {
+			harvestList = harvestProductRepository.findByProducerId(traderId);
+			transformedList = transformedRepository.findByTransformerId(traderId);
 		} else {
-			return productRepository.findAll().stream().map(productMapper::toDto)
-					.collect(Collectors.toList());
+			switch (productType) {
+				case HARVEST -> harvestList = harvestProductRepository.findByProducerId(traderId);
+				case TRANSFORMED ->
+					transformedList = transformedRepository.findByTransformerId(traderId);
+				default -> throw new ResourceNotFoundException("ProductType not found");
+			}
 		}
+
+		return Stream
+				.concat(harvestList.stream().map(productMapper::toDto),
+						transformedList.stream().map(productMapper::toDto))
+				.collect(Collectors.toList());
 	}
 
 	@Override

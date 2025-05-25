@@ -1,9 +1,12 @@
+import type { HarvestProductDto } from '@/api/generated'
 import {
   listFieldsOptions,
+  listProductsOptions,
   listQualitiesOptions,
   listStoresOptions,
   listUsersOptions,
 } from '@/api/generated/@tanstack/react-query.gen'
+import { ProductType } from '@/api/generated/types.gen'
 import { BreadcrumbSection } from '@/components/BreadcrumbSection'
 import { ProductForm } from '@/components/deposits/ProductForm'
 import { useSuspenseQuery } from '@tanstack/react-query'
@@ -28,6 +31,11 @@ function RouteComponent() {
 
   const { data: fieldsData } = useSuspenseQuery({
     ...listFieldsOptions(),
+    staleTime: staleTime,
+  })
+
+  const { data: productsData } = useSuspenseQuery({
+    ...listProductsOptions({ query: { productType: ProductType.HARVEST } }),
     staleTime: staleTime,
   })
 
@@ -59,6 +67,7 @@ function RouteComponent() {
         stores={storesData}
         qualities={qualitiesData}
         fields={fieldsData}
+        harvestProducts={productsData as HarvestProductDto[]}
       />
     </>
   )

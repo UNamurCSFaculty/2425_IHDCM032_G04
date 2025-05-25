@@ -5,6 +5,7 @@ import be.labil.anacarde.domain.dto.db.ValidationGroups;
 import be.labil.anacarde.domain.dto.db.product.ProductDto;
 import be.labil.anacarde.domain.dto.write.product.ProductUpdateDto;
 import be.labil.anacarde.presentation.controller.annotations.ApiValidId;
+import be.labil.anacarde.presentation.controller.enums.ProductType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -40,7 +41,8 @@ public interface ProductApi {
 	@ApiResponses({
 			@ApiResponse(responseCode = "200", description = "Liste récupérée avec succès", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ProductDto.class))))})
 	ResponseEntity<List<? extends ProductDto>> listProducts(
-			@Parameter(in = ParameterIn.QUERY, description = "ID du propriétaire des produits") @Valid @RequestParam(value = "traderId", required = false) Integer traderId);
+			@Parameter(in = ParameterIn.QUERY, description = "ID du propriétaire des produits") @Valid @RequestParam(value = "traderId", required = false) Integer traderId,
+			@Parameter(in = ParameterIn.QUERY, description = "Type du produit", schema = @Schema(implementation = ProductType.class)) @RequestParam(value = "productType", required = false) ProductType productType);
 
 	@Operation(summary = "Créer un produit")
 	@PostMapping

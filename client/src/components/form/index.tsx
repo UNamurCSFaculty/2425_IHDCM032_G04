@@ -1,5 +1,6 @@
 import { PhoneField } from './PhoneField'
 import { VirtualizedSelectField } from './VirtualizedSelectField'
+import { MultiSelectField } from './multi-select-field'
 import { NumberField } from './number-field'
 import { RadioGroupField } from './RadioGroupField'
 import { CheckboxField } from '@/components/form/CheckboxField'
@@ -22,6 +23,7 @@ export const { useAppForm } = createFormHook({
     TextField,
     CheckboxField,
     SelectField,
+    MultiSelectField,
     TextAreaField,
     DateTimePickerField,
     FileUploadField,
