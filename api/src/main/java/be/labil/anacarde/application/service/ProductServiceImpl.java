@@ -66,8 +66,8 @@ public class ProductServiceImpl implements ProductService {
 			transformedList = transformedRepository.findByTransformerId(traderId);
 		} else {
 			switch (productType) {
-				case HARVEST -> harvestList = harvestProductRepository.findByProducerId(traderId);
-				case TRANSFORMED ->
+				case harvest -> harvestList = harvestProductRepository.findByProducerId(traderId);
+				case transformed ->
 					transformedList = transformedRepository.findByTransformerId(traderId);
 				default -> throw new ResourceNotFoundException("ProductType not found");
 			}

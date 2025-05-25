@@ -6,18 +6,27 @@ import { Label } from './ui/label'
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
 import { RadioGroup, RadioGroupItem } from './ui/radio-group'
 import { Slider } from './ui/slider'
-import type { AuctionDto, ProductDto, QualityDto } from '@/api/generated'
-// QualityDto peut être nécessaire pour qualitiesData
+import {
+  type AuctionDto,
+  type ProductDto,
+  ProductType,
+  type QualityDto,
+} from '@/api/generated'
 import { listQualitiesOptions } from '@/api/generated/@tanstack/react-query.gen'
 import cities from '@/data/cities.json'
 import regions from '@/data/regions.json'
-import { TradeStatus, productTypes } from '@/lib/utils'
+import { TradeStatus } from '@/lib/utils'
 import { formatDate, formatPrice } from '@/utils/formatter'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import { ChevronDown, Search, X } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+
+const productTypes: ProductType[] = [
+  ProductType.HARVEST,
+  ProductType.TRANSFORMED,
+]
 
 const cityOptions = cities.map((n, i) => ({
   id: i + 1,

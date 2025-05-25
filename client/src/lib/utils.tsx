@@ -63,16 +63,6 @@ export enum TradeStatus {
   REJECTED = 'Refusé',
 }
 
-export enum ProductType {
-  HARVEST = 'harvest',
-  TRANSFORMED = 'transformed',
-}
-
-export const productTypes: ProductType[] = [
-  ProductType.HARVEST,
-  ProductType.TRANSFORMED,
-]
-
 //export type DeepPartial<T> = {
 //  [K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> : T[K]
 //}

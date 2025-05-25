@@ -3150,8 +3150,8 @@ export type CreateQualityResponse =
  * Type du produit
  */
 export enum ProductType {
-  HARVEST = 'HARVEST',
-  TRANSFORMED = 'TRANSFORMED',
+  HARVEST = 'harvest',
+  TRANSFORMED = 'transformed',
 }
 
 export type ListProductsData = {
@@ -3165,7 +3165,7 @@ export type ListProductsData = {
     /**
      * Type du produit
      */
-    productType?: 'HARVEST' | 'TRANSFORMED'
+    productType?: 'harvest' | 'transformed'
   }
   url: '/api/products'
 }
