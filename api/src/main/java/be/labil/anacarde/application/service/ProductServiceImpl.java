@@ -37,9 +37,9 @@ public class ProductServiceImpl implements ProductService {
 			List<HarvestProduct> harvests = harvestProductRepository
 					.findAllById(tpDto.getHarvestProductIds());
 			// TODO stackoverflow error
-			//	for (HarvestProduct hp : harvests) {
-			//  hp.setTransformedProduct(tp);
-			//			}
+			// for (HarvestProduct hp : harvests) {
+			// hp.setTransformedProduct(tp);
+			// }
 			tp.setHarvestProducts(harvests);
 		}
 		Product full = persistenceHelper.saveAndReload(productRepository, product, Product::getId);

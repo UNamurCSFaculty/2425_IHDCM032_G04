@@ -14,7 +14,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -128,8 +127,7 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 	}
 
 	/**
-	 * Teste la création d'un nouveau produit transformé, qui référence une liste
-	 * de produits bruts.
+	 * Teste la création d'un nouveau produit transformé, qui référence une liste de produits bruts.
 	 *
 	 */
 	@Test
@@ -154,7 +152,7 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 		String jsonContent = node.toString();
 
 		mockMvc.perform(
-						post("/api/products").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				post("/api/products").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
 				.andExpect(status().isCreated())
 				.andExpect(header().string("Location", containsString("/api/products/")))
 				.andExpect(jsonPath("$.type").value("transformed"))
