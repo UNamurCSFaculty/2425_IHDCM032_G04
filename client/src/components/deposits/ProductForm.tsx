@@ -278,11 +278,11 @@ export function ProductForm({
                   name="product.harvestProductIds"
                   children={field => (
                     <field.MultiSelectField
-                      placeholder="S�lectionner les lots"
+                      placeholder="Sélectionner les lots"
                       options={harvestProducts.map(product => ({
                         value: product.id,
                         label:
-                          'Lot n�' +
+                          'Lot n°' +
                           product.id +
                           ' - ' +
                           t('database.' + product.type) +

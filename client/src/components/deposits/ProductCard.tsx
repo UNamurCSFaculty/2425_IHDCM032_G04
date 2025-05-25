@@ -142,12 +142,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, layout }) => {
           >
             {formatWeight(product.weightKg)}
           </InfoTile>
-          <InfoTile
-            icon={<Earth className="size-4" />}
-            label={t('product.origin_label')}
-          >
-            {product.type === ProductType.HARVEST ? 'N/A' : 'N/A'}
-          </InfoTile>
+
           <InfoTile
             icon={<UserSearch className="size-4" />}
             label={t('product.quality_inspector_label')}
@@ -158,7 +153,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, layout }) => {
                 ' ' +
                 product.qualityControl.qualityInspector.lastName}
           </InfoTile>
-          <InfoTile icon={<Earth className="size-4" />} label="Origine">
+          <InfoTile
+            icon={<Earth className="size-4" />}
+            label={t('product.origin_label')}
+          >
             {(() => {
               if (product.type === ProductType.HARVEST) {
                 const hp = product as HarvestProductDto
