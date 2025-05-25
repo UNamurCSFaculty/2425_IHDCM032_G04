@@ -179,19 +179,23 @@ const FiltersPanel = <T extends AuctionDto | ProductDto>({
 
   return (
     <div>
-      <div className="flex items-center justify-between border-b p-4">
-        <h3 className="text-lg font-semibold">Filtres</h3>
-        <Button variant="ghost" size="sm" onClick={resetFilters}>
-          Reset
+      <div className="flex items-center justify-between border-b p-3">
+        <h3 className="text-lg font-semibold">{t('filters.panel_title')}</h3>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={resetFilters}
+          className="px-0 text-xs"
+        >
+          {t('buttons.reset')}
         </Button>
       </div>
       <div className="p-4">
-        <div className="space-y-6 p-4 lg:p-0">
-          {/* Search */}
+        <div className="space-y-6 p-3 lg:p-0">
           <div className="relative">
             <Search className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2" />
             <Input
-              placeholder="Rechercher…"
+              placeholder={t('form.placeholder.search')}
               className="pl-10"
               value={search}
               onChange={e => setSearch(e.target.value)}
@@ -217,20 +221,21 @@ const FiltersPanel = <T extends AuctionDto | ProductDto>({
             >
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value={TradeStatus.OPEN} id="r1" />
-                <Label htmlFor="r1">Enchères en cours</Label>
+                <Label htmlFor="r1">
+                  {t('filters.auctions_in_progress_label')}
+                </Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value={TradeStatus.EXPIRED} id="r2" />
-                <Label htmlFor="r2">Enchères terminées</Label>
+                <Label htmlFor="r2">{t('filters.auctions_ended_label')}</Label>
               </div>
             </RadioGroup>
           )}
 
-          {/* Price */}
           {filterByPrice && (
             <div className="space-y-2">
               <div className="flex justify-between text-sm font-medium">
-                <span>Prix</span>
+                <span>{t('product.price_label')}</span>
                 <span>
                   {formatPrice.format(priceRange[0])} –{' '}
                   {formatPrice.format(priceRange[1])}
@@ -249,8 +254,8 @@ const FiltersPanel = <T extends AuctionDto | ProductDto>({
           {/* Product Type */}
           <VirtualizedSelect
             id="product-type-select"
-            label="Marchandise"
-            placeholder="Tous les types"
+            label={t('product.merchandise_label')}
+            placeholder={t('filters.all_types_placeholder')}
             placeholderSelectable={true}
             options={productTypeOptions}
             value={productTypeId}
@@ -259,8 +264,8 @@ const FiltersPanel = <T extends AuctionDto | ProductDto>({
           {/* Quality */}
           <VirtualizedSelect
             id="quality-select"
-            label="Qualité"
-            placeholder="Toutes les qualités"
+            label={t('product.quality_label')}
+            placeholder={t('filters.all_qualities_placeholder')}
             placeholderSelectable={true}
             options={qualityOptions}
             value={qualityId}
@@ -269,8 +274,8 @@ const FiltersPanel = <T extends AuctionDto | ProductDto>({
           {/* Region / City */}
           <VirtualizedSelect
             id="region-select"
-            label="Région"
-            placeholder="Toutes les régions"
+            label={t('address.region_label')}
+            placeholder={t('filters.all_regions_placeholder')}
             placeholderSelectable={true}
             options={regionOptions}
             value={regionId}
@@ -278,8 +283,8 @@ const FiltersPanel = <T extends AuctionDto | ProductDto>({
           />
           <VirtualizedSelect
             id="city-select"
-            label="Ville"
-            placeholder="Toutes les villes"
+            label={t('form.city')}
+            placeholder={t('filters.all_cities_placeholder')}
             placeholderSelectable={true}
             options={cityOptions}
             value={cityId}
@@ -292,7 +297,7 @@ const FiltersPanel = <T extends AuctionDto | ProductDto>({
                 htmlFor="expiration-date-picker"
                 className="text-sm font-medium"
               >
-                Expire avant
+                {t('filters.expires_before_label')}
               </label>
               <Popover>
                 <PopoverTrigger asChild>
@@ -303,7 +308,7 @@ const FiltersPanel = <T extends AuctionDto | ProductDto>({
                   >
                     {selectedDate
                       ? formatDate(selectedDate.toISOString())
-                      : 'Choisir…'}
+                      : t('filters.choose_date_placeholder')}
                     <ChevronDown className="size-4 opacity-50" />
                   </Button>
                 </PopoverTrigger>

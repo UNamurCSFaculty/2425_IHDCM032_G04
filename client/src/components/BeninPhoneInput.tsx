@@ -2,12 +2,14 @@ import { Input } from './ui/input'
 import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/utils'
 import React, { useEffect, useRef, useState } from 'react'
+import SimpleTooltip from './SimpleTooltip'
 
 interface BeninPhoneInputProps {
   value?: string
   onChange?: (value: string) => void
   onBlur?: (value: string) => void
   label?: string
+  tooltip?: string
   required?: boolean
   id?: string
   className?: string
@@ -19,6 +21,7 @@ export function BeninPhoneInput({
   onBlur,
   className,
   label = 'Phone Number',
+  tooltip,
   required = false,
   id = 'phone',
 }: BeninPhoneInputProps) {
@@ -54,6 +57,7 @@ export function BeninPhoneInput({
       {label && (
         <Label htmlFor={id} className="mb-1 block">
           {label} {required && <span className="text-red-500">*</span>}
+          {tooltip && <SimpleTooltip content={tooltip} />}
         </Label>
       )}
 

@@ -13,20 +13,15 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 
 type Crumb = {
-  /** Clé de traduction pour le libellé */
   labelKey: string
-  /** URL de navigation ou route key pour TanStack Router */
   href?: string
-  /** Icône optionnelle à afficher avant le label */
+
   icon?: LucideIcon
 }
 
 type BreadcrumbSectionProps = {
-  /** Clé de traduction pour le titre */
   titleKey: string
-  /** Clé de traduction pour le sous-titre (optionnel) */
   subtitleKey?: string
-  /** Liste des crumbs supplémentaires (sans Home) */
   breadcrumbs?: Crumb[]
   className?: string
 }

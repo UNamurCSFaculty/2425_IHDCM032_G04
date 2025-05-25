@@ -10,9 +10,10 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { formatDate } from '@/utils/formatter'
+import { formatDate, formatPrice, formatWeight } from '@/utils/formatter'
 import { MapPin } from 'lucide-react'
 import React, { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 interface AuctionsTableProps {
   tableTitle: string
@@ -40,6 +41,7 @@ const AuctionsTable: React.FC<AuctionsTableProps> = ({
   handleMakeBid,
 }) => {
   const [isOpen, setIsOpen] = useState(false)
+  const { t } = useTranslation()
 
   return (
     <div className="bg-muted flex flex-col p-6 md:p-10">
@@ -47,29 +49,35 @@ const AuctionsTable: React.FC<AuctionsTableProps> = ({
         <CardContent>
           <h2 className="mb-4 text-2xl font-bold">{tableTitle}</h2>
           {auctions === null || auctions.length == 0 ? (
-            <p>Aucune vente aux enchères n'est répertoriée.</p>
+            <p>{t('auction.table.no_auctions')}</p>
           ) : (
             <>
               <p className="mb-4">
-                La liste des transactions peut être consultée ci-dessous.
+                {t('auction.table.transactions_list_message')}
               </p>
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Début de l'enchère</TableHead>
-                    <TableHead>Fin de l'enchère</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Marchandise</TableHead>
-                    <TableHead>Num. Lot</TableHead>
-                    <TableHead>Quantité</TableHead>
-                    <TableHead>Qualité</TableHead>
-                    <TableHead>Localisation</TableHead>
-                    <TableHead>Date de dépôt</TableHead>
-                    <TableHead>Prix demandé</TableHead>
+                    <TableHead>
+                      {t('auction.table.start_date_header')}
+                    </TableHead>
+                    <TableHead>{t('auction.table.end_date_header')}</TableHead>
+                    <TableHead>{t('auction.table.status_header')}</TableHead>
+                    <TableHead>{t('product.merchandise_label')}</TableHead>
+                    <TableHead>{t('product.lot_number_label')}</TableHead>
+                    <TableHead>{t('product.quantity_label')}</TableHead>
+                    <TableHead>{t('product.quality_label')}</TableHead>
+                    <TableHead>{t('form.location')}</TableHead>
+                    <TableHead>{t('product.deposit_date_label')}</TableHead>
+                    <TableHead>{t('auction.asking_price')}</TableHead>
                     {showColumnBidderPrice && (
-                      <TableHead>Prix obtenu</TableHead>
+                      <TableHead>
+                        {t('auction.table.obtained_price_header')}
+                      </TableHead>
                     )}
-                    {showColumnBidder && <TableHead>Acheteur</TableHead>}
+                    {showColumnBidder && (
+                      <TableHead>{t('auction.table.buyer_header')}</TableHead>
+                    )}
                     {showColumnViewBids && <TableHead></TableHead>}
                     {showColumnDeleteAuction && <TableHead></TableHead>}
                     {showColumnMakeBid && <TableHead></TableHead>}
@@ -92,12 +100,12 @@ const AuctionsTable: React.FC<AuctionsTableProps> = ({
                         </TableCell>
                         <TableCell>{auction.status!.name}</TableCell>
                         <TableCell>
-                          {auction.product.type === 'harvest'
-                            ? 'Récolte'
-                            : 'Transformé'}
+                          {t('database.' + auction.product.type)}
                         </TableCell>
                         <TableCell>{auction.product.id}</TableCell>
-                        <TableCell>{auction.productQuantity} kg</TableCell>
+                        <TableCell>
+                          {formatWeight(auction.productQuantity)}
+                        </TableCell>
                         <TableCell>
                           {auction.product.qualityControl?.quality.name ??
                             'N/A'}
@@ -112,11 +120,13 @@ const AuctionsTable: React.FC<AuctionsTableProps> = ({
                           {formatDate(auction.product.deliveryDate)}
                         </TableCell>
                         <TableCell>
-                          {auction.price.toLocaleString()} CFA
+                          {formatPrice.format(auction.price)}
                         </TableCell>
                         {showColumnBidderPrice && (
                           <TableCell>
-                            {acceptedBid ? acceptedBid.amount + ' CFA' : 'N/A'}
+                            {acceptedBid
+                              ? formatPrice.format(acceptedBid.amount)
+                              : 'N/A'}
                           </TableCell>
                         )}
                         {showColumnBidder && (
@@ -135,8 +145,7 @@ const AuctionsTable: React.FC<AuctionsTableProps> = ({
                                 handleViewBids(auction.id)
                               }}
                             >
-                              {' '}
-                              Voir les offres
+                              {t('auction.table.view_bids_button')}
                             </Button>
                           </TableCell>
                         )}
@@ -147,7 +156,7 @@ const AuctionsTable: React.FC<AuctionsTableProps> = ({
                                 handleDeleteAuction(auction.id)
                               }}
                             >
-                              Supprimer
+                              {t('buttons.delete')}
                             </Button>
                           </TableCell>
                         )}
@@ -158,7 +167,7 @@ const AuctionsTable: React.FC<AuctionsTableProps> = ({
                                 handleMakeBid(auction.id)
                               }}
                             >
-                              Faire une offre
+                              {t('auction.table.make_bid_button')}
                             </Button>
                           </TableCell>
                         )}
@@ -169,7 +178,7 @@ const AuctionsTable: React.FC<AuctionsTableProps> = ({
                                 setIsOpen(true)
                               }}
                             >
-                              Proposer un contrat
+                              {t('auction.table.propose_contract_button')}
                             </Button>
 
                             <ContractModal

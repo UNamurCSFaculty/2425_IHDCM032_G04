@@ -1,8 +1,11 @@
+import arTranslation from './locales/ar/translation.json'
 import enTranslation from './locales/en/translation.json'
+import esTranslation from './locales/es/translation.json'
 import frTranslation from './locales/fr/translation.json'
 import i18next from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
 import { initReactI18next } from 'react-i18next'
+import zhCNTranslation from './locales/zh-cn/translation.json'
 
 i18next
   .use(LanguageDetector) // détecte la langue du navigateur
@@ -14,6 +17,15 @@ i18next
       },
       en: {
         translation: enTranslation,
+      },
+      es: {
+        translation: esTranslation,
+      },
+      ar: {
+        translation: arTranslation,
+      },
+      'zh-CN': {
+        translation: zhCNTranslation,
       },
     },
     fallbackLng: 'fr',

@@ -104,10 +104,10 @@ export function ProductForm({
         qualityControlId: 0,
         type: ProductType.TRANSFORMED,
         transformerId: -1,
-        identifier: 'TR-000', //TODO: remove from DB
+        identifier: 'TR-000',
       },
       qualityControl: {
-        identifier: 'QC-000', //TODO: remove from DB
+        identifier: 'QC-000',
         controlDate: '',
         granularity: 0,
         korTest: 0,
@@ -131,7 +131,7 @@ export function ProductForm({
   })
 
   return (
-    <FormContainer title="Saisie du produit">
+    <FormContainer title={t('product.form.title')}>
       <form
         onSubmit={e => {
           e.preventDefault()
@@ -141,7 +141,9 @@ export function ProductForm({
       >
         <div className="flex flex-row gap-10">
           <div className="flex w-1/2 flex-col gap-6">
-            <FormSectionTitle text="Paramètres du dépôt" />
+            <FormSectionTitle
+              text={t('product.form.section_deposit_settings_title')}
+            />
 
             <div className="flex gap-4">
               <div className="flex-1">
@@ -159,9 +161,8 @@ export function ProductForm({
                           label: t('database.harvest'),
                         },
                       ]}
-                      label="Marchandise"
+                      label={t('product.merchandise_label')}
                       onChange={() => {
-                        // Reset dependent fields
                         form.setFieldValue('product.producerId', -1)
                         form.setFieldValue('product.transformerId', -1)
                         form.setFieldValue('product.fieldId', -1)
@@ -176,7 +177,7 @@ export function ProductForm({
                   name="product.weightKg"
                   children={field => (
                     <field.TextField
-                      label="Poids (kg)"
+                      label={t('product.weight_in_kg_label')}
                       type="product.weightKg"
                       placeholder="0.0"
                       fieldType="number"
@@ -205,16 +206,15 @@ export function ProductForm({
                     }))}
                     label={
                       productType === ProductType.HARVEST
-                        ? 'Producteur'
-                        : 'Transformateur'
+                        ? t('types.producer')
+                        : t('types.transformer')
                     }
                     hint={
                       field.state.value !== -1
-                        ? 'identifiant : ' + field.state.value
+                        ? t('form.identifier_label', { id: field.state.value })
                         : ''
                     }
                     onChange={() => {
-                      // Reset dependent fields
                       form.setFieldValue('product.fieldId', -1)
                     }}
                   />
@@ -227,7 +227,9 @@ export function ProductForm({
                 children={field => {
                   const gps = fields.find(f => f.id === field.state.value)
                     ?.address.location
-                  const hintText = gps ? 'gps : ' + formatCoordinates(gps) : ''
+                  const hintText = gps
+                    ? t('form.gps_label', { gps: formatCoordinates(gps) })
+                    : ''
                   return (
                     <field.SelectField
                       options={(fields as FieldDto[])
@@ -236,7 +238,7 @@ export function ProductForm({
                           value: field.id,
                           label: field.identifier!,
                         }))}
-                      label="Champ cultivé"
+                      label={t('product.form.cultivated_field_label')}
                       hint={hintText}
                     />
                   )
@@ -253,7 +255,9 @@ export function ProductForm({
                     label: store.name,
                   }))}
                   label={
-                    productType === ProductType.HARVEST ? 'Magasin' : 'Entrepôt'
+                    productType === ProductType.HARVEST
+                      ? t('product.store_label')
+                      : t('product.warehouse_label')
                   }
                 />
               )}
@@ -283,13 +287,15 @@ export function ProductForm({
 
             <form.AppForm>
               <form.SubmitButton className="w-full">
-                Enregistrer le produit
+                {t('product.form.submit_button')}
               </form.SubmitButton>
             </form.AppForm>
           </div>
 
           <div className="flex w-1/2 flex-col gap-6">
-            <FormSectionTitle text="Contrôle qualité" />
+            <FormSectionTitle
+              text={t('product.form.section_quality_control_title')}
+            />
 
             <form.AppField
               name="qualityControl.qualityId"
@@ -311,7 +317,7 @@ export function ProductForm({
                       value: quality.id,
                       label: quality.name,
                     }))}
-                  label="Qualité"
+                  label={t('product.quality_label')}
                 />
               )}
             />
@@ -325,10 +331,10 @@ export function ProductForm({
                       value: qi.id,
                       label: qi.firstName + ' ' + qi.lastName,
                     }))}
-                  label="Qualiticien"
+                  label={t('product.quality_inspector_label')}
                   hint={
                     field.state.value !== -1
-                      ? 'identifiant : ' + field.state.value
+                      ? t('form.identifier_label', { id: field.state.value })
                       : ''
                   }
                 />
@@ -337,14 +343,16 @@ export function ProductForm({
             <form.AppField
               name="qualityControl.controlDate"
               children={field => (
-                <field.DateTimePickerField label="Date du contrôle" />
+                <field.DateTimePickerField
+                  label={t('product.form.control_date_label')}
+                />
               )}
             />
             <form.AppField
               name="qualityControl.documentId"
               children={field => (
                 <field.TextField
-                  label="Certificat (Photo ou PDF)"
+                  label={t('product.form.certificate_label')}
                   type="document"
                   required={false}
                 />

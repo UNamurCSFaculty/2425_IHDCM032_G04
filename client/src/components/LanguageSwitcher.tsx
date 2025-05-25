@@ -16,7 +16,7 @@ export function LanguageSwitcher({
 }: {
   inMobileNav?: boolean
 }) {
-  const { i18n } = useTranslation()
+  const { i18n, t } = useTranslation()
   const [currentLanguage, setCurrentLanguage] = useState(i18n.language)
 
   useEffect(() => {
@@ -45,14 +45,19 @@ export function LanguageSwitcher({
   }
 
   const languages = [
-    { code: 'fr', name: 'Français' },
-    { code: 'en', name: 'English' },
+    { code: 'fr', name: t('languages.fr') },
+    { code: 'en', name: t('languages.en') },
+    { code: 'es', name: t('languages.es') },
+    { code: 'ar', name: t('languages.ar') },
+    { code: 'zh-CN', name: t('languages.zh-CN') },
   ]
 
   if (inMobileNav) {
     return (
       <div className="space-y-1">
-        <p className="text-muted-foreground px-1 text-sm font-medium">Langue</p>
+        <p className="text-muted-foreground px-1 text-sm font-medium">
+          {t('language_switcher.label')}
+        </p>
         {languages.map(lang => (
           <Button
             key={lang.code}
@@ -73,12 +78,16 @@ export function LanguageSwitcher({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" aria-label="Changer de langue">
+        <Button
+          variant="ghost"
+          size="icon"
+          aria-label={t('language_switcher.aria_label')}
+        >
           <Globe className="h-5 w-5" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Langue</DropdownMenuLabel>
+        <DropdownMenuLabel>{t('language_switcher.label')}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {languages.map(lang => (
           <DropdownMenuItem

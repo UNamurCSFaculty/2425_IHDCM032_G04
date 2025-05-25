@@ -37,95 +37,22 @@ import {
   ShoppingCart,
 } from 'lucide-react'
 import React, { useState } from 'react'
+import { useTranslation } from 'react-i18next' // Added import
 
-interface MenuItem {
-  title: string
+interface MenuItemDefinition {
+  titleKey: string
   url: string
-  description?: string
+  descriptionKey?: string
   icon?: React.ReactNode
-  items?: MenuItem[]
+  items?: MenuItemDefinition[]
 }
 
 const activeStyle = { style: { color: 'var(--anacarde-dark-green)' } }
 
-const menu: MenuItem[] = [
-  { title: 'Accueil', url: '/' },
-  {
-    title: 'Achats',
-    url: '#',
-    items: [
-      {
-        title: 'Acheter un produit',
-        description: 'Acheter un produit à la vente directe',
-        icon: <ShoppingCart className="size-5 shrink-0" />,
-        url: '/achats/marche',
-      },
-      {
-        title: 'Mes achats',
-        description: 'Consulter tous mes achats',
-        icon: <ArrowLeftRight className="size-5 shrink-0" />,
-        url: '/achats/mes-encheres',
-      },
-    ],
-  },
-  {
-    title: 'Ventes',
-    url: '#',
-    items: [
-      {
-        title: 'Vendre un produit',
-        description: 'Créer une nouvelle offre de vente',
-        icon: <CircleDollarSign className="size-5 shrink-0" />,
-        url: '/ventes/nouvelle-enchere',
-      },
-      {
-        title: 'Mes ventes',
-        description: 'Consulter toutes mes ventes',
-        icon: <ArrowLeftRight className="size-5 shrink-0" />,
-        url: '/ventes/mes-encheres',
-      },
-    ],
-  },
-  {
-    title: 'Dépôts',
-    url: '#',
-    items: [
-      {
-        title: 'Déposer un produit',
-        description: 'Encoder un dépôt en magasin',
-        icon: <Package className="size-5 shrink-0" />,
-        url: '/depots/nouveau-produit',
-      },
-      {
-        title: 'Mes produits',
-        description: 'Consulter tous mes dépôts',
-        icon: <History className="size-5 shrink-0" />,
-        url: '/depots/mes-produits',
-      },
-    ],
-  },
-  {
-    title: 'Contrats',
-    url: '#',
-    items: [
-      {
-        title: 'Créer un contrat',
-        description: 'Créer un nouveau contrat',
-        icon: <FileText className="size-5 shrink-0" />,
-        url: '/contrats',
-      },
-      {
-        title: 'Historique',
-        description: 'Détail mes contrats',
-        icon: <History className="size-5 shrink-0" />,
-        url: '/contrats',
-      },
-    ],
-  },
-  { title: 'Contact', url: '/contact' },
-]
+// menu definition will be moved inside the component to use the t function
 
 export function Header() {
+  const { t } = useTranslation() // Added
   const user = useUserStore(state => state.user)
   const logout = useUserStore(state => state.logout)
   const isLoggedIn = Boolean(user)
@@ -149,12 +76,92 @@ export function Header() {
 
   const handleMobileLinkClick = () => setIsSheetOpen(false)
 
+  const menu: MenuItemDefinition[] = [
+    { titleKey: 'header.menu.home', url: '/' },
+    {
+      titleKey: 'header.menu.purchases.title',
+      url: '#',
+      items: [
+        {
+          titleKey: 'header.menu.purchases.items.buy_product.title',
+          descriptionKey: 'header.menu.purchases.items.buy_product.description',
+          icon: <ShoppingCart className="size-5 shrink-0" />,
+          url: '/achats/marche',
+        },
+        {
+          titleKey: 'header.menu.purchases.items.my_purchases.title',
+          descriptionKey:
+            'header.menu.purchases.items.my_purchases.description',
+          icon: <ArrowLeftRight className="size-5 shrink-0" />,
+          url: '/achats/mes-encheres',
+        },
+      ],
+    },
+    {
+      titleKey: 'header.menu.sales.title',
+      url: '#',
+      items: [
+        {
+          titleKey: 'header.menu.sales.items.sell_product.title',
+          descriptionKey: 'header.menu.sales.items.sell_product.description',
+          icon: <CircleDollarSign className="size-5 shrink-0" />,
+          url: '/ventes/nouvelle-enchere',
+        },
+        {
+          titleKey: 'header.menu.sales.items.my_sales.title',
+          descriptionKey: 'header.menu.sales.items.my_sales.description',
+          icon: <ArrowLeftRight className="size-5 shrink-0" />,
+          url: '/ventes/mes-encheres',
+        },
+      ],
+    },
+    {
+      titleKey: 'header.menu.deposits.title',
+      url: '#',
+      items: [
+        {
+          titleKey: 'header.menu.deposits.items.deposit_product.title',
+          descriptionKey:
+            'header.menu.deposits.items.deposit_product.description',
+          icon: <Package className="size-5 shrink-0" />,
+          url: '/depots/nouveau-produit',
+        },
+        {
+          titleKey: 'header.menu.deposits.items.my_products.title',
+          descriptionKey: 'header.menu.deposits.items.my_products.description',
+          icon: <History className="size-5 shrink-0" />,
+          url: '/depots/mes-produits',
+        },
+      ],
+    },
+    {
+      titleKey: 'header.menu.contracts.title',
+      url: '#',
+      items: [
+        {
+          titleKey: 'header.menu.contracts.items.create_contract.title',
+          descriptionKey:
+            'header.menu.contracts.items.create_contract.description',
+          icon: <FileText className="size-5 shrink-0" />,
+          url: '/contrats',
+        },
+        {
+          titleKey: 'header.menu.contracts.items.history.title',
+          descriptionKey: 'header.menu.contracts.items.history.description',
+          icon: <History className="size-5 shrink-0" />,
+          url: '/contrats',
+        },
+      ],
+    },
+    { titleKey: 'header.menu.contact', url: '/contact' },
+  ]
+
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white shadow-sm">
       <div className="container mx-auto flex h-18 items-center justify-between px-5 lg:px-0">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2">
-          <img src={logo} alt="Logo e-Anacarde" className="h-16" />
+          <img src={logo} alt={t('header.logo_alt')} className="h-16" />
         </Link>
 
         {/* Desktop Nav */}
@@ -162,22 +169,23 @@ export function Header() {
           <NavigationMenu delayDuration={0}>
             <NavigationMenuList>
               {menu.map(item => (
-                <NavigationMenuItem key={item.title}>
+                <NavigationMenuItem key={item.titleKey}>
                   {item.items ? (
                     <>
                       <NavigationMenuTrigger>
-                        {item.title}
+                        {t(item.titleKey)}
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
                         <ul className="grid w-[400px] gap-3 p-4 lg:w-[500px] lg:w-[600px] lg:grid-cols-2">
                           {item.items.map(subItem => (
                             <ListItem
-                              key={subItem.title}
-                              title={subItem.title}
+                              key={subItem.titleKey}
+                              title={t(subItem.titleKey)}
                               href={subItem.url}
                               icon={subItem.icon}
                             >
-                              {subItem.description}
+                              {subItem.descriptionKey &&
+                                t(subItem.descriptionKey)}
                             </ListItem>
                           ))}
                         </ul>
@@ -190,7 +198,7 @@ export function Header() {
                         activeProps={activeStyle}
                         className={navigationMenuTriggerStyle()}
                       >
-                        {item.title}
+                        {t(item.titleKey)}
                       </Link>
                     </NavigationMenuLink>
                   )}
@@ -205,7 +213,7 @@ export function Header() {
           {!isLoggedIn ? (
             <>
               <Button asChild size="sm" className="mr-2">
-                <Link to="/login">Connexion</Link>
+                <Link to="/connexion">{t('header.auth.login')}</Link>
               </Button>
             </>
           ) : (
@@ -225,13 +233,13 @@ export function Header() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem asChild>
-                  <Link to="/profil">Profil</Link>
+                  <Link to="/profil">{t('header.auth.profile')}</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link to="/parametres">Paramètres</Link>
+                  <Link to="/parametres">{t('header.auth.settings')}</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem onSelect={handleLogout}>
-                  Déconnexion
+                  {t('header.auth.logout')}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -245,43 +253,49 @@ export function Header() {
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="lg:hidden">
                 <MenuIcon className="h-6 w-6" />
-                <span className="sr-only">Menu</span>
+                <span className="sr-only">
+                  {t('header.mobile.toggle_menu_sr')}
+                </span>
               </Button>
             </SheetTrigger>
 
-            <SheetContent side="right" className="w-[300px] sm:w-[350px]">
+            <SheetContent
+              side="right"
+              className="w-[300px] overflow-y-auto sm:w-[350px]"
+            >
               <SheetHeader className="flex w-full items-center justify-center pb-5">
                 <Link
                   to="/"
                   className="flex w-full items-center justify-center gap-2"
+                  onClick={handleMobileLinkClick}
                 >
-                  <img src={logo} alt="Logo e-Anacarde" className="h-16" />
+                  <img src={logo} alt={t('header.logo_alt')} className="h-16" />
                 </Link>
               </SheetHeader>
 
               <nav className="flex flex-col space-y-4 pr-5 pl-5">
                 {menu.map(item => (
-                  <div key={item.title} className="py-1">
+                  <div key={item.titleKey} className="py-1">
                     {item.items ? (
                       <>
                         <button
                           className="flex w-full items-center justify-between text-lg font-medium"
-                          onClick={() => toggleMobileSubmenu(item.title)}
+                          onClick={() => toggleMobileSubmenu(item.titleKey)}
                         >
-                          {item.title}
+                          {t(item.titleKey)}
                           <History
                             className={`h-5 w-5 transform transition-transform ${
-                              openMobileMenuItems[item.title]
+                              openMobileMenuItems[item.titleKey]
                                 ? 'rotate-180'
                                 : ''
                             }`}
                           />
                         </button>
-                        {openMobileMenuItems[item.title] && (
+                        {openMobileMenuItems[item.titleKey] && (
                           <div className="space-y-3 pl-4">
                             {item.items.map(subItem => (
                               <Link
-                                key={subItem.title}
+                                key={subItem.titleKey}
                                 to={subItem.url}
                                 className="flex items-start gap-3 py-2"
                                 onClick={handleMobileLinkClick}
@@ -289,11 +303,13 @@ export function Header() {
                                 <div className="mt-0.5">{subItem.icon}</div>
                                 <div>
                                   <div className="font-medium">
-                                    {subItem.title}
+                                    {t(subItem.titleKey)}
                                   </div>
-                                  <div className="text-muted-foreground text-sm">
-                                    {subItem.description}
-                                  </div>
+                                  {subItem.descriptionKey && (
+                                    <div className="text-muted-foreground text-sm">
+                                      {t(subItem.descriptionKey)}
+                                    </div>
+                                  )}
                                 </div>
                               </Link>
                             ))}
@@ -306,7 +322,7 @@ export function Header() {
                         className="text-lg font-medium"
                         onClick={handleMobileLinkClick}
                       >
-                        {item.title}
+                        {t(item.titleKey)}
                       </Link>
                     )}
                   </div>
@@ -319,8 +335,8 @@ export function Header() {
                 {!isLoggedIn && (
                   <>
                     <Button asChild size="sm" className="w-full">
-                      <Link to="/login" onClick={handleMobileLinkClick}>
-                        Connexion
+                      <Link to="/connexion" onClick={handleMobileLinkClick}>
+                        {t('header.auth.login')}
                       </Link>
                     </Button>
                   </>
@@ -340,14 +356,14 @@ export function Header() {
                       className="hover:bg-accent block rounded-md px-1 py-2 text-base font-medium"
                       onClick={handleMobileLinkClick}
                     >
-                      Profil
+                      {t('header.auth.profile')}
                     </Link>
                     <Link
                       to="/parametres"
                       className="hover:bg-accent block rounded-md px-1 py-2 text-base font-medium"
                       onClick={handleMobileLinkClick}
                     >
-                      Paramètres
+                      {t('header.auth.settings')}
                     </Link>
                     <button
                       onClick={() => {
@@ -356,7 +372,7 @@ export function Header() {
                       }}
                       className="hover:bg-accent block w-full rounded-md px-1 py-2 text-left text-base font-medium"
                     >
-                      Déconnexion
+                      {t('header.auth.logout')}
                     </button>
                   </div>
                 )}

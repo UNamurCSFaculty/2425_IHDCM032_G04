@@ -17,6 +17,8 @@ import { Check, ChevronDown } from 'lucide-react'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Virtuoso, type VirtuosoHandle } from 'react-virtuoso'
+import { Label } from './ui/label'
+import SimpleTooltip from './SimpleTooltip'
 
 export interface Option {
   // Le placeholder ayant un id `null`, on garde ce type.
@@ -27,6 +29,7 @@ export interface Option {
 interface Props {
   id: string
   label: string
+  tooltip?: string
   options: Option[] // Assure que les options ont un id de type number
   placeholder?: string
   value: number | null // La valeur peut être un id ou null pour le placeholder
@@ -46,6 +49,7 @@ const VirtualizedSelect: React.FC<Props> = ({
   id,
   label,
   options,
+  tooltip,
   placeholder = '',
   value,
   onChange,
@@ -130,82 +134,89 @@ const VirtualizedSelect: React.FC<Props> = ({
 
   return (
     <div className="space-y-2">
-      <label htmlFor={id} className="text-sm font-medium">
-        {label}
-      </label>
+      <div className="space-y-1">
+        <Label htmlFor={id}>
+          {label}
+          {tooltip && <SimpleTooltip content={tooltip} />}
+        </Label>
 
-      <Popover
-        open={open}
-        onOpenChange={openState => {
-          if (!openState) setSearch('') // Réinitialise la recherche à la fermeture
-          setOpen(openState)
-        }}
-      >
-        <PopoverTrigger asChild>
-          <Button id={id} variant="outline" className="w-full justify-between">
-            <span className="truncate">{displayLabel}</span>
-            <ChevronDown className="size-4 shrink-0 opacity-50" />
-          </Button>
-        </PopoverTrigger>
-
-        <PopoverContent
-          className="w-[var(--radix-popover-trigger-width)] p-0"
-          align="start"
+        <Popover
+          open={open}
+          onOpenChange={openState => {
+            if (!openState) setSearch('') // Réinitialise la recherche à la fermeture
+            setOpen(openState)
+          }}
         >
-          <Command>
-            <CommandInput
-              placeholder="Rechercher…"
-              value={search}
-              onValueChange={setSearch}
-              onKeyDown={handleKeyDown}
-            />
+          <PopoverTrigger asChild>
+            <Button
+              id={id}
+              variant="outline"
+              className="w-full justify-between"
+            >
+              <span className="truncate">{displayLabel}</span>
+              <ChevronDown className="size-4 shrink-0 opacity-50" />
+            </Button>
+          </PopoverTrigger>
 
-            <CommandList>
-              <CommandEmpty>Aucun résultat</CommandEmpty>
-              {filteredOptions.length > 0 && (
-                <CommandGroup>
-                  <div style={{ height }}>
-                    <Virtuoso
-                      ref={virtuosoRef}
-                      data={filteredOptions}
-                      itemContent={(index, option) => {
-                        const isPlaceholder = option.id === null
-                        const isDisabled =
-                          isPlaceholder && !placeholderSelectable
+          <PopoverContent
+            className="w-[var(--radix-popover-trigger-width)] p-0"
+            align="start"
+          >
+            <Command>
+              <CommandInput
+                placeholder="Rechercher…"
+                value={search}
+                onValueChange={setSearch}
+                onKeyDown={handleKeyDown}
+              />
 
-                        return (
-                          <CommandItem
-                            key={option.id ?? 'placeholder'}
-                            className={cn(
-                              'cursor-pointer',
-                              index === activeIndex && 'bg-muted',
-                              isDisabled && 'text-muted-foreground opacity-60'
-                            )}
-                            value={option.label}
-                            disabled={isDisabled}
-                            onMouseEnter={() => setActiveIndex(index)}
-                            onSelect={() => handleSelect(option)}
-                          >
-                            <Check
+              <CommandList>
+                <CommandEmpty>Aucun résultat</CommandEmpty>
+                {filteredOptions.length > 0 && (
+                  <CommandGroup>
+                    <div style={{ height }}>
+                      <Virtuoso
+                        ref={virtuosoRef}
+                        data={filteredOptions}
+                        itemContent={(index, option) => {
+                          const isPlaceholder = option.id === null
+                          const isDisabled =
+                            isPlaceholder && !placeholderSelectable
+
+                          return (
+                            <CommandItem
+                              key={option.id ?? 'placeholder'}
                               className={cn(
-                                'mr-2 h-4 w-4',
-                                value === option.id
-                                  ? 'opacity-100'
-                                  : 'opacity-0'
+                                'cursor-pointer',
+                                index === activeIndex && 'bg-muted',
+                                isDisabled && 'text-muted-foreground opacity-60'
                               )}
-                            />
-                            {option.label}
-                          </CommandItem>
-                        )
-                      }}
-                    />
-                  </div>
-                </CommandGroup>
-              )}
-            </CommandList>
-          </Command>
-        </PopoverContent>
-      </Popover>
+                              value={option.label}
+                              disabled={isDisabled}
+                              onMouseEnter={() => setActiveIndex(index)}
+                              onSelect={() => handleSelect(option)}
+                            >
+                              <Check
+                                className={cn(
+                                  'mr-2 h-4 w-4',
+                                  value === option.id
+                                    ? 'opacity-100'
+                                    : 'opacity-0'
+                                )}
+                              />
+                              {option.label}
+                            </CommandItem>
+                          )
+                        }}
+                      />
+                    </div>
+                  </CommandGroup>
+                )}
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
+      </div>
     </div>
   )
 }

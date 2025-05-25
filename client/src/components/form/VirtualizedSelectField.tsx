@@ -1,4 +1,3 @@
-/* virtualized-select-field.tsx */
 import { useFieldContext } from '.'
 import { FieldErrors } from './field-errors'
 import VirtualizedSelect from '@/components/VirtualizedSelect'
@@ -10,11 +9,13 @@ type VirtualizedSelectFieldProps = Omit<
 > & {
   /** Nom visible et accessible (sera passé tel quel au composant) */
   label: string
+  tooltip?: string
 }
 
 export const VirtualizedSelectField: React.FC<VirtualizedSelectFieldProps> = ({
   label,
   options,
+  tooltip,
   placeholder,
   ...rest
 }) => {
@@ -23,17 +24,18 @@ export const VirtualizedSelectField: React.FC<VirtualizedSelectFieldProps> = ({
     field.state.meta.isTouched && field.state.meta.errors.length > 0
 
   return (
-    <div className="space-y-2">
+    <>
       <VirtualizedSelect
         {...rest}
         id={field.name}
         label={label}
         options={options}
+        tooltip={tooltip}
         placeholder={placeholder}
         value={field.state.value}
         onChange={val => field.handleChange(val)}
       />
       {hasError && <FieldErrors meta={field.state.meta} />}
-    </div>
+    </>
   )
 }

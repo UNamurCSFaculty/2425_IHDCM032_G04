@@ -1,4 +1,3 @@
-// src/components/leaflet/BeninPointSelectorMap.tsx
 import { acceptedFileTypes, cn, getFileIcon } from '@/lib/utils'
 import { Upload, X } from 'lucide-react'
 import React, { useRef, useState } from 'react'

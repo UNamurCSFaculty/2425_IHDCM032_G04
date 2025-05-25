@@ -1,11 +1,10 @@
-/* CheckboxField.tsx – version sans erreur de typage
-   ───────────────────────────────────────────────── */
 import { useFieldContext } from '.'
 import { FieldErrors } from './field-errors'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/utils'
 import React from 'react'
+import SimpleTooltip from '../SimpleTooltip'
 
 /* -------------------------------------------------------------------------- */
 /* Types                                                                      */
@@ -20,6 +19,7 @@ export type Choice = { value: string; label: string }
 export interface CheckboxFieldProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children' | 'disabled'> {
   label?: string
+  tooltip?: string
   choices?: Choice[]
   direction?: 'row' | 'col'
   multiple?: boolean
@@ -36,6 +36,7 @@ type FieldValue = boolean | string | string[]
 export const CheckboxField: React.FC<CheckboxFieldProps> = ({
   label,
   required,
+  tooltip,
   choices,
   direction = 'col',
   multiple = false,
@@ -66,6 +67,7 @@ export const CheckboxField: React.FC<CheckboxFieldProps> = ({
             <Label htmlFor={field.name}>
               {label}
               {required && <span className="text-red-500">*</span>}
+              {tooltip && <SimpleTooltip content={tooltip} />}
             </Label>
           )}
         </div>
@@ -102,6 +104,7 @@ export const CheckboxField: React.FC<CheckboxFieldProps> = ({
         <legend className="mb-1 text-sm font-medium">
           {label}
           {required && <span className="ml-0.5 text-red-500">*</span>}
+          {tooltip && <SimpleTooltip content={tooltip} />}
         </legend>
       )}
 

@@ -2,11 +2,12 @@
   "app": {
     "accueil": {
       "subtitle": "Rejoignez la plateforme d’enchères en temps réel pour la noix de\n cajou et ses produits transformés au Bénin. Surveillez,\n surenchérissez et soutenez les producteurs locaux en toute\n confiance.",
-      "title": "Enchères & Marché du Cajou"
+      "title": "Enchères & Marché du Cajou",
+      "image_alt_cashew_nuts": "Illustration noix de cajou"
     },
     "contact": {
-      "subtitle": "N'hésitez pas à nous envoyer vos questions ou commentaires.",
-      "title": "Contactez-nous"
+      "title": "Contactez-nous",
+      "subtitle": "Nous sommes là pour vous aider. Envoyez-nous un message et nous vous répondrons dans les plus brefs délais."
     },
     "loading": "Chargement…",
     "networkError": "Impossible de joindre le serveur",
@@ -55,10 +56,77 @@
       "go_to_login": "Aller à la page de connexion"
     }
   },
+  "homepage": {
+    "features": {
+      "section_title_prefix": "Pourquoi choisir ",
+      "section_title_brand": "e-Anacarde",
+      "section_title_suffix": "?",
+      "section_subtitle": "Découvrez comment notre plateforme révolutionne les enchères de noix de cajou avec technologie, sécurité et impact social.",
+      "items": {
+        "real_time": {
+          "title": "Enchères en temps réel",
+          "description": "Suivez chaque enchère et ne manquez aucune opportunité de surenchérir."
+        },
+        "secure_transactions": {
+          "title": "Transactions sécurisées",
+          "description": "Paiement et livraison gérés de bout en bout pour votre tranquillité d’esprit."
+        },
+        "industry_support": {
+          "title": "Soutien à la filière",
+          "description": "Valorisez les producteurs locaux et contribuez au développement durable."
+        }
+      }
+    },
+    "blog": {
+      "title": "Notre Blog",
+      "subtitle": "Découvrez les dernières actualités, normes et conseils pour optimiser vos ventes aux enchères de noix de cajou au Bénin.",
+      "article1": {
+        "category": "Tutoriel",
+        "date": "il y a 3 jours",
+        "title": "Comment maîtriser les enchères de noix de cajou sur e-Anacarde",
+        "description": "Suivez notre guide pas à pas pour comprendre le processus d'enchères, fixer vos réserves et maximiser vos revenus sur la première plateforme d'enchères de cajou au Bénin.",
+        "author": "Aïssatou Adégbidi"
+      },
+      "article2": {
+        "category": "Actualité",
+        "date": "il y a 7 jours",
+        "title": "Nouvelles normes gouvernementales pour la production de cajou",
+        "description": "Le gouvernement béninois a publié de nouvelles directives pour améliorer la qualité et la traçabilité de la noix de cajou. Découvrez les exigences et comment vous y conformer.",
+        "author": "Kofi Mensah"
+      },
+      "author_avatar_alt": "Avatar de l'auteur",
+      "read_more": "Lire la suite"
+    },
+    "hero": {
+      "heading": "Enchères en ligne de noix de cajou",
+      "description": "Participez aux enchères en temps réel pour la noix de cajou et ses produits dérivés au Bénin. Surveillez chaque offre, surenchérissez et soutenez les producteurs locaux en toute confiance.",
+      "buttons": {
+        "primary_text": "Voir les enchères",
+        "secondary_text": "En savoir plus"
+      },
+      "image_alt": "Logo e-Anacarde, plateforme d’enchères de noix de cajou"
+    },
+    "faq": {
+      "heading": "Questions fréquentes",
+      "q1_question": "Qu'est-ce qu'e-Anacarde ?",
+      "q1_answer": "e-Anacarde est une plateforme d'enchères en ligne dédiée à la noix de cajou au Bénin, qui met en relation directe producteurs et acheteurs pour maximiser la transparence et la valeur des transactions.",
+      "q2_question": "Comment puis-je m'inscrire en tant que producteur ?",
+      "q2_answer_part1": "Pour vous inscrire, remplissez le formulaire avec vos informations de production et téléchargez les documents requis pour vérification.",
+      "q3_question": "Comment participer à une enchère ?",
+      "q3_answer": "Après validation de votre compte, connectez-vous, rendez-vous sur la page d'enchères, sélectionnez le lot de noix de cajou souhaité et placez votre enchère en indiquant le montant que vous êtes prêt à payer.",
+      "q4_question": "Quels sont les frais de service ?",
+      "q4_answer": "e-Anacarde applique une commission de 2% sur le montant final de chaque enchère remportée, sans frais cachés pour les producteurs ou acheteurs.",
+      "q5_question": "Comment se fait le paiement et la livraison ?",
+      "q5_answer": "Une fois l'enchère remportée, le paiement s'effectue via nos partenaires de paiement mobile (MoMo, Flooz) ou virement bancaire. La livraison est organisée par des transporteurs agréés, aux frais de l'acheteur ou selon l'accord conclu.",
+      "q6_question": "Quelles normes qualité dois-je respecter ?",
+      "q6_answer": "Vous devez vous conformer aux nouvelles directives du gouvernement béninois sur le calibrage, la teneur en humidité et le conditionnement de la noix de cajou. Consultez notre article « Nouvelles normes gouvernementales pour la production de cajou » pour tous les détails."
+    }
+  },
   "breadcrumb": {
     "about": "À propos",
     "auctions": "Enchères",
     "buy": "Acheter",
+    "home": "Accueil",
     "contact": "Contact",
     "home": "Accueil",
     "login": "Connexion",
@@ -83,7 +151,18 @@
     "reinitialise": "Réinitialiser",
     "submit": "Envoyer",
     "submitting": "Envoi en cours...",
-    "subscribe": "Créer un compte"
+    "subscribe": "Créer un compte",
+    "view_all_news": "Voir toutes les actualités",
+    "details": "Détails",
+    "buy": "Acheter",
+    "view_details": "Voir détails",
+    "confirm": "Confirmer",
+    "place_bid": "Placer l'offre",
+    "accept": "Accepter",
+    "reject": "Refuser",
+    "back": "Retour",
+    "reset": "Reset",
+    "delete": "Supprimer"
   },
   "common": {
     "add": "Ajouter",
@@ -91,6 +170,7 @@
     "close": "Fermer",
     "delete": "Supprimer",
     "edit": "Modifier",
+    "step": "Étape",
     "error": "Erreur",
     "info": "Info",
     "loading": "Chargement...",
@@ -102,8 +182,7 @@
     "success": "Succès",
     "view": "Voir",
     "warning": "Avertissement",
-    "yes": "Oui",
-    "step": "Étape"
+    "yes": "Oui"
   },
   "errors": {
     "access.denied": "Accès refusé : vous n’avez pas les droits suffisants.",
@@ -167,11 +246,25 @@
     "message": "Message",
     "password": "Mot de passe",
     "phone": "Téléphone",
+    "coordinates_label": "Coordonnée :",
     "placeholder": {
       "date": "Sélectionner une date",
       "no_city_found": "Aucune ville trouvée",
       "search": "Rechercher",
-      "select_city": "Sélectionner une ville"
+      "select_city": "Sélectionner une ville",
+      "language": "Sélectionnez une langue",
+      "price_per_km_example": "500",
+      "radius_example": "50",
+      "street_example": "Ex. : Rue de la soif",
+      "email_example": "m@example.com",
+      "password_example": "••••••••••",
+      "bid_amount_cfa": "Montant CFA"
+    },
+    "tooltip": {
+      "price_per_km": "Prix par kilomètre parcouru pour le transport des produits",
+      "radius": "Rayon de service en kilomètres pour le transport des produits",
+      "city": "Sélectionnez votre ville pour faciliter la localisation. Si elle n'est pas dans la liste, sélectionnez la plus proche.",
+      "location": "Sélectionnez votre position sur la carte pour faciliter la localisation. Cliquez simplement sur la carte pour centrer la position."
     },
     "type": "Je suis",
     "upload_accepted": "Formats acceptés",
@@ -190,11 +283,20 @@
       "video": "Vidéo",
       "audio": "Audio",
       "zip": "Archive ZIP"
-    }
+    },
+    "identifier_label": "identifiant : {{id}}",
+    "gps_label": "gps : {{gps}}"
   },
   "languages": {
     "en": "Anglais",
-    "fr": "Français"
+    "fr": "Français",
+    "ar": "Arabe",
+    "zh-CN": "Mandarin",
+    "es": "Espagnol"
+  },
+  "language_switcher": {
+    "label": "Langue",
+    "aria_label": "Changer de langue"
   },
   "pagination": {
     "all": "Tout",
@@ -233,12 +335,311 @@
     "ExporterListDto": "exportateur",
     "CarrierListDto": "transporteur"
   },
+  "auction": {
+    "lot_label": "lot {{id}}",
+    "lot_label_short": "lot #{{id}}",
+    "bid_count_zero": "{{count}} offre",
+    "bid_count_one": "{{count}} offre",
+    "bid_count_other": "{{count}} offres",
+    "bid_count": "{{count}} offre",
+    "bid_count_plural": "{{count}} offres",
+    "expires_in": "Expire dans",
+    "asking_price": "Prix demandé",
+    "best_bid": "Meilleure offre",
+    "details_title_full": "Produit {{productType}} · Lot n°{{productId}} · Enchère n°{{auctionId}}",
+    "auction_details_title": "Détails de l’enchère",
+    "buy_now_label": "Achat immédiat",
+    "buy_now_price": "Achat immédiat {{price}}",
+    "confirm_buy_now_prompt": "Confirmer l’achat immédiat {{price}} ?",
+    "add_bid_label": "Ajouter une enchère",
+    "confirm_bid_prompt": "Confirmer votre offre de {{amount}} ?",
+    "status": {
+      "ended_title": "Enchère terminée",
+      "ended_message": "Cette enchère est maintenant terminée."
+    },
+    "bid_count_for_lot_zero": "{{count}} offre pour le lot",
+    "bid_count_for_lot_one": "{{count}} offre pour le lot",
+    "bid_count_for_lot_other": "{{count}} offres pour le lot",
+    "bid_count_for_lot": "{{count}} offre pour le lot",
+    "bid_count_for_lot_plural": "{{count}} offres pour le lot",
+    "no_bids_yet": "Aucune offre pour le moment.",
+    "accept_bid_prompt": "Accepter cette offre ?",
+    "reject_bid_prompt": "Refuser cette offre ?",
+    "seller_label": "Vendeur",
+    "no_bids_message": "Pas d’offres",
+    "time_remaining_label": "Temps restant",
+    "click_to_see_details_prompt": "Cliquez pour voir les détails →",
+    "expiration_label": "Expiration",
+    "form": {
+      "title": "Saisie de l'enchère",
+      "section_settings_title": "Paramètres de la vente",
+      "submit_button": "Ouvrir la vente"
+    },
+    "expiration_date_label": "Expiration de l'enchère",
+    "table": {
+      "no_auctions": "Aucune vente aux enchères n'est répertoriée.",
+      "transactions_list_message": "La liste des transactions peut être consultée ci-dessous.",
+      "start_date_header": "Début de l'enchère",
+      "end_date_header": "Fin de l'enchère",
+      "status_header": "Statut",
+      "obtained_price_header": "Prix obtenu",
+      "buyer_header": "Acheteur",
+      "view_bids_button": "Voir les offres",
+      "make_bid_button": "Faire une offre",
+      "propose_contract_button": "Proposer un contrat"
+    }
+  },
+  "product": {
+    "quality_label": "Qualité",
+    "quantity_label": "Quantité",
+    "type_label": "Type",
+    "merchandise_label": "Marchandise",
+    "price_label": "Prix",
+    "product_label": "Produit",
+    "quantity_in_kg_label": "Quantité (kg)",
+    "price_in_cfa_label": "Prix (CFA)",
+    "info_title": "Informations du produit",
+    "lot_number_label": "Numéro du lot",
+    "deposited_quantity_label": "Quantité déposée",
+    "deposit_date_label": "Date de dépôt",
+    "store_label": "Magasin",
+    "lot_label": "Lot n°{{id}}",
+    "product_type_label": "Produit {{type}}",
+    "origin_label": "Origine",
+    "quality_inspector_label": "Qualiticien",
+    "results_count_zero": "Résultat : {{count}} produit",
+    "results_count_one": "Résultat : {{count}} produit",
+    "results_count_other": "Résultats : {{count}} produits",
+    "results_count": "Résultat : {{count}} produit",
+    "results_count_plural": "Résultats : {{count}} produits",
+    "owner_label": "Propriétaire",
+    "warehouse_label": "Entrepôt",
+    "form": {
+      "title": "Saisie du produit",
+      "section_deposit_settings_title": "Paramètres du dépôt",
+      "cultivated_field_label": "Champ cultivé",
+      "submit_button": "Enregistrer le produit",
+      "section_quality_control_title": "Contrôle qualité",
+      "control_date_label": "Date du contrôle",
+      "certificate_label": "Certificat (Photo ou PDF)"
+    },
+    "weight_in_kg_label": "Poids (kg)"
+  },
+  "sort": {
+    "expiration_asc": "Expiration ⬆",
+    "expiration_desc": "Expiration ⬇",
+    "price_asc": "Prix ⬆",
+    "price_desc": "Prix ⬇",
+    "label_prefix": "Tri par ",
+    "date_asc": "date ⬆",
+    "date_desc": "date ⬇",
+    "weight_asc": "poids ⬆",
+    "weight_desc": "poids ⬇"
+  },
+  "marketplace": {
+    "title": "Marché des enchères",
+    "subtitle": "Achetez des produits en ligne.",
+    "results_count_zero": "Résultat : {{count}} enchère",
+    "results_count_one": "Résultat : {{count}} enchère",
+    "results_count_other": "Résultats : {{count}} enchères",
+    "results_count": "Résultat : {{count}} enchère",
+    "results_count_plural": "Résultats : {{count}} enchères"
+  },
+  "view_mode": {
+    "grid_label": "Grille",
+    "list_label": "Liste",
+    "map_label": "Carte"
+  },
+  "filters": {
+    "panel_title": "Filtres",
+    "auctions_in_progress_label": "Enchères en cours",
+    "auctions_ended_label": "Enchères terminées",
+    "all_types_placeholder": "Tous les types",
+    "all_qualities_placeholder": "Toutes les qualités",
+    "all_regions_placeholder": "Toutes les régions",
+    "all_cities_placeholder": "Toutes les villes",
+    "expires_before_label": "Expire avant",
+    "choose_date_placeholder": "Choisir…"
+  },
+  "address": {
+    "region_label": "Région"
+  },
   "types": {
+    "admin": "Administrateur",
     "producer": "Producteur",
     "transformer": "Transformateur",
     "carrier": "Transporteur",
     "exporter": "Exportateur",
-    "quality_inspector": "Qualiticien",
-    "admin": "Administrateur"
+    "quality_inspector": "Qualiticien"
+  },
+  "header": {
+    "logo_alt": "Logo e-Anacarde",
+    "menu": {
+      "home": "Accueil",
+      "purchases": {
+        "title": "Achats",
+        "items": {
+          "buy_product": {
+            "title": "Acheter un produit",
+            "description": "Acheter un produit à la vente directe"
+          },
+          "my_purchases": {
+            "title": "Mes achats",
+            "description": "Consulter tous mes achats"
+          }
+        }
+      },
+      "sales": {
+        "title": "Ventes",
+        "items": {
+          "sell_product": {
+            "title": "Vendre un produit",
+            "description": "Créer une nouvelle offre de vente"
+          },
+          "my_sales": {
+            "title": "Mes ventes",
+            "description": "Consulter toutes mes ventes"
+          }
+        }
+      },
+      "deposits": {
+        "title": "Dépôts",
+        "items": {
+          "deposit_product": {
+            "title": "Déposer un produit",
+            "description": "Encoder un dépôt en magasin"
+          },
+          "my_products": {
+            "title": "Mes produits",
+            "description": "Consulter tous mes dépôts"
+          }
+        }
+      },
+      "contracts": {
+        "title": "Contrats",
+        "items": {
+          "create_contract": {
+            "title": "Créer un contrat",
+            "description": "Créer un nouveau contrat"
+          },
+          "history": {
+            "title": "Historique",
+            "description": "Détail mes contrats"
+          }
+        }
+      },
+      "contact": "Contact"
+    },
+    "auth": {
+      "login": "Connexion",
+      "profile": "Profil",
+      "settings": "Paramètres",
+      "logout": "Déconnexion"
+    },
+    "mobile": {
+      "toggle_menu_sr": "Ouvrir le menu principal"
+    }
+  },
+  "login": {
+    "title_description": "Connectez-vous à votre compte e-Anacarde",
+    "forgot_password": "Mot de passe oublié ?",
+    "continue_with_separator": "Ou continuer avec",
+    "social": {
+      "apple_sr": "Connexion avec Apple",
+      "google_sr": "Connexion avec Google",
+      "meta_sr": "Connexion avec Meta"
+    },
+    "signup_prompt": "Vous n’avez pas de compte ?",
+    "terms_prefix": "En cliquant sur Continuer, vous acceptez nos ",
+    "terms_separator": " et notre ",
+    "terms_suffix": "."
+  },
+  "footer_cta": {
+    "title": "Rejoignez e-Anacarde dès aujourd’hui et optimisez la vente de vos noix de cajou !",
+    "button_signup": "S’inscrire"
+  },
+  "footer": {
+    "logo": {
+      "alt": "Logo Cashew Auction Bénin",
+      "title": "Cashew Auction Bénin"
+    },
+    "tagline": "Votre plateforme d'enchères de noix de cajou au Bénin — matières premières et produits transformés",
+    "menu": {
+      "auctions": {
+        "title": "Enchères",
+        "links": {
+          "raw_materials": "Matières premières",
+          "processed_products": "Produits transformés",
+          "my_offers": "Mes offres"
+        }
+      },
+      "company": {
+        "title": "Entreprise",
+        "links": {
+          "about_us": "À propos de nous",
+          "team": "Équipe",
+          "careers": "Carrières",
+          "contact": "Contact"
+        }
+      },
+      "resources": {
+        "title": "Ressources",
+        "links": {
+          "faq": "FAQ",
+          "support": "Support",
+          "blog": "Blog"
+        }
+      },
+      "social_media": {
+        "title": "Réseaux sociaux",
+        "links": {
+          "facebook": "Facebook",
+          "twitter": "Twitter",
+          "linkedin": "LinkedIn"
+        }
+      }
+    },
+    "copyright": "© 2025 Groupe 4 - Laboratoire d’Ingénierie Logicielle, Université de Namur.",
+    "bottom_links": {
+      "terms": "Conditions générales",
+      "privacy_policy": "Politique de confidentialité"
+    }
+  },
+  "not_found": {
+    "error_code": "404",
+    "title": "Page non trouvée",
+    "message": "Désolé, nous n’avons pas trouvé la page que vous recherchez.",
+    "button_home": "Retour à l’accueil",
+    "button_contact_support": "Contacter le support"
+  },
+  "error_boundary": {
+    "title": "Une erreur est survenue",
+    "message": "Désolé, un problème est survenu. Veuillez réessayer plus tard ou retourner à l’accueil.",
+    "button_home": "Retour à l’accueil"
+  },
+  "empty_state": {
+    "title": "Aucun résultat trouvé",
+    "message": "Ajustez vos filtres ou réinitialisez la recherche."
+  },
+  "countdown_timer": {
+    "auction_ended": "Enchère terminée",
+    "days_one": "{{count}} jour",
+    "days_other": "{{count}} jours",
+    "hours_one": "{{count}} heure",
+    "hours_other": "{{count}} heures",
+    "minutes_one": "{{count}} minute",
+    "minutes_other": "{{count}} minutes",
+    "seconds_one": "{{count}} seconde",
+    "seconds_other": "{{count}} secondes"
+  },
+  "contract": {
+    "modal_title": "Proposition de contrat",
+    "avatar_alt": "Avatar",
+    "guaranteed_price_cfa_kg_label": "Prix garanti (CFA/kg)",
+    "minimum_quantity_kg_label": "Quantité minimum (kg)",
+    "duration_label": "Durée du contrat",
+    "duration_years_label": "(Années)",
+    "duration_months_label": "(Mois)",
+    "ends_on_date_label": "Se termine le {{date}}"
   }
 }

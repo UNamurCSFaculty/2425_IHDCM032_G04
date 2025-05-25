@@ -8,12 +8,14 @@ import L from 'leaflet'
 import React from 'react'
 import { MapContainer, Marker, TileLayer, Tooltip } from 'react-leaflet'
 import MarkerClusterGroup from 'react-leaflet-markercluster'
+import { useTranslation } from 'react-i18next'
 
 const AuctionMap: React.FC<{
   auctions: AuctionDto[]
   onSelect: (a: AuctionDto) => void
 }> = ({ auctions, onSelect }) => {
   const center: [number, number] = [9.3, 2.3] // centre Bénin
+  const { t } = useTranslation()
   return (
     <MapContainer center={center} zoom={7} className="h-[70vh] rounded-md">
       <TileLayer
@@ -30,8 +32,7 @@ const AuctionMap: React.FC<{
             bids.length > 0 ? Math.max(...bids.map(b => b.amount)) : null
 
           // Libellés
-          const typeLabel =
-            a.product.type === 'harvest' ? 'Récolte' : 'Transformé'
+          const typeLabel = t('database.' + a.product.type)
           const expires = dayjs(a.expirationDate)
           return (
             <Marker
@@ -49,60 +50,73 @@ const AuctionMap: React.FC<{
                 <div className="pointer-events-auto">
                   <CardContent className="p-1 text-xs">
                     <h3 className="mb-1 text-base font-semibold">
-                      {a.product.type === 'harvest' ? 'Récolte' : 'Transformé'}{' '}
-                      · lot #{a.product.id}
+                      {typeLabel} ·{' '}
+                      {t('auction.lot_label_short', { id: a.product.id })}
                     </h3>
                     <dl className="space-y-0.5">
                       <div className="flex justify-between">
-                        <dt className="font-semibold">Vendeur</dt>
+                        <dt className="font-semibold">
+                          {t('auction.seller_label')}
+                        </dt>
                         <dd className="ml-2">
                           {' '}
                           {a.trader.firstName} {a.trader.lastName}
                         </dd>
                       </div>
                       <div className="flex justify-between">
-                        <dt className="font-semibold">Type</dt>
+                        <dt className="font-semibold">
+                          {t('product.type_label')}
+                        </dt>
                         <dd className="ml-2">{typeLabel}</dd>
                       </div>
                       <div className="flex justify-between">
-                        <dt className="font-semibold">Qualité</dt>
+                        <dt className="font-semibold">
+                          {t('product.quality_label')}
+                        </dt>
                         <dd className="ml-2">
                           {' '}
                           {a.product.qualityControl?.quality.name ?? 'N/A'}
                         </dd>
                       </div>
                       <div className="flex justify-between">
-                        <dt className="font-semibold">Quantité</dt>
+                        <dt className="font-semibold">
+                          {t('product.quantity_label')}
+                        </dt>
                         <dd className="ml-2">
                           {formatWeight(a.product.weightKg)}
                         </dd>
                       </div>
                       <div className="flex justify-between">
-                        <dt className="font-semibold">Prix demandé</dt>
+                        <dt className="font-semibold">
+                          {t('auction.asking_price')}
+                        </dt>
                         <dd className="ml-2">{formatPrice.format(a.price)}</dd>
                       </div>
                       {bestBid !== null ? (
                         <div className="flex justify-between">
-                          <dt className="font-semibold">Meilleure offre</dt>
+                          <dt className="font-semibold">
+                            {t('auction.best_bid')}
+                          </dt>
                           <dd className="ml-2">
                             {formatPrice.format(bestBid)}
                           </dd>
                         </div>
                       ) : (
                         <div className="text-muted-foreground text-center italic">
-                          Pas d’offres
+                          {t('auction.no_bids_message')}
                         </div>
                       )}
                       <div className="flex justify-between">
-                        <dt className="font-semibold">Temps restant</dt>
+                        <dt className="font-semibold">
+                          {t('auction.time_remaining_label')}
+                        </dt>
                         <dd className="ml-2">
                           <CountdownTimer endDate={expires.toDate()} />
                         </dd>
                       </div>
                     </dl>
-                    {/* Invite à cliquer */}
                     <div className="mt-1 text-center text-xs font-medium text-blue-600">
-                      Cliquez pour voir les détails →
+                      {t('auction.click_to_see_details_prompt')}
                     </div>
                   </CardContent>
                 </div>

@@ -1,4 +1,3 @@
-// components/ui/table.tsx
 import { cn } from '@/lib/utils'
 import * as React from 'react'
 

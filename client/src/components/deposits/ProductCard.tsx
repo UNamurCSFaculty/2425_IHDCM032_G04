@@ -13,7 +13,6 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { TableCell, TableRow } from '@/components/ui/table'
-// Simple JSON import (no async fetch) -----------------------------------------
 import cities from '@/data/cities.json'
 import regions from '@/data/regions.json'
 import { ProductType, cn } from '@/lib/utils'
@@ -50,7 +49,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, layout }) => {
     ? (cities[product.store.address.cityId - 1] ?? '—')
     : '—'
 
-  /* -------------------- Table row layout -------------------- */
   if (layout === 'row') {
     return (
       <TableRow className="hover:bg-muted/50 h-10" key={product.id}>
@@ -77,7 +75,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, layout }) => {
     )
   }
 
-  /* -------------------- Card layout -------------------- */
   return (
     <Card
       className={cn(
@@ -86,9 +83,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, layout }) => {
     >
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2 truncate text-base font-semibold">
-          Lot n°{product.id}
+          {t('product.lot_label', { id: product.id })}
           <Badge variant={'default'} className="ml-auto shrink-0">
-            Produit {t('database.' + product.type)}
+            {t('product.product_type_label', {
+              type: t('database.' + product.type),
+            })}
           </Badge>
         </CardTitle>
         <CardDescription className="flex flex-col flex-wrap items-center justify-center gap-1.5 text-sm text-neutral-700">
@@ -121,27 +120,34 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, layout }) => {
         <div className="flex items-center justify-between">
           <InfoTile
             icon={<Clock className="size-4" />}
-            label="Date de dépôt"
+            label={t('product.deposit_date_label')}
             size="lg"
           >
             {formatDate(product.deliveryDate)}
           </InfoTile>
         </div>
         <div className="grid grid-cols-2 gap-3 text-sm">
-          <InfoTile icon={<ShieldCheck className="size-4" />} label="Qualité">
+          <InfoTile
+            icon={<ShieldCheck className="size-4" />}
+            label={t('product.quality_label')}
+          >
             {product.qualityControl?.quality.name ?? 'N/A'}
           </InfoTile>
-          <InfoTile icon={<Package className="size-4" />} label="Quantité">
+          <InfoTile
+            icon={<Package className="size-4" />}
+            label={t('product.quantity_label')}
+          >
             {formatWeight(product.weightKg)}
           </InfoTile>
-          <InfoTile icon={<Earth className="size-4" />} label="Origine">
-            {product.type === ProductType.HARVEST
-              ? 'N/A' // (product as HarvestProductDto).field.id
-              : 'N/A'}
+          <InfoTile
+            icon={<Earth className="size-4" />}
+            label={t('product.origin_label')}
+          >
+            {product.type === ProductType.HARVEST ? 'N/A' : 'N/A'}
           </InfoTile>
           <InfoTile
             icon={<TrendingUp className="size-4" />}
-            label="Qualiticien"
+            label={t('product.quality_inspector_label')}
           >
             {!product.qualityControl.qualityInspector
               ? 'N/A'
@@ -151,7 +157,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, layout }) => {
           </InfoTile>
         </div>
       </CardContent>
-      {/* <CardFooter className="pt-1 pb-1  flex flex-col gap-2"></CardFooter> */}
     </Card>
   )
 }

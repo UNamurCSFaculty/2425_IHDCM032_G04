@@ -1,6 +1,7 @@
 import logo from '@/assets/logo.svg'
 import { Button } from '@/components/ui/button'
 import { ArrowRight } from 'lucide-react'
+import { useTranslation } from 'react-i18next' // Added
 
 interface HeroSectionProps {
   badge?: string
@@ -22,30 +23,41 @@ interface HeroSectionProps {
   }
 }
 
-const HeroSection = ({
-  heading = 'Enchères en ligne de noix de cajou',
-  description = 'Participez aux enchères en temps réel pour la noix de cajou et ses produits dérivés au Bénin. Surveillez chaque offre, surenchérissez et soutenez les producteurs locaux en toute confiance.',
-  buttons = {
+const HeroSection = (props: HeroSectionProps) => {
+  const { t } = useTranslation()
+  const {
+    heading: headingProp,
+    description: descriptionProp,
+    buttons: buttonsProp,
+    image: imageProp,
+  } = props
+
+  const heading = headingProp ?? t('homepage.hero.heading')
+  const description = descriptionProp ?? t('homepage.hero.description')
+
+  const buttons = buttonsProp ?? {
     primary: {
-      text: 'Voir les enchères',
-      url: '/enchères',
+      text: t('homepage.hero.buttons.primary_text'),
+      url: '/achats/marche', // Default URL
     },
     secondary: {
-      text: 'En savoir plus',
-      url: '/a-propos',
+      text: t('homepage.hero.buttons.secondary_text'),
+      url: '/a-propos', // Default URL
     },
-  },
-  image = {
-    src: logo,
-    alt: 'logo de la plateforme d’enchères de noix de cajou',
-  },
-}: HeroSectionProps) => {
+  }
+
+  const image = imageProp ?? {
+    src: logo, // Default image source
+    alt: t('homepage.hero.image_alt'),
+  }
+
   return (
     <section className="bg-yellow-50 py-32">
       <div className="container mx-auto">
         <div className="intersect-once intersect-half intersect:scale-100 intersect:opacity-100 container scale-50 transform opacity-0 transition duration-500 ease-out">
           <div className="grid items-center gap-8 lg:grid-cols-2">
             <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
+              {/* Badge can be rendered here if needed, e.g., {badge && <span>{badge}</span>} */}
               <h1 className="my-6 text-4xl font-bold text-pretty lg:text-6xl">
                 {heading}
               </h1>
@@ -66,7 +78,7 @@ const HeroSection = ({
                   >
                     <a href={buttons.secondary.url}>
                       {buttons.secondary.text}
-                      <ArrowRight className="size-4" />
+                      <ArrowRight className="ml-2 size-4" />
                     </a>
                   </Button>
                 )}
@@ -75,7 +87,7 @@ const HeroSection = ({
             <img
               src={image.src}
               alt={image.alt}
-              className="max-h-96 w-full rounded-md object-cover"
+              className="max-h-96 w-full rounded-md object-contain" // Changed object-cover to object-contain for logo
             />
           </div>
         </div>

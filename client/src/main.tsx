@@ -33,9 +33,15 @@ import { Observer } from 'tailwindcss-intersect'
 // Initialise dayjs sur la langue courante
 setDayjsLocale(i18n.language)
 
-// Met à jour dayjs si la langue change dynamiquement
+// Met à jour dayjs et la direction du document si la langue change dynamiquement
 i18n.on('languageChanged', lng => {
   setDayjsLocale(lng)
+  // Met à jour la direction du document
+  if (lng === 'ar') {
+    document.documentElement.setAttribute('dir', 'rtl')
+  } else {
+    document.documentElement.setAttribute('dir', 'ltr')
+  }
 })
 
 client.setConfig({
@@ -73,6 +79,14 @@ function AppWithProvider() {
   const user = useUserStore(s => s.user)
   const setUser = useUserStore(s => s.setUser)
   const setAppData = useAppStore(s => s.setAppData)
+
+  useEffect(() => {
+    if (i18n.language === 'ar') {
+      document.documentElement.setAttribute('dir', 'rtl')
+    } else {
+      document.documentElement.setAttribute('dir', 'ltr')
+    }
+  }, [])
 
   const [currentUserQuery, appDataQuery] = useQueries({
     queries: [

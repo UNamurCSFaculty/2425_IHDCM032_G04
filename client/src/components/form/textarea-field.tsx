@@ -4,15 +4,18 @@ import { Textarea } from '../ui/textarea'
 import { FieldErrors } from './field-errors'
 import { cn } from '@/lib/utils'
 import React from 'react'
+import SimpleTooltip from '../SimpleTooltip'
 
 type TextAreaProps = {
   label: string
   required?: boolean
+  tooltip?: string
 } & React.TextareaHTMLAttributes<HTMLTextAreaElement>
 
 export const TextAreaField = ({
   label,
   className,
+  tooltip,
   required = true,
   ...restProps
 }: TextAreaProps) => {
@@ -27,6 +30,7 @@ export const TextAreaField = ({
         <Label htmlFor={field.name}>
           {label}
           {required && <span className="text-red-500">*</span>}
+          {tooltip && <SimpleTooltip content={tooltip} />}
         </Label>
         <Textarea
           id={field.name}
