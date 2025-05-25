@@ -245,7 +245,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 			    tr.id                            AS seller_id,
 			    sc.name                          AS seller_city,
 			    sr.name                          AS seller_region,
-			    co.name                          AS seller_cooperative,
+			    co.id                            AS seller_cooperative,
 
 			    /* ======== agrégats bids ======== */
 			    COUNT(b.id)                      AS bid_count,
@@ -298,7 +298,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 			          p.id, p.weight_kg, p.delivery_date, p.transformed_product_id,
 			          qc.quality_inspector_id, q.name, qt.name,
 			          st.id, st.name, su.first_name, su.last_name, stc.name, str.name,
-			          tr.id, u.first_name, u.last_name, sc.name, sr.name, co.name,
+			          tr.id, u.first_name, u.last_name, sc.name, sr.name, co.id,
 			          w.winning_bid_amount, w.winner_trader_id,
 			          wu.first_name, wu.last_name, wc.name, wr.name;
 			""";
