@@ -27,6 +27,7 @@ import {
   ShoppingCart,
   UserCircle2,
   UserSearch,
+  Wheat,
 } from 'lucide-react'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
@@ -124,7 +125,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, layout }) => {
           <InfoTile
             icon={<Clock className="size-4" />}
             label="Date de dépôt"
-            size="lg"
+            size="sm"
           >
             {formatDate(product.deliveryDate)}
           </InfoTile>
@@ -152,14 +153,26 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, layout }) => {
                 const hp = product as HarvestProductDto
                 return hp.field.identifier
               } else if (product.type === ProductType.TRANSFORMED) {
-                const tp = product as TransformedProductDto
-                return tp.harvestProducts?.length
+                return 'Anacardes'
               } else {
                 return 'N/A'
               }
             })()}
           </InfoTile>
         </div>
+        {product.type === ProductType.TRANSFORMED && (
+          <InfoTile
+            icon={<Wheat className="size-4" />}
+            label="Matières premières"
+            size="sm"
+          >
+            <ul className="lg">
+              <li>Lot brut n°1 (Grade I)</li>
+              <li>Lot brut n°2 (Grade III)</li>
+              <li>Lot brut n°3 (Hors normes)</li>
+            </ul>
+          </InfoTile>
+        )}
       </CardContent>
       {/* <CardFooter className="pt-1 pb-1  flex flex-col gap-2"></CardFooter> */}
     </Card>

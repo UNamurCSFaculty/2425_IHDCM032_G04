@@ -69,22 +69,27 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
         .includes(search.toLowerCase())
     )
       return false
+
     if (
       auctionStatus === TradeStatus.OPEN &&
       a.status.name !== TradeStatus.OPEN
     )
       return false
+
     if (
       auctionStatus !== TradeStatus.OPEN &&
       a.status.name === TradeStatus.OPEN
     )
       return false
+
     if (a.price < priceRange[0] || a.price > priceRange[1]) return false
+
     if (
       selectedDate &&
       dayjs(a.expirationDate).isAfter(dayjs(selectedDate).endOf('day'))
     )
       return false
+
     if (qualityId && a.product.qualityControl?.quality.id !== qualityId)
       return false
     if (productTypeId && a.product.type !== productTypes[productTypeId - 1])
@@ -104,7 +109,12 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
     )
       return false
 
-    if (p.weightKg < priceRange[0] || p.weightKg > priceRange[1]) return false
+    if (
+      selectedDate &&
+      dayjs(p.deliveryDate).isAfter(dayjs(selectedDate).endOf('day'))
+    )
+      return false
+
     if (qualityId && p.qualityControl?.quality.id !== qualityId) return false
     if (productTypeId && p.type !== productTypes[productTypeId - 1])
       return false
@@ -308,7 +318,10 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
                   mode="single"
                   selected={selectedDate ?? undefined}
                   onSelect={d => setSelectedDate(d ?? null)}
-                  disabled={d => d < dayjs().startOf('day').toDate()}
+                  disabled={d =>
+                    filterDataType === 'auction' &&
+                    d < dayjs().startOf('day').toDate()
+                  }
                 />
               </PopoverContent>
             </Popover>
