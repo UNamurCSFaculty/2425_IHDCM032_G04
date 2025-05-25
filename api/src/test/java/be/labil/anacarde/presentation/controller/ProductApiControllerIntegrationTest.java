@@ -12,6 +12,7 @@ import be.labil.anacarde.domain.model.Product;
 import be.labil.anacarde.domain.model.TransformedProduct;
 import be.labil.anacarde.infrastructure.persistence.ProductRepository;
 import be.labil.anacarde.infrastructure.persistence.TransformedProductRepository;
+import be.labil.anacarde.presentation.controller.enums.ProductType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.time.LocalDateTime;
@@ -190,6 +191,17 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 	}
 
 	/**
+	 * Teste la récupération de la liste de tous les produits harvest.
+	 *
+	 */
+	@Test
+	public void testListProductsByType() throws Exception {
+		mockMvc.perform(get("/api/products?productType=" + ProductType.HARVEST)
+				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+				.andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(1));
+	}
+
+	/**
 	 * Teste la récupération de la liste de tous les produits par utilisateur.
 	 *
 	 */
@@ -198,6 +210,19 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 		mockMvc.perform(get("/api/products?traderId=" + getTransformerTestUser().getId())
 				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
 				.andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(1))
+				.andExpect(jsonPath("$[0].type").value("transformed"));
+	}
+
+	/**
+	 * Teste la récupération de la liste de tous les produits par type et par utilisateur.
+	 *
+	 */
+	@Test
+	public void testListProductsByTypeAndTrader() throws Exception {
+		mockMvc.perform(get("/api/products?traderId=" + getTransformerTestUser().getId()
+				+ "&productType=" + ProductType.TRANSFORMED).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()).andExpect(jsonPath("$").isArray())
+				.andExpect(jsonPath("$.length()").value(1))
 				.andExpect(jsonPath("$[0].type").value("transformed"));
 	}
 
