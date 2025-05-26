@@ -80,6 +80,7 @@ public abstract class AbstractIntegrationTest {
 	private AuctionStrategy testAuctionStrategy;
 	private Bid testBid;
 	private TradeStatus testTradeStatus;
+	private TradeStatus rejectedTradeStatus;
 	private Field mainTestField;
 	private Cooperative mainTestCooperative;
 	private Region mainTestRegion;
@@ -361,6 +362,13 @@ public abstract class AbstractIntegrationTest {
 		return mainTestQualityControl;
 	}
 
+	public TradeStatus getTradeStatusRejected() {
+		if (this.rejectedTradeStatus == null) {
+			throw new IllegalStateException("Statut de trade non initialisé");
+		}
+		return this.rejectedTradeStatus;
+	}
+
 	/**
 	 * Initialise la base de données des utilisateurs avec deux utilisateurs de test et les rôles
 	 * associés.
@@ -512,7 +520,7 @@ public abstract class AbstractIntegrationTest {
 		tradeStatusRepository.save(tradeStatusAccepted);
 
 		TradeStatus tradeStatusRejected = TradeStatus.builder().name("Refusé").build();
-		tradeStatusRepository.save(tradeStatusRejected);
+		rejectedTradeStatus = rejectedTradeStatus = tradeStatusRepository.save(tradeStatusRejected);
 
 		TradeStatus tradeStatusExpired = TradeStatus.builder().name("Expiré").build();
 		tradeStatusRepository.save(tradeStatusExpired);
