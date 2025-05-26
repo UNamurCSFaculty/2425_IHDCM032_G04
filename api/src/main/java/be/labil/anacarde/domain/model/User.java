@@ -61,6 +61,14 @@ public abstract class User extends BaseEntity implements UserDetails {
 	@Builder.Default
 	private List<Document> documents = new ArrayList<>();
 
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	@Builder.Default
+	private AuthProvider provider = AuthProvider.LOCAL;
+
+	@Column(name = "provider_id", unique = true)
+	private String providerId;
+
 	/**
 	 * Ajoute un rôle à cet utilisateur et met à jour le côté inverse (le rôle) pour maintenir la
 	 * cohérence.

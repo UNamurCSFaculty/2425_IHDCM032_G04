@@ -1,6 +1,7 @@
 package be.labil.anacarde.domain.dto.db.user;
 
 import be.labil.anacarde.domain.dto.db.BaseDto;
+import be.labil.anacarde.domain.model.AuthProvider;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.swagger.v3.oas.annotations.media.DiscriminatorMapping;
@@ -60,6 +61,14 @@ public abstract class UserListDto extends BaseDto {
 	@Pattern(regexp = "^(?:\\+229)?01\\d{8}$", message = "Numéro invalide – doit être +229XXXXXXXX ou +22901XXXXXXXX")
 	@Schema(description = "Numéro de téléphone (Bénin, format local à 10 chiffres débutant par 01, ou +229...)", example = "+2290178123456", pattern = "^(?:\\+229)?01\\d{8}$")
 	private String phone;
+
+	/** Entité gérant l'authentification : Local (password) ou Google (tierce partie) */
+	@Schema(description = "Fournisseur d'authentification", example = "LOCAL")
+	private AuthProvider provider = AuthProvider.LOCAL;
+
+	/** Identifiant récupéré via le compte google de l'utilisateur */
+	@Schema(description = "Identifiant du fournisseur (ex. Google sub)")
+	private String providerId;
 
 	/**
 	 * Propriété virtuelle pour Swagger. Ce getter n'est pas utilisé par Jackson car il est ignoré,

@@ -2,6 +2,8 @@ package be.labil.anacarde.presentation.controller;
 
 import be.labil.anacarde.application.exception.ApiErrorResponse;
 import be.labil.anacarde.domain.dto.db.ValidationGroups;
+import be.labil.anacarde.domain.dto.db.user.GoogleAuthResponse;
+import be.labil.anacarde.domain.dto.db.user.GoogleRegistrationDto;
 import be.labil.anacarde.domain.dto.db.user.UserDetailDto;
 import be.labil.anacarde.domain.dto.db.user.UserListDto;
 import be.labil.anacarde.domain.dto.write.user.UserUpdateDto;
@@ -17,6 +19,8 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.groups.Default;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -171,4 +175,30 @@ public interface UserApi {
 	ResponseEntity<? extends UserDetailDto> updateUserRoles(
 			@NotNull(message = "L'ID de l'utilisateur est obligatoire") @Positive(message = "L'ID doit être un entier positif") @Parameter(description = "Identifiant de l'utilisateur", example = "1", required = true) @PathVariable("id") Integer id,
 			@NotNull(message = "La liste des rôles est obligatoire") @RequestBody List<String> roleNames);
+
+	/**
+	 * Authentifie ou crée un compte utilisateur via Google + profil (1 seul appel).
+	 *
+	 * @param googleDto
+	 *            DTO GoogleRegistrationDto (idToken + phone + address + languageId + type)
+	 * @param documents
+	 *            Documents à téléverser (optionnel)
+	 * @return Le JWT applicatif
+	 */
+	@Operation(summary = "S’authentifier / s’inscrire avec Google", description = "Vérifie l’ID-token Google, crée ou met à jour le profil, et renvoie un JWT.")
+	@io.swagger.v3.oas.annotations.parameters.RequestBody(required = true, content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE, schema = @Schema(type = "object", properties = {
+			@StringToClassMapItem(key = "user", value = GoogleRegistrationDto.class),
+			@StringToClassMapItem(key = "documents", value = MultipartFile[].class)}), encoding = {
+					@Encoding(name = "user", contentType = MediaType.APPLICATION_JSON_VALUE),
+					@Encoding(name = "documents", contentType = MediaType.APPLICATION_OCTET_STREAM_VALUE)}))
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "Authentification réussie", content = @Content(schema = @Schema(implementation = GoogleAuthResponse.class))),
+			@ApiResponse(responseCode = "400", description = "Erreur de validation ou token invalide", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
+	@PostMapping(value = "/google", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	ResponseEntity<GoogleAuthResponse> authenticateWithGoogle(
+			@RequestPart("user") @Validated({Default.class,
+					ValidationGroups.Create.class}) GoogleRegistrationDto googleDto,
+
+			@RequestPart(value = "documents", required = false) List<MultipartFile> documents)
+			throws GeneralSecurityException, IOException;
 }

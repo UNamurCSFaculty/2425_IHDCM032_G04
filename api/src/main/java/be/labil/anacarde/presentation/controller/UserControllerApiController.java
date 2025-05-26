@@ -4,11 +4,15 @@ import be.labil.anacarde.application.exception.ApiErrorCode;
 import be.labil.anacarde.application.exception.ApiErrorException;
 import be.labil.anacarde.application.exception.ErrorDetail;
 import be.labil.anacarde.application.service.UserService;
+import be.labil.anacarde.domain.dto.db.user.GoogleAuthResponse;
+import be.labil.anacarde.domain.dto.db.user.GoogleRegistrationDto;
 import be.labil.anacarde.domain.dto.db.user.UserDetailDto;
 import be.labil.anacarde.domain.dto.db.user.UserListDto;
 import be.labil.anacarde.domain.dto.write.user.AdminUpdateDto;
 import be.labil.anacarde.domain.dto.write.user.UserUpdateDto;
+import java.io.IOException;
 import java.net.URI;
+import java.security.GeneralSecurityException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -91,5 +95,14 @@ public class UserControllerApiController implements UserApi {
 	public ResponseEntity<Boolean> checkPhone(String phone) {
 		boolean exists = userService.phoneExists(phone);
 		return ResponseEntity.ok(exists);
+	}
+
+	@Override
+	public ResponseEntity<GoogleAuthResponse> authenticateWithGoogle(
+			GoogleRegistrationDto googleDto, List<MultipartFile> documents)
+			throws GeneralSecurityException, IOException {
+
+		String jwt = userService.authenticateWithGoogle(googleDto, documents);
+		return ResponseEntity.ok(new GoogleAuthResponse(jwt));
 	}
 }

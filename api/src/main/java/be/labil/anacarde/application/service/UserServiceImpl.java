@@ -2,6 +2,7 @@ package be.labil.anacarde.application.service;
 
 import be.labil.anacarde.application.exception.*;
 import be.labil.anacarde.application.service.storage.StorageService;
+import be.labil.anacarde.domain.dto.db.user.GoogleRegistrationDto;
 import be.labil.anacarde.domain.dto.db.user.UserDetailDto;
 import be.labil.anacarde.domain.dto.db.user.UserListDto;
 import be.labil.anacarde.domain.dto.write.user.ProducerUpdateDto;
@@ -14,6 +15,8 @@ import be.labil.anacarde.infrastructure.persistence.RoleRepository;
 import be.labil.anacarde.infrastructure.persistence.user.ProducerRepository;
 import be.labil.anacarde.infrastructure.persistence.user.UserRepository;
 import be.labil.anacarde.infrastructure.util.PersistenceHelper;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -41,12 +44,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	private final UserDetailMapper userDetailMapper;
 	private final StorageService storage;
 	private final GeoService geoService;
-
 	private final UserListMapper userListMapper;
 	private final PasswordEncoder bCryptPasswordEncoder;
 	private final PersistenceHelper persistenceHelper;
-
 	private final DocumentRepository docRepo;
+	private final GoogleAuthService googleAuthService;
 
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -185,5 +187,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	@Override
 	public boolean phoneExists(String phone) {
 		return userRepository.existsByPhone(phone);
+	}
+
+	@Override
+	public String authenticateWithGoogle(GoogleRegistrationDto dto, List<MultipartFile> files)
+			throws GeneralSecurityException, IOException {
+		return googleAuthService.processGoogleRegistration(dto, files);
 	}
 }

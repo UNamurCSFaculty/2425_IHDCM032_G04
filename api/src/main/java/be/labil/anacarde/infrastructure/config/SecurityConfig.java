@@ -23,16 +23,16 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-@Configuration
-@RequiredArgsConstructor
-@EnableMethodSecurity
-@SecurityScheme(name = "jwt", type = SecuritySchemeType.HTTP, scheme = "bearer", bearerFormat = "JWT")
 /**
  * Cette classe définit les beans pour les fournisseurs d'authentification, les gestionnaires
  * d'authentification, et la chaîne de filtres de sécurité. Elle configure également les politiques
  * de sécurité HTTP en désactivant CORS et CSRF, en définissant la gestion de session en mode
  * "stateless", et en configurant l'autorisation des requêtes.
  */
+@Configuration
+@RequiredArgsConstructor
+@EnableMethodSecurity
+@SecurityScheme(name = "jwt", type = SecuritySchemeType.HTTP, scheme = "bearer", bearerFormat = "JWT")
 public class SecurityConfig {
 
 	private final AuthEntryPointJwt unauthorizedHandler;
@@ -43,7 +43,6 @@ public class SecurityConfig {
 	@Value("${app.trusted.origin}")
 	private String trustedOrigin;
 
-	@Bean
 	/**
 	 * Cette méthode crée un bean de gestionnaire d'authentification qui est utilisé pour gérer les
 	 * authentifications des utilisateurs.
@@ -54,18 +53,19 @@ public class SecurityConfig {
 	 * @throws Exception
 	 *             En cas d'erreur lors de la création du gestionnaire d'authentification.
 	 */
+	@Bean
 	public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig)
 			throws Exception {
 		return authConfig.getAuthenticationManager();
 	}
 
-	@Bean
 	/**
 	 * Cette méthode crée un bean de gestionnaire de requêtes CSRF qui est utilisé pour gérer les
 	 * tokens CSRF dans les requêtes HTTP.
 	 *
 	 * @return Le gestionnaire de requêtes CSRF configuré.
 	 */
+	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration config = new CorsConfiguration();
 		config.setAllowedOrigins(List.of(trustedOrigin));
@@ -78,15 +78,14 @@ public class SecurityConfig {
 		return src;
 	}
 
-	@Bean
 	/**
 	 * Cette méthode crée un bean de gestionnaire de requêtes CSRF qui est utilisé pour gérer les
 	 * tokens CSRF dans les requêtes HTTP.
 	 *
 	 * @return Le gestionnaire de requêtes CSRF configuré.
 	 */
+	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		// On utilise CookieCsrfTokenRepository + SpaHandler
 		http.cors(Customizer.withDefaults())
 				.csrf(csrf -> csrf
 						.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
@@ -95,15 +94,20 @@ public class SecurityConfig {
 						.accessDeniedHandler(accessDeniedHandler))
 				.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-		// Autorisations
-		http.authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.POST, "/api/users")
-				.permitAll().requestMatchers(HttpMethod.GET, "/api/app").permitAll()
+		http.authorizeHttpRequests(auth -> auth
+				// inscription « classique » et login Google
+				.requestMatchers(HttpMethod.POST, "/api/users", "/api/users/google").permitAll()
+				// endpoint public d’info applicative
+				.requestMatchers(HttpMethod.GET, "/api/app").permitAll()
+				// contact
 				.requestMatchers(HttpMethod.POST, "/api/contact").permitAll()
+				// auth JWT, docs, checks
 				.requestMatchers("/api/auth/**", "/v3/api-docs**", "/swagger-ui/**",
 						"/api/users/check/**")
-				.permitAll().anyRequest().authenticated());
+				.permitAll()
+				// tout le reste nécessite un JWT
+				.anyRequest().authenticated());
 
-		// Filtres
 		http.addFilterBefore(originFilter, CsrfFilter.class);
 		http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
 

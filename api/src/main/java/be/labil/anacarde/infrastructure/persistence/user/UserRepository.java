@@ -1,5 +1,6 @@
 package be.labil.anacarde.infrastructure.persistence.user;
 
+import be.labil.anacarde.domain.model.AuthProvider;
 import be.labil.anacarde.domain.model.User;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -11,24 +12,35 @@ import org.springframework.stereotype.Repository;
 /** Interface Repository pour les entités User. */
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
-	/**
-	 * Recherche une entité User dont l'adresse e-mail concide avec celle fournie.
-	 *
-	 * @param email
-	 *            L'adresse e-mail de l'utilisateur à rechercher.
-	 * @return Un Optional contenant le User trouvé, ou Optional.empty() si aucun utilisateur n'est
-	 *         trouvé.
-	 */
+
+	/** Recherche un User (tous providers confondus) par e-mail, fetch roles. */
 	@Query("SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.email = :email")
 	Optional<User> findByEmail(String email);
 
+	/** Recherche un User “local” par e-mail. */
+	default Optional<User> findLocalByEmail(String email) {
+		return findByEmailAndProvider(email, AuthProvider.LOCAL);
+	}
+
+	/** Recherche un User Google par son providerId (le “sub”). */
+	default Optional<User> findGoogleByProviderId(String providerId) {
+		return findByProviderAndProviderId(AuthProvider.GOOGLE, providerId);
+	}
+
 	/**
-	 * Recherche une entité User dont le numéro de téléphone correspond à celui fourni.
-	 *
-	 * @param phone
-	 *            Le numéro de téléphone de l'utilisateur à rechercher.
-	 * @return Un Optional contenant le User trouvé (avec ses rôles chargés), ou Optional.empty() si
-	 *         aucun utilisateur n'est trouvé.
+	 * Recherche un User par e-mail **et** provider. Utile pour distinguer local vs. social.
+	 */
+	Optional<User> findByEmailAndProvider(String email, AuthProvider provider);
+
+	/**
+	 * Recherche un User par provider **et** providerId (ex. GOOGLE + “1234567890”).
+	 */
+	@EntityGraph(attributePaths = {"roles", "documents", "address", "address.city",
+			"address.region", "language"})
+	Optional<User> findByProviderAndProviderId(AuthProvider provider, String providerId);
+
+	/**
+	 * Recherche un User dont le numéro de téléphone correspond à celui fourni. (inchangé)
 	 */
 	@Query("SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.phone = :phone")
 	Optional<User> findByPhone(String phone);

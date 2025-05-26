@@ -1,9 +1,12 @@
 
 package be.labil.anacarde.application.service;
 
+import be.labil.anacarde.domain.dto.db.user.GoogleRegistrationDto;
 import be.labil.anacarde.domain.dto.db.user.UserDetailDto;
 import be.labil.anacarde.domain.dto.db.user.UserListDto;
 import be.labil.anacarde.domain.dto.write.user.UserUpdateDto;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -82,7 +85,7 @@ public interface UserService {
 
 	/**
 	 * Vérifie si un utilisateur existe déjà dans le système en fonction de son adresse e-mail.
-	 * 
+	 *
 	 * @param email
 	 * @return true si l'adresse e-mail existe déjà, false sinon.
 	 */
@@ -95,4 +98,21 @@ public interface UserService {
 	 * @return true si le numéro de téléphone existe déjà, false sinon.
 	 */
 	boolean phoneExists(String phone);
+
+	/**
+	 * Authentifie ou crée un compte utilisateur via Google en un seul appel : vérifie l'ID-token
+	 * Google, crée ou met à jour le profil utilisateur, et retourne le JWT généré.
+	 *
+	 * @param googleDto
+	 *            DTO contenant l'idToken Google et les informations de profil
+	 * @param documents
+	 *            Fichiers éventuels à associer au profil utilisateur
+	 * @return Le token JWT de la session utilisateur
+	 * @throws GeneralSecurityException
+	 *             en cas d'échec de la vérification du token Google
+	 * @throws IOException
+	 *             en cas d'erreur lors du traitement des fichiers
+	 */
+	String authenticateWithGoogle(GoogleRegistrationDto googleDto, List<MultipartFile> documents)
+			throws GeneralSecurityException, IOException;
 }
