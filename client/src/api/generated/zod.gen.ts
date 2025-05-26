@@ -116,6 +116,8 @@ export const zUserDetailDto = z.object({
     .string()
     .regex(/^(?:\+229)?01\d{8}$/)
     .optional(),
+  provider: z.enum(['LOCAL', 'GOOGLE']).optional(),
+  providerId: z.string().optional(),
   roles: z.array(zRoleDto).readonly().optional(),
   language: zLanguageDto,
   address: zAddressDto,
@@ -176,6 +178,8 @@ export const zProducerDetailDto = z.object({
     .string()
     .regex(/^(?:\+229)?01\d{8}$/)
     .optional(),
+  provider: z.enum(['LOCAL', 'GOOGLE']).optional(),
+  providerId: z.string().optional(),
   roles: z.array(zRoleDto).readonly().optional(),
   language: zLanguageDto,
   address: zAddressDto,
@@ -210,6 +214,8 @@ export const zTransformerDetailDto = z.object({
     .string()
     .regex(/^(?:\+229)?01\d{8}$/)
     .optional(),
+  provider: z.enum(['LOCAL', 'GOOGLE']).optional(),
+  providerId: z.string().optional(),
   roles: z.array(zRoleDto).readonly().optional(),
   language: zLanguageDto,
   address: zAddressDto,
@@ -450,7 +456,7 @@ export const zAuctionUpdateDto = z.object({
   productId: z.number().int(),
   traderId: z.number().int(),
   statusId: z.number().int().optional(),
-  options: zAuctionOptionsUpdateDto.optional(),
+  options: zAuctionOptionsUpdateDto,
 })
 
 export const zAuctionStrategyDto = z.object({
@@ -493,6 +499,28 @@ export const zApiError = z.object({
   errors: z.array(zApiErrorErrors).optional(),
 })
 
+export const zGoogleRegistrationDto = z.object({
+  firstName: z.string().min(1),
+  lastName: z.string().min(1),
+  email: z.email(),
+  registrationDate: z.iso.datetime().readonly().optional(),
+  validationDate: z.iso.datetime().readonly().optional(),
+  enabled: z.boolean().optional(),
+  phone: z
+    .string()
+    .regex(/^(?:\+229)?01\d{8}$/)
+    .optional(),
+  password: z.string(),
+  roles: z.array(zRoleDto).optional(),
+  languageId: z.number().int(),
+  address: zAddressDto,
+  idToken: z.string().min(1),
+})
+
+export const zGoogleAuthResponse = z.object({
+  token: z.string().optional(),
+})
+
 export const zContactRequestDto = z.object({
   name: z.string().min(1),
   email: z.string().min(1),
@@ -516,6 +544,8 @@ export const zUserListDto = z.object({
     .string()
     .regex(/^(?:\+229)?01\d{8}$/)
     .optional(),
+  provider: z.enum(['LOCAL', 'GOOGLE']).optional(),
+  providerId: z.string().optional(),
   type: z.enum([
     'admin',
     'producer',
@@ -557,6 +587,8 @@ export const zExporterListDto = z.object({
     .string()
     .regex(/^(?:\+229)?01\d{8}$/)
     .optional(),
+  provider: z.enum(['LOCAL', 'GOOGLE']).optional(),
+  providerId: z.string().optional(),
   roles: z.array(zRoleDto).readonly().optional(),
   language: zLanguageDto,
   address: zAddressDto,
@@ -723,6 +755,8 @@ export const zCreateUserResponse = zUserDetailDto
 
 export const zAddRoleToUserResponse = zUserDetailDto
 
+export const zAuthenticateWithGoogleResponse = zGoogleAuthResponse
+
 export const zListStoresResponse = z.array(zStoreDetailDto)
 
 export const zCreateStoreResponse = zStoreDetailDto
@@ -778,8 +812,6 @@ export const zListRegionsResponse = z.array(zRegionDto)
 export const zListAuctions1Response = z.array(zExportAuctionDto)
 
 export const zGetAuction1Response = zExportAuctionDto
-
-export const zListAllAuctionsResponse = z.array(zExportAuctionDto)
 
 export const zDeleteDocumentResponse = z.void()
 

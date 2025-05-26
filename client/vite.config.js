@@ -45,6 +45,15 @@ export default defineConfig(({ command }) => ({
       },
     }),
   ],
+
+  // <–– Ajout de cette section pour les headers COOP/COEP en dev
+  server: {
+    headers: {
+      'Cross-Origin-Opener-Policy': 'same-origin-allow-popups',
+      'Cross-Origin-Embedder-Policy': 'unsafe-none',
+    },
+  },
+
   test: {
     globals: true,
     environment: 'jsdom',

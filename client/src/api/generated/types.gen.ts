@@ -297,6 +297,14 @@ export type ProducerDetailDto = {
    */
   phone?: string
   /**
+   * Fournisseur d'authentification
+   */
+  provider?: 'LOCAL' | 'GOOGLE'
+  /**
+   * Identifiant du fournisseur (ex. Google sub)
+   */
+  providerId?: string
+  /**
    * Liste des rôles de l'utilisateur
    */
   readonly roles?: Array<RoleDto>
@@ -383,6 +391,14 @@ export type TransformerDetailDto = {
    */
   phone?: string
   /**
+   * Fournisseur d'authentification
+   */
+  provider?: 'LOCAL' | 'GOOGLE'
+  /**
+   * Identifiant du fournisseur (ex. Google sub)
+   */
+  providerId?: string
+  /**
    * Liste des rôles de l'utilisateur
    */
   readonly roles?: Array<RoleDto>
@@ -446,6 +462,14 @@ export type UserDetailDto = {
    * Numéro de téléphone (Bénin, format local à 10 chiffres débutant par 01, ou +229...)
    */
   phone?: string
+  /**
+   * Fournisseur d'authentification
+   */
+  provider?: 'LOCAL' | 'GOOGLE'
+  /**
+   * Identifiant du fournisseur (ex. Google sub)
+   */
+  providerId?: string
   /**
    * Liste des rôles de l'utilisateur
    */
@@ -1084,7 +1108,7 @@ export type AuctionUpdateDto = {
   /**
    * Options d'enchère
    */
-  options?: AuctionOptionsUpdateDto
+  options: AuctionOptionsUpdateDto
 }
 
 /**
@@ -1208,6 +1232,67 @@ export type ApiErrorErrors = {
   errorCode?: string
 }
 
+export type GoogleRegistrationDto = {
+  /**
+   * Prénom de l'utilisateur
+   */
+  firstName: string
+  /**
+   * Nom de famille de l'utilisateur
+   */
+  lastName: string
+  /**
+   * Adresse email de l'utilisateur
+   */
+  email: string
+  /**
+   * Date d'enregistrement
+   */
+  readonly registrationDate?: string
+  /**
+   * Date de validation
+   */
+  readonly validationDate?: string
+  /**
+   * Compte activé
+   */
+  enabled?: boolean
+  /**
+   * Numéro de téléphone (Bénin, format local à 10 chiffres débutant par 01, ou +229...)
+   */
+  phone?: string
+  /**
+   * Mot de passe de l'utilisateur
+   */
+  password: string
+  /**
+   * Liste des rôles de l'utilisateur
+   */
+  roles?: Array<RoleDto>
+  /**
+   * Identifiant de la langue préférée
+   */
+  languageId: number
+  /**
+   * Adresse de l'utilisateur
+   */
+  address: AddressDto
+  /**
+   * ID-Token Google issu du front
+   */
+  idToken: string
+}
+
+/**
+ * Réponse d’authentification Google
+ */
+export type GoogleAuthResponse = {
+  /**
+   * Jeton JWT à utiliser dans Authorization: Bearer …
+   */
+  token?: string
+}
+
 /**
  * Payload du message de contact
  */
@@ -1293,6 +1378,14 @@ export type ExporterListDto = {
    * Numéro de téléphone (Bénin, format local à 10 chiffres débutant par 01, ou +229...)
    */
   phone?: string
+  /**
+   * Fournisseur d'authentification
+   */
+  provider?: 'LOCAL' | 'GOOGLE'
+  /**
+   * Identifiant du fournisseur (ex. Google sub)
+   */
+  providerId?: string
   /**
    * Liste des rôles de l'utilisateur
    */
@@ -1390,6 +1483,14 @@ export type UserListDto = {
    * Numéro de téléphone (Bénin, format local à 10 chiffres débutant par 01, ou +229...)
    */
   phone?: string
+  /**
+   * Fournisseur d'authentification
+   */
+  provider?: 'LOCAL' | 'GOOGLE'
+  /**
+   * Identifiant du fournisseur (ex. Google sub)
+   */
+  providerId?: string
   /**
    * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
    */
@@ -2997,6 +3098,36 @@ export type AddRoleToUserResponses = {
 export type AddRoleToUserResponse =
   AddRoleToUserResponses[keyof AddRoleToUserResponses]
 
+export type AuthenticateWithGoogleData = {
+  body: {
+    user?: GoogleRegistrationDto
+    documents?: Array<Blob | File>
+  }
+  path?: never
+  query?: never
+  url: '/api/users/google'
+}
+
+export type AuthenticateWithGoogleErrors = {
+  /**
+   * Erreur de validation ou token invalide
+   */
+  400: ApiErrorResponse
+}
+
+export type AuthenticateWithGoogleError =
+  AuthenticateWithGoogleErrors[keyof AuthenticateWithGoogleErrors]
+
+export type AuthenticateWithGoogleResponses = {
+  /**
+   * Authentification réussie
+   */
+  200: GoogleAuthResponse
+}
+
+export type AuthenticateWithGoogleResponse =
+  AuthenticateWithGoogleResponses[keyof AuthenticateWithGoogleResponses]
+
 export type ListStoresData = {
   body?: never
   path?: never
@@ -3822,19 +3953,31 @@ export type GetAuction1Response =
 export type ListAllAuctionsData = {
   body?: never
   path?: never
-  query?: never
+  query?: {
+    /**
+     * `json` (défaut) ou `csv`
+     */
+    format?: 'json' | 'csv'
+  }
   url: '/api/export/auctions/all'
 }
 
-export type ListAllAuctionsResponses = {
+export type ListAllAuctionsErrors = {
   /**
-   * Liste complète
+   * Erreur interne
    */
-  200: Array<ExportAuctionDto>
+  500: ApiErrorResponse
 }
 
-export type ListAllAuctionsResponse =
-  ListAllAuctionsResponses[keyof ListAllAuctionsResponses]
+export type ListAllAuctionsError =
+  ListAllAuctionsErrors[keyof ListAllAuctionsErrors]
+
+export type ListAllAuctionsResponses = {
+  /**
+   * Liste complète en CSV
+   */
+  200: unknown
+}
 
 export type DeleteDocumentData = {
   body?: never

@@ -48,6 +48,7 @@ import {
   listUsers,
   createUser,
   addRoleToUser,
+  authenticateWithGoogle,
   listStores,
   createStore,
   listQualityControls,
@@ -204,6 +205,9 @@ import type {
   AddRoleToUserData,
   AddRoleToUserError,
   AddRoleToUserResponse,
+  AuthenticateWithGoogleData,
+  AuthenticateWithGoogleError,
+  AuthenticateWithGoogleResponse,
   ListStoresData,
   CreateStoreData,
   CreateStoreError,
@@ -1363,6 +1367,51 @@ export const addRoleToUserMutation = (
   > = {
     mutationFn: async localOptions => {
       const { data } = await addRoleToUser({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+export const authenticateWithGoogleQueryKey = (
+  options: Options<AuthenticateWithGoogleData>
+) => createQueryKey('authenticateWithGoogle', options)
+
+export const authenticateWithGoogleOptions = (
+  options: Options<AuthenticateWithGoogleData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await authenticateWithGoogle({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: authenticateWithGoogleQueryKey(options),
+  })
+}
+
+export const authenticateWithGoogleMutation = (
+  options?: Partial<Options<AuthenticateWithGoogleData>>
+): UseMutationOptions<
+  AuthenticateWithGoogleResponse,
+  AuthenticateWithGoogleError,
+  Options<AuthenticateWithGoogleData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    AuthenticateWithGoogleResponse,
+    AuthenticateWithGoogleError,
+    Options<AuthenticateWithGoogleData>
+  > = {
+    mutationFn: async localOptions => {
+      const { data } = await authenticateWithGoogle({
         ...options,
         ...localOptions,
         throwOnError: true,

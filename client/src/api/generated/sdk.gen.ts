@@ -142,6 +142,9 @@ import type {
   AddRoleToUserData,
   AddRoleToUserResponse,
   AddRoleToUserError,
+  AuthenticateWithGoogleData,
+  AuthenticateWithGoogleResponse,
+  AuthenticateWithGoogleError,
   ListStoresData,
   ListStoresResponse,
   CreateStoreData,
@@ -220,7 +223,7 @@ import type {
   GetAuction1Response,
   GetAuction1Error,
   ListAllAuctionsData,
-  ListAllAuctionsResponse,
+  ListAllAuctionsError,
   DeleteDocumentData,
   DeleteDocumentResponse,
   DeleteDocumentError,
@@ -1339,6 +1342,34 @@ export const addRoleToUser = <ThrowOnError extends boolean = false>(
 }
 
 /**
+ * S’authentifier / s’inscrire avec Google
+ * Vérifie l’ID-token Google, crée ou met à jour le profil, et renvoie un JWT.
+ */
+export const authenticateWithGoogle = <ThrowOnError extends boolean = false>(
+  options: Options<AuthenticateWithGoogleData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).post<
+    AuthenticateWithGoogleResponse,
+    AuthenticateWithGoogleError,
+    ThrowOnError
+  >({
+    ...formDataBodySerializer,
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/users/google',
+    ...options,
+    headers: {
+      'Content-Type': null,
+      ...options?.headers,
+    },
+  })
+}
+
+/**
  * Obtenir tous les magasins
  */
 export const listStores = <ThrowOnError extends boolean = false>(
@@ -2083,8 +2114,8 @@ export const listAllAuctions = <ThrowOnError extends boolean = false>(
   options?: Options<ListAllAuctionsData, ThrowOnError>
 ) => {
   return (options?.client ?? _heyApiClient).get<
-    ListAllAuctionsResponse,
     unknown,
+    ListAllAuctionsError,
     ThrowOnError
   >({
     security: [

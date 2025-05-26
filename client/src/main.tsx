@@ -30,6 +30,9 @@ import { StrictMode, useEffect } from 'react'
 import ReactDOM from 'react-dom/client'
 import { Observer } from 'tailwindcss-intersect'
 
+import { GoogleOAuthProvider } from '@react-oauth/google'
+import { AuthProvider } from '@/contexts/AuthContext'
+
 // Initialise dayjs sur la langue courante
 setDayjsLocale(i18n.language)
 
@@ -126,11 +129,15 @@ function AppWithProvider() {
 const root = ReactDOM.createRoot(document.getElementById('app')!)
 root.render(
   <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <AppWithProvider />
-      <Toaster richColors position="top-center" />
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID!}>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <AppWithProvider />
+        </AuthProvider>
+        <Toaster richColors position="top-center" />
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
+    </GoogleOAuthProvider>
   </StrictMode>
 )
 

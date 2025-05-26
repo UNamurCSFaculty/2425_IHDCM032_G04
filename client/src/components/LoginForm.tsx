@@ -15,12 +15,16 @@ import { Link, useNavigate, useRouter, useSearch } from '@tanstack/react-router'
 import { AlertCircle, LockIcon, UserIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { GoogleLogin } from '@react-oauth/google'
+import { useAuth } from '@/contexts/AuthContext'
+
 export function LoginForm() {
   const navigate = useNavigate()
   const { t } = useTranslation()
   const router = useRouter()
   const setUser = useUserStore(s => s.setUser)
   const { redirect: redirectParam } = useSearch({ from: LoginRoute.id })
+  const { loginWithGoogle } = useAuth()
 
   const loginMutation = useMutation({
     ...authenticateUserMutation(),
@@ -147,15 +151,14 @@ export function LoginForm() {
                   </svg>
                   <span className="sr-only">{t('login.social.apple_sr')}</span>
                 </Button>
-                <Button variant="outline" className="w-full">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                    <path
-                      d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"
-                      fill="currentColor"
-                    />
-                  </svg>
-                  <span className="sr-only">{t('login.social.google_sr')}</span>
-                </Button>
+                <GoogleLogin
+                  onSuccess={({ credential }) => {
+                    if (credential) {
+                      loginWithGoogle(credential)
+                    }
+                  }}
+                  onError={() => console.error('Échec de l’auth Google')}
+                />
                 <Button variant="outline" className="w-full">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <path

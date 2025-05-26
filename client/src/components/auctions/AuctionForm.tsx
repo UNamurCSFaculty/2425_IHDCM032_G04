@@ -46,6 +46,7 @@ export function AuctionForm({
       expirationDate: '',
       active: true,
       traderId: user.id,
+      options: {},
     },
     onSubmit({ value }) {
       createAuctionRequest.mutate({ body: value })
