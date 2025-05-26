@@ -71,4 +71,12 @@ public interface AuctionService {
 	 *            L'identifiant unique de l'enchère à supprimer.
 	 */
 	void deleteAuction(Integer id);
+
+	/**
+	 * Clôture l'enchère identifiée par l'ID donné
+	 *
+	 * @param auctionId
+	 *            L'identifiant unique de l'enchère à clôturer.
+	 */
+	void closeAuction(Integer auctionId);
 }

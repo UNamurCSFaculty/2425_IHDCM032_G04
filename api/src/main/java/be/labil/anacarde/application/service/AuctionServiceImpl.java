@@ -1,6 +1,7 @@
 package be.labil.anacarde.application.service;
 
 import be.labil.anacarde.application.exception.ResourceNotFoundException;
+import be.labil.anacarde.application.job.CloseAuctionJob;
 import be.labil.anacarde.domain.dto.db.AuctionDto;
 import be.labil.anacarde.domain.dto.write.AuctionUpdateDto;
 import be.labil.anacarde.domain.mapper.AuctionMapper;
@@ -10,9 +11,16 @@ import be.labil.anacarde.infrastructure.persistence.AuctionRepository;
 import be.labil.anacarde.infrastructure.persistence.TradeStatusRepository;
 import be.labil.anacarde.infrastructure.util.PersistenceHelper;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
+import org.quartz.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +32,11 @@ public class AuctionServiceImpl implements AuctionService {
 	private final AuctionRepository auctionRepository;
 	private final AuctionMapper auctionMapper;
 	private final PersistenceHelper persistenceHelper;
+
+	private static final Logger log = LoggerFactory.getLogger(CloseAuctionJob.class);
+
+	@Autowired
+	private Scheduler scheduler;
 
 	@Override
 	public AuctionDto createAuction(AuctionUpdateDto dto) {
@@ -38,6 +51,11 @@ public class AuctionServiceImpl implements AuctionService {
 		}
 
 		Auction full = persistenceHelper.saveAndReload(auctionRepository, auction, Auction::getId);
+
+		if (full.getExpirationDate() != null) {
+			scheduleAuctionClose(Long.valueOf(full.getId()), full.getExpirationDate());
+		}
+
 		return auctionMapper.toDto(full);
 	}
 
@@ -69,6 +87,11 @@ public class AuctionServiceImpl implements AuctionService {
 		Auction existingAuction = auctionRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Enchère non trouvée"));
 
+		if (existingAuction.getStatus().getId()
+				.equals(tradeStatusRepository.findStatusPending().getId())
+				&& !existingAuction.getStatus().getId().equals(auctionDetailDto.getStatusId())) {
+			deleteAuctionCloseJob(id.longValue());
+		}
 		Auction updatedAuction = auctionMapper.partialUpdate(auctionDetailDto, existingAuction);
 
 		Auction full = persistenceHelper.saveAndReload(auctionRepository, updatedAuction,
@@ -85,6 +108,10 @@ public class AuctionServiceImpl implements AuctionService {
 
 		Auction existingAuction = auctionRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Enchère non trouvée"));
+		if (existingAuction.getStatus().getId()
+				.equals(tradeStatusRepository.findStatusPending().getId())) {
+			deleteAuctionCloseJob(id.longValue());
+		}
 		existingAuction.setStatus(acceptedStatus);
 		existingAuction.setExpirationDate(LocalDateTime.now());
 
@@ -98,8 +125,74 @@ public class AuctionServiceImpl implements AuctionService {
 			AuctionUpdateDto dto = new AuctionUpdateDto();
 			dto.setActive(false);
 			updateAuction(id, dto);
+			deleteAuctionCloseJob(id.longValue());
 		} else {
 			throw new ResourceNotFoundException("Enchère non trouvée");
 		}
 	}
+
+	public void deleteAuctionCloseJob(Long auctionId) {
+		try {
+			JobKey jobKey = new JobKey("auctionCloseJob-" + auctionId, "auction-jobs");
+			if (scheduler.checkExists(jobKey)) {
+				scheduler.deleteJob(jobKey);
+				log.info("Job de clôture supprimé pour l'enchère ID : {}", auctionId);
+			} else {
+				log.warn(
+						"Tentative de suppression d'un job de clôture non existant pour l'enchère ID : {}",
+						auctionId);
+			}
+		} catch (SchedulerException e) {
+			log.error(
+					"Erreur lors de la suppression du job de clôture pour l'enchère ID : {}. Message : {}",
+					auctionId, e.getMessage());
+		}
+	}
+
+	@Transactional
+	@Override
+	public void closeAuction(Integer auctionId) {
+		Optional<Auction> auctionOpt = auctionRepository.findById(auctionId);
+		if (auctionOpt.isPresent()) {
+			Auction auction = auctionOpt.get();
+			if (auction.getStatus().getId()
+					.equals(tradeStatusRepository.findStatusPending().getId())) {
+				auction.setStatus(tradeStatusRepository.findStatusExpired());
+				auctionRepository.save(auction);
+				log.info("L'enchère ID {} a été marquée comme CLOSED.", auctionId);
+
+				deleteAuctionCloseJob(auctionId.longValue());
+			} else {
+				log.warn(
+						"Tentative de clôture d'une enchère ID {} qui n'est pas ACTIVE/PENDING. Statut actuel : {}",
+						auctionId, auction.getStatus());
+			}
+		} else {
+			log.warn("Tentative de clôture d'une enchère ID {} non trouvée.", auctionId);
+		}
+	}
+
+	public void scheduleAuctionClose(Long auctionId, LocalDateTime endTime) {
+		try {
+			JobDetail jobDetail = JobBuilder.newJob(CloseAuctionJob.class)
+					.withIdentity("auctionCloseJob-" + auctionId, "auction-jobs")
+					.usingJobData("auctionId", auctionId).storeDurably().build();
+
+			Trigger trigger = TriggerBuilder.newTrigger().forJob(jobDetail)
+					.withIdentity("auctionCloseTrigger-" + auctionId, "auction-triggers")
+					.startAt(Date.from(endTime.atZone(ZoneId.systemDefault()).toInstant()))
+					.withSchedule(SimpleScheduleBuilder.simpleSchedule()
+							.withMisfireHandlingInstructionFireNow())
+					.build();
+
+			scheduler.scheduleJob(jobDetail, trigger);
+			log.info("Job de clôture programmé pour l'enchère ID : {} à {}", auctionId, endTime);
+
+		} catch (SchedulerException e) {
+			log.error(
+					"Erreur lors de la programmation du job de clôture pour l'enchère ID : {}. Message : {}",
+					auctionId, e.getMessage());
+		}
+	}
+
 }

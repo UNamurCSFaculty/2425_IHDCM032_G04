@@ -29,4 +29,12 @@ public interface TradeStatusRepository extends JpaRepository<TradeStatus, Intege
 	 */
 	@Query("SELECT s FROM TradeStatus s WHERE s.name = 'Ouvert'")
 	TradeStatus findStatusPending();
+
+	/**
+	 * Retourne le status en cours.
+	 *
+	 * @return Un status correspondant à l'évaluation d'une achat/vente.
+	 */
+	@Query("SELECT s FROM TradeStatus s WHERE s.name = 'Expiré'")
+	TradeStatus findStatusExpired();
 }
