@@ -1,60 +1,222 @@
 import {
   zCooperativeDto,
-  zProductUpdateDto,
-  zUserUpdateDto,
+  zProductUpdateDto as zGeneratedProductUpdateDto, // Renommé pour clarté
+  zUserCreateDto as zGeneratedUserCreateDto,
+  zUserListDto as zGeneratedUserListDto,
+  zUserUpdateDto as zGeneratedUserUpdateDto,
+  zUserDetailDto as zGeneratedUserDetailDto, // Import zUserDetailDto
 } from '@/api/generated/zod.gen'
 import z from 'zod/v4'
 
-const zProducer = zUserUpdateDto.extend({
+// --- User Create Schemas ---
+const zUserCreateDtoBase = zGeneratedUserCreateDto.omit({ type: true })
+
+const zCreateProducer = zUserCreateDtoBase.extend({
   type: z.literal('producer'),
   agriculturalIdentifier: z.string().min(1),
   cooperative: zCooperativeDto.optional(),
 })
 
-const zAdmin = zUserUpdateDto.extend({
+const zCreateAdmin = zUserCreateDtoBase.extend({
   type: z.literal('admin'),
 })
 
-const zTransformer = zUserUpdateDto.extend({
+const zCreateTransformer = zUserCreateDtoBase.extend({
   type: z.literal('transformer'),
 })
 
-const zCarrier = zUserUpdateDto.extend({
+const zCreateTrader = zUserCreateDtoBase.extend({
+  type: z.literal('trader'),
+})
+
+const zCreateCarrier = zUserCreateDtoBase.extend({
   type: z.literal('carrier'),
   pricePerKm: z.number().min(1),
   radius: z.number().min(1),
 })
 
-const zExporter = zUserUpdateDto.extend({
+const zCreateExporter = zUserCreateDtoBase.extend({
   type: z.literal('exporter'),
 })
 
-const zQualityInspector = zUserUpdateDto.extend({
+const zCreateQualityInspector = zUserCreateDtoBase.extend({
   type: z.literal('quality_inspector'),
 })
 
-export const zUser = z.discriminatedUnion('type', [
-  zProducer,
-  zAdmin,
-  zTransformer,
-  zCarrier,
-  zExporter,
-  zQualityInspector,
+export const zAppCreateUser = z.discriminatedUnion('type', [
+  zCreateProducer,
+  zCreateAdmin,
+  zCreateTransformer,
+  zCreateCarrier,
+  zCreateExporter,
+  zCreateQualityInspector,
+  zCreateTrader,
 ])
+export type AppCreateUserDto = z.infer<typeof zAppCreateUser>
 
-const zHarvestProduct = zProductUpdateDto.extend({
+// --- User Update Schemas ---
+const zUserUpdateDtoBase = zGeneratedUserUpdateDto.omit({ type: true })
+
+const zUpdateProducer = zUserUpdateDtoBase.extend({
+  type: z.literal('producer'),
+  agriculturalIdentifier: z.string().min(1),
+  cooperative: zCooperativeDto.optional(),
+})
+
+const zUpdateAdmin = zUserUpdateDtoBase.extend({
+  type: z.literal('admin'),
+})
+
+const zUpdateTransformer = zUserUpdateDtoBase.extend({
+  type: z.literal('transformer'),
+})
+
+const zUpdateCarrier = zUserUpdateDtoBase.extend({
+  type: z.literal('carrier'),
+  pricePerKm: z.number().min(1),
+  radius: z.number().min(1),
+})
+
+const zUpdateExporter = zUserUpdateDtoBase.extend({
+  type: z.literal('exporter'),
+})
+
+const zUpdateQualityInspector = zUserUpdateDtoBase.extend({
+  type: z.literal('quality_inspector'),
+})
+
+const zUpdateTrader = zUserUpdateDtoBase.extend({
+  type: z.literal('trader'),
+})
+
+export const zAppUpdateUser = z.discriminatedUnion('type', [
+  zUpdateProducer,
+  zUpdateAdmin,
+  zUpdateTransformer,
+  zUpdateCarrier,
+  zUpdateExporter,
+  zUpdateQualityInspector,
+  zUpdateTrader,
+])
+export type AppUpdateUserDto = z.infer<typeof zAppUpdateUser>
+
+// --- Product Schemas (assuming for Update context based on zGeneratedProductUpdateDto) ---
+const zProductUpdateDtoBase = zGeneratedProductUpdateDto.omit({ type: true })
+
+const zHarvestProduct = zProductUpdateDtoBase.extend({
   type: z.literal('harvest'),
   producerId: z.number().int(),
   fieldId: z.number().int(),
 })
 
-const zTransformedProduct = zProductUpdateDto.extend({
+const zTransformedProduct = zProductUpdateDtoBase.extend({
   type: z.literal('transformed'),
   identifier: z.string().min(1),
   transformerId: z.number().int(),
 })
 
-export const zProduct = z.discriminatedUnion('type', [
+export const zAppProduct = z.discriminatedUnion('type', [
   zHarvestProduct,
   zTransformedProduct,
+  // Ajoutez d'autres types de produits ici si nécessaire
 ])
+export type AppProductDto = z.infer<typeof zAppProduct>
+
+// --- User List Schemas ---
+const zAppUserListDtoBase = zGeneratedUserListDto.omit({ type: true })
+
+const zAdminAppListDtoSchema = zAppUserListDtoBase.extend({
+  type: z.literal('admin'),
+})
+
+const zProducerAppListDtoSchema = zAppUserListDtoBase.extend({
+  type: z.literal('producer'),
+  agriculturalIdentifier: z.string(),
+  cooperative: zCooperativeDto,
+})
+
+const zTransformerAppListDtoSchema = zAppUserListDtoBase.extend({
+  type: z.literal('transformer'),
+})
+
+const zQualityInspectorAppListDtoSchema = zAppUserListDtoBase.extend({
+  type: z.literal('quality_inspector'),
+})
+
+const zExporterAppListDtoSchema = zAppUserListDtoBase.extend({
+  type: z.literal('exporter'),
+})
+
+const zCarrierAppListDtoSchema = zAppUserListDtoBase.extend({
+  type: z.literal('carrier'),
+  pricePerKm: z.number(),
+  radius: z.number(),
+})
+
+const zTraderAppListDtoSchema = zAppUserListDtoBase.extend({
+  type: z.literal('trader'),
+})
+
+export const zAppUserList = z.discriminatedUnion('type', [
+  zAdminAppListDtoSchema,
+  zProducerAppListDtoSchema,
+  zTransformerAppListDtoSchema,
+  zQualityInspectorAppListDtoSchema,
+  zExporterAppListDtoSchema,
+  zCarrierAppListDtoSchema,
+  zTraderAppListDtoSchema,
+])
+export type AppUserListDto = z.infer<typeof zAppUserList>
+
+// --- User Detail Schemas ---
+const zUserDetailDtoBase = zGeneratedUserDetailDto.omit({
+  type: true,
+})
+
+const zAdminDetailDtoSchema = zUserDetailDtoBase.extend({
+  type: z.literal('admin'),
+  // Pas de champs spécifiques supplémentaires pour admin dans UserDetailDto généralement
+})
+
+const zProducerDetailDtoSchema = zUserDetailDtoBase.extend({
+  type: z.literal('producer'),
+  agriculturalIdentifier: z.string().nullable().optional(), // Ajustez selon la définition exacte de UserDetailDto
+  cooperative: zCooperativeDto.nullable().optional(), // Ajustez selon la définition exacte de UserDetailDto
+})
+
+const zTransformerDetailDtoSchema = zUserDetailDtoBase.extend({
+  type: z.literal('transformer'),
+  // Pas de champs spécifiques supplémentaires pour transformer
+})
+
+const zQualityInspectorDetailDtoSchema = zUserDetailDtoBase.extend({
+  type: z.literal('quality_inspector'),
+  // Pas de champs spécifiques supplémentaires
+})
+
+const zExporterDetailDtoSchema = zUserDetailDtoBase.extend({
+  type: z.literal('exporter'),
+  // Pas de champs spécifiques supplémentaires
+})
+
+const zCarrierDetailDtoSchema = zUserDetailDtoBase.extend({
+  type: z.literal('carrier'),
+  pricePerKm: z.number().nullable().optional(), // Ajustez selon la définition exacte
+  radius: z.number().nullable().optional(), // Ajustez selon la définition exacte
+})
+
+const zTraderDetailDtoSchema = zUserDetailDtoBase.extend({
+  type: z.literal('trader'),
+  // Pas de champs spécifiques supplémentaires
+})
+
+export const zAppUserDetail = z.discriminatedUnion('type', [
+  zAdminDetailDtoSchema,
+  zProducerDetailDtoSchema,
+  zTransformerDetailDtoSchema,
+  zQualityInspectorDetailDtoSchema,
+  zExporterDetailDtoSchema,
+  zCarrierDetailDtoSchema,
+  zTraderDetailDtoSchema,
+])
+export type AppUserDetailDto = z.infer<typeof zAppUserDetail>

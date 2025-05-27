@@ -6,7 +6,7 @@ import be.labil.anacarde.domain.dto.db.CooperativeDto;
 import be.labil.anacarde.domain.dto.db.LanguageDto;
 import be.labil.anacarde.domain.dto.db.RoleDto;
 import be.labil.anacarde.domain.dto.db.user.ProducerDetailDto;
-import be.labil.anacarde.domain.dto.write.user.ProducerUpdateDto;
+import be.labil.anacarde.domain.dto.write.user.create.ProducerCreateDto;
 import be.labil.anacarde.domain.model.Cooperative;
 import be.labil.anacarde.domain.model.Language;
 import be.labil.anacarde.domain.model.Producer;
@@ -32,7 +32,7 @@ class ProducerDetailMapperTest {
 		coopDto.setId(10);
 		coopDto.setName("COOP-A");
 
-		ProducerUpdateDto dto = new ProducerUpdateDto();
+		ProducerCreateDto dto = new ProducerCreateDto();
 		dto.setFirstName("Paul");
 		dto.setLastName("Farmer");
 		dto.setEmail("paul@farm.com");

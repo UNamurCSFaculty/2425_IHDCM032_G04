@@ -1,7 +1,7 @@
 import Stepper from './Stepper'
 import { checkEmail, checkPhone } from '@/api/generated'
 import { createUserMutation } from '@/api/generated/@tanstack/react-query.gen'
-import { zAddressDto, zUserUpdateDto } from '@/api/generated/zod.gen' // zAddressDto a été ajouté
+import { zAddressDto, zUserCreateDto } from '@/api/generated/zod.gen' // zAddressDto a été ajouté
 import { BreadcrumbSection } from '@/components/BreadcrumbSection'
 import { useAppForm } from '@/components/form'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
@@ -14,7 +14,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { calculatePasswordStrength, cn, type DeepPartial } from '@/lib/utils'
-import { zUser } from '@/schemas/api-schemas'
+import { zAppCreateUser } from '@/schemas/api-schemas'
 import { useAppData } from '@/store/appStore'
 import { useStore } from '@tanstack/react-form'
 import { useMutation } from '@tanstack/react-query'
@@ -25,11 +25,11 @@ import { useTranslation } from 'react-i18next'
 import { z } from 'zod/v4'
 import { PasswordStrengthIndicator } from './PasswordStrengthIndicator'
 
-const zUserRegistration = zUser
+const zUserRegistration = zAppCreateUser
   .and(
     z.object({
       password: z.string().min(8),
-      passwordValidation: z.string().min(8),
+      passwordValidation: z.string().min(1),
       acceptTerms: z
         .boolean()
         .refine(v => v === true, { message: 'errors.accept_terms' }),
@@ -254,7 +254,7 @@ export const SignupForm: React.FC = () => {
                   <form.AppField
                     name="email"
                     validators={{
-                      onChange: zUserUpdateDto.shape.email,
+                      onChange: zUserCreateDto.shape.email,
                       onBlurAsync: async ({ value }) => {
                         if (!value) return
                         const exists = await checkEmail({
@@ -272,7 +272,7 @@ export const SignupForm: React.FC = () => {
                   <form.AppField
                     name="phone"
                     validators={{
-                      onChange: zUserUpdateDto.shape.phone,
+                      onChange: zUserCreateDto.shape.phone,
                       onBlurAsync: async ({ value }) => {
                         if (!value) return
                         const exists = await checkPhone({

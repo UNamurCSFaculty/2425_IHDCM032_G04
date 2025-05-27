@@ -1,7 +1,7 @@
 package be.labil.anacarde.domain.mapper;
 
 import be.labil.anacarde.domain.dto.db.user.ProducerDetailDto;
-import be.labil.anacarde.domain.dto.write.user.ProducerUpdateDto;
+import be.labil.anacarde.domain.dto.write.user.create.ProducerCreateDto;
 import be.labil.anacarde.domain.model.Cooperative;
 import be.labil.anacarde.domain.model.Language;
 import be.labil.anacarde.domain.model.Producer;
@@ -21,7 +21,7 @@ public abstract class ProducerDetailMapper {
 	@Mapping(source = "roles", target = "roles")
 	@Mapping(target = "language", ignore = true)
 	@Mapping(source = "address", target = "address")
-	public abstract Producer toEntity(ProducerUpdateDto dto);
+	public abstract Producer toEntity(ProducerCreateDto dto);
 
 	@Mapping(source = "cooperative", target = "cooperative")
 	@Mapping(source = "roles", target = "roles")
@@ -30,7 +30,7 @@ public abstract class ProducerDetailMapper {
 	public abstract ProducerDetailDto toDto(Producer entity);
 
 	@AfterMapping
-	protected void afterUpdateDto(ProducerUpdateDto dto, @MappingTarget User user) {
+	protected void afterUpdateDto(ProducerCreateDto dto, @MappingTarget User user) {
 		if (dto.getLanguageId() != null) {
 			user.setLanguage(em.getReference(Language.class, dto.getLanguageId()));
 		}

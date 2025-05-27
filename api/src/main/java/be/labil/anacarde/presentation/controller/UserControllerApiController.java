@@ -6,8 +6,9 @@ import be.labil.anacarde.application.exception.ErrorDetail;
 import be.labil.anacarde.application.service.UserService;
 import be.labil.anacarde.domain.dto.db.user.UserDetailDto;
 import be.labil.anacarde.domain.dto.db.user.UserListDto;
-import be.labil.anacarde.domain.dto.write.user.AdminUpdateDto;
-import be.labil.anacarde.domain.dto.write.user.UserUpdateDto;
+import be.labil.anacarde.domain.dto.write.user.create.AdminCreateDto;
+import be.labil.anacarde.domain.dto.write.user.create.UserCreateDto;
+import be.labil.anacarde.domain.dto.write.user.update.UserUpdateDto;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -30,9 +31,9 @@ public class UserControllerApiController implements UserApi {
 	}
 
 	@Override
-	public ResponseEntity<UserDetailDto> createUser(UserUpdateDto user,
+	public ResponseEntity<UserDetailDto> createUser(UserCreateDto user,
 			List<MultipartFile> documents) {
-		if (user instanceof AdminUpdateDto admin) {
+		if (user instanceof AdminCreateDto admin) {
 			throw new ApiErrorException(HttpStatus.FORBIDDEN, ApiErrorCode.ACCESS_FORBIDDEN.code(),
 					List.of(new ErrorDetail("user", "user.admin.not.allowed",
 							"Il est interdit de créer un utilisateur admin via cette API.")));

@@ -1,7 +1,8 @@
 package be.labil.anacarde.domain.mapper;
 
 import be.labil.anacarde.domain.dto.db.user.*;
-import be.labil.anacarde.domain.dto.write.user.*;
+import be.labil.anacarde.domain.dto.write.user.create.*;
+import be.labil.anacarde.domain.dto.write.user.update.*;
 import be.labil.anacarde.domain.model.*;
 import jakarta.persistence.EntityManager;
 import org.mapstruct.*;
@@ -13,7 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  * ambiguïtés.
  */
 @Mapper(componentModel = "spring", uses = {MapperHelpers.class, RoleMapper.class,
-		LanguageMapper.class, AddressMapper.class, CooperativeMapper.class,
+		LanguageMapper.class, AddressMapper.class, AddressUpdateMapper.class,
+		CooperativeMapper.class,
 		DocumentMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class UserDetailMapper {
 
@@ -28,31 +30,31 @@ public abstract class UserDetailMapper {
 	@Mapping(source = "address", target = "address")
 	@Mapping(target = "language", ignore = true)
 	@Mapping(target = "id", ignore = true)
-	public abstract Admin toEntity(AdminUpdateDto dto);
+	public abstract Admin toEntity(AdminCreateDto dto);
 
 	@Mapping(source = "roles", target = "roles")
 	@Mapping(source = "address", target = "address")
 	@Mapping(target = "language", ignore = true)
 	@Mapping(target = "id", ignore = true)
-	public abstract Exporter toEntity(ExporterUpdateDto dto);
+	public abstract Exporter toEntity(ExporterCreateDto dto);
 
 	@Mapping(source = "roles", target = "roles")
 	@Mapping(source = "address", target = "address")
 	@Mapping(target = "language", ignore = true)
 	@Mapping(target = "id", ignore = true)
-	public abstract Carrier toEntity(CarrierUpdateDto dto);
+	public abstract Carrier toEntity(CarrierCreateDto dto);
 
 	@Mapping(source = "roles", target = "roles")
 	@Mapping(source = "address", target = "address")
 	@Mapping(target = "language", ignore = true)
 	@Mapping(target = "id", ignore = true)
-	public abstract QualityInspector toEntity(QualityInspectorUpdateDto dto);
+	public abstract QualityInspector toEntity(QualityInspectorCreateDto dto);
 
 	@Mapping(source = "roles", target = "roles")
 	@Mapping(source = "address", target = "address")
 	@Mapping(target = "language", ignore = true)
 	@Mapping(target = "id", ignore = true)
-	public abstract Transformer toEntity(TransformerUpdateDto dto);
+	public abstract Transformer toEntity(TransformerCreateDto dto);
 
 	@Mapping(source = "roles", target = "roles")
 	@Mapping(source = "address", target = "address")
@@ -60,14 +62,14 @@ public abstract class UserDetailMapper {
 	@Mapping(source = "agriculturalIdentifier", target = "agriculturalIdentifier")
 	@Mapping(target = "cooperative", ignore = true)
 	@Mapping(target = "id", ignore = true)
-	public abstract Producer toEntity(ProducerUpdateDto dto);
+	public abstract Producer toEntity(ProducerCreateDto dto);
 
 	@AfterMapping
-	protected void afterUpdateDto(UserUpdateDto dto, @MappingTarget User user) {
+	protected void afterUpdateDto(UserCreateDto dto, @MappingTarget User user) {
 		if (dto.getLanguageId() != null) {
 			user.setLanguage(em.getReference(Language.class, dto.getLanguageId()));
 		}
-		if (dto instanceof ProducerUpdateDto producer) {
+		if (dto instanceof ProducerCreateDto producer) {
 			if (producer.getCooperativeId() != null) {
 				((Producer) user).setCooperative(
 						em.getReference(Cooperative.class, producer.getCooperativeId()));
@@ -78,19 +80,19 @@ public abstract class UserDetailMapper {
 	/**
 	 * Méthode générique qui délègue à la bonne surcharge selon le type concret du DTO.
 	 */
-	public User toEntity(UserUpdateDto dto) {
-		if (dto instanceof AdminUpdateDto) {
-			return toEntity((AdminUpdateDto) dto);
-		} else if (dto instanceof ExporterUpdateDto) {
-			return toEntity((ExporterUpdateDto) dto);
-		} else if (dto instanceof CarrierUpdateDto) {
-			return toEntity((CarrierUpdateDto) dto);
-		} else if (dto instanceof QualityInspectorUpdateDto) {
-			return toEntity((QualityInspectorUpdateDto) dto);
-		} else if (dto instanceof TransformerUpdateDto) {
-			return toEntity((TransformerUpdateDto) dto);
-		} else if (dto instanceof ProducerUpdateDto) {
-			return toEntity((ProducerUpdateDto) dto);
+	public User toEntity(UserCreateDto dto) {
+		if (dto instanceof AdminCreateDto) {
+			return toEntity((AdminCreateDto) dto);
+		} else if (dto instanceof ExporterCreateDto) {
+			return toEntity((ExporterCreateDto) dto);
+		} else if (dto instanceof CarrierCreateDto) {
+			return toEntity((CarrierCreateDto) dto);
+		} else if (dto instanceof QualityInspectorCreateDto) {
+			return toEntity((QualityInspectorCreateDto) dto);
+		} else if (dto instanceof TransformerCreateDto) {
+			return toEntity((TransformerCreateDto) dto);
+		} else if (dto instanceof ProducerCreateDto) {
+			return toEntity((ProducerCreateDto) dto);
 		}
 		throw new IllegalArgumentException("Type de DTO non supporté: " + dto.getClass());
 	}

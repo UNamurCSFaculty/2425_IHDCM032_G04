@@ -3,6 +3,7 @@ package be.labil.anacarde.application.exception;
 public enum ApiErrorCode {
 	ACCESS_DENIED("access.denied"),
 	ACCESS_DISABLED("access.disabled"),
+	ACCESS_DISABLED_VALIDATION("access.disabled.validation"),
 	ACCESS_FORBIDDEN("access.forbidden"),
 	ACCESS_FORBIDDEN_CSRF("access.forbidden.csrf"),
 	ACCESS_FORBIDDEN_CSRF_MISSING("access.forbidden.csrf.missing"),

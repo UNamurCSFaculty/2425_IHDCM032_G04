@@ -8,7 +8,7 @@ import be.labil.anacarde.domain.dto.db.user.*;
 import be.labil.anacarde.domain.dto.write.*;
 import be.labil.anacarde.domain.dto.write.product.HarvestProductUpdateDto;
 import be.labil.anacarde.domain.dto.write.product.TransformedProductUpdateDto;
-import be.labil.anacarde.domain.dto.write.user.*;
+import be.labil.anacarde.domain.dto.write.user.create.*;
 import be.labil.anacarde.domain.mapper.DocumentMapper;
 import be.labil.anacarde.domain.mapper.QualityControlMapper;
 import be.labil.anacarde.domain.mapper.QualityMapper;
@@ -70,11 +70,11 @@ public class DatabaseServiceImpl implements DatabaseService {
 	private static final int MAX_AUCTION_INCREMENT = 5; // kCFA
 	private static final String DEFAULT_PASSWORD = "password";
 
-	private static final Map<Class<? extends UserUpdateDto>, String> DEFAULT_EMAILS = Map.of(
-			AdminUpdateDto.class, "admin@example.com", ProducerUpdateDto.class,
-			"producer@example.com", TransformerUpdateDto.class, "transformer@example.com",
-			ExporterUpdateDto.class, "exporter@example.com", CarrierUpdateDto.class,
-			"carrier@example.com", QualityInspectorUpdateDto.class,
+	private static final Map<Class<? extends UserCreateDto>, String> DEFAULT_EMAILS = Map.of(
+			AdminCreateDto.class, "admin@example.com", ProducerCreateDto.class,
+			"producer@example.com", TransformerCreateDto.class, "transformer@example.com",
+			ExporterCreateDto.class, "exporter@example.com", CarrierCreateDto.class,
+			"carrier@example.com", QualityInspectorCreateDto.class,
 			"quality_inspector@example.com");
 
 	// --- Injected Dependencies (Final with Lombok RequiredArgsConstructor) ---
@@ -499,23 +499,23 @@ public class DatabaseServiceImpl implements DatabaseService {
 	/* ================================================================ */
 	private void createUsers() {
 
-		createdAdmins = createUsersOfType(AdminUpdateDto.class, this::createRandomAdminDto,
+		createdAdmins = createUsersOfType(AdminCreateDto.class, this::createRandomAdminDto,
 				dto -> (AdminDetailDto) userService.createUser(dto, null), NUM_ADMINS);
 
-		createdProducers = createUsersOfType(ProducerUpdateDto.class, this::createRandomProducerDto,
+		createdProducers = createUsersOfType(ProducerCreateDto.class, this::createRandomProducerDto,
 				dto -> (ProducerDetailDto) userService.createUser(dto, null), NUM_PRODUCERS);
 
-		createdTransformers = createUsersOfType(TransformerUpdateDto.class,
+		createdTransformers = createUsersOfType(TransformerCreateDto.class,
 				this::createRandomTransformerDto,
 				dto -> (TransformerDetailDto) userService.createUser(dto, null), NUM_TRANSFORMERS);
 
-		createdExporters = createUsersOfType(ExporterUpdateDto.class, this::createRandomExporterDto,
+		createdExporters = createUsersOfType(ExporterCreateDto.class, this::createRandomExporterDto,
 				dto -> (ExporterDetailDto) userService.createUser(dto, null), NUM_EXPORTERS);
 
-		createdCarriers = createUsersOfType(CarrierUpdateDto.class, this::createRandomCarrierDto,
+		createdCarriers = createUsersOfType(CarrierCreateDto.class, this::createRandomCarrierDto,
 				dto -> (CarrierDetailDto) userService.createUser(dto, null), NUM_CARRIERS);
 
-		createdQualityInspectors = createUsersOfType(QualityInspectorUpdateDto.class,
+		createdQualityInspectors = createUsersOfType(QualityInspectorCreateDto.class,
 				this::createRandomQualityInspectorDto,
 				dto -> (QualityInspectorDetailDto) userService.createUser(dto, null),
 				NUM_QUALITY_INSPECTORS);
@@ -541,7 +541,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 	 *            Type du DTO renvoyé par userService
 	 * @return Liste des DTO créés
 	 */
-	private <U extends UserUpdateDto, D> List<D> createUsersOfType(Class<U> dtoClass,
+	private <U extends UserCreateDto, D> List<D> createUsersOfType(Class<U> dtoClass,
 			Supplier<U> dtoSupplier, Function<U, D> createMethod, int totalCount) {
 		List<D> list = new ArrayList<>(totalCount);
 
@@ -1229,8 +1229,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 
 	// --- User DTO Creation Helpers ---
 
-	private AdminUpdateDto createRandomAdminDto() {
-		AdminUpdateDto admin = new AdminUpdateDto();
+	private AdminCreateDto createRandomAdminDto() {
+		AdminCreateDto admin = new AdminCreateDto();
 		admin.setFirstName(faker.name().firstName());
 		admin.setLastName(faker.name().lastName());
 		admin.setEmail(uniqueEmail());
@@ -1245,8 +1245,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 		return admin;
 	}
 
-	private ProducerUpdateDto createRandomProducerDto() {
-		ProducerUpdateDto producer = new ProducerUpdateDto();
+	private ProducerCreateDto createRandomProducerDto() {
+		ProducerCreateDto producer = new ProducerCreateDto();
 		producer.setFirstName(faker.name().firstName());
 		producer.setLastName(faker.name().lastName());
 		producer.setEmail(uniqueEmail());
@@ -1262,8 +1262,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 		return producer;
 	}
 
-	private TransformerUpdateDto createRandomTransformerDto() {
-		TransformerUpdateDto transformer = new TransformerUpdateDto();
+	private TransformerCreateDto createRandomTransformerDto() {
+		TransformerCreateDto transformer = new TransformerCreateDto();
 		transformer.setFirstName(faker.name().firstName());
 		transformer.setLastName(faker.name().lastName());
 		transformer.setEmail(uniqueEmail());
@@ -1278,8 +1278,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 		return transformer;
 	}
 
-	private ExporterUpdateDto createRandomExporterDto() {
-		ExporterUpdateDto exporter = new ExporterUpdateDto();
+	private ExporterCreateDto createRandomExporterDto() {
+		ExporterCreateDto exporter = new ExporterCreateDto();
 		exporter.setFirstName(faker.name().firstName());
 		exporter.setLastName(faker.name().lastName());
 		exporter.setEmail(uniqueEmail());
@@ -1294,8 +1294,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 		return exporter;
 	}
 
-	private CarrierUpdateDto createRandomCarrierDto() {
-		CarrierUpdateDto carrier = new CarrierUpdateDto();
+	private CarrierCreateDto createRandomCarrierDto() {
+		CarrierCreateDto carrier = new CarrierCreateDto();
 		carrier.setFirstName(faker.name().firstName());
 		carrier.setLastName(faker.name().lastName());
 		carrier.setEmail(uniqueEmail());
@@ -1312,8 +1312,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 		return carrier;
 	}
 
-	private QualityInspectorUpdateDto createRandomQualityInspectorDto() {
-		QualityInspectorUpdateDto qualityInspector = new QualityInspectorUpdateDto();
+	private QualityInspectorCreateDto createRandomQualityInspectorDto() {
+		QualityInspectorCreateDto qualityInspector = new QualityInspectorCreateDto();
 		qualityInspector.setFirstName(faker.name().firstName());
 		qualityInspector.setLastName(faker.name().lastName());
 		qualityInspector.setEmail(uniqueEmail());

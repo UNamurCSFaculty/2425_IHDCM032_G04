@@ -48,6 +48,7 @@ export default defineConfig([
       'jsx-react/no-children-prop': 'off',
       'react/no-children-prop': 'off',
       'react/no-unescaped-entities': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
     },
   },
 ])
