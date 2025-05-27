@@ -1,5 +1,4 @@
 import { AdminAppSidebar } from '@/components/admin/AdminAppSidebar'
-import { AdminSiteHeader } from '@/components/admin/AdminSiteHeader'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 import { Outlet, createFileRoute } from '@tanstack/react-router'
 
@@ -12,7 +11,7 @@ function AdminLayoutComponent() {
     <SidebarProvider>
       <AdminAppSidebar variant="inset" />
       <SidebarInset>
-        <AdminSiteHeader />
+        {/*<AdminSiteHeader /> */}
         <div className="flex flex-1 flex-col">
           <div className="@container/main flex flex-1 flex-col gap-2">
             <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">

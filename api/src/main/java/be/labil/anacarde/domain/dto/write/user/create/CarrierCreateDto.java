@@ -1,4 +1,4 @@
-package be.labil.anacarde.domain.dto.write.user;
+package be.labil.anacarde.domain.dto.write.user.create;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Schema(description = "Objet de transfert de données pour les transporteurs.")
-public class CarrierUpdateDto extends UserUpdateDto {
+public class CarrierCreateDto extends UserCreateDto {
 
 	/** Prix par kilomètre facturé par le transporteur. */
 	@Schema(description = "Prix par kilomètre facturé par le transporteur", example = "1.50", requiredMode = Schema.RequiredMode.REQUIRED)

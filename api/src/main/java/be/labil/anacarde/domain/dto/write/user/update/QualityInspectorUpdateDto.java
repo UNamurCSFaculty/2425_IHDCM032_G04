@@ -1,4 +1,4 @@
-package be.labil.anacarde.domain.dto.write.user;
+package be.labil.anacarde.domain.dto.write.user.update;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.EqualsAndHashCode;

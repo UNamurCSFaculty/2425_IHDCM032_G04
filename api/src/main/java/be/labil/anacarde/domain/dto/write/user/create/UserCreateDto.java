@@ -1,4 +1,4 @@
-package be.labil.anacarde.domain.dto.write.user;
+package be.labil.anacarde.domain.dto.write.user.create;
 
 import be.labil.anacarde.domain.dto.db.AddressDto;
 import be.labil.anacarde.domain.dto.db.RoleDto;
@@ -19,27 +19,27 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type", visible = true)
-@JsonSubTypes({@JsonSubTypes.Type(value = AdminUpdateDto.class, name = "admin"),
-		@JsonSubTypes.Type(value = ProducerUpdateDto.class, name = "producer"),
-		@JsonSubTypes.Type(value = TransformerUpdateDto.class, name = "transformer"),
-		@JsonSubTypes.Type(value = QualityInspectorUpdateDto.class, name = "quality_inspector"),
-		@JsonSubTypes.Type(value = ExporterUpdateDto.class, name = "exporter"),
-		@JsonSubTypes.Type(value = CarrierUpdateDto.class, name = "carrier"),
-		@JsonSubTypes.Type(value = TraderUpdateDto.class, name = "trader")})
+@JsonSubTypes({@JsonSubTypes.Type(value = AdminCreateDto.class, name = "admin"),
+		@JsonSubTypes.Type(value = ProducerCreateDto.class, name = "producer"),
+		@JsonSubTypes.Type(value = TransformerCreateDto.class, name = "transformer"),
+		@JsonSubTypes.Type(value = QualityInspectorCreateDto.class, name = "quality_inspector"),
+		@JsonSubTypes.Type(value = ExporterCreateDto.class, name = "exporter"),
+		@JsonSubTypes.Type(value = CarrierCreateDto.class, name = "carrier"),
+		@JsonSubTypes.Type(value = TraderCreateDto.class, name = "trader")})
 @Schema(description = "Objet de transfert pour créer ou mettre à jour un utilisateur.", requiredProperties = {
 		"type"}, discriminatorProperty = "type", discriminatorMapping = {
-				@DiscriminatorMapping(value = "admin", schema = AdminUpdateDto.class),
-				@DiscriminatorMapping(value = "producer", schema = ProducerUpdateDto.class),
-				@DiscriminatorMapping(value = "transformer", schema = TransformerUpdateDto.class),
-				@DiscriminatorMapping(value = "quality_inspector", schema = QualityInspectorUpdateDto.class),
-				@DiscriminatorMapping(value = "exporter", schema = ExporterUpdateDto.class),
-				@DiscriminatorMapping(value = "carrier", schema = CarrierUpdateDto.class),
-				@DiscriminatorMapping(value = "trader", schema = TraderUpdateDto.class)}, subTypes = {
-						TraderUpdateDto.class, CarrierUpdateDto.class,
-						QualityInspectorUpdateDto.class, AdminUpdateDto.class,
-						ExporterUpdateDto.class, TransformerUpdateDto.class,
-						ProducerUpdateDto.class})
-public abstract class UserUpdateDto {
+				@DiscriminatorMapping(value = "admin", schema = AdminCreateDto.class),
+				@DiscriminatorMapping(value = "producer", schema = ProducerCreateDto.class),
+				@DiscriminatorMapping(value = "transformer", schema = TransformerCreateDto.class),
+				@DiscriminatorMapping(value = "quality_inspector", schema = QualityInspectorCreateDto.class),
+				@DiscriminatorMapping(value = "exporter", schema = ExporterCreateDto.class),
+				@DiscriminatorMapping(value = "carrier", schema = CarrierCreateDto.class),
+				@DiscriminatorMapping(value = "trader", schema = TraderCreateDto.class)}, subTypes = {
+						TraderCreateDto.class, CarrierCreateDto.class,
+						QualityInspectorCreateDto.class, AdminCreateDto.class,
+						ExporterCreateDto.class, TransformerCreateDto.class,
+						ProducerCreateDto.class})
+public abstract class UserCreateDto {
 
 	/** User's first name. */
 	@Schema(description = "Prénom de l'utilisateur", example = "John", requiredMode = Schema.RequiredMode.REQUIRED)

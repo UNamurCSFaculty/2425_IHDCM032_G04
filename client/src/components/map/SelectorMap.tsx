@@ -19,8 +19,8 @@ import {
 } from '@/components/ui/command'
 import { useDebounce } from '@/hooks/useDebounce'
 import type { GeoPointString } from '@/utils/geo-utils'
+import { wktToLatLon } from '@/lib/utils'
 
-// --- icône par défaut Leaflet (+ retina) ---
 const iconMarker = new L.Icon({
   iconUrl: '/leaflet/marker-icon.png',
   iconRetinaUrl: '/leaflet/marker-icon-2x.png',
@@ -39,13 +39,13 @@ export interface NominatimSearchResult {
 export interface NominatimAddress {
   display_name: string
   road?: string
-  quarter?: string // quartier
-  suburb?: string // banlieue / arrondissement
-  city_district?: string // arrondissement de la ville
+  quarter?: string
+  suburb?: string
+  city_district?: string
   city?: string
   town?: string
   village?: string
-  county?: string // département
+  county?: string
   state?: string // région (peut varier)
   country?: string
   country_code?: string
@@ -53,20 +53,14 @@ export interface NominatimAddress {
 
 export interface SelectorMapProps {
   initialPosition?: string | null
-  onPositionChange: (point: GeoPointString, address?: NominatimAddress) => void
+  onPositionChange?: (point: GeoPointString, address?: NominatimAddress) => void
   defaultCenter?: LatLngExpression
   defaultZoom?: number
   mapHeight?: string
   showSearch?: boolean
   /** Rayon en mètres (optionnel) */
   radius?: number
-}
-
-function parseGeoPoint(point?: string | null) {
-  if (!point) return null
-  const m = point.match(/POINT\(\s*([\d.-]+)\s+([\d.-]+)\s*\)/)
-  if (!m) return null
-  return { lng: parseFloat(m[1]), lat: parseFloat(m[2]) }
+  isDisplayOnly?: boolean
 }
 
 const ChangeView: React.FC<{ center: LatLngExpression; minZoom: number }> = ({
@@ -75,8 +69,10 @@ const ChangeView: React.FC<{ center: LatLngExpression; minZoom: number }> = ({
 }) => {
   const map = useMap()
   useEffect(() => {
-    const zoom = Math.max(map.getZoom(), minZoom)
-    map.setView(center, zoom)
+    if (center) {
+      const zoom = Math.max(map.getZoom(), minZoom)
+      map.setView(center, zoom)
+    }
   }, [center, minZoom, map])
   return null
 }
@@ -88,18 +84,19 @@ export const SelectorMap: React.FC<SelectorMapProps> = ({
   defaultZoom = 7,
   mapHeight = '400px',
   showSearch = true,
-  radius = 0, // rayon par défaut en mètres
+  radius = 0,
+  isDisplayOnly = false,
 }) => {
   const [selectedPosition, setSelectedPosition] = useState<LatLng | null>(
     () => {
-      const p = parseGeoPoint(initialPosition)
-      return p ? new LatLng(p.lat, p.lng) : null
+      if (!initialPosition) return null
+      const coords = wktToLatLon(initialPosition)
+      return coords ? new LatLng(coords[0], coords[1]) : null
     }
   )
   const [addressInfo, setAddressInfo] = useState<NominatimAddress | null>(null)
   const [loadingAddress, setLoadingAddress] = useState(false)
 
-  // pour le champ de recherche
   const [search, setSearch] = useState('')
   const debounced = useDebounce(search, 500)
   const [suggestions, setSuggestions] = useState<NominatimSearchResult[]>([])
@@ -110,10 +107,9 @@ export const SelectorMap: React.FC<SelectorMapProps> = ({
   const centerIcon = new L.DivIcon({
     className: 'bg-green-600 rounded-full w-3 h-3 opacity-75',
     iconSize: [3, 3],
-    iconAnchor: [1.5, 1.5], // pour centrer l’icône sur le point
+    iconAnchor: [1.5, 1.5],
   })
 
-  // reverse géocoding
   const fetchAddress = useCallback(async (lat: number, lng: number) => {
     setLoadingAddress(true)
     try {
@@ -129,33 +125,36 @@ export const SelectorMap: React.FC<SelectorMapProps> = ({
         city: addr.city || addr.town || addr.village,
         state: addr.state || addr.county,
         country: addr.country,
+        country_code: addr.country_code,
       }
       setAddressInfo(simplified)
       return simplified
     } catch {
+      setAddressInfo(null)
       return undefined
     } finally {
       setLoadingAddress(false)
     }
   }, [])
 
-  // clic sur la carte
   const MapEvents = () => {
     useMapEvents({
       click: async e => {
+        if (isDisplayOnly || !onPositionChange) return
         const { lat, lng } = e.latlng
         setSelectedPosition(e.latlng)
         const point = `POINT(${lng} ${lat})` as GeoPointString
         const addr = await fetchAddress(lat, lng)
-        onPositionChange(point, addr)
+        if (onPositionChange) {
+          onPositionChange(point, addr)
+        }
       },
     })
     return null
   }
 
-  // suggestions Nominatim
   useEffect(() => {
-    if (!debounced) {
+    if (isDisplayOnly || !showSearch || !debounced) {
       setSuggestions([])
       return
     }
@@ -169,9 +168,10 @@ export const SelectorMap: React.FC<SelectorMapProps> = ({
       .then((list: NominatimSearchResult[]) => setSuggestions(list))
       .catch(() => setSuggestions([]))
       .finally(() => setLoadingSearch(false))
-  }, [debounced])
+  }, [debounced, isDisplayOnly, showSearch])
 
   const selectSuggestion = (item: NominatimSearchResult) => {
+    if (isDisplayOnly || !onPositionChange) return
     const lat = parseFloat(item.lat),
       lon = parseFloat(item.lon)
     const pt = new LatLng(lat, lon)
@@ -192,19 +192,9 @@ export const SelectorMap: React.FC<SelectorMapProps> = ({
     setIsFocused(false)
   }
 
-  // sync initialPosition
-  useEffect(() => {
-    const p = parseGeoPoint(initialPosition)
-    if (p) {
-      const pt = new LatLng(p.lat, p.lng)
-      setSelectedPosition(pt)
-      fetchAddress(p.lat, p.lng)
-    }
-  }, [initialPosition, fetchAddress])
-
   return (
     <div className="relative">
-      {showSearch && (
+      {showSearch && !isDisplayOnly && (
         <div className="absolute top-2 right-2 left-11 z-30">
           <Command>
             <CommandInput
@@ -251,15 +241,18 @@ export const SelectorMap: React.FC<SelectorMapProps> = ({
 
         {selectedPosition && (
           <>
-            {selectedPosition && (
-              <Marker position={selectedPosition} icon={centerIcon} />
-            )}
+            <Marker position={selectedPosition} icon={centerIcon} />
             <Marker position={selectedPosition} icon={iconMarker}>
               <Popup>
                 {selectedPosition.lat.toFixed(5)},{' '}
                 {selectedPosition.lng.toFixed(5)}
-                {loadingAddress && <div>Chargement de l'adresse…</div>}
+                {loadingAddress && !addressInfo && (
+                  <div>Chargement de l'adresse…</div>
+                )}
                 {addressInfo && <div>{addressInfo.display_name}</div>}
+                {!loadingAddress && !addressInfo && initialPosition && (
+                  <div>Adresse non trouvée</div>
+                )}
               </Popup>
             </Marker>
 
@@ -277,8 +270,7 @@ export const SelectorMap: React.FC<SelectorMapProps> = ({
             )}
           </>
         )}
-
-        <MapEvents />
+        {!isDisplayOnly && <MapEvents />}
       </MapContainer>
     </div>
   )

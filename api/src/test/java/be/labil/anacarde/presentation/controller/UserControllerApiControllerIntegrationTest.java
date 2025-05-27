@@ -8,10 +8,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import be.labil.anacarde.domain.dto.db.AddressDto;
-import be.labil.anacarde.domain.dto.write.user.AdminUpdateDto;
-import be.labil.anacarde.domain.dto.write.user.ExporterUpdateDto;
-import be.labil.anacarde.domain.dto.write.user.ProducerUpdateDto;
-import be.labil.anacarde.domain.dto.write.user.UserUpdateDto;
+import be.labil.anacarde.domain.dto.write.user.create.AdminCreateDto;
+import be.labil.anacarde.domain.dto.write.user.create.ExporterCreateDto;
+import be.labil.anacarde.domain.dto.write.user.create.ProducerCreateDto;
+import be.labil.anacarde.domain.dto.write.user.create.UserCreateDto;
+import be.labil.anacarde.domain.dto.write.user.update.AddressUpdateDto;
+import be.labil.anacarde.domain.dto.write.user.update.AdminUpdateDto;
+import be.labil.anacarde.domain.dto.write.user.update.UserUpdateDto;
 import be.labil.anacarde.domain.model.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -66,7 +69,7 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 	@Test
 	public void testCreateUser() throws Exception {
 		// ---------- partie JSON "user" ----------
-		ProducerUpdateDto newUser = new ProducerUpdateDto();
+		ProducerCreateDto newUser = new ProducerCreateDto();
 		newUser.setFirstName("Alice");
 		newUser.setLastName("Smith");
 		newUser.setEmail("alice.smith@example.com");
@@ -117,7 +120,7 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 	 */
 	@Test
 	public void testCreateUserMissingTypeFails() throws Exception {
-		UserUpdateDto newUser = new ExporterUpdateDto();
+		UserCreateDto newUser = new ExporterCreateDto();
 		newUser.setFirstName("Charlie");
 		newUser.setLastName("Brown");
 		newUser.setEmail("charlie.brown@example.com");
@@ -161,7 +164,7 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 		updateUser.setLastName("Doe Updated");
 		updateUser.setEmail("email@updated.com");
 		updateUser.setAddress(
-				AddressDto.builder().street("Rue de la paix").cityId(1).regionId(1).build());
+				AddressUpdateDto.builder().street("Rue de la paix").cityId(1).regionId(1).build());
 		updateUser.setPassword("newpassword");
 		updateUser.setLanguageId(getMainLanguageDto().getId());
 
@@ -251,7 +254,7 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 	 */
 	@Test
 	public void testCreateUserMissingEmail() throws Exception {
-		UserUpdateDto newUser = new AdminUpdateDto();
+		UserCreateDto newUser = new AdminCreateDto();
 		newUser.setFirstName("Bob");
 		newUser.setLastName("Smith");
 		newUser.setAddress(

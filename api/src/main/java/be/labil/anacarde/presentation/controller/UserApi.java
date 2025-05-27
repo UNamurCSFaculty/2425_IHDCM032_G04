@@ -4,7 +4,8 @@ import be.labil.anacarde.application.exception.ApiErrorResponse;
 import be.labil.anacarde.domain.dto.db.ValidationGroups;
 import be.labil.anacarde.domain.dto.db.user.UserDetailDto;
 import be.labil.anacarde.domain.dto.db.user.UserListDto;
-import be.labil.anacarde.domain.dto.write.user.UserUpdateDto;
+import be.labil.anacarde.domain.dto.write.user.create.UserCreateDto;
+import be.labil.anacarde.domain.dto.write.user.update.UserUpdateDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.StringToClassMapItem;
@@ -74,7 +75,7 @@ public interface UserApi {
 	 */
 	@Operation(summary = "Créer un utilisateur et téléverser des documents")
 	@io.swagger.v3.oas.annotations.parameters.RequestBody(required = true, content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE, schema = @Schema(type = "object", properties = {
-			@StringToClassMapItem(key = "user", value = UserUpdateDto.class),
+			@StringToClassMapItem(key = "user", value = UserCreateDto.class),
 			@StringToClassMapItem(key = "documents", value = MultipartFile[].class)}), encoding = {
 					@Encoding(name = "user", contentType = MediaType.APPLICATION_JSON_VALUE),
 					@Encoding(name = "documents", contentType = MediaType.APPLICATION_OCTET_STREAM_VALUE)}))
@@ -85,7 +86,7 @@ public interface UserApi {
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	ResponseEntity<? extends UserDetailDto> createUser(
 			@Validated({Default.class,
-					ValidationGroups.Create.class}) @RequestPart("user") @Valid UserUpdateDto user,
+					ValidationGroups.Create.class}) @RequestPart("user") @Valid UserCreateDto user,
 			@RequestPart(value = "documents", required = false) List<MultipartFile> documents);
 
 	/**
@@ -104,7 +105,7 @@ public interface UserApi {
 	 * 
 	 * @param id
 	 *            L'identifiant de l'utilisateur à mettre à jour.
-	 * @param userUpdateDto
+	 * @param userCreateDto
 	 *            Détails de l'utilisateur à mettre à jour.
 	 * @return L'utilisateur mis à jour.
 	 */

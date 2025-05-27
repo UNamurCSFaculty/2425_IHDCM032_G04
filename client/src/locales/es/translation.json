@@ -247,6 +247,7 @@
     "phone": "Teléfono",
     "coordinates_label": "Coordenadas:",
     "placeholder": {
+      "leave_blank_password": "Dejar en blanco para no cambiar la contraseña",
       "date": "Seleccionar una fecha",
       "no_city_found": "No se encontró ninguna ciudad",
       "search": "Buscar",

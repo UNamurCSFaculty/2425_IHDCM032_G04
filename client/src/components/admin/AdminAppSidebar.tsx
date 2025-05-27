@@ -1,6 +1,5 @@
 import logo from '@/assets/logo.svg'
 import { NavMain } from '@/components/admin/AdminNavMain'
-import { NavUser } from '@/components/admin/nav-user'
 import {
   Sidebar,
   SidebarContent,
@@ -24,6 +23,8 @@ import {
 } from '@tabler/icons-react'
 import { Link } from '@tanstack/react-router'
 import * as React from 'react'
+import { Button } from '../ui/button'
+import { LogOut } from 'lucide-react'
 
 const data = {
   user: {
@@ -119,13 +120,16 @@ export function AdminAppSidebar({
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        {/*
-        <NavDocuments items={data.documents} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
-        */}
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <div className="border-t p-4">
+          <Button variant="outline" className="w-full justify-start" asChild>
+            <Link to="/">
+              <LogOut className="mr-2 h-4 w-4" />
+              Quitter
+            </Link>
+          </Button>
+        </div>
       </SidebarFooter>
     </Sidebar>
   )

@@ -247,6 +247,7 @@
     "phone": "الهاتف",
     "coordinates_label": "الإحداثيات:",
     "placeholder": {
+      "leave_blank_password": "اترك هذا الحقل فارغًا إذا كنت لا تريد تغيير كلمة المرور",
       "date": "حدد تاريخًا",
       "no_city_found": "لم يتم العثور على مدينة",
       "search": "بحث",

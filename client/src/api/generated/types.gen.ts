@@ -3,7 +3,7 @@
 /**
  * DTO pour l'entité Adresse.
  */
-export type AddressDto = {
+export type AddressUpdateDto = {
   /**
    * Rue/Quartier/Numéro
    */
@@ -11,11 +11,11 @@ export type AddressDto = {
   /**
    * Coordonnées géographiques du store (au format GeoJSON, WKT ou équivalent)
    */
-  location: string
+  location?: string
   /**
    * Id de la ville
    */
-  cityId: number
+  cityId?: number
   /**
    * Id de la région
    */
@@ -76,20 +76,6 @@ export type QualityInspectorUpdateDto = UserUpdateDto & {
 }
 
 /**
- * Objet de transfert de données pour les rôles.
- */
-export type RoleDto = {
-  /**
-   * Identifiant unique
-   */
-  readonly id: number
-  /**
-   * Nom du rôle
-   */
-  name: string
-}
-
-/**
  * Objet de transfert de données pour les traders.
  */
 export type TraderUpdateDto = UserUpdateDto & {
@@ -110,23 +96,15 @@ export type UserUpdateDto = {
   /**
    * Prénom de l'utilisateur
    */
-  firstName: string
+  firstName?: string
   /**
    * Nom de famille de l'utilisateur
    */
-  lastName: string
+  lastName?: string
   /**
    * Adresse email de l'utilisateur
    */
-  email: string
-  /**
-   * Date d'enregistrement
-   */
-  readonly registrationDate?: string
-  /**
-   * Date de validation
-   */
-  readonly validationDate?: string
+  email?: string
   /**
    * Compte activé
    */
@@ -138,20 +116,38 @@ export type UserUpdateDto = {
   /**
    * Mot de passe de l'utilisateur
    */
-  password: string
-  /**
-   * Liste des rôles de l'utilisateur
-   */
-  roles?: Array<RoleDto>
+  password?: string
   /**
    * Identifiant de la langue préférée
    */
-  languageId: number
+  languageId?: number
   /**
    * Adresse de l'utilisateur
    */
-  address: AddressDto
+  address?: AddressUpdateDto
   type: string
+}
+
+/**
+ * DTO pour l'entité Adresse.
+ */
+export type AddressDto = {
+  /**
+   * Rue/Quartier/Numéro
+   */
+  street?: string
+  /**
+   * Coordonnées géographiques du store (au format GeoJSON, WKT ou équivalent)
+   */
+  location: string
+  /**
+   * Id de la ville
+   */
+  cityId: number
+  /**
+   * Id de la région
+   */
+  regionId?: number
 }
 
 /**
@@ -342,6 +338,7 @@ export type ProducerDetailDto = {
     | 'quality_inspector'
     | 'exporter'
     | 'carrier'
+    | 'trader'
 }
 
 /**
@@ -349,6 +346,20 @@ export type ProducerDetailDto = {
  */
 export type QualityInspectorDetailDto = UserDetailDto & {
   type: 'quality_inspector'
+}
+
+/**
+ * Objet de transfert de données pour les rôles.
+ */
+export type RoleDto = {
+  /**
+   * Identifiant unique
+   */
+  readonly id: number
+  /**
+   * Nom du rôle
+   */
+  name: string
 }
 
 /**
@@ -420,6 +431,7 @@ export type TransformerDetailDto = {
     | 'quality_inspector'
     | 'exporter'
     | 'carrier'
+    | 'trader'
 }
 
 /**
@@ -484,6 +496,7 @@ export type UserDetailDto = {
     | 'quality_inspector'
     | 'exporter'
     | 'carrier'
+    | 'trader'
 }
 
 /**
@@ -1217,6 +1230,124 @@ export type ApiErrorErrors = {
 }
 
 /**
+ * Objet de transfert de données pour les administrateurs.
+ */
+export type AdminCreateDto = UserCreateDto & {
+  type: 'admin'
+}
+
+/**
+ * Objet de transfert de données pour les transporteurs.
+ */
+export type CarrierCreateDto = UserCreateDto & {
+  type: 'carrier'
+} & {
+  /**
+   * Prix par kilomètre facturé par le transporteur
+   */
+  pricePerKm: number
+  /**
+   * Rayon d'action du transporteur en kilomètres
+   */
+  radius: number
+}
+
+/**
+ * Objet de transfert de données pour les exportateurs.
+ */
+export type ExporterCreateDto = UserCreateDto & {
+  type: 'exporter'
+}
+
+/**
+ * Objet de transfert de données pour les producteurs.
+ */
+export type ProducerCreateDto = UserCreateDto & {
+  type: 'producer'
+} & {
+  /**
+   * Identifiant agricole
+   */
+  agriculturalIdentifier: string
+  /**
+   * Coopérative du producteur
+   */
+  cooperativeId?: number
+}
+
+/**
+ * Objet de transfert de données pour les inspecteurs qualité.
+ */
+export type QualityInspectorCreateDto = UserCreateDto & {
+  type: 'quality_inspector'
+}
+
+/**
+ * Objet de transfert de données pour les traders.
+ */
+export type TraderCreateDto = UserCreateDto & {
+  type: 'trader'
+}
+
+/**
+ * Objet de transfert de données pour les transformateurs.
+ */
+export type TransformerCreateDto = UserCreateDto & {
+  type: 'transformer'
+}
+
+/**
+ * Objet de transfert pour créer ou mettre à jour un utilisateur.
+ */
+export type UserCreateDto = {
+  /**
+   * Prénom de l'utilisateur
+   */
+  firstName: string
+  /**
+   * Nom de famille de l'utilisateur
+   */
+  lastName: string
+  /**
+   * Adresse email de l'utilisateur
+   */
+  email: string
+  /**
+   * Date d'enregistrement
+   */
+  readonly registrationDate?: string
+  /**
+   * Date de validation
+   */
+  readonly validationDate?: string
+  /**
+   * Compte activé
+   */
+  enabled?: boolean
+  /**
+   * Numéro de téléphone (Bénin, format local à 10 chiffres débutant par 01, ou +229...)
+   */
+  phone?: string
+  /**
+   * Mot de passe de l'utilisateur
+   */
+  password: string
+  /**
+   * Liste des rôles de l'utilisateur
+   */
+  roles?: Array<RoleDto>
+  /**
+   * Identifiant de la langue préférée
+   */
+  languageId: number
+  /**
+   * Adresse de l'utilisateur
+   */
+  address: AddressDto
+  type: string
+}
+
+/**
  * Payload du message de contact
  */
 export type ContactRequestDto = {
@@ -1327,6 +1458,7 @@ export type ExporterListDto = {
     | 'quality_inspector'
     | 'exporter'
     | 'carrier'
+    | 'trader'
 }
 
 /**
@@ -1408,6 +1540,7 @@ export type UserListDto = {
     | 'quality_inspector'
     | 'exporter'
     | 'carrier'
+    | 'trader'
 }
 
 export type ExportAuctionDto = {
@@ -2936,7 +3069,7 @@ export type ListUsersResponse = ListUsersResponses[keyof ListUsersResponses]
 
 export type CreateUserData = {
   body: {
-    user?: UserUpdateDto
+    user?: UserCreateDto
     documents?: Array<Blob | File>
   }
   path?: never

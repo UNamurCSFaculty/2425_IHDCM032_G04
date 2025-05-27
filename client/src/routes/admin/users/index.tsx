@@ -1,67 +1,46 @@
-import { Button } from '@/components/ui/button'
-import { Link, createFileRoute } from '@tanstack/react-router'
-import { PlusCircle } from 'lucide-react'
-
-// Si vous avez un layout spécifique pour /admin/users/*, créez src/routes/admin/users/__root.tsx
-// et changez getParentRoute ici. Sinon, il hérite de /admin/__root.tsx.
+import { PendingApprovalsPage } from '@/components/admin/user-management/PendingApprovalsPage'
+import { UserListPage } from '@/components/admin/user-management/UserListPage'
+import { Tabs, TabsContent, TabsTrigger } from '@/components/ui/tabs'
+import { TabsList } from '@radix-ui/react-tabs'
+import { createFileRoute } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
 
 export const Route = createFileRoute('/admin/users/')({
-  component: AdminUsersListComponent,
+  component: UserManagementPage,
 })
 
-function AdminUsersListComponent() {
-  // Logique pour récupérer et afficher la liste des utilisateurs
-  const users = [
-    { id: '1', name: 'Alice Wonderland', email: 'alice@example.com' },
-    { id: '2', name: 'Bob The Builder', email: 'bob@example.com' },
-  ]
+function UserManagementPage() {
+  const { t } = useTranslation()
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Gestion des Utilisateurs</h1>
-        <Button asChild>
-          <Link to="/admin/users/new">
-            <PlusCircle className="mr-2 size-4" /> Ajouter un utilisateur
-          </Link>
-        </Button>
+    <div className="container mx-auto py-6 lg:py-10">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold tracking-tight">
+          {t('admin.user_management.title')}
+        </h1>
+        <p className="text-muted-foreground">
+          {t('admin.user_management.description')}
+        </p>
       </div>
-      {/* Ici, une table ou une liste des utilisateurs (ex: utilisant votre DataTable) */}
-      <div className="rounded-md border">
-        {/* Exemple de table simple */}
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
-                Nom
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
-                Email
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200 bg-white">
-            {users.map(user => (
-              <tr key={user.id}>
-                <td className="px-6 py-4 whitespace-nowrap">{user.name}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{user.email}</td>
-                <td className="px-6 py-4 text-sm font-medium whitespace-nowrap">
-                  <Link
-                    to="/admin/users/$userId"
-                    params={{ userId: user.id }}
-                    className="text-indigo-600 hover:text-indigo-900"
-                  >
-                    Voir/Modifier
-                  </Link>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+
+      <Tabs defaultValue="all-users" className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="all-users">
+            {t('admin.user_management.tabs.all_users')}
+          </TabsTrigger>
+          <TabsTrigger value="pending-approvals">
+            {t('admin.user_management.tabs.pending_approvals')}
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value="all-users">
+          <UserListPage />
+        </TabsContent>
+        <TabsContent value="pending-approvals">
+          <PendingApprovalsPage />
+
+          <div>Platecholder Pending Approvals</div>
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }

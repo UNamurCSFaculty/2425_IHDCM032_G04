@@ -247,6 +247,7 @@
     "phone": "电话",
     "coordinates_label": "坐标：",
     "placeholder": {
+      "leave_blank_password": "如果不想更改密码，请留空",
       "date": "选择日期",
       "no_city_found": "未找到城市",
       "search": "搜索",

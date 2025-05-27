@@ -4,8 +4,9 @@ import be.labil.anacarde.application.exception.*;
 import be.labil.anacarde.application.service.storage.StorageService;
 import be.labil.anacarde.domain.dto.db.user.UserDetailDto;
 import be.labil.anacarde.domain.dto.db.user.UserListDto;
-import be.labil.anacarde.domain.dto.write.user.ProducerUpdateDto;
-import be.labil.anacarde.domain.dto.write.user.UserUpdateDto;
+import be.labil.anacarde.domain.dto.write.user.create.ProducerCreateDto;
+import be.labil.anacarde.domain.dto.write.user.create.UserCreateDto;
+import be.labil.anacarde.domain.dto.write.user.update.UserUpdateDto;
 import be.labil.anacarde.domain.mapper.UserDetailMapper;
 import be.labil.anacarde.domain.mapper.UserListMapper;
 import be.labil.anacarde.domain.model.*;
@@ -14,6 +15,7 @@ import be.labil.anacarde.infrastructure.persistence.RoleRepository;
 import be.labil.anacarde.infrastructure.persistence.user.ProducerRepository;
 import be.labil.anacarde.infrastructure.persistence.user.UserRepository;
 import be.labil.anacarde.infrastructure.util.PersistenceHelper;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -55,13 +57,13 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	}
 
 	@Override
-	public UserDetailDto createUser(UserUpdateDto dto, List<MultipartFile> files) {
+	public UserDetailDto createUser(UserCreateDto dto, List<MultipartFile> files) {
 		dto.setPassword(bCryptPasswordEncoder.encode(dto.getPassword()));
 
 		boolean emailExists = userRepository.findByEmail(dto.getEmail()).isPresent();
 		boolean phoneExists = userRepository.findByPhone(dto.getPhone()).isPresent();
 		boolean agriculturalIdentifierExists = false;
-		if (dto instanceof ProducerUpdateDto producerDto) {
+		if (dto instanceof ProducerCreateDto producerDto) {
 			agriculturalIdentifierExists = producerRepository
 					.findByAgriculturalIdentifier(producerDto.getAgriculturalIdentifier())
 					.isPresent();
@@ -120,17 +122,21 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	}
 
 	@Override
-	public UserDetailDto updateUser(Integer id, UserUpdateDto userDetailDto) {
+	public UserDetailDto updateUser(Integer id, UserUpdateDto userUpdateDto) {
 		User existingUser = userRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé"));
 		// Mets uniquement à jour les champs non nuls du DTO
-		User user = userDetailMapper.partialUpdate(userDetailDto, existingUser);
+		User user = userDetailMapper.partialUpdate(userUpdateDto, existingUser);
 		City city = geoService.findCityById(user.getAddress().getCity().getId());
 		user.getAddress().setCity(city);
 		user.getAddress().setRegion(geoService.findRegionByCityId(city));
 
-		if (userDetailDto.getPassword() != null && !userDetailDto.getPassword().isBlank()) {
-			user.setPassword(bCryptPasswordEncoder.encode(userDetailDto.getPassword()));
+		if (user.isEnabled() && user.getValidationDate() == null) {
+			user.setValidationDate(LocalDateTime.now());
+		}
+
+		if (userUpdateDto.getPassword() != null && !userUpdateDto.getPassword().isBlank()) {
+			user.setPassword(bCryptPasswordEncoder.encode(userUpdateDto.getPassword()));
 		}
 
 		User full = persistenceHelper.saveAndReload(userRepository, user, User::getId);
