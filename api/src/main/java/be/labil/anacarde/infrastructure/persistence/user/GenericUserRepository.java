@@ -11,10 +11,9 @@ import org.springframework.data.repository.query.Param;
 @NoRepositoryBean
 public interface GenericUserRepository<T extends User> extends JpaRepository<T, Integer> {
 
-	@EntityGraph(attributePaths = {"roles"})
 	Optional<T> findByEmail(String email);
 
-	@EntityGraph(attributePaths = {"roles", "language"})
+	@EntityGraph(attributePaths = {"language"})
 	@Query("SELECT u FROM #{#entityName} u WHERE u.id = :id")
 	Optional<T> findByIdWithAssociations(@Param("id") Integer id);
 }

@@ -35,6 +35,10 @@ public class GlobalSettings {
 	@Column(name = "default_min_price_kg")
 	private Double defaultMinPriceKg;
 
+	@Column(name = "force_better_bids", nullable = false)
+	@Builder.Default
+	private Boolean forceBetterBids = Boolean.FALSE;
+
 	@Column(name = "show_only_active", nullable = false)
 	@Builder.Default
 	private Boolean showOnlyActive = Boolean.TRUE;

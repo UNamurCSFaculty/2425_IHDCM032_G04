@@ -55,7 +55,7 @@ const data = {
     },
     {
       title: 'Paramètres',
-      url: '/admin/settings',
+      url: '/admin/global-settings',
       icon: IconSettings,
     },
   ],

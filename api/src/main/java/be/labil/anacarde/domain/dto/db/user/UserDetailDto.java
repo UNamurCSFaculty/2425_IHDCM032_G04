@@ -3,12 +3,10 @@ package be.labil.anacarde.domain.dto.db.user;
 import be.labil.anacarde.domain.dto.db.AddressDto;
 import be.labil.anacarde.domain.dto.db.DocumentDto;
 import be.labil.anacarde.domain.dto.db.LanguageDto;
-import be.labil.anacarde.domain.dto.db.RoleDto;
 import io.swagger.v3.oas.annotations.media.DiscriminatorMapping;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Set;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -29,10 +27,6 @@ import lombok.EqualsAndHashCode;
 						TraderDetailDto.class, CarrierDetailDto.class,
 						QualityInspectorDetailDto.class, AdminDetailDto.class})
 public abstract class UserDetailDto extends UserListDto {
-
-	/** Rôles de l'utilisateur. */
-	@Schema(description = "Liste des rôles de l'utilisateur", accessMode = Schema.AccessMode.READ_ONLY)
-	private Set<RoleDto> roles;
 
 	/** Identifiant de la langue préférée. */
 	@Schema(description = "Identifiant de la langue préférée", requiredMode = Schema.RequiredMode.REQUIRED)

@@ -11,16 +11,14 @@ import org.mapstruct.Mapping;
 import org.mapstruct.ObjectFactory;
 import org.mapstruct.ReportingPolicy;
 
-@Mapper(componentModel = "spring", uses = {MapperHelpers.class, RoleMapper.class,
-		LanguageMapper.class, AddressMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring", uses = {MapperHelpers.class, LanguageMapper.class,
+		AddressMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class TraderDetailMapper {
 
-	@Mapping(source = "roles", target = "roles")
 	@Mapping(source = "language", target = "language")
 	@Mapping(source = "address", target = "address")
 	public abstract Trader toEntity(TraderDetailDto dto);
 
-	@Mapping(source = "roles", target = "roles")
 	@Mapping(source = "language", target = "language")
 	@Mapping(source = "address", target = "address")
 	public abstract TraderDetailDto toDto(Trader entity);

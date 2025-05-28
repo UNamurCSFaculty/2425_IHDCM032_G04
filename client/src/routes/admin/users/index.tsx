@@ -37,8 +37,6 @@ function UserManagementPage() {
         </TabsContent>
         <TabsContent value="pending-approvals">
           <PendingApprovalsPage />
-
-          <div>Platecholder Pending Approvals</div>
         </TabsContent>
       </Tabs>
     </div>

@@ -612,6 +612,13 @@
     "button_home": "返回首页",
     "button_contact_support": "联系支持"
   },
+  "forbidden": {
+    "error_code": "403",
+    "title": "禁止访问",
+    "message": "抱歉，您没有访问此页面所需的权限。",
+    "button_home": "返回首页",
+    "button_contact_support": "联系支持"
+  },
   "error_boundary": {
     "title": "发生错误",
     "message": "抱歉，出现问题。请稍后重试或返回首页。",

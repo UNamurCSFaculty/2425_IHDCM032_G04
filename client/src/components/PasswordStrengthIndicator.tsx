@@ -8,8 +8,8 @@ interface PasswordStrengthIndicatorProps
 
 export function PasswordStrengthIndicator({
   strength,
-  className, // Extrait className des props
-  ...rest // Récupère toutes les autres props HTML
+  className,
+  ...rest
 }: PasswordStrengthIndicatorProps) {
   const { t } = useTranslation()
 

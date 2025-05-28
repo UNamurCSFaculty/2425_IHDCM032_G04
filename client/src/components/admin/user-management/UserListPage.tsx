@@ -3,7 +3,7 @@ import {
   listUsersOptions,
   updateUserMutation,
   deleteUserMutation,
-  getUserOptions, // Import getUserOptions
+  getUserOptions,
 } from '@/api/generated/@tanstack/react-query.gen'
 import type { UserDetailDto, UserListDto } from '@/api/generated/types.gen'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
@@ -24,10 +24,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu'
-import {
-  Dialog,
-  DialogContent, // Keep DialogTrigger if you want to open dialog from a button outside dropdown
-} from '@/components/ui/dialog'
+import { Dialog, DialogContent } from '@/components/ui/dialog'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -47,18 +44,17 @@ import {
   CheckCircle2,
   XCircle,
   Loader2,
-  ArrowUpDown, // For sort indicator
+  ArrowUpDown,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { UserForm } from './UserForm'
-import { format } from 'date-fns' // For date formatting
+import { format } from 'date-fns'
 import { toast } from 'sonner'
-import PaginationControls from '@/components/PaginationControls' // Import your PaginationControls
+import PaginationControls from '@/components/PaginationControls'
 import { useMemo } from 'react'
-import { sortData, type SortConfig } from '@/lib/sorting' // Import your sorting utility
+import { sortData, type SortConfig } from '@/lib/sorting'
 import type { AppUpdateUserDto, AppUserDetailDto } from '@/schemas/api-schemas'
 
-// Define a type for sortable columns
 type SortableColumn = keyof Pick<
   UserDetailDto,
   'firstName' | 'email' | 'type' | 'registrationDate' | 'enabled'
@@ -72,25 +68,22 @@ export function UserListPage() {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [selectedUserForDelete, setSelectedUserForDelete] =
-    useState<UserListDto | null>(null) // Renamed for clarity
+    useState<UserListDto | null>(null)
   const [editingUserId, setEditingUserId] = useState<number | null>(null)
 
-  // Pagination state
   const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 10 // Or make this configurable
+  const itemsPerPage = 10
 
-  // Sorting state
   const [sortColumn, setSortColumn] = useState<SortableColumn | null>(null)
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
 
-  // Query to fetch detailed user for editing
   const {
     data: detailedUserToEdit,
     isLoading: isLoadingUserDetails,
     isError: isErrorUserDetails,
     error: userDetailsError,
   } = useQuery({
-    ...getUserOptions({ path: { id: editingUserId! } }), // Non-null assertion as 'enabled' guarantees id is present
+    ...getUserOptions({ path: { id: editingUserId! } }),
     enabled: !!editingUserId && isEditDialogOpen,
     staleTime: 5 * 60 * 1000,
   })
@@ -142,19 +135,13 @@ export function UserListPage() {
   ])
 
   const mutationUpdate = useMutation({
-    // This mutation is now primarily for handleToggleUserStatus
-    // The path will be set dynamically in mutate calls
     ...updateUserMutation(),
     onSuccess: (_, variables) => {
-      // variables contains path and body
       queryClient.invalidateQueries({ queryKey: listUsersOptions().queryKey })
-      // Optionally invalidate specific user if needed, though list invalidation might cover it
       queryClient.invalidateQueries({
         queryKey: ['getUser', { path: { id: variables.path.id } }],
       })
       toast.success(t('admin.user_management.toasts.user_updated_success'))
-      // setIsEditDialogOpen(false) // This will be handled by UserForm's onSubmitSuccess
-      // setEditingUserId(null)    // This will be handled by UserForm's onSubmitSuccess or onOpenChange
     },
     onError: (error: any) => {
       toast.error(t('common.error'), {
@@ -234,8 +221,6 @@ export function UserListPage() {
     if (sortColumn !== column) {
       return <ArrowUpDown className="text-muted-foreground/50 ml-2 h-3 w-3" />
     }
-    // Assuming you might want different icons for asc/desc in the future
-    // For now, ArrowUpDown is used for both, but you can replace them.
     return sortDirection === 'asc' ? (
       <ArrowUpDown className="ml-2 h-3 w-3" />
     ) : (
@@ -441,18 +426,15 @@ export function UserListPage() {
             !isErrorUserDetails &&
             detailedUserToEdit && (
               <UserForm
-                existingUser={detailedUserToEdit as AppUserDetailDto} // Pass fetched detailed user
+                existingUser={detailedUserToEdit as AppUserDetailDto}
                 onSubmitSuccess={() => {
-                  // Correctly using onSubmitSuccess
                   setIsEditDialogOpen(false)
                   setEditingUserId(null)
-                  // Query invalidation is now handled within UserForm's mutation.onSuccess
                 }}
                 onCancel={() => {
                   setIsEditDialogOpen(false)
                   setEditingUserId(null)
                 }}
-                // isSubmitting is handled by UserForm's internal mutation
                 formTitle={t('admin.user_management.edit_dialog.title')}
                 formDescription={t(
                   'admin.user_management.edit_dialog.description'

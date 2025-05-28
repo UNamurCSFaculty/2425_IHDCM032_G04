@@ -87,13 +87,8 @@ export const SelectorMap: React.FC<SelectorMapProps> = ({
   radius = 0,
   isDisplayOnly = false,
 }) => {
-  const [selectedPosition, setSelectedPosition] = useState<LatLng | null>(
-    () => {
-      if (!initialPosition) return null
-      const coords = wktToLatLon(initialPosition)
-      return coords ? new LatLng(coords[0], coords[1]) : null
-    }
-  )
+  const [selectedPosition, setSelectedPosition] = useState<LatLng | null>(null)
+
   const [addressInfo, setAddressInfo] = useState<NominatimAddress | null>(null)
   const [loadingAddress, setLoadingAddress] = useState(false)
 
@@ -136,6 +131,17 @@ export const SelectorMap: React.FC<SelectorMapProps> = ({
       setLoadingAddress(false)
     }
   }, [])
+
+  // sync initialPosition
+  useEffect(() => {
+    if (!initialPosition) return
+    const coords = wktToLatLon(initialPosition)
+    if (coords) {
+      const pt = new LatLng(coords[0], coords[1])
+      setSelectedPosition(pt)
+      fetchAddress(pt.lat, pt.lng)
+    }
+  }, [initialPosition, fetchAddress])
 
   const MapEvents = () => {
     useMapEvents({

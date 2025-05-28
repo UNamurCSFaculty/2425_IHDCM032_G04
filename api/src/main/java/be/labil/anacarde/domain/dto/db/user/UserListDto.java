@@ -57,8 +57,8 @@ public abstract class UserListDto extends BaseDto {
 	private boolean enabled;
 
 	/** Numéro de téléphone de l'utilisateur. */
-	@Pattern(regexp = "^(?:\\+229)?01\\d{8}$", message = "Numéro invalide – doit être +229XXXXXXXX ou +22901XXXXXXXX")
-	@Schema(description = "Numéro de téléphone (Bénin, format local à 10 chiffres débutant par 01, ou +229...)", example = "+2290178123456", pattern = "^(?:\\+229)?01\\d{8}$")
+	@Pattern(regexp = "^\\+22901\\d{8}$", message = "Le numéro de téléphone doit commencer par +22901 suivi de 8 chiffres (ex: +2290123456789).")
+	@Schema(description = "Numéro de téléphone (Bénin, format local à 10 chiffres débutant par 01, ou +229...)", example = "+2290178123456", pattern = "^\\+22901\\d{8}$")
 	private String phone;
 
 	/**

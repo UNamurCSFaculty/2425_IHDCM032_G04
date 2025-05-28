@@ -66,7 +66,7 @@ public class AuctionStrategyApiControllerIntegrationTest extends AbstractIntegra
 	public void testListAuctionStrategies() throws Exception {
 		mockMvc.perform(get("/api/auctions/strategies").accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk()).andExpect(jsonPath("$").isArray())
-				.andExpect(jsonPath("$.length()").value(1));
+				.andExpect(jsonPath("$.length()").value(3));
 	}
 
 	/**

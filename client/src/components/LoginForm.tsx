@@ -24,6 +24,7 @@ export function LoginForm() {
 
   const loginMutation = useMutation({
     ...authenticateUserMutation(),
+    retry: 0, // Valeur par défaut, ajouté pour être explicite
     onSuccess(user) {
       setUser(user)
       if (redirectParam) {

@@ -3,11 +3,9 @@ package be.labil.anacarde.presentation.controller;
 import be.labil.anacarde.application.exception.ApiErrorResponse;
 import be.labil.anacarde.domain.dto.db.AuctionStrategyDto;
 import be.labil.anacarde.domain.dto.db.ValidationGroups;
-import be.labil.anacarde.presentation.controller.annotations.ApiResponseGet;
-import be.labil.anacarde.presentation.controller.annotations.ApiResponsePost;
-import be.labil.anacarde.presentation.controller.annotations.ApiResponsePut;
 import be.labil.anacarde.presentation.controller.annotations.ApiValidId;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -29,26 +27,35 @@ public interface AuctionStrategyApi {
 
 	@Operation(summary = "Obtenir une stratégie d'enchère")
 	@GetMapping("/{id}")
-	@ApiResponseGet
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "", content = @Content(schema = @Schema(implementation = AuctionStrategyDto.class))),
+			@ApiResponse(responseCode = "404", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
 	ResponseEntity<AuctionStrategyDto> getAuctionStrategy(
 			@ApiValidId @PathVariable("id") Integer id);
 
 	@Operation(summary = "Créer une stratégie d'enchère")
 	@PostMapping
-	@ApiResponsePost
+	@ApiResponses({
+			@ApiResponse(responseCode = "201", description = "", content = @Content(schema = @Schema(implementation = AuctionStrategyDto.class))),
+			@ApiResponse(responseCode = "400", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
+			@ApiResponse(responseCode = "409", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
 	ResponseEntity<AuctionStrategyDto> createAuctionStrategy(@Validated({Default.class,
 			ValidationGroups.Create.class}) @RequestBody AuctionStrategyDto auctionStrategyDto);
 
 	@Operation(summary = "Mettre à jour une stratégie d'enchère")
 	@PutMapping("/{id}")
-	@ApiResponsePut
+	@ApiResponses({
+			@ApiResponse(responseCode = "201", description = "", content = @Content(schema = @Schema(implementation = AuctionStrategyDto.class))),
+			@ApiResponse(responseCode = "400", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
+			@ApiResponse(responseCode = "409", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
 	ResponseEntity<AuctionStrategyDto> updateAuctionStrategy(
 			@ApiValidId @PathVariable("id") Integer id, @Validated({Default.class,
 					ValidationGroups.Update.class}) @RequestBody AuctionStrategyDto auctionStrategyDto);
 
 	@Operation(summary = "Obtenir toutes les stratégies d'enchère")
 	@GetMapping
-	@ApiResponseGet
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "Liste récupérée avec succès", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = AuctionStrategyDto.class))))})
 	ResponseEntity<List<AuctionStrategyDto>> listAuctionStrategies();
 
 	@Operation(summary = "Supprimer une stratégie d'enchère")

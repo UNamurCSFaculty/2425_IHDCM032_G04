@@ -1,7 +1,6 @@
 package be.labil.anacarde.domain.dto.write.user.create;
 
 import be.labil.anacarde.domain.dto.db.AddressDto;
-import be.labil.anacarde.domain.dto.db.RoleDto;
 import be.labil.anacarde.domain.dto.db.ValidationGroups;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -9,7 +8,6 @@ import io.swagger.v3.oas.annotations.media.DiscriminatorMapping;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import java.time.LocalDateTime;
-import java.util.Set;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -71,8 +69,9 @@ public abstract class UserCreateDto {
 	private boolean enabled;
 
 	/** Numéro de téléphone de l'utilisateur. */
-	@Pattern(regexp = "^(?:\\+229)?01\\d{8}$", message = "Numéro invalide – doit être +229XXXXXXXX ou +22901XXXXXXXX")
-	@Schema(description = "Numéro de téléphone (Bénin, format local à 10 chiffres débutant par 01, ou +229...)", example = "+2290178123456", pattern = "^(?:\\+229)?01\\d{8}$")
+	@Pattern(regexp = "^\\+22901\\d{8}$", message = "Le numéro de téléphone doit commencer par +22901 suivi de 8 chiffres (ex: +2290123456789).")
+	@Schema(description = "Numéro de téléphone (Bénin, format local à 10 chiffres débutant par 01, ou +229...)", example = "+2290178123456", pattern = "^\\+22901\\d{8}$", requiredMode = Schema.RequiredMode.REQUIRED)
+	@NotBlank
 	private String phone;
 
 	/**
@@ -84,10 +83,6 @@ public abstract class UserCreateDto {
 	@NotBlank(groups = ValidationGroups.Create.class, message = "Le mot de passe est requis")
 	@Size(min = 8, message = "Le mot de passe doit contenir au moins {min} caractères", groups = ValidationGroups.Create.class)
 	private String password;
-
-	/** Rôles de l'utilisateur. */
-	@Schema(description = "Liste des rôles de l'utilisateur")
-	private Set<RoleDto> roles;
 
 	/** Identifiant de la langue préférée. */
 	@Schema(description = "Identifiant de la langue préférée", requiredMode = Schema.RequiredMode.REQUIRED)

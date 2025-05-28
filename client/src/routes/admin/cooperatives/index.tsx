@@ -14,7 +14,6 @@ export const Route = createFileRoute('/admin/cooperatives/')({
         </Button>
       </div>
       <p>Liste des coopératives ici...</p>
-      {/* Exemple: <Link to="/admin/cooperatives/$coopId" params={{ coopId: '123' }}>Voir Coop Alpha</Link> */}
     </div>
   ),
 })

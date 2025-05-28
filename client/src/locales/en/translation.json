@@ -611,6 +611,13 @@
     "button_home": "Back to Home",
     "button_contact_support": "Contact Support"
   },
+  "forbidden": {
+    "error_code": "403",
+    "title": "Access Denied",
+    "message": "Sorry, you do not have the necessary permissions to access this page.",
+    "button_home": "Back to Home",
+    "button_contact_support": "Contact Support"
+  },
   "error_boundary": {
     "title": "An Error Occurred",
     "message": "Sorry, something went wrong. Please try again later or return to home.",

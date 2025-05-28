@@ -77,6 +77,7 @@ export const SignupForm: React.FC = () => {
   const { t } = useTranslation()
   const appData = useAppData()
   const containerRef = useRef<HTMLDivElement>(null)
+  const isMountedRef = useRef(false) // Référence pour suivre l'état de montage
 
   const [step, setStep] = useState(1)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -192,9 +193,19 @@ export const SignupForm: React.FC = () => {
       }
     }
   }
+
   useEffect(() => {
-    containerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }, [step])
+    if (isMountedRef.current) {
+      // Si ce n'est pas le rendu initial, alors on effectue le défilement
+      containerRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      })
+    } else {
+      // Au premier rendu, on marque que le montage est terminé
+      isMountedRef.current = true
+    }
+  }, [step]) // Ce hook s'exécute à chaque changement de 'step'
 
   return (
     <section className="body-font relative text-gray-600">

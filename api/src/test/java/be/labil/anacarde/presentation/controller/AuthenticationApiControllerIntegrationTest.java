@@ -1,6 +1,5 @@
 package be.labil.anacarde.presentation.controller;
 
-import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -28,7 +27,6 @@ import org.springframework.test.web.servlet.MvcResult;
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-/** Test d'intégration pour le contrôleur d'authentification. */
 public class AuthenticationApiControllerIntegrationTest {
 
 	@Autowired
@@ -105,7 +103,6 @@ public class AuthenticationApiControllerIntegrationTest {
 				.andExpect(jsonPath("$.address.regionId").value(1))
 
 				.andExpect(jsonPath("$.phone").value("+2290197020000"))
-				.andExpect(jsonPath("$.roles").isArray()).andExpect(jsonPath("$.roles", hasSize(0)))
 				.andExpect(jsonPath("$.language.id").value(lang.getId()))
 				.andExpect(jsonPath("$.language.name").value("Français"));
 	}

@@ -287,6 +287,10 @@
     "inactive": "Inactif"
   },
   "admin": {
+    "settings": {
+      "title": "Paramèttres de la plateforme",
+      "description": "Gérez les paramètres de la plateforme."
+    },
     "user_management": {
       "title": "Gestion des utilisateurs",
       "description": "Gérez les utilisateurs, approuvez les inscriptions et modifiez les détails des utilisateurs.",
@@ -379,7 +383,14 @@
     "fields": {
       "agriculturalIdentifier": "Identifiant Agricole",
       "email": "E-mail",
-      "phone": "Téléphone"
+      "phone": "Téléphone",
+      "defaultStrategyId": "Stratégie par défaut",
+      "defaultFixedPriceKg": "Prix fixe par défaut par kg",
+      "defaultMaxPriceKg": "Prix maximum par défaut par kg",
+      "defaultMinPriceKg": "Prix minimum par défaut par kg",
+      "showOnlyActive": "Afficher uniquement les actifs",
+      "forceBetterBids": "Forcer de meilleures offres",
+      "minIncrement": "Incrément minimum"
     },
     "internal_error": "Une erreur interne s'est produite. Contactez le support si le problème persiste.",
     "message.not_readable": "Message HTTP illisible",
@@ -695,6 +706,13 @@
     "button_home": "Retour à l’accueil",
     "button_contact_support": "Contacter le support"
   },
+  "forbidden": {
+    "error_code": "403",
+    "title": "Accès Interdit",
+    "message": "Désolé, vous n'avez pas les permissions nécessaires pour accéder à cette page.",
+    "button_home": "Retour à l’accueil",
+    "button_contact_support": "Contacter le support"
+  },
   "error_boundary": {
     "title": "Une erreur est survenue",
     "message": "Désolé, un problème est survenu. Veuillez réessayer plus tard ou retourner à l’accueil.",
@@ -724,5 +742,17 @@
     "duration_years_label": "(Années)",
     "duration_months_label": "(Mois)",
     "ends_on_date_label": "Se termine le {{date}}"
+  },
+  "settings": {
+    "update_success": "Paramètres globaux mis à jour avec succès.",
+    "title": "Paramètres Globaux",
+    "default_strategy": "Stratégie d'enchère par défaut",
+    "select_strategy_placeholder": "Sélectionner une stratégie par défaut...",
+    "default_fixed_price_kg": "Prix fixe par défaut (par kg)",
+    "default_max_price_kg": "Prix maximum par défaut (par kg)",
+    "default_min_price_kg": "Prix minimum par défaut (par kg)",
+    "show_only_active": "Afficher uniquement les enchères actives par défaut",
+    "force_better_bids": "Exiger des offres supérieures par défaut",
+    "min_increment": "Incrément minimum pour les offres par défaut"
   }
 }

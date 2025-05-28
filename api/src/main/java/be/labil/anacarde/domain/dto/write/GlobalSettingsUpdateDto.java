@@ -25,6 +25,10 @@ public class GlobalSettingsUpdateDto {
 	@Schema(description = "Filtrer les enchères terminées", example = "true", required = true)
 	private Boolean showOnlyActive;
 
+	@NotNull(message = "Le flag forceBetterBids est requis")
+	@Schema(description = "Forcer de faire des sur enchères meilleures que la précédente", example = "true", required = true)
+	private Boolean forceBetterBids = false;
+
 	@Schema(description = "Incrément minimum d'une sur enchère")
 	private Integer minIncrement = 1;
 }

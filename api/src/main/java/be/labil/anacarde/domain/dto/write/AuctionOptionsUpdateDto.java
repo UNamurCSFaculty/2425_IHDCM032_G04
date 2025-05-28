@@ -24,6 +24,9 @@ public class AuctionOptionsUpdateDto {
 	@Schema(description = "Afficher au public", example = "true")
 	private Boolean showPublic;
 
+	@Schema(description = "Forcer les meilleures enchères", example = "false")
+	private Boolean forceBetterBids = false;
+
 	@Schema(description = "Incrément minimum d'une sur enchère")
 	private Integer minIncrement = 1;
 }

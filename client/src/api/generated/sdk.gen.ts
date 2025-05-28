@@ -10,15 +10,9 @@ import type {
   DeleteUserData,
   DeleteUserResponse,
   DeleteUserError,
-  GetUserData,
-  GetUserResponse,
-  GetUserError,
   UpdateUserData,
   UpdateUserResponse,
   UpdateUserError,
-  UpdateUserRolesData,
-  UpdateUserRolesResponse,
-  UpdateUserRolesError,
   DeleteStoreData,
   DeleteStoreResponse,
   DeleteStoreError,
@@ -131,17 +125,20 @@ import type {
   DeleteAuctionStrategyResponse,
   DeleteAuctionStrategyError,
   GetAuctionStrategyData,
+  GetAuctionStrategyResponse,
   GetAuctionStrategyError,
   UpdateAuctionStrategyData,
+  UpdateAuctionStrategyResponse,
   UpdateAuctionStrategyError,
-  ListUsersData,
-  ListUsersResponse,
+  GetGlobalSettingsData,
+  GetGlobalSettingsResponse,
+  GetGlobalSettingsError,
+  UpdateGlobalSettingsData,
+  UpdateGlobalSettingsResponse,
+  UpdateGlobalSettingsError,
   CreateUserData,
   CreateUserResponse,
   CreateUserError,
-  AddRoleToUserData,
-  AddRoleToUserResponse,
-  AddRoleToUserError,
   ListStoresData,
   ListStoresResponse,
   CreateStoreData,
@@ -205,8 +202,9 @@ import type {
   CreateAuctionResponse,
   CreateAuctionError,
   ListAuctionStrategiesData,
-  ListAuctionStrategiesError,
+  ListAuctionStrategiesResponse,
   CreateAuctionStrategyData,
+  CreateAuctionStrategyResponse,
   CreateAuctionStrategyError,
   CheckPhoneData,
   CheckPhoneResponse,
@@ -236,6 +234,11 @@ import type {
   GetApplicationDataData,
   GetApplicationDataResponse,
   GetApplicationDataError,
+  ListUsersData,
+  ListUsersResponse,
+  GetUserData,
+  GetUserResponse,
+  GetUserError,
 } from './types.gen'
 import { client as _heyApiClient } from './client.gen'
 
@@ -280,29 +283,6 @@ export const deleteUser = <ThrowOnError extends boolean = false>(
 }
 
 /**
- * Récupérer les détails d'un utilisateur
- * Renvoie les informations détaillées d'un utilisateur à partir de son ID.
- */
-export const getUser = <ThrowOnError extends boolean = false>(
-  options: Options<GetUserData, ThrowOnError>
-) => {
-  return (options.client ?? _heyApiClient).get<
-    GetUserResponse,
-    GetUserError,
-    ThrowOnError
-  >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
-    url: '/api/users/{id}',
-    ...options,
-  })
-}
-
-/**
  * Mettre à jour un utilisateur
  * Met à jour un utilisateur existant en utilisant l'ID spécifié.
  */
@@ -321,33 +301,6 @@ export const updateUser = <ThrowOnError extends boolean = false>(
       },
     ],
     url: '/api/users/{id}',
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...options?.headers,
-    },
-  })
-}
-
-/**
- * Mettre à jour les rôles d'un utilisateur
- * Remplace l'ensemble des rôles de l'utilisateur spécifié.
- */
-export const updateUserRoles = <ThrowOnError extends boolean = false>(
-  options: Options<UpdateUserRolesData, ThrowOnError>
-) => {
-  return (options.client ?? _heyApiClient).put<
-    UpdateUserRolesResponse,
-    UpdateUserRolesError,
-    ThrowOnError
-  >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
-    url: '/api/users/{id}/roles',
     ...options,
     headers: {
       'Content-Type': 'application/json',
@@ -1224,7 +1177,7 @@ export const getAuctionStrategy = <ThrowOnError extends boolean = false>(
   options: Options<GetAuctionStrategyData, ThrowOnError>
 ) => {
   return (options.client ?? _heyApiClient).get<
-    unknown,
+    GetAuctionStrategyResponse,
     GetAuctionStrategyError,
     ThrowOnError
   >({
@@ -1246,7 +1199,7 @@ export const updateAuctionStrategy = <ThrowOnError extends boolean = false>(
   options: Options<UpdateAuctionStrategyData, ThrowOnError>
 ) => {
   return (options.client ?? _heyApiClient).put<
-    unknown,
+    UpdateAuctionStrategyResponse,
     UpdateAuctionStrategyError,
     ThrowOnError
   >({
@@ -1266,15 +1219,14 @@ export const updateAuctionStrategy = <ThrowOnError extends boolean = false>(
 }
 
 /**
- * Lister tous les utilisateurs
- * Renvoie la liste de tous les utilisateurs présents dans le système.
+ * Obtenir les réglages globaux
  */
-export const listUsers = <ThrowOnError extends boolean = false>(
-  options?: Options<ListUsersData, ThrowOnError>
+export const getGlobalSettings = <ThrowOnError extends boolean = false>(
+  options?: Options<GetGlobalSettingsData, ThrowOnError>
 ) => {
   return (options?.client ?? _heyApiClient).get<
-    ListUsersResponse,
-    unknown,
+    GetGlobalSettingsResponse,
+    GetGlobalSettingsError,
     ThrowOnError
   >({
     security: [
@@ -1283,8 +1235,34 @@ export const listUsers = <ThrowOnError extends boolean = false>(
         type: 'http',
       },
     ],
-    url: '/api/users',
+    url: '/api/admin/global-settings',
     ...options,
+  })
+}
+
+/**
+ * Mettre à jour les réglages globaux
+ */
+export const updateGlobalSettings = <ThrowOnError extends boolean = false>(
+  options: Options<UpdateGlobalSettingsData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).put<
+    UpdateGlobalSettingsResponse,
+    UpdateGlobalSettingsError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/admin/global-settings',
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options?.headers,
+    },
   })
 }
 
@@ -1312,29 +1290,6 @@ export const createUser = <ThrowOnError extends boolean = false>(
       'Content-Type': null,
       ...options?.headers,
     },
-  })
-}
-
-/**
- * Ajouter un rôle à un utilisateur
- * Ajoute un rôle spécifique à l'utilisateur.
- */
-export const addRoleToUser = <ThrowOnError extends boolean = false>(
-  options: Options<AddRoleToUserData, ThrowOnError>
-) => {
-  return (options.client ?? _heyApiClient).post<
-    AddRoleToUserResponse,
-    AddRoleToUserError,
-    ThrowOnError
-  >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
-    url: '/api/users/{id}/roles/{roleName}',
-    ...options,
   })
 }
 
@@ -1923,8 +1878,8 @@ export const listAuctionStrategies = <ThrowOnError extends boolean = false>(
   options?: Options<ListAuctionStrategiesData, ThrowOnError>
 ) => {
   return (options?.client ?? _heyApiClient).get<
+    ListAuctionStrategiesResponse,
     unknown,
-    ListAuctionStrategiesError,
     ThrowOnError
   >({
     security: [
@@ -1945,7 +1900,7 @@ export const createAuctionStrategy = <ThrowOnError extends boolean = false>(
   options: Options<CreateAuctionStrategyData, ThrowOnError>
 ) => {
   return (options.client ?? _heyApiClient).post<
-    unknown,
+    CreateAuctionStrategyResponse,
     CreateAuctionStrategyError,
     ThrowOnError
   >({
@@ -2175,6 +2130,52 @@ export const getApplicationData = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     url: '/api/app',
+    ...options,
+  })
+}
+
+/**
+ * Lister tous les utilisateurs
+ * Renvoie la liste de tous les utilisateurs présents dans le système.
+ */
+export const listUsers = <ThrowOnError extends boolean = false>(
+  options?: Options<ListUsersData, ThrowOnError>
+) => {
+  return (options?.client ?? _heyApiClient).get<
+    ListUsersResponse,
+    unknown,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/admin/users',
+    ...options,
+  })
+}
+
+/**
+ * Récupérer les détails d'un utilisateur
+ * Renvoie les informations détaillées d'un utilisateur à partir de son ID.
+ */
+export const getUser = <ThrowOnError extends boolean = false>(
+  options: Options<GetUserData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).get<
+    GetUserResponse,
+    GetUserError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/admin/users/{id}',
     ...options,
   })
 }

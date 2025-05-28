@@ -11,14 +11,12 @@ import be.labil.anacarde.domain.mapper.UserDetailMapper;
 import be.labil.anacarde.domain.mapper.UserListMapper;
 import be.labil.anacarde.domain.model.*;
 import be.labil.anacarde.infrastructure.persistence.DocumentRepository;
-import be.labil.anacarde.infrastructure.persistence.RoleRepository;
 import be.labil.anacarde.infrastructure.persistence.user.ProducerRepository;
 import be.labil.anacarde.infrastructure.persistence.user.UserRepository;
 import be.labil.anacarde.infrastructure.util.PersistenceHelper;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +35,6 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 public class UserServiceImpl implements UserDetailsService, UserService {
 
-	private final RoleRepository roleRepository;
 	private final ProducerRepository producerRepository;
 	private final UserRepository userRepository;
 	private final UserDetailMapper userDetailMapper;
@@ -149,38 +146,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 			throw new ResourceNotFoundException("Utilisateur non trouvé");
 		}
 		userRepository.deleteById(id);
-	}
-
-	@Override
-	public UserDetailDto addRoleToUser(Integer userId, String roleName) {
-		User user = userRepository.findById(userId)
-				.orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé"));
-		Role role = roleRepository.findByName(roleName)
-				.orElseThrow(() -> new ResourceNotFoundException("Rôle non trouvé"));
-
-		if (user.getRoles().contains(role)) {
-			throw new BadRequestException("Le rôle est déjà attribué à l'utilisateur");
-		}
-		user.getRoles().add(role);
-
-		User savedUser = userRepository.save(user);
-		return userDetailMapper.toDto(savedUser);
-	}
-
-	@Override
-	public UserDetailDto updateUserRoles(Integer userId, List<String> roleNames) {
-		User user = userRepository.findById(userId)
-				.orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé"));
-
-		Set<Role> newRoles = roleNames.stream()
-				.map(roleName -> roleRepository.findByName(roleName).orElseThrow(
-						() -> new ResourceNotFoundException("Rôle non trouvé: " + roleName)))
-				.collect(Collectors.toSet());
-
-		user.setRoles(newRoles);
-
-		User savedUser = userRepository.save(user);
-		return userDetailMapper.toDto(savedUser);
 	}
 
 	@Override

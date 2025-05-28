@@ -2,16 +2,11 @@ import { useState, useMemo } from 'react'
 import {
   listUsersOptions,
   updateUserMutation,
-  deleteUserMutation, // For rejecting by deleting
-  getUserOptions, // Import getUserOptions
+  deleteUserMutation,
+  getUserOptions,
 } from '@/api/generated/@tanstack/react-query.gen'
-import type {
-  UserDetailDto,
-  // UserCreateDto, // No longer explicitly needed here if AppUpdateUserDto covers it
-  UserListDto,
-  // UserUpdateDto, // We will use AppUpdateUserDto
-} from '@/api/generated/types.gen'
-import type { AppUpdateUserDto, AppUserDetailDto } from '@/schemas/api-schemas' // Import AppUpdateUserDto
+import type { UserDetailDto, UserListDto } from '@/api/generated/types.gen'
+import type { AppUpdateUserDto, AppUserDetailDto } from '@/schemas/api-schemas'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import {
   Table,
@@ -39,19 +34,18 @@ import {
   XCircle,
   Loader2,
   CheckCircle2,
-  ArrowUpDown, // Added for sort indicator
-  Search, // Added for search icon
+  ArrowUpDown,
+  Search,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { format } from 'date-fns'
 import { toast } from 'sonner'
-// Import the actual API function
-import { downloadDocument } from '@/api/generated' // Ensure this is the correct import for your generated function
-import PaginationControls from '@/components/PaginationControls'
-import { Input } from '@/components/ui/input' // Added for search input
-import { UserDetailsDisplay } from './UserDetailsDisplay' // Nouvel import
 
-// Define a type for sortable columns (adjust based on available fields in UserDetailDto for pending users)
+import { downloadDocument } from '@/api/generated'
+import PaginationControls from '@/components/PaginationControls'
+import { Input } from '@/components/ui/input'
+import { UserDetailsDisplay } from './UserDetailsDisplay'
+
 type SortableColumnPending = keyof Pick<
   UserDetailDto,
   'firstName' | 'email' | 'type' | 'registrationDate'
@@ -73,7 +67,7 @@ export function PendingApprovalsPage() {
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 10 // Or make this configurable
+  const itemsPerPage = 10
 
   // Sorting state
   const [sortColumn, setSortColumn] = useState<SortableColumnPending | null>(
@@ -322,8 +316,6 @@ export function PendingApprovalsPage() {
             description: t('common.popup_blocker_error_description'),
           })
         }
-        // Consider revoking URL.createObjectURL(fileURL) on newWindow.onload or newWindow.onunload
-        // For simplicity, some browsers handle blob URL lifecycle well once opened.
       } else {
         console.error(
           'Expected a Blob response for viewing, but received:',
@@ -405,7 +397,6 @@ export function PendingApprovalsPage() {
         </div>
       ) : (
         <>
-          {/* Count display is now part of the header section above */}
           <div className="rounded-md border">
             <Table>
               <TableHeader>

@@ -5,7 +5,6 @@ import be.labil.anacarde.application.exception.ApiErrorException;
 import be.labil.anacarde.application.exception.ErrorDetail;
 import be.labil.anacarde.application.service.UserService;
 import be.labil.anacarde.domain.dto.db.user.UserDetailDto;
-import be.labil.anacarde.domain.dto.db.user.UserListDto;
 import be.labil.anacarde.domain.dto.write.user.create.AdminCreateDto;
 import be.labil.anacarde.domain.dto.write.user.create.UserCreateDto;
 import be.labil.anacarde.domain.dto.write.user.update.UserUpdateDto;
@@ -23,12 +22,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 public class UserControllerApiController implements UserApi {
 
 	private final UserService userService;
-
-	@Override
-	public ResponseEntity<? extends UserDetailDto> getUser(Integer id) {
-		UserDetailDto user = userService.getUserById(id);
-		return ResponseEntity.ok(user);
-	}
 
 	@Override
 	public ResponseEntity<UserDetailDto> createUser(UserCreateDto user,
@@ -51,12 +44,6 @@ public class UserControllerApiController implements UserApi {
 	}
 
 	@Override
-	public ResponseEntity<List<? extends UserListDto>> listUsers() {
-		List<UserListDto> users = userService.listUsers();
-		return ResponseEntity.ok(users);
-	}
-
-	@Override
 	public ResponseEntity<UserDetailDto> updateUser(Integer id, UserUpdateDto userUpdateDto) {
 		UserDetailDto updated = userService.updateUser(id, userUpdateDto);
 		return ResponseEntity.ok(updated);
@@ -66,19 +53,6 @@ public class UserControllerApiController implements UserApi {
 	public ResponseEntity<Void> deleteUser(Integer id) {
 		userService.deleteUser(id);
 		return ResponseEntity.noContent().build();
-	}
-
-	@Override
-	public ResponseEntity<? extends UserDetailDto> addRoleToUser(Integer id, String roleName) {
-		UserDetailDto updated = userService.addRoleToUser(id, roleName);
-		return ResponseEntity.ok(updated);
-	}
-
-	@Override
-	public ResponseEntity<? extends UserDetailDto> updateUserRoles(Integer id,
-			List<String> roleNames) {
-		UserDetailDto updated = userService.updateUserRoles(id, roleNames);
-		return ResponseEntity.ok(updated);
 	}
 
 	// Vérification de l'existence de l'email et du téléphone

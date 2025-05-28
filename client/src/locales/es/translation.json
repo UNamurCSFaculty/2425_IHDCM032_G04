@@ -612,6 +612,13 @@
     "button_home": "Volver al Inicio",
     "button_contact_support": "Contactar Soporte"
   },
+  "forbidden": {
+    "error_code": "403",
+    "title": "Acceso Denegado",
+    "message": "Lo sentimos, no tiene los permisos necesarios para acceder a esta página.",
+    "button_home": "Volver al Inicio",
+    "button_contact_support": "Contactar Soporte"
+  },
   "error_boundary": {
     "title": "Ocurrió un Error",
     "message": "Lo sentimos, algo salió mal. Por favor, inténtelo de nuevo más tarde o vuelva al inicio.",

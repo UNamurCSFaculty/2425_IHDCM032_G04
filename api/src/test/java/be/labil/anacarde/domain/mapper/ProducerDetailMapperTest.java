@@ -4,14 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import be.labil.anacarde.domain.dto.db.CooperativeDto;
 import be.labil.anacarde.domain.dto.db.LanguageDto;
-import be.labil.anacarde.domain.dto.db.RoleDto;
 import be.labil.anacarde.domain.dto.db.user.ProducerDetailDto;
 import be.labil.anacarde.domain.dto.write.user.create.ProducerCreateDto;
 import be.labil.anacarde.domain.model.Cooperative;
 import be.labil.anacarde.domain.model.Language;
 import be.labil.anacarde.domain.model.Producer;
-import be.labil.anacarde.domain.model.Role;
-import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,8 +23,6 @@ class ProducerDetailMapperTest {
 	void shouldMapProducerDetailDtoToProducerEntity() {
 		LanguageDto languageDto = LanguageDto.builder().id(1).code("fr").name("Français").build();
 
-		RoleDto roleDto = RoleDto.builder().id(30).name("Producer").build();
-
 		CooperativeDto coopDto = new CooperativeDto();
 		coopDto.setId(10);
 		coopDto.setName("COOP-A");
@@ -40,7 +35,6 @@ class ProducerDetailMapperTest {
 		dto.setAgriculturalIdentifier("AGRI2025");
 		dto.setCooperativeId(coopDto.getId());
 		dto.setLanguageId(languageDto.getId());
-		dto.setRoles(Set.of(roleDto));
 		dto.setPhone("+2290197000002");
 
 		Producer entity = mapper.toEntity(dto);
@@ -58,20 +52,12 @@ class ProducerDetailMapperTest {
 
 		assertThat(entity.getLanguage()).isNotNull();
 		assertThat(entity.getLanguage().getId()).isEqualTo(1);
-
-		assertThat(entity.getRoles()).isNotEmpty();
-		assertThat(entity.getRoles().iterator().next().getId()).isEqualTo(30);
-		assertThat(entity.getRoles().iterator().next().getName()).isEqualTo("Producer");
 	}
 
 	@Test
 	void shouldMapProducerEntityToProducerDetailDto() {
 		Language lang = new Language();
 		lang.setId(1);
-
-		Role role = new Role();
-		role.setId(30);
-		role.setName("ROLE_PRODUCER");
 
 		Cooperative coop = new Cooperative();
 		coop.setId(10);
@@ -83,7 +69,6 @@ class ProducerDetailMapperTest {
 		producer.setEmail("marie@farm.com");
 		producer.setPassword("hiddenpass");
 		producer.setLanguage(lang);
-		producer.setRoles(Set.of(role));
 		producer.setAgriculturalIdentifier("AGRI9988");
 		producer.setCooperative(coop);
 		producer.setPhone("+32444444444");
@@ -103,9 +88,5 @@ class ProducerDetailMapperTest {
 
 		assertThat(dto.getLanguage()).isNotNull();
 		assertThat(dto.getLanguage().getId()).isEqualTo(1);
-
-		assertThat(dto.getRoles()).isNotEmpty();
-		assertThat(dto.getRoles().iterator().next().getId()).isEqualTo(30);
-		assertThat(dto.getRoles().iterator().next().getName()).isEqualTo("ROLE_PRODUCER");
 	}
 }

@@ -15,7 +15,7 @@ export const zUserUpdateDto = z.object({
   enabled: z.boolean().optional(),
   phone: z
     .string()
-    .regex(/^(?:\+229)?01\d{8}$/)
+    .regex(/^\+22901\d{8}$/)
     .optional(),
   password: z.string().optional(),
   languageId: z.number().int().optional(),
@@ -86,11 +86,6 @@ export const zAddressDto = z.object({
   regionId: z.number().int().optional(),
 })
 
-export const zRoleDto = z.object({
-  id: z.number().int().readonly(),
-  name: z.string().min(1),
-})
-
 export const zLanguageDto = z.object({
   id: z.number().int().readonly(),
   code: z.string().min(1),
@@ -118,9 +113,8 @@ export const zUserDetailDto = z.object({
   enabled: z.boolean().optional(),
   phone: z
     .string()
-    .regex(/^(?:\+229)?01\d{8}$/)
+    .regex(/^\+22901\d{8}$/)
     .optional(),
-  roles: z.array(zRoleDto).readonly().optional(),
   language: zLanguageDto,
   address: zAddressDto,
   documents: z.array(zDocumentDto).optional(),
@@ -169,34 +163,12 @@ export const zTraderDetailDto = zUserDetailDto.and(
 
 export const zExporterDetailDto = zTraderDetailDto
 
-export const zProducerDetailDto = z.object({
-  id: z.number().int().readonly(),
-  firstName: z.string().min(1),
-  lastName: z.string().min(1),
-  email: z.string().min(1),
-  registrationDate: z.iso.datetime().readonly().optional(),
-  validationDate: z.iso.datetime().readonly().optional(),
-  enabled: z.boolean().optional(),
-  phone: z
-    .string()
-    .regex(/^(?:\+229)?01\d{8}$/)
-    .optional(),
-  roles: z.array(zRoleDto).readonly().optional(),
-  language: zLanguageDto,
-  address: zAddressDto,
-  documents: z.array(zDocumentDto).optional(),
-  agriculturalIdentifier: z.string().min(1),
-  cooperative: zCooperativeDto.optional(),
-  type: z.enum([
-    'admin',
-    'producer',
-    'transformer',
-    'quality_inspector',
-    'exporter',
-    'carrier',
-    'trader',
-  ]),
-})
+export const zProducerDetailDto = zTraderDetailDto.and(
+  z.object({
+    agriculturalIdentifier: z.string().min(1),
+    cooperative: zCooperativeDto.optional(),
+  })
+)
 
 export const zQualityInspectorDetailDto = zUserDetailDto.and(
   z.object({
@@ -204,32 +176,7 @@ export const zQualityInspectorDetailDto = zUserDetailDto.and(
   })
 )
 
-export const zTransformerDetailDto = z.object({
-  id: z.number().int().readonly(),
-  firstName: z.string().min(1),
-  lastName: z.string().min(1),
-  email: z.string().min(1),
-  registrationDate: z.iso.datetime().readonly().optional(),
-  validationDate: z.iso.datetime().readonly().optional(),
-  enabled: z.boolean().optional(),
-  phone: z
-    .string()
-    .regex(/^(?:\+229)?01\d{8}$/)
-    .optional(),
-  roles: z.array(zRoleDto).readonly().optional(),
-  language: zLanguageDto,
-  address: zAddressDto,
-  documents: z.array(zDocumentDto).optional(),
-  type: z.enum([
-    'admin',
-    'producer',
-    'transformer',
-    'quality_inspector',
-    'exporter',
-    'carrier',
-    'trader',
-  ]),
-})
+export const zTransformerDetailDto = zTraderDetailDto
 
 export const zErrorDetail = z.object({
   field: z.string().optional(),
@@ -438,6 +385,7 @@ export const zAuctionOptionsUpdateDto = z.object({
   minPriceKg: z.number().optional(),
   buyNowPrice: z.number().optional(),
   showPublic: z.boolean().optional(),
+  forceBetterBids: z.boolean().optional(),
   minIncrement: z.number().int().optional(),
 })
 
@@ -465,6 +413,7 @@ export const zAuctionOptionsDto = z.object({
   minPriceKg: z.number().optional(),
   buyNowPrice: z.number().optional(),
   showPublic: z.boolean().optional(),
+  forceBetterBids: z.boolean().optional(),
   minIncrement: z.number().int().optional(),
 })
 
@@ -482,15 +431,24 @@ export const zAuctionDto = z.object({
   options: zAuctionOptionsDto.optional(),
 })
 
-export const zApiErrorErrors = z.object({
-  path: z.string().optional(),
-  message: z.string().optional(),
-  errorCode: z.string().optional(),
+export const zGlobalSettingsUpdateDto = z.object({
+  defaultStrategyId: z.number().int().optional(),
+  defaultFixedPriceKg: z.number().optional(),
+  defaultMaxPriceKg: z.number().optional(),
+  defaultMinPriceKg: z.number().optional(),
+  showOnlyActive: z.boolean(),
+  forceBetterBids: z.boolean(),
+  minIncrement: z.number().int().optional(),
 })
 
-export const zApiError = z.object({
-  message: z.string().optional(),
-  errors: z.array(zApiErrorErrors).optional(),
+export const zGlobalSettingsDto = z.object({
+  defaultStrategy: zAuctionStrategyDto.optional(),
+  defaultFixedPriceKg: z.number().optional(),
+  defaultMaxPriceKg: z.number().optional(),
+  defaultMinPriceKg: z.number().optional(),
+  showOnlyActive: z.boolean().optional(),
+  forceBetterBids: z.boolean(),
+  minIncrement: z.number().int().optional(),
 })
 
 export const zUserCreateDto = z.object({
@@ -502,10 +460,9 @@ export const zUserCreateDto = z.object({
   enabled: z.boolean().optional(),
   phone: z
     .string()
-    .regex(/^(?:\+229)?01\d{8}$/)
-    .optional(),
+    .min(1)
+    .regex(/^\+22901\d{8}$/),
   password: z.string(),
-  roles: z.array(zRoleDto).optional(),
   languageId: z.number().int(),
   address: zAddressDto,
   type: z.string(),
@@ -578,96 +535,6 @@ export const zLoginRequest = z.object({
   password: z.string(),
 })
 
-export const zUserListDto = z.object({
-  id: z.number().int().readonly(),
-  firstName: z.string().min(1),
-  lastName: z.string().min(1),
-  email: z.string().min(1),
-  registrationDate: z.iso.datetime().readonly().optional(),
-  validationDate: z.iso.datetime().readonly().optional(),
-  enabled: z.boolean().optional(),
-  phone: z
-    .string()
-    .regex(/^(?:\+229)?01\d{8}$/)
-    .optional(),
-  type: z.enum([
-    'admin',
-    'producer',
-    'transformer',
-    'quality_inspector',
-    'exporter',
-    'carrier',
-    'trader',
-  ]),
-})
-
-export const zAdminListDto = zUserListDto.and(
-  z.object({
-    type: z.literal('admin'),
-  })
-)
-
-export const zCarrierListDto = zUserListDto
-  .and(
-    z.object({
-      type: z.literal('carrier'),
-    })
-  )
-  .and(
-    z.object({
-      pricePerKm: z.number(),
-      radius: z.number(),
-    })
-  )
-
-export const zExporterListDto = z.object({
-  id: z.number().int().readonly(),
-  firstName: z.string().min(1),
-  lastName: z.string().min(1),
-  email: z.string().min(1),
-  registrationDate: z.iso.datetime().readonly().optional(),
-  validationDate: z.iso.datetime().readonly().optional(),
-  enabled: z.boolean().optional(),
-  phone: z
-    .string()
-    .regex(/^(?:\+229)?01\d{8}$/)
-    .optional(),
-  roles: z.array(zRoleDto).readonly().optional(),
-  language: zLanguageDto,
-  address: zAddressDto,
-  documents: z.array(zDocumentDto).optional(),
-  type: z.enum([
-    'admin',
-    'producer',
-    'transformer',
-    'quality_inspector',
-    'exporter',
-    'carrier',
-    'trader',
-  ]),
-})
-
-export const zTraderListDto = zUserListDto.and(
-  z.object({
-    type: z.literal('trader'),
-  })
-)
-
-export const zProducerListDto = zTraderListDto.and(
-  z.object({
-    agriculturalIdentifier: z.string().min(1),
-    cooperative: zCooperativeDto,
-  })
-)
-
-export const zQualityInspectorListDto = zUserListDto.and(
-  z.object({
-    type: z.literal('quality_inspector'),
-  })
-)
-
-export const zTransformerListDto = zTraderListDto
-
 export const zExportAuctionDto = z.object({
   auctionId: z.number().int().optional(),
   auctionStartDate: z.iso.datetime().optional(),
@@ -711,13 +578,109 @@ export const zApplicationDataDto = z.object({
   languages: z.array(zLanguageDto),
 })
 
+export const zUserListDto = z.object({
+  id: z.number().int().readonly(),
+  firstName: z.string().min(1),
+  lastName: z.string().min(1),
+  email: z.string().min(1),
+  registrationDate: z.iso.datetime().readonly().optional(),
+  validationDate: z.iso.datetime().readonly().optional(),
+  enabled: z.boolean().optional(),
+  phone: z
+    .string()
+    .regex(/^\+22901\d{8}$/)
+    .optional(),
+  type: z.enum([
+    'admin',
+    'producer',
+    'transformer',
+    'quality_inspector',
+    'exporter',
+    'carrier',
+    'trader',
+  ]),
+})
+
+export const zAdminListDto = zUserListDto.and(
+  z.object({
+    type: z.literal('admin'),
+  })
+)
+
+export const zCarrierListDto = zUserListDto
+  .and(
+    z.object({
+      type: z.literal('carrier'),
+    })
+  )
+  .and(
+    z.object({
+      pricePerKm: z.number(),
+      radius: z.number(),
+    })
+  )
+
+export const zExporterListDto = z.object({
+  id: z.number().int().readonly(),
+  firstName: z.string().min(1),
+  lastName: z.string().min(1),
+  email: z.string().min(1),
+  registrationDate: z.iso.datetime().readonly().optional(),
+  validationDate: z.iso.datetime().readonly().optional(),
+  enabled: z.boolean().optional(),
+  phone: z
+    .string()
+    .regex(/^\+22901\d{8}$/)
+    .optional(),
+  language: zLanguageDto,
+  address: zAddressDto,
+  documents: z.array(zDocumentDto).optional(),
+  type: z.enum([
+    'admin',
+    'producer',
+    'transformer',
+    'quality_inspector',
+    'exporter',
+    'carrier',
+    'trader',
+  ]),
+})
+
+export const zTraderListDto = zUserListDto.and(
+  z.object({
+    type: z.literal('trader'),
+  })
+)
+
+export const zProducerListDto = zTraderListDto.and(
+  z.object({
+    agriculturalIdentifier: z.string().min(1),
+    cooperative: zCooperativeDto,
+  })
+)
+
+export const zQualityInspectorListDto = zUserListDto.and(
+  z.object({
+    type: z.literal('quality_inspector'),
+  })
+)
+
+export const zTransformerListDto = zTraderListDto
+
+export const zApiErrorErrors = z.object({
+  path: z.string().optional(),
+  message: z.string().optional(),
+  errorCode: z.string().optional(),
+})
+
+export const zApiError = z.object({
+  message: z.string().optional(),
+  errors: z.array(zApiErrorErrors).optional(),
+})
+
 export const zDeleteUserResponse = z.void()
 
-export const zGetUserResponse = zUserDetailDto
-
 export const zUpdateUserResponse = zUserDetailDto
-
-export const zUpdateUserRolesResponse = zUserDetailDto
 
 export const zDeleteStoreResponse = z.union([z.unknown(), z.void()])
 
@@ -793,11 +756,15 @@ export const zAcceptAuctionResponse = zAuctionDto
 
 export const zDeleteAuctionStrategyResponse = z.union([z.unknown(), z.void()])
 
-export const zListUsersResponse = z.array(zUserListDto)
+export const zGetAuctionStrategyResponse = zAuctionStrategyDto
+
+export const zUpdateAuctionStrategyResponse = zAuctionStrategyDto
+
+export const zGetGlobalSettingsResponse = zGlobalSettingsDto
+
+export const zUpdateGlobalSettingsResponse = zGlobalSettingsDto
 
 export const zCreateUserResponse = zUserDetailDto
-
-export const zAddRoleToUserResponse = zUserDetailDto
 
 export const zListStoresResponse = z.array(zStoreDetailDto)
 
@@ -845,6 +812,10 @@ export const zListAuctionsResponse = z.array(zAuctionDto)
 
 export const zCreateAuctionResponse = zAuctionUpdateDto
 
+export const zListAuctionStrategiesResponse = z.array(zAuctionStrategyDto)
+
+export const zCreateAuctionStrategyResponse = zAuctionStrategyDto
+
 export const zCheckPhoneResponse = z.boolean()
 
 export const zCheckEmailResponse = z.boolean()
@@ -866,3 +837,7 @@ export const zDownloadDocumentResponse = z.string()
 export const zGetCurrentUserResponse = zUserDetailDto
 
 export const zGetApplicationDataResponse = zApplicationDataDto
+
+export const zListUsersResponse = z.array(zUserListDto)
+
+export const zGetUserResponse = zUserDetailDto

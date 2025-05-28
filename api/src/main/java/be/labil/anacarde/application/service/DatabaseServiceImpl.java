@@ -43,8 +43,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class DatabaseServiceImpl implements DatabaseService {
 
 	// --- Configuration Constants ---
-	private static final int TARGET_YEAR = 2025; // Année cible pour les données
-	private static final int NUM_PRODUCERS = 100;
+	private static final int TARGET_YEAR = 2025;
+	private static final int NUM_PENDING_PRODUCERS = 10;
+	private static final int NUM_PRODUCERS = 120;
 	private static final int NUM_TRANSFORMERS = 30;
 	private static final int NUM_EXPORTERS = 10;
 	private static final int NUM_CARRIERS = 10;
@@ -79,7 +80,6 @@ public class DatabaseServiceImpl implements DatabaseService {
 
 	// --- Injected Dependencies (Final with Lombok RequiredArgsConstructor) ---
 	private final UserRepository userRepository;
-	private final RoleRepository roleRepository;
 	private final LanguageRepository languageRepository;
 	private final StoreRepository storeRepository;
 	private final ProductRepository productRepository;
@@ -95,6 +95,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 	private final QualityControlRepository qualityControlRepository;
 	private final CityRepository cityRepository;
 	private final RegionRepository regionRepository;
+	private final GlobalSettingsRepository globalSettingsRepository;
 
 	private final StoreService storeService;
 	private final ProductService productService;
@@ -107,6 +108,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 	private final AuctionStrategyService auctionStrategyService;
 	private final FieldService fieldService;
 	private final RegionCityImportService regionCityImportService;
+	private final GlobalSettingsService globalSettingsService;
 
 	private final EntityManager entityManager;
 
@@ -118,9 +120,10 @@ public class DatabaseServiceImpl implements DatabaseService {
 	private final DocumentMapper documentMapper;
 	private final QualityControlMapper qualityControlMapper;
 	private final QualityMapper qualityMapper;
-	private LocalDateTime generationTime; // Timestamp when generation starts
+	private LocalDateTime generationTime;
 	private final Set<String> generatedEmails = new HashSet<>();
-	private final List<AuctionDto> createdAuctions = new ArrayList<>(); // Reset list for this run
+	private final Set<String> generatedPhones = new HashSet<>();
+	private final List<AuctionDto> createdAuctions = new ArrayList<>();
 	private static final double[] regionWeights = {0.006, // ID 1
 			0.158, // ID 2 (Atacora 15.8 %)
 			0.006, // ID 3
@@ -139,9 +142,11 @@ public class DatabaseServiceImpl implements DatabaseService {
 			new double[]{600.0, 800.0}, "Grade II", new double[]{500.0, 700.0}, "Grade III",
 			new double[]{400.0, 600.0}, "Hors normes", new double[]{300.0, 500.0});
 
-	// Base data loaded once
 	private LanguageDto langFr;
 	private LanguageDto langEn;
+	private LanguageDto langAr;
+	private LanguageDto langEs;
+	private LanguageDto langZhCn;
 	private TradeStatusDto statusOpen;
 	private TradeStatusDto statusAccepted;
 	private TradeStatusDto statusExpired;
@@ -150,7 +155,6 @@ public class DatabaseServiceImpl implements DatabaseService {
 	private TradeStatusDto statusCancelled;
 	private AuctionStrategyDto strategyOffer;
 
-	// Lists to hold created DTOs for relationships
 	private List<Region> regions;
 	private List<City> cities;
 	private List<ProducerDetailDto> createdProducers = new ArrayList<>();
@@ -317,6 +321,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 			}
 		});
 		userRepository.flush();
+		globalSettingsRepository.deleteAllInBatch();
 		// Delete all entities in the correct order to avoid foreign key constraint violations
 		cooperativeRepository.deleteAllInBatch();
 		contractOfferRepository.deleteAllInBatch();
@@ -332,15 +337,11 @@ public class DatabaseServiceImpl implements DatabaseService {
 		fieldRepository.deleteAllInBatch();
 		storeRepository.deleteAllInBatch();
 		userRepository.deleteAllInBatch();
-		roleRepository.deleteAllInBatch();
 		cityRepository.deleteAllInBatch();
 		regionRepository.deleteAllInBatch();
 		languageRepository.deleteAllInBatch();
 	}
 
-	/* ================================================================ */
-	/* ================ Create DataBase =============================== */
-	/* ================================================================ */
 	@Override
 	@Transactional
 	public void createDatabase() throws IOException {
@@ -358,8 +359,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 		generationTime = LocalDateTime.now();
 		log.info("===== initDatabase() – données de référence =====");
 
-		createBaseLookups(); // langues, rôles, statuts, stratégies, qualités
-		createRegionsAndCities(); // régions + villes
+		createBaseLookups();
+		createRegionsAndCities();
 		entityManager.flush();
 		log.info("Référentiel terminé ✔");
 	}
@@ -378,12 +379,10 @@ public class DatabaseServiceImpl implements DatabaseService {
 		createStores();
 		createFields();
 
-		/* → Cycle 1: récoltes */
 		createHarvestProducts();
 		createAuctions(false);
 		createBidsForFinishedAuctions();
 
-		/* → Cycle 2: produits transformés */
 		createTransformedProducts();
 		createAuctions(true);
 		createBidsForFinishedAuctions();
@@ -392,9 +391,6 @@ public class DatabaseServiceImpl implements DatabaseService {
 		log.info("Données de test générées ✔");
 	}
 
-	/* ================================================================ */
-	/* ================ Step 1: Base Lookups ========================== */
-	/* ================================================================ */
 	private void createBaseLookups() {
 		log.debug("Creating base lookups...");
 		// Languages
@@ -402,20 +398,12 @@ public class DatabaseServiceImpl implements DatabaseService {
 				.createLanguage(LanguageDto.builder().name("Français").code("fr").build());
 		langEn = languageService
 				.createLanguage(LanguageDto.builder().name("English").code("en").build());
-
-		// Roles (Ensure they exist - UserService might create them too)
-		roleRepository.findByName("ROLE_CARRIER")
-				.orElseGet(() -> roleRepository.save(Role.builder().name("ROLE_CARRIER").build()));
-		roleRepository.findByName("ROLE_ADMIN")
-				.orElseGet(() -> roleRepository.save(Role.builder().name("ROLE_ADMIN").build()));
-		roleRepository.findByName("ROLE_PRODUCER")
-				.orElseGet(() -> roleRepository.save(Role.builder().name("ROLE_PRODUCER").build()));
-		roleRepository.findByName("ROLE_TRANSFORMER").orElseGet(
-				() -> roleRepository.save(Role.builder().name("ROLE_TRANSFORMER").build()));
-		roleRepository.findByName("ROLE_EXPORTER")
-				.orElseGet(() -> roleRepository.save(Role.builder().name("ROLE_EXPORTER").build()));
-		roleRepository.findByName("ROLE_QUALITY_CONTROL").orElseGet(
-				() -> roleRepository.save(Role.builder().name("ROLE_QUALITY_CONTROL").build()));
+		langAr = languageService
+				.createLanguage(LanguageDto.builder().name("العربية").code("ar").build());
+		langEs = languageService
+				.createLanguage(LanguageDto.builder().name("Español").code("es").build());
+		langZhCn = languageService
+				.createLanguage(LanguageDto.builder().name("简体中文").code("zh-CN").build());
 
 		// Trade Statuses
 		statusOpen = tradeStatusService.createTradeStatus(createTradeStatusDto("Ouvert"));
@@ -432,14 +420,24 @@ public class DatabaseServiceImpl implements DatabaseService {
 		AuctionStrategyDto dto1 = new AuctionStrategyDto();
 		dto1.setName("Enchères montantes");
 		AuctionStrategyDto strategyBid = auctionStrategyService.createAuctionStrategy(dto1);
+		AuctionStrategyDto dtoFixedPrice = new AuctionStrategyDto();
+		dtoFixedPrice.setName("Prix fixe");
+		auctionStrategyService.createAuctionStrategy(dtoFixedPrice);
+
+		GlobalSettingsUpdateDto globalSettingsUpdateDto = new GlobalSettingsUpdateDto();
+		globalSettingsUpdateDto.setDefaultStrategyId(strategyOffer.getId());
+		globalSettingsUpdateDto.setForceBetterBids(false);
+		globalSettingsUpdateDto.setMinIncrement(1);
+		globalSettingsUpdateDto.setShowOnlyActive(false);
+		globalSettingsService.updateGlobalSettings(globalSettingsUpdateDto);
 		log.debug("Base lookups created.");
 
+		// TODO: AJOUTE EN DB UNE STRATEGIE GLOBALE
+
 		// create QualityTypes and Qualities
-		// --- Création des QualityType ---
 		QualityType anacardeType = qualityTypeRepository.save(new QualityType("Harvest"));
 		QualityType amandeType = qualityTypeRepository.save(new QualityType("Transformed"));
 
-		// --- Qualités Anacarde brute ---
 		List<String> anacardeCategory = List.of("Grade I", "Grade II", "Grade III", "Hors normes");
 
 		for (String name : anacardeCategory) {
@@ -449,12 +447,10 @@ public class DatabaseServiceImpl implements DatabaseService {
 			anacardeQualities.add(qualityMapper.toDto(qualityRepository.save(q)));
 		}
 
-		// --- Qualités Amande transformée (combinaison catégorie et calibre pour WW/SW/DW) ---
 		List<String> amandeCategories = List.of("WW", "SW", "DW");
 		List<String> amandeCalibres = List.of("180", "210", "240", "280", "320", "400", "450",
 				"500");
 
-		// Catégories entières avec calibres
 		for (String cat : amandeCategories) {
 			for (String calibre : amandeCalibres) {
 				String name = cat + calibre;
@@ -475,12 +471,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 		}
 	}
 
-	/* ================================================================ */
-	/* ================ Step 2: Regions and Cities ==================== */
-	/* ================================================================ */
 	private void createRegionsAndCities() throws IOException {
 
-		/* ---------- 1) Régions ---------- */
 		regions = List.of();
 		cities = List.of();
 		try {
@@ -494,10 +486,11 @@ public class DatabaseServiceImpl implements DatabaseService {
 		}
 	}
 
-	/* ================================================================ */
-	/* ================ Step 3: Users ================================= */
-	/* ================================================================ */
 	private void createUsers() {
+
+		createUsersOfType(ProducerCreateDto.class, this::createRandomPendingProducerDto,
+				dto -> (ProducerDetailDto) userService.createUser(dto, null), NUM_PENDING_PRODUCERS,
+				false);
 
 		createdAdmins = createUsersOfType(AdminCreateDto.class, this::createRandomAdminDto,
 				dto -> (AdminDetailDto) userService.createUser(dto, null), NUM_ADMINS);
@@ -542,18 +535,19 @@ public class DatabaseServiceImpl implements DatabaseService {
 	 * @return Liste des DTO créés
 	 */
 	private <U extends UserCreateDto, D> List<D> createUsersOfType(Class<U> dtoClass,
-			Supplier<U> dtoSupplier, Function<U, D> createMethod, int totalCount) {
+			Supplier<U> dtoSupplier, Function<U, D> createMethod, int totalCount,
+			boolean insertDefault) {
 		List<D> list = new ArrayList<>(totalCount);
 
 		log.info("Création de {} instances de {}", totalCount, dtoClass.getSimpleName());
 
-		// 1) L’utilisateur « par défaut »
-		U defaultDto = dtoSupplier.get();
-		defaultDto.setEmail(DEFAULT_EMAILS.get(dtoClass));
-		D defaultUser = createMethod.apply(defaultDto);
-		list.add(defaultUser);
+		if (insertDefault) {
+			U defaultDto = dtoSupplier.get();
+			defaultDto.setEmail(DEFAULT_EMAILS.get(dtoClass));
+			D defaultUser = createMethod.apply(defaultDto);
+			list.add(defaultUser);
+		}
 
-		// 2) Les autres générés aléatoirement
 		IntStream.range(1, totalCount).forEach(i -> {
 			U randomDto = dtoSupplier.get();
 			D randomUser = createMethod.apply(randomDto);
@@ -563,9 +557,11 @@ public class DatabaseServiceImpl implements DatabaseService {
 		return list;
 	}
 
-	/* ================================================================ */
-	/* ================ Step 4: Cooperatives ========================== */
-	/* ================================================================ */
+	private <U extends UserCreateDto, D> List<D> createUsersOfType(Class<U> dtoClass,
+			Supplier<U> dtoSupplier, Function<U, D> createMethod, int totalCount) {
+		return createUsersOfType(dtoClass, dtoSupplier, createMethod, totalCount, true);
+	}
+
 	private void createCooperativesAndAssignMembers() {
 		if (createdProducers.isEmpty()) {
 			log.warn("No producers available to create cooperatives.");
@@ -575,14 +571,11 @@ public class DatabaseServiceImpl implements DatabaseService {
 		log.info("Creating {} Cooperatives...", NUM_COOPERATIVES);
 		createdCooperatives = new ArrayList<>();
 
-		// listes de travail
 		List<ProducerDetailDto> presidentsPool = new ArrayList<>(createdProducers);
-		List<ProducerDetailDto> membersPool = new ArrayList<>(createdProducers); // producteur
-		// restant
+		List<ProducerDetailDto> membersPool = new ArrayList<>(createdProducers);
 
 		for (int i = 0; i < NUM_COOPERATIVES && !presidentsPool.isEmpty(); i++) {
 
-			/* ---------- 1) Président ---------- */
 			ProducerDetailDto presidentDto = presidentsPool
 					.remove(random.nextInt(presidentsPool.size()));
 			membersPool.remove(presidentDto); // pas re-sélectionné comme membre
@@ -624,9 +617,6 @@ public class DatabaseServiceImpl implements DatabaseService {
 		log.info("Cooperatives created, presidents and members assigned.");
 	}
 
-	/* ================================================================ */
-	/* ================ Step 5: Stores ================================ */
-	/* ================================================================ */
 	private void createStores() {
 		if (createdProducers.isEmpty() && createdTransformers.isEmpty()) {
 			log.warn("No Producers or Transformers available to manage stores.");
@@ -653,9 +643,6 @@ public class DatabaseServiceImpl implements DatabaseService {
 		log.info("Stores created.");
 	}
 
-	/* ================================================================ */
-	/* ================ Step 6: Fields ================================ */
-	/* ================================================================ */
 	private void createFields() {
 		if (createdProducers.isEmpty()) {
 			log.warn("No producers available to create fields.");
@@ -684,9 +671,6 @@ public class DatabaseServiceImpl implements DatabaseService {
 		log.info("Fields created.");
 	}
 
-	/* ================================================================ */
-	/* ================ Step 7a : Harvest Products ==================== */
-	/* ================================================================ */
 	private void createHarvestProducts() {
 		if (createdProducers.isEmpty()) {
 			log.warn("No producers to create harvest products.");
@@ -710,7 +694,6 @@ public class DatabaseServiceImpl implements DatabaseService {
 				QualityDto quality = anacardeQualities
 						.get(random.nextInt(anacardeQualities.size()));
 
-				// --- Document
 				DocumentUpdateDto docDto = new DocumentUpdateDto();
 				String[] extensions = {"pdf", "docx", "xlsx", "jpg", "png"};
 				docDto.setExtension(faker.options().option(extensions));
@@ -724,7 +707,6 @@ public class DatabaseServiceImpl implements DatabaseService {
 				docDto.setUserId(producer.getId());
 				Document document = documentRepository.save(documentMapper.toEntity(docDto));
 
-				// --- Quality control
 				QualityControlUpdateDto qc = new QualityControlUpdateDto();
 				qc.setIdentifier(faker.number().digits(10));
 				qc.setControlDate(generateRandomDateTimeInPast());
@@ -737,7 +719,6 @@ public class DatabaseServiceImpl implements DatabaseService {
 				QualityControl qualityControl = qualityControlRepository
 						.save(qualityControlMapper.toEntity(qc));
 
-				// --- Product
 				HarvestProductUpdateDto dto = new HarvestProductUpdateDto();
 				dto.setProducerId(producer.getId());
 				dto.setStoreId(store.getId());
@@ -759,9 +740,6 @@ public class DatabaseServiceImpl implements DatabaseService {
 		log.info("Harvest products created ({}).", createdProducts.size());
 	}
 
-	/* ================================================================ */
-	/* ================ Step 7b : Transformed Products ================ */
-	/* ================================================================ */
 	private void createTransformedProducts() {
 		if (createdTransformers.isEmpty()) {
 			log.warn("No transformers available to create transformed products.");
@@ -782,7 +760,6 @@ public class DatabaseServiceImpl implements DatabaseService {
 				StoreDetailDto store = createdStores.get(random.nextInt(createdStores.size()));
 				QualityDto quality = amandeQualities.get(random.nextInt(amandeQualities.size()));
 
-				// --- Document associé
 				DocumentUpdateDto docDto = new DocumentUpdateDto();
 				String[] extensions = {"pdf", "docx", "xlsx", "jpg", "png"};
 				docDto.setExtension(faker.options().option(extensions));
@@ -796,7 +773,6 @@ public class DatabaseServiceImpl implements DatabaseService {
 				docDto.setUserId(transformer.getId());
 				Document document = documentRepository.save(documentMapper.toEntity(docDto));
 
-				// --- Quality control
 				QualityInspectorDetailDto inspector = createdQualityInspectors
 						.get(random.nextInt(createdQualityInspectors.size()));
 				QualityControlUpdateDto qc = new QualityControlUpdateDto();
@@ -811,7 +787,6 @@ public class DatabaseServiceImpl implements DatabaseService {
 				QualityControl qualityControl = qualityControlRepository
 						.save(qualityControlMapper.toEntity(qc));
 
-				// --- Produit transformé
 				TransformedProductUpdateDto dto = new TransformedProductUpdateDto();
 				dto.setTransformerId(transformer.getId());
 				dto.setStoreId(store.getId());
@@ -846,9 +821,6 @@ public class DatabaseServiceImpl implements DatabaseService {
 				createdProducts.size());
 	}
 
-	/* ================================================================ */
-	/* ================ Step 8a : Auctions ============================ */
-	/* ================================================================ */
 	private void createAuctions(boolean onlyTransformed) {
 		if (createdProducts.isEmpty()) {
 			log.warn("No products available to create auctions.");
@@ -905,9 +877,6 @@ public class DatabaseServiceImpl implements DatabaseService {
 		log.info("Auctions created (Total list size: {}).", createdAuctions.size());
 	}
 
-	/* ================================================================ */
-	/* ================ Step 8b : Auction ============================= */
-	/* ================================================================ */
 	private void createSingleAuction(ProductDto product, TraderDetailDto seller) {
 		LocalDateTime creationDate = generateRandomDateTimeInPast();
 		LocalDateTime expirationDate = creationDate.plusDays(
@@ -940,6 +909,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 		opt.setStrategyId(strategyOffer.getId());
 		opt.setBuyNowPrice(maxPrice * quantity);
 		opt.setShowPublic(true);
+		opt.setForceBetterBids(faker.bool().bool());
 		opt.setMinPriceKg(minPrice);
 		opt.setMaxPriceKg(maxPrice);
 		opt.setMinIncrement(
@@ -966,9 +936,6 @@ public class DatabaseServiceImpl implements DatabaseService {
 		}
 	}
 
-	/* ================================================================ */
-	/* ================ Step 9: Bids ================================== */
-	/* ================================================================ */
 	private void createBidsForFinishedAuctions() {
 		log.info("Generating bids (context‑aware buyers)…");
 
@@ -977,9 +944,6 @@ public class DatabaseServiceImpl implements DatabaseService {
 			// éviter de dupliquer les offres si on passe plusieurs fois
 			if (auctionsWithBids.contains(auction.getId())) continue;
 
-			/*
-			 * 1) Sélection dynamique du pool d’acheteurs
-			 */
 			List<TraderDetailDto> potentialBidders;
 			if (auction.getProduct() instanceof HarvestProductDto) {
 				// Acheteurs possibles : transformeurs + exportateurs
@@ -994,17 +958,11 @@ public class DatabaseServiceImpl implements DatabaseService {
 			}
 			if (potentialBidders.isEmpty()) continue;
 
-			/*
-			 * 2) Exclure le vendeur courant
-			 */
 			Integer ownerId = auction.getTrader().getId();
 			potentialBidders = potentialBidders.stream().filter(t -> !t.getId().equals(ownerId))
 					.toList();
 			if (potentialBidders.isEmpty()) continue;
 
-			/*
-			 * 3) Nombre d’offres à générer pour cette vente
-			 */
 			int numBids = random
 					.nextInt(MAX_BIDS_PER_FINISHED_AUCTION - MIN_BIDS_PER_FINISHED_AUCTION + 1)
 					+ MIN_BIDS_PER_FINISHED_AUCTION;
@@ -1111,17 +1069,22 @@ public class DatabaseServiceImpl implements DatabaseService {
 		log.info("Bids generated: {}", bidsCreated);
 	}
 
-	/* ================================================================ */
-	/* ================ Helper Methods ================================ */
-	/* ================================================================ */
-
 	/** Génère une adresse email unique pour tout le run */
 	private String uniqueEmail() {
 		String email;
 		do {
-			email = faker.internet().emailAddress(); // ou safeEmailAddress()
+			email = faker.internet().emailAddress();
 		} while (!generatedEmails.add(email)); // add() renvoie false si déjà présent
 		return email;
+	}
+
+	/** Génère un numéro de téléphone unique pour tout le run */
+	private String uniquePhone() {
+		String phone;
+		do {
+			phone = "+22901" + faker.phoneNumber().subscriberNumber(8);
+		} while (!generatedPhones.add(phone)); // add() renvoie false si déjà présent
+		return phone;
 	}
 
 	private LocalDateTime generateRandomDateTimeInPast() {
@@ -1155,20 +1118,16 @@ public class DatabaseServiceImpl implements DatabaseService {
 	 * Crée une adresse aléatoire pondérée par la production d'anacarde par région.
 	 */
 	public AddressDto createRandomAddress() {
-		// 1) Choix de la région selon le poids
 		Region selectedRegion = selectRegionByWeight();
 
-		// 2) Récupération des villes dans la région
 		List<City> citiesInRegion = cities.stream()
 				.filter(c -> c.getRegion().equals(selectedRegion)).collect(Collectors.toList());
 		if (citiesInRegion.isEmpty()) {
 			citiesInRegion = new ArrayList<>(cities);
 		}
 
-		// 3) Choix aléatoire d'une ville
 		City selectedCity = citiesInRegion.get(random.nextInt(citiesInRegion.size()));
 
-		// 4) Récupération des coordonnées du Point JTS et décalage ±0.1°
 		Point orig = selectedCity.getLocation();
 		double lon0 = orig.getX();
 		double lat0 = orig.getY();
@@ -1177,7 +1136,6 @@ public class DatabaseServiceImpl implements DatabaseService {
 		Point newPoint = geometryFactory.createPoint(new Coordinate(lon, lat));
 		String newWkt = newPoint.toText();
 
-		// 5) Construction du DTO
 		return AddressDto.builder().street(faker.address().streetAddress()).location(newWkt)
 				.regionId(selectedRegion.getId()).cityId(selectedCity.getId()).build();
 	}
@@ -1187,15 +1145,12 @@ public class DatabaseServiceImpl implements DatabaseService {
 	 * producteur, mais avec rue aléatoire et décalage ±0.1° sur le point.
 	 */
 	private AddressDto createVariationAddress(AddressDto addressDto) {
-		// On récupère la même région et la même ville
 		Integer regionId = addressDto.getRegionId();
 		Integer cityId = addressDto.getCityId();
 
-		// Trouve la City correspondante pour son Point JTS
 		City baseCity = cities.stream().filter(c -> c.getId().equals(cityId)).findFirst()
 				.orElseThrow(() -> new IllegalStateException("Ville du producteur introuvable"));
 
-		// Récupère les coordonnées du Point JTS et ajoute ±0.1°
 		Point orig = baseCity.getLocation();
 		double lon0 = orig.getX();
 		double lat0 = orig.getY();
@@ -1203,7 +1158,6 @@ public class DatabaseServiceImpl implements DatabaseService {
 		double lat = lat0 + (random.nextDouble() * 0.2 - 0.1);
 		Point newPoint = geometryFactory.createPoint(new Coordinate(lon, lat));
 
-		// Construit et retourne l'AddressDto
 		return AddressDto.builder().street(faker.address().streetAddress()) // rue aléatoire
 				.location(newPoint.toText()) // WKT du nouveau point
 				.regionId(regionId) // même région que le producteur
@@ -1227,8 +1181,6 @@ public class DatabaseServiceImpl implements DatabaseService {
 		return regions.getLast();
 	}
 
-	// --- User DTO Creation Helpers ---
-
 	private AdminCreateDto createRandomAdminDto() {
 		AdminCreateDto admin = new AdminCreateDto();
 		admin.setFirstName(faker.name().firstName());
@@ -1240,7 +1192,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 		admin.setRegistrationDate(generateRandomDateTimeInPast());
 		admin.setValidationDate(
 				admin.getRegistrationDate().plusDays(faker.number().numberBetween(1, 4))); // Validated
-		admin.setPhone(faker.phoneNumber().cellPhone());
+		admin.setPhone(this.uniquePhone());
 		admin.setLanguageId(langFr.getId()); // Default to French for now
 		return admin;
 	}
@@ -1256,10 +1208,17 @@ public class DatabaseServiceImpl implements DatabaseService {
 		producer.setRegistrationDate(generateRandomDateTimeInPast());
 		producer.setValidationDate(
 				producer.getRegistrationDate().plusDays(faker.number().numberBetween(1, 4)));
-		producer.setPhone(faker.phoneNumber().cellPhone());
+		producer.setPhone(this.uniquePhone());
 		producer.setAgriculturalIdentifier(faker.number().digits(10));
 		producer.setLanguageId(random.nextBoolean() ? langFr.getId() : langEn.getId());
 		return producer;
+	}
+
+	private ProducerCreateDto createRandomPendingProducerDto() {
+		ProducerCreateDto pendingProducer = createRandomProducerDto();
+		pendingProducer.setValidationDate(null);
+		pendingProducer.setEnabled(false);
+		return pendingProducer;
 	}
 
 	private TransformerCreateDto createRandomTransformerDto() {
@@ -1273,7 +1232,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 		transformer.setRegistrationDate(generateRandomDateTimeInPast());
 		transformer.setValidationDate(
 				transformer.getRegistrationDate().plusDays(faker.number().numberBetween(1, 4)));
-		transformer.setPhone(faker.phoneNumber().cellPhone());
+		transformer.setPhone(this.uniquePhone());
 		transformer.setLanguageId(random.nextBoolean() ? langFr.getId() : langEn.getId());
 		return transformer;
 	}
@@ -1289,7 +1248,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 		exporter.setRegistrationDate(generateRandomDateTimeInPast());
 		exporter.setValidationDate(
 				exporter.getRegistrationDate().plusDays(faker.number().numberBetween(1, 4)));
-		exporter.setPhone(faker.phoneNumber().cellPhone());
+		exporter.setPhone(this.uniquePhone());
 		exporter.setLanguageId(random.nextBoolean() ? langFr.getId() : langEn.getId());
 		return exporter;
 	}
@@ -1307,7 +1266,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 		carrier.setRegistrationDate(generateRandomDateTimeInPast());
 		carrier.setValidationDate(
 				carrier.getRegistrationDate().plusDays(faker.number().numberBetween(1, 4)));
-		carrier.setPhone(faker.phoneNumber().cellPhone());
+		carrier.setPhone(this.uniquePhone());
 		carrier.setLanguageId(random.nextBoolean() ? langFr.getId() : langEn.getId());
 		return carrier;
 	}
@@ -1323,7 +1282,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 		qualityInspector.setRegistrationDate(generateRandomDateTimeInPast());
 		qualityInspector.setValidationDate(qualityInspector.getRegistrationDate()
 				.plusDays(faker.number().numberBetween(1, 4)));
-		qualityInspector.setPhone(faker.phoneNumber().cellPhone());
+		qualityInspector.setPhone(this.uniquePhone());
 		qualityInspector.setLanguageId(random.nextBoolean() ? langFr.getId() : langEn.getId());
 		return qualityInspector;
 	}

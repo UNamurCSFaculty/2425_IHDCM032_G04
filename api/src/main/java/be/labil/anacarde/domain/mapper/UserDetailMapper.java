@@ -13,9 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  * Les Producteurs sont mappés dans un mapper dédié (ProducerDetailMapper) pour éviter les
  * ambiguïtés.
  */
-@Mapper(componentModel = "spring", uses = {MapperHelpers.class, RoleMapper.class,
-		LanguageMapper.class, AddressMapper.class, AddressUpdateMapper.class,
-		CooperativeMapper.class,
+@Mapper(componentModel = "spring", uses = {MapperHelpers.class, LanguageMapper.class,
+		AddressMapper.class, AddressUpdateMapper.class, CooperativeMapper.class,
 		DocumentMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class UserDetailMapper {
 
@@ -26,37 +25,31 @@ public abstract class UserDetailMapper {
 	/* Conversion DTO -> Entité par type */
 	/*------------------------------------*/
 
-	@Mapping(source = "roles", target = "roles")
 	@Mapping(source = "address", target = "address")
 	@Mapping(target = "language", ignore = true)
 	@Mapping(target = "id", ignore = true)
 	public abstract Admin toEntity(AdminCreateDto dto);
 
-	@Mapping(source = "roles", target = "roles")
 	@Mapping(source = "address", target = "address")
 	@Mapping(target = "language", ignore = true)
 	@Mapping(target = "id", ignore = true)
 	public abstract Exporter toEntity(ExporterCreateDto dto);
 
-	@Mapping(source = "roles", target = "roles")
 	@Mapping(source = "address", target = "address")
 	@Mapping(target = "language", ignore = true)
 	@Mapping(target = "id", ignore = true)
 	public abstract Carrier toEntity(CarrierCreateDto dto);
 
-	@Mapping(source = "roles", target = "roles")
 	@Mapping(source = "address", target = "address")
 	@Mapping(target = "language", ignore = true)
 	@Mapping(target = "id", ignore = true)
 	public abstract QualityInspector toEntity(QualityInspectorCreateDto dto);
 
-	@Mapping(source = "roles", target = "roles")
 	@Mapping(source = "address", target = "address")
 	@Mapping(target = "language", ignore = true)
 	@Mapping(target = "id", ignore = true)
 	public abstract Transformer toEntity(TransformerCreateDto dto);
 
-	@Mapping(source = "roles", target = "roles")
 	@Mapping(source = "address", target = "address")
 	@Mapping(target = "language", ignore = true)
 	@Mapping(source = "agriculturalIdentifier", target = "agriculturalIdentifier")
@@ -101,32 +94,26 @@ public abstract class UserDetailMapper {
 	/* Conversion Entité -> DTO par type */
 	/*------------------------------------*/
 
-	@Mapping(source = "roles", target = "roles")
 	@Mapping(source = "address", target = "address")
 	@Mapping(source = "language", target = "language")
 	public abstract AdminDetailDto toDto(Admin entity);
 
-	@Mapping(source = "roles", target = "roles")
 	@Mapping(source = "address", target = "address")
 	@Mapping(source = "language", target = "language")
 	public abstract ExporterDetailDto toDto(Exporter entity);
 
-	@Mapping(source = "roles", target = "roles")
 	@Mapping(source = "address", target = "address")
 	@Mapping(source = "language", target = "language")
 	public abstract CarrierDetailDto toDto(Carrier entity);
 
-	@Mapping(source = "roles", target = "roles")
 	@Mapping(source = "address", target = "address")
 	@Mapping(source = "language", target = "language")
 	public abstract QualityInspectorDetailDto toDto(QualityInspector entity);
 
-	@Mapping(source = "roles", target = "roles")
 	@Mapping(source = "address", target = "address")
 	@Mapping(source = "language", target = "language")
 	public abstract TransformerDetailDto toDto(Transformer entity);
 
-	@Mapping(source = "roles", target = "roles")
 	@Mapping(source = "address", target = "address")
 	@Mapping(source = "language", target = "language")
 	@Mapping(source = "cooperative", target = "cooperative")
@@ -157,28 +144,24 @@ public abstract class UserDetailMapper {
 	/*------------------------------------------*/
 
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-	@Mapping(target = "roles", ignore = true)
 	@Mapping(target = "id", ignore = true)
 	@Mapping(source = "address", target = "address")
 	@Mapping(target = "documents", ignore = true)
 	public abstract void partialUpdate(AdminUpdateDto dto, @MappingTarget Admin entity);
 
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-	@Mapping(target = "roles", ignore = true)
 	@Mapping(target = "id", ignore = true)
 	@Mapping(source = "address", target = "address")
 	@Mapping(target = "documents", ignore = true)
 	public abstract void partialUpdate(ExporterUpdateDto dto, @MappingTarget Exporter entity);
 
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-	@Mapping(target = "roles", ignore = true)
 	@Mapping(target = "id", ignore = true)
 	@Mapping(source = "address", target = "address")
 	@Mapping(target = "documents", ignore = true)
 	public abstract void partialUpdate(CarrierUpdateDto dto, @MappingTarget Carrier entity);
 
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-	@Mapping(target = "roles", ignore = true)
 	@Mapping(target = "id", ignore = true)
 	@Mapping(source = "address", target = "address")
 	@Mapping(target = "documents", ignore = true)
@@ -186,14 +169,12 @@ public abstract class UserDetailMapper {
 			@MappingTarget QualityInspector entity);
 
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-	@Mapping(target = "roles", ignore = true)
 	@Mapping(target = "id", ignore = true)
 	@Mapping(source = "address", target = "address")
 	@Mapping(target = "documents", ignore = true)
 	public abstract void partialUpdate(TransformerUpdateDto dto, @MappingTarget Transformer entity);
 
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-	@Mapping(target = "roles", ignore = true)
 	@Mapping(target = "cooperative", ignore = true)
 	@Mapping(target = "id", ignore = true)
 	@Mapping(source = "address", target = "address")

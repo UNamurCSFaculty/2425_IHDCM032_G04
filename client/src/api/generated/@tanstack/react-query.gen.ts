@@ -3,9 +3,7 @@
 import {
   type Options,
   deleteUser,
-  getUser,
   updateUser,
-  updateUserRoles,
   deleteStore,
   getStore,
   updateStore,
@@ -45,9 +43,9 @@ import {
   deleteAuctionStrategy,
   getAuctionStrategy,
   updateAuctionStrategy,
-  listUsers,
+  getGlobalSettings,
+  updateGlobalSettings,
   createUser,
-  addRoleToUser,
   listStores,
   createStore,
   listQualityControls,
@@ -86,6 +84,8 @@ import {
   downloadDocument,
   getCurrentUser,
   getApplicationData,
+  listUsers,
+  getUser,
 } from '../sdk.gen'
 import {
   type UseMutationOptions,
@@ -98,13 +98,9 @@ import type {
   DeleteUserData,
   DeleteUserError,
   DeleteUserResponse,
-  GetUserData,
   UpdateUserData,
   UpdateUserError,
   UpdateUserResponse,
-  UpdateUserRolesData,
-  UpdateUserRolesError,
-  UpdateUserRolesResponse,
   DeleteStoreData,
   DeleteStoreError,
   DeleteStoreResponse,
@@ -197,13 +193,14 @@ import type {
   GetAuctionStrategyData,
   UpdateAuctionStrategyData,
   UpdateAuctionStrategyError,
-  ListUsersData,
+  UpdateAuctionStrategyResponse,
+  GetGlobalSettingsData,
+  UpdateGlobalSettingsData,
+  UpdateGlobalSettingsError,
+  UpdateGlobalSettingsResponse,
   CreateUserData,
   CreateUserError,
   CreateUserResponse,
-  AddRoleToUserData,
-  AddRoleToUserError,
-  AddRoleToUserResponse,
   ListStoresData,
   CreateStoreData,
   CreateStoreError,
@@ -257,6 +254,7 @@ import type {
   ListAuctionStrategiesData,
   CreateAuctionStrategyData,
   CreateAuctionStrategyError,
+  CreateAuctionStrategyResponse,
   CheckPhoneData,
   CheckEmailData,
   ListRegionsData,
@@ -271,6 +269,8 @@ import type {
   DownloadDocumentData,
   GetCurrentUserData,
   GetApplicationDataData,
+  ListUsersData,
+  GetUserData,
 } from '../types.gen'
 import { client as _heyApiClient } from '../client.gen'
 
@@ -288,6 +288,54 @@ export const deleteUserMutation = (
   > = {
     mutationFn: async localOptions => {
       const { data } = await deleteUser({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+export const updateUserMutation = (
+  options?: Partial<Options<UpdateUserData>>
+): UseMutationOptions<
+  UpdateUserResponse,
+  UpdateUserError,
+  Options<UpdateUserData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    UpdateUserResponse,
+    UpdateUserError,
+    Options<UpdateUserData>
+  > = {
+    mutationFn: async localOptions => {
+      const { data } = await updateUser({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+export const deleteStoreMutation = (
+  options?: Partial<Options<DeleteStoreData>>
+): UseMutationOptions<
+  DeleteStoreResponse,
+  DeleteStoreError,
+  Options<DeleteStoreData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    DeleteStoreResponse,
+    DeleteStoreError,
+    Options<DeleteStoreData>
+  > = {
+    mutationFn: async localOptions => {
+      const { data } = await deleteStore({
         ...options,
         ...localOptions,
         throwOnError: true,
@@ -330,96 +378,6 @@ const createQueryKey = <TOptions extends Options>(
     params.query = options.query
   }
   return [params]
-}
-
-export const getUserQueryKey = (options: Options<GetUserData>) =>
-  createQueryKey('getUser', options)
-
-export const getUserOptions = (options: Options<GetUserData>) => {
-  return queryOptions({
-    queryFn: async ({ queryKey, signal }) => {
-      const { data } = await getUser({
-        ...options,
-        ...queryKey[0],
-        signal,
-        throwOnError: true,
-      })
-      return data
-    },
-    queryKey: getUserQueryKey(options),
-  })
-}
-
-export const updateUserMutation = (
-  options?: Partial<Options<UpdateUserData>>
-): UseMutationOptions<
-  UpdateUserResponse,
-  UpdateUserError,
-  Options<UpdateUserData>
-> => {
-  const mutationOptions: UseMutationOptions<
-    UpdateUserResponse,
-    UpdateUserError,
-    Options<UpdateUserData>
-  > = {
-    mutationFn: async localOptions => {
-      const { data } = await updateUser({
-        ...options,
-        ...localOptions,
-        throwOnError: true,
-      })
-      return data
-    },
-  }
-  return mutationOptions
-}
-
-export const updateUserRolesMutation = (
-  options?: Partial<Options<UpdateUserRolesData>>
-): UseMutationOptions<
-  UpdateUserRolesResponse,
-  UpdateUserRolesError,
-  Options<UpdateUserRolesData>
-> => {
-  const mutationOptions: UseMutationOptions<
-    UpdateUserRolesResponse,
-    UpdateUserRolesError,
-    Options<UpdateUserRolesData>
-  > = {
-    mutationFn: async localOptions => {
-      const { data } = await updateUserRoles({
-        ...options,
-        ...localOptions,
-        throwOnError: true,
-      })
-      return data
-    },
-  }
-  return mutationOptions
-}
-
-export const deleteStoreMutation = (
-  options?: Partial<Options<DeleteStoreData>>
-): UseMutationOptions<
-  DeleteStoreResponse,
-  DeleteStoreError,
-  Options<DeleteStoreData>
-> => {
-  const mutationOptions: UseMutationOptions<
-    DeleteStoreResponse,
-    DeleteStoreError,
-    Options<DeleteStoreData>
-  > = {
-    mutationFn: async localOptions => {
-      const { data } = await deleteStore({
-        ...options,
-        ...localOptions,
-        throwOnError: true,
-      })
-      return data
-    },
-  }
-  return mutationOptions
 }
 
 export const getStoreQueryKey = (options: Options<GetStoreData>) =>
@@ -1250,12 +1208,12 @@ export const getAuctionStrategyOptions = (
 export const updateAuctionStrategyMutation = (
   options?: Partial<Options<UpdateAuctionStrategyData>>
 ): UseMutationOptions<
-  unknown,
+  UpdateAuctionStrategyResponse,
   UpdateAuctionStrategyError,
   Options<UpdateAuctionStrategyData>
 > => {
   const mutationOptions: UseMutationOptions<
-    unknown,
+    UpdateAuctionStrategyResponse,
     UpdateAuctionStrategyError,
     Options<UpdateAuctionStrategyData>
   > = {
@@ -1271,13 +1229,16 @@ export const updateAuctionStrategyMutation = (
   return mutationOptions
 }
 
-export const listUsersQueryKey = (options?: Options<ListUsersData>) =>
-  createQueryKey('listUsers', options)
+export const getGlobalSettingsQueryKey = (
+  options?: Options<GetGlobalSettingsData>
+) => createQueryKey('getGlobalSettings', options)
 
-export const listUsersOptions = (options?: Options<ListUsersData>) => {
+export const getGlobalSettingsOptions = (
+  options?: Options<GetGlobalSettingsData>
+) => {
   return queryOptions({
     queryFn: async ({ queryKey, signal }) => {
-      const { data } = await listUsers({
+      const { data } = await getGlobalSettings({
         ...options,
         ...queryKey[0],
         signal,
@@ -1285,8 +1246,32 @@ export const listUsersOptions = (options?: Options<ListUsersData>) => {
       })
       return data
     },
-    queryKey: listUsersQueryKey(options),
+    queryKey: getGlobalSettingsQueryKey(options),
   })
+}
+
+export const updateGlobalSettingsMutation = (
+  options?: Partial<Options<UpdateGlobalSettingsData>>
+): UseMutationOptions<
+  UpdateGlobalSettingsResponse,
+  UpdateGlobalSettingsError,
+  Options<UpdateGlobalSettingsData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    UpdateGlobalSettingsResponse,
+    UpdateGlobalSettingsError,
+    Options<UpdateGlobalSettingsData>
+  > = {
+    mutationFn: async localOptions => {
+      const { data } = await updateGlobalSettings({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
 }
 
 export const createUserQueryKey = (options: Options<CreateUserData>) =>
@@ -1321,48 +1306,6 @@ export const createUserMutation = (
   > = {
     mutationFn: async localOptions => {
       const { data } = await createUser({
-        ...options,
-        ...localOptions,
-        throwOnError: true,
-      })
-      return data
-    },
-  }
-  return mutationOptions
-}
-
-export const addRoleToUserQueryKey = (options: Options<AddRoleToUserData>) =>
-  createQueryKey('addRoleToUser', options)
-
-export const addRoleToUserOptions = (options: Options<AddRoleToUserData>) => {
-  return queryOptions({
-    queryFn: async ({ queryKey, signal }) => {
-      const { data } = await addRoleToUser({
-        ...options,
-        ...queryKey[0],
-        signal,
-        throwOnError: true,
-      })
-      return data
-    },
-    queryKey: addRoleToUserQueryKey(options),
-  })
-}
-
-export const addRoleToUserMutation = (
-  options?: Partial<Options<AddRoleToUserData>>
-): UseMutationOptions<
-  AddRoleToUserResponse,
-  AddRoleToUserError,
-  Options<AddRoleToUserData>
-> => {
-  const mutationOptions: UseMutationOptions<
-    AddRoleToUserResponse,
-    AddRoleToUserError,
-    Options<AddRoleToUserData>
-  > = {
-    mutationFn: async localOptions => {
-      const { data } = await addRoleToUser({
         ...options,
         ...localOptions,
         throwOnError: true,
@@ -2227,12 +2170,12 @@ export const createAuctionStrategyOptions = (
 export const createAuctionStrategyMutation = (
   options?: Partial<Options<CreateAuctionStrategyData>>
 ): UseMutationOptions<
-  unknown,
+  CreateAuctionStrategyResponse,
   CreateAuctionStrategyError,
   Options<CreateAuctionStrategyData>
 > => {
   const mutationOptions: UseMutationOptions<
-    unknown,
+    CreateAuctionStrategyResponse,
     CreateAuctionStrategyError,
     Options<CreateAuctionStrategyData>
   > = {
@@ -2542,5 +2485,41 @@ export const getApplicationDataOptions = (
       return data
     },
     queryKey: getApplicationDataQueryKey(options),
+  })
+}
+
+export const listUsersQueryKey = (options?: Options<ListUsersData>) =>
+  createQueryKey('listUsers', options)
+
+export const listUsersOptions = (options?: Options<ListUsersData>) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await listUsers({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: listUsersQueryKey(options),
+  })
+}
+
+export const getUserQueryKey = (options: Options<GetUserData>) =>
+  createQueryKey('getUser', options)
+
+export const getUserOptions = (options: Options<GetUserData>) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getUser({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: getUserQueryKey(options),
   })
 }

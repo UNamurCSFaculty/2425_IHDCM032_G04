@@ -44,7 +44,6 @@ const AuctionMap: React.FC<{
                 direction="top"
                 offset={[-15.5, -20]}
                 opacity={1}
-                // interactive si vous voulez autoriser le survol du tooltip
                 interactive={false}
               >
                 <div className="pointer-events-auto">
