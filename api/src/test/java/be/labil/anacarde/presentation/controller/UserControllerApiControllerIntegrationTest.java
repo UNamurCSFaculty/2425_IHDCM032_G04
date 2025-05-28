@@ -1,7 +1,7 @@
 package be.labil.anacarde.presentation.controller;
 
 import static org.hamcrest.Matchers.containsString;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -14,6 +14,7 @@ import be.labil.anacarde.domain.dto.write.user.create.UserCreateDto;
 import be.labil.anacarde.domain.dto.write.user.update.AddressUpdateDto;
 import be.labil.anacarde.domain.dto.write.user.update.AdminUpdateDto;
 import be.labil.anacarde.domain.dto.write.user.update.UserUpdateDto;
+import be.labil.anacarde.domain.model.Field;
 import be.labil.anacarde.domain.model.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -23,6 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -99,6 +101,11 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 				.orElseThrow(() -> new AssertionError("Utilisateur non trouvé"));
 		assertTrue(bCryptPasswordEncoder.matches("secret!!!", createdUser.getPassword()),
 				"Le mot de passe stocké doit correspondre au mot de passe brut 'secret!!!'");
+		List<Field> field = fieldRepository.findByProducerId(createdUser.getId());
+		assertFalse(field.isEmpty(), "Un champ doit être créé et associé au producteur créé");
+		assertEquals(field.getFirst().getAddress().getStreet(),
+				createdUser.getAddress().getStreet(),
+				"La rue de l'adresse du champ doit être la même que celle du producteur créé");
 	}
 
 	/**
