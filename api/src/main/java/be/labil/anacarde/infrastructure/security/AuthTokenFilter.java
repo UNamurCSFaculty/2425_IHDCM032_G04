@@ -92,6 +92,10 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 	 * @return Le token JWT sous forme de String s'il est présent ; sinon, null.
 	 */
 	private String parseJwt(HttpServletRequest request) {
+		String authHeader = request.getHeader("Authorization");
+		if (authHeader != null && authHeader.startsWith("Bearer ")) {
+			return authHeader.substring(7);
+		}
 		Cookie[] cookies = request.getCookies();
 		if (cookies != null) {
 			for (Cookie cookie : cookies) {

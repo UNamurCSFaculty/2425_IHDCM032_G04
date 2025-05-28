@@ -99,10 +99,8 @@ public class UserControllerApiController implements UserApi {
 
 	@Override
 	public ResponseEntity<GoogleAuthResponse> authenticateWithGoogle(
-			GoogleRegistrationDto googleDto, List<MultipartFile> documents)
-			throws GeneralSecurityException, IOException {
-
-		String jwt = userService.authenticateWithGoogle(googleDto, documents);
+			GoogleRegistrationDto googleDto) throws GeneralSecurityException, IOException {
+		String jwt = userService.authenticateWithGoogle(googleDto);
 		return ResponseEntity.ok(new GoogleAuthResponse(jwt));
 	}
 }

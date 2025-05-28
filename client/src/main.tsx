@@ -14,7 +14,7 @@ import './styles.css'
 import { getCookie } from './utils/cookies.ts'
 import { setDayjsLocale } from './utils/dayjs-config.ts'
 import '/node_modules/react-leaflet-markercluster/dist/styles.min.css'
-import { client } from '@/api/generated/client.gen.ts'
+import { client } from '@/api/client.ts'
 import { Toaster } from '@/components/ui/sonner'
 import { useAppStore } from '@/store/appStore.tsx'
 import {
@@ -29,9 +29,6 @@ import 'leaflet/dist/leaflet.css'
 import { StrictMode, useEffect } from 'react'
 import ReactDOM from 'react-dom/client'
 import { Observer } from 'tailwindcss-intersect'
-
-import { GoogleOAuthProvider } from '@react-oauth/google'
-import { AuthProvider } from '@/contexts/AuthContext'
 
 // Initialise dayjs sur la langue courante
 setDayjsLocale(i18n.language)
@@ -129,15 +126,11 @@ function AppWithProvider() {
 const root = ReactDOM.createRoot(document.getElementById('app')!)
 root.render(
   <StrictMode>
-    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID!}>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <AppWithProvider />
-        </AuthProvider>
-        <Toaster richColors position="top-center" />
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
-    </GoogleOAuthProvider>
+    <QueryClientProvider client={queryClient}>
+      <AppWithProvider />
+      <Toaster richColors position="top-center" />
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   </StrictMode>
 )
 

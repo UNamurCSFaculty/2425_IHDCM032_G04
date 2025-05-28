@@ -500,20 +500,6 @@ export const zApiError = z.object({
 })
 
 export const zGoogleRegistrationDto = z.object({
-  firstName: z.string().min(1),
-  lastName: z.string().min(1),
-  email: z.email(),
-  registrationDate: z.iso.datetime().readonly().optional(),
-  validationDate: z.iso.datetime().readonly().optional(),
-  enabled: z.boolean().optional(),
-  phone: z
-    .string()
-    .regex(/^(?:\+229)?01\d{8}$/)
-    .optional(),
-  password: z.string(),
-  roles: z.array(zRoleDto).optional(),
-  languageId: z.number().int(),
-  address: zAddressDto,
   idToken: z.string().min(1),
 })
 

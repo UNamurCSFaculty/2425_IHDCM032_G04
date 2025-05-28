@@ -100,19 +100,17 @@ public interface UserService {
 	boolean phoneExists(String phone);
 
 	/**
-	 * Authentifie ou crée un compte utilisateur via Google en un seul appel : vérifie l'ID-token
-	 * Google, crée ou met à jour le profil utilisateur, et retourne le JWT généré.
+	 * Authentifie un utilisateur existant via Google : vérifie l'ID-token Google, associe le
+	 * provider Google à son compte local si nécessaire, et retourne le JWT généré.
 	 *
 	 * @param googleDto
 	 *            DTO contenant l'idToken Google et les informations de profil
-	 * @param documents
-	 *            Fichiers éventuels à associer au profil utilisateur
 	 * @return Le token JWT de la session utilisateur
 	 * @throws GeneralSecurityException
 	 *             en cas d'échec de la vérification du token Google
 	 * @throws IOException
-	 *             en cas d'erreur lors du traitement des fichiers
+	 *             en cas d'erreur lors du traitement des données
 	 */
-	String authenticateWithGoogle(GoogleRegistrationDto googleDto, List<MultipartFile> documents)
+	String authenticateWithGoogle(GoogleRegistrationDto googleDto)
 			throws GeneralSecurityException, IOException;
 }

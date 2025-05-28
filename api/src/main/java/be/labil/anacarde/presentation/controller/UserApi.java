@@ -177,28 +177,19 @@ public interface UserApi {
 			@NotNull(message = "La liste des rôles est obligatoire") @RequestBody List<String> roleNames);
 
 	/**
-	 * Authentifie ou crée un compte utilisateur via Google + profil (1 seul appel).
+	 * Authentifie un compte utilisateur via Google.
 	 *
 	 * @param googleDto
 	 *            DTO GoogleRegistrationDto (idToken + phone + address + languageId + type)
-	 * @param documents
-	 *            Documents à téléverser (optionnel)
 	 * @return Le JWT applicatif
 	 */
-	@Operation(summary = "S’authentifier / s’inscrire avec Google", description = "Vérifie l’ID-token Google, crée ou met à jour le profil, et renvoie un JWT.")
-	@io.swagger.v3.oas.annotations.parameters.RequestBody(required = true, content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE, schema = @Schema(type = "object", properties = {
-			@StringToClassMapItem(key = "user", value = GoogleRegistrationDto.class),
-			@StringToClassMapItem(key = "documents", value = MultipartFile[].class)}), encoding = {
-					@Encoding(name = "user", contentType = MediaType.APPLICATION_JSON_VALUE),
-					@Encoding(name = "documents", contentType = MediaType.APPLICATION_OCTET_STREAM_VALUE)}))
+	@Operation(summary = "S’authentifier avec Google", description = "Vérifie l’ID-token Google, associe le compte Google si besoin, et renvoie un JWT.")
 	@ApiResponses({
-			@ApiResponse(responseCode = "200", description = "Authentification réussie", content = @Content(schema = @Schema(implementation = GoogleAuthResponse.class))),
-			@ApiResponse(responseCode = "400", description = "Erreur de validation ou token invalide", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
-	@PostMapping(value = "/google", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+			@ApiResponse(responseCode = "200", description = "Authentification réussie", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = GoogleAuthResponse.class))),
+			@ApiResponse(responseCode = "400", description = "Token invalide ou données erronées", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ApiErrorResponse.class)))})
+	@PostMapping(value = "/google", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	ResponseEntity<GoogleAuthResponse> authenticateWithGoogle(
-			@RequestPart("user") @Validated({Default.class,
-					ValidationGroups.Create.class}) GoogleRegistrationDto googleDto,
-
-			@RequestPart(value = "documents", required = false) List<MultipartFile> documents)
+			@RequestBody @Validated({Default.class,
+					ValidationGroups.Create.class}) GoogleRegistrationDto googleDto)
 			throws GeneralSecurityException, IOException;
 }

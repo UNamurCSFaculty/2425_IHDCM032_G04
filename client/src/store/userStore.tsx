@@ -3,15 +3,20 @@ import { create } from 'zustand'
 
 interface UserState {
   user?: UserDetailDto
+  token?: string
 
   setUser: (user: UserDetailDto) => void
+  setJwt: (jwt: string) => void
   logout: () => void
 }
 
 export const useUserStore = create<UserState>(set => ({
   user: undefined,
+  token: undefined,
+
   setUser: user => set({ user }),
-  logout: () => set({ user: undefined }),
+  setJwt: token => set({ token }),
+  logout: () => set({ user: undefined, token: undefined }),
 }))
 
 export function useAuthUser(): UserDetailDto {

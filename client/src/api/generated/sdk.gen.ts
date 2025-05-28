@@ -1342,8 +1342,8 @@ export const addRoleToUser = <ThrowOnError extends boolean = false>(
 }
 
 /**
- * S’authentifier / s’inscrire avec Google
- * Vérifie l’ID-token Google, crée ou met à jour le profil, et renvoie un JWT.
+ * S’authentifier avec Google
+ * Vérifie l’ID-token Google, associe le compte Google si besoin, et renvoie un JWT.
  */
 export const authenticateWithGoogle = <ThrowOnError extends boolean = false>(
   options: Options<AuthenticateWithGoogleData, ThrowOnError>
@@ -1353,7 +1353,6 @@ export const authenticateWithGoogle = <ThrowOnError extends boolean = false>(
     AuthenticateWithGoogleError,
     ThrowOnError
   >({
-    ...formDataBodySerializer,
     security: [
       {
         scheme: 'bearer',
@@ -1363,7 +1362,7 @@ export const authenticateWithGoogle = <ThrowOnError extends boolean = false>(
     url: '/api/users/google',
     ...options,
     headers: {
-      'Content-Type': null,
+      'Content-Type': 'application/json',
       ...options?.headers,
     },
   })

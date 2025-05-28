@@ -1,15 +1,17 @@
 package be.labil.anacarde.domain.dto.db.user;
 
-import be.labil.anacarde.domain.dto.write.user.UserUpdateDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
-@EqualsAndHashCode(callSuper = true)
+/**
+ * DTO utilisé UNIQUEMENT pour le endpoint /api/users/google -> il contient seulement l'ID-token
+ * Google.
+ */
 @Data
-public class GoogleRegistrationDto extends UserUpdateDto {
+public class GoogleRegistrationDto {
+
 	@NotBlank
-	@Schema(description = "ID-Token Google issu du front", example = "eyJhbGciOiJSUzI1NiIsInR5…")
+	@Schema(description = "ID-token Google provenant du front", example = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...")
 	private String idToken;
 }

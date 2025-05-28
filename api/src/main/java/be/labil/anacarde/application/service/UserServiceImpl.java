@@ -190,8 +190,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	}
 
 	@Override
-	public String authenticateWithGoogle(GoogleRegistrationDto dto, List<MultipartFile> files)
+	public String authenticateWithGoogle(GoogleRegistrationDto dto)
 			throws GeneralSecurityException, IOException {
-		return googleAuthService.processGoogleRegistration(dto, files);
+		return googleAuthService.processGoogleRegistration(dto);
 	}
 }

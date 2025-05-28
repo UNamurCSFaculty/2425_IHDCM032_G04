@@ -1234,51 +1234,7 @@ export type ApiErrorErrors = {
 
 export type GoogleRegistrationDto = {
   /**
-   * Prénom de l'utilisateur
-   */
-  firstName: string
-  /**
-   * Nom de famille de l'utilisateur
-   */
-  lastName: string
-  /**
-   * Adresse email de l'utilisateur
-   */
-  email: string
-  /**
-   * Date d'enregistrement
-   */
-  readonly registrationDate?: string
-  /**
-   * Date de validation
-   */
-  readonly validationDate?: string
-  /**
-   * Compte activé
-   */
-  enabled?: boolean
-  /**
-   * Numéro de téléphone (Bénin, format local à 10 chiffres débutant par 01, ou +229...)
-   */
-  phone?: string
-  /**
-   * Mot de passe de l'utilisateur
-   */
-  password: string
-  /**
-   * Liste des rôles de l'utilisateur
-   */
-  roles?: Array<RoleDto>
-  /**
-   * Identifiant de la langue préférée
-   */
-  languageId: number
-  /**
-   * Adresse de l'utilisateur
-   */
-  address: AddressDto
-  /**
-   * ID-Token Google issu du front
+   * ID-token Google provenant du front
    */
   idToken: string
 }
@@ -3099,10 +3055,7 @@ export type AddRoleToUserResponse =
   AddRoleToUserResponses[keyof AddRoleToUserResponses]
 
 export type AuthenticateWithGoogleData = {
-  body: {
-    user?: GoogleRegistrationDto
-    documents?: Array<Blob | File>
-  }
+  body: GoogleRegistrationDto
   path?: never
   query?: never
   url: '/api/users/google'
@@ -3110,7 +3063,7 @@ export type AuthenticateWithGoogleData = {
 
 export type AuthenticateWithGoogleErrors = {
   /**
-   * Erreur de validation ou token invalide
+   * Token invalide ou données erronées
    */
   400: ApiErrorResponse
 }
