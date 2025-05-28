@@ -11,8 +11,6 @@ import {
 } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 
-// Assurez-vous d'importer React
-
 export interface MyRouterContext {
   user?: UserDetailDto
   queryClient: QueryClient

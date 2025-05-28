@@ -101,7 +101,8 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.POST, "/api/contact").permitAll()
 				.requestMatchers("/api/auth/**", "/v3/api-docs**", "/swagger-ui/**",
 						"/api/users/check/**")
-				.permitAll().anyRequest().authenticated());
+				.permitAll().requestMatchers("/api/admin/**").hasRole("ADMIN").anyRequest()
+				.authenticated());
 
 		// Filtres
 		http.addFilterBefore(originFilter, CsrfFilter.class);

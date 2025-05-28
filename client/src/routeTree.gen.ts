@@ -16,17 +16,16 @@ import { Route as InscriptionImport } from './routes/inscription'
 import { Route as ConnexionImport } from './routes/connexion'
 import { Route as AdminImport } from './routes/admin'
 import { Route as AuthenticatedImport } from './routes/_authenticated'
+import { Route as R403Import } from './routes/403'
 import { Route as IndexImport } from './routes/index'
 import { Route as ContactIndexImport } from './routes/contact/index'
 import { Route as AdminIndexImport } from './routes/admin/index'
 import { Route as ContactMerciImport } from './routes/contact/merci'
-import { Route as AdminSettingsImport } from './routes/admin/settings'
+import { Route as AdminGlobalSettingsImport } from './routes/admin/global-settings'
 import { Route as AdminAnalyticsImport } from './routes/admin/analytics'
 import { Route as AdminUsersIndexImport } from './routes/admin/users/index'
 import { Route as AdminCooperativesIndexImport } from './routes/admin/cooperatives/index'
 import { Route as AdminBlogIndexImport } from './routes/admin/blog/index'
-import { Route as AdminUsersNewImport } from './routes/admin/users/new'
-import { Route as AdminUsersUserIdImport } from './routes/admin/users/$userId'
 import { Route as AuthenticatedVentesNouvelleEnchereImport } from './routes/_authenticated/ventes/nouvelle-enchere'
 import { Route as AuthenticatedVentesMesEncheresImport } from './routes/_authenticated/ventes/mes-encheres'
 import { Route as AuthenticatedDepotsNouveauProduitImport } from './routes/_authenticated/depots/nouveau-produit'
@@ -65,6 +64,12 @@ const AuthenticatedRoute = AuthenticatedImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const R403Route = R403Import.update({
+  id: '/403',
+  path: '/403',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
@@ -89,9 +94,9 @@ const ContactMerciRoute = ContactMerciImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const AdminSettingsRoute = AdminSettingsImport.update({
-  id: '/settings',
-  path: '/settings',
+const AdminGlobalSettingsRoute = AdminGlobalSettingsImport.update({
+  id: '/global-settings',
+  path: '/global-settings',
   getParentRoute: () => AdminRoute,
 } as any)
 
@@ -116,18 +121,6 @@ const AdminCooperativesIndexRoute = AdminCooperativesIndexImport.update({
 const AdminBlogIndexRoute = AdminBlogIndexImport.update({
   id: '/blog/',
   path: '/blog/',
-  getParentRoute: () => AdminRoute,
-} as any)
-
-const AdminUsersNewRoute = AdminUsersNewImport.update({
-  id: '/users/new',
-  path: '/users/new',
-  getParentRoute: () => AdminRoute,
-} as any)
-
-const AdminUsersUserIdRoute = AdminUsersUserIdImport.update({
-  id: '/users/$userId',
-  path: '/users/$userId',
   getParentRoute: () => AdminRoute,
 } as any)
 
@@ -183,6 +176,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/403': {
+      id: '/403'
+      path: '/403'
+      fullPath: '/403'
+      preLoaderRoute: typeof R403Import
+      parentRoute: typeof rootRoute
+    }
     '/_authenticated': {
       id: '/_authenticated'
       path: ''
@@ -225,11 +225,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAnalyticsImport
       parentRoute: typeof AdminImport
     }
-    '/admin/settings': {
-      id: '/admin/settings'
-      path: '/settings'
-      fullPath: '/admin/settings'
-      preLoaderRoute: typeof AdminSettingsImport
+    '/admin/global-settings': {
+      id: '/admin/global-settings'
+      path: '/global-settings'
+      fullPath: '/admin/global-settings'
+      preLoaderRoute: typeof AdminGlobalSettingsImport
       parentRoute: typeof AdminImport
     }
     '/contact/merci': {
@@ -295,20 +295,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedVentesNouvelleEnchereImport
       parentRoute: typeof AuthenticatedImport
     }
-    '/admin/users/$userId': {
-      id: '/admin/users/$userId'
-      path: '/users/$userId'
-      fullPath: '/admin/users/$userId'
-      preLoaderRoute: typeof AdminUsersUserIdImport
-      parentRoute: typeof AdminImport
-    }
-    '/admin/users/new': {
-      id: '/admin/users/new'
-      path: '/users/new'
-      fullPath: '/admin/users/new'
-      preLoaderRoute: typeof AdminUsersNewImport
-      parentRoute: typeof AdminImport
-    }
     '/admin/blog/': {
       id: '/admin/blog/'
       path: '/blog'
@@ -361,10 +347,8 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
 
 interface AdminRouteChildren {
   AdminAnalyticsRoute: typeof AdminAnalyticsRoute
-  AdminSettingsRoute: typeof AdminSettingsRoute
+  AdminGlobalSettingsRoute: typeof AdminGlobalSettingsRoute
   AdminIndexRoute: typeof AdminIndexRoute
-  AdminUsersUserIdRoute: typeof AdminUsersUserIdRoute
-  AdminUsersNewRoute: typeof AdminUsersNewRoute
   AdminBlogIndexRoute: typeof AdminBlogIndexRoute
   AdminCooperativesIndexRoute: typeof AdminCooperativesIndexRoute
   AdminUsersIndexRoute: typeof AdminUsersIndexRoute
@@ -372,10 +356,8 @@ interface AdminRouteChildren {
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAnalyticsRoute: AdminAnalyticsRoute,
-  AdminSettingsRoute: AdminSettingsRoute,
+  AdminGlobalSettingsRoute: AdminGlobalSettingsRoute,
   AdminIndexRoute: AdminIndexRoute,
-  AdminUsersUserIdRoute: AdminUsersUserIdRoute,
-  AdminUsersNewRoute: AdminUsersNewRoute,
   AdminBlogIndexRoute: AdminBlogIndexRoute,
   AdminCooperativesIndexRoute: AdminCooperativesIndexRoute,
   AdminUsersIndexRoute: AdminUsersIndexRoute,
@@ -385,13 +367,14 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/403': typeof R403Route
   '': typeof AuthenticatedRouteWithChildren
   '/admin': typeof AdminRouteWithChildren
   '/connexion': typeof ConnexionRoute
   '/inscription': typeof InscriptionRoute
   '/inscription-succes': typeof InscriptionSuccesRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
-  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/global-settings': typeof AdminGlobalSettingsRoute
   '/contact/merci': typeof ContactMerciRoute
   '/admin/': typeof AdminIndexRoute
   '/contact': typeof ContactIndexRoute
@@ -401,8 +384,6 @@ export interface FileRoutesByFullPath {
   '/depots/nouveau-produit': typeof AuthenticatedDepotsNouveauProduitRoute
   '/ventes/mes-encheres': typeof AuthenticatedVentesMesEncheresRoute
   '/ventes/nouvelle-enchere': typeof AuthenticatedVentesNouvelleEnchereRoute
-  '/admin/users/$userId': typeof AdminUsersUserIdRoute
-  '/admin/users/new': typeof AdminUsersNewRoute
   '/admin/blog': typeof AdminBlogIndexRoute
   '/admin/cooperatives': typeof AdminCooperativesIndexRoute
   '/admin/users': typeof AdminUsersIndexRoute
@@ -410,12 +391,13 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/403': typeof R403Route
   '': typeof AuthenticatedRouteWithChildren
   '/connexion': typeof ConnexionRoute
   '/inscription': typeof InscriptionRoute
   '/inscription-succes': typeof InscriptionSuccesRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
-  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/global-settings': typeof AdminGlobalSettingsRoute
   '/contact/merci': typeof ContactMerciRoute
   '/admin': typeof AdminIndexRoute
   '/contact': typeof ContactIndexRoute
@@ -425,8 +407,6 @@ export interface FileRoutesByTo {
   '/depots/nouveau-produit': typeof AuthenticatedDepotsNouveauProduitRoute
   '/ventes/mes-encheres': typeof AuthenticatedVentesMesEncheresRoute
   '/ventes/nouvelle-enchere': typeof AuthenticatedVentesNouvelleEnchereRoute
-  '/admin/users/$userId': typeof AdminUsersUserIdRoute
-  '/admin/users/new': typeof AdminUsersNewRoute
   '/admin/blog': typeof AdminBlogIndexRoute
   '/admin/cooperatives': typeof AdminCooperativesIndexRoute
   '/admin/users': typeof AdminUsersIndexRoute
@@ -435,13 +415,14 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/403': typeof R403Route
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/admin': typeof AdminRouteWithChildren
   '/connexion': typeof ConnexionRoute
   '/inscription': typeof InscriptionRoute
   '/inscription-succes': typeof InscriptionSuccesRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
-  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/global-settings': typeof AdminGlobalSettingsRoute
   '/contact/merci': typeof ContactMerciRoute
   '/admin/': typeof AdminIndexRoute
   '/contact/': typeof ContactIndexRoute
@@ -451,8 +432,6 @@ export interface FileRoutesById {
   '/_authenticated/depots/nouveau-produit': typeof AuthenticatedDepotsNouveauProduitRoute
   '/_authenticated/ventes/mes-encheres': typeof AuthenticatedVentesMesEncheresRoute
   '/_authenticated/ventes/nouvelle-enchere': typeof AuthenticatedVentesNouvelleEnchereRoute
-  '/admin/users/$userId': typeof AdminUsersUserIdRoute
-  '/admin/users/new': typeof AdminUsersNewRoute
   '/admin/blog/': typeof AdminBlogIndexRoute
   '/admin/cooperatives/': typeof AdminCooperativesIndexRoute
   '/admin/users/': typeof AdminUsersIndexRoute
@@ -462,13 +441,14 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/403'
     | ''
     | '/admin'
     | '/connexion'
     | '/inscription'
     | '/inscription-succes'
     | '/admin/analytics'
-    | '/admin/settings'
+    | '/admin/global-settings'
     | '/contact/merci'
     | '/admin/'
     | '/contact'
@@ -478,20 +458,19 @@ export interface FileRouteTypes {
     | '/depots/nouveau-produit'
     | '/ventes/mes-encheres'
     | '/ventes/nouvelle-enchere'
-    | '/admin/users/$userId'
-    | '/admin/users/new'
     | '/admin/blog'
     | '/admin/cooperatives'
     | '/admin/users'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/403'
     | ''
     | '/connexion'
     | '/inscription'
     | '/inscription-succes'
     | '/admin/analytics'
-    | '/admin/settings'
+    | '/admin/global-settings'
     | '/contact/merci'
     | '/admin'
     | '/contact'
@@ -501,21 +480,20 @@ export interface FileRouteTypes {
     | '/depots/nouveau-produit'
     | '/ventes/mes-encheres'
     | '/ventes/nouvelle-enchere'
-    | '/admin/users/$userId'
-    | '/admin/users/new'
     | '/admin/blog'
     | '/admin/cooperatives'
     | '/admin/users'
   id:
     | '__root__'
     | '/'
+    | '/403'
     | '/_authenticated'
     | '/admin'
     | '/connexion'
     | '/inscription'
     | '/inscription-succes'
     | '/admin/analytics'
-    | '/admin/settings'
+    | '/admin/global-settings'
     | '/contact/merci'
     | '/admin/'
     | '/contact/'
@@ -525,8 +503,6 @@ export interface FileRouteTypes {
     | '/_authenticated/depots/nouveau-produit'
     | '/_authenticated/ventes/mes-encheres'
     | '/_authenticated/ventes/nouvelle-enchere'
-    | '/admin/users/$userId'
-    | '/admin/users/new'
     | '/admin/blog/'
     | '/admin/cooperatives/'
     | '/admin/users/'
@@ -535,6 +511,7 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  R403Route: typeof R403Route
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AdminRoute: typeof AdminRouteWithChildren
   ConnexionRoute: typeof ConnexionRoute
@@ -546,6 +523,7 @@ export interface RootRouteChildren {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  R403Route: R403Route,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AdminRoute: AdminRouteWithChildren,
   ConnexionRoute: ConnexionRoute,
@@ -566,6 +544,7 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/403",
         "/_authenticated",
         "/admin",
         "/connexion",
@@ -577,6 +556,9 @@ export const routeTree = rootRoute
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/403": {
+      "filePath": "403.tsx"
     },
     "/_authenticated": {
       "filePath": "_authenticated.tsx",
@@ -593,10 +575,8 @@ export const routeTree = rootRoute
       "filePath": "admin.tsx",
       "children": [
         "/admin/analytics",
-        "/admin/settings",
+        "/admin/global-settings",
         "/admin/",
-        "/admin/users/$userId",
-        "/admin/users/new",
         "/admin/blog/",
         "/admin/cooperatives/",
         "/admin/users/"
@@ -615,8 +595,8 @@ export const routeTree = rootRoute
       "filePath": "admin/analytics.tsx",
       "parent": "/admin"
     },
-    "/admin/settings": {
-      "filePath": "admin/settings.tsx",
+    "/admin/global-settings": {
+      "filePath": "admin/global-settings.tsx",
       "parent": "/admin"
     },
     "/contact/merci": {
@@ -652,14 +632,6 @@ export const routeTree = rootRoute
     "/_authenticated/ventes/nouvelle-enchere": {
       "filePath": "_authenticated/ventes/nouvelle-enchere.tsx",
       "parent": "/_authenticated"
-    },
-    "/admin/users/$userId": {
-      "filePath": "admin/users/$userId.tsx",
-      "parent": "/admin"
-    },
-    "/admin/users/new": {
-      "filePath": "admin/users/new.tsx",
-      "parent": "/admin"
     },
     "/admin/blog/": {
       "filePath": "admin/blog/index.tsx",

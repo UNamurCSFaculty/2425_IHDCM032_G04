@@ -30,6 +30,7 @@ interface Props {
   id: string
   label: string
   tooltip?: string
+  required?: boolean
   options: Option[] // Assure que les options ont un id de type number
   placeholder?: string
   value: number | null // La valeur peut être un id ou null pour le placeholder
@@ -39,6 +40,7 @@ interface Props {
    * @default false
    */
   placeholderSelectable?: boolean
+  disabled?: boolean // Ajout de la propriété disabled
 }
 
 // Constantes pour la virtualisation
@@ -51,9 +53,11 @@ const VirtualizedSelect: React.FC<Props> = ({
   options,
   tooltip,
   placeholder = '',
+  required = false,
   value,
   onChange,
   placeholderSelectable = false,
+  disabled = false, // Valeur par défaut pour disabled
 }) => {
   const [open, setOpen] = useState(false)
   const [search, setSearch] = useState('')
@@ -137,12 +141,14 @@ const VirtualizedSelect: React.FC<Props> = ({
       <div className="space-y-1">
         <Label htmlFor={id}>
           {label}
+          {required && <span className="text-red-500">*</span>}
           {tooltip && <SimpleTooltip content={tooltip} />}
         </Label>
 
         <Popover
-          open={open}
+          open={open && !disabled} // S'assurer que le popover ne s'ouvre pas si désactivé
           onOpenChange={openState => {
+            if (disabled) return // Ne rien faire si désactivé
             if (!openState) setSearch('') // Réinitialise la recherche à la fermeture
             setOpen(openState)
           }}
@@ -152,6 +158,7 @@ const VirtualizedSelect: React.FC<Props> = ({
               id={id}
               variant="outline"
               className="w-full justify-between"
+              disabled={disabled} // Passer la propriété disabled au bouton
             >
               <span className="truncate">{displayLabel}</span>
               <ChevronDown className="size-4 shrink-0 opacity-50" />

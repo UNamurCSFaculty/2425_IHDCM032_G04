@@ -1,7 +1,6 @@
 package be.labil.anacarde.presentation.controller;
 
 import static org.hamcrest.Matchers.containsString;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -24,7 +23,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Comparator;
-import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -49,18 +47,6 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 				System.err.println("Impossible de nettoyer build/test-uploads : " + e.getMessage());
 			}
 		}
-	}
-
-	/**
-	 * Teste la récupération d'un utilisa teur existant.
-	 * 
-	 */
-	@Test
-	public void testGetUser() throws Exception {
-		mockMvc.perform(
-				get("/api/users/" + getMainTestUser().getId()).accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.email").value(getMainTestUser().getEmail()));
 	}
 
 	/**
@@ -142,18 +128,6 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 	}
 
 	/**
-	 * Teste la récupération de la liste de tous les utilisateurs.
-	 * 
-	 */
-	@Test
-	public void testListUsers() throws Exception {
-		mockMvc.perform(get("/api/users").accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk())
-				// print
-				.andExpect(jsonPath("$").isArray());
-	}
-
-	/**
 	 * Teste la mise à jour d'un utilisateur existant.
 	 * 
 	 */
@@ -171,8 +145,6 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 		ObjectNode node = objectMapper.valueToTree(updateUser);
 		node.put("password", updateUser.getPassword());
 
-		int userRoleSize = getMainTestUser().getRoles().size();
-
 		String jsonContent = node.toString();
 
 		mockMvc.perform(put("/api/users/" + getMainTestUser().getId())
@@ -183,12 +155,6 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 		// Vérifie que le mot de passe est correctement haché après la mise à jour
 		User updatedUser = userRepository.findByEmail("email@updated.com")
 				.orElseThrow(() -> new AssertionError("Utilisateur non trouvé"));
-		// Vérifie que les rôles ne sont pas mis à jour
-		assertEquals(updatedUser.getRoles().size(), userRoleSize,
-				"Les rôles ne doivent pas être mis à jour");
-		assertEquals(updatedUser.getRoles().iterator().next().getName(),
-				getUserTestRole().getName(),
-				"Le rôle ne doit pas être mis à jour avec le rôle ADMIN");
 		assertTrue(bCryptPasswordEncoder.matches("newpassword", updatedUser.getPassword()),
 				"Le mot de passe stocké doit correspondre au nouveau mot de passe 'newpassword'");
 	}
@@ -205,48 +171,6 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 		//
 		// mockMvc.perform(get("/api/users/" +
 		// getSecondTestUser().getId())).andExpect(status().isNotFound());
-	}
-
-	/**
-	 * Teste l'ajout d'un rôle à un utilisateur.
-	 * 
-	 */
-	@Test
-	public void testAddRoleToUserIntegration() throws Exception {
-		Integer userId = getMainTestUser().getId();
-
-		mockMvc.perform(post("/api/users/" + userId + "/roles/" + getAdminTestRole().getName())
-				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
-				.andExpect(jsonPath("$.roles").isArray())
-				.andExpect(jsonPath("$.roles[?(@.name=='" + getAdminTestRole().getName() + "')]")
-						.exists());
-	}
-
-	/**
-	 * Teste la mise à jour complète des rôles d'un utilisateur.
-	 * 
-	 */
-	@Test
-	public void testUpdateUserRolesIntegration() throws Exception {
-		Integer userId = getMainTestUser().getId();
-		List<String> roleNames = List.of(getUserTestRole().getName(), getAdminTestRole().getName());
-		String jsonContent = objectMapper.writeValueAsString(roleNames);
-
-		mockMvc.perform(
-				put("/api/users/" + userId + "/roles").contentType(MediaType.APPLICATION_JSON)
-						.content(jsonContent).accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk()).andExpect(jsonPath("$.roles").isArray())
-				.andExpect(jsonPath("$.roles[?(@.name=='ROLE_ADMIN')]").exists())
-				.andExpect(jsonPath("$.roles[?(@.name=='ROLE_USER')]").exists());
-	}
-
-	/**
-	 * Teste la récupération d'un utilisateur inexistant.
-	 * 
-	 */
-	@Test
-	public void testGetUserNotFound() throws Exception {
-		mockMvc.perform(get("/api/users/999999")).andExpect(status().isNotFound());
 	}
 
 	/**
@@ -270,58 +194,5 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 		mockMvc.perform(multipart("/api/users").file(userPart).with(jwtAndCsrf()))
 				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.code", containsString("validation.error")));
-	}
-
-	/**
-	 * Teste l'ajout d'un rôle à un utilisateur inexistant.
-	 * 
-	 */
-	@Test
-	public void testAddRoleToUserUserNotFound() throws Exception {
-		int nonExistentUserId = 999999;
-		mockMvc.perform(
-				post("/api/users/" + nonExistentUserId + "/roles/" + getUserTestRole().getName()))
-				.andExpect(status().isNotFound());
-	}
-
-	/**
-	 * Teste l'ajout d'un rôle inexistant à un utilisateur.
-	 * 
-	 */
-	@Test
-	public void testAddRoleToUserRoleNotFound() throws Exception {
-		Integer userId = getMainTestUser().getId();
-		String nonExistentRoleName = "ROLE_NON_EXISTENT";
-		mockMvc.perform(post("/api/users/" + userId + "/roles/" + nonExistentRoleName))
-				.andExpect(status().isNotFound());
-	}
-
-	/**
-	 * Teste la mise à jour des rôles d'un utilisateur inexistant.
-	 */
-	@Test
-	public void testUpdateUserRolesUserNotFound() throws Exception {
-		int nonExistentUserId = 999999;
-		List<String> roleNames = List.of(getUserTestRole().getName());
-		String jsonContent = objectMapper.writeValueAsString(roleNames);
-
-		mockMvc.perform(put("/api/users/" + nonExistentUserId + "/roles")
-				.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
-				.andExpect(status().isNotFound());
-	}
-
-	/**
-	 * Teste la mise à jour des rôles d'un utilisateur lorsqu'un rôle spécifié est inexistant.
-	 * 
-	 */
-	@Test
-	public void testUpdateUserRolesRoleNotFound() throws Exception {
-		Integer userId = getMainTestUser().getId();
-		List<String> roleNames = List.of("ROLE_NON_EXISTENT");
-		String jsonContent = objectMapper.writeValueAsString(roleNames);
-
-		mockMvc.perform(put("/api/users/" + userId + "/roles")
-				.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
-				.andExpect(status().isNotFound());
 	}
 }

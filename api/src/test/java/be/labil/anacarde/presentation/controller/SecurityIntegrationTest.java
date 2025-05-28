@@ -1,5 +1,6 @@
 package be.labil.anacarde.presentation.controller;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.anonymous;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -38,16 +39,25 @@ public class SecurityIntegrationTest {
 	private @Autowired UserRepository userRepository;
 	private @Autowired JwtUtil jwtUtil;
 
-	private Cookie jwtCookie;
-	private User user;
+	private Cookie jwtCookieAdmin;
+	private Cookie jwtCookieProducer;
+	private User userAdmin;
+	private User userProducer;
 	@Autowired
 	private RegionRepository regionRepository;
 	@Autowired
 	private CityRepository cityRepository;
 
-	private RequestPostProcessor addJwtCookie() {
+	private RequestPostProcessor addJwtAdminCookie() {
 		return request -> {
-			request.setCookies(jwtCookie);
+			request.setCookies(jwtCookieAdmin);
+			return request;
+		};
+	}
+
+	private RequestPostProcessor addJwtProducerCookie() {
+		return request -> {
+			request.setCookies(jwtCookieProducer);
 			return request;
 		};
 	}
@@ -64,14 +74,24 @@ public class SecurityIntegrationTest {
 		Address address = Address.builder().street("Rue de la paix").city(city).region(region)
 				.build();
 
-		user = Admin.builder().firstName("John").lastName("Doe").email("user@example.com")
+		userAdmin = Admin.builder().firstName("John").lastName("Doe").email("user@example.com")
 				.address(address).password("password").registrationDate(LocalDateTime.now())
 				.phone("+2290197000000").language(language).enabled(true).build();
-		user = userRepository.save(user);
-		String token = jwtUtil.generateToken(user);
-		jwtCookie = new Cookie("jwt", token);
-		jwtCookie.setHttpOnly(true);
-		jwtCookie.setPath("/");
+		userAdmin = userRepository.save(userAdmin);
+		String token = jwtUtil.generateToken(userAdmin);
+		jwtCookieAdmin = new Cookie("jwt", token);
+		jwtCookieAdmin.setHttpOnly(true);
+		jwtCookieAdmin.setPath("/");
+
+		userProducer = Producer.builder().firstName("Jane").lastName("Doe")
+				.email("janedoe@example.com").address(address).agriculturalIdentifier("123456789")
+				.password("password").registrationDate(LocalDateTime.now()).phone("+2290197000001")
+				.language(language).enabled(true).build();
+		userProducer = userRepository.save(userProducer);
+		String producerToken = jwtUtil.generateToken(userProducer);
+		jwtCookieProducer = new Cookie("jwt", producerToken);
+		jwtCookieProducer.setHttpOnly(true);
+		jwtCookieProducer.setPath("/");
 	}
 
 	@AfterEach
@@ -124,12 +144,28 @@ public class SecurityIntegrationTest {
 		StoreDetailDto newStore = new StoreDetailDto();
 		newStore.setAddress(AddressDto.builder().street("Rue de la paix")
 				.location("POINT(2.3522 48.8566)").cityId(1).regionId(1).build());
-		newStore.setUserId(user.getId());
+		newStore.setUserId(userAdmin.getId());
 
 		ObjectNode node = objectMapper.valueToTree(newStore);
 		String jsonContent = node.toString();
 
 		mockMvc.perform(post("/api/stores").contentType(MediaType.APPLICATION_JSON)
-				.content(jsonContent).with(addJwtCookie())).andExpect(status().isForbidden());
+				.content(jsonContent).with(addJwtAdminCookie())).andExpect(status().isForbidden());
+	}
+
+	@Test
+	public void testAdminRouteAccess() throws Exception {
+
+		// Cas 1: Un utilisateur anonyme tente d'accéder à une route admin
+		mockMvc.perform(get("/api/admin/global-settings").with(anonymous())
+				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isUnauthorized());
+
+		// Cas 2: Un utilisateur non-admin (producer) tente d'accéder à une route admin
+		mockMvc.perform(get("/api/admin/global-settings").with(addJwtProducerCookie())
+				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isForbidden());
+
+		// Cas 3: Un utilisateur admin accède à la route admin
+		mockMvc.perform(get("/api/admin/global-settings").with(addJwtAdminCookie())
+				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
 	}
 }

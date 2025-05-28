@@ -1,10 +1,10 @@
 import {
   zCooperativeDto,
-  zProductUpdateDto as zGeneratedProductUpdateDto, // Renommé pour clarté
+  zProductUpdateDto as zGeneratedProductUpdateDto,
   zUserCreateDto as zGeneratedUserCreateDto,
   zUserListDto as zGeneratedUserListDto,
   zUserUpdateDto as zGeneratedUserUpdateDto,
-  zUserDetailDto as zGeneratedUserDetailDto, // Import zUserDetailDto
+  zUserDetailDto as zGeneratedUserDetailDto,
 } from '@/api/generated/zod.gen'
 import z from 'zod/v4'
 
@@ -118,7 +118,6 @@ const zTransformedProduct = zProductUpdateDtoBase.extend({
 export const zAppProduct = z.discriminatedUnion('type', [
   zHarvestProduct,
   zTransformedProduct,
-  // Ajoutez d'autres types de produits ici si nécessaire
 ])
 export type AppProductDto = z.infer<typeof zAppProduct>
 
@@ -175,39 +174,34 @@ const zUserDetailDtoBase = zGeneratedUserDetailDto.omit({
 
 const zAdminDetailDtoSchema = zUserDetailDtoBase.extend({
   type: z.literal('admin'),
-  // Pas de champs spécifiques supplémentaires pour admin dans UserDetailDto généralement
 })
 
 const zProducerDetailDtoSchema = zUserDetailDtoBase.extend({
   type: z.literal('producer'),
-  agriculturalIdentifier: z.string().nullable().optional(), // Ajustez selon la définition exacte de UserDetailDto
-  cooperative: zCooperativeDto.nullable().optional(), // Ajustez selon la définition exacte de UserDetailDto
+  agriculturalIdentifier: z.string().nullable().optional(),
+  cooperative: zCooperativeDto.nullable().optional(),
 })
 
 const zTransformerDetailDtoSchema = zUserDetailDtoBase.extend({
   type: z.literal('transformer'),
-  // Pas de champs spécifiques supplémentaires pour transformer
 })
 
 const zQualityInspectorDetailDtoSchema = zUserDetailDtoBase.extend({
   type: z.literal('quality_inspector'),
-  // Pas de champs spécifiques supplémentaires
 })
 
 const zExporterDetailDtoSchema = zUserDetailDtoBase.extend({
   type: z.literal('exporter'),
-  // Pas de champs spécifiques supplémentaires
 })
 
 const zCarrierDetailDtoSchema = zUserDetailDtoBase.extend({
   type: z.literal('carrier'),
-  pricePerKm: z.number().nullable().optional(), // Ajustez selon la définition exacte
-  radius: z.number().nullable().optional(), // Ajustez selon la définition exacte
+  pricePerKm: z.number().nullable().optional(),
+  radius: z.number().nullable().optional(),
 })
 
 const zTraderDetailDtoSchema = zUserDetailDtoBase.extend({
   type: z.literal('trader'),
-  // Pas de champs spécifiques supplémentaires
 })
 
 export const zAppUserDetail = z.discriminatedUnion('type', [

@@ -257,69 +257,9 @@ export type LanguageDto = {
 }
 
 /**
- * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
- */
-export enum Type {
-  ADMIN = 'admin',
-  PRODUCER = 'producer',
-  TRANSFORMER = 'transformer',
-  QUALITY_INSPECTOR = 'quality_inspector',
-  EXPORTER = 'exporter',
-  CARRIER = 'carrier',
-}
-
-/**
  * Objet de transfert de données pour les producteurs.
  */
-export type ProducerDetailDto = {
-  /**
-   * Identifiant unique
-   */
-  readonly id: number
-  /**
-   * Prénom de l'utilisateur
-   */
-  firstName: string
-  /**
-   * Nom de famille de l'utilisateur
-   */
-  lastName: string
-  /**
-   * Adresse email de l'utilisateur
-   */
-  email: string
-  /**
-   * Date d'enregistrement
-   */
-  readonly registrationDate?: string
-  /**
-   * Date de validation
-   */
-  readonly validationDate?: string
-  /**
-   * Compte activé
-   */
-  enabled?: boolean
-  /**
-   * Numéro de téléphone (Bénin, format local à 10 chiffres débutant par 01, ou +229...)
-   */
-  phone?: string
-  /**
-   * Liste des rôles de l'utilisateur
-   */
-  readonly roles?: Array<RoleDto>
-  /**
-   * Identifiant de la langue préférée
-   */
-  language: LanguageDto
-  /**
-   * Adresse de l'utilisateur
-   */
-  address: AddressDto
-  /**
-   * Détails complets d’un utilisateur
-   */
-  documents?: Array<DocumentDto>
+export type ProducerDetailDto = TraderDetailDto & {
   /**
    * Identifiant agricole
    */
@@ -328,17 +268,6 @@ export type ProducerDetailDto = {
    * Coopérative du producteur
    */
   cooperative?: CooperativeDto
-  /**
-   * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
-   */
-  type:
-    | 'admin'
-    | 'producer'
-    | 'transformer'
-    | 'quality_inspector'
-    | 'exporter'
-    | 'carrier'
-    | 'trader'
 }
 
 /**
@@ -346,20 +275,6 @@ export type ProducerDetailDto = {
  */
 export type QualityInspectorDetailDto = UserDetailDto & {
   type: 'quality_inspector'
-}
-
-/**
- * Objet de transfert de données pour les rôles.
- */
-export type RoleDto = {
-  /**
-   * Identifiant unique
-   */
-  readonly id: number
-  /**
-   * Nom du rôle
-   */
-  name: string
 }
 
 /**
@@ -372,66 +287,19 @@ export type TraderDetailDto = UserDetailDto & {
 /**
  * Objet de transfert de données pour les transformateurs.
  */
-export type TransformerDetailDto = {
-  /**
-   * Identifiant unique
-   */
-  readonly id: number
-  /**
-   * Prénom de l'utilisateur
-   */
-  firstName: string
-  /**
-   * Nom de famille de l'utilisateur
-   */
-  lastName: string
-  /**
-   * Adresse email de l'utilisateur
-   */
-  email: string
-  /**
-   * Date d'enregistrement
-   */
-  readonly registrationDate?: string
-  /**
-   * Date de validation
-   */
-  readonly validationDate?: string
-  /**
-   * Compte activé
-   */
-  enabled?: boolean
-  /**
-   * Numéro de téléphone (Bénin, format local à 10 chiffres débutant par 01, ou +229...)
-   */
-  phone?: string
-  /**
-   * Liste des rôles de l'utilisateur
-   */
-  readonly roles?: Array<RoleDto>
-  /**
-   * Identifiant de la langue préférée
-   */
-  language: LanguageDto
-  /**
-   * Adresse de l'utilisateur
-   */
-  address: AddressDto
-  /**
-   * Détails complets d’un utilisateur
-   */
-  documents?: Array<DocumentDto>
-  /**
-   * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
-   */
-  type:
-    | 'admin'
-    | 'producer'
-    | 'transformer'
-    | 'quality_inspector'
-    | 'exporter'
-    | 'carrier'
-    | 'trader'
+export type TransformerDetailDto = TraderDetailDto
+
+/**
+ * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
+ */
+export enum Type {
+  ADMIN = 'admin',
+  PRODUCER = 'producer',
+  TRANSFORMER = 'transformer',
+  QUALITY_INSPECTOR = 'quality_inspector',
+  EXPORTER = 'exporter',
+  CARRIER = 'carrier',
+  TRADER = 'trader',
 }
 
 /**
@@ -470,10 +338,6 @@ export type UserDetailDto = {
    * Numéro de téléphone (Bénin, format local à 10 chiffres débutant par 01, ou +229...)
    */
   phone?: string
-  /**
-   * Liste des rôles de l'utilisateur
-   */
-  readonly roles?: Array<RoleDto>
   /**
    * Identifiant de la langue préférée
    */
@@ -1061,6 +925,10 @@ export type AuctionOptionsUpdateDto = {
    */
   showPublic?: boolean
   /**
+   * Forcer les meilleures enchères
+   */
+  forceBetterBids?: boolean
+  /**
    * Incrément minimum d'une sur enchère
    */
   minIncrement?: number
@@ -1187,6 +1055,10 @@ export type AuctionOptionsDto = {
    */
   showPublic?: boolean
   /**
+   * Forcer les meilleures enchères
+   */
+  forceBetterBids?: boolean
+  /**
    * Incrément minimum d'une sur enchère
    */
   minIncrement?: number
@@ -1206,27 +1078,72 @@ export type AuctionStrategyDto = {
   name: string
 }
 
-export type ApiError = {
+/**
+ * Mise à jour des réglages globaux
+ */
+export type GlobalSettingsUpdateDto = {
   /**
-   * human-readable error message
+   * ID de la stratégie par défaut
    */
-  message?: string
-  errors?: Array<ApiErrorErrors>
+  defaultStrategyId?: number
+  /**
+   * Prix fixe au kg par défaut
+   */
+  defaultFixedPriceKg?: number
+  /**
+   * Prix max au kg par défaut
+   */
+  defaultMaxPriceKg?: number
+  /**
+   * Prix min au kg par défaut
+   */
+  defaultMinPriceKg?: number
+  /**
+   * Filtrer les enchères terminées
+   */
+  showOnlyActive: boolean
+  /**
+   * Forcer de faire des sur enchères meilleures que la précédente
+   */
+  forceBetterBids: boolean
+  /**
+   * Incrément minimum d'une sur enchère
+   */
+  minIncrement?: number
 }
 
-export type ApiErrorErrors = {
+/**
+ * Réglages globaux du système d'enchères
+ */
+export type GlobalSettingsDto = {
   /**
-   * For input validation errors, identifies where in the  JSON request body the error occurred.
+   * Stratégie par défaut
    */
-  path?: string
+  defaultStrategy?: AuctionStrategyDto
   /**
-   * Human-readable error message.
+   * Prix fixe au kg par défaut
    */
-  message?: string
+  defaultFixedPriceKg?: number
   /**
-   * Code indicating error type.
+   * Prix max au kg par défaut
    */
-  errorCode?: string
+  defaultMaxPriceKg?: number
+  /**
+   * Prix min au kg par défaut
+   */
+  defaultMinPriceKg?: number
+  /**
+   * Filtrer automatiquement les enchères terminées
+   */
+  showOnlyActive?: boolean
+  /**
+   * Forcer de faire des sur enchères meilleures que la précédente
+   */
+  forceBetterBids: boolean
+  /**
+   * Incrément minimum d'une sur enchère
+   */
+  minIncrement?: number
 }
 
 /**
@@ -1327,15 +1244,11 @@ export type UserCreateDto = {
   /**
    * Numéro de téléphone (Bénin, format local à 10 chiffres débutant par 01, ou +229...)
    */
-  phone?: string
+  phone: string
   /**
    * Mot de passe de l'utilisateur
    */
   password: string
-  /**
-   * Liste des rôles de l'utilisateur
-   */
-  roles?: Array<RoleDto>
   /**
    * Identifiant de la langue préférée
    */
@@ -1371,6 +1284,55 @@ export type ContactRequestDto = {
 export type LoginRequest = {
   username: string
   password: string
+}
+
+export type ExportAuctionDto = {
+  auctionId?: number
+  auctionStartDate?: string
+  auctionEndDate?: string
+  auctionStartPrice?: number
+  auctionEnded?: boolean
+  auctionStatus?: string
+  strategyName?: string
+  optionMinPriceKg?: number
+  optionMaxPriceKg?: number
+  optionBuyNowPrice?: number
+  optionShowPublic?: boolean
+  optionMinIncrement?: number
+  productId?: number
+  productWeightKg?: number
+  productDepositDate?: string
+  transformedProductId?: number
+  qualityInspectorId?: number
+  productQuality?: string
+  productType?: string
+  storeId?: number
+  storeName?: string
+  storeCity?: string
+  storeRegion?: string
+  sellerId?: number
+  sellerCity?: string
+  sellerRegion?: string
+  sellerCooperative?: string
+  bidCount?: number
+  bidMax?: number
+  bidMin?: number
+  bidAvg?: number
+  bidSum?: number
+  winnerTraderId?: number
+  bidWinningAmount?: number
+  winnerCity?: string
+  winnerRegion?: string
+}
+
+/**
+ * Données nécessaires pour l'application cliente.
+ */
+export type ApplicationDataDto = {
+  /**
+   * Liste des stratégies d'enchères disponibles.
+   */
+  languages: Array<LanguageDto>
 }
 
 /**
@@ -1432,10 +1394,6 @@ export type ExporterListDto = {
    * Numéro de téléphone (Bénin, format local à 10 chiffres débutant par 01, ou +229...)
    */
   phone?: string
-  /**
-   * Liste des rôles de l'utilisateur
-   */
-  readonly roles?: Array<RoleDto>
   /**
    * Identifiant de la langue préférée
    */
@@ -1543,53 +1501,27 @@ export type UserListDto = {
     | 'trader'
 }
 
-export type ExportAuctionDto = {
-  auctionId?: number
-  auctionStartDate?: string
-  auctionEndDate?: string
-  auctionStartPrice?: number
-  auctionEnded?: boolean
-  auctionStatus?: string
-  strategyName?: string
-  optionMinPriceKg?: number
-  optionMaxPriceKg?: number
-  optionBuyNowPrice?: number
-  optionShowPublic?: boolean
-  optionMinIncrement?: number
-  productId?: number
-  productWeightKg?: number
-  productDepositDate?: string
-  transformedProductId?: number
-  qualityInspectorId?: number
-  productQuality?: string
-  productType?: string
-  storeId?: number
-  storeName?: string
-  storeCity?: string
-  storeRegion?: string
-  sellerId?: number
-  sellerCity?: string
-  sellerRegion?: string
-  sellerCooperative?: string
-  bidCount?: number
-  bidMax?: number
-  bidMin?: number
-  bidAvg?: number
-  bidSum?: number
-  winnerTraderId?: number
-  bidWinningAmount?: number
-  winnerCity?: string
-  winnerRegion?: string
+export type ApiError = {
+  /**
+   * human-readable error message
+   */
+  message?: string
+  errors?: Array<ApiErrorErrors>
 }
 
-/**
- * Données nécessaires pour l'application cliente.
- */
-export type ApplicationDataDto = {
+export type ApiErrorErrors = {
   /**
-   * Liste des stratégies d'enchères disponibles.
+   * For input validation errors, identifies where in the  JSON request body the error occurred.
    */
-  languages: Array<LanguageDto>
+  path?: string
+  /**
+   * Human-readable error message.
+   */
+  message?: string
+  /**
+   * Code indicating error type.
+   */
+  errorCode?: string
 }
 
 export type DeleteUserData = {
@@ -1621,36 +1553,6 @@ export type DeleteUserResponses = {
 }
 
 export type DeleteUserResponse = DeleteUserResponses[keyof DeleteUserResponses]
-
-export type GetUserData = {
-  body?: never
-  path: {
-    /**
-     * Identifiant de l'utilisateur
-     */
-    id: number
-  }
-  query?: never
-  url: '/api/users/{id}'
-}
-
-export type GetUserErrors = {
-  /**
-   * Utilisateur non trouvé
-   */
-  404: ApiErrorResponse
-}
-
-export type GetUserError = GetUserErrors[keyof GetUserErrors]
-
-export type GetUserResponses = {
-  /**
-   * Utilisateur trouvé
-   */
-  200: UserDetailDto
-}
-
-export type GetUserResponse = GetUserResponses[keyof GetUserResponses]
 
 export type UpdateUserData = {
   body:
@@ -1692,42 +1594,6 @@ export type UpdateUserResponses = {
 }
 
 export type UpdateUserResponse = UpdateUserResponses[keyof UpdateUserResponses]
-
-export type UpdateUserRolesData = {
-  body: Array<string>
-  path: {
-    /**
-     * Identifiant de l'utilisateur
-     */
-    id: number
-  }
-  query?: never
-  url: '/api/users/{id}/roles'
-}
-
-export type UpdateUserRolesErrors = {
-  /**
-   * Erreur de validation ou JSON invalide
-   */
-  400: ApiErrorResponse
-  /**
-   * Utilisateur ou rôle non trouvé
-   */
-  404: ApiErrorResponse
-}
-
-export type UpdateUserRolesError =
-  UpdateUserRolesErrors[keyof UpdateUserRolesErrors]
-
-export type UpdateUserRolesResponses = {
-  /**
-   * Rôles mis à jour avec succès
-   */
-  200: UserDetailDto
-}
-
-export type UpdateUserRolesResponse =
-  UpdateUserRolesResponses[keyof UpdateUserRolesResponses]
 
 export type DeleteStoreData = {
   body?: never
@@ -2987,17 +2853,9 @@ export type GetAuctionStrategyData = {
 
 export type GetAuctionStrategyErrors = {
   /**
-   * Unauthorized
-   */
-  401: ApiError
-  /**
-   * Forbidden
-   */
-  403: ApiError
-  /**
    * Not Found
    */
-  404: ApiError
+  404: ApiErrorResponse
 }
 
 export type GetAuctionStrategyError =
@@ -3005,10 +2863,13 @@ export type GetAuctionStrategyError =
 
 export type GetAuctionStrategyResponses = {
   /**
-   * Success
+   * OK
    */
-  200: unknown
+  200: AuctionStrategyDto
 }
+
+export type GetAuctionStrategyResponse =
+  GetAuctionStrategyResponses[keyof GetAuctionStrategyResponses]
 
 export type UpdateAuctionStrategyData = {
   body: AuctionStrategyDto
@@ -3026,19 +2887,11 @@ export type UpdateAuctionStrategyErrors = {
   /**
    * Bad Request
    */
-  400: ApiError
+  400: ApiErrorResponse
   /**
-   * Unauthorized
+   * Conflict
    */
-  401: ApiError
-  /**
-   * Forbidden
-   */
-  403: ApiError
-  /**
-   * Not Found
-   */
-  404: ApiError
+  409: ApiErrorResponse
 }
 
 export type UpdateAuctionStrategyError =
@@ -3046,26 +2899,67 @@ export type UpdateAuctionStrategyError =
 
 export type UpdateAuctionStrategyResponses = {
   /**
-   * Updated successfully
+   * Created
    */
-  200: unknown
+  201: AuctionStrategyDto
 }
 
-export type ListUsersData = {
+export type UpdateAuctionStrategyResponse =
+  UpdateAuctionStrategyResponses[keyof UpdateAuctionStrategyResponses]
+
+export type GetGlobalSettingsData = {
   body?: never
   path?: never
   query?: never
-  url: '/api/users'
+  url: '/api/admin/global-settings'
 }
 
-export type ListUsersResponses = {
+export type GetGlobalSettingsErrors = {
   /**
-   * Liste récupérée avec succès
+   * Réglages globaux non configurés
    */
-  200: Array<UserListDto>
+  404: ApiErrorResponse
 }
 
-export type ListUsersResponse = ListUsersResponses[keyof ListUsersResponses]
+export type GetGlobalSettingsError =
+  GetGlobalSettingsErrors[keyof GetGlobalSettingsErrors]
+
+export type GetGlobalSettingsResponses = {
+  /**
+   * Réglages globaux récupérés avec succès
+   */
+  200: GlobalSettingsDto
+}
+
+export type GetGlobalSettingsResponse =
+  GetGlobalSettingsResponses[keyof GetGlobalSettingsResponses]
+
+export type UpdateGlobalSettingsData = {
+  body: GlobalSettingsUpdateDto
+  path?: never
+  query?: never
+  url: '/api/admin/global-settings'
+}
+
+export type UpdateGlobalSettingsErrors = {
+  /**
+   * Données invalides
+   */
+  400: ApiErrorResponse
+}
+
+export type UpdateGlobalSettingsError =
+  UpdateGlobalSettingsErrors[keyof UpdateGlobalSettingsErrors]
+
+export type UpdateGlobalSettingsResponses = {
+  /**
+   * Réglages globaux mis à jour avec succès
+   */
+  200: GlobalSettingsDto
+}
+
+export type UpdateGlobalSettingsResponse =
+  UpdateGlobalSettingsResponses[keyof UpdateGlobalSettingsResponses]
 
 export type CreateUserData = {
   body: {
@@ -3098,45 +2992,6 @@ export type CreateUserResponses = {
 }
 
 export type CreateUserResponse = CreateUserResponses[keyof CreateUserResponses]
-
-export type AddRoleToUserData = {
-  body?: never
-  path: {
-    /**
-     * Identifiant de l'utilisateur
-     */
-    id: number
-    /**
-     * Nom du rôle
-     */
-    roleName: string
-  }
-  query?: never
-  url: '/api/users/{id}/roles/{roleName}'
-}
-
-export type AddRoleToUserErrors = {
-  /**
-   * Erreur de validation ou JSON invalide
-   */
-  400: ApiErrorResponse
-  /**
-   * Utilisateur ou rôle non trouvé
-   */
-  404: ApiErrorResponse
-}
-
-export type AddRoleToUserError = AddRoleToUserErrors[keyof AddRoleToUserErrors]
-
-export type AddRoleToUserResponses = {
-  /**
-   * Rôle ajouté avec succès
-   */
-  200: UserDetailDto
-}
-
-export type AddRoleToUserResponse =
-  AddRoleToUserResponses[keyof AddRoleToUserResponses]
 
 export type ListStoresData = {
   body?: never
@@ -3798,30 +3653,15 @@ export type ListAuctionStrategiesData = {
   url: '/api/auctions/strategies'
 }
 
-export type ListAuctionStrategiesErrors = {
-  /**
-   * Unauthorized
-   */
-  401: ApiError
-  /**
-   * Forbidden
-   */
-  403: ApiError
-  /**
-   * Not Found
-   */
-  404: ApiError
-}
-
-export type ListAuctionStrategiesError =
-  ListAuctionStrategiesErrors[keyof ListAuctionStrategiesErrors]
-
 export type ListAuctionStrategiesResponses = {
   /**
-   * Success
+   * Liste récupérée avec succès
    */
-  200: unknown
+  200: Array<AuctionStrategyDto>
 }
+
+export type ListAuctionStrategiesResponse =
+  ListAuctionStrategiesResponses[keyof ListAuctionStrategiesResponses]
 
 export type CreateAuctionStrategyData = {
   body: AuctionStrategyDto
@@ -3834,15 +3674,11 @@ export type CreateAuctionStrategyErrors = {
   /**
    * Bad Request
    */
-  400: ApiError
+  400: ApiErrorResponse
   /**
-   * Unauthorized
+   * Conflict
    */
-  401: ApiError
-  /**
-   * Forbidden
-   */
-  403: ApiError
+  409: ApiErrorResponse
 }
 
 export type CreateAuctionStrategyError =
@@ -3852,8 +3688,11 @@ export type CreateAuctionStrategyResponses = {
   /**
    * Created
    */
-  201: unknown
+  201: AuctionStrategyDto
 }
+
+export type CreateAuctionStrategyResponse =
+  CreateAuctionStrategyResponses[keyof CreateAuctionStrategyResponses]
 
 export type CheckPhoneData = {
   body?: never
@@ -4141,6 +3980,52 @@ export type GetApplicationDataResponses = {
 
 export type GetApplicationDataResponse =
   GetApplicationDataResponses[keyof GetApplicationDataResponses]
+
+export type ListUsersData = {
+  body?: never
+  path?: never
+  query?: never
+  url: '/api/admin/users'
+}
+
+export type ListUsersResponses = {
+  /**
+   * Liste récupérée avec succès
+   */
+  200: Array<UserListDto>
+}
+
+export type ListUsersResponse = ListUsersResponses[keyof ListUsersResponses]
+
+export type GetUserData = {
+  body?: never
+  path: {
+    /**
+     * Identifiant de l'utilisateur
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/admin/users/{id}'
+}
+
+export type GetUserErrors = {
+  /**
+   * Utilisateur non trouvé
+   */
+  404: ApiErrorResponse
+}
+
+export type GetUserError = GetUserErrors[keyof GetUserErrors]
+
+export type GetUserResponses = {
+  /**
+   * Utilisateur trouvé
+   */
+  200: UserDetailDto
+}
+
+export type GetUserResponse = GetUserResponses[keyof GetUserResponses]
 
 export type ClientOptions = {
   baseUrl: 'http://localhost:8080' | (string & {})

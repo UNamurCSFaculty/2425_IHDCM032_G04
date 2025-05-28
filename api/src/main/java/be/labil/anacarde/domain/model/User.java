@@ -3,7 +3,6 @@ package be.labil.anacarde.domain.model;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
@@ -43,10 +42,6 @@ public abstract class User extends BaseEntity implements UserDetails {
 	@Column(nullable = false)
 	private boolean enabled;
 
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-	private Set<Role> roles;
-
 	@Embedded
 	private Address address;
 
@@ -62,47 +57,23 @@ public abstract class User extends BaseEntity implements UserDetails {
 	private List<Document> documents = new ArrayList<>();
 
 	/**
-	 * Ajoute un rôle à cet utilisateur et met à jour le côté inverse (le rôle) pour maintenir la
-	 * cohérence.
+	 * Convertit le type d'utilisateur en autorités basées sur l'héritage de classe. Les Admin ont
+	 * ROLE_ADMIN et ROLE_USER, les autres utilisateurs n'ont que ROLE_USER.
 	 *
-	 * @param role
-	 *            Le rôle à ajouter.
-	 */
-	public void addRole(Role role) {
-		if (role != null) {
-			if (roles == null) {
-				roles = new HashSet<>();
-			}
-			roles.add(role);
-		}
-	}
-
-	/**
-	 * Convertit les rôles assignés à l'utilisateur en une collection d'objets GrantedAuthority. Si
-	 * aucun rôle n'est assigné, une liste vide est retournée.
-	 *
-	 * @return Une Collection de GrantedAuthority représentant les rôles de l'utilisateur.
+	 * @return Une Collection de GrantedAuthority basée sur le type d'utilisateur.
 	 */
 	@Override
 	@Transient
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		if (roles == null) {
-			return new ArrayList<>();
-		}
-		return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName()))
-				.collect(Collectors.toList());
-	}
+		List<GrantedAuthority> authorities = new ArrayList<>();
+		authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 
-	/**
-	 * Retourne les rôles de l'utilisateur.
-	 *
-	 * @return Un ensemble vide si l'utilisateur n'a aucun rôle ; sinon, les rôles de l'utilisateur.
-	 */
-	public Set<Role> getRoles() {
-		if (roles == null) {
-			return new HashSet<>();
+		// Si c'est un Admin, ajouter ROLE_ADMIN
+		if (this instanceof Admin) {
+			authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
 		}
-		return roles;
+
+		return authorities;
 	}
 
 	/**

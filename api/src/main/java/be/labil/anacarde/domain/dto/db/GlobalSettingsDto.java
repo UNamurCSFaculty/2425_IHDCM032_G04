@@ -23,6 +23,9 @@ public class GlobalSettingsDto {
 	@Schema(description = "Filtrer automatiquement les enchères terminées", example = "true")
 	private Boolean showOnlyActive;
 
+	@Schema(description = "Forcer de faire des sur enchères meilleures que la précédente", example = "true", required = true)
+	private Boolean forceBetterBids;
+
 	@Schema(description = "Incrément minimum d'une sur enchère")
 	private Integer minIncrement = 1;
 }

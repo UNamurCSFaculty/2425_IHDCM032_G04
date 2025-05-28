@@ -32,6 +32,10 @@ public class AuctionOptions {
 	@Builder.Default
 	private Boolean showPublic = Boolean.TRUE;
 
+	@Column(name = "force_better_bids", nullable = false)
+	@Builder.Default
+	private Boolean forceBetterBids = Boolean.FALSE;
+
 	@Column(name = "min_increment", nullable = false)
 	@Builder.Default
 	private Integer minIncrement = 1;

@@ -19,7 +19,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	 * @return Un Optional contenant le User trouvé, ou Optional.empty() si aucun utilisateur n'est
 	 *         trouvé.
 	 */
-	@Query("SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.email = :email")
+	@Query("SELECT u FROM User u WHERE u.email = :email")
 	Optional<User> findByEmail(String email);
 
 	/**
@@ -30,13 +30,13 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	 * @return Un Optional contenant le User trouvé (avec ses rôles chargés), ou Optional.empty() si
 	 *         aucun utilisateur n'est trouvé.
 	 */
-	@Query("SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.phone = :phone")
+	@Query("SELECT u FROM User u WHERE u.phone = :phone")
 	Optional<User> findByPhone(String phone);
 
 	@Override
 	@NonNull
-	@EntityGraph(attributePaths = {"roles", "documents", "address", "address.city",
-			"address.region", "language"})
+	@EntityGraph(attributePaths = {"documents", "address", "address.city", "address.region",
+			"language"})
 	Optional<User> findById(@NonNull Integer id);
 
 	/**

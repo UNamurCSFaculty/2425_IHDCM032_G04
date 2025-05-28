@@ -36,14 +36,11 @@ export const Route = createFileRoute('/admin/')({
 function AdminDashboardComponent() {
   return (
     <div className="@container/main flex flex-1 flex-col gap-4 md:gap-6">
-      {/* SectionCards nécessitera des données ou une logique appropriée */}
       <SectionCards />
       <div className="px-0 lg:px-0">
         {' '}
-        {/* Ajustez le padding si nécessaire */}
         <ChartAreaInteractive />
       </div>
-      {/* Assurez-vous que DataTable est correctement initialisé avec des données et colonnes */}
       <DataTable data={exampleData.tableData} />
     </div>
   )

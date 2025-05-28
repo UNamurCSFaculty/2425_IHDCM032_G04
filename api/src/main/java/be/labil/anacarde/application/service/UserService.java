@@ -60,28 +60,6 @@ public interface UserService {
 	void deleteUser(Integer id);
 
 	/**
-	 * Ajoute un rôle à l'utilisateur identifié par l'ID fourni.
-	 *
-	 * @param userId
-	 *            L'identifiant unique de l'utilisateur.
-	 * @param roleName
-	 *            Le nom du rôle à ajouter.
-	 * @return Un UserDto représentant l'utilisateur mis à jour.
-	 */
-	UserDetailDto addRoleToUser(Integer userId, String roleName);
-
-	/**
-	 * Met à jour l'ensemble des rôles de l'utilisateur identifié par l'ID fourni.
-	 *
-	 * @param userId
-	 *            L'identifiant unique de l'utilisateur.
-	 * @param roleNames
-	 *            La List des noms de rôle à attribuer à l'utilisateur.
-	 * @return Un UserDto représentant l'utilisateur mis à jour.
-	 */
-	UserDetailDto updateUserRoles(Integer userId, List<String> roleNames);
-
-	/**
 	 * Vérifie si un utilisateur existe déjà dans le système en fonction de son adresse e-mail.
 	 * 
 	 * @param email

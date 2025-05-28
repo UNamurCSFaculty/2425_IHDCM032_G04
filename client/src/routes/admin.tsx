@@ -1,8 +1,16 @@
 import { AdminAppSidebar } from '@/components/admin/AdminAppSidebar'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
-import { Outlet, createFileRoute } from '@tanstack/react-router'
+import { Outlet, createFileRoute, redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/admin')({
+  beforeLoad: async ({ context }) => {
+    console.log('Admin route beforeLoad', context)
+    if (!context.user || (context.user && context.user.type !== 'admin')) {
+      throw redirect({
+        to: '/403',
+      })
+    }
+  },
   component: AdminLayoutComponent,
 })
 

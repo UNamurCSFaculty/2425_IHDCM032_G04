@@ -10,12 +10,14 @@ type VirtualizedSelectFieldProps = Omit<
   /** Nom visible et accessible (sera passé tel quel au composant) */
   label: string
   tooltip?: string
+  required?: boolean
 }
 
 export const VirtualizedSelectField: React.FC<VirtualizedSelectFieldProps> = ({
   label,
   options,
   tooltip,
+  required = false,
   placeholder,
   ...rest
 }) => {
@@ -32,6 +34,7 @@ export const VirtualizedSelectField: React.FC<VirtualizedSelectFieldProps> = ({
         options={options}
         tooltip={tooltip}
         placeholder={placeholder}
+        required={required}
         value={field.state.value}
         onChange={val => field.handleChange(val)}
       />

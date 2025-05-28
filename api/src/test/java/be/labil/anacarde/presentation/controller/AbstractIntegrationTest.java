@@ -42,7 +42,6 @@ public abstract class AbstractIntegrationTest {
 
 	protected @Autowired JwtUtil jwtUtil;
 	protected @Autowired UserRepository userRepository;
-	protected @Autowired RoleRepository roleRepository;
 	protected @Autowired LanguageRepository languageRepository;
 	protected @Autowired StoreRepository storeRepository;
 	protected @Autowired ProductRepository productRepository;
@@ -63,6 +62,7 @@ public abstract class AbstractIntegrationTest {
 	protected @Autowired DatabaseService databaseService;
 	protected @Autowired ExportAuctionRepository exportAuctionRepository;
 	protected @Autowired ExportAuctionMapper exportAuctionMapper;
+	protected @Autowired GlobalSettingsRepository globalSettingsRepository;
 
 	private Language mainLanguage;
 	private User mainTestUser;
@@ -71,8 +71,6 @@ public abstract class AbstractIntegrationTest {
 	private User secondTestProducer;
 	private User transformerTestUser;
 	private User mainTestCarrier;
-	private Role userTestRole;
-	private Role adminTestRole;
 	private Store mainTestStore;
 	private Product testHarvestProduct;
 	private Product testTransformedProduct;
@@ -180,26 +178,6 @@ public abstract class AbstractIntegrationTest {
 			throw new IllegalStateException("Second utilisateur de test non initialisé");
 		}
 		return transformerTestUser;
-	}
-
-	/**
-	 * Renvoie le rôle d'utilisateur de test.
-	 */
-	public Role getUserTestRole() {
-		if (userTestRole == null) {
-			throw new IllegalStateException("Rôle d'utilisateur non initialisé");
-		}
-		return userTestRole;
-	}
-
-	/**
-	 * Renvoie le rôle d'administrateur de test.
-	 */
-	public Role getAdminTestRole() {
-		if (adminTestRole == null) {
-			throw new IllegalStateException("Rôle d'administrateur non initialisé");
-		}
-		return adminTestRole;
 	}
 
 	/**
@@ -425,17 +403,7 @@ public abstract class AbstractIntegrationTest {
 				.address(mainAddress).registrationDate(LocalDateTime.now()).phone("+2290197000006")
 				.language(mainLanguage).enabled(true).pricePerKm(100d).radius(30d).build();
 
-		Role userRole = Role.builder().name("ROLE_USER").build();
-		Role adminRole = Role.builder().name("ROLE_ADMIN").build();
-		userTestRole = roleRepository.save(userRole);
-		adminTestRole = roleRepository.save(adminRole);
-
-		user1.addRole(userTestRole);
-		user2.addRole(adminTestRole);
-		user2.addRole(userTestRole);
-		producer.addRole(userTestRole);
-		transformer.addRole(userTestRole);
-
+		// Ne plus assigner de rôles - on utilise l'héritage
 		mainTestUser = userRepository.save(user1);
 		secondTestUser = userRepository.save(user2);
 		producerTestUser = userRepository.save(producer);
@@ -512,6 +480,16 @@ public abstract class AbstractIntegrationTest {
 
 		AuctionStrategy strategy = AuctionStrategy.builder().name("Meilleure offre").build();
 		testAuctionStrategy = auctionStrategyRepository.save(strategy);
+
+		AuctionStrategy strategyBid = AuctionStrategy.builder().name("Enchères montantes").build();
+		auctionStrategyRepository.save(strategyBid);
+
+		AuctionStrategy strategyFixedPrice = AuctionStrategy.builder().name("Prix fixe").build();
+		auctionStrategyRepository.save(strategyFixedPrice);
+
+		GlobalSettings globalSettings = new GlobalSettings();
+		globalSettings.setDefaultStrategy(testAuctionStrategy);
+		globalSettingsRepository.save(globalSettings);
 
 		TradeStatus tradeStatusOpen = TradeStatus.builder().name("Ouvert").build();
 		testTradeStatus = tradeStatusRepository.save(tradeStatusOpen);
@@ -602,7 +580,7 @@ public abstract class AbstractIntegrationTest {
 		mainTestContractOffer = contractOfferRepository.save(contractOffer);
 	}
 	/**
-	 * Génère un cookie JWT HTTP-only en utilisant les détails de l'utilisateur de test principal.
+	 * Génère un cookie JWT HTTP-only en utilisant les détails de l'utilisateur admin de test.
 	 */
 	protected void initJwtCookie() {
 		UserDetails userDetails = userDetailsService

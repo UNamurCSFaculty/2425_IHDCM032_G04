@@ -54,7 +54,7 @@ function RouteComponent() {
                       <ArrowUpRight className="!h-5 !w-5" />
                     </Button>
                   </Link>
-                  <Link to="/signup">
+                  <Link to="/inscription">
                     <Button
                       variant="outline"
                       size="lg"
