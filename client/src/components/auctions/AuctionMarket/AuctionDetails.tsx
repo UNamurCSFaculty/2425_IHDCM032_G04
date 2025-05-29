@@ -40,7 +40,7 @@ import {
   UserCircle2,
   XCircle,
 } from 'lucide-react'
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
 
@@ -57,6 +57,8 @@ const AuctionDetailsPanel: React.FC<Props> = ({
   showDetails = false,
   role,
 }) => {
+  const user = useAuthUser()
+  const queryClient = useQueryClient()
   const [amount, setAmount] = useState('')
   const [buyNowPopover, setBuyNowPopover] = useState(false)
   const [makeBidPopover, setMakeBidPopover] = useState(false)
@@ -123,10 +125,6 @@ const AuctionDetailsPanel: React.FC<Props> = ({
       console.error('Accept Auction - Invalid request ', error)
     },
   })
-
-  const user = useAuthUser()
-
-  const queryClient = useQueryClient()
 
   const handleSubmitBid = () => {
     const value = Number(amount)
