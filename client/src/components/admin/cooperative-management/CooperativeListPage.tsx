@@ -1,6 +1,5 @@
 import React, { useMemo, useState, useCallback } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { useNavigate } from '@tanstack/react-router'
 import {
   listCooperativesOptions,
   listUsersOptions,
@@ -21,13 +20,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from '@/components/ui/card'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import {
   AlertDialog,
@@ -73,7 +65,6 @@ type SortableCooperativeColumn =
 export const CooperativeListPage: React.FC = () => {
   const { t } = useTranslation()
   const queryClient = useQueryClient()
-  const navigate = useNavigate()
 
   const [selectedCooperativeForMembers, setSelectedCooperativeForMembers] =
     useState<CooperativeDto | null>(null)
@@ -87,6 +78,8 @@ export const CooperativeListPage: React.FC = () => {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [editingCooperative, setEditingCooperative] =
     useState<CooperativeDto | null>(null)
+
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
 
   const [isConfirmDeleteDialogOpen, setIsConfirmDeleteDialogOpen] =
     useState(false)
@@ -105,15 +98,15 @@ export const CooperativeListPage: React.FC = () => {
         queryKey: listCooperativesOptions().queryKey,
       })
       queryClient.invalidateQueries({ queryKey: listUsersOptions().queryKey })
-      setCooperativeIdToDelete(null) // Reset after deletion
+      setCooperativeIdToDelete(null)
     },
-    onError: (error: any) => {
-      toast.error(t('common.error'), {
+    onError: error => {
+      toast.error(t('common.error_general'), {
         description:
-          error.message ||
+          error.errors.map(e => e.message).join(' ,') ||
           t('admin.cooperative_management.toasts.deleted_error'),
       })
-      setCooperativeIdToDelete(null) // Reset on error
+      setCooperativeIdToDelete(null)
     },
   })
 
@@ -250,233 +243,242 @@ export const CooperativeListPage: React.FC = () => {
 
   return (
     <>
-      <Card className="m-4">
-        <CardHeader>
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <CardTitle>{t('admin.cooperative_management.title')}</CardTitle>
-              <CardDescription>
-                {t('admin.cooperative_management.description')}
-              </CardDescription>
-            </div>
-            <Button onClick={() => navigate({ to: '/admin/cooperatives/new' })}>
-              <PlusCircle className="mr-2 h-4 w-4" />
-              {t('admin.cooperative_management.add_button')}
-            </Button>
+      <div className="m-4 space-y-4">
+        {/* Search and Add Button Row */}
+        <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <div className="relative w-full max-w-xs">
+            <Search className="text-muted-foreground absolute top-2.5 left-2.5 h-4 w-4" />
+            <Input
+              type="search"
+              placeholder={t('admin.cooperative_management.search_placeholder')}
+              className="w-full pl-8"
+              value={searchTerm}
+              onChange={e => {
+                setSearchTerm(e.target.value)
+                setCurrentPage(1)
+              }}
+            />
           </div>
-          <div className="mt-4 flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <div className="relative w-full max-w-xs">
-              <Search className="text-muted-foreground absolute top-2.5 left-2.5 h-4 w-4" />
-              <Input
-                type="search"
-                placeholder={t(
-                  'admin.cooperative_management.search_placeholder'
-                )}
-                className="w-full pl-8"
-                value={searchTerm}
-                onChange={e => {
-                  setSearchTerm(e.target.value)
-                  setCurrentPage(1)
-                }}
-              />
-            </div>
-            <div className="text-muted-foreground text-sm">
-              {t('admin.user_management.results_count', {
-                // Réutilisation de la clé de traduction
-                count: processedCooperatives.totalItems,
-                total: cooperativesQuery.data?.length || 0,
-              })}
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          {cooperativesQuery.isError && (
-            <Alert variant="destructive" className="mb-4">
-              <AlertCircle className="h-4 w-4" />
-              <AlertTitle>{t('common.error_loading_data_title')}</AlertTitle>
-              <AlertDescription>
-                {cooperativesQuery.error?.message || t('common.error_occurred')}
-              </AlertDescription>
-            </Alert>
-          )}
-          {usersQuery.isError && (
-            <Alert variant="destructive" className="mb-4">
-              <AlertCircle className="h-4 w-4" />
-              <AlertTitle>{t('common.error_loading_users_title')}</AlertTitle>
-              <AlertDescription>
-                {usersQuery.error?.message || t('common.error_occurred')}
-              </AlertDescription>
-            </Alert>
-          )}
-
-          <div className="rounded-md border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead
-                    className="hover:bg-muted/50 cursor-pointer"
-                    onClick={() => handleSort('name')}
-                  >
-                    <div className="flex items-center">
-                      {t('form.name')}
-                      {renderSortIcon('name')}
-                    </div>
-                  </TableHead>
-                  <TableHead
-                    className="hover:bg-muted/50 cursor-pointer"
-                    onClick={() => handleSort('creationDate')}
-                  >
-                    <div className="flex items-center">
-                      {t('form.creation_date')}
-                      {renderSortIcon('creationDate')}
-                    </div>
-                  </TableHead>
-                  <TableHead
-                    className="hover:bg-muted/50 cursor-pointer"
-                    onClick={() => handleSort('presidentName')}
-                  >
-                    <div className="flex items-center">
-                      {t('form.president')}
-                      {renderSortIcon('presidentName')}
-                    </div>
-                  </TableHead>
-                  <TableHead
-                    className="hover:bg-muted/50 cursor-pointer text-center"
-                    onClick={() => handleSort('membersCounts')}
-                  >
-                    <div className="flex items-center justify-center">
-                      {t('admin.cooperative_management.members_count_column')}
-                      {renderSortIcon('membersCounts')}
-                    </div>
-                  </TableHead>
-                  <TableHead className="text-right">
-                    {t('form.actions')}
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {processedCooperatives.paginatedCooperatives.length > 0 ? (
-                  processedCooperatives.paginatedCooperatives.map(
-                    cooperative => (
-                      <TableRow key={cooperative.id}>
-                        <TableCell className="font-medium">
-                          {cooperative.name}
-                        </TableCell>
-                        <TableCell>
-                          {format(new Date(cooperative.creationDate), 'PP')}
-                        </TableCell>
-                        <TableCell>
-                          {getPresidentName(cooperative.presidentId)}
-                        </TableCell>
-                        <TableCell className="text-center">
-                          {cooperative.membersCounts}
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => handleOpenMembersDialog(cooperative)}
-                            title={t(
-                              'admin.cooperative_management.manage_members_button_title'
-                            )}
-                          >
-                            <Users className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => handleEditCooperative(cooperative)}
-                            title={t('buttons.edit')}
-                          >
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => handleDelete(cooperative.id)}
-                            disabled={deleteMutation.isPending}
-                            title={t('buttons.delete')}
-                            className="text-destructive hover:text-destructive"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    )
-                  )
-                ) : (
-                  <TableRow>
-                    <TableCell
-                      colSpan={5}
-                      className="text-muted-foreground h-24 text-center"
-                    >
-                      {searchTerm
-                        ? t(
-                            'admin.cooperative_management.no_cooperatives_match_search'
-                          )
-                        : t(
-                            'admin.cooperative_management.no_cooperatives_found'
-                          )}
+          <Button onClick={() => setIsCreateDialogOpen(true)}>
+            <PlusCircle className="mr-2 h-4 w-4" />
+            {t('admin.cooperative_management.add_button')}
+          </Button>
+        </div>
+        {/* Results Count */}
+        <div className="text-muted-foreground text-sm">
+          {t('admin.user_management.results_count', {
+            count: processedCooperatives.totalItems,
+            total: cooperativesQuery.data?.length || 0,
+          })}
+        </div>
+        {/* Error Alerts */}
+        {cooperativesQuery.isError && (
+          <Alert variant="destructive" className="mb-4">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>{t('common.error_loading_data_title')}</AlertTitle>
+            <AlertDescription>
+              {cooperativesQuery.error?.message || t('common.error_occurred')}
+            </AlertDescription>
+          </Alert>
+        )}
+        {usersQuery.isError && (
+          <Alert variant="destructive" className="mb-4">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>{t('common.error_loading_users_title')}</AlertTitle>
+            <AlertDescription>
+              {usersQuery.error?.message || t('common.error_occurred')}
+            </AlertDescription>
+          </Alert>
+        )}
+        {/* Table */}
+        <div className="rounded-md border">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead
+                  className="hover:bg-muted/50 cursor-pointer"
+                  onClick={() => handleSort('name')}
+                >
+                  <div className="flex items-center">
+                    {t('form.name')}
+                    {renderSortIcon('name')}
+                  </div>
+                </TableHead>
+                <TableHead
+                  className="hover:bg-muted/50 cursor-pointer"
+                  onClick={() => handleSort('creationDate')}
+                >
+                  <div className="flex items-center">
+                    {t('form.creation_date')}
+                    {renderSortIcon('creationDate')}
+                  </div>
+                </TableHead>
+                <TableHead
+                  className="hover:bg-muted/50 cursor-pointer"
+                  onClick={() => handleSort('presidentName')}
+                >
+                  <div className="flex items-center">
+                    {t('form.president')}
+                    {renderSortIcon('presidentName')}
+                  </div>
+                </TableHead>
+                <TableHead
+                  className="hover:bg-muted/50 cursor-pointer text-center"
+                  onClick={() => handleSort('membersCounts')}
+                >
+                  <div className="flex items-center justify-center">
+                    {t('admin.cooperative_management.members_count_column')}
+                    {renderSortIcon('membersCounts')}
+                  </div>
+                </TableHead>
+                <TableHead className="text-right">
+                  {t('form.actions')}
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {processedCooperatives.paginatedCooperatives.length > 0 ? (
+                processedCooperatives.paginatedCooperatives.map(cooperative => (
+                  <TableRow key={cooperative.id}>
+                    <TableCell className="font-medium">
+                      {cooperative.name}
+                    </TableCell>
+                    <TableCell>
+                      {format(new Date(cooperative.creationDate), 'PP')}
+                    </TableCell>
+                    <TableCell>
+                      {getPresidentName(cooperative.presidentId)}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      {cooperative.membersCounts}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleOpenMembersDialog(cooperative)}
+                        title={t(
+                          'admin.cooperative_management.manage_members_button_title'
+                        )}
+                      >
+                        <Users className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleEditCooperative(cooperative)}
+                        title={t('buttons.edit')}
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleDelete(cooperative.id)}
+                        disabled={deleteMutation.isPending}
+                        title={t('buttons.delete')}
+                        className="text-destructive hover:text-destructive"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                     </TableCell>
                   </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </div>
-          {processedCooperatives.totalPages > 1 && (
-            <PaginationControls
-              current={currentPage}
-              total={processedCooperatives.totalPages}
-              onChange={setCurrentPage}
-            />
-          )}
-        </CardContent>
-        {selectedCooperativeForMembers && (
-          <CooperativeMembersDialog
-            open={!!selectedCooperativeForMembers}
-            onClose={handleCloseMembersDialog}
-            cooperative={selectedCooperativeForMembers}
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={5}
+                    className="text-muted-foreground h-24 text-center"
+                  >
+                    {searchTerm
+                      ? t(
+                          'admin.cooperative_management.no_cooperatives_match_search'
+                        )
+                      : t('admin.cooperative_management.no_cooperatives_found')}
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+        {processedCooperatives.totalPages > 1 && (
+          <PaginationControls
+            current={currentPage}
+            total={processedCooperatives.totalPages}
+            onChange={setCurrentPage}
           />
         )}
-        {editingCooperative && (
-          <Dialog
-            open={isEditDialogOpen}
-            onOpenChange={isOpen => {
-              setIsEditDialogOpen(isOpen)
-              if (!isOpen) {
+      </div>{' '}
+      {/* End of the replacement for Card */}
+      {/* Dialogs remain outside the main content flow */}
+      {selectedCooperativeForMembers && (
+        <CooperativeMembersDialog
+          open={!!selectedCooperativeForMembers}
+          onClose={handleCloseMembersDialog}
+          cooperative={selectedCooperativeForMembers}
+          allCooperatives={cooperativesQuery.data} // Pass all cooperatives
+        />
+      )}
+      {editingCooperative && (
+        <Dialog
+          open={isEditDialogOpen}
+          onOpenChange={isOpen => {
+            setIsEditDialogOpen(isOpen)
+            if (!isOpen) {
+              setEditingCooperative(null)
+            }
+          }}
+        >
+          <DialogContent className="max-h-[90vh] w-full overflow-y-auto sm:max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>
+                {t('admin.cooperative_management.edit_dialog.title')}
+              </DialogTitle>
+              <DialogDescription>
+                {t('admin.cooperative_management.edit_dialog.description')}
+              </DialogDescription>
+            </DialogHeader>
+            <CooperativeForm
+              isEditMode={true}
+              cooperativeIdToEdit={editingCooperative.id}
+              allCooperatives={cooperativesQuery.data} // Pass all cooperatives
+              onSuccess={() => {
+                setIsEditDialogOpen(false)
                 setEditingCooperative(null)
-              }
-            }}
-          >
-            <DialogContent className="max-h-[90vh] w-full max-w-2xl overflow-y-auto sm:max-w-xl">
-              <DialogHeader>
-                <DialogTitle>
-                  {t('admin.cooperative_management.edit_dialog.title')}
-                </DialogTitle>
-                <DialogDescription>
-                  {t('admin.cooperative_management.edit_dialog.description')}
-                </DialogDescription>
-              </DialogHeader>
-              <CooperativeForm
-                isEditMode={true}
-                cooperativeIdToEdit={editingCooperative.id}
-                onSuccess={() => {
-                  setIsEditDialogOpen(false)
-                  setEditingCooperative(null)
-                  // Invalider les requêtes pour rafraîchir la liste
-                  queryClient.invalidateQueries({
-                    queryKey: listCooperativesOptions().queryKey,
-                  })
-                }}
-                onCancel={() => {
-                  setIsEditDialogOpen(false)
-                  setEditingCooperative(null)
-                }}
-              />
-            </DialogContent>
-          </Dialog>
-        )}
-      </Card>
+                // Query invalidation for list is handled by CooperativeForm
+              }}
+              onCancel={() => {
+                setIsEditDialogOpen(false)
+                setEditingCooperative(null)
+              }}
+            />
+          </DialogContent>
+        </Dialog>
+      )}
+      {/* New Dialog for Creating a Cooperative */}
+      {isCreateDialogOpen && (
+        <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+          <DialogContent className="max-h-[90vh] w-full max-w-2xl overflow-y-auto sm:max-w-xl">
+            <DialogHeader>
+              <DialogTitle>
+                {t('admin.cooperative_management.create_dialog.title')}
+              </DialogTitle>
+              <DialogDescription>
+                {t('admin.cooperative_management.create_dialog.description')}
+              </DialogDescription>
+            </DialogHeader>
+            <CooperativeForm
+              allCooperatives={cooperativesQuery.data} // Pass all cooperatives
+              onSuccess={() => {
+                setIsCreateDialogOpen(false)
+              }}
+              onCancel={() => {
+                setIsCreateDialogOpen(false)
+              }}
+            />
+          </DialogContent>
+        </Dialog>
+      )}
       <AlertDialog
         open={isConfirmDeleteDialogOpen}
         onOpenChange={setIsConfirmDeleteDialogOpen}

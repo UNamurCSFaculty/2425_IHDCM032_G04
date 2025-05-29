@@ -11,7 +11,10 @@ import { formatFileSize, type DeepPartial } from '@/lib/utils'
 import { useAppData } from '@/store/appStore'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { zAddressDto, zUserCreateDto } from '@/api/generated/zod.gen'
+import {
+  zAddressDto,
+  zUserCreateDto as zApiUserCreateDto,
+} from '@/api/generated/zod.gen'
 import { FileText, Download, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { downloadDocument } from '@/api/generated'
@@ -19,29 +22,43 @@ import {
   zAppUpdateUser,
   type AppUpdateUserDto,
   type AppUserDetailDto,
+  zAppCreateUser,
 } from '@/schemas/api-schemas'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { updateUserMutation } from '@/api/generated/@tanstack/react-query.gen'
-import type { CooperativeDto } from '@/api/generated/types.gen'
+import {
+  updateUserMutation,
+  createUserMutation,
+  listUsersQueryKey,
+} from '@/api/generated/@tanstack/react-query.gen'
+import z from 'zod/v4'
+import { useStore } from '@tanstack/react-form'
+
+const zAdminUpdateUser = zAppUpdateUser
+const zAdminCreateUser = zAppCreateUser.and(
+  z.object({
+    password: z.string().min(8),
+    documents: z.array(z.file()).optional(),
+  })
+)
 
 interface UserFormProps {
-  existingUser: AppUserDetailDto
+  mode: 'create' | 'edit'
+  existingUser?: AppUserDetailDto
   onSubmitSuccess: () => void
   onCancel: () => void
   formTitle: string
   formDescription: string
   submitButtonText: string
-  allCooperatives?: CooperativeDto[]
 }
 
 export const UserForm: React.FC<UserFormProps> = ({
+  mode,
   existingUser,
   onSubmitSuccess,
   onCancel,
   formTitle,
   formDescription,
   submitButtonText,
-  allCooperatives,
 }) => {
   const { t } = useTranslation()
   const appData = useAppData()
@@ -50,69 +67,111 @@ export const UserForm: React.FC<UserFormProps> = ({
     Record<string, boolean>
   >({})
 
-  const defaultValues: DeepPartial<AppUpdateUserDto> = {
-    firstName: existingUser.firstName,
-    lastName: existingUser.lastName,
-    email: existingUser.email,
-    phone: existingUser.phone,
-    languageId: existingUser.language.id,
-    enabled: existingUser.enabled,
-    address: existingUser.address
-      ? {
-          cityId: existingUser.address.cityId,
-          street: existingUser.address.street,
-          location: existingUser.address.location,
-        }
-      : undefined,
-    type: existingUser.type,
+  const isEditMode = mode === 'edit'
 
-    ...(existingUser.type === 'producer' && {
-      agriculturalIdentifier: (existingUser as any).agriculturalIdentifier,
-      cooperativeId:
-        (existingUser as any).cooperativeId ??
-        (existingUser as any).cooperative?.id,
-    }),
-    ...(existingUser.type === 'carrier' && {
-      pricePerKm: (existingUser as any).pricePerKm,
-      radius: (existingUser as any).radius,
-    }),
-  }
+  const defaultValues: DeepPartial<AppUpdateUserDto> =
+    isEditMode && existingUser
+      ? {
+          firstName: existingUser.firstName,
+          lastName: existingUser.lastName,
+          email: existingUser.email,
+          phone: existingUser.phone,
+          languageId: existingUser.language.id,
+          enabled: existingUser.enabled,
+          type: existingUser.type,
+          address: existingUser.address
+            ? {
+                cityId: existingUser.address.cityId,
+                street: existingUser.address.street,
+                location: existingUser.address.location,
+              }
+            : {},
+          agriculturalIdentifier: (existingUser as any).agriculturalIdentifier,
+          pricePerKm: (existingUser as any).pricePerKm,
+          radius: (existingUser as any).radius,
+        }
+      : {
+          // Defaults for create mode
+          firstName: '',
+          lastName: '',
+          email: '',
+          phone: '',
+          languageId: appData.languages[0]?.id,
+          enabled: true,
+          type: undefined,
+          address: {},
+          password: '',
+          agriculturalIdentifier: '',
+          pricePerKm: 0,
+          radius: 0,
+        }
 
   const mutationUpdate = useMutation({
     ...updateUserMutation(),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['listUsers'] })
-      queryClient.invalidateQueries({
-        queryKey: ['getUser', { path: { id: existingUser.id } }],
-      })
+      queryClient.invalidateQueries({ queryKey: listUsersQueryKey() })
+      if (existingUser) {
+        queryClient.invalidateQueries({
+          queryKey: ['getUser', { path: { id: existingUser.id } }],
+        })
+      }
       toast.success(t('admin.user_management.toasts.user_updated_success'))
       onSubmitSuccess()
     },
-    onError: (error: any) => {
-      toast.error(t('common.error'), {
+    onError: error => {
+      toast.error(t('common.error_general'), {
         description:
-          error.message || t('admin.user_management.toasts.user_updated_error'),
+          error.errors.map(e => e.message).join(' ,') ||
+          t('admin.user_management.toasts.user_updated_error'),
       })
     },
   })
+
+  const mutationCreate = useMutation({
+    ...createUserMutation(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: listUsersQueryKey() })
+      toast.success(t('admin.user_management.toasts.user_created_success'))
+      onSubmitSuccess()
+    },
+    onError: error => {
+      toast.error(t('common.error_general'), {
+        description:
+          error.errors.map(e => e.message).join(' ,') ||
+          t('admin.user_management.toasts.user_created_error'),
+      })
+    },
+  })
+
+  // Choose schema based on mode
+  const currentSchema = isEditMode ? zAdminUpdateUser : zAdminCreateUser
 
   const form = useAppForm({
     validators: {
-      onChange: zAppUpdateUser,
+      onChange: currentSchema,
     },
     defaultValues,
     onSubmit: async ({ value }) => {
-      const body: AppUpdateUserDto = value as AppUpdateUserDto
-      await mutationUpdate.mutateAsync({
-        path: { id: existingUser.id },
-        body,
-      })
+      if (isEditMode && existingUser) {
+        const body: AppUpdateUserDto = value as AppUpdateUserDto
+        await mutationUpdate.mutateAsync({
+          path: { id: existingUser.id },
+          body,
+        })
+      } else {
+        const userCreatePayload = value as z.infer<typeof zAdminCreateUser>
+        await mutationCreate.mutateAsync({
+          body: { user: userCreatePayload, documents: [] },
+        })
+      }
     },
   })
 
+  const values = useStore(form.store, s => s.values)
+
   useEffect(() => {
     form.reset()
-  }, [existingUser, form])
+  }, [existingUser, mode, form])
 
   const triggerBlobDownload = (blob: Blob, filename: string) => {
     const url = window.URL.createObjectURL(blob)
@@ -140,12 +199,14 @@ export const UserForm: React.FC<UserFormProps> = ({
     } catch (error) {
       console.error('Download error:', error)
       toast.error(t('common.download_error'), {
-        description: t('common.download_error') || t('common.unknown_error'),
+        description: (error as Error).message || t('common.unknown_error'),
       })
     } finally {
       setDownloadingDocIds(prev => ({ ...prev, [docId]: false }))
     }
   }
+
+  console.log(existingUser)
 
   return (
     <>
@@ -165,6 +226,27 @@ export const UserForm: React.FC<UserFormProps> = ({
           <legend className="text-muted-foreground px-1 text-sm font-medium">
             {t('form.sections.basic_info')}
           </legend>
+          <form.AppField name="type">
+            {f => (
+              <f.RadioGroupField
+                className="md:col-span-2"
+                direction="row"
+                choices={[
+                  { value: 'producer', label: t('types.producer') },
+                  { value: 'transformer', label: t('types.transformer') },
+                  { value: 'exporter', label: t('types.exporter') },
+                  { value: 'carrier', label: t('types.carrier') },
+                  { value: 'admin', label: t('types.admin') },
+                  {
+                    value: 'quality_inspector',
+                    label: t('types.quality_inspector'),
+                  },
+                ]}
+                label={t('form.type')}
+                readonly={isEditMode}
+              />
+            )}
+          </form.AppField>
           <form.AppField name="lastName">
             {f => <f.TextField label={t('form.last_name')} />}
           </form.AppField>
@@ -173,17 +255,19 @@ export const UserForm: React.FC<UserFormProps> = ({
           </form.AppField>
           <form.AppField
             name="email"
-            validators={{ onChange: zUserCreateDto.shape.email.optional() }}
+            validators={{ onChange: zApiUserCreateDto.shape.email.optional() }} // Use optional for edit, create schema handles requirement
           >
             {f => <f.TextField type="email" label={t('form.mail')} />}
           </form.AppField>
           <form.AppField
             name="phone"
             validators={{
-              onChange: zUserCreateDto.shape.phone.optional(),
+              onChange: zApiUserCreateDto.shape.phone.optional(),
             }}
           >
-            {f => <f.PhoneField label={t('form.phone')} required={false} />}
+            {f => (
+              <f.PhoneField label={t('form.phone')} required={!isEditMode} />
+            )}
           </form.AppField>
           <form.AppField name="languageId">
             {f => (
@@ -197,6 +281,7 @@ export const UserForm: React.FC<UserFormProps> = ({
               />
             )}
           </form.AppField>
+
           <form.AppField name="enabled">
             {f => (
               <f.CheckboxField
@@ -206,10 +291,34 @@ export const UserForm: React.FC<UserFormProps> = ({
               />
             )}
           </form.AppField>
+          {isEditMode && existingUser?.type === 'producer' && (
+            <div className="flex items-center text-sm font-medium">
+              {t('form.cooperative')} : {existingUser.cooperative?.name || '/'}
+            </div>
+          )}
         </fieldset>
 
+        {/* Password Fields for Create Mode */}
+        {!isEditMode && (
+          <fieldset className="grid grid-cols-1 gap-4 rounded-md border p-4 md:grid-cols-2">
+            <legend className="text-muted-foreground px-1 text-sm font-medium">
+              {t('form.sections.password')}
+            </legend>
+            <form.AppField name="password">
+              {f => (
+                <f.TextField
+                  type="password"
+                  label={t('form.password')}
+                  required={!isEditMode}
+                />
+              )}
+            </form.AppField>
+            {/* Add confirm password if needed by your schema/logic */}
+          </fieldset>
+        )}
+
         {/* User Type Specific Fields */}
-        {existingUser.type === 'producer' && (
+        {values.type === 'producer' && (
           <fieldset className="grid grid-cols-1 gap-4 rounded-md border p-4">
             <legend className="text-muted-foreground px-1 text-sm font-medium">
               {t('types.producer')}
@@ -217,24 +326,10 @@ export const UserForm: React.FC<UserFormProps> = ({
             <form.AppField name="agriculturalIdentifier">
               {f => <f.TextField label={t('form.agricultural_identifier')} />}
             </form.AppField>
-            <form.AppField name="cooperative.id">
-              {f => (
-                <f.SelectField
-                  label={t('form.cooperative')}
-                  placeholder={t('form.select_cooperative')}
-                  options={
-                    allCooperatives?.map(coop => ({
-                      value: coop.id,
-                      label: coop.name,
-                    })) || []
-                  }
-                />
-              )}
-            </form.AppField>
           </fieldset>
         )}
 
-        {existingUser.type === 'carrier' && (
+        {values.type === 'carrier' && (
           <fieldset className="grid grid-cols-1 gap-4 rounded-md border p-4 md:grid-cols-2">
             <legend className="text-muted-foreground px-1 text-sm font-medium">
               {t('types.carrier')}
@@ -287,9 +382,9 @@ export const UserForm: React.FC<UserFormProps> = ({
                 label={t('form.location')}
                 mapHeight="200px"
                 radius={
-                  existingUser.type === 'carrier' &&
-                  typeof existingUser.radius === 'number'
-                    ? existingUser.radius * 1000
+                  values.type === 'carrier' &&
+                  typeof form.getFieldValue('radius' as any) === 'number'
+                    ? (form.getFieldValue('radius' as any) || 0) * 1000
                     : 0
                 }
                 required={false}
@@ -298,21 +393,23 @@ export const UserForm: React.FC<UserFormProps> = ({
           </form.AppField>
         </fieldset>
 
-        {/* Password Change - Optional */}
-        <fieldset className="grid grid-cols-1 gap-4 rounded-md border p-4">
-          <legend className="text-muted-foreground px-1 text-sm font-medium">
-            {t('form.sections.change_password')}
-          </legend>
-          <form.AppField name="password">
-            {f => (
-              <f.TextField
-                type="password"
-                label={t('form.new_password')}
-                placeholder={t('form.placeholder.leave_blank_password')}
-              />
-            )}
-          </form.AppField>
-        </fieldset>
+        {/* Password Change - Optional for Edit Mode */}
+        {isEditMode && (
+          <fieldset className="grid grid-cols-1 gap-4 rounded-md border p-4">
+            <legend className="text-muted-foreground px-1 text-sm font-medium">
+              {t('form.sections.change_password')}
+            </legend>
+            <form.AppField name="password">
+              {f => (
+                <f.TextField
+                  type="password"
+                  label={t('form.new_password')}
+                  placeholder={t('form.placeholder.leave_blank_password')}
+                />
+              )}
+            </form.AppField>
+          </fieldset>
+        )}
 
         <DialogFooter className="pt-4">
           <DialogClose asChild>
@@ -320,66 +417,71 @@ export const UserForm: React.FC<UserFormProps> = ({
               {t('buttons.cancel')}
             </Button>
           </DialogClose>
-          <Button type="submit" disabled={mutationUpdate.isPending}>
-            {mutationUpdate.isPending
+          <Button
+            type="submit"
+            disabled={mutationUpdate.isPending || mutationCreate.isPending}
+          >
+            {mutationUpdate.isPending || mutationCreate.isPending
               ? t('buttons.submitting')
               : submitButtonText}
           </Button>
         </DialogFooter>
       </form>
 
-      {/* Documents Section - if any */}
-      {existingUser.documents && existingUser.documents.length > 0 && (
-        <fieldset className="mt-4 rounded-md border p-4">
-          <legend className="text-muted-foreground px-1 text-sm font-medium">
-            {t('form.documents')}
-          </legend>
-          <div className="max-h-[200px] space-y-2 overflow-y-auto py-2 pr-1">
-            {existingUser.documents.map(doc => (
-              <div
-                key={doc.id}
-                className="bg-background flex items-center justify-between rounded-md border p-3 shadow-sm"
-              >
-                <div className="flex flex-grow items-center space-x-3 overflow-hidden">
-                  <FileText className="text-muted-foreground h-5 w-5 flex-shrink-0" />
-                  <div className="flex-grow overflow-hidden">
-                    <p
-                      className="truncate text-sm font-medium"
-                      title={doc.originalFilename || `document-${doc.id}`}
-                    >
-                      {doc.originalFilename || `document-${doc.id}`}
-                    </p>
-                    <p className="text-muted-foreground text-xs">
-                      {formatFileSize(doc.size as any as number)}
-                    </p>
-                  </div>
-                </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="ml-2 flex-shrink-0"
-                  onClick={() =>
-                    handleDownloadDocument(
-                      doc.id,
-                      doc.originalFilename || `document-${doc.id}`
-                    )
-                  }
-                  disabled={downloadingDocIds[doc.id]}
+      {/* Documents Section - if any (Only for edit mode and if user has documents) */}
+      {isEditMode &&
+        existingUser?.documents &&
+        existingUser.documents.length > 0 && (
+          <fieldset className="mt-4 rounded-md border p-4">
+            <legend className="text-muted-foreground px-1 text-sm font-medium">
+              {t('form.documents')}
+            </legend>
+            <div className="max-h-[200px] space-y-2 overflow-y-auto py-2 pr-1">
+              {existingUser.documents.map(doc => (
+                <div
+                  key={doc.id}
+                  className="bg-background flex items-center justify-between rounded-md border p-3 shadow-sm"
                 >
-                  {downloadingDocIds[doc.id] ? (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  ) : (
-                    <Download className="mr-2 h-4 w-4" />
-                  )}
-                  {downloadingDocIds[doc.id]
-                    ? t('buttons.downloading')
-                    : t('buttons.download')}
-                </Button>
-              </div>
-            ))}
-          </div>
-        </fieldset>
-      )}
+                  <div className="flex flex-grow items-center space-x-3 overflow-hidden">
+                    <FileText className="text-muted-foreground h-5 w-5 flex-shrink-0" />
+                    <div className="flex-grow overflow-hidden">
+                      <p
+                        className="truncate text-sm font-medium"
+                        title={doc.originalFilename || `document-${doc.id}`}
+                      >
+                        {doc.originalFilename || `document-${doc.id}`}
+                      </p>
+                      <p className="text-muted-foreground text-xs">
+                        {formatFileSize(doc.size as any as number)}
+                      </p>
+                    </div>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="ml-2 flex-shrink-0"
+                    onClick={() =>
+                      handleDownloadDocument(
+                        doc.id,
+                        doc.originalFilename || `document-${doc.id}`
+                      )
+                    }
+                    disabled={downloadingDocIds[doc.id]}
+                  >
+                    {downloadingDocIds[doc.id] ? (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    ) : (
+                      <Download className="mr-2 h-4 w-4" />
+                    )}
+                    {downloadingDocIds[doc.id]
+                      ? t('buttons.downloading')
+                      : t('buttons.download')}
+                  </Button>
+                </div>
+              ))}
+            </div>
+          </fieldset>
+        )}
     </>
   )
 }

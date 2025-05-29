@@ -68,9 +68,22 @@ public abstract class User extends BaseEntity implements UserDetails {
 		List<GrantedAuthority> authorities = new ArrayList<>();
 		authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 
-		// Si c'est un Admin, ajouter ROLE_ADMIN
+		if (this instanceof Trader) {
+			authorities.add(new SimpleGrantedAuthority("ROLE_TRADER"));
+		}
+
 		if (this instanceof Admin) {
 			authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+		} else if (this instanceof QualityInspector) {
+			authorities.add(new SimpleGrantedAuthority("ROLE_QUALITY_INSPECTOR"));
+		} else if (this instanceof Producer) {
+			authorities.add(new SimpleGrantedAuthority("ROLE_PRODUCER"));
+		} else if (this instanceof Exporter) {
+			authorities.add(new SimpleGrantedAuthority("ROLE_EXPORTER"));
+		} else if (this instanceof Carrier) {
+			authorities.add(new SimpleGrantedAuthority("ROLE_CARRIER"));
+		} else if (this instanceof Transformer) {
+			authorities.add(new SimpleGrantedAuthority("ROLE_TRANSFORMER"));
 		}
 
 		return authorities;

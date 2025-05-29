@@ -13,17 +13,18 @@ import be.labil.anacarde.domain.mapper.UserDetailMapper;
 import be.labil.anacarde.domain.mapper.UserListMapper;
 import be.labil.anacarde.domain.model.*;
 import be.labil.anacarde.infrastructure.persistence.DocumentRepository;
+import be.labil.anacarde.infrastructure.persistence.FieldRepository;
 import be.labil.anacarde.infrastructure.persistence.user.*;
 import be.labil.anacarde.infrastructure.util.PersistenceHelper;
 import be.labil.anacarde.presentation.controller.enums.UserType;
+import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import jakarta.persistence.EntityManager;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -44,6 +45,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	private final CarrierRepository carrierRepository;
 	private final ExporterRepository exporterRepository;
 	private final QualityInspectorRepository qualityInspectorRepository;
+	private final FieldRepository fieldRepository;
 	private final UserRepository userRepository;
 	private final UserDetailMapper userDetailMapper;
 	private final StorageService storage;
@@ -94,6 +96,9 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 		}
 
 		User user = userDetailMapper.toEntity(dto);
+		if (user.isEnabled() && user.getValidationDate() == null) {
+			user.setValidationDate(LocalDateTime.now());
+		}
 		City city = geoService.findCityById(user.getAddress().getCity().getId());
 		user.getAddress().setCity(city);
 		user.getAddress().setRegion(geoService.findRegionByCityId(city));
@@ -125,6 +130,9 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	public UserDetailDto getUserById(Integer id) {
 		User user = userRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé"));
+		if (user instanceof Producer producer) {
+			Hibernate.initialize(producer.getCooperative());
+		}
 		return userDetailMapper.toDto(user);
 	}
 
@@ -170,9 +178,10 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 		User user = userDetailMapper.partialUpdate(userUpdateDto, existingUser);
 
 		// Gestion des coopératives.
-		if(userUpdateDto instanceof ProducerUpdateDto producerDto) {
+		if (userUpdateDto instanceof ProducerUpdateDto producerDto) {
 			if (producerDto.getCooperativeId() != null) {
-				Cooperative reference = em.getReference(Cooperative.class, producerDto.getCooperativeId());
+				Cooperative reference = em.getReference(Cooperative.class,
+						producerDto.getCooperativeId());
 				((Producer) user).setCooperative(reference);
 			} else {
 				((Producer) user).setCooperative(null);
@@ -182,7 +191,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 		City city = geoService.findCityById(user.getAddress().getCity().getId());
 		user.getAddress().setCity(city);
 		user.getAddress().setRegion(geoService.findRegionByCityId(city));
-
 
 		if (user.isEnabled() && user.getValidationDate() == null) {
 			user.setValidationDate(LocalDateTime.now());
@@ -198,9 +206,13 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
 	@Override
 	public void deleteUser(Integer id) {
-		if (!userRepository.existsById(id)) {
-			throw new ResourceNotFoundException("Utilisateur non trouvé");
+		User user = userRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé"));
+		if (user instanceof Producer producer) {
+			List<Field> byProducerId = fieldRepository.findByProducerId(producer.getId());
+			fieldRepository.deleteAll(byProducerId);
 		}
+
 		userRepository.deleteById(id);
 	}
 

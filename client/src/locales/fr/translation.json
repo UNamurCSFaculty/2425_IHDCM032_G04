@@ -177,6 +177,7 @@
   "buttons": {
     "view": "Voir",
     "edit": "Modifier",
+    "create": "Créer",
     "approve": "Approuver",
     "cancel": "Annuler",
     "connection": "Connexion",
@@ -212,7 +213,11 @@
     "add": "Ajouter"
   },
   "form": {
+    "read_only": "Lecture seule",
     "carrier_details": "Détails du transporteur",
+    "cooperative": "Coopérative",
+    "select_cooperative": "Sélectionner une coopérative",
+    "cooperative_name": "Entrez le nom de la coopérative",
     "creation_date": "Date de création",
     "president": "Président de la coopérative",
     "accept_terms": "J’accepte les conditions d’utilisation",
@@ -258,7 +263,8 @@
     "sections": {
       "user_details": "Détails de l'utilisateur",
       "basic_info": "Informations de base",
-      "change_password": "Changer le mot de passe"
+      "change_password": "Changer le mot de passe",
+      "password": "Mot de passe"
     },
     "enabled": {
       "label": "Activé",
@@ -307,6 +313,7 @@
     "user_management": {
       "title": "Gestion des utilisateurs",
       "description": "Gérez les utilisateurs, approuvez les inscriptions et modifiez les détails des utilisateurs.",
+      "add_user_button": "Ajouter un utilisateur",
       "tabs": {
         "all_users": "Tous les utilisateurs",
         "pending_approvals": "Approbations en attente"
@@ -319,12 +326,22 @@
         "user_approved_success": "Utilisateur approuvé avec succès.",
         "user_approved_error": "Erreur lors de l'approbation de l'utilisateur.",
         "user_rejected_success": "Utilisateur rejeté avec succès.",
-        "user_rejected_error": "Erreur lors du rejet de l'utilisateur."
+        "user_rejected_error": "Erreur lors du rejet de l'utilisateur.",
+        "user_created_success": "Utilisateur créé avec succès.",
+        "user_created_error": "Erreur lors de la création de l'utilisateur."
+      },
+      "no_users_match_search_pending": {
+        "title": "Aucun utilisateur en attente ne correspond à votre recherche.",
+        "description": "Essayez d'élargir vos critères de recherche ou de vérifier les fautes de frappe."
       },
       "search_placeholder": "Rechercher...",
       "no_users_found": "Aucun utilisateur trouvé.",
       "no_users_match_search": "Aucun utilisateur ne correspond à votre recherche.",
       "results_count": "{{count}} sur {{total}} utilisateurs",
+      "create_dialog": {
+        "title": "Créer un nouvel utilisateur",
+        "description": "Remplissez les informations ci-dessous pour ajouter un nouvel utilisateur."
+      },
       "edit_dialog": {
         "title": "Modifier l'utilisateur",
         "description": "Mettez à jour les informations et les paramètres de l'utilisateur."
@@ -352,6 +369,10 @@
       "no_cooperatives_match_search": "Aucune coopérative ne correspond à votre recherche.",
       "no_cooperatives_found": "Aucune coopérative trouvée.",
       "members_count_column": "Nombre de membres",
+      "create_dialog": {
+        "title": "Créer une nouvelle coopérative",
+        "description": "Remplissez les informations ci-dessous pour ajouter une nouvelle coopérative."
+      },
       "delete_dialog": {
         "title": "Supprimer la Coopérative",
         "description_confirm": "Êtes-vous sûr de vouloir supprimer cette coopérative ? Cette action est irréversible."
@@ -422,6 +443,8 @@
     "to": "à"
   },
   "validation": {
+    "default": "Le champ est invalide",
+    "regex": "Le format du champ est invalide",
     "acceptTerms": "Vous devez accepter les conditions d’utilisation",
     "email": "Format d’email invalide",
     "max": "Le champ doit être au plus {{count}}",

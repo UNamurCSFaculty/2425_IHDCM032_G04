@@ -330,7 +330,7 @@ export const zTransformedProductDto = zProductDto
 
 export const zCooperativeUpdateDto = z.object({
   name: z.string().min(1),
-  creationDate: z.iso.datetime(),
+  creationDate: z.iso.datetime().optional(),
   presidentId: z.number().int(),
 })
 

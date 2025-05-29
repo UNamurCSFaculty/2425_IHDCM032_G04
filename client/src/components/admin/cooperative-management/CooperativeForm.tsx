@@ -9,7 +9,10 @@ import {
   updateCooperativeMutation,
   listCooperativesOptions,
 } from '@/api/generated/@tanstack/react-query.gen'
-import type { CooperativeUpdateDto } from '@/api/generated/types.gen'
+import type {
+  CooperativeUpdateDto,
+  CooperativeDto,
+} from '@/api/generated/types.gen'
 
 import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
@@ -41,6 +44,7 @@ const cooperativeSchema = z.object({
 interface CooperativeFormProps {
   isEditMode?: boolean
   cooperativeIdToEdit?: number
+  allCooperatives?: CooperativeDto[] // New prop
   onSuccess?: () => void // Callback pour succès (utilisé par la Dialog)
   onCancel?: () => void // Callback pour annulation (utilisé par la Dialog)
 }
@@ -48,6 +52,7 @@ interface CooperativeFormProps {
 export const CooperativeForm: React.FC<CooperativeFormProps> = ({
   isEditMode,
   cooperativeIdToEdit,
+  allCooperatives, // New prop
   onSuccess,
   onCancel,
 }) => {
@@ -123,15 +128,12 @@ export const CooperativeForm: React.FC<CooperativeFormProps> = ({
         navigate({ to: '/admin/cooperatives' })
       }
     },
-    onError: (error: any) => {
-      toast.error(
-        t('admin.cooperative_management.toasts.created_error_title'),
-        {
-          description:
-            error.message ||
-            t('admin.cooperative_management.toasts.created_error_description'),
-        }
-      )
+    onError: error => {
+      toast.error(t('common.error_general'), {
+        description:
+          error.errors.map(e => e.message).join(' ,') ||
+          t('admin.cooperative_management.toasts.created_error_description'),
+      })
     },
   })
   const updateMutationHook = useMutation({
@@ -151,15 +153,12 @@ export const CooperativeForm: React.FC<CooperativeFormProps> = ({
         onSuccess()
       }
     },
-    onError: (error: any) => {
-      toast.error(
-        t('admin.cooperative_management.toasts.updated_error_title'),
-        {
-          description:
-            error.message ||
-            t('admin.cooperative_management.toasts.updated_error_description'),
-        }
-      )
+    onError: error => {
+      toast.error(t('common.error_general'), {
+        description:
+          error.errors.map(e => e.message).join(' ,') ||
+          t('admin.cooperative_management.toasts.updated_error_description'),
+      })
     },
   })
 
@@ -173,6 +172,34 @@ export const CooperativeForm: React.FC<CooperativeFormProps> = ({
   const isLoadingData =
     (isEditMode && cooperativeQuery.isLoading) || usersQuery.isLoading
 
+  const presidentOptions = React.useMemo(() => {
+    if (!usersQuery.data) return []
+
+    const existingPresidentIds = new Set(
+      allCooperatives
+        ?.map(c => c.presidentId)
+        .filter(id => id !== null && id !== undefined) || []
+    )
+
+    return usersQuery.data
+      .filter(user => {
+        if (user.type !== 'producer') return false
+
+        // If in edit mode, and this user is the current president of the cooperative being edited,
+        // they should always be in the list.
+        if (isEditMode && cooperativeQuery.data?.presidentId === user.id) {
+          return true
+        }
+        // Otherwise (for new coops, or for other users in edit mode),
+        // they should only be in the list if they are not a president of any cooperative.
+        return !existingPresidentIds.has(user.id)
+      })
+      .map(user => ({
+        id: user.id,
+        label: `${user.firstName} ${user.lastName} (${user.email}) - Type: ${user.type}`,
+      }))
+  }, [usersQuery.data, allCooperatives, isEditMode, cooperativeQuery.data])
+
   if (isLoadingData) {
     return (
       <div className="flex min-h-[200px] items-center justify-center">
@@ -180,13 +207,6 @@ export const CooperativeForm: React.FC<CooperativeFormProps> = ({
       </div>
     )
   }
-
-  const presidentOptions = usersQuery.data
-    ? usersQuery.data.map(user => ({
-        id: user.id,
-        label: `${user.firstName} ${user.lastName} (${user.email}) - Type: ${user.type}`,
-      }))
-    : []
 
   return (
     <div className={onSuccess || onCancel ? '' : 'm-4'}>
@@ -245,22 +265,24 @@ export const CooperativeForm: React.FC<CooperativeFormProps> = ({
             }}
             className="space-y-6"
           >
+            {isEditMode && (
+              <form.AppField name="creationDate">
+                {f => (
+                  <f.TextField
+                    label={`${t('form.creation_date')} (${t('form.read_only')})`}
+                    type="date"
+                    readOnly
+                  />
+                )}
+              </form.AppField>
+            )}
+
             <form.AppField name="name">
               {f => (
                 <f.TextField
                   label={t('form.cooperative_name')}
                   placeholder={t('form.placeholder.cooperative_name')}
                   disabled={isLoadingSubmit}
-                />
-              )}
-            </form.AppField>
-
-            <form.AppField name="creationDate">
-              {f => (
-                <f.TextField
-                  label={t('form.creation_date')}
-                  type="date"
-                  disabled={true}
                 />
               )}
             </form.AppField>

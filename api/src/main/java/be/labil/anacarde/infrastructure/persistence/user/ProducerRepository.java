@@ -1,7 +1,6 @@
 package be.labil.anacarde.infrastructure.persistence.user;
 
 import be.labil.anacarde.domain.model.Producer;
-import be.labil.anacarde.domain.model.User;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.Query;
@@ -26,7 +25,6 @@ public interface ProducerRepository extends GenericUserRepository<Producer> {
 	 * @return Une liste triée d'utilisateurs.
 	 */
 	List<Producer> findAllByOrderByLastNameAsc();
-
 
 	List<Producer> findByCooperativeId(Integer cooperativeId);
 

@@ -743,7 +743,7 @@ export type CooperativeUpdateDto = {
   /**
    * Date de création
    */
-  creationDate: string
+  creationDate?: string
   /**
    * Président de la coopérative
    */

@@ -28,11 +28,12 @@ interface CooperativeMembersDialogProps {
   open: boolean
   onClose: () => void
   cooperative: CooperativeDto
+  allCooperatives?: CooperativeDto[] // New prop
 }
 
 export const CooperativeMembersDialog: React.FC<
   CooperativeMembersDialogProps
-> = ({ open, onClose, cooperative }) => {
+> = ({ open, onClose, cooperative, allCooperatives }) => {
   const queryClient = useQueryClient()
   const [selectedProducerToAdd, setSelectedProducerToAdd] = useState<
     number | null
@@ -48,16 +49,16 @@ export const CooperativeMembersDialog: React.FC<
       )
       queryClient.invalidateQueries({ queryKey: listUsersOptions().queryKey })
     },
-    onError: (error: any) => {
+    onError: error => {
       toast.error('Erreur lors de la mise à jour du membre', {
         description:
-          error.message || 'Impossible de mettre à jour le statut du membre.',
+          error.errors.map(e => e.message).join(' ,') ||
+          'Impossible de mettre à jour le statut du membre.',
       })
     },
   })
 
   const currentMembers = useMemo(() => {
-    console.log('usersQuery.data', usersQuery.data)
     if (!usersQuery.data) return []
     return usersQuery.data.filter(
       user =>
@@ -68,12 +69,21 @@ export const CooperativeMembersDialog: React.FC<
 
   const availableProducers = useMemo(() => {
     if (!usersQuery.data) return []
-    return usersQuery.data.filter(
-      user =>
-        user.type === 'producer' &&
-        (user as ProducerListDto).cooperativeId !== cooperative.id
-    ) as ProducerListDto[]
-  }, [usersQuery.data, cooperative.id])
+
+    const existingPresidentIds = new Set(
+      allCooperatives
+        ?.map(c => c.presidentId)
+        .filter(id => id !== null && id !== undefined) || []
+    )
+
+    return usersQuery.data.filter(user => {
+      if (user.type !== 'producer') return false
+      if ((user as ProducerListDto).cooperativeId === cooperative.id)
+        return false
+      if (existingPresidentIds.has(user.id)) return false
+      return true
+    }) as ProducerListDto[]
+  }, [usersQuery.data, cooperative.id, allCooperatives])
 
   const handleAddMember = () => {
     if (!selectedProducerToAdd) return
@@ -136,7 +146,7 @@ export const CooperativeMembersDialog: React.FC<
 
   return (
     <Dialog open={open} onOpenChange={isOpen => !isOpen && onClose()}>
-      <DialogContent className="sm:max-w-[525px]">
+      <DialogContent className="max-h-[90vh] w-full overflow-y-auto sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle>Gérer les Membres de "{cooperative.name}"</DialogTitle>
           <DialogDescription>

@@ -1,7 +1,6 @@
 package be.labil.anacarde.domain.mapper;
 
 import be.labil.anacarde.domain.dto.db.user.*;
-import be.labil.anacarde.domain.dto.write.ContractOfferUpdateDto;
 import be.labil.anacarde.domain.dto.write.user.create.*;
 import be.labil.anacarde.domain.dto.write.user.update.*;
 import be.labil.anacarde.domain.model.*;
