@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.listener.PatternTopic;
@@ -15,6 +16,7 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.stereotype.Service;
 
 @Service
+@ConditionalOnProperty(prefix = "app.redis.notifications", name = "enabled", havingValue = "true", matchIfMissing = true)
 public class RedisNotificationListener {
 	private static final Logger log = LoggerFactory.getLogger(RedisNotificationListener.class);
 	private final NotificationSseService notificationSseService;
