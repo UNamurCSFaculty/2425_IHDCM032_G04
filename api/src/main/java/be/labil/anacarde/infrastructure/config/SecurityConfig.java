@@ -96,13 +96,15 @@ public class SecurityConfig {
 				.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
 		// Autorisations
-		http.authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.POST, "/api/users")
-				.permitAll().requestMatchers(HttpMethod.GET, "/api/app").permitAll()
-				.requestMatchers(HttpMethod.POST, "/api/contact").permitAll()
-				.requestMatchers("/api/auth/**", "/v3/api-docs**", "/swagger-ui/**",
-						"/api/users/check/**")
-				.permitAll().requestMatchers("/api/admin/**").hasRole("ADMIN").anyRequest()
-				.authenticated());
+		http.authorizeHttpRequests(
+				auth -> auth.requestMatchers(HttpMethod.POST, "/api/users").permitAll()
+						.requestMatchers(HttpMethod.GET, "/api/app", "/api/dashboard/graphic",
+								"/api/dashboard/cards")
+						.permitAll().requestMatchers(HttpMethod.POST, "/api/contact").permitAll()
+						.requestMatchers("/api/auth/**", "/v3/api-docs**", "/swagger-ui/**",
+								"/api/users/check/**")
+						.permitAll().requestMatchers("/api/admin/**").hasRole("ADMIN").anyRequest()
+						.authenticated());
 
 		// Filtres
 		http.addFilterBefore(originFilter, CsrfFilter.class);
