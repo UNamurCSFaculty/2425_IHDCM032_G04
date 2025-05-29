@@ -5,7 +5,6 @@ import {
 import { ErrorBoundary } from './components/ErrorBoundary.tsx'
 import NotFound from './components/NotFound.tsx'
 import { AppSkeleton } from './components/Skeleton/AppSkeleton.tsx'
-import { SseNotificationsProvider } from './components/SseNotificationsProvider.tsx'
 // initialisation i18n
 import './i18n'
 import reportWebVitals from './reportWebVitals.ts'
@@ -126,13 +125,11 @@ function AppWithProvider() {
 const root = ReactDOM.createRoot(document.getElementById('app')!)
 root.render(
   <StrictMode>
-    <SseNotificationsProvider>
-      <QueryClientProvider client={queryClient}>
-        <AppWithProvider />
-        <Toaster richColors position="top-center" />
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
-    </SseNotificationsProvider>
+    <QueryClientProvider client={queryClient}>
+      <AppWithProvider />
+      <Toaster richColors position="top-center" />
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   </StrictMode>
 )
 
