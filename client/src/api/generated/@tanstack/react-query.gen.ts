@@ -45,6 +45,7 @@ import {
   updateAuctionStrategy,
   getGlobalSettings,
   updateGlobalSettings,
+  listUsers,
   createUser,
   listStores,
   createStore,
@@ -59,7 +60,8 @@ import {
   listFields,
   createField,
   listDocumentsByUser,
-  createDocument,
+  createDocumentUser,
+  createDocumentQualityControl,
   listCooperatives,
   createCooperative,
   listContractOffers,
@@ -84,7 +86,6 @@ import {
   downloadDocument,
   getCurrentUser,
   getApplicationData,
-  listUsers,
   getUser,
 } from '../sdk.gen'
 import {
@@ -198,6 +199,7 @@ import type {
   UpdateGlobalSettingsData,
   UpdateGlobalSettingsError,
   UpdateGlobalSettingsResponse,
+  ListUsersData,
   CreateUserData,
   CreateUserError,
   CreateUserResponse,
@@ -226,9 +228,12 @@ import type {
   CreateFieldError,
   CreateFieldResponse,
   ListDocumentsByUserData,
-  CreateDocumentData,
-  CreateDocumentError,
-  CreateDocumentResponse,
+  CreateDocumentUserData,
+  CreateDocumentUserError,
+  CreateDocumentUserResponse,
+  CreateDocumentQualityControlData,
+  CreateDocumentQualityControlError,
+  CreateDocumentQualityControlResponse,
   ListCooperativesData,
   CreateCooperativeData,
   CreateCooperativeError,
@@ -269,7 +274,6 @@ import type {
   DownloadDocumentData,
   GetCurrentUserData,
   GetApplicationDataData,
-  ListUsersData,
   GetUserData,
 } from '../types.gen'
 import { client as _heyApiClient } from '../client.gen'
@@ -1274,6 +1278,24 @@ export const updateGlobalSettingsMutation = (
   return mutationOptions
 }
 
+export const listUsersQueryKey = (options?: Options<ListUsersData>) =>
+  createQueryKey('listUsers', options)
+
+export const listUsersOptions = (options?: Options<ListUsersData>) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await listUsers({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: listUsersQueryKey(options),
+  })
+}
+
 export const createUserQueryKey = (options: Options<CreateUserData>) =>
   createQueryKey('createUser', options)
 
@@ -1703,13 +1725,16 @@ export const listDocumentsByUserOptions = (
   })
 }
 
-export const createDocumentQueryKey = (options: Options<CreateDocumentData>) =>
-  createQueryKey('createDocument', options)
+export const createDocumentUserQueryKey = (
+  options: Options<CreateDocumentUserData>
+) => createQueryKey('createDocumentUser', options)
 
-export const createDocumentOptions = (options: Options<CreateDocumentData>) => {
+export const createDocumentUserOptions = (
+  options: Options<CreateDocumentUserData>
+) => {
   return queryOptions({
     queryFn: async ({ queryKey, signal }) => {
-      const { data } = await createDocument({
+      const { data } = await createDocumentUser({
         ...options,
         ...queryKey[0],
         signal,
@@ -1717,24 +1742,69 @@ export const createDocumentOptions = (options: Options<CreateDocumentData>) => {
       })
       return data
     },
-    queryKey: createDocumentQueryKey(options),
+    queryKey: createDocumentUserQueryKey(options),
   })
 }
 
-export const createDocumentMutation = (
-  options?: Partial<Options<CreateDocumentData>>
+export const createDocumentUserMutation = (
+  options?: Partial<Options<CreateDocumentUserData>>
 ): UseMutationOptions<
-  CreateDocumentResponse,
-  CreateDocumentError,
-  Options<CreateDocumentData>
+  CreateDocumentUserResponse,
+  CreateDocumentUserError,
+  Options<CreateDocumentUserData>
 > => {
   const mutationOptions: UseMutationOptions<
-    CreateDocumentResponse,
-    CreateDocumentError,
-    Options<CreateDocumentData>
+    CreateDocumentUserResponse,
+    CreateDocumentUserError,
+    Options<CreateDocumentUserData>
   > = {
     mutationFn: async localOptions => {
-      const { data } = await createDocument({
+      const { data } = await createDocumentUser({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+export const createDocumentQualityControlQueryKey = (
+  options: Options<CreateDocumentQualityControlData>
+) => createQueryKey('createDocumentQualityControl', options)
+
+export const createDocumentQualityControlOptions = (
+  options: Options<CreateDocumentQualityControlData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await createDocumentQualityControl({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: createDocumentQualityControlQueryKey(options),
+  })
+}
+
+export const createDocumentQualityControlMutation = (
+  options?: Partial<Options<CreateDocumentQualityControlData>>
+): UseMutationOptions<
+  CreateDocumentQualityControlResponse,
+  CreateDocumentQualityControlError,
+  Options<CreateDocumentQualityControlData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    CreateDocumentQualityControlResponse,
+    CreateDocumentQualityControlError,
+    Options<CreateDocumentQualityControlData>
+  > = {
+    mutationFn: async localOptions => {
+      const { data } = await createDocumentQualityControl({
         ...options,
         ...localOptions,
         throwOnError: true,
@@ -2485,24 +2555,6 @@ export const getApplicationDataOptions = (
       return data
     },
     queryKey: getApplicationDataQueryKey(options),
-  })
-}
-
-export const listUsersQueryKey = (options?: Options<ListUsersData>) =>
-  createQueryKey('listUsers', options)
-
-export const listUsersOptions = (options?: Options<ListUsersData>) => {
-  return queryOptions({
-    queryFn: async ({ queryKey, signal }) => {
-      const { data } = await listUsers({
-        ...options,
-        ...queryKey[0],
-        signal,
-        throwOnError: true,
-      })
-      return data
-    },
-    queryKey: listUsersQueryKey(options),
   })
 }
 

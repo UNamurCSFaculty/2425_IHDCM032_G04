@@ -12,9 +12,9 @@ import be.labil.anacarde.domain.mapper.UserDetailMapper;
 import be.labil.anacarde.domain.mapper.UserListMapper;
 import be.labil.anacarde.domain.model.*;
 import be.labil.anacarde.infrastructure.persistence.DocumentRepository;
-import be.labil.anacarde.infrastructure.persistence.user.ProducerRepository;
-import be.labil.anacarde.infrastructure.persistence.user.UserRepository;
+import be.labil.anacarde.infrastructure.persistence.user.*;
 import be.labil.anacarde.infrastructure.util.PersistenceHelper;
+import be.labil.anacarde.presentation.controller.enums.UserType;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +37,10 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserServiceImpl implements UserDetailsService, UserService {
 
 	private final ProducerRepository producerRepository;
+	private final TransformerRepository transformerRepository;
+	private final CarrierRepository carrierRepository;
+	private final ExporterRepository exporterRepository;
+	private final QualityInspectorRepository qualityInspectorRepository;
 	private final UserRepository userRepository;
 	private final UserDetailMapper userDetailMapper;
 	private final StorageService storage;
@@ -123,8 +127,35 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<UserListDto> listUsers() {
-		return userRepository.findAll().stream().map(userListMapper::toDto)
+	public List<UserListDto> listUsers(UserType userType) {
+		if (userType != null) {
+			switch (userType) {
+				case producer -> {
+					return producerRepository.findAllByOrderByLastNameAsc().stream()
+							.map(userListMapper::toDto).collect(Collectors.toList());
+				}
+				case transformer -> {
+					return transformerRepository.findAllByOrderByLastNameAsc().stream()
+							.map(userListMapper::toDto).collect(Collectors.toList());
+				}
+				case quality_inspector -> {
+					return qualityInspectorRepository.findAllByOrderByLastNameAsc().stream()
+							.map(userListMapper::toDto).collect(Collectors.toList());
+				}
+				case exporter -> {
+					return exporterRepository.findAllByOrderByLastNameAsc().stream()
+							.map(userListMapper::toDto).collect(Collectors.toList());
+				}
+				case carrier -> {
+					return carrierRepository.findAllByOrderByLastNameAsc().stream()
+							.map(userListMapper::toDto).collect(Collectors.toList());
+				}
+				default -> throw new ApiErrorException(HttpStatus.BAD_REQUEST,
+						ApiErrorCode.BAD_REQUEST.code(), List.of(new ErrorDetail("userType",
+								"user.type", "Type utilisateur inconnu")));
+			}
+		}
+		return userRepository.findAllByOrderByLastNameAsc().stream().map(userListMapper::toDto)
 				.collect(Collectors.toList());
 	}
 

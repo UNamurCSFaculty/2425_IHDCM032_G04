@@ -25,7 +25,18 @@ public interface DocumentService {
 	 * @return Le DocumentDto complet (id, uploadDate, storagePath, etc.).
 	 */
 	@PreAuthorize("@authz.isAdmin(principal) or #userId == principal.id")
-	DocumentDto createDocument(Integer userId, MultipartFile file);
+	DocumentDto createDocumentUser(Integer userId, MultipartFile file);
+
+	/**
+	 * Crée un nouveau document en même temps que son upload.
+	 *
+	 * @param qualityControlId
+	 *            Identifiant du contrôle qualité propriétaire du document.
+	 * @param file
+	 *            Le fichier à téléverser.
+	 * @return Le DocumentDto complet (id, uploadDate, storagePath, etc.).
+	 */
+	DocumentDto createDocumentQualityControl(Integer qualityControlId, MultipartFile file);
 
 	/**
 	 * Recherche les méta-infos d’un document.

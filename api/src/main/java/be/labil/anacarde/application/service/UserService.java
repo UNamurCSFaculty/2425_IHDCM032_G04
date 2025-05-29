@@ -5,6 +5,7 @@ import be.labil.anacarde.domain.dto.db.user.UserDetailDto;
 import be.labil.anacarde.domain.dto.db.user.UserListDto;
 import be.labil.anacarde.domain.dto.write.user.create.UserCreateDto;
 import be.labil.anacarde.domain.dto.write.user.update.UserUpdateDto;
+import be.labil.anacarde.presentation.controller.enums.UserType;
 import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,11 +34,13 @@ public interface UserService {
 	UserDetailDto getUserById(Integer id);
 
 	/**
-	 * Récupère tous les utilisateurs du système.
+	 * Récupère les utilisateurs du système.
 	 *
-	 * @return Une List de UserDto représentant tous les utilisateurs.
+	 * @param type
+	 *            Le types d'utilisateur à filtrer.
+	 * @return Une List de UserDto représentant les utilisateurs.
 	 */
-	List<UserListDto> listUsers();
+	List<UserListDto> listUsers(UserType type);
 
 	/**
 	 * Met à jour l'utilisateur identifié par l'ID donné avec les informations fournies dans le

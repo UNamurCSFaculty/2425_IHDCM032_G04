@@ -2,16 +2,22 @@ import FormContainer from '../FormContainer'
 import FormSectionTitle from '../FormSectionTitle'
 import {
   type FieldDto,
-  type HarvestProductDto,
   type HarvestProductUpdateDto,
   ProductType,
   type QualityDto,
-  type StoreDetailDto,
   type UserListDto,
+  type HarvestProductDto,
+  type StoreDetailDto,
+  UserType,
 } from '@/api/generated'
 import {
   createProductMutation,
   createQualityControlMutation,
+  listFieldsOptions,
+  listProductsOptions,
+  listQualitiesOptions,
+  listStoresOptions,
+  listUsersOptions,
 } from '@/api/generated/@tanstack/react-query.gen.ts'
 import {
   zHarvestProductUpdateDto,
@@ -22,33 +28,58 @@ import { useAppForm } from '@/components/form'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { formatCoordinates } from '@/utils/formatter'
 import { useStore } from '@tanstack/react-form'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { AlertCircle } from 'lucide-react'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import z from 'zod/v4'
 
-interface ProductFormProps {
-  users: UserListDto[]
-  stores: StoreDetailDto[]
-  qualities: QualityDto[]
-  fields: FieldDto[]
-  harvestProducts: HarvestProductDto[]
-}
-
-export function ProductForm({
-  users,
-  stores,
-  qualities,
-  fields,
-  harvestProducts,
-}: ProductFormProps): React.ReactElement<'div'> {
+export function ProductForm(): React.ReactElement<'div'> {
   const navigate = useNavigate()
 
   const { t } = useTranslation()
 
-  // TODO: this should be handled internally by the form, this is a hack
+  const staleTime = 10_000
+
+  const { data: harvestProducts, isLoading: isHarvestProductsLoading } =
+    useQuery({
+      ...listProductsOptions({ query: { productType: ProductType.HARVEST } }),
+      staleTime: staleTime,
+    })
+
+  const { data: transformers, isLoading: isTransformersLoading } = useQuery({
+    ...listUsersOptions({ query: { userType: UserType.TRANSFORMER } }),
+    staleTime: staleTime,
+  })
+
+  const { data: producers, isLoading: isProducersLoading } = useQuery({
+    ...listUsersOptions({ query: { userType: UserType.PRODUCER } }),
+    staleTime: staleTime,
+  })
+
+  const { data: qualityInspectors, isLoading: isQualityInspectorsLoading } =
+    useQuery({
+      ...listUsersOptions({ query: { userType: UserType.QUALITY_INSPECTOR } }),
+      staleTime: staleTime,
+    })
+
+  const { data: qualities, isLoading: isQualitiesLoading } = useQuery({
+    ...listQualitiesOptions(),
+    staleTime: staleTime,
+  })
+
+  const { data: fields, isLoading: isFieldsLoading } = useQuery({
+    ...listFieldsOptions(),
+    staleTime: staleTime,
+  })
+
+  const { data: stores, isLoading: isStoresLoading } = useQuery({
+    ...listStoresOptions(),
+    staleTime: staleTime,
+  })
+
+  // this should be handled internally by the form
   const [selectedHarvestProductsIds, setSelectedHarvestProductsIds] = useState<
     number[]
   >([])
@@ -56,7 +87,6 @@ export function ProductForm({
   const createProductRequest = useMutation({
     ...createProductMutation(),
     onSuccess() {
-      console.log('Product created successfully')
       navigate({ to: '/depots/mes-produits' })
     },
     onError(error) {
@@ -76,15 +106,18 @@ export function ProductForm({
   const productSchema = z.object({
     product: z.union([zHarvestProductUpdateDto, zTransformedProductUpdateDto]),
     qualityControl: zQualityControlUpdateDto,
+    documents: z.array(z.file()).min(1),
   })
 
   type ProductRegistration = z.infer<typeof productSchema>
 
   const handleSaveProduct = async (value: ProductRegistration) => {
-    console.log('Saving product with values:', value)
     try {
       const qc = await createQualityControlRequest.mutateAsync({
-        body: value.qualityControl,
+        body: {
+          qualityControl: value.qualityControl,
+          documents: value.documents,
+        },
       })
 
       if (value.product.type === ProductType.TRANSFORMED) {
@@ -141,6 +174,7 @@ export function ProductForm({
         qualityInspectorId: -1,
         qualityId: 0,
       },
+      documents: [],
     },
     onSubmit({ value }) {
       handleSaveProduct(value)
@@ -212,23 +246,22 @@ export function ProductForm({
                 />
               </div>
             </div>
-
             <form.AppField
               name={`product.${productType === ProductType.HARVEST ? 'producerId' : 'transformerId'}`}
               children={field => {
-                const traders = users.filter(user =>
-                  productType === ProductType.HARVEST
-                    ? user.type === 'producer'
-                    : productType === ProductType.TRANSFORMED
-                      ? user.type === 'transformer'
-                      : true
-                )
+                let traders: UserListDto[] = []
+                if (!isProducersLoading && !isTransformersLoading) {
+                  traders =
+                    productType === ProductType.HARVEST
+                      ? (producers as UserListDto[])
+                      : (transformers as UserListDto[])
+                }
 
                 return (
                   <field.SelectField
                     options={traders.map(trader => ({
                       value: trader.id,
-                      label: trader.firstName + ' ' + trader.lastName,
+                      label: trader.lastName + ' ' + trader.firstName,
                     }))}
                     label={
                       productType === ProductType.HARVEST
@@ -251,19 +284,27 @@ export function ProductForm({
               <form.AppField
                 name="product.fieldId"
                 children={field => {
-                  const gps = fields.find(f => f.id === field.state.value)
-                    ?.address.location
+                  const gps =
+                    !isFieldsLoading &&
+                    (fields as FieldDto[]).find(f => f.id === field.state.value)
+                      ?.address.location
                   const hintText = gps
                     ? t('form.gps_label', { gps: formatCoordinates(gps) })
                     : ''
                   return (
                     <field.SelectField
-                      options={(fields as FieldDto[])
-                        .filter(field => field.producer?.id === producerId)
-                        .map(field => ({
-                          value: field.id,
-                          label: field.identifier!,
-                        }))}
+                      options={
+                        isFieldsLoading
+                          ? []
+                          : (fields as FieldDto[])
+                              .filter(
+                                field => field.producer?.id === producerId
+                              )
+                              .map(field => ({
+                                value: field.id,
+                                label: field.identifier!,
+                              }))
+                      }
                       label={t('product.form.cultivated_field_label')}
                       hint={hintText}
                     />
@@ -271,29 +312,34 @@ export function ProductForm({
                 }}
               />
             )}
-
             {productType == ProductType.TRANSFORMED && (
               <>
                 <form.AppField
                   name="product.harvestProductIds"
                   children={field => (
                     <field.MultiSelectField
+                      loading={isHarvestProductsLoading}
                       placeholder="Sélectionner les lots"
-                      options={harvestProducts.map(product => ({
-                        value: product.id,
-                        label:
-                          'Lot n°' +
-                          product.id +
-                          ' - ' +
-                          t('database.' + product.type) +
-                          ' (' +
-                          product.qualityControl.quality.name +
-                          ')',
-                      }))}
-                      label="Mati�res premi�res"
+                      options={
+                        isHarvestProductsLoading
+                          ? []
+                          : (harvestProducts as HarvestProductDto[]).map(
+                              product => ({
+                                value: product.id,
+                                label:
+                                  'Lot n°' +
+                                  product.id +
+                                  ' - ' +
+                                  t('database.' + product.type) +
+                                  ' (' +
+                                  product.qualityControl.quality.name +
+                                  ')',
+                              })
+                            )
+                      }
+                      label="Matières premières"
                       maxCount={2}
                       onChange={values => {
-                        console.log('Selected harvest product IDs:', values)
                         setSelectedHarvestProductsIds(values as number[])
                       }}
                     />
@@ -301,15 +347,18 @@ export function ProductForm({
                 />
               </>
             )}
-
             <form.AppField
               name="product.storeId"
               children={field => (
                 <field.SelectField
-                  options={stores.map(store => ({
-                    value: store.id,
-                    label: store.name,
-                  }))}
+                  options={
+                    isStoresLoading
+                      ? []
+                      : (stores as StoreDetailDto[]).map(store => ({
+                          value: store.id,
+                          label: store.name,
+                        }))
+                  }
                   label={
                     productType === ProductType.HARVEST
                       ? t('product.store_label')
@@ -318,7 +367,6 @@ export function ProductForm({
                 />
               )}
             />
-
             {isError && error?.errors?.length > 0 && (
               <Alert
                 variant="destructive"
@@ -340,7 +388,6 @@ export function ProductForm({
                 </AlertDescription>
               </Alert>
             )}
-
             <form.AppForm>
               <form.SubmitButton className="w-full">
                 {t('product.form.submit_button')}
@@ -353,67 +400,85 @@ export function ProductForm({
               text={t('product.form.section_quality_control_title')}
             />
 
-            <form.AppField
-              name="qualityControl.qualityId"
-              children={field => (
-                <field.SelectField
-                  options={qualities
-                    .filter(quality => {
-                      return (
-                        !productType ||
-                        (productType === ProductType.HARVEST &&
-                          quality.qualityType.name.toLowerCase() ==
-                            ProductType.HARVEST.toLowerCase()) ||
-                        (productType === ProductType.TRANSFORMED &&
-                          quality.qualityType.name.toLowerCase() ==
-                            ProductType.TRANSFORMED.toLowerCase())
-                      )
-                    })
-                    .map(quality => ({
-                      value: quality.id,
-                      label: quality.name,
-                    }))}
-                  label={t('product.quality_label')}
+            <div className="flex gap-4">
+              <div className="flex-1">
+                <form.AppField
+                  name="qualityControl.qualityId"
+                  children={field => (
+                    <field.SelectField
+                      options={
+                        isQualitiesLoading
+                          ? []
+                          : (qualities as QualityDto[])
+                              .filter(quality => {
+                                return (
+                                  !productType ||
+                                  (productType === ProductType.HARVEST &&
+                                    quality.qualityType.name.toLowerCase() ==
+                                      ProductType.HARVEST.toLowerCase()) ||
+                                  (productType === ProductType.TRANSFORMED &&
+                                    quality.qualityType.name.toLowerCase() ==
+                                      ProductType.TRANSFORMED.toLowerCase())
+                                )
+                              })
+                              .map(quality => ({
+                                value: quality.id,
+                                label: quality.name,
+                              }))
+                      }
+                      label={t('product.quality_label')}
+                    />
+                  )}
                 />
-              )}
-            />
+              </div>
+              <div className="flex-1">
+                <form.AppField
+                  name="qualityControl.controlDate"
+                  children={field => (
+                    <field.DateTimePickerField
+                      label={t('product.form.control_date_label')}
+                    />
+                  )}
+                />
+              </div>
+            </div>
+
             <form.AppField
               name="qualityControl.qualityInspectorId"
               children={field => (
                 <field.SelectField
-                  options={users
-                    .filter(user => user.type === 'quality_inspector')
-                    .map(qi => ({
-                      value: qi.id,
-                      label: qi.firstName + ' ' + qi.lastName,
-                    }))}
+                  options={
+                    isQualityInspectorsLoading
+                      ? []
+                      : (qualityInspectors as UserListDto[]).map(qi => ({
+                          value: qi.id,
+                          label: qi.lastName + ' ' + qi.firstName,
+                        }))
+                  }
                   label={t('product.quality_inspector_label')}
                   hint={
                     field.state.value !== -1
-                      ? t('form.identifier_label', { id: field.state.value })
+                      ? t('form.identifier_label', {
+                          id: field.state.value,
+                        })
                       : ''
                   }
                 />
               )}
             />
-            <form.AppField
-              name="qualityControl.controlDate"
-              children={field => (
-                <field.DateTimePickerField
-                  label={t('product.form.control_date_label')}
-                />
-              )}
-            />
-            <form.AppField
-              name="qualityControl.documentId"
-              children={field => (
-                <field.TextField
+
+            <form.AppField name="documents">
+              {f => (
+                <f.FileUploadField
+                  className="col-span-full"
                   label={t('product.form.certificate_label')}
-                  type="document"
+                  accept="application/pdf,image/*"
+                  maxFiles={1}
+                  maxSize={5}
                   required={false}
                 />
               )}
-            />
+            </form.AppField>
           </div>
         </div>
       </form>

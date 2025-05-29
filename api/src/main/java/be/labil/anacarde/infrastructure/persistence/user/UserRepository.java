@@ -1,6 +1,7 @@
 package be.labil.anacarde.infrastructure.persistence.user;
 
 import be.labil.anacarde.domain.model.User;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -38,6 +39,13 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	@EntityGraph(attributePaths = {"documents", "address", "address.city", "address.region",
 			"language"})
 	Optional<User> findById(@NonNull Integer id);
+
+	/**
+	 * Retourne les utilisateurs triés alphabétiquement par nom de famille.
+	 *
+	 * @return Une liste triée d'utilisateurs.
+	 */
+	List<User> findAllByOrderByLastNameAsc();
 
 	/**
 	 * Vérifie si un utilisateur existe avec l'adresse e-mail fournie.

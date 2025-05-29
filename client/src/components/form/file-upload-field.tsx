@@ -10,12 +10,14 @@ type FileUploadFieldProps = {
   label: string
   tooltip?: string
   className?: string
+  required?: boolean
 } & Omit<FileUploadProps, 'onChange' | 'className'>
 
 export function FileUploadField({
   label,
   tooltip,
   className = '',
+  required = true,
   ...uploadProps
 }: FileUploadFieldProps) {
   const field = useFieldContext<File[]>()
@@ -38,7 +40,7 @@ export function FileUploadField({
         onChange={files => field.handleChange(files)}
       />
 
-      <FieldErrors meta={field.state.meta} />
+      {required && <FieldErrors meta={field.state.meta} />}
     </div>
   )
 }

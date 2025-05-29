@@ -2,6 +2,7 @@ package be.labil.anacarde.application.service.storage;
 
 import be.labil.anacarde.application.exception.DocumentStorageException;
 import be.labil.anacarde.domain.model.Document;
+import be.labil.anacarde.domain.model.QualityControl;
 import be.labil.anacarde.domain.model.User;
 import com.github.slugify.Slugify;
 import java.io.IOException;
@@ -9,6 +10,7 @@ import java.io.InputStream;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiFunction;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
@@ -28,26 +30,19 @@ public class DiskStorageService implements StorageService {
 
 	@Override
 	public List<Document> storeAll(User user, List<MultipartFile> files) {
-		try {
-			Files.createDirectories(rootDir);
+		if (user.getId() == null) throw new IllegalArgumentException("User ID is null");
 
-			List<Document> result = new ArrayList<>();
-			for (MultipartFile f : files) {
-				String ts = String.valueOf(System.currentTimeMillis());
-				String filename = "%d_%s_%s".formatted(user.getId(), ts, f.getOriginalFilename());
-				filename = Slugify.builder().build().slugify(filename);
-				Path target = rootDir.resolve(filename);
+		return storeAllGeneric(user.getId().toString(), files,
+				(file, path) -> DiskStorageUtils.buildDocument(user, file, path));
+	}
 
-				try (var in = f.getInputStream()) {
-					Files.copy(in, target, StandardCopyOption.REPLACE_EXISTING);
-				}
+	@Override
+	public List<Document> storeAll(QualityControl qualityControl, List<MultipartFile> files) {
+		if (qualityControl.getId() == null)
+			throw new IllegalArgumentException("QualityControl ID is null");
 
-				result.add(DiskStorageUtils.buildDocument(user, f, target.toString()));
-			}
-			return result;
-		} catch (IOException e) {
-			throw new DocumentStorageException("Impossible de stocker les documents", e);
-		}
+		return storeAllGeneric(qualityControl.getId().toString(), files,
+				(file, path) -> DiskStorageUtils.buildDocument(qualityControl, file, path));
 	}
 
 	@Override
@@ -66,5 +61,36 @@ public class DiskStorageService implements StorageService {
 		} catch (IOException e) {
 			throw new DocumentStorageException("Impossible de supprimer le document", e);
 		}
+	}
+
+	private List<Document> storeAllGeneric(String uniqueId, List<MultipartFile> files,
+			BiFunction<MultipartFile, String, Document> documentBuilder) {
+		try {
+			Files.createDirectories(rootDir);
+
+			List<Document> result = new ArrayList<>();
+			for (MultipartFile file : files) {
+				Path target = getFiletTarget(file, uniqueId);
+
+				try (var in = file.getInputStream()) {
+					Files.copy(in, target, StandardCopyOption.REPLACE_EXISTING);
+				}
+
+				result.add(documentBuilder.apply(file, target.toString()));
+			}
+			return result;
+		} catch (IOException e) {
+			throw new DocumentStorageException("Impossible de stocker les documents", e);
+		}
+	}
+
+	private Path getFiletTarget(MultipartFile file, String uniqueId) {
+		String ts = String.valueOf(System.currentTimeMillis());
+
+		String filename = "%s_%s_%s".formatted(uniqueId, ts, file.getOriginalFilename());
+		filename = Slugify.builder().build().slugify(filename);
+
+		Path target = rootDir.resolve(filename);
+		return target;
 	}
 }

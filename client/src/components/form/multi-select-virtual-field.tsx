@@ -1,29 +1,27 @@
-import { LoaderIcon } from 'lucide-react'
 import { useFieldContext } from '.'
 import { Label } from '../ui/label'
-import { MultiSelect } from '../ui/multi-select'
+import { MultiSelectVirtual } from '../ui/multi-select-virtual'
 import { FieldErrors } from './field-errors'
 
-type MultiSelectOption<T> = {
+type MultiSelectVirtualOption<T> = {
   value: T
   label: string
 }
 
-type MultiSelectFieldProps<T extends string | number> = {
+type MultiSelectVirtualFieldProps<T extends string | number> = {
   label: string
   hint?: string
-  options: MultiSelectOption<T>[]
+  options: MultiSelectVirtualOption<T>[]
   placeholder?: string
   className?: string
   required?: boolean
   disabled?: boolean
   maxCount?: number
-  loading?: boolean
   parseValue?: (v: string) => T
   onChange?: (value: (string | number)[]) => void
 }
 
-export function MultiSelectField<T extends string | number>({
+export function MultiSelectVirtualField<T extends string | number>({
   label,
   hint,
   options,
@@ -31,10 +29,9 @@ export function MultiSelectField<T extends string | number>({
   className = 'w-full',
   required = true,
   maxCount = 3,
-  loading = false,
   parseValue,
   onChange,
-}: MultiSelectFieldProps<T>) {
+}: MultiSelectVirtualFieldProps<T>) {
   const field = useFieldContext<T>()
 
   // la fonction par défaut qui transforme "val" en T
@@ -52,14 +49,13 @@ export function MultiSelectField<T extends string | number>({
         <div className="flex items-center justify-between">
           <Label htmlFor={field.name}>
             {label}
-            {loading && <LoaderIcon className="animate-spin" />}
             {required && <span className="text-red-500">*</span>}
           </Label>
           {hint && (
             <span className="text-xs font-semibold text-gray-500">{hint}</span>
           )}
         </div>
-        <MultiSelect
+        <MultiSelectVirtual
           className={className}
           options={options.map(opt => ({
             label: opt.label,

@@ -475,10 +475,6 @@ export type QualityControlUpdateDto = {
    * Qualité associée
    */
   qualityId: number
-  /**
-   * Document associé au contrôle qualité
-   */
-  documentId?: number
 }
 
 /**
@@ -518,9 +514,9 @@ export type QualityControlDto = {
    */
   quality: QualityDto
   /**
-   * Document associé au contrôle qualité
+   * Documents associés au contrôle qualité
    */
-  document: DocumentDto
+  documents?: Array<DocumentDto>
 }
 
 /**
@@ -1286,55 +1282,6 @@ export type LoginRequest = {
   password: string
 }
 
-export type ExportAuctionDto = {
-  auctionId?: number
-  auctionStartDate?: string
-  auctionEndDate?: string
-  auctionStartPrice?: number
-  auctionEnded?: boolean
-  auctionStatus?: string
-  strategyName?: string
-  optionMinPriceKg?: number
-  optionMaxPriceKg?: number
-  optionBuyNowPrice?: number
-  optionShowPublic?: boolean
-  optionMinIncrement?: number
-  productId?: number
-  productWeightKg?: number
-  productDepositDate?: string
-  transformedProductId?: number
-  qualityInspectorId?: number
-  productQuality?: string
-  productType?: string
-  storeId?: number
-  storeName?: string
-  storeCity?: string
-  storeRegion?: string
-  sellerId?: number
-  sellerCity?: string
-  sellerRegion?: string
-  sellerCooperative?: string
-  bidCount?: number
-  bidMax?: number
-  bidMin?: number
-  bidAvg?: number
-  bidSum?: number
-  winnerTraderId?: number
-  bidWinningAmount?: number
-  winnerCity?: string
-  winnerRegion?: string
-}
-
-/**
- * Données nécessaires pour l'application cliente.
- */
-export type ApplicationDataDto = {
-  /**
-   * Liste des stratégies d'enchères disponibles.
-   */
-  languages: Array<LanguageDto>
-}
-
 /**
  * Objet de transfert de données pour les administrateurs.
  */
@@ -1499,6 +1446,55 @@ export type UserListDto = {
     | 'exporter'
     | 'carrier'
     | 'trader'
+}
+
+export type ExportAuctionDto = {
+  auctionId?: number
+  auctionStartDate?: string
+  auctionEndDate?: string
+  auctionStartPrice?: number
+  auctionEnded?: boolean
+  auctionStatus?: string
+  strategyName?: string
+  optionMinPriceKg?: number
+  optionMaxPriceKg?: number
+  optionBuyNowPrice?: number
+  optionShowPublic?: boolean
+  optionMinIncrement?: number
+  productId?: number
+  productWeightKg?: number
+  productDepositDate?: string
+  transformedProductId?: number
+  qualityInspectorId?: number
+  productQuality?: string
+  productType?: string
+  storeId?: number
+  storeName?: string
+  storeCity?: string
+  storeRegion?: string
+  sellerId?: number
+  sellerCity?: string
+  sellerRegion?: string
+  sellerCooperative?: string
+  bidCount?: number
+  bidMax?: number
+  bidMin?: number
+  bidAvg?: number
+  bidSum?: number
+  winnerTraderId?: number
+  bidWinningAmount?: number
+  winnerCity?: string
+  winnerRegion?: string
+}
+
+/**
+ * Données nécessaires pour l'application cliente.
+ */
+export type ApplicationDataDto = {
+  /**
+   * Liste des stratégies d'enchères disponibles.
+   */
+  languages: Array<LanguageDto>
 }
 
 export type ApiError = {
@@ -2961,6 +2957,47 @@ export type UpdateGlobalSettingsResponses = {
 export type UpdateGlobalSettingsResponse =
   UpdateGlobalSettingsResponses[keyof UpdateGlobalSettingsResponses]
 
+/**
+ * Type d'utilisateur
+ */
+export enum UserType {
+  ADMIN = 'admin',
+  PRODUCER = 'producer',
+  TRANSFORMER = 'transformer',
+  QUALITY_INSPECTOR = 'quality_inspector',
+  EXPORTER = 'exporter',
+  CARRIER = 'carrier',
+  TRADER = 'trader',
+}
+
+export type ListUsersData = {
+  body?: never
+  path?: never
+  query?: {
+    /**
+     * Type d'utilisateur
+     */
+    userType?:
+      | 'admin'
+      | 'producer'
+      | 'transformer'
+      | 'quality_inspector'
+      | 'exporter'
+      | 'carrier'
+      | 'trader'
+  }
+  url: '/api/users'
+}
+
+export type ListUsersResponses = {
+  /**
+   * Liste récupérée avec succès
+   */
+  200: Array<UserListDto>
+}
+
+export type ListUsersResponse = ListUsersResponses[keyof ListUsersResponses]
+
 export type CreateUserData = {
   body: {
     user?: UserCreateDto
@@ -3057,7 +3094,10 @@ export type ListQualityControlsResponse =
   ListQualityControlsResponses[keyof ListQualityControlsResponses]
 
 export type CreateQualityControlData = {
-  body: QualityControlUpdateDto
+  body: {
+    qualityControl?: QualityControlUpdateDto
+    documents?: Array<Blob | File>
+  }
   path?: never
   query?: never
   url: '/api/quality-controls'
@@ -3065,11 +3105,11 @@ export type CreateQualityControlData = {
 
 export type CreateQualityControlErrors = {
   /**
-   * Bad Request
+   * Erreur de validation ou JSON invalide
    */
   400: ApiErrorResponse
   /**
-   * Conflict
+   * Conflit avec un utilisateur existant
    */
   409: ApiErrorResponse
 }
@@ -3079,7 +3119,7 @@ export type CreateQualityControlError =
 
 export type CreateQualityControlResponses = {
   /**
-   * Created
+   * Contrôle qualité créé avec succès
    */
   201: QualityControlDto
 }
@@ -3325,7 +3365,7 @@ export type ListDocumentsByUserResponses = {
 export type ListDocumentsByUserResponse =
   ListDocumentsByUserResponses[keyof ListDocumentsByUserResponses]
 
-export type CreateDocumentData = {
+export type CreateDocumentUserData = {
   body: {
     file?: Blob | File
   }
@@ -3339,7 +3379,7 @@ export type CreateDocumentData = {
   url: '/api/documents/users/{userId}'
 }
 
-export type CreateDocumentErrors = {
+export type CreateDocumentUserErrors = {
   /**
    * Validation KO
    */
@@ -3354,18 +3394,60 @@ export type CreateDocumentErrors = {
   500: ApiErrorResponse
 }
 
-export type CreateDocumentError =
-  CreateDocumentErrors[keyof CreateDocumentErrors]
+export type CreateDocumentUserError =
+  CreateDocumentUserErrors[keyof CreateDocumentUserErrors]
 
-export type CreateDocumentResponses = {
+export type CreateDocumentUserResponses = {
   /**
    * Document créé
    */
   201: DocumentDto
 }
 
-export type CreateDocumentResponse =
-  CreateDocumentResponses[keyof CreateDocumentResponses]
+export type CreateDocumentUserResponse =
+  CreateDocumentUserResponses[keyof CreateDocumentUserResponses]
+
+export type CreateDocumentQualityControlData = {
+  body: {
+    file?: Blob | File
+  }
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    qualityControlId: number
+  }
+  query?: never
+  url: '/api/documents/quality-controls/{qualityControlId}'
+}
+
+export type CreateDocumentQualityControlErrors = {
+  /**
+   * Validation KO
+   */
+  400: ApiErrorResponse
+  /**
+   * Contrôle qualité non trouvé
+   */
+  404: ApiErrorResponse
+  /**
+   * Erreur stockage
+   */
+  500: ApiErrorResponse
+}
+
+export type CreateDocumentQualityControlError =
+  CreateDocumentQualityControlErrors[keyof CreateDocumentQualityControlErrors]
+
+export type CreateDocumentQualityControlResponses = {
+  /**
+   * Document créé
+   */
+  201: DocumentDto
+}
+
+export type CreateDocumentQualityControlResponse =
+  CreateDocumentQualityControlResponses[keyof CreateDocumentQualityControlResponses]
 
 export type ListCooperativesData = {
   body?: never
@@ -3980,22 +4062,6 @@ export type GetApplicationDataResponses = {
 
 export type GetApplicationDataResponse =
   GetApplicationDataResponses[keyof GetApplicationDataResponses]
-
-export type ListUsersData = {
-  body?: never
-  path?: never
-  query?: never
-  url: '/api/admin/users'
-}
-
-export type ListUsersResponses = {
-  /**
-   * Liste récupérée avec succès
-   */
-  200: Array<UserListDto>
-}
-
-export type ListUsersResponse = ListUsersResponses[keyof ListUsersResponses]
 
 export type GetUserData = {
   body?: never

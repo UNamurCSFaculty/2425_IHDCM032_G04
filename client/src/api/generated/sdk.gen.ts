@@ -136,6 +136,8 @@ import type {
   UpdateGlobalSettingsData,
   UpdateGlobalSettingsResponse,
   UpdateGlobalSettingsError,
+  ListUsersData,
+  ListUsersResponse,
   CreateUserData,
   CreateUserResponse,
   CreateUserError,
@@ -172,9 +174,12 @@ import type {
   ListDocumentsByUserData,
   ListDocumentsByUserResponse,
   ListDocumentsByUserError,
-  CreateDocumentData,
-  CreateDocumentResponse,
-  CreateDocumentError,
+  CreateDocumentUserData,
+  CreateDocumentUserResponse,
+  CreateDocumentUserError,
+  CreateDocumentQualityControlData,
+  CreateDocumentQualityControlResponse,
+  CreateDocumentQualityControlError,
   ListCooperativesData,
   ListCooperativesResponse,
   CreateCooperativeData,
@@ -234,8 +239,6 @@ import type {
   GetApplicationDataData,
   GetApplicationDataResponse,
   GetApplicationDataError,
-  ListUsersData,
-  ListUsersResponse,
   GetUserData,
   GetUserResponse,
   GetUserError,
@@ -1267,6 +1270,29 @@ export const updateGlobalSettings = <ThrowOnError extends boolean = false>(
 }
 
 /**
+ * Lister tous les utilisateurs
+ * Renvoie la liste de tous les utilisateurs présents dans le système.
+ */
+export const listUsers = <ThrowOnError extends boolean = false>(
+  options?: Options<ListUsersData, ThrowOnError>
+) => {
+  return (options?.client ?? _heyApiClient).get<
+    ListUsersResponse,
+    unknown,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/users',
+    ...options,
+  })
+}
+
+/**
  * Créer un utilisateur et téléverser des documents
  */
 export const createUser = <ThrowOnError extends boolean = false>(
@@ -1364,7 +1390,7 @@ export const listQualityControls = <ThrowOnError extends boolean = false>(
 }
 
 /**
- * Créer un contrôle qualité
+ * Créer un contrôle qualité et téléverser des documents
  */
 export const createQualityControl = <ThrowOnError extends boolean = false>(
   options: Options<CreateQualityControlData, ThrowOnError>
@@ -1374,6 +1400,7 @@ export const createQualityControl = <ThrowOnError extends boolean = false>(
     CreateQualityControlError,
     ThrowOnError
   >({
+    ...formDataBodySerializer,
     security: [
       {
         scheme: 'bearer',
@@ -1383,7 +1410,7 @@ export const createQualityControl = <ThrowOnError extends boolean = false>(
     url: '/api/quality-controls',
     ...options,
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': null,
       ...options?.headers,
     },
   })
@@ -1602,16 +1629,39 @@ export const listDocumentsByUser = <ThrowOnError extends boolean = false>(
 /**
  * Créer un document et téléverser un fichier
  */
-export const createDocument = <ThrowOnError extends boolean = false>(
-  options: Options<CreateDocumentData, ThrowOnError>
+export const createDocumentUser = <ThrowOnError extends boolean = false>(
+  options: Options<CreateDocumentUserData, ThrowOnError>
 ) => {
   return (options.client ?? _heyApiClient).post<
-    CreateDocumentResponse,
-    CreateDocumentError,
+    CreateDocumentUserResponse,
+    CreateDocumentUserError,
     ThrowOnError
   >({
     ...formDataBodySerializer,
     url: '/api/documents/users/{userId}',
+    ...options,
+    headers: {
+      'Content-Type': null,
+      ...options?.headers,
+    },
+  })
+}
+
+/**
+ * Créer un document et téléverser un fichier
+ */
+export const createDocumentQualityControl = <
+  ThrowOnError extends boolean = false,
+>(
+  options: Options<CreateDocumentQualityControlData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).post<
+    CreateDocumentQualityControlResponse,
+    CreateDocumentQualityControlError,
+    ThrowOnError
+  >({
+    ...formDataBodySerializer,
+    url: '/api/documents/quality-controls/{qualityControlId}',
     ...options,
     headers: {
       'Content-Type': null,
@@ -2130,29 +2180,6 @@ export const getApplicationData = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     url: '/api/app',
-    ...options,
-  })
-}
-
-/**
- * Lister tous les utilisateurs
- * Renvoie la liste de tous les utilisateurs présents dans le système.
- */
-export const listUsers = <ThrowOnError extends boolean = false>(
-  options?: Options<ListUsersData, ThrowOnError>
-) => {
-  return (options?.client ?? _heyApiClient).get<
-    ListUsersResponse,
-    unknown,
-    ThrowOnError
-  >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
-    url: '/api/admin/users',
     ...options,
   })
 }

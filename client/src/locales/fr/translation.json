@@ -239,7 +239,7 @@
     "upload_all": "Tous les fichiers sont acceptés",
     "upload_click_or_drag": "Cliquez pour télécharger ou glisser-déposer",
     "upload_invalid_type": "Type de fichier invalide",
-    "upload_files": "Fichiers",
+    "upload_files": "Fichier(s)",
     "documents": "Documents",
     "language": "Langue",
     "address": "Adresse",
@@ -515,7 +515,7 @@
       "submit_button": "Enregistrer le produit",
       "section_quality_control_title": "Contrôle qualité",
       "control_date_label": "Date du contrôle",
-      "certificate_label": "Certificat (Photo ou PDF)"
+      "certificate_label": "Certificat de contrôle"
     },
     "weight_in_kg_label": "Poids (kg)"
   },

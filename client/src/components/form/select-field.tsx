@@ -9,6 +9,7 @@ import {
 } from '../ui/select'
 import { FieldErrors } from './field-errors'
 import SimpleTooltip from '../SimpleTooltip'
+import { LoaderIcon } from 'lucide-react'
 
 type SelectOption<T> = {
   value: T
@@ -24,6 +25,7 @@ type SelectFieldProps<T extends string | number> = {
   className?: string
   required?: boolean
   disabled?: boolean
+  loading?: boolean
   /**
    * Comment transformer la string reçue du composant en T.
    * Par défaut, identity pour string et Number(v) pour number.
@@ -41,6 +43,7 @@ export function SelectField<T extends string | number>({
   tooltip,
   required = true,
   disabled = false,
+  loading = false,
   parseValue,
   onChange,
 }: SelectFieldProps<T>) {
@@ -61,6 +64,7 @@ export function SelectField<T extends string | number>({
         <div className="flex items-center justify-between">
           <Label htmlFor={field.name}>
             {label}
+            {loading && <LoaderIcon className="animate-spin" />}
             {required && <span className="text-red-500">*</span>}
             {tooltip && <SimpleTooltip content={tooltip} />}
           </Label>

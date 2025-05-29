@@ -46,8 +46,17 @@ public class DocumentApiController implements DocumentApi {
 	}
 
 	@Override
-	public ResponseEntity<DocumentDto> createDocument(Integer userId, MultipartFile file) {
-		DocumentDto created = documentService.createDocument(userId, file);
+	public ResponseEntity<DocumentDto> createDocumentUser(Integer userId, MultipartFile file) {
+		DocumentDto created = documentService.createDocumentUser(userId, file);
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+				.buildAndExpand(created.getId()).toUri();
+		return ResponseEntity.created(location).body(created);
+	}
+
+	@Override
+	public ResponseEntity<DocumentDto> createDocumentQualityControl(Integer qualityControlId,
+			MultipartFile file) {
+		DocumentDto created = documentService.createDocumentQualityControl(qualityControlId, file);
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(created.getId()).toUri();
 		return ResponseEntity.created(location).body(created);

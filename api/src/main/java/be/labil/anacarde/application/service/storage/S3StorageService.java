@@ -2,6 +2,7 @@ package be.labil.anacarde.application.service.storage;
 
 import be.labil.anacarde.application.exception.DocumentStorageException;
 import be.labil.anacarde.domain.model.Document;
+import be.labil.anacarde.domain.model.QualityControl;
 import be.labil.anacarde.domain.model.User;
 import com.github.slugify.Slugify;
 import java.io.IOException;
@@ -9,6 +10,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -51,6 +53,11 @@ public class S3StorageService implements StorageService {
 					DiskStorageUtils.buildDocument(user, f, "s3://%s/%s".formatted(bucket, key)));
 		}
 		return result;
+	}
+
+	@Override
+	public List<Document> storeAll(QualityControl qualityControl, List<MultipartFile> files) {
+		throw new NotImplementedException();
 	}
 
 	@Override

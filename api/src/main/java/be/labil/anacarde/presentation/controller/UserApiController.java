@@ -5,9 +5,11 @@ import be.labil.anacarde.application.exception.ApiErrorException;
 import be.labil.anacarde.application.exception.ErrorDetail;
 import be.labil.anacarde.application.service.UserService;
 import be.labil.anacarde.domain.dto.db.user.UserDetailDto;
+import be.labil.anacarde.domain.dto.db.user.UserListDto;
 import be.labil.anacarde.domain.dto.write.user.create.AdminCreateDto;
 import be.labil.anacarde.domain.dto.write.user.create.UserCreateDto;
 import be.labil.anacarde.domain.dto.write.user.update.UserUpdateDto;
+import be.labil.anacarde.presentation.controller.enums.UserType;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +21,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @RequiredArgsConstructor
-public class UserControllerApiController implements UserApi {
+public class UserApiController implements UserApi {
 
 	private final UserService userService;
 
@@ -66,5 +68,11 @@ public class UserControllerApiController implements UserApi {
 	public ResponseEntity<Boolean> checkPhone(String phone) {
 		boolean exists = userService.phoneExists(phone);
 		return ResponseEntity.ok(exists);
+	}
+
+	@Override
+	public ResponseEntity<List<? extends UserListDto>> listUsers(UserType type) {
+		List<UserListDto> users = userService.listUsers(type);
+		return ResponseEntity.ok(users);
 	}
 }
