@@ -8,6 +8,7 @@ import {
   listBidsQueryKey,
   rejectBidMutation,
 } from '@/api/generated/@tanstack/react-query.gen'
+import { ContractModal } from '@/components/ContractModal'
 import { CountdownTimer } from '@/components/CountDownTimer'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -64,6 +65,10 @@ const AuctionDetailsPanel: React.FC<Props> = ({
   const [makeBidPopover, setMakeBidPopover] = useState(false)
   const [acceptBidPopoverIndex, setAcceptBidPopoverIndex] = useState(-1)
   const [rejectBidPopoverIndex, setRejectBidPopoverIndex] = useState(-1)
+  const [isOpen, setIsOpen] = useState(false)
+
+  const acceptedBid =
+    auction.bids?.find(bid => bid.status!.name === 'Accepté') || null
 
   const { t } = useTranslation()
 
@@ -207,6 +212,28 @@ const AuctionDetailsPanel: React.FC<Props> = ({
             {auction.trader.firstName} {auction.trader.lastName}
           </span>
         </div>
+
+        {acceptedBid && (
+          <div className="ml-auto">
+            <Button
+              onClick={() => {
+                setIsOpen(true)
+              }}
+            >
+              {t('auction.table.propose_contract_button')}
+            </Button>
+
+            <ContractModal
+              acceptedBid={acceptedBid}
+              auction={auction}
+              isOpen={isOpen}
+              onClose={() => setIsOpen(false)}
+              onSubmit={() => {
+                setIsOpen(false)
+              }}
+            />
+          </div>
+        )}
       </div>
 
       {/* Map */}

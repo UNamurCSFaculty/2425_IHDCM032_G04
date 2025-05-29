@@ -97,7 +97,7 @@ export const ContractModal: React.FC<ContractModalProps> = ({
     <Dialog.Root open={isOpen} onOpenChange={open => !open && onClose()}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/40" />
-        <Dialog.Content className="fixed top-1/2 left-1/2 max-h-[90vh] w-full max-w-md -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-xl bg-white p-4 shadow-lg">
+        <Dialog.Content className="fixed top-1/2 left-1/2 z-[50] max-h-[90vh] w-full max-w-md -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-xl bg-white p-4 shadow-lg">
           <Dialog.Title className="mb-4 text-2xl font-bold">
             {t('contract.modal_title')}
           </Dialog.Title>

@@ -94,9 +94,9 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
   selectedUserType,
   onUserTypeChange,
 }) => (
-  <div className="p-4 border rounded mb-4 bg-white shadow-sm">
-    <div className="flex justify-between items-center mb-4">
-      <h3 className="font-semibold text-lg">Filtres</h3>
+  <div className="mb-4 rounded border bg-white p-4 shadow-sm">
+    <div className="mb-4 flex items-center justify-between">
+      <h3 className="text-lg font-semibold">Filtres</h3>
       <Button variant="ghost" size="sm" onClick={resetFilters}>
         Reset
       </Button>
@@ -104,7 +104,7 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
 
     {/* Recherche */}
     <div className="relative mb-4">
-      <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+      <Search className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2" />
       <Input
         placeholder="Rechercher…"
         className="pl-10"
@@ -115,7 +115,7 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
         <Button
           variant="ghost"
           size="icon"
-          className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7"
+          className="absolute top-1/2 right-1 h-7 w-7 -translate-y-1/2"
           onClick={() => onSearch('')}
         >
           <X className="size-4" />
@@ -127,7 +127,7 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
     <div>
       <label
         htmlFor="product-type-select"
-        className="text-sm font-medium mb-1 block"
+        className="mb-1 block text-sm font-medium"
       >
         En tant que
       </label>
@@ -147,7 +147,7 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
 
     {/* Prix */}
     <div className="mb-6">
-      <div className="flex justify-between text-sm font-medium mb-1">
+      <div className="mb-1 flex justify-between text-sm font-medium">
         <span>Prix</span>
         <span>
           {formatPrice.format(priceRange[0])} –{' '}
@@ -167,7 +167,7 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
     <div className="mb-4">
       <label
         htmlFor="quality-select"
-        className="text-sm font-medium mb-1 block"
+        className="mb-1 block text-sm font-medium"
       >
         Qualité
       </label>
@@ -192,7 +192,7 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
     <div>
       <label
         htmlFor="product-type-select"
-        className="text-sm font-medium mb-1 block"
+        className="mb-1 block text-sm font-medium"
       >
         Type
       </label>
@@ -360,9 +360,9 @@ export function RouteComponent() {
   )
 
   return (
-    <div className="grid lg:grid-cols-[260px_1fr] gap-6 items-start mt-6 mb-6">
+    <div className="mt-6 mb-6 grid items-start gap-6 lg:grid-cols-[260px_1fr]">
       {/* Filtres à gauche, sticky sur desktop */}
-      <div className="hidden lg:block sticky top-20 border rounded-lg shadow-sm bg-background self-start m-1 ml-4 ">
+      <div className="bg-background sticky top-20 m-1 ml-4 hidden self-start rounded-lg border shadow-sm lg:block">
         <FiltersPanel
           search={search}
           onSearch={setSearch}
@@ -385,7 +385,7 @@ export function RouteComponent() {
       {/* Table à droite */}
       <div className="m-2">
         {/* Affiche les filtres au-dessus sur mobile */}
-        <div className="lg:hidden mb-4">
+        <div className="mb-4 lg:hidden">
           <FiltersPanel
             search={search}
             onSearch={setSearch}
@@ -405,9 +405,9 @@ export function RouteComponent() {
           />
         </div>
 
-        <div className="border rounded-lg bg-background overflow-x-auto mr-6">
-          <Table className="text-sm table-auto">
-            <TableHeader className="sticky top-0 backdrop-blur supports-[backdrop-filter]:bg-muted/60 z-10">
+        <div className="bg-background mr-6 overflow-x-auto rounded-lg border">
+          <Table className="table-auto text-sm">
+            <TableHeader className="supports-[backdrop-filter]:bg-muted/60 sticky top-0 z-10 backdrop-blur">
               <TableRow className="h-9 bg-neutral-100">
                 <TableHead>Vendeur</TableHead>
                 <TableHead>Acheteur</TableHead>

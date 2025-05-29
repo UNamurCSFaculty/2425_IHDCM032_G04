@@ -30,6 +30,7 @@ import { Route as AuthenticatedVentesNouvelleEnchereImport } from './routes/_aut
 import { Route as AuthenticatedVentesMesEncheresImport } from './routes/_authenticated/ventes/mes-encheres'
 import { Route as AuthenticatedDepotsNouveauProduitImport } from './routes/_authenticated/depots/nouveau-produit'
 import { Route as AuthenticatedDepotsMesProduitsImport } from './routes/_authenticated/depots/mes-produits'
+import { Route as AuthenticatedContratsMesContratsImport } from './routes/_authenticated/contrats/mes-contrats'
 import { Route as AuthenticatedAchatsMesEncheresImport } from './routes/_authenticated/achats/mes-encheres'
 import { Route as AuthenticatedAchatsMarcheImport } from './routes/_authenticated/achats/marche'
 
@@ -149,6 +150,13 @@ const AuthenticatedDepotsMesProduitsRoute =
   AuthenticatedDepotsMesProduitsImport.update({
     id: '/depots/mes-produits',
     path: '/depots/mes-produits',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+
+const AuthenticatedContratsMesContratsRoute =
+  AuthenticatedContratsMesContratsImport.update({
+    id: '/contrats/mes-contrats',
+    path: '/contrats/mes-contrats',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
 
@@ -281,6 +289,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAchatsMesEncheresImport
       parentRoute: typeof AuthenticatedImport
     }
+    '/_authenticated/contrats/mes-contrats': {
+      id: '/_authenticated/contrats/mes-contrats'
+      path: '/contrats/mes-contrats'
+      fullPath: '/contrats/mes-contrats'
+      preLoaderRoute: typeof AuthenticatedContratsMesContratsImport
+      parentRoute: typeof AuthenticatedImport
+    }
     '/_authenticated/depots/mes-produits': {
       id: '/_authenticated/depots/mes-produits'
       path: '/depots/mes-produits'
@@ -324,6 +339,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteChildren {
   AuthenticatedAchatsMarcheRoute: typeof AuthenticatedAchatsMarcheRoute
   AuthenticatedAchatsMesEncheresRoute: typeof AuthenticatedAchatsMesEncheresRoute
+  AuthenticatedContratsMesContratsRoute: typeof AuthenticatedContratsMesContratsRoute
   AuthenticatedDepotsMesProduitsRoute: typeof AuthenticatedDepotsMesProduitsRoute
   AuthenticatedDepotsNouveauProduitRoute: typeof AuthenticatedDepotsNouveauProduitRoute
   AuthenticatedVentesMesEncheresRoute: typeof AuthenticatedVentesMesEncheresRoute
@@ -333,6 +349,7 @@ interface AuthenticatedRouteChildren {
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAchatsMarcheRoute: AuthenticatedAchatsMarcheRoute,
   AuthenticatedAchatsMesEncheresRoute: AuthenticatedAchatsMesEncheresRoute,
+  AuthenticatedContratsMesContratsRoute: AuthenticatedContratsMesContratsRoute,
   AuthenticatedDepotsMesProduitsRoute: AuthenticatedDepotsMesProduitsRoute,
   AuthenticatedDepotsNouveauProduitRoute:
     AuthenticatedDepotsNouveauProduitRoute,
@@ -382,6 +399,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactIndexRoute
   '/achats/marche': typeof AuthenticatedAchatsMarcheRoute
   '/achats/mes-encheres': typeof AuthenticatedAchatsMesEncheresRoute
+  '/contrats/mes-contrats': typeof AuthenticatedContratsMesContratsRoute
   '/depots/mes-produits': typeof AuthenticatedDepotsMesProduitsRoute
   '/depots/nouveau-produit': typeof AuthenticatedDepotsNouveauProduitRoute
   '/ventes/mes-encheres': typeof AuthenticatedVentesMesEncheresRoute
@@ -405,6 +423,7 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactIndexRoute
   '/achats/marche': typeof AuthenticatedAchatsMarcheRoute
   '/achats/mes-encheres': typeof AuthenticatedAchatsMesEncheresRoute
+  '/contrats/mes-contrats': typeof AuthenticatedContratsMesContratsRoute
   '/depots/mes-produits': typeof AuthenticatedDepotsMesProduitsRoute
   '/depots/nouveau-produit': typeof AuthenticatedDepotsNouveauProduitRoute
   '/ventes/mes-encheres': typeof AuthenticatedVentesMesEncheresRoute
@@ -430,6 +449,7 @@ export interface FileRoutesById {
   '/contact/': typeof ContactIndexRoute
   '/_authenticated/achats/marche': typeof AuthenticatedAchatsMarcheRoute
   '/_authenticated/achats/mes-encheres': typeof AuthenticatedAchatsMesEncheresRoute
+  '/_authenticated/contrats/mes-contrats': typeof AuthenticatedContratsMesContratsRoute
   '/_authenticated/depots/mes-produits': typeof AuthenticatedDepotsMesProduitsRoute
   '/_authenticated/depots/nouveau-produit': typeof AuthenticatedDepotsNouveauProduitRoute
   '/_authenticated/ventes/mes-encheres': typeof AuthenticatedVentesMesEncheresRoute
@@ -456,6 +476,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/achats/marche'
     | '/achats/mes-encheres'
+    | '/contrats/mes-contrats'
     | '/depots/mes-produits'
     | '/depots/nouveau-produit'
     | '/ventes/mes-encheres'
@@ -478,6 +499,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/achats/marche'
     | '/achats/mes-encheres'
+    | '/contrats/mes-contrats'
     | '/depots/mes-produits'
     | '/depots/nouveau-produit'
     | '/ventes/mes-encheres'
@@ -501,6 +523,7 @@ export interface FileRouteTypes {
     | '/contact/'
     | '/_authenticated/achats/marche'
     | '/_authenticated/achats/mes-encheres'
+    | '/_authenticated/contrats/mes-contrats'
     | '/_authenticated/depots/mes-produits'
     | '/_authenticated/depots/nouveau-produit'
     | '/_authenticated/ventes/mes-encheres'
@@ -565,6 +588,7 @@ export const routeTree = rootRoute
       "children": [
         "/_authenticated/achats/marche",
         "/_authenticated/achats/mes-encheres",
+        "/_authenticated/contrats/mes-contrats",
         "/_authenticated/depots/mes-produits",
         "/_authenticated/depots/nouveau-produit",
         "/_authenticated/ventes/mes-encheres",
@@ -623,6 +647,10 @@ export const routeTree = rootRoute
     },
     "/_authenticated/achats/mes-encheres": {
       "filePath": "_authenticated/achats/mes-encheres.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/contrats/mes-contrats": {
+      "filePath": "_authenticated/contrats/mes-contrats.tsx",
       "parent": "/_authenticated"
     },
     "/_authenticated/depots/mes-produits": {
