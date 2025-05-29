@@ -67,7 +67,6 @@ export function MultiSelectVirtualField<T extends string | number>({
               const newVal = _parse(val)
               newValues.push(newVal)
             }
-            console.log('newValues', newValues)
             // field.handleChange(newValues) TODO TYPE ERROR
             onChange?.(newValues)
           }}

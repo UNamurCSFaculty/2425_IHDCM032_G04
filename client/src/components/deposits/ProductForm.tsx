@@ -27,7 +27,7 @@ import { useAppForm } from '@/components/form'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { formatCoordinates } from '@/utils/formatter'
 import { useStore } from '@tanstack/react-form'
-import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { AlertCircle } from 'lucide-react'
 import React, { useState } from 'react'
@@ -41,34 +41,36 @@ export function ProductForm(): React.ReactElement<'div'> {
 
   const staleTime = 10_000
 
-  const { data: harvestProducts } = useSuspenseQuery({
-    ...listProductsOptions({ query: { productType: ProductType.HARVEST } }),
-    staleTime: staleTime,
-  })
+  const { data: harvestProducts, isLoading: isHarvestProductsLoading } =
+    useQuery({
+      ...listProductsOptions({ query: { productType: ProductType.HARVEST } }),
+      staleTime: staleTime,
+    })
 
-  const { data: allUsersData } = useSuspenseQuery({
+  const { data: allUsersData, isLoading: isUsersLoading } = useQuery({
     ...listUsersOptions(),
     staleTime: staleTime,
   })
 
-  const users = allUsersData.filter(
-    user =>
-      user.type === 'transformer' ||
-      user.type === 'producer' ||
-      user.type === 'quality_inspector'
-  )
+  const users = allUsersData
+  // const users = allUsersData.filter(
+  //   user =>
+  //     user.type === 'transformer' ||
+  //     user.type === 'producer' ||
+  //     user.type === 'quality_inspector'
+  // )
 
-  const { data: qualities } = useSuspenseQuery({
+  const { data: qualities, isLoading: isQualitiesLoading } = useQuery({
     ...listQualitiesOptions(),
     staleTime: staleTime,
   })
 
-  const { data: fields } = useSuspenseQuery({
+  const { data: fields, isLoading: isFieldsLoading } = useQuery({
     ...listFieldsOptions(),
     staleTime: staleTime,
   })
 
-  const { data: stores } = useSuspenseQuery({
+  const { data: stores, isLoading: isStoresLoading } = useQuery({
     ...listStoresOptions(),
     staleTime: staleTime,
   })
@@ -240,17 +242,19 @@ export function ProductForm(): React.ReactElement<'div'> {
                 />
               </div>
             </div>
-
             <form.AppField
               name={`product.${productType === ProductType.HARVEST ? 'producerId' : 'transformerId'}`}
               children={field => {
-                const traders = users.filter(user =>
-                  productType === ProductType.HARVEST
-                    ? user.type === 'producer'
-                    : productType === ProductType.TRANSFORMED
-                      ? user.type === 'transformer'
-                      : true
-                )
+                let traders: UserListDto[] = []
+                if (!isUsersLoading) {
+                  traders = (users as UserListDto[]).filter(user =>
+                    productType === ProductType.HARVEST
+                      ? user.type === 'producer'
+                      : productType === ProductType.TRANSFORMED
+                        ? user.type === 'transformer'
+                        : true
+                  )
+                }
 
                 return (
                   <field.SelectField
@@ -279,20 +283,27 @@ export function ProductForm(): React.ReactElement<'div'> {
               <form.AppField
                 name="product.fieldId"
                 children={field => {
-                  const gps = (fields as FieldDto[]).find(
-                    f => f.id === field.state.value
-                  )?.address.location
+                  const gps =
+                    !isFieldsLoading &&
+                    (fields as FieldDto[]).find(f => f.id === field.state.value)
+                      ?.address.location
                   const hintText = gps
                     ? t('form.gps_label', { gps: formatCoordinates(gps) })
                     : ''
                   return (
                     <field.SelectField
-                      options={(fields as FieldDto[])
-                        .filter(field => field.producer?.id === producerId)
-                        .map(field => ({
-                          value: field.id,
-                          label: field.identifier!,
-                        }))}
+                      options={
+                        isFieldsLoading
+                          ? []
+                          : (fields as FieldDto[])
+                              .filter(
+                                field => field.producer?.id === producerId
+                              )
+                              .map(field => ({
+                                value: field.id,
+                                label: field.identifier!,
+                              }))
+                      }
                       label={t('product.form.cultivated_field_label')}
                       hint={hintText}
                     />
@@ -300,27 +311,31 @@ export function ProductForm(): React.ReactElement<'div'> {
                 }}
               />
             )}
-
             {productType == ProductType.TRANSFORMED && (
               <>
                 <form.AppField
                   name="product.harvestProductIds"
                   children={field => (
                     <field.MultiSelectField
+                      loading={isHarvestProductsLoading}
                       placeholder="Sélectionner les lots"
-                      options={(harvestProducts as HarvestProductDto[]).map(
-                        product => ({
-                          value: product.id,
-                          label:
-                            'Lot n°' +
-                            product.id +
-                            ' - ' +
-                            t('database.' + product.type) +
-                            ' (' +
-                            product.qualityControl.quality.name +
-                            ')',
-                        })
-                      )}
+                      options={
+                        isHarvestProductsLoading
+                          ? []
+                          : (harvestProducts as HarvestProductDto[]).map(
+                              product => ({
+                                value: product.id,
+                                label:
+                                  'Lot n°' +
+                                  product.id +
+                                  ' - ' +
+                                  t('database.' + product.type) +
+                                  ' (' +
+                                  product.qualityControl.quality.name +
+                                  ')',
+                              })
+                            )
+                      }
                       label="Matières premières"
                       maxCount={2}
                       onChange={values => {
@@ -332,15 +347,18 @@ export function ProductForm(): React.ReactElement<'div'> {
                 />
               </>
             )}
-
             <form.AppField
               name="product.storeId"
               children={field => (
                 <field.SelectField
-                  options={(stores as StoreDetailDto[]).map(store => ({
-                    value: store.id,
-                    label: store.name,
-                  }))}
+                  options={
+                    isStoresLoading
+                      ? []
+                      : (stores as StoreDetailDto[]).map(store => ({
+                          value: store.id,
+                          label: store.name,
+                        }))
+                  }
                   label={
                     productType === ProductType.HARVEST
                       ? t('product.store_label')
@@ -349,7 +367,6 @@ export function ProductForm(): React.ReactElement<'div'> {
                 />
               )}
             />
-
             {isError && error?.errors?.length > 0 && (
               <Alert
                 variant="destructive"
@@ -371,7 +388,6 @@ export function ProductForm(): React.ReactElement<'div'> {
                 </AlertDescription>
               </Alert>
             )}
-
             <form.AppForm>
               <form.SubmitButton className="w-full">
                 {t('product.form.submit_button')}
@@ -390,22 +406,26 @@ export function ProductForm(): React.ReactElement<'div'> {
                   name="qualityControl.qualityId"
                   children={field => (
                     <field.SelectField
-                      options={(qualities! as QualityDto[])
-                        .filter(quality => {
-                          return (
-                            !productType ||
-                            (productType === ProductType.HARVEST &&
-                              quality.qualityType.name.toLowerCase() ==
-                                ProductType.HARVEST.toLowerCase()) ||
-                            (productType === ProductType.TRANSFORMED &&
-                              quality.qualityType.name.toLowerCase() ==
-                                ProductType.TRANSFORMED.toLowerCase())
-                          )
-                        })
-                        .map(quality => ({
-                          value: quality.id,
-                          label: quality.name,
-                        }))}
+                      options={
+                        isQualitiesLoading
+                          ? []
+                          : (qualities! as QualityDto[])
+                              .filter(quality => {
+                                return (
+                                  !productType ||
+                                  (productType === ProductType.HARVEST &&
+                                    quality.qualityType.name.toLowerCase() ==
+                                      ProductType.HARVEST.toLowerCase()) ||
+                                  (productType === ProductType.TRANSFORMED &&
+                                    quality.qualityType.name.toLowerCase() ==
+                                      ProductType.TRANSFORMED.toLowerCase())
+                                )
+                              })
+                              .map(quality => ({
+                                value: quality.id,
+                                label: quality.name,
+                              }))
+                      }
                       label={t('product.quality_label')}
                     />
                   )}
@@ -427,12 +447,16 @@ export function ProductForm(): React.ReactElement<'div'> {
               name="qualityControl.qualityInspectorId"
               children={field => (
                 <field.SelectField
-                  options={(users as UserListDto[])
-                    .filter(user => user.type === 'quality_inspector')
-                    .map(qi => ({
-                      value: qi.id,
-                      label: qi.lastName + ' ' + qi.firstName,
-                    }))}
+                  options={
+                    isUsersLoading
+                      ? []
+                      : (users as UserListDto[])
+                          .filter(user => user.type === 'quality_inspector')
+                          .map(qi => ({
+                            value: qi.id,
+                            label: qi.lastName + ' ' + qi.firstName,
+                          }))
+                  }
                   label={t('product.quality_inspector_label')}
                   hint={
                     field.state.value !== -1
