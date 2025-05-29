@@ -177,7 +177,7 @@ public class UserApiControllerIntegrationTest extends AbstractIntegrationTest {
 	@Test
 	public void testListUsersByType() throws Exception {
 		mockMvc.perform(
-				get("/api/users?type=" + UserType.producer).accept(MediaType.APPLICATION_JSON))
+				get("/api/users?userType=" + UserType.producer).accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk()).andExpect(jsonPath("$").isArray())
 				.andExpect(jsonPath("$.length()").value(2));
 	}
