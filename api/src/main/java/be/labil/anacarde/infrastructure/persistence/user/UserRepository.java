@@ -1,12 +1,16 @@
 package be.labil.anacarde.infrastructure.persistence.user;
 
 import be.labil.anacarde.domain.model.User;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /** Interface Repository pour les entités User. */
 @Repository
@@ -38,6 +42,16 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	@EntityGraph(attributePaths = {"documents", "address", "address.city", "address.region",
 			"language"})
 	Optional<User> findById(@NonNull Integer id);
+
+	@Modifying
+	@Transactional
+	@Query(value = """
+			  	UPDATE users
+			    SET registration_date = :newDate
+			   	WHERE id = :id
+			""", nativeQuery = true)
+	void overrideCreationDateNative(@Param("id") Integer id,
+			@Param("newDate") LocalDateTime newDate);
 
 	/**
 	 * Vérifie si un utilisateur existe avec l'adresse e-mail fournie.

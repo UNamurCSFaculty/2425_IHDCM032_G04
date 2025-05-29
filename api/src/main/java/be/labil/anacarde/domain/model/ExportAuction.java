@@ -11,8 +11,6 @@ import org.hibernate.annotations.Immutable;
  * d’UPDATE/INSERT.
  */
 @Getter
-@Setter(AccessLevel.PACKAGE)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Immutable
 public class ExportAuction {
