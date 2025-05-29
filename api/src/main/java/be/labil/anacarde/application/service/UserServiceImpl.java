@@ -2,6 +2,7 @@ package be.labil.anacarde.application.service;
 
 import be.labil.anacarde.application.exception.*;
 import be.labil.anacarde.application.service.storage.StorageService;
+import be.labil.anacarde.domain.dto.db.FieldDto;
 import be.labil.anacarde.domain.dto.db.user.UserDetailDto;
 import be.labil.anacarde.domain.dto.db.user.UserListDto;
 import be.labil.anacarde.domain.dto.write.user.create.ProducerCreateDto;
@@ -50,6 +51,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	private final PersistenceHelper persistenceHelper;
 
 	private final DocumentRepository docRepo;
+	private final FieldService fieldService;
 
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -93,9 +95,18 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 		user.getAddress().setCity(city);
 		user.getAddress().setRegion(geoService.findRegionByCityId(city));
 		user = userRepository.save(user);
-		// persistenceHelper.saveAndReload(userRepository, user, User::getId);
 
-		// 2. stockage des documents
+		// création et association d'un champ à la même adresse
+		if (dto instanceof ProducerCreateDto producerDto) {
+			FieldDto fieldDto = new FieldDto();
+			fieldDto.setIdentifier("FIELD-" + user.getId().toString() + "001");
+			fieldDto.setAddress(producerDto.getAddress());
+			Producer producer = (Producer) user;
+			fieldDto.setProducer(userDetailMapper.toDto(producer));
+			fieldService.createField(fieldDto);
+		}
+
+		// stockage des documents
 		if (files != null && !files.isEmpty()) {
 			List<Document> saved = storage.storeAll(user, files);
 			docRepo.saveAll(saved);
@@ -103,7 +114,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 		}
 
 		User full = persistenceHelper.saveAndReload(userRepository, user, User::getId);
-
 		return userDetailMapper.toDto(full);
 	}
 
