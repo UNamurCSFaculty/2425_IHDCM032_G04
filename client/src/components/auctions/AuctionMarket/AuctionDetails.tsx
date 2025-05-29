@@ -85,7 +85,6 @@ const AuctionDetailsPanel: React.FC<Props> = ({
     const handler = (event: Event) => {
       const customEvent = event as CustomEvent<{ auctionId: number }>
       if (customEvent.detail && customEvent.detail.auctionId === auction.id) {
-        console.log('Received new bid for auction', auction.id)
         queryClient.invalidateQueries({ queryKey: listBidsQueryKey() })
         queryClient.invalidateQueries({ queryKey: listAuctionsQueryKey() })
       }
@@ -99,7 +98,6 @@ const AuctionDetailsPanel: React.FC<Props> = ({
   const createBidRequest = useMutation({
     ...createBidMutation(),
     onSuccess() {
-      console.log('Create Bid - Success')
       queryClient.invalidateQueries({ queryKey: listBidsQueryKey() })
       queryClient.invalidateQueries({ queryKey: listAuctionsQueryKey() })
     },
@@ -111,7 +109,6 @@ const AuctionDetailsPanel: React.FC<Props> = ({
   const acceptBidRequest = useMutation({
     ...acceptBidMutation(),
     onSuccess() {
-      console.log('Accept Bid - Success')
       queryClient.invalidateQueries({ queryKey: listBidsQueryKey() })
     },
     onError(error) {
@@ -122,7 +119,6 @@ const AuctionDetailsPanel: React.FC<Props> = ({
   const rejectBidRequest = useMutation({
     ...rejectBidMutation(),
     onSuccess() {
-      console.log('Reject Bid - Success')
       queryClient.invalidateQueries({ queryKey: listBidsQueryKey() })
     },
     onError(error) {
@@ -133,7 +129,6 @@ const AuctionDetailsPanel: React.FC<Props> = ({
   const acceptAuctionRequest = useMutation({
     ...acceptAuctionMutation(),
     onSuccess() {
-      console.log('Accept Auction - Success')
       queryClient.invalidateQueries({ queryKey: listAuctionsQueryKey() })
     },
     onError(error) {
