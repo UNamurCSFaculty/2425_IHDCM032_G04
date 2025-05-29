@@ -1325,6 +1325,29 @@ export type ExportAuctionDto = {
   winnerRegion?: string
 }
 
+export type DashboardGraphicDto = {
+  date?: string
+  totalOpenAuctions?: number
+  totalNewAuctions?: number
+}
+
+export type DashboardCardsDto = {
+  totalNbUsers?: number
+  totalNbUsersTendency?: number
+  pendingValidation?: number
+  pendingValidationTendency?: number
+  totalAuctions?: number
+  totalAuctionsTendency?: number
+  auctionsConcluded?: number
+  auctionsConcludedTendency?: number
+  totalLotWeightKg?: number
+  totalLotWeightKgTendency?: number
+  totalSoldWeightKg?: number
+  totalSoldWeightKgTendency?: number
+  totalSalesAmount?: number
+  totalSalesAmountTendency?: number
+}
+
 /**
  * Données nécessaires pour l'application cliente.
  */
@@ -3926,6 +3949,50 @@ export type DownloadDocumentResponses = {
 
 export type DownloadDocumentResponse =
   DownloadDocumentResponses[keyof DownloadDocumentResponses]
+
+export type GetDashboardGraphicSeriesData = {
+  body?: never
+  path?: never
+  query?: never
+  url: '/api/dashboard/graphic'
+}
+
+export type GetDashboardGraphicSeriesResponses = {
+  /**
+   * Liste récupérée
+   */
+  200: Array<DashboardGraphicDto>
+}
+
+export type GetDashboardGraphicSeriesResponse =
+  GetDashboardGraphicSeriesResponses[keyof GetDashboardGraphicSeriesResponses]
+
+export type GetDashboardCardsData = {
+  body?: never
+  path?: never
+  query?: never
+  url: '/api/dashboard/cards'
+}
+
+export type GetDashboardCardsErrors = {
+  /**
+   * Not Found
+   */
+  404: ApiErrorResponse
+}
+
+export type GetDashboardCardsError =
+  GetDashboardCardsErrors[keyof GetDashboardCardsErrors]
+
+export type GetDashboardCardsResponses = {
+  /**
+   * OK
+   */
+  200: DashboardCardsDto
+}
+
+export type GetDashboardCardsResponse =
+  GetDashboardCardsResponses[keyof GetDashboardCardsResponses]
 
 export type GetCurrentUserData = {
   body?: never

@@ -82,6 +82,8 @@ import {
   deleteDocument,
   getDocument,
   downloadDocument,
+  getDashboardGraphicSeries,
+  getDashboardCards,
   getCurrentUser,
   getApplicationData,
   listUsers,
@@ -267,6 +269,8 @@ import type {
   DeleteDocumentResponse,
   GetDocumentData,
   DownloadDocumentData,
+  GetDashboardGraphicSeriesData,
+  GetDashboardCardsData,
   GetCurrentUserData,
   GetApplicationDataData,
   ListUsersData,
@@ -2444,6 +2448,48 @@ export const downloadDocumentOptions = (
       return data
     },
     queryKey: downloadDocumentQueryKey(options),
+  })
+}
+
+export const getDashboardGraphicSeriesQueryKey = (
+  options?: Options<GetDashboardGraphicSeriesData>
+) => createQueryKey('getDashboardGraphicSeries', options)
+
+export const getDashboardGraphicSeriesOptions = (
+  options?: Options<GetDashboardGraphicSeriesData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getDashboardGraphicSeries({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: getDashboardGraphicSeriesQueryKey(options),
+  })
+}
+
+export const getDashboardCardsQueryKey = (
+  options?: Options<GetDashboardCardsData>
+) => createQueryKey('getDashboardCards', options)
+
+export const getDashboardCardsOptions = (
+  options?: Options<GetDashboardCardsData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getDashboardCards({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: getDashboardCardsQueryKey(options),
   })
 }
 

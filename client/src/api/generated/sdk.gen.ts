@@ -228,6 +228,11 @@ import type {
   DownloadDocumentData,
   DownloadDocumentResponse,
   DownloadDocumentError,
+  GetDashboardGraphicSeriesData,
+  GetDashboardGraphicSeriesResponse,
+  GetDashboardCardsData,
+  GetDashboardCardsResponse,
+  GetDashboardCardsError,
   GetCurrentUserData,
   GetCurrentUserResponse,
   GetCurrentUserError,
@@ -2097,6 +2102,50 @@ export const downloadDocument = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     url: '/api/documents/{id}/download',
+    ...options,
+  })
+}
+
+/**
+ * Obtenir la série chronologique « Open vs New »
+ */
+export const getDashboardGraphicSeries = <ThrowOnError extends boolean = false>(
+  options?: Options<GetDashboardGraphicSeriesData, ThrowOnError>
+) => {
+  return (options?.client ?? _heyApiClient).get<
+    GetDashboardGraphicSeriesResponse,
+    unknown,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/dashboard/graphic',
+    ...options,
+  })
+}
+
+/**
+ * Obtenir la carte des indicateurs globaux
+ */
+export const getDashboardCards = <ThrowOnError extends boolean = false>(
+  options?: Options<GetDashboardCardsData, ThrowOnError>
+) => {
+  return (options?.client ?? _heyApiClient).get<
+    GetDashboardCardsResponse,
+    GetDashboardCardsError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/dashboard/cards',
     ...options,
   })
 }

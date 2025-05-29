@@ -574,6 +574,29 @@ export const zExportAuctionDto = z.object({
   winnerRegion: z.string().optional(),
 })
 
+export const zDashboardGraphicDto = z.object({
+  date: z.iso.datetime().optional(),
+  totalOpenAuctions: z.coerce.bigint().optional(),
+  totalNewAuctions: z.coerce.bigint().optional(),
+})
+
+export const zDashboardCardsDto = z.object({
+  totalNbUsers: z.coerce.bigint().optional(),
+  totalNbUsersTendency: z.number().optional(),
+  pendingValidation: z.coerce.bigint().optional(),
+  pendingValidationTendency: z.number().optional(),
+  totalAuctions: z.coerce.bigint().optional(),
+  totalAuctionsTendency: z.number().optional(),
+  auctionsConcluded: z.coerce.bigint().optional(),
+  auctionsConcludedTendency: z.number().optional(),
+  totalLotWeightKg: z.number().optional(),
+  totalLotWeightKgTendency: z.number().optional(),
+  totalSoldWeightKg: z.number().optional(),
+  totalSoldWeightKgTendency: z.number().optional(),
+  totalSalesAmount: z.number().optional(),
+  totalSalesAmountTendency: z.number().optional(),
+})
+
 export const zApplicationDataDto = z.object({
   languages: z.array(zLanguageDto),
 })
@@ -833,6 +856,10 @@ export const zDeleteDocumentResponse = z.void()
 export const zGetDocumentResponse = zDocumentDto
 
 export const zDownloadDocumentResponse = z.string()
+
+export const zGetDashboardGraphicSeriesResponse = z.array(zDashboardGraphicDto)
+
+export const zGetDashboardCardsResponse = zDashboardCardsDto
 
 export const zGetCurrentUserResponse = zUserDetailDto
 
