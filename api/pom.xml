@@ -52,6 +52,12 @@
             <email>stephane.glibert@student.unamur.be</email>
             <url>https://github.com/stexpe</url>
         </developer>
+        <developer>
+            <id>ibonmr</id>
+            <name>Ilias Boutchichi</name>
+            <email>ilias.boutchichi@student.unamur.be</email>
+            <url>https://github.com/ibonmr</url>
+        </developer>
     </developers>
     <properties>
         <java.version>21</java.version>
@@ -185,6 +191,10 @@
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>s3</artifactId>
             <version>${amazon.s3.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
     </dependencies>
 
