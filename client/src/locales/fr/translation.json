@@ -54,6 +54,10 @@
       "description_line2": "Votre compte est en attente de validation par un administrateur.",
       "email_notification": "Vous recevrez un e-mail une fois votre compte activé.",
       "go_to_login": "Aller à la page de connexion"
+    },
+    "contracts_list_contracts": {
+      "title": "Mes contrats",
+      "subtitle": "Consultez tous vos contrats."
     }
   },
   "homepage": {
@@ -141,7 +145,9 @@
     "new_auction": "Nouvelle enchère",
     "deposits": "Dépôts",
     "my_deposits": "Mes produits",
-    "new_deposit": "Nouveau produit"
+    "new_deposit": "Nouveau produit",
+    "contracts": "Contrats",
+    "my_contracts": "Mes contrats"
   },
   "common": {
     "add": "Ajouter",
@@ -644,7 +650,13 @@
     "all_regions_placeholder": "Toutes les régions",
     "all_cities_placeholder": "Toutes les villes",
     "expires_before_label": "Expire avant",
-    "choose_date_placeholder": "Choisir…"
+    "choose_date_placeholder": "Choisir…",
+    "user_type": {
+      "undefined": "Non-défini",
+      "seller": "Vendeur",
+      "buyer": "Acheteur",
+      "label": "En tant que"
+    }
   },
   "address": {
     "region_label": "Région"
@@ -832,7 +844,15 @@
     "duration_label": "Durée du contrat",
     "duration_years_label": "(Années)",
     "duration_months_label": "(Mois)",
-    "ends_on_date_label": "Se termine le {{date}}"
+    "ends_on_date_label": "Se termine le {{date}}",
+    "results_count": "Résultats : {{count}} contrats",
+    "seller_label": "Vendeur",
+    "buyer_label": "Acheteur",
+    "quality_label": "Qualité",
+    "status_label": "Statut",
+    "contract_end_label": "Fin du contrat",
+    "label": "Contrat n°{{id}}",
+    "price_per_kg_label": "Prix par kg"
   },
   "settings": {
     "update_success": "Paramètres globaux mis à jour avec succès.",
