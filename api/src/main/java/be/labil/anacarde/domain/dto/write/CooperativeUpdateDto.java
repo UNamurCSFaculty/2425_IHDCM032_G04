@@ -15,7 +15,7 @@ public class CooperativeUpdateDto {
 	private String name;
 
 	/** Date de création de la coopérative. */
-	@Schema(description = "Date de création", example = "2023-06-15T00:00:00", requiredMode = Schema.RequiredMode.REQUIRED)
+	@Schema(description = "Date de création", example = "2023-06-15T00:00:00")
 	private LocalDateTime creationDate;
 
 	/** Id du Président de la coopérative. */

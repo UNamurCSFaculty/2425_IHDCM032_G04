@@ -743,7 +743,7 @@ export type CooperativeUpdateDto = {
   /**
    * Date de création
    */
-  creationDate: string
+  creationDate?: string
   /**
    * Président de la coopérative
    */
@@ -1377,7 +1377,7 @@ export type ProducerListDto = TraderListDto & {
   /**
    * Coopérative du producteur
    */
-  cooperative: CooperativeDto
+  cooperativeId: number
 }
 
 /**
