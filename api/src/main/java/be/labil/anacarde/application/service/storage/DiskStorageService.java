@@ -30,12 +30,17 @@ public class DiskStorageService implements StorageService {
 
 	@Override
 	public List<Document> storeAll(User user, List<MultipartFile> files) {
+		if (user.getId() == null) throw new IllegalArgumentException("User ID is null");
+
 		return storeAllGeneric(user.getId().toString(), files,
 				(file, path) -> DiskStorageUtils.buildDocument(user, file, path));
 	}
 
 	@Override
 	public List<Document> storeAll(QualityControl qualityControl, List<MultipartFile> files) {
+		if (qualityControl.getId() == null)
+			throw new IllegalArgumentException("QualityControl ID is null");
+
 		return storeAllGeneric(qualityControl.getId().toString(), files,
 				(file, path) -> DiskStorageUtils.buildDocument(qualityControl, file, path));
 	}

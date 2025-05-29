@@ -76,6 +76,7 @@ export function ProductForm({
   const productSchema = z.object({
     product: z.union([zHarvestProductUpdateDto, zTransformedProductUpdateDto]),
     qualityControl: zQualityControlUpdateDto,
+    documents: z.array(z.file()).min(1),
   })
 
   type ProductRegistration = z.infer<typeof productSchema>
@@ -141,6 +142,7 @@ export function ProductForm({
         qualityInspectorId: -1,
         qualityId: 0,
       },
+      documents: [],
     },
     onSubmit({ value }) {
       handleSaveProduct(value)
@@ -414,7 +416,7 @@ export function ProductForm({
               )}
             />
 
-            <form.AppField name="qualityControl.documentId">
+            <form.AppField name="documents">
               {f => (
                 <f.FileUploadField
                   className="col-span-full"

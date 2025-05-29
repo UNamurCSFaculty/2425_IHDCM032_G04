@@ -174,9 +174,12 @@ import type {
   ListDocumentsByUserData,
   ListDocumentsByUserResponse,
   ListDocumentsByUserError,
-  CreateDocumentData,
-  CreateDocumentResponse,
-  CreateDocumentError,
+  CreateDocumentUserData,
+  CreateDocumentUserResponse,
+  CreateDocumentUserError,
+  CreateDocumentQualityControlData,
+  CreateDocumentQualityControlResponse,
+  CreateDocumentQualityControlError,
   ListCooperativesData,
   ListCooperativesResponse,
   CreateCooperativeData,
@@ -1625,16 +1628,39 @@ export const listDocumentsByUser = <ThrowOnError extends boolean = false>(
 /**
  * Créer un document et téléverser un fichier
  */
-export const createDocument = <ThrowOnError extends boolean = false>(
-  options: Options<CreateDocumentData, ThrowOnError>
+export const createDocumentUser = <ThrowOnError extends boolean = false>(
+  options: Options<CreateDocumentUserData, ThrowOnError>
 ) => {
   return (options.client ?? _heyApiClient).post<
-    CreateDocumentResponse,
-    CreateDocumentError,
+    CreateDocumentUserResponse,
+    CreateDocumentUserError,
     ThrowOnError
   >({
     ...formDataBodySerializer,
     url: '/api/documents/users/{userId}',
+    ...options,
+    headers: {
+      'Content-Type': null,
+      ...options?.headers,
+    },
+  })
+}
+
+/**
+ * Créer un document et téléverser un fichier
+ */
+export const createDocumentQualityControl = <
+  ThrowOnError extends boolean = false,
+>(
+  options: Options<CreateDocumentQualityControlData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).post<
+    CreateDocumentQualityControlResponse,
+    CreateDocumentQualityControlError,
+    ThrowOnError
+  >({
+    ...formDataBodySerializer,
+    url: '/api/documents/quality-controls/{qualityControlId}',
     ...options,
     headers: {
       'Content-Type': null,

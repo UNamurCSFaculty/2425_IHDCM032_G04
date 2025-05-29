@@ -212,7 +212,6 @@ export const zQualityControlUpdateDto = z.object({
   humidity: z.number(),
   qualityInspectorId: z.number().int(),
   qualityId: z.number().int(),
-  documentId: z.number().int().optional(),
 })
 
 export const zUserMiniDto = z.object({
@@ -241,7 +240,7 @@ export const zQualityControlDto = z.object({
   humidity: z.number(),
   qualityInspector: zUserMiniDto,
   quality: zQualityDto,
-  document: zDocumentDto,
+  documents: z.array(zDocumentDto).optional(),
 })
 
 export const zQualityUpdateDto = z.object({
@@ -794,7 +793,9 @@ export const zCreateFieldResponse = zFieldDto
 
 export const zListDocumentsByUserResponse = z.array(zDocumentDto)
 
-export const zCreateDocumentResponse = zDocumentDto
+export const zCreateDocumentUserResponse = zDocumentDto
+
+export const zCreateDocumentQualityControlResponse = zDocumentDto
 
 export const zListCooperativesResponse = z.array(zCooperativeDto)
 

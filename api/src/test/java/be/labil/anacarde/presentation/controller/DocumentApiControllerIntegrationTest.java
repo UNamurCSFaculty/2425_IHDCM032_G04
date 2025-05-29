@@ -81,9 +81,10 @@ public class DocumentApiControllerIntegrationTest extends AbstractIntegrationTes
 		MockMultipartFile filePart = new MockMultipartFile("file", // nom de la part attendue
 				"attestation.pdf", "application/pdf", content);
 
-		mockMvc.perform(multipart("/api/documents/quality-controls/{qualityControlId}", getMainTestQualityControl().getId())
-				.file(filePart).characterEncoding("UTF-8").accept(MediaType.APPLICATION_JSON)
-				.with(user(getProducerTestUser()))).andExpect(status().isCreated())
+		mockMvc.perform(multipart("/api/documents/quality-controls/{qualityControlId}",
+				getMainTestQualityControl().getId()).file(filePart).characterEncoding("UTF-8")
+				.accept(MediaType.APPLICATION_JSON).with(user(getProducerTestUser())))
+				.andExpect(status().isCreated())
 				.andExpect(header().string("Location", containsString("/api/documents/")))
 				.andExpect(jsonPath("$.originalFilename").value("attestation.pdf"))
 				.andExpect(jsonPath("$.contentType").value("application/pdf"))

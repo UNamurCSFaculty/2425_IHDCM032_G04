@@ -34,15 +34,16 @@ public class QualityControlServiceImpl implements QualityControlService {
 			List<MultipartFile> files) {
 		QualityControl qcEntity = qualityControlMapper.toEntity(dto);
 
+		QualityControl fullEntity = persistenceHelper.saveAndReload(qualityControlRepository,
+				qcEntity, QualityControl::getId);
+
 		if (files != null && !files.isEmpty()) {
-			List<Document> saved = storage.storeAll(qcEntity, files);
+			List<Document> saved = storage.storeAll(fullEntity, files);
 			documentRepository.saveAll(saved);
 			qcEntity.getDocuments().addAll(saved);
 		}
 
-		QualityControl full = persistenceHelper.saveAndReload(qualityControlRepository, qcEntity,
-				QualityControl::getId);
-		return qualityControlMapper.toDto(full);
+		return qualityControlMapper.toDto(fullEntity);
 	}
 
 	@Override

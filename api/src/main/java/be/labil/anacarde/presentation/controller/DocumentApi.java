@@ -79,7 +79,8 @@ public interface DocumentApi {
 			@ApiResponse(responseCode = "500", description = "Erreur stockage", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
 	@PostMapping(path = "/quality-controls/{qualityControlId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	ResponseEntity<DocumentDto> createDocumentQualityControl(
-			@ApiValidId @PathVariable("qualityControlId") Integer qualityControlId, @Validated({Default.class,
+			@ApiValidId @PathVariable("qualityControlId") Integer qualityControlId,
+			@Validated({Default.class,
 					ValidationGroups.Create.class}) @RequestPart("file") MultipartFile file);
 
 	/**

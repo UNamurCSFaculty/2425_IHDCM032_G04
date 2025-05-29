@@ -475,10 +475,6 @@ export type QualityControlUpdateDto = {
    * Qualité associée
    */
   qualityId: number
-  /**
-   * Document associé au contrôle qualité
-   */
-  documentId?: number
 }
 
 /**
@@ -518,9 +514,9 @@ export type QualityControlDto = {
    */
   quality: QualityDto
   /**
-   * Document associé au contrôle qualité
+   * Documents associés au contrôle qualité
    */
-  document: DocumentDto
+  documents?: Array<DocumentDto>
 }
 
 /**
@@ -3075,7 +3071,9 @@ export type ListQualityControlsResponse =
 export type CreateQualityControlData = {
   body: QualityControlUpdateDto
   path?: never
-  query?: never
+  query: {
+    documents: Array<Blob | File>
+  }
   url: '/api/quality-controls'
 }
 
@@ -3341,7 +3339,7 @@ export type ListDocumentsByUserResponses = {
 export type ListDocumentsByUserResponse =
   ListDocumentsByUserResponses[keyof ListDocumentsByUserResponses]
 
-export type CreateDocumentData = {
+export type CreateDocumentUserData = {
   body: {
     file?: Blob | File
   }
@@ -3355,7 +3353,7 @@ export type CreateDocumentData = {
   url: '/api/documents/users/{userId}'
 }
 
-export type CreateDocumentErrors = {
+export type CreateDocumentUserErrors = {
   /**
    * Validation KO
    */
@@ -3370,18 +3368,60 @@ export type CreateDocumentErrors = {
   500: ApiErrorResponse
 }
 
-export type CreateDocumentError =
-  CreateDocumentErrors[keyof CreateDocumentErrors]
+export type CreateDocumentUserError =
+  CreateDocumentUserErrors[keyof CreateDocumentUserErrors]
 
-export type CreateDocumentResponses = {
+export type CreateDocumentUserResponses = {
   /**
    * Document créé
    */
   201: DocumentDto
 }
 
-export type CreateDocumentResponse =
-  CreateDocumentResponses[keyof CreateDocumentResponses]
+export type CreateDocumentUserResponse =
+  CreateDocumentUserResponses[keyof CreateDocumentUserResponses]
+
+export type CreateDocumentQualityControlData = {
+  body: {
+    file?: Blob | File
+  }
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    qualityControlId: number
+  }
+  query?: never
+  url: '/api/documents/quality-controls/{qualityControlId}'
+}
+
+export type CreateDocumentQualityControlErrors = {
+  /**
+   * Validation KO
+   */
+  400: ApiErrorResponse
+  /**
+   * Contrôle qualité non trouvé
+   */
+  404: ApiErrorResponse
+  /**
+   * Erreur stockage
+   */
+  500: ApiErrorResponse
+}
+
+export type CreateDocumentQualityControlError =
+  CreateDocumentQualityControlErrors[keyof CreateDocumentQualityControlErrors]
+
+export type CreateDocumentQualityControlResponses = {
+  /**
+   * Document créé
+   */
+  201: DocumentDto
+}
+
+export type CreateDocumentQualityControlResponse =
+  CreateDocumentQualityControlResponses[keyof CreateDocumentQualityControlResponses]
 
 export type ListCooperativesData = {
   body?: never
