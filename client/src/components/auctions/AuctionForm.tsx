@@ -3,6 +3,7 @@ import { type ProductDto } from '@/api/generated'
 import {
   createAuctionMutation,
   getAuctionSettingsOptions,
+  listAuctionsQueryKey,
   listProductsOptions,
 } from '@/api/generated/@tanstack/react-query.gen'
 import { zAuctionUpdateDto } from '@/api/generated/zod.gen'
@@ -20,7 +21,7 @@ import {
 import { cn } from '@/lib/utils'
 import { useAuthUser } from '@/store/userStore'
 import { formatDate, formatWeight } from '@/utils/formatter'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { AlertCircle, ArrowRight, Loader2 } from 'lucide-react'
 import React, { useState, useRef, useEffect } from 'react'
@@ -58,9 +59,16 @@ export const AuctionForm: React.FC = () => {
   const [step, setStep] = useState(1)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
+  const queryClient = useQueryClient()
+
   const createAuctionRequest = useMutation({
     ...createAuctionMutation(),
-    onSuccess: () => navigate({ to: '/ventes/enchere-creee' }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: listAuctionsQueryKey({ query: { traderId: user.id } }),
+      })
+      navigate({ to: '/ventes/enchere-creee' })
+    },
     onError(error) {
       console.error('Requête invalide :', error)
     },

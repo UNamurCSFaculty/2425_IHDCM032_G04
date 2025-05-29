@@ -55,8 +55,7 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 	 */
 	@Test
 	public void testGetAuctionSettings() throws Exception {
-		mockMvc.perform(
-						get("/api/auctions/settings").accept(MediaType.APPLICATION_JSON))
+		mockMvc.perform(get("/api/auctions/settings").accept(MediaType.APPLICATION_JSON))
 				.andExpect(jsonPath("$.defaultStrategy.name").value("Meilleure offre"))
 				.andExpect(jsonPath("$.minIncrement").value("1"));
 	}
@@ -176,8 +175,8 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 	}
 
 	/**
-	 * Teste la création d'une nouvelle enchère, avec un status par défaut et des options
-	 * par défaut.
+	 * Teste la création d'une nouvelle enchère, avec un status par défaut et des options par
+	 * défaut.
 	 */
 	@Test
 	public void testCreateAuctionWithDefaultStatusAndDefaultOptions() throws Exception {
@@ -199,7 +198,7 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		String jsonContent = node.toString();
 
 		mockMvc.perform(
-						post("/api/auctions").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				post("/api/auctions").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
 				.andExpect(status().isCreated())
 				.andExpect(header().string("Location", containsString("/api/auctions/")))
 				.andExpect(jsonPath("$.price").value("111.11"))

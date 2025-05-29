@@ -4,10 +4,8 @@ import be.labil.anacarde.application.exception.ResourceNotFoundException;
 import be.labil.anacarde.application.job.CloseAuctionJob;
 import be.labil.anacarde.domain.dto.db.AuctionDto;
 import be.labil.anacarde.domain.dto.db.GlobalSettingsDto;
-import be.labil.anacarde.domain.dto.write.AuctionOptionsUpdateDto;
 import be.labil.anacarde.domain.dto.write.AuctionUpdateDto;
 import be.labil.anacarde.domain.mapper.AuctionMapper;
-import be.labil.anacarde.domain.mapper.AuctionOptionsMapper;
 import be.labil.anacarde.domain.mapper.AuctionStrategyMapper;
 import be.labil.anacarde.domain.model.Auction;
 import be.labil.anacarde.domain.model.AuctionOptions;
@@ -66,9 +64,12 @@ public class AuctionServiceImpl implements AuctionService {
 			options.setStrategy(auctionStrategyMapper.toEntity(settings.getDefaultStrategy()));
 			options.setMinIncrement(settings.getMinIncrement());
 			options.setForceBetterBids(settings.getForceBetterBids());
-			if (settings.getDefaultFixedPriceKg() != null) options.setFixedPriceKg(settings.getDefaultFixedPriceKg().doubleValue());
-			if (settings.getDefaultMaxPriceKg() != null) options.setMaxPriceKg(settings.getDefaultMaxPriceKg().doubleValue());
-			if (settings.getDefaultMinPriceKg() != null) options.setMinPriceKg(settings.getDefaultMinPriceKg().doubleValue());
+			if (settings.getDefaultFixedPriceKg() != null)
+				options.setFixedPriceKg(settings.getDefaultFixedPriceKg().doubleValue());
+			if (settings.getDefaultMaxPriceKg() != null)
+				options.setMaxPriceKg(settings.getDefaultMaxPriceKg().doubleValue());
+			if (settings.getDefaultMinPriceKg() != null)
+				options.setMinPriceKg(settings.getDefaultMinPriceKg().doubleValue());
 			auction.setOptions(options);
 		}
 
