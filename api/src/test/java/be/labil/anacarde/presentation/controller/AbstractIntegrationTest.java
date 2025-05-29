@@ -4,6 +4,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
+import be.labil.anacarde.TestRedisMocks;
 import be.labil.anacarde.application.service.DatabaseService;
 import be.labil.anacarde.domain.dto.db.LanguageDto;
 import be.labil.anacarde.domain.dto.db.view.ExportAuctionDto;
@@ -24,6 +25,7 @@ import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.context.ActiveProfiles;
@@ -38,6 +40,7 @@ import org.springframework.web.context.WebApplicationContext;
  */
 @SpringBootTest
 @ActiveProfiles("test")
+@Import(TestRedisMocks.class)
 public abstract class AbstractIntegrationTest {
 
 	protected @Autowired JwtUtil jwtUtil;

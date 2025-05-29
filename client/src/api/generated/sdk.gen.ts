@@ -217,6 +217,8 @@ import type {
   CheckEmailResponse,
   ListRegionsData,
   ListRegionsResponse,
+  SubscribeData,
+  SubscribeResponse,
   ListAuctions1Data,
   ListAuctions1Response,
   GetAuction1Data,
@@ -2033,6 +2035,19 @@ export const listRegions = <ThrowOnError extends boolean = false>(
       },
     ],
     url: '/api/regions',
+    ...options,
+  })
+}
+
+export const subscribe = <ThrowOnError extends boolean = false>(
+  options?: Options<SubscribeData, ThrowOnError>
+) => {
+  return (options?.client ?? _heyApiClient).get<
+    SubscribeResponse,
+    unknown,
+    ThrowOnError
+  >({
+    url: '/api/notifications/stream',
     ...options,
   })
 }

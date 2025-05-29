@@ -78,6 +78,7 @@ import {
   checkPhone,
   checkEmail,
   listRegions,
+  subscribe,
   listAuctions1,
   getAuction1,
   listAllAuctions,
@@ -263,6 +264,7 @@ import type {
   CheckPhoneData,
   CheckEmailData,
   ListRegionsData,
+  SubscribeData,
   ListAuctions1Data,
   ListAuctions1Response,
   GetAuction1Data,
@@ -2312,6 +2314,24 @@ export const listRegionsOptions = (options?: Options<ListRegionsData>) => {
       return data
     },
     queryKey: listRegionsQueryKey(options),
+  })
+}
+
+export const subscribeQueryKey = (options?: Options<SubscribeData>) =>
+  createQueryKey('subscribe', options)
+
+export const subscribeOptions = (options?: Options<SubscribeData>) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await subscribe({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: subscribeQueryKey(options),
   })
 }
 

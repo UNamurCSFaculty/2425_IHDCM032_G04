@@ -206,8 +206,6 @@ export const UserForm: React.FC<UserFormProps> = ({
     }
   }
 
-  console.log(existingUser)
-
   return (
     <>
       <DialogHeader>

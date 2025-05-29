@@ -1448,6 +1448,10 @@ export type UserListDto = {
     | 'trader'
 }
 
+export type SseEmitter = {
+  timeout?: number
+}
+
 export type ExportAuctionDto = {
   auctionId?: number
   auctionStartDate?: string
@@ -3831,6 +3835,24 @@ export type ListRegionsResponses = {
 
 export type ListRegionsResponse =
   ListRegionsResponses[keyof ListRegionsResponses]
+
+export type SubscribeData = {
+  body?: never
+  path?: never
+  query?: {
+    token?: string
+  }
+  url: '/api/notifications/stream'
+}
+
+export type SubscribeResponses = {
+  /**
+   * OK
+   */
+  200: SseEmitter
+}
+
+export type SubscribeResponse = SubscribeResponses[keyof SubscribeResponses]
 
 export type ListAuctions1Data = {
   body?: never

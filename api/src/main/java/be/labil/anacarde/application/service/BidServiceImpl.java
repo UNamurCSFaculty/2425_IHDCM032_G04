@@ -4,14 +4,20 @@ import be.labil.anacarde.application.exception.ResourceNotFoundException;
 import be.labil.anacarde.domain.dto.db.BidDto;
 import be.labil.anacarde.domain.dto.write.BidUpdateDto;
 import be.labil.anacarde.domain.mapper.BidMapper;
+import be.labil.anacarde.domain.model.Auction;
 import be.labil.anacarde.domain.model.Bid;
 import be.labil.anacarde.domain.model.TradeStatus;
+import be.labil.anacarde.infrastructure.persistence.AuctionRepository;
 import be.labil.anacarde.infrastructure.persistence.BidRepository;
 import be.labil.anacarde.infrastructure.persistence.TradeStatusRepository;
 import be.labil.anacarde.infrastructure.util.PersistenceHelper;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,10 +25,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @AllArgsConstructor
 public class BidServiceImpl implements BidService {
+	private static final Logger log = LoggerFactory.getLogger(BidServiceImpl.class);
 	private final TradeStatusRepository tradeStatusRepository;
 	private final BidRepository bidRepository;
 	private final BidMapper bidMapper;
 	private final PersistenceHelper persistenceHelper;
+	private final AuctionRepository auctionRepository;
+	private final NotificationSseService notificationSseService;
+	private final AuctionSseService auctionSseService;
 
 	@Override
 	public BidDto createBid(BidUpdateDto dto) {
@@ -37,7 +47,37 @@ public class BidServiceImpl implements BidService {
 		}
 
 		Bid full = persistenceHelper.saveAndReload(bidRepository, bid, Bid::getId);
-		return bidMapper.toDto(full);
+		BidDto bidDto = bidMapper.toDto(full);
+
+		Auction auction = auctionRepository.findById(dto.getAuctionId())
+				.orElseThrow(() -> new ResourceNotFoundException("Enchère non trouvée"));
+		// Ajoute l'enchérisseur à la liste des abonnés Redis (si pas déjà abonné)
+		if (full.getTrader() != null && full.getTrader().getUsername() != null) {
+			auctionSseService.addSubscriber(dto.getAuctionId(), full.getTrader().getUsername());
+		}
+
+		// Notifie tous les abonnés de la nouvelle enchère
+		Set<String> subscribers = auctionSseService.getSubscribers(dto.getAuctionId());
+		if (subscribers == null || subscribers.isEmpty()) {
+			// fallback & notifie tous utilisateurs liés à l'enchère
+			log.info("[SSE] Aucun abonné trouvé, fallback & notification globale");
+			List<Bid> allBids = bidRepository.findByAuctionId(dto.getAuctionId());
+			subscribers = allBids.stream()
+					.map(currentBid -> currentBid.getTrader() != null
+							? currentBid.getTrader().getUsername()
+							: null)
+					.filter(Objects::nonNull).collect(Collectors.toSet());
+			if (auction.getTrader() != null && auction.getTrader().getUsername() != null) {
+				subscribers.add(auction.getTrader().getUsername());
+			}
+		}
+		log.info("[SSE] Liste d'abonnés à notifier pour l'enchère " + dto.getAuctionId() + ": "
+				+ subscribers);
+		for (String subKey : subscribers) {
+			notificationSseService.publishEvent(subKey, "newBid", bidDto);
+			log.info("[SSE] Notification envoyé à " + subKey + " pour nouvelle offre: " + bidDto);
+		}
+		return bidDto;
 	}
 
 	@Override
