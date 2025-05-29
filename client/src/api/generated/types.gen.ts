@@ -947,10 +947,6 @@ export type AuctionUpdateDto = {
    */
   expirationDate: string
   /**
-   * Date de création de l'enchère
-   */
-  readonly creationDate?: string
-  /**
    * Statut actif de l'enchère
    */
   active: boolean
@@ -4035,6 +4031,33 @@ export type GetCurrentUserResponses = {
 
 export type GetCurrentUserResponse =
   GetCurrentUserResponses[keyof GetCurrentUserResponses]
+
+export type GetAuctionSettingsData = {
+  body?: never
+  path?: never
+  query?: never
+  url: '/api/auctions/settings'
+}
+
+export type GetAuctionSettingsErrors = {
+  /**
+   * Not Found
+   */
+  404: ApiErrorResponse
+}
+
+export type GetAuctionSettingsError =
+  GetAuctionSettingsErrors[keyof GetAuctionSettingsErrors]
+
+export type GetAuctionSettingsResponses = {
+  /**
+   * OK
+   */
+  200: GlobalSettingsDto
+}
+
+export type GetAuctionSettingsResponse =
+  GetAuctionSettingsResponses[keyof GetAuctionSettingsResponses]
 
 export type GetApplicationDataData = {
   body?: never

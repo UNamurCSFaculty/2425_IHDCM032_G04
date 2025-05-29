@@ -50,6 +50,18 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 	}
 
 	/**
+	 * Teste la récupération des settings d'enchères.
+	 *
+	 */
+	@Test
+	public void testGetAuctionSettings() throws Exception {
+		mockMvc.perform(
+						get("/api/auctions/settings").accept(MediaType.APPLICATION_JSON))
+				.andExpect(jsonPath("$.defaultStrategy.name").value("Meilleure offre"))
+				.andExpect(jsonPath("$.minIncrement").value("1"));
+	}
+
+	/**
 	 * Teste la création d'une nouvelle enchère.
 	 *
 	 */
@@ -77,7 +89,6 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		newAuction.setPrice(111.11);
 		newAuction.setProductQuantity(11);
 		newAuction.setActive(true);
-		newAuction.setCreationDate(LocalDateTime.now());
 		newAuction.setExpirationDate(LocalDateTime.now().plusDays(1));
 		newAuction.setOptions(optionsDto);
 		newAuction.setProductId(productDto.getId());
@@ -133,7 +144,6 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		newAuction.setPrice(111.11);
 		newAuction.setProductQuantity(11);
 		newAuction.setActive(true);
-		newAuction.setCreationDate(LocalDateTime.now());
 		newAuction.setExpirationDate(LocalDateTime.now().plusDays(1));
 		newAuction.setProductId(productDto.getId());
 		newAuction.setTraderId(producer.getId());
@@ -228,7 +238,6 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		updateAuction.setPrice(999.99);
 		updateAuction.setProductQuantity(99);
 		updateAuction.setActive(true);
-		updateAuction.setCreationDate(LocalDateTime.now());
 		updateAuction.setExpirationDate(LocalDateTime.now());
 		updateAuction.setOptions(optionsDto);
 		updateAuction.setProductId(productDto.getId());
@@ -265,7 +274,6 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		newAuction.setPrice(111.11);
 		newAuction.setProductQuantity(11);
 		newAuction.setActive(true);
-		newAuction.setCreationDate(LocalDateTime.now());
 		newAuction.setExpirationDate(LocalDateTime.now().plusDays(1));
 		newAuction.setProductId(productDto.getId());
 		newAuction.setTraderId(producer.getId());
@@ -291,7 +299,6 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		updateAuction.setPrice(999.99);
 		updateAuction.setProductQuantity(99);
 		updateAuction.setActive(true);
-		updateAuction.setCreationDate(LocalDateTime.now());
 		updateAuction.setExpirationDate(LocalDateTime.now().plusDays(1));
 		updateAuction.setOptions(optionsDto);
 		updateAuction.setProductId(productDto.getId());
@@ -345,7 +352,6 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		newAuction.setPrice(123.45);
 		newAuction.setProductQuantity(10);
 		newAuction.setActive(true);
-		newAuction.setCreationDate(LocalDateTime.now());
 		newAuction.setExpirationDate(LocalDateTime.now().plusDays(1));
 		newAuction.setProductId(productDto.getId());
 		newAuction.setTraderId(producer.getId());
@@ -410,7 +416,6 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		newAuction.setPrice(123.45);
 		newAuction.setProductQuantity(10);
 		newAuction.setActive(true);
-		newAuction.setCreationDate(LocalDateTime.now());
 		newAuction.setExpirationDate(LocalDateTime.now().plusDays(1));
 		newAuction.setProductId(productDto.getId());
 		newAuction.setTraderId(producer.getId());
@@ -464,7 +469,6 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		newAuction.setPrice(50.0);
 		newAuction.setProductQuantity(2);
 		newAuction.setActive(true);
-		newAuction.setCreationDate(LocalDateTime.now());
 		newAuction.setExpirationDate(LocalDateTime.now().plusSeconds(5)); // auto-close rapide
 		newAuction.setProductId(productDto.getId());
 		newAuction.setTraderId(producer.getId());

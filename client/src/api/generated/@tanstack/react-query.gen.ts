@@ -85,6 +85,7 @@ import {
   getDocument,
   downloadDocument,
   getCurrentUser,
+  getAuctionSettings,
   getApplicationData,
   getUser,
 } from '../sdk.gen'
@@ -273,6 +274,7 @@ import type {
   GetDocumentData,
   DownloadDocumentData,
   GetCurrentUserData,
+  GetAuctionSettingsData,
   GetApplicationDataData,
   GetUserData,
 } from '../types.gen'
@@ -2534,6 +2536,27 @@ export const getCurrentUserOptions = (
       return data
     },
     queryKey: getCurrentUserQueryKey(options),
+  })
+}
+
+export const getAuctionSettingsQueryKey = (
+  options?: Options<GetAuctionSettingsData>
+) => createQueryKey('getAuctionSettings', options)
+
+export const getAuctionSettingsOptions = (
+  options?: Options<GetAuctionSettingsData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getAuctionSettings({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: getAuctionSettingsQueryKey(options),
   })
 }
 

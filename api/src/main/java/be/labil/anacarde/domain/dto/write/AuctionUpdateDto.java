@@ -21,9 +21,6 @@ public class AuctionUpdateDto {
 	@Schema(description = "Date d'expiration de l'enchère", example = "2025-12-31T23:59:59", requiredMode = Schema.RequiredMode.REQUIRED)
 	private LocalDateTime expirationDate;
 
-	@Schema(description = "Date de création de l'enchère", example = "2025-01-01T00:00:00", accessMode = Schema.AccessMode.READ_ONLY)
-	private LocalDateTime creationDate;
-
 	@NotNull(message = "Le statut actif est requis")
 	@Schema(description = "Statut actif de l'enchère", example = "true", requiredMode = Schema.RequiredMode.REQUIRED)
 	private Boolean active;

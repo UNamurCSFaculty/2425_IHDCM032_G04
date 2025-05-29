@@ -236,6 +236,9 @@ import type {
   GetCurrentUserData,
   GetCurrentUserResponse,
   GetCurrentUserError,
+  GetAuctionSettingsData,
+  GetAuctionSettingsResponse,
+  GetAuctionSettingsError,
   GetApplicationDataData,
   GetApplicationDataResponse,
   GetApplicationDataError,
@@ -2164,6 +2167,28 @@ export const getCurrentUser = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     url: '/api/auth/me',
+    ...options,
+  })
+}
+
+/**
+ * Obtenir les paramètres des enchères
+ */
+export const getAuctionSettings = <ThrowOnError extends boolean = false>(
+  options?: Options<GetAuctionSettingsData, ThrowOnError>
+) => {
+  return (options?.client ?? _heyApiClient).get<
+    GetAuctionSettingsResponse,
+    GetAuctionSettingsError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/auctions/settings',
     ...options,
   })
 }
