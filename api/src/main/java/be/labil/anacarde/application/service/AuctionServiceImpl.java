@@ -3,9 +3,14 @@ package be.labil.anacarde.application.service;
 import be.labil.anacarde.application.exception.ResourceNotFoundException;
 import be.labil.anacarde.application.job.CloseAuctionJob;
 import be.labil.anacarde.domain.dto.db.AuctionDto;
+import be.labil.anacarde.domain.dto.db.GlobalSettingsDto;
+import be.labil.anacarde.domain.dto.write.AuctionOptionsUpdateDto;
 import be.labil.anacarde.domain.dto.write.AuctionUpdateDto;
 import be.labil.anacarde.domain.mapper.AuctionMapper;
+import be.labil.anacarde.domain.mapper.AuctionOptionsMapper;
+import be.labil.anacarde.domain.mapper.AuctionStrategyMapper;
 import be.labil.anacarde.domain.model.Auction;
+import be.labil.anacarde.domain.model.AuctionOptions;
 import be.labil.anacarde.domain.model.TradeStatus;
 import be.labil.anacarde.infrastructure.persistence.AuctionRepository;
 import be.labil.anacarde.infrastructure.persistence.TradeStatusRepository;
@@ -31,7 +36,9 @@ public class AuctionServiceImpl implements AuctionService {
 	private final TradeStatusRepository tradeStatusRepository;
 	private final AuctionRepository auctionRepository;
 	private final AuctionMapper auctionMapper;
+	private final AuctionStrategyMapper auctionStrategyMapper;
 	private final PersistenceHelper persistenceHelper;
+	private final GlobalSettingsService globalSettingsService;
 
 	private static final Logger log = LoggerFactory.getLogger(CloseAuctionJob.class);
 
@@ -39,15 +46,30 @@ public class AuctionServiceImpl implements AuctionService {
 	private Scheduler scheduler;
 
 	@Override
-	public AuctionDto createAuction(AuctionUpdateDto dto) {
-		Auction auction = auctionMapper.toEntity(dto);
+	public AuctionDto createAuction(AuctionUpdateDto auctionUpdateDto) {
+		Auction auction = auctionMapper.toEntity(auctionUpdateDto);
 
-		if (dto.getStatusId() == null) {
+		// Use default status
+		if (auctionUpdateDto.getStatusId() == null) {
 			TradeStatus pendingStatus = tradeStatusRepository.findStatusPending();
 			if (pendingStatus == null) {
 				throw new ResourceNotFoundException("Status non trouvé");
 			}
 			auction.setStatus(pendingStatus);
+		}
+
+		// Use default options
+		if (auctionUpdateDto.getOptions() == null) {
+			GlobalSettingsDto settings = globalSettingsService.getGlobalSettings();
+
+			AuctionOptions options = new AuctionOptions();
+			options.setStrategy(auctionStrategyMapper.toEntity(settings.getDefaultStrategy()));
+			options.setMinIncrement(settings.getMinIncrement());
+			options.setForceBetterBids(settings.getForceBetterBids());
+			if (settings.getDefaultFixedPriceKg() != null) options.setFixedPriceKg(settings.getDefaultFixedPriceKg().doubleValue());
+			if (settings.getDefaultMaxPriceKg() != null) options.setMaxPriceKg(settings.getDefaultMaxPriceKg().doubleValue());
+			if (settings.getDefaultMinPriceKg() != null) options.setMinPriceKg(settings.getDefaultMinPriceKg().doubleValue());
+			auction.setOptions(options);
 		}
 
 		Auction full = persistenceHelper.saveAndReload(auctionRepository, auction, Auction::getId);

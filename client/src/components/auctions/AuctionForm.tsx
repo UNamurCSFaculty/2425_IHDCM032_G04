@@ -60,7 +60,7 @@ export const AuctionForm: React.FC = () => {
 
   const createAuctionRequest = useMutation({
     ...createAuctionMutation(),
-    onSuccess: () => navigate({ to: '/inscription-succes' }),
+    onSuccess: () => navigate({ to: '/ventes/enchere-creee' }),
     onError(error) {
       console.error('Requête invalide :', error)
     },
@@ -95,9 +95,10 @@ export const AuctionForm: React.FC = () => {
 
   /** Valide tous les champs du step et renvoie true s’ils sont OK */
   const validateStep = async (stepToValidate: number): Promise<boolean> => {
-    if (stepToValidate == 1) {
-    } else if (stepToValidate == 2) {
-    }
+    console.log(stepToValidate)
+    // if (stepToValidate == 1) {
+    // } else if (stepToValidate == 2) {
+    // }
 
     return true
   }
