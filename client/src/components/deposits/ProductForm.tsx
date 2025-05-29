@@ -2,16 +2,21 @@ import FormContainer from '../FormContainer'
 import FormSectionTitle from '../FormSectionTitle'
 import {
   type FieldDto,
-  type HarvestProductDto,
   type HarvestProductUpdateDto,
   ProductType,
   type QualityDto,
-  type StoreDetailDto,
   type UserListDto,
+  type HarvestProductDto,
+  type StoreDetailDto,
 } from '@/api/generated'
 import {
   createProductMutation,
   createQualityControlMutation,
+  listFieldsOptions,
+  listProductsOptions,
+  listQualitiesOptions,
+  listStoresOptions,
+  listUsersOptions,
 } from '@/api/generated/@tanstack/react-query.gen.ts'
 import {
   zHarvestProductUpdateDto,
@@ -22,31 +27,51 @@ import { useAppForm } from '@/components/form'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { formatCoordinates } from '@/utils/formatter'
 import { useStore } from '@tanstack/react-form'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { AlertCircle } from 'lucide-react'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import z from 'zod/v4'
 
-interface ProductFormProps {
-  users: UserListDto[]
-  stores: StoreDetailDto[]
-  qualities: QualityDto[]
-  fields: FieldDto[]
-  harvestProducts: HarvestProductDto[]
-}
-
-export function ProductForm({
-  users,
-  stores,
-  qualities,
-  fields,
-  harvestProducts,
-}: ProductFormProps): React.ReactElement<'div'> {
+export function ProductForm(): React.ReactElement<'div'> {
   const navigate = useNavigate()
 
   const { t } = useTranslation()
+
+  const staleTime = 10_000
+
+  const { data: harvestProducts } = useSuspenseQuery({
+    ...listProductsOptions({ query: { productType: ProductType.HARVEST } }),
+    staleTime: staleTime,
+  })
+
+  const { data: allUsersData } = useSuspenseQuery({
+    ...listUsersOptions(),
+    staleTime: staleTime,
+  })
+
+  const users = allUsersData.filter(
+    user =>
+      user.type === 'transformer' ||
+      user.type === 'producer' ||
+      user.type === 'quality_inspector'
+  )
+
+  const { data: qualities } = useSuspenseQuery({
+    ...listQualitiesOptions(),
+    staleTime: staleTime,
+  })
+
+  const { data: fields } = useSuspenseQuery({
+    ...listFieldsOptions(),
+    staleTime: staleTime,
+  })
+
+  const { data: stores } = useSuspenseQuery({
+    ...listStoresOptions(),
+    staleTime: staleTime,
+  })
 
   // TODO: this should be handled internally by the form, this is a hack
   const [selectedHarvestProductsIds, setSelectedHarvestProductsIds] = useState<
@@ -254,8 +279,9 @@ export function ProductForm({
               <form.AppField
                 name="product.fieldId"
                 children={field => {
-                  const gps = fields.find(f => f.id === field.state.value)
-                    ?.address.location
+                  const gps = (fields as FieldDto[]).find(
+                    f => f.id === field.state.value
+                  )?.address.location
                   const hintText = gps
                     ? t('form.gps_label', { gps: formatCoordinates(gps) })
                     : ''
@@ -282,17 +308,19 @@ export function ProductForm({
                   children={field => (
                     <field.MultiSelectField
                       placeholder="Sélectionner les lots"
-                      options={harvestProducts.map(product => ({
-                        value: product.id,
-                        label:
-                          'Lot n°' +
-                          product.id +
-                          ' - ' +
-                          t('database.' + product.type) +
-                          ' (' +
-                          product.qualityControl.quality.name +
-                          ')',
-                      }))}
+                      options={(harvestProducts as HarvestProductDto[]).map(
+                        product => ({
+                          value: product.id,
+                          label:
+                            'Lot n°' +
+                            product.id +
+                            ' - ' +
+                            t('database.' + product.type) +
+                            ' (' +
+                            product.qualityControl.quality.name +
+                            ')',
+                        })
+                      )}
                       label="Matières premières"
                       maxCount={2}
                       onChange={values => {
@@ -309,7 +337,7 @@ export function ProductForm({
               name="product.storeId"
               children={field => (
                 <field.SelectField
-                  options={stores.map(store => ({
+                  options={(stores as StoreDetailDto[]).map(store => ({
                     value: store.id,
                     label: store.name,
                   }))}
@@ -362,7 +390,7 @@ export function ProductForm({
                   name="qualityControl.qualityId"
                   children={field => (
                     <field.SelectField
-                      options={qualities
+                      options={(qualities! as QualityDto[])
                         .filter(quality => {
                           return (
                             !productType ||
@@ -399,7 +427,7 @@ export function ProductForm({
               name="qualityControl.qualityInspectorId"
               children={field => (
                 <field.SelectField
-                  options={users
+                  options={(users as UserListDto[])
                     .filter(user => user.type === 'quality_inspector')
                     .map(qi => ({
                       value: qi.id,
