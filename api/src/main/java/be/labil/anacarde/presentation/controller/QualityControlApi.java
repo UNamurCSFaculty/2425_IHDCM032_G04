@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Validated
 @SecurityRequirement(name = "jwt")
@@ -41,7 +42,8 @@ public interface QualityControlApi {
 			@ApiResponse(responseCode = "400", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
 			@ApiResponse(responseCode = "409", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
 	ResponseEntity<? extends QualityControlDto> createQualityControl(@Validated({Default.class,
-			ValidationGroups.Create.class}) @RequestBody QualityControlUpdateDto qualityControlDto);
+			ValidationGroups.Create.class}) @RequestBody QualityControlUpdateDto qualityControlDto,
+			List<MultipartFile> documents);
 
 	@Operation(summary = "Mettre à jour un contrôle qualité")
 	@PutMapping("/{id}")

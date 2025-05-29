@@ -5,8 +5,10 @@ import be.labil.anacarde.application.service.storage.StorageService;
 import be.labil.anacarde.domain.dto.db.DocumentDto;
 import be.labil.anacarde.domain.mapper.DocumentMapper;
 import be.labil.anacarde.domain.model.Document;
+import be.labil.anacarde.domain.model.QualityControl;
 import be.labil.anacarde.domain.model.User;
 import be.labil.anacarde.infrastructure.persistence.DocumentRepository;
+import be.labil.anacarde.infrastructure.persistence.QualityControlRepository;
 import be.labil.anacarde.infrastructure.persistence.user.UserRepository;
 import java.io.InputStream;
 import java.time.LocalDateTime;
@@ -25,16 +27,29 @@ class DocumentServiceImpl implements DocumentService {
 	private final DocumentRepository docRepo;
 	private final DocumentMapper mapper;
 	private final UserRepository userRepo;
+	private final QualityControlRepository qualityControlRepo;
 	private final StorageService storage;
 
 	/* ---------- création ---------- */
 
 	@Override
-	public DocumentDto createDocument(Integer userId, MultipartFile file) {
+	public DocumentDto createDocumentUser(Integer userId, MultipartFile file) {
 		User user = userRepo.findById(userId).orElseThrow(
 				() -> new ResourceNotFoundException("Utilisateur non trouvé : " + userId));
 
 		Document stored = storage.storeAll(user, List.of(file)).getFirst();
+		stored.setUploadDate(LocalDateTime.now());
+
+		return mapper.toDto(docRepo.save(stored));
+	}
+
+	@Override
+	public DocumentDto createDocumentQualityControl(Integer qualityControlId, MultipartFile file) {
+		QualityControl qualityControl = qualityControlRepo.findById(qualityControlId)
+				.orElseThrow(() -> new ResourceNotFoundException(
+						"Contrôle qualité non trouvé : " + qualityControlId));
+
+		Document stored = storage.storeAll(qualityControl, List.of(file)).getFirst();
 		stored.setUploadDate(LocalDateTime.now());
 
 		return mapper.toDto(docRepo.save(stored));

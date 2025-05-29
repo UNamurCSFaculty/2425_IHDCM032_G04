@@ -290,7 +290,7 @@ export function ProductForm({
                           product.qualityControl.quality.name +
                           ')',
                       }))}
-                      label="Mati�res premi�res"
+                      label="Matières premières"
                       maxCount={2}
                       onChange={values => {
                         console.log('Selected harvest product IDs:', values)
@@ -353,30 +353,45 @@ export function ProductForm({
               text={t('product.form.section_quality_control_title')}
             />
 
-            <form.AppField
-              name="qualityControl.qualityId"
-              children={field => (
-                <field.SelectField
-                  options={qualities
-                    .filter(quality => {
-                      return (
-                        !productType ||
-                        (productType === ProductType.HARVEST &&
-                          quality.qualityType.name.toLowerCase() ==
-                            ProductType.HARVEST.toLowerCase()) ||
-                        (productType === ProductType.TRANSFORMED &&
-                          quality.qualityType.name.toLowerCase() ==
-                            ProductType.TRANSFORMED.toLowerCase())
-                      )
-                    })
-                    .map(quality => ({
-                      value: quality.id,
-                      label: quality.name,
-                    }))}
-                  label={t('product.quality_label')}
+            <div className="flex gap-4">
+              <div className="flex-1">
+                <form.AppField
+                  name="qualityControl.qualityId"
+                  children={field => (
+                    <field.SelectField
+                      options={qualities
+                        .filter(quality => {
+                          return (
+                            !productType ||
+                            (productType === ProductType.HARVEST &&
+                              quality.qualityType.name.toLowerCase() ==
+                                ProductType.HARVEST.toLowerCase()) ||
+                            (productType === ProductType.TRANSFORMED &&
+                              quality.qualityType.name.toLowerCase() ==
+                                ProductType.TRANSFORMED.toLowerCase())
+                          )
+                        })
+                        .map(quality => ({
+                          value: quality.id,
+                          label: quality.name,
+                        }))}
+                      label={t('product.quality_label')}
+                    />
+                  )}
                 />
-              )}
-            />
+              </div>
+              <div className="flex-1">
+                <form.AppField
+                  name="qualityControl.controlDate"
+                  children={field => (
+                    <field.DateTimePickerField
+                      label={t('product.form.control_date_label')}
+                    />
+                  )}
+                />
+              </div>
+            </div>
+
             <form.AppField
               name="qualityControl.qualityInspectorId"
               children={field => (
@@ -390,30 +405,26 @@ export function ProductForm({
                   label={t('product.quality_inspector_label')}
                   hint={
                     field.state.value !== -1
-                      ? t('form.identifier_label', { id: field.state.value })
+                      ? t('form.identifier_label', {
+                          id: field.state.value,
+                        })
                       : ''
                   }
                 />
               )}
             />
-            <form.AppField
-              name="qualityControl.controlDate"
-              children={field => (
-                <field.DateTimePickerField
-                  label={t('product.form.control_date_label')}
-                />
-              )}
-            />
-            <form.AppField
-              name="qualityControl.documentId"
-              children={field => (
-                <field.TextField
+
+            <form.AppField name="qualityControl.documentId">
+              {f => (
+                <f.FileUploadField
+                  className="col-span-full"
                   label={t('product.form.certificate_label')}
-                  type="document"
-                  required={false}
+                  accept="application/pdf,image/*"
+                  maxFiles={1}
+                  maxSize={5}
                 />
               )}
-            />
+            </form.AppField>
           </div>
         </div>
       </form>

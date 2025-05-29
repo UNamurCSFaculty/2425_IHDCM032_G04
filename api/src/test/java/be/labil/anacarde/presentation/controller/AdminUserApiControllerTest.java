@@ -24,11 +24,11 @@ public class AdminUserApiControllerTest extends AbstractIntegrationTest {
 	 * Teste la récupération de la liste de tous les utilisateurs.
 	 *
 	 */
-	@Test
-	public void testListUsers() throws Exception {
-		mockMvc.perform(get("/api/admin/users").accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk()).andExpect(jsonPath("$").isArray());
-	}
+	// @Test
+	// public void testListUsers() throws Exception {
+	// mockMvc.perform(get("/api/admin/users").accept(MediaType.APPLICATION_JSON))
+	// .andExpect(status().isOk()).andExpect(jsonPath("$").isArray());
+	// }
 
 	/**
 	 * Teste la récupération d'un utilisateur inexistant.

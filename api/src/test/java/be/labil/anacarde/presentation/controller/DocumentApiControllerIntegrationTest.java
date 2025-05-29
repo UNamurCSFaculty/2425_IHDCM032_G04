@@ -57,7 +57,7 @@ public class DocumentApiControllerIntegrationTest extends AbstractIntegrationTes
 	/* ---------- POST create ---------- */
 
 	@Test
-	public void testCreateDocument() throws Exception {
+	public void testCreateDocumentUser() throws Exception {
 		byte[] content = "Hello World".getBytes();
 		MockMultipartFile filePart = new MockMultipartFile("file", // nom de la part attendue
 				"attestation.pdf", "application/pdf", content);
@@ -71,6 +71,24 @@ public class DocumentApiControllerIntegrationTest extends AbstractIntegrationTes
 				.andExpect(jsonPath("$.extension").value("pdf"))
 				.andExpect(jsonPath("$.size").value(content.length))
 				.andExpect(jsonPath("$.userId").value(getProducerTestUser().getId()))
+				.andExpect(jsonPath("$.storagePath").value(
+						startsWith("build" + File.separator + "test-uploads" + File.separator)));
+	}
+
+	@Test
+	public void testCreateDocumentQualityControl() throws Exception {
+		byte[] content = "Hello World".getBytes();
+		MockMultipartFile filePart = new MockMultipartFile("file", // nom de la part attendue
+				"attestation.pdf", "application/pdf", content);
+
+		mockMvc.perform(multipart("/api/documents/quality-controls/{qualityControlId}", getMainTestQualityControl().getId())
+				.file(filePart).characterEncoding("UTF-8").accept(MediaType.APPLICATION_JSON)
+				.with(user(getProducerTestUser()))).andExpect(status().isCreated())
+				.andExpect(header().string("Location", containsString("/api/documents/")))
+				.andExpect(jsonPath("$.originalFilename").value("attestation.pdf"))
+				.andExpect(jsonPath("$.contentType").value("application/pdf"))
+				.andExpect(jsonPath("$.extension").value("pdf"))
+				.andExpect(jsonPath("$.size").value(content.length))
 				.andExpect(jsonPath("$.storagePath").value(
 						startsWith("build" + File.separator + "test-uploads" + File.separator)));
 	}

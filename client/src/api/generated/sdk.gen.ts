@@ -136,6 +136,8 @@ import type {
   UpdateGlobalSettingsData,
   UpdateGlobalSettingsResponse,
   UpdateGlobalSettingsError,
+  ListUsersData,
+  ListUsersResponse,
   CreateUserData,
   CreateUserResponse,
   CreateUserError,
@@ -234,8 +236,6 @@ import type {
   GetApplicationDataData,
   GetApplicationDataResponse,
   GetApplicationDataError,
-  ListUsersData,
-  ListUsersResponse,
   GetUserData,
   GetUserResponse,
   GetUserError,
@@ -1267,6 +1267,29 @@ export const updateGlobalSettings = <ThrowOnError extends boolean = false>(
 }
 
 /**
+ * Lister tous les utilisateurs
+ * Renvoie la liste de tous les utilisateurs présents dans le système.
+ */
+export const listUsers = <ThrowOnError extends boolean = false>(
+  options?: Options<ListUsersData, ThrowOnError>
+) => {
+  return (options?.client ?? _heyApiClient).get<
+    ListUsersResponse,
+    unknown,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/users',
+    ...options,
+  })
+}
+
+/**
  * Créer un utilisateur et téléverser des documents
  */
 export const createUser = <ThrowOnError extends boolean = false>(
@@ -2130,29 +2153,6 @@ export const getApplicationData = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     url: '/api/app',
-    ...options,
-  })
-}
-
-/**
- * Lister tous les utilisateurs
- * Renvoie la liste de tous les utilisateurs présents dans le système.
- */
-export const listUsers = <ThrowOnError extends boolean = false>(
-  options?: Options<ListUsersData, ThrowOnError>
-) => {
-  return (options?.client ?? _heyApiClient).get<
-    ListUsersResponse,
-    unknown,
-    ThrowOnError
-  >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
-    url: '/api/admin/users',
     ...options,
   })
 }

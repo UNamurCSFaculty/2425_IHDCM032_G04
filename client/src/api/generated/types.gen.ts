@@ -1286,55 +1286,6 @@ export type LoginRequest = {
   password: string
 }
 
-export type ExportAuctionDto = {
-  auctionId?: number
-  auctionStartDate?: string
-  auctionEndDate?: string
-  auctionStartPrice?: number
-  auctionEnded?: boolean
-  auctionStatus?: string
-  strategyName?: string
-  optionMinPriceKg?: number
-  optionMaxPriceKg?: number
-  optionBuyNowPrice?: number
-  optionShowPublic?: boolean
-  optionMinIncrement?: number
-  productId?: number
-  productWeightKg?: number
-  productDepositDate?: string
-  transformedProductId?: number
-  qualityInspectorId?: number
-  productQuality?: string
-  productType?: string
-  storeId?: number
-  storeName?: string
-  storeCity?: string
-  storeRegion?: string
-  sellerId?: number
-  sellerCity?: string
-  sellerRegion?: string
-  sellerCooperative?: string
-  bidCount?: number
-  bidMax?: number
-  bidMin?: number
-  bidAvg?: number
-  bidSum?: number
-  winnerTraderId?: number
-  bidWinningAmount?: number
-  winnerCity?: string
-  winnerRegion?: string
-}
-
-/**
- * Données nécessaires pour l'application cliente.
- */
-export type ApplicationDataDto = {
-  /**
-   * Liste des stratégies d'enchères disponibles.
-   */
-  languages: Array<LanguageDto>
-}
-
 /**
  * Objet de transfert de données pour les administrateurs.
  */
@@ -1499,6 +1450,55 @@ export type UserListDto = {
     | 'exporter'
     | 'carrier'
     | 'trader'
+}
+
+export type ExportAuctionDto = {
+  auctionId?: number
+  auctionStartDate?: string
+  auctionEndDate?: string
+  auctionStartPrice?: number
+  auctionEnded?: boolean
+  auctionStatus?: string
+  strategyName?: string
+  optionMinPriceKg?: number
+  optionMaxPriceKg?: number
+  optionBuyNowPrice?: number
+  optionShowPublic?: boolean
+  optionMinIncrement?: number
+  productId?: number
+  productWeightKg?: number
+  productDepositDate?: string
+  transformedProductId?: number
+  qualityInspectorId?: number
+  productQuality?: string
+  productType?: string
+  storeId?: number
+  storeName?: string
+  storeCity?: string
+  storeRegion?: string
+  sellerId?: number
+  sellerCity?: string
+  sellerRegion?: string
+  sellerCooperative?: string
+  bidCount?: number
+  bidMax?: number
+  bidMin?: number
+  bidAvg?: number
+  bidSum?: number
+  winnerTraderId?: number
+  bidWinningAmount?: number
+  winnerCity?: string
+  winnerRegion?: string
+}
+
+/**
+ * Données nécessaires pour l'application cliente.
+ */
+export type ApplicationDataDto = {
+  /**
+   * Liste des stratégies d'enchères disponibles.
+   */
+  languages: Array<LanguageDto>
 }
 
 export type ApiError = {
@@ -2961,6 +2961,22 @@ export type UpdateGlobalSettingsResponses = {
 export type UpdateGlobalSettingsResponse =
   UpdateGlobalSettingsResponses[keyof UpdateGlobalSettingsResponses]
 
+export type ListUsersData = {
+  body?: never
+  path?: never
+  query?: never
+  url: '/api/users'
+}
+
+export type ListUsersResponses = {
+  /**
+   * Liste récupérée avec succès
+   */
+  200: Array<UserListDto>
+}
+
+export type ListUsersResponse = ListUsersResponses[keyof ListUsersResponses]
+
 export type CreateUserData = {
   body: {
     user?: UserCreateDto
@@ -3980,22 +3996,6 @@ export type GetApplicationDataResponses = {
 
 export type GetApplicationDataResponse =
   GetApplicationDataResponses[keyof GetApplicationDataResponses]
-
-export type ListUsersData = {
-  body?: never
-  path?: never
-  query?: never
-  url: '/api/admin/users'
-}
-
-export type ListUsersResponses = {
-  /**
-   * Liste récupérée avec succès
-   */
-  200: Array<UserListDto>
-}
-
-export type ListUsersResponse = ListUsersResponses[keyof ListUsersResponses]
 
 export type GetUserData = {
   body?: never

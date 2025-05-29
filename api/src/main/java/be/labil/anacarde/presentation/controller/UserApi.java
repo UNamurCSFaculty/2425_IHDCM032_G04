@@ -3,6 +3,7 @@ package be.labil.anacarde.presentation.controller;
 import be.labil.anacarde.application.exception.ApiErrorResponse;
 import be.labil.anacarde.domain.dto.db.ValidationGroups;
 import be.labil.anacarde.domain.dto.db.user.UserDetailDto;
+import be.labil.anacarde.domain.dto.db.user.UserListDto;
 import be.labil.anacarde.domain.dto.write.user.create.UserCreateDto;
 import be.labil.anacarde.domain.dto.write.user.update.UserUpdateDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -107,4 +108,15 @@ public interface UserApi {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	ResponseEntity<Void> deleteUser(
 			@NotNull(message = "L'ID de l'utilisateur est obligatoire") @Positive(message = "L'ID doit être un entier positif") @Parameter(description = "Identifiant de l'utilisateur", example = "1", required = true) @PathVariable("id") Integer id);
+
+	/**
+	 * Renvoie la liste de tous les utilisateurs.
+	 *
+	 * @return La liste des utilisateurs.
+	 */
+	@Operation(summary = "Lister tous les utilisateurs", description = "Renvoie la liste de tous les utilisateurs présents dans le système.")
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "Liste récupérée avec succès", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UserListDto.class))))})
+	@GetMapping
+	ResponseEntity<List<? extends UserListDto>> listUsers();
 }

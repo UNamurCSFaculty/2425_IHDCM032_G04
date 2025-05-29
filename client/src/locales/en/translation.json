@@ -273,7 +273,7 @@
     "upload_all": "All files are accepted",
     "upload_click_or_drag": "Click to upload or drag and drop",
     "upload_invalid_type": "Invalid file type",
-    "upload_files": "Files",
+    "upload_files": "File(s)",
     "documents": "Documents",
     "file_type": {
       "image": "Image",
@@ -420,7 +420,7 @@
       "submit_button": "Save Product",
       "section_quality_control_title": "Quality Control",
       "control_date_label": "Control Date",
-      "certificate_label": "Certificate (Photo or PDF)"
+      "certificate_label": "Certificate Document"
     },
     "weight_in_kg_label": "Weight (kg)"
   },

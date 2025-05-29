@@ -45,6 +45,7 @@ import {
   updateAuctionStrategy,
   getGlobalSettings,
   updateGlobalSettings,
+  listUsers,
   createUser,
   listStores,
   createStore,
@@ -84,7 +85,6 @@ import {
   downloadDocument,
   getCurrentUser,
   getApplicationData,
-  listUsers,
   getUser,
 } from '../sdk.gen'
 import {
@@ -198,6 +198,7 @@ import type {
   UpdateGlobalSettingsData,
   UpdateGlobalSettingsError,
   UpdateGlobalSettingsResponse,
+  ListUsersData,
   CreateUserData,
   CreateUserError,
   CreateUserResponse,
@@ -269,7 +270,6 @@ import type {
   DownloadDocumentData,
   GetCurrentUserData,
   GetApplicationDataData,
-  ListUsersData,
   GetUserData,
 } from '../types.gen'
 import { client as _heyApiClient } from '../client.gen'
@@ -1272,6 +1272,24 @@ export const updateGlobalSettingsMutation = (
     },
   }
   return mutationOptions
+}
+
+export const listUsersQueryKey = (options?: Options<ListUsersData>) =>
+  createQueryKey('listUsers', options)
+
+export const listUsersOptions = (options?: Options<ListUsersData>) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await listUsers({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: listUsersQueryKey(options),
+  })
 }
 
 export const createUserQueryKey = (options: Options<CreateUserData>) =>
@@ -2485,24 +2503,6 @@ export const getApplicationDataOptions = (
       return data
     },
     queryKey: getApplicationDataQueryKey(options),
-  })
-}
-
-export const listUsersQueryKey = (options?: Options<ListUsersData>) =>
-  createQueryKey('listUsers', options)
-
-export const listUsersOptions = (options?: Options<ListUsersData>) => {
-  return queryOptions({
-    queryFn: async ({ queryKey, signal }) => {
-      const { data } = await listUsers({
-        ...options,
-        ...queryKey[0],
-        signal,
-        throwOnError: true,
-      })
-      return data
-    },
-    queryKey: listUsersQueryKey(options),
   })
 }
 

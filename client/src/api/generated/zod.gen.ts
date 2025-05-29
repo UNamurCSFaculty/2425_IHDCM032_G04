@@ -535,49 +535,6 @@ export const zLoginRequest = z.object({
   password: z.string(),
 })
 
-export const zExportAuctionDto = z.object({
-  auctionId: z.number().int().optional(),
-  auctionStartDate: z.iso.datetime().optional(),
-  auctionEndDate: z.iso.datetime().optional(),
-  auctionStartPrice: z.number().optional(),
-  auctionEnded: z.boolean().optional(),
-  auctionStatus: z.string().optional(),
-  strategyName: z.string().optional(),
-  optionMinPriceKg: z.number().optional(),
-  optionMaxPriceKg: z.number().optional(),
-  optionBuyNowPrice: z.number().optional(),
-  optionShowPublic: z.boolean().optional(),
-  optionMinIncrement: z.number().int().optional(),
-  productId: z.number().int().optional(),
-  productWeightKg: z.number().optional(),
-  productDepositDate: z.iso.datetime().optional(),
-  transformedProductId: z.number().int().optional(),
-  qualityInspectorId: z.number().int().optional(),
-  productQuality: z.string().optional(),
-  productType: z.string().optional(),
-  storeId: z.number().int().optional(),
-  storeName: z.string().optional(),
-  storeCity: z.string().optional(),
-  storeRegion: z.string().optional(),
-  sellerId: z.number().int().optional(),
-  sellerCity: z.string().optional(),
-  sellerRegion: z.string().optional(),
-  sellerCooperative: z.string().optional(),
-  bidCount: z.coerce.bigint().optional(),
-  bidMax: z.number().optional(),
-  bidMin: z.number().optional(),
-  bidAvg: z.number().optional(),
-  bidSum: z.number().optional(),
-  winnerTraderId: z.number().int().optional(),
-  bidWinningAmount: z.number().optional(),
-  winnerCity: z.string().optional(),
-  winnerRegion: z.string().optional(),
-})
-
-export const zApplicationDataDto = z.object({
-  languages: z.array(zLanguageDto),
-})
-
 export const zUserListDto = z.object({
   id: z.number().int().readonly(),
   firstName: z.string().min(1),
@@ -666,6 +623,49 @@ export const zQualityInspectorListDto = zUserListDto.and(
 )
 
 export const zTransformerListDto = zTraderListDto
+
+export const zExportAuctionDto = z.object({
+  auctionId: z.number().int().optional(),
+  auctionStartDate: z.iso.datetime().optional(),
+  auctionEndDate: z.iso.datetime().optional(),
+  auctionStartPrice: z.number().optional(),
+  auctionEnded: z.boolean().optional(),
+  auctionStatus: z.string().optional(),
+  strategyName: z.string().optional(),
+  optionMinPriceKg: z.number().optional(),
+  optionMaxPriceKg: z.number().optional(),
+  optionBuyNowPrice: z.number().optional(),
+  optionShowPublic: z.boolean().optional(),
+  optionMinIncrement: z.number().int().optional(),
+  productId: z.number().int().optional(),
+  productWeightKg: z.number().optional(),
+  productDepositDate: z.iso.datetime().optional(),
+  transformedProductId: z.number().int().optional(),
+  qualityInspectorId: z.number().int().optional(),
+  productQuality: z.string().optional(),
+  productType: z.string().optional(),
+  storeId: z.number().int().optional(),
+  storeName: z.string().optional(),
+  storeCity: z.string().optional(),
+  storeRegion: z.string().optional(),
+  sellerId: z.number().int().optional(),
+  sellerCity: z.string().optional(),
+  sellerRegion: z.string().optional(),
+  sellerCooperative: z.string().optional(),
+  bidCount: z.coerce.bigint().optional(),
+  bidMax: z.number().optional(),
+  bidMin: z.number().optional(),
+  bidAvg: z.number().optional(),
+  bidSum: z.number().optional(),
+  winnerTraderId: z.number().int().optional(),
+  bidWinningAmount: z.number().optional(),
+  winnerCity: z.string().optional(),
+  winnerRegion: z.string().optional(),
+})
+
+export const zApplicationDataDto = z.object({
+  languages: z.array(zLanguageDto),
+})
 
 export const zApiErrorErrors = z.object({
   path: z.string().optional(),
@@ -764,6 +764,8 @@ export const zGetGlobalSettingsResponse = zGlobalSettingsDto
 
 export const zUpdateGlobalSettingsResponse = zGlobalSettingsDto
 
+export const zListUsersResponse = z.array(zUserListDto)
+
 export const zCreateUserResponse = zUserDetailDto
 
 export const zListStoresResponse = z.array(zStoreDetailDto)
@@ -837,7 +839,5 @@ export const zDownloadDocumentResponse = z.string()
 export const zGetCurrentUserResponse = zUserDetailDto
 
 export const zGetApplicationDataResponse = zApplicationDataDto
-
-export const zListUsersResponse = z.array(zUserListDto)
 
 export const zGetUserResponse = zUserDetailDto

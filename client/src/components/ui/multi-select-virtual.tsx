@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useVirtualizer } from '@tanstack/react-virtual'
 import { cva, type VariantProps } from 'class-variance-authority'
 import {
   CheckIcon,
@@ -51,6 +52,15 @@ const multiSelectVariants = cva(
   }
 )
 
+type Option = {
+  /** The text to display for the option. */
+  label: string
+  /** The unique value associated with the option. */
+  value: string
+  /** Optional icon component to display alongside the option. */
+  icon?: React.ComponentType<{ className?: string }>
+}
+
 /**
  * Props for MultiSelect component
  */
@@ -61,14 +71,7 @@ interface MultiSelectProps
    * An array of option objects to be displayed in the multi-select component.
    * Each option object has a label, value, and an optional icon.
    */
-  options: {
-    /** The text to display for the option. */
-    label: string
-    /** The unique value associated with the option. */
-    value: string
-    /** Optional icon component to display alongside the option. */
-    icon?: React.ComponentType<{ className?: string }>
-  }[]
+  options: Option[]
 
   /**
    * Callback function triggered when the selected values change.
@@ -117,7 +120,7 @@ interface MultiSelectProps
   className?: string
 }
 
-export const MultiSelect = React.forwardRef<
+export const MultiSelectVirtual = React.forwardRef<
   HTMLButtonElement,
   MultiSelectProps
 >(
@@ -131,6 +134,7 @@ export const MultiSelect = React.forwardRef<
       animation = 0,
       maxCount = 3,
       modalPopover = false,
+      asChild = false,
       className,
       ...props
     },
@@ -282,84 +286,17 @@ export const MultiSelect = React.forwardRef<
           align="start"
           onEscapeKeyDown={() => setIsPopoverOpen(false)}
         >
-          <Command>
-            <CommandInput
-              placeholder="Search..."
-              onKeyDown={handleInputKeyDown}
-            />
-            <CommandList>
-              <CommandEmpty>No results found.</CommandEmpty>
-              <CommandGroup>
-                <CommandItem
-                  key="all"
-                  onSelect={toggleAll}
-                  className="cursor-pointer"
-                >
-                  <div
-                    className={cn(
-                      'border-primary mr-2 flex h-4 w-4 items-center justify-center rounded-sm border',
-                      selectedValues.length === options.length
-                        ? 'bg-primary text-primary-foreground'
-                        : 'opacity-50 [&_svg]:invisible'
-                    )}
-                  >
-                    <CheckIcon className="h-4 w-4" />
-                  </div>
-                  <span>(Select All)</span>
-                </CommandItem>
-                {options.map(option => {
-                  const isSelected = selectedValues.includes(option.value)
-                  return (
-                    <CommandItem
-                      key={option.value}
-                      onSelect={() => toggleOption(option.value)}
-                      className="cursor-pointer"
-                    >
-                      <div
-                        className={cn(
-                          'border-primary mr-2 flex h-4 w-4 items-center justify-center rounded-sm border',
-                          isSelected
-                            ? 'bg-primary text-primary-foreground'
-                            : 'opacity-50 [&_svg]:invisible'
-                        )}
-                      >
-                        <CheckIcon className="h-4 w-4" />
-                      </div>
-                      {option.icon && (
-                        <option.icon className="text-muted-foreground mr-2 h-4 w-4" />
-                      )}
-                      <span>{option.label}</span>
-                    </CommandItem>
-                  )
-                })}
-              </CommandGroup>
-              <CommandSeparator />
-              <CommandGroup>
-                <div className="flex items-center justify-between">
-                  {selectedValues.length > 0 && (
-                    <>
-                      <CommandItem
-                        onSelect={handleClear}
-                        className="flex-1 cursor-pointer justify-center"
-                      >
-                        Clear
-                      </CommandItem>
-                      <Separator
-                        orientation="vertical"
-                        className="flex h-full min-h-6"
-                      />
-                    </>
-                  )}
-                  <CommandItem
-                    onSelect={() => setIsPopoverOpen(false)}
-                    className="max-w-full flex-1 cursor-pointer justify-center"
-                  >
-                    Close
-                  </CommandItem>
-                </div>
-              </CommandGroup>
-            </CommandList>
-          </Command>
+          <VirtualCommand
+            options={options}
+            selectedValues={selectedValues}
+            placeholderSearch="Search..."
+            selectAllText="Select All"
+            handleInputKeyDown={handleInputKeyDown}
+            toggleAll={toggleAll}
+            toggleOption={toggleOption}
+            handleClear={handleClear}
+            setIsPopoverOpen={setIsPopoverOpen}
+          />
         </PopoverContent>
         {animation > 0 && selectedValues.length > 0 && (
           <WandSparkles
@@ -375,4 +312,145 @@ export const MultiSelect = React.forwardRef<
   }
 )
 
-MultiSelect.displayName = 'MultiSelect'
+const VirtualCommand = ({
+  options,
+  selectedValues,
+  placeholderSearch,
+  selectAllText,
+  handleInputKeyDown,
+  toggleAll,
+  toggleOption,
+  handleClear,
+  setIsPopoverOpen,
+}: {
+  options: Option[]
+  selectedValues: string[]
+  placeholderSearch: string
+  selectAllText: string
+  handleInputKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void
+  toggleAll: () => void
+  toggleOption: (option: string) => void
+  handleClear: () => void
+  setIsPopoverOpen: (open: boolean) => void
+}) => {
+  const [filteredOptions, setFilteredOptions] =
+    React.useState<Option[]>(options)
+
+  const parentRef = React.useRef<HTMLDivElement | null>(null)
+
+  const virtualizer = useVirtualizer({
+    count: filteredOptions.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 32,
+  })
+
+  const virtualItems = virtualizer.getVirtualItems()
+
+  const handleSearch = (value: string) => {
+    setFilteredOptions(
+      options.filter(option =>
+        option.label
+          .toLocaleLowerCase()
+          .includes(value.toLocaleLowerCase() ?? [])
+      )
+    )
+  }
+
+  return (
+    <Command shouldFilter={false}>
+      <CommandInput
+        placeholder={placeholderSearch}
+        onKeyDown={handleInputKeyDown}
+        onValueChange={handleSearch}
+      />
+      <CommandList ref={parentRef} className="overflow-auto">
+        <div
+          className="min-w-lg"
+          style={{
+            height: virtualizer.getTotalSize() + 80,
+            position: 'relative',
+          }}
+        >
+          <CommandEmpty>No results found.</CommandEmpty>
+          <CommandGroup>
+            <CommandItem
+              key="all"
+              onSelect={toggleAll}
+              className="cursor-pointer"
+            >
+              <div
+                className={cn(
+                  'border-primary mr-2 flex h-4 w-4 items-center justify-center rounded-sm border',
+                  selectedValues.length === options.length
+                    ? 'bg-primary text-primary-foreground'
+                    : 'opacity-50 [&_svg]:invisible'
+                )}
+              >
+                <CheckIcon className="h-4 w-4" />
+              </div>
+              <span>({selectAllText})</span>
+            </CommandItem>
+            {virtualItems.map(item => {
+              const option = filteredOptions[item.index]
+
+              const isSelected = selectedValues.includes(option.value)
+              return (
+                <CommandItem
+                  key={option.value}
+                  onSelect={() => toggleOption(option.value)}
+                  className="absolute top-10 left-1 w-full cursor-pointer bg-transparent"
+                  style={{
+                    height: `${item.size}px`,
+                    transform: `translateY(${item.start}px)`,
+                  }}
+                >
+                  <div
+                    className={cn(
+                      'border-primary mr-2 flex h-4 w-4 items-center justify-center rounded-sm border',
+                      isSelected
+                        ? 'bg-primary text-primary-foreground'
+                        : 'opacity-50 [&_svg]:invisible'
+                    )}
+                  >
+                    <CheckIcon className="h-4 w-4" />
+                  </div>
+                  {option.icon && (
+                    <option.icon className="text-muted-foreground mr-2 h-4 w-4" />
+                  )}
+                  <span>{option.label}</span>
+                </CommandItem>
+              )
+            })}
+          </CommandGroup>
+          <CommandSeparator />
+          <CommandGroup className="absolute bottom-0 left-0 w-full">
+            <div className="flex items-center justify-between">
+              {selectedValues.length > 0 && (
+                <>
+                  <CommandItem
+                    onSelect={handleClear}
+                    className="flex-1 cursor-pointer justify-center"
+                  >
+                    Clear
+                  </CommandItem>
+                  <Separator
+                    orientation="vertical"
+                    className="flex h-full min-h-6"
+                  />
+                </>
+              )}
+              <CommandItem
+                onSelect={() => setIsPopoverOpen(false)}
+                className="max-w-full flex-1 cursor-pointer justify-center"
+              >
+                Close
+              </CommandItem>
+            </div>
+          </CommandGroup>
+        </div>
+      </CommandList>
+    </Command>
+  )
+}
+
+MultiSelectVirtual.displayName = 'MultiSelectVirtual'

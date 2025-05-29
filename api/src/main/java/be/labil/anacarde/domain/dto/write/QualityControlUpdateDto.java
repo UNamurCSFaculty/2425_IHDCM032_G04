@@ -44,9 +44,4 @@ public class QualityControlUpdateDto {
 	@NotNull(message = "La qualité est requise")
 	@Schema(description = "Qualité associée", requiredMode = Schema.RequiredMode.REQUIRED)
 	private Integer qualityId;
-
-	/** Document associé au contrôle qualité. */
-	// TODO add NotNull
-	@Schema(description = "Document associé au contrôle qualité")
-	private Integer documentId;
 }
