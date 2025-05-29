@@ -40,7 +40,7 @@ import {
   UserCircle2,
   XCircle,
 } from 'lucide-react'
-import React, { useMemo, useState, useEffect } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
 
@@ -80,6 +80,21 @@ const AuctionDetailsPanel: React.FC<Props> = ({
     (max, b) => (b.amount > max ? b.amount : max),
     0
   )
+
+  useEffect(() => {
+    const handler = (event: Event) => {
+      const customEvent = event as CustomEvent<{ auctionId: number }>
+      if (customEvent.detail && customEvent.detail.auctionId === auction.id) {
+        console.log('Received new bid for auction', auction.id)
+        queryClient.invalidateQueries({ queryKey: listBidsQueryKey() })
+        queryClient.invalidateQueries({ queryKey: listAuctionsQueryKey() })
+      }
+    }
+    window.addEventListener('auction:newBid', handler)
+    return () => {
+      window.removeEventListener('auction:newBid', handler)
+    }
+  }, [auction.id, queryClient])
 
   const createBidRequest = useMutation({
     ...createBidMutation(),
