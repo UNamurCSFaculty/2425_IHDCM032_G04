@@ -623,6 +623,10 @@ export const zQualityInspectorListDto = zUserListDto.and(
 
 export const zTransformerListDto = zTraderListDto
 
+export const zSseEmitter = z.object({
+  timeout: z.coerce.bigint().optional(),
+})
+
 export const zExportAuctionDto = z.object({
   auctionId: z.number().int().optional(),
   auctionStartDate: z.iso.datetime().optional(),
@@ -824,6 +828,8 @@ export const zCheckPhoneResponse = z.boolean()
 export const zCheckEmailResponse = z.boolean()
 
 export const zListRegionsResponse = z.array(zRegionDto)
+
+export const zSubscribeResponse = zSseEmitter
 
 export const zListAuctions1Response = z.array(zExportAuctionDto)
 
