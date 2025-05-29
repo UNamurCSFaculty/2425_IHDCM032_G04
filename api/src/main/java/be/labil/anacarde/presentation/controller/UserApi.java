@@ -6,9 +6,11 @@ import be.labil.anacarde.domain.dto.db.user.UserDetailDto;
 import be.labil.anacarde.domain.dto.db.user.UserListDto;
 import be.labil.anacarde.domain.dto.write.user.create.UserCreateDto;
 import be.labil.anacarde.domain.dto.write.user.update.UserUpdateDto;
+import be.labil.anacarde.presentation.controller.enums.UserType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.StringToClassMapItem;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.*;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -118,5 +120,7 @@ public interface UserApi {
 	@ApiResponses({
 			@ApiResponse(responseCode = "200", description = "Liste récupérée avec succès", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UserListDto.class))))})
 	@GetMapping
-	ResponseEntity<List<? extends UserListDto>> listUsers();
+	ResponseEntity<List<? extends UserListDto>> listUsers(
+			@Parameter(in = ParameterIn.QUERY, description = "Type d'utilisateur", schema = @Schema(implementation = UserType.class)) @RequestParam(value = "userType", required = false) UserType userType);
+
 }

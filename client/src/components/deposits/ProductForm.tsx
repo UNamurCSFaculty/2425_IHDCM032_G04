@@ -8,6 +8,7 @@ import {
   type UserListDto,
   type HarvestProductDto,
   type StoreDetailDto,
+  UserType,
 } from '@/api/generated'
 import {
   createProductMutation,
@@ -47,18 +48,21 @@ export function ProductForm(): React.ReactElement<'div'> {
       staleTime: staleTime,
     })
 
-  const { data: allUsersData, isLoading: isUsersLoading } = useQuery({
-    ...listUsersOptions(),
+  const { data: transformers, isLoading: isTransformersLoading } = useQuery({
+    ...listUsersOptions({ query: { userType: UserType.TRANSFORMER } }),
     staleTime: staleTime,
   })
 
-  const users = allUsersData
-  // const users = allUsersData.filter(
-  //   user =>
-  //     user.type === 'transformer' ||
-  //     user.type === 'producer' ||
-  //     user.type === 'quality_inspector'
-  // )
+  const { data: producers, isLoading: isProducersLoading } = useQuery({
+    ...listUsersOptions({ query: { userType: UserType.PRODUCER } }),
+    staleTime: staleTime,
+  })
+
+  const { data: qualityInspectors, isLoading: isQualityInspectorsLoading } =
+    useQuery({
+      ...listUsersOptions({ query: { userType: UserType.QUALITY_INSPECTOR } }),
+      staleTime: staleTime,
+    })
 
   const { data: qualities, isLoading: isQualitiesLoading } = useQuery({
     ...listQualitiesOptions(),
@@ -75,7 +79,7 @@ export function ProductForm(): React.ReactElement<'div'> {
     staleTime: staleTime,
   })
 
-  // TODO: this should be handled internally by the form, this is a hack
+  // this should be handled internally by the form
   const [selectedHarvestProductsIds, setSelectedHarvestProductsIds] = useState<
     number[]
   >([])
@@ -246,14 +250,11 @@ export function ProductForm(): React.ReactElement<'div'> {
               name={`product.${productType === ProductType.HARVEST ? 'producerId' : 'transformerId'}`}
               children={field => {
                 let traders: UserListDto[] = []
-                if (!isUsersLoading) {
-                  traders = (users as UserListDto[]).filter(user =>
+                if (!isProducersLoading && !isTransformersLoading) {
+                  traders =
                     productType === ProductType.HARVEST
-                      ? user.type === 'producer'
-                      : productType === ProductType.TRANSFORMED
-                        ? user.type === 'transformer'
-                        : true
-                  )
+                      ? (producers as UserListDto[])
+                      : (transformers as UserListDto[])
                 }
 
                 return (
@@ -339,7 +340,6 @@ export function ProductForm(): React.ReactElement<'div'> {
                       label="Matières premières"
                       maxCount={2}
                       onChange={values => {
-                        console.log('Selected harvest product IDs:', values)
                         setSelectedHarvestProductsIds(values as number[])
                       }}
                     />
@@ -409,7 +409,7 @@ export function ProductForm(): React.ReactElement<'div'> {
                       options={
                         isQualitiesLoading
                           ? []
-                          : (qualities! as QualityDto[])
+                          : (qualities as QualityDto[])
                               .filter(quality => {
                                 return (
                                   !productType ||
@@ -448,14 +448,12 @@ export function ProductForm(): React.ReactElement<'div'> {
               children={field => (
                 <field.SelectField
                   options={
-                    isUsersLoading
+                    isQualityInspectorsLoading
                       ? []
-                      : (users as UserListDto[])
-                          .filter(user => user.type === 'quality_inspector')
-                          .map(qi => ({
-                            value: qi.id,
-                            label: qi.lastName + ' ' + qi.firstName,
-                          }))
+                      : (qualityInspectors as UserListDto[]).map(qi => ({
+                          value: qi.id,
+                          label: qi.lastName + ' ' + qi.firstName,
+                        }))
                   }
                   label={t('product.quality_inspector_label')}
                   hint={

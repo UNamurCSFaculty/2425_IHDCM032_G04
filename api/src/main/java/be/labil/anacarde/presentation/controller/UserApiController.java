@@ -9,6 +9,7 @@ import be.labil.anacarde.domain.dto.db.user.UserListDto;
 import be.labil.anacarde.domain.dto.write.user.create.AdminCreateDto;
 import be.labil.anacarde.domain.dto.write.user.create.UserCreateDto;
 import be.labil.anacarde.domain.dto.write.user.update.UserUpdateDto;
+import be.labil.anacarde.presentation.controller.enums.UserType;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -70,8 +71,8 @@ public class UserApiController implements UserApi {
 	}
 
 	@Override
-	public ResponseEntity<List<? extends UserListDto>> listUsers() {
-		List<UserListDto> users = userService.listUsers();
+	public ResponseEntity<List<? extends UserListDto>> listUsers(UserType type) {
+		List<UserListDto> users = userService.listUsers(type);
 		return ResponseEntity.ok(users);
 	}
 }

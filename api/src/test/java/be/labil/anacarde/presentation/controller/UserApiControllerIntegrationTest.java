@@ -15,6 +15,7 @@ import be.labil.anacarde.domain.dto.write.user.update.AddressUpdateDto;
 import be.labil.anacarde.domain.dto.write.user.update.AdminUpdateDto;
 import be.labil.anacarde.domain.dto.write.user.update.UserUpdateDto;
 import be.labil.anacarde.domain.model.User;
+import be.labil.anacarde.presentation.controller.enums.UserType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.File;
@@ -32,7 +33,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /** Tests d'intégration pour le contrôleur des utilisateurs. */
-public class UserControllerApiControllerIntegrationTest extends AbstractIntegrationTest {
+public class UserApiControllerIntegrationTest extends AbstractIntegrationTest {
 
 	private @Autowired ObjectMapper objectMapper;
 	private @Autowired BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -157,6 +158,28 @@ public class UserControllerApiControllerIntegrationTest extends AbstractIntegrat
 				.orElseThrow(() -> new AssertionError("Utilisateur non trouvé"));
 		assertTrue(bCryptPasswordEncoder.matches("newpassword", updatedUser.getPassword()),
 				"Le mot de passe stocké doit correspondre au nouveau mot de passe 'newpassword'");
+	}
+
+	/**
+	 * Teste la récupération de la liste de tous les utilisateurs.
+	 *
+	 */
+	@Test
+	public void testListUsers() throws Exception {
+		mockMvc.perform(get("/api/users").accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()).andExpect(jsonPath("$").isArray());
+	}
+
+	/**
+	 * Teste la récupération de la liste de tous les utilisateurs par type.
+	 *
+	 */
+	@Test
+	public void testListUsersByType() throws Exception {
+		mockMvc.perform(
+				get("/api/users?type=" + UserType.producer).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()).andExpect(jsonPath("$").isArray())
+				.andExpect(jsonPath("$.length()").value(2));
 	}
 
 	/**

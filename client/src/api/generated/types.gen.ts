@@ -2957,10 +2957,35 @@ export type UpdateGlobalSettingsResponses = {
 export type UpdateGlobalSettingsResponse =
   UpdateGlobalSettingsResponses[keyof UpdateGlobalSettingsResponses]
 
+/**
+ * Type d'utilisateur
+ */
+export enum UserType {
+  ADMIN = 'admin',
+  PRODUCER = 'producer',
+  TRANSFORMER = 'transformer',
+  QUALITY_INSPECTOR = 'quality_inspector',
+  EXPORTER = 'exporter',
+  CARRIER = 'carrier',
+  TRADER = 'trader',
+}
+
 export type ListUsersData = {
   body?: never
   path?: never
-  query?: never
+  query?: {
+    /**
+     * Type d'utilisateur
+     */
+    userType?:
+      | 'admin'
+      | 'producer'
+      | 'transformer'
+      | 'quality_inspector'
+      | 'exporter'
+      | 'carrier'
+      | 'trader'
+  }
   url: '/api/users'
 }
 
