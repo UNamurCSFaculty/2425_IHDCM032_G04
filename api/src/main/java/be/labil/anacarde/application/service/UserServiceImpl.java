@@ -121,24 +121,24 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 		if (userType != null) {
 			switch (userType) {
 				case producer -> {
-					return producerRepository.findAll().stream().map(userListMapper::toDto)
-							.collect(Collectors.toList());
+					return producerRepository.findAllByOrderByLastNameAsc().stream()
+							.map(userListMapper::toDto).collect(Collectors.toList());
 				}
 				case transformer -> {
-					return transformerRepository.findAll().stream().map(userListMapper::toDto)
-							.collect(Collectors.toList());
+					return transformerRepository.findAllByOrderByLastNameAsc().stream()
+							.map(userListMapper::toDto).collect(Collectors.toList());
 				}
 				case quality_inspector -> {
-					return qualityInspectorRepository.findAll().stream().map(userListMapper::toDto)
-							.collect(Collectors.toList());
+					return qualityInspectorRepository.findAllByOrderByLastNameAsc().stream()
+							.map(userListMapper::toDto).collect(Collectors.toList());
 				}
 				case exporter -> {
-					return exporterRepository.findAll().stream().map(userListMapper::toDto)
-							.collect(Collectors.toList());
+					return exporterRepository.findAllByOrderByLastNameAsc().stream()
+							.map(userListMapper::toDto).collect(Collectors.toList());
 				}
 				case carrier -> {
-					return carrierRepository.findAll().stream().map(userListMapper::toDto)
-							.collect(Collectors.toList());
+					return carrierRepository.findAllByOrderByLastNameAsc().stream()
+							.map(userListMapper::toDto).collect(Collectors.toList());
 				}
 				default -> throw new ApiErrorException(HttpStatus.BAD_REQUEST,
 						ApiErrorCode.BAD_REQUEST.code(), List.of(new ErrorDetail("userType",
