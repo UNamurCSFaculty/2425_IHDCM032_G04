@@ -611,7 +611,7 @@ export const zTraderListDto = zUserListDto.and(
 export const zProducerListDto = zTraderListDto.and(
   z.object({
     agriculturalIdentifier: z.string().min(1),
-    cooperative: zCooperativeDto,
+    cooperativeId: z.number().int(),
   })
 )
 

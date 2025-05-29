@@ -11,7 +11,10 @@ import be.labil.anacarde.infrastructure.persistence.user.ProducerRepository;
 import be.labil.anacarde.infrastructure.util.PersistenceHelper;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import jakarta.persistence.EntityManager;
 import lombok.AllArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +27,7 @@ public class CooperativeServiceImpl implements CooperativeService {
 	private final CooperativeMapper cooperativeMapper;
 	private final ProducerRepository producerRepository;
 	private final PersistenceHelper persistenceHelper;
+	private final EntityManager em;
 
 	@Override
 	public CooperativeDto createCooperative(CooperativeUpdateDto dto) {
@@ -50,14 +54,14 @@ public class CooperativeServiceImpl implements CooperativeService {
 
 	@Override
 	public CooperativeDto updateCooperative(Integer id, CooperativeUpdateDto dto) {
-		Cooperative existing = cooperativeRepository.findById(id)
+
+		Cooperative coop = cooperativeRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Coopérative non trouvée"));
 
-		Cooperative updated = cooperativeMapper.partialUpdate(dto, existing);
+		cooperativeMapper.partialUpdate(dto, coop);
 
-		Cooperative full = persistenceHelper.saveAndReload(cooperativeRepository, updated,
-				Cooperative::getId);
-		return cooperativeMapper.toDto(full);
+		Cooperative saved = cooperativeRepository.save(coop);
+		return cooperativeMapper.toDto(saved);
 	}
 
 	/**
@@ -76,6 +80,12 @@ public class CooperativeServiceImpl implements CooperativeService {
 		if (president != null) {
 			president.setCooperative(null);
 			producerRepository.save(president);
+		}
+
+		List<Producer> producers = producerRepository.findByCooperativeId(coop.getId());
+		for (Producer producer : producers) {
+			producer.setCooperative(null);
+			producerRepository.save(producer);
 		}
 
 		cooperativeRepository.delete(coop);

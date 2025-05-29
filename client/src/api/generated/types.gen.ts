@@ -1377,7 +1377,7 @@ export type ProducerListDto = TraderListDto & {
   /**
    * Coopérative du producteur
    */
-  cooperative: CooperativeDto
+  cooperativeId: number
 }
 
 /**

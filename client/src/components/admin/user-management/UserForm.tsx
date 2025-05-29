@@ -22,6 +22,7 @@ import {
 } from '@/schemas/api-schemas'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { updateUserMutation } from '@/api/generated/@tanstack/react-query.gen'
+import type { CooperativeDto } from '@/api/generated/types.gen'
 
 interface UserFormProps {
   existingUser: AppUserDetailDto
@@ -30,6 +31,7 @@ interface UserFormProps {
   formTitle: string
   formDescription: string
   submitButtonText: string
+  allCooperatives?: CooperativeDto[]
 }
 
 export const UserForm: React.FC<UserFormProps> = ({
@@ -39,6 +41,7 @@ export const UserForm: React.FC<UserFormProps> = ({
   formTitle,
   formDescription,
   submitButtonText,
+  allCooperatives,
 }) => {
   const { t } = useTranslation()
   const appData = useAppData()
@@ -65,7 +68,9 @@ export const UserForm: React.FC<UserFormProps> = ({
 
     ...(existingUser.type === 'producer' && {
       agriculturalIdentifier: (existingUser as any).agriculturalIdentifier,
-      cooperative: (existingUser as any).cooperative,
+      cooperativeId:
+        (existingUser as any).cooperativeId ??
+        (existingUser as any).cooperative?.id,
     }),
     ...(existingUser.type === 'carrier' && {
       pricePerKm: (existingUser as any).pricePerKm,
@@ -104,8 +109,6 @@ export const UserForm: React.FC<UserFormProps> = ({
       })
     },
   })
-
-  // const currentFormValues  = useStore(form.store, s => s.values)
 
   useEffect(() => {
     form.reset()
@@ -170,7 +173,6 @@ export const UserForm: React.FC<UserFormProps> = ({
           </form.AppField>
           <form.AppField
             name="email"
-            // Assuming zAppUpdateUser has email validation, or use zGeneratedUserUpdateDto.shape.email
             validators={{ onChange: zUserCreateDto.shape.email.optional() }}
           >
             {f => <f.TextField type="email" label={t('form.mail')} />}
@@ -206,8 +208,7 @@ export const UserForm: React.FC<UserFormProps> = ({
           </form.AppField>
         </fieldset>
 
-        {/* Type Specific Fields - Render based on existingUser.type */}
-        {/* Ensure field names match AppUpdateUserDto structure */}
+        {/* User Type Specific Fields */}
         {existingUser.type === 'producer' && (
           <fieldset className="grid grid-cols-1 gap-4 rounded-md border p-4">
             <legend className="text-muted-foreground px-1 text-sm font-medium">
@@ -216,8 +217,20 @@ export const UserForm: React.FC<UserFormProps> = ({
             <form.AppField name="agriculturalIdentifier">
               {f => <f.TextField label={t('form.agricultural_identifier')} />}
             </form.AppField>
-            {/* Add cooperative field if it's part of AppUpdateUserDto for producer */}
-            {/* <form.AppField name="cooperative.id"> or similar based on zCooperativeDto structure */}
+            <form.AppField name="cooperative.id">
+              {f => (
+                <f.SelectField
+                  label={t('form.cooperative')}
+                  placeholder={t('form.select_cooperative')}
+                  options={
+                    allCooperatives?.map(coop => ({
+                      value: coop.id,
+                      label: coop.name,
+                    })) || []
+                  }
+                />
+              )}
+            </form.AppField>
           </fieldset>
         )}
 
@@ -254,7 +267,6 @@ export const UserForm: React.FC<UserFormProps> = ({
           </legend>
           <form.AppField
             name="address.cityId"
-            // Assuming zAppUpdateUser has address validation, or use zAddressDto.shape.cityId
             validators={{ onChange: zAddressDto.shape.cityId.optional() }}
           >
             {f => <f.CityField label={t('form.city')} required={false} />}

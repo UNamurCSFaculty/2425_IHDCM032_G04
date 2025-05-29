@@ -5,7 +5,7 @@ import { TabsList } from '@radix-ui/react-tabs'
 import { createFileRoute } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 
-export const Route = createFileRoute('/admin/users/')({
+export const Route = createFileRoute('/admin/users')({
   component: UserManagementPage,
 })
 

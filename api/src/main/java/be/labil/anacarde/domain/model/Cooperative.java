@@ -2,10 +2,9 @@ package be.labil.anacarde.domain.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.util.HashSet;
+import java.util.Set;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -28,4 +27,8 @@ public class Cooperative extends BaseEntity {
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "president_id", unique = true)
 	private Producer president;
+
+	@OneToMany(mappedBy = "cooperative", fetch = FetchType.LAZY)
+	@Builder.Default
+	private Set<Producer> members = new HashSet<>();
 }

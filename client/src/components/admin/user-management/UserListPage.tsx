@@ -4,6 +4,7 @@ import {
   updateUserMutation,
   deleteUserMutation,
   getUserOptions,
+  listCooperativesOptions, // Importer listCooperativesOptions
 } from '@/api/generated/@tanstack/react-query.gen'
 import type { UserDetailDto, UserListDto } from '@/api/generated/types.gen'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
@@ -91,6 +92,11 @@ export function UserListPage() {
   const { data: allUsers, isLoading: isLoadingUsers } = useQuery({
     ...listUsersOptions(),
   })
+
+  // Ajouter la requête pour récupérer toutes les coopératives
+  const { data: allCooperatives, isLoading: isLoadingCooperatives } = useQuery(
+    listCooperativesOptions()
+  )
 
   const processedUsers = useMemo(() => {
     if (!allUsers) return { paginatedUsers: [], totalPages: 0, totalItems: 0 }
@@ -228,7 +234,8 @@ export function UserListPage() {
     )
   }
 
-  if (isLoadingUsers) {
+  if (isLoadingUsers || isLoadingCooperatives) {
+    // Ajouter isLoadingCooperatives à la condition de chargement
     return (
       <div className="flex items-center justify-center py-10">
         <Loader2 className="text-primary h-8 w-8 animate-spin" />
@@ -411,7 +418,7 @@ export function UserListPage() {
         }}
       >
         <DialogContent className="max-h-[90vh] w-full max-w-[80vw]! overflow-y-auto">
-          {isLoadingUserDetails && (
+          {(isLoadingUserDetails || isLoadingCooperatives) && ( // Vérifier aussi isLoadingCooperatives
             <div className="flex h-48 items-center justify-center">
               <Loader2 className="text-primary h-8 w-8 animate-spin" />
             </div>
@@ -423,8 +430,10 @@ export function UserListPage() {
             </div>
           )}
           {!isLoadingUserDetails &&
+            !isLoadingCooperatives && // S'assurer que les coopératives sont chargées
             !isErrorUserDetails &&
-            detailedUserToEdit && (
+            detailedUserToEdit &&
+            allCooperatives && ( // S'assurer que allCooperatives est disponible
               <UserForm
                 existingUser={detailedUserToEdit as AppUserDetailDto}
                 onSubmitSuccess={() => {
@@ -440,6 +449,7 @@ export function UserListPage() {
                   'admin.user_management.edit_dialog.description'
                 )}
                 submitButtonText={t('buttons.save_changes')}
+                allCooperatives={allCooperatives} // Passer les coopératives ici
               />
             )}
         </DialogContent>

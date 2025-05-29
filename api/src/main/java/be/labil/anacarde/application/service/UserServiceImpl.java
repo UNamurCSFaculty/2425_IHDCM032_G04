@@ -7,6 +7,7 @@ import be.labil.anacarde.domain.dto.db.user.UserDetailDto;
 import be.labil.anacarde.domain.dto.db.user.UserListDto;
 import be.labil.anacarde.domain.dto.write.user.create.ProducerCreateDto;
 import be.labil.anacarde.domain.dto.write.user.create.UserCreateDto;
+import be.labil.anacarde.domain.dto.write.user.update.ProducerUpdateDto;
 import be.labil.anacarde.domain.dto.write.user.update.UserUpdateDto;
 import be.labil.anacarde.domain.mapper.UserDetailMapper;
 import be.labil.anacarde.domain.mapper.UserListMapper;
@@ -19,6 +20,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import jakarta.persistence.EntityManager;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -49,7 +52,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	private final UserListMapper userListMapper;
 	private final PasswordEncoder bCryptPasswordEncoder;
 	private final PersistenceHelper persistenceHelper;
-
+	private final EntityManager em;
 	private final DocumentRepository docRepo;
 	private final FieldService fieldService;
 
@@ -165,9 +168,21 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 				.orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé"));
 		// Mets uniquement à jour les champs non nuls du DTO
 		User user = userDetailMapper.partialUpdate(userUpdateDto, existingUser);
+
+		// Gestion des coopératives.
+		if(userUpdateDto instanceof ProducerUpdateDto producerDto) {
+			if (producerDto.getCooperativeId() != null) {
+				Cooperative reference = em.getReference(Cooperative.class, producerDto.getCooperativeId());
+				((Producer) user).setCooperative(reference);
+			} else {
+				((Producer) user).setCooperative(null);
+			}
+		}
+
 		City city = geoService.findCityById(user.getAddress().getCity().getId());
 		user.getAddress().setCity(city);
 		user.getAddress().setRegion(geoService.findRegionByCityId(city));
+
 
 		if (user.isEnabled() && user.getValidationDate() == null) {
 			user.setValidationDate(LocalDateTime.now());

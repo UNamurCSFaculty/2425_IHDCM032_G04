@@ -18,13 +18,16 @@ public interface ProducerRepository extends GenericUserRepository<Producer> {
 	 *         aucun utilisateur n’est trouvé.
 	 */
 	@Query("SELECT p FROM Producer p LEFT JOIN FETCH p.cooperative WHERE p.agriculturalIdentifier = :agriculturalIdentifier")
-	Optional<User> findByAgriculturalIdentifier(String agriculturalIdentifier);
+	Optional<Producer> findByAgriculturalIdentifier(String agriculturalIdentifier);
 
 	/**
 	 * Retourne les utilisateurs triés alphabétiquement par nom de famille.
 	 *
 	 * @return Une liste triée d'utilisateurs.
 	 */
-	List<User> findAllByOrderByLastNameAsc();
+	List<Producer> findAllByOrderByLastNameAsc();
+
+
+	List<Producer> findByCooperativeId(Integer cooperativeId);
 
 }

@@ -1,6 +1,7 @@
 package be.labil.anacarde.domain.mapper;
 
 import be.labil.anacarde.domain.dto.db.user.*;
+import be.labil.anacarde.domain.dto.write.ContractOfferUpdateDto;
 import be.labil.anacarde.domain.dto.write.user.create.*;
 import be.labil.anacarde.domain.dto.write.user.update.*;
 import be.labil.anacarde.domain.model.*;
@@ -175,10 +176,11 @@ public abstract class UserDetailMapper {
 	public abstract void partialUpdate(TransformerUpdateDto dto, @MappingTarget Transformer entity);
 
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-	@Mapping(target = "cooperative", ignore = true)
+
 	@Mapping(target = "id", ignore = true)
 	@Mapping(source = "address", target = "address")
 	@Mapping(target = "documents", ignore = true)
+	@Mapping(target = "cooperative", ignore = true)
 	public abstract void partialUpdate(ProducerUpdateDto dto, @MappingTarget Producer entity);
 
 	/**
