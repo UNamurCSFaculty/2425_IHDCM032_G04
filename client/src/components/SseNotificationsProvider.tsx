@@ -46,6 +46,15 @@ export const SseNotificationsProvider: React.FC<SseNotificationsProviderProps> =
       }
     })
 
+    es.addEventListener('auctionClosed', evt => {
+      try {
+        const auction = JSON.parse((evt as MessageEvent).data)
+        showAuctionClosedNotification(auction)
+      } catch (err) {
+        console.error('[SSE] Erreur auctionClosed:', err, evt)
+      }
+    })
+
     es.onerror = err => {
       console.error('[SSE] Erreur EventSource', err)
     }
@@ -83,11 +92,43 @@ export const SseNotificationsProvider: React.FC<SseNotificationsProviderProps> =
                   detail: { auctionId: newBid.auctionId }
                 })
               )
-            }, 300)
+            }, 500)
           },
         },
       }
     )
+  }
+
+  function showAuctionClosedNotification(auction: { id: number }) {
+    toast(
+      <span>
+        <b>⏰ Enchère clôturée</b><br />
+        L’enchère n°{auction.id} est terminée.
+      </span>,
+      {
+        description: 'Consultez l’historique pour plus de détails.',
+        duration: 10000,
+        action: {
+          label: "Voir l’enchère",
+          onClick: () => {
+            navigate({ to: '/achats/marche' })
+            setTimeout(() => {
+              window.dispatchEvent(
+                new CustomEvent('auction:showInlineAuction', {
+                  detail: { auctionId: auction.id }
+                })
+              )
+            }, 500)
+          },
+        },
+      }
+    )
+    // Réutiliser event auction:newBid pour rafraîchir page? 
+    // window.dispatchEvent(
+    //   new CustomEvent('auction:newBid', {
+    //     detail: { auctionId: auction.id }
+    //   })
+    // )
   }
 
   return <>{children}</>

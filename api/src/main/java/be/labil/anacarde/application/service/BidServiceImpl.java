@@ -52,11 +52,8 @@ public class BidServiceImpl implements BidService {
 		Auction auction = auctionRepository.findById(dto.getAuctionId())
 				.orElseThrow(() -> new ResourceNotFoundException("Enchère non trouvée"));
 		// Ajoute l'enchérisseur à la liste des abonnés Redis (si pas déjà abonné)
-		String userKey = (full.getTrader() != null && full.getTrader().getUsername() != null)
-				? full.getTrader().getUsername()
-				: null;
-		if (userKey != null) {
-			auctionSseService.addSubscriber(dto.getAuctionId(), userKey);
+		if (full.getTrader() != null && full.getTrader().getUsername() != null) {
+			auctionSseService.addSubscriber(dto.getAuctionId(), full.getTrader().getUsername());
 		}
 
 		// Notifie tous les abonnés de la nouvelle enchère
