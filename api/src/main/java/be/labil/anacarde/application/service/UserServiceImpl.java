@@ -18,11 +18,9 @@ import be.labil.anacarde.infrastructure.util.PersistenceHelper;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.datafaker.Faker;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -49,7 +47,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	private final PersistenceHelper persistenceHelper;
 
 	private final DocumentRepository docRepo;
-	private final Faker faker = new Faker(Locale.of("fr"));
 	private final FieldService fieldService;
 
 	@Override
@@ -98,7 +95,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 		// création et association d'un champ à la même adresse
 		if (dto instanceof ProducerCreateDto producerDto) {
 			FieldDto fieldDto = new FieldDto();
-			fieldDto.setIdentifier("FIELD-" + faker.number().digits(10));
+			fieldDto.setIdentifier("FIELD-" + user.getId().toString() + "001");
 			fieldDto.setAddress(producerDto.getAddress());
 			Producer producer = (Producer) user;
 			fieldDto.setProducer(userDetailMapper.toDto(producer));
