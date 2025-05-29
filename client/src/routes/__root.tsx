@@ -10,6 +10,7 @@ import {
   useRouterState,
 } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
+import { SseNotificationsProvider } from '@/components/SseNotificationsProvider'
 
 export interface MyRouterContext {
   user?: UserDetailDto
@@ -42,13 +43,15 @@ function RootComponent() {
   // Layout public
   return (
     <>
-      <Header />
-      <Outlet />
-      <FooterCta />
-      <Footer />
-      {import.meta.env.DEV && (
-        <TanStackRouterDevtools position="bottom-right" />
-      )}
+      <SseNotificationsProvider>
+        <Header />
+        <Outlet />
+        <FooterCta />
+        <Footer />
+        {import.meta.env.DEV && (
+          <TanStackRouterDevtools position="bottom-right" />
+        )}
+      </SseNotificationsProvider>
     </>
   )
 }
