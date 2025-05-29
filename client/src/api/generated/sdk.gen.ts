@@ -1390,7 +1390,7 @@ export const listQualityControls = <ThrowOnError extends boolean = false>(
 }
 
 /**
- * Créer un contrôle qualité
+ * Créer un contrôle qualité et téléverser des documents
  */
 export const createQualityControl = <ThrowOnError extends boolean = false>(
   options: Options<CreateQualityControlData, ThrowOnError>
@@ -1400,6 +1400,7 @@ export const createQualityControl = <ThrowOnError extends boolean = false>(
     CreateQualityControlError,
     ThrowOnError
   >({
+    ...formDataBodySerializer,
     security: [
       {
         scheme: 'bearer',
@@ -1409,7 +1410,7 @@ export const createQualityControl = <ThrowOnError extends boolean = false>(
     url: '/api/quality-controls',
     ...options,
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': null,
       ...options?.headers,
     },
   })

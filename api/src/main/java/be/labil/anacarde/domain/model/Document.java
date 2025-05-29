@@ -10,7 +10,7 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
-@Table(name = "document", indexes = @Index(columnList = "user_id"))
+@Table(name = "document")
 @Getter
 @Setter
 @SuperBuilder

@@ -56,7 +56,6 @@ export function ProductForm({
   const createProductRequest = useMutation({
     ...createProductMutation(),
     onSuccess() {
-      console.log('Product created successfully')
       navigate({ to: '/depots/mes-produits' })
     },
     onError(error) {
@@ -82,10 +81,12 @@ export function ProductForm({
   type ProductRegistration = z.infer<typeof productSchema>
 
   const handleSaveProduct = async (value: ProductRegistration) => {
-    console.log('Saving product with values:', value)
     try {
       const qc = await createQualityControlRequest.mutateAsync({
-        body: value.qualityControl,
+        body: {
+          qualityControl: value.qualityControl,
+          documents: value.documents,
+        },
       })
 
       if (value.product.type === ProductType.TRANSFORMED) {
@@ -230,7 +231,7 @@ export function ProductForm({
                   <field.SelectField
                     options={traders.map(trader => ({
                       value: trader.id,
-                      label: trader.firstName + ' ' + trader.lastName,
+                      label: trader.lastName + ' ' + trader.firstName,
                     }))}
                     label={
                       productType === ProductType.HARVEST
@@ -402,7 +403,7 @@ export function ProductForm({
                     .filter(user => user.type === 'quality_inspector')
                     .map(qi => ({
                       value: qi.id,
-                      label: qi.firstName + ' ' + qi.lastName,
+                      label: qi.lastName + ' ' + qi.firstName,
                     }))}
                   label={t('product.quality_inspector_label')}
                   hint={
@@ -424,6 +425,7 @@ export function ProductForm({
                   accept="application/pdf,image/*"
                   maxFiles={1}
                   maxSize={5}
+                  required={false}
                 />
               )}
             </form.AppField>

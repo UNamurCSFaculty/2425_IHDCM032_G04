@@ -114,7 +114,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<UserListDto> listUsers() {
-		return userRepository.findAll().stream().map(userListMapper::toDto)
+		return userRepository.findAllByOrderByLastNameAsc().stream().map(userListMapper::toDto)
 				.collect(Collectors.toList());
 	}
 

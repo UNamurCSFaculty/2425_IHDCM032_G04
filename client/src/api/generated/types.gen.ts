@@ -3069,21 +3069,22 @@ export type ListQualityControlsResponse =
   ListQualityControlsResponses[keyof ListQualityControlsResponses]
 
 export type CreateQualityControlData = {
-  body: QualityControlUpdateDto
-  path?: never
-  query: {
-    documents: Array<Blob | File>
+  body: {
+    qualityControl?: QualityControlUpdateDto
+    documents?: Array<Blob | File>
   }
+  path?: never
+  query?: never
   url: '/api/quality-controls'
 }
 
 export type CreateQualityControlErrors = {
   /**
-   * Bad Request
+   * Erreur de validation ou JSON invalide
    */
   400: ApiErrorResponse
   /**
-   * Conflict
+   * Conflit avec un utilisateur existant
    */
   409: ApiErrorResponse
 }
@@ -3093,7 +3094,7 @@ export type CreateQualityControlError =
 
 export type CreateQualityControlResponses = {
   /**
-   * Created
+   * Contrôle qualité créé avec succès
    */
   201: QualityControlDto
 }
