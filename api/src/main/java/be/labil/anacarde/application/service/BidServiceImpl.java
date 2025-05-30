@@ -1,7 +1,10 @@
 package be.labil.anacarde.application.service;
 
+import be.labil.anacarde.application.exception.ApiErrorCode;
+import be.labil.anacarde.application.exception.ApiErrorException;
 import be.labil.anacarde.application.exception.ResourceNotFoundException;
 import be.labil.anacarde.domain.dto.db.BidDto;
+import be.labil.anacarde.domain.dto.db.GlobalSettingsDto;
 import be.labil.anacarde.domain.dto.write.BidUpdateDto;
 import be.labil.anacarde.domain.mapper.BidMapper;
 import be.labil.anacarde.domain.model.Bid;
@@ -12,6 +15,7 @@ import be.labil.anacarde.infrastructure.util.PersistenceHelper;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,9 +27,12 @@ public class BidServiceImpl implements BidService {
 	private final BidRepository bidRepository;
 	private final BidMapper bidMapper;
 	private final PersistenceHelper persistenceHelper;
+	private final GlobalSettingsService globalSettingsService;
 
 	@Override
 	public BidDto createBid(BidUpdateDto dto) {
+		checkBidSettings(dto);
+
 		Bid bid = bidMapper.toEntity(dto);
 
 		if (dto.getStatusId() == null) {
@@ -62,6 +69,8 @@ public class BidServiceImpl implements BidService {
 
 	@Override
 	public BidDto updateBid(Integer id, BidUpdateDto bidDetailDto) {
+		checkBidSettings(bidDetailDto);
+
 		Bid existingBid = bidRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Offre non trouvée"));
 
@@ -117,5 +126,33 @@ public class BidServiceImpl implements BidService {
 			throw new ResourceNotFoundException("Offre non trouvée");
 		}
 		bidRepository.deleteById(id);
+	}
+
+	private void checkBidSettings(BidUpdateDto bidUpdateDto) {
+		GlobalSettingsDto settings = globalSettingsService.getGlobalSettings();
+		List<Bid> currentBids = null;
+
+		if (settings.getForceBetterBids()) {
+			currentBids = bidRepository.findByAuctionId(bidUpdateDto.getAuctionId());
+
+			if (currentBids.size() > 0 && bidUpdateDto.getAmount().doubleValue() <= currentBids
+					.getLast().getAmount().doubleValue()) {
+				throw new ApiErrorException(HttpStatus.BAD_REQUEST, ApiErrorCode.BAD_REQUEST.code(),
+						"forceBetterBids", "Une nouvelle offre doit être meilleure");
+			}
+		}
+
+		if (settings.getMinIncrement() != null) {
+			if (currentBids == null) {
+				currentBids = bidRepository.findByAuctionId(bidUpdateDto.getAuctionId());
+			}
+
+			if (currentBids.size() > 0 && bidUpdateDto.getAmount().doubleValue() <= currentBids
+					.getLast().getAmount().doubleValue() + settings.getMinIncrement()) {
+				throw new ApiErrorException(HttpStatus.BAD_REQUEST, ApiErrorCode.BAD_REQUEST.code(),
+						"minIncrement", "Une nouvelle offre doit être meilleure de "
+								+ settings.getMinIncrement() + " CFA");
+			}
+		}
 	}
 }

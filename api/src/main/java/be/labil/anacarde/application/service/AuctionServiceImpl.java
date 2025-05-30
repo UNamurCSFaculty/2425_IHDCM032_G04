@@ -48,9 +48,9 @@ public class AuctionServiceImpl implements AuctionService {
 
 	@Override
 	public AuctionDto createAuction(AuctionUpdateDto auctionUpdateDto) {
-		Auction auction = auctionMapper.toEntity(auctionUpdateDto);
-
 		checkAuctionSettings(auctionUpdateDto);
+
+		Auction auction = auctionMapper.toEntity(auctionUpdateDto);
 
 		// Use default status
 		if (auctionUpdateDto.getStatusId() == null) {
@@ -114,6 +114,8 @@ public class AuctionServiceImpl implements AuctionService {
 	public AuctionDto updateAuction(Integer id, AuctionUpdateDto auctionDetailDto) {
 		Auction existingAuction = auctionRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Enchère non trouvée"));
+
+		checkAuctionSettings(auctionDetailDto);
 
 		if (existingAuction.getStatus().getId()
 				.equals(tradeStatusRepository.findStatusPending().getId())
@@ -238,5 +240,4 @@ public class AuctionServiceImpl implements AuctionService {
 						"defaultMaxPriceKg", "Prix maximum non respecté");
 		}
 	}
-
 }
