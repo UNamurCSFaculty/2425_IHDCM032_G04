@@ -10,7 +10,7 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
-@Table(name = "document", indexes = @Index(columnList = "user_id"))
+@Table(name = "document")
 @Getter
 @Setter
 @SuperBuilder
@@ -44,6 +44,10 @@ public class Document extends BaseEntity {
 
 	/* relations */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id", nullable = false)
+	@JoinColumn(name = "user_id", nullable = true)
 	private User user;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "quality_control", nullable = true)
+	private QualityControl qualityControl;
 }

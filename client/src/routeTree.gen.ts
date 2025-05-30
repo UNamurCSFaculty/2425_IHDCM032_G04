@@ -21,15 +21,16 @@ import { Route as IndexImport } from './routes/index'
 import { Route as ContactIndexImport } from './routes/contact/index'
 import { Route as AdminIndexImport } from './routes/admin/index'
 import { Route as ContactMerciImport } from './routes/contact/merci'
+import { Route as AdminUsersImport } from './routes/admin/users'
 import { Route as AdminGlobalSettingsImport } from './routes/admin/global-settings'
+import { Route as AdminCooperativesImport } from './routes/admin/cooperatives'
 import { Route as AdminAnalyticsImport } from './routes/admin/analytics'
-import { Route as AdminUsersIndexImport } from './routes/admin/users/index'
-import { Route as AdminCooperativesIndexImport } from './routes/admin/cooperatives/index'
 import { Route as AdminBlogIndexImport } from './routes/admin/blog/index'
 import { Route as AuthenticatedVentesNouvelleEnchereImport } from './routes/_authenticated/ventes/nouvelle-enchere'
 import { Route as AuthenticatedVentesMesEncheresImport } from './routes/_authenticated/ventes/mes-encheres'
 import { Route as AuthenticatedDepotsNouveauProduitImport } from './routes/_authenticated/depots/nouveau-produit'
 import { Route as AuthenticatedDepotsMesProduitsImport } from './routes/_authenticated/depots/mes-produits'
+import { Route as AuthenticatedContratsMesContratsImport } from './routes/_authenticated/contrats/mes-contrats'
 import { Route as AuthenticatedAchatsMesEncheresImport } from './routes/_authenticated/achats/mes-encheres'
 import { Route as AuthenticatedAchatsMarcheImport } from './routes/_authenticated/achats/marche'
 
@@ -94,27 +95,27 @@ const ContactMerciRoute = ContactMerciImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const AdminUsersRoute = AdminUsersImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AdminRoute,
+} as any)
+
 const AdminGlobalSettingsRoute = AdminGlobalSettingsImport.update({
   id: '/global-settings',
   path: '/global-settings',
   getParentRoute: () => AdminRoute,
 } as any)
 
+const AdminCooperativesRoute = AdminCooperativesImport.update({
+  id: '/cooperatives',
+  path: '/cooperatives',
+  getParentRoute: () => AdminRoute,
+} as any)
+
 const AdminAnalyticsRoute = AdminAnalyticsImport.update({
   id: '/analytics',
   path: '/analytics',
-  getParentRoute: () => AdminRoute,
-} as any)
-
-const AdminUsersIndexRoute = AdminUsersIndexImport.update({
-  id: '/users/',
-  path: '/users/',
-  getParentRoute: () => AdminRoute,
-} as any)
-
-const AdminCooperativesIndexRoute = AdminCooperativesIndexImport.update({
-  id: '/cooperatives/',
-  path: '/cooperatives/',
   getParentRoute: () => AdminRoute,
 } as any)
 
@@ -149,6 +150,13 @@ const AuthenticatedDepotsMesProduitsRoute =
   AuthenticatedDepotsMesProduitsImport.update({
     id: '/depots/mes-produits',
     path: '/depots/mes-produits',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+
+const AuthenticatedContratsMesContratsRoute =
+  AuthenticatedContratsMesContratsImport.update({
+    id: '/contrats/mes-contrats',
+    path: '/contrats/mes-contrats',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
 
@@ -225,11 +233,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAnalyticsImport
       parentRoute: typeof AdminImport
     }
+    '/admin/cooperatives': {
+      id: '/admin/cooperatives'
+      path: '/cooperatives'
+      fullPath: '/admin/cooperatives'
+      preLoaderRoute: typeof AdminCooperativesImport
+      parentRoute: typeof AdminImport
+    }
     '/admin/global-settings': {
       id: '/admin/global-settings'
       path: '/global-settings'
       fullPath: '/admin/global-settings'
       preLoaderRoute: typeof AdminGlobalSettingsImport
+      parentRoute: typeof AdminImport
+    }
+    '/admin/users': {
+      id: '/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersImport
       parentRoute: typeof AdminImport
     }
     '/contact/merci': {
@@ -267,6 +289,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAchatsMesEncheresImport
       parentRoute: typeof AuthenticatedImport
     }
+    '/_authenticated/contrats/mes-contrats': {
+      id: '/_authenticated/contrats/mes-contrats'
+      path: '/contrats/mes-contrats'
+      fullPath: '/contrats/mes-contrats'
+      preLoaderRoute: typeof AuthenticatedContratsMesContratsImport
+      parentRoute: typeof AuthenticatedImport
+    }
     '/_authenticated/depots/mes-produits': {
       id: '/_authenticated/depots/mes-produits'
       path: '/depots/mes-produits'
@@ -302,20 +331,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminBlogIndexImport
       parentRoute: typeof AdminImport
     }
-    '/admin/cooperatives/': {
-      id: '/admin/cooperatives/'
-      path: '/cooperatives'
-      fullPath: '/admin/cooperatives'
-      preLoaderRoute: typeof AdminCooperativesIndexImport
-      parentRoute: typeof AdminImport
-    }
-    '/admin/users/': {
-      id: '/admin/users/'
-      path: '/users'
-      fullPath: '/admin/users'
-      preLoaderRoute: typeof AdminUsersIndexImport
-      parentRoute: typeof AdminImport
-    }
   }
 }
 
@@ -324,6 +339,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteChildren {
   AuthenticatedAchatsMarcheRoute: typeof AuthenticatedAchatsMarcheRoute
   AuthenticatedAchatsMesEncheresRoute: typeof AuthenticatedAchatsMesEncheresRoute
+  AuthenticatedContratsMesContratsRoute: typeof AuthenticatedContratsMesContratsRoute
   AuthenticatedDepotsMesProduitsRoute: typeof AuthenticatedDepotsMesProduitsRoute
   AuthenticatedDepotsNouveauProduitRoute: typeof AuthenticatedDepotsNouveauProduitRoute
   AuthenticatedVentesMesEncheresRoute: typeof AuthenticatedVentesMesEncheresRoute
@@ -333,6 +349,7 @@ interface AuthenticatedRouteChildren {
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAchatsMarcheRoute: AuthenticatedAchatsMarcheRoute,
   AuthenticatedAchatsMesEncheresRoute: AuthenticatedAchatsMesEncheresRoute,
+  AuthenticatedContratsMesContratsRoute: AuthenticatedContratsMesContratsRoute,
   AuthenticatedDepotsMesProduitsRoute: AuthenticatedDepotsMesProduitsRoute,
   AuthenticatedDepotsNouveauProduitRoute:
     AuthenticatedDepotsNouveauProduitRoute,
@@ -347,20 +364,20 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
 
 interface AdminRouteChildren {
   AdminAnalyticsRoute: typeof AdminAnalyticsRoute
+  AdminCooperativesRoute: typeof AdminCooperativesRoute
   AdminGlobalSettingsRoute: typeof AdminGlobalSettingsRoute
+  AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminBlogIndexRoute: typeof AdminBlogIndexRoute
-  AdminCooperativesIndexRoute: typeof AdminCooperativesIndexRoute
-  AdminUsersIndexRoute: typeof AdminUsersIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAnalyticsRoute: AdminAnalyticsRoute,
+  AdminCooperativesRoute: AdminCooperativesRoute,
   AdminGlobalSettingsRoute: AdminGlobalSettingsRoute,
+  AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminBlogIndexRoute: AdminBlogIndexRoute,
-  AdminCooperativesIndexRoute: AdminCooperativesIndexRoute,
-  AdminUsersIndexRoute: AdminUsersIndexRoute,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
@@ -374,19 +391,20 @@ export interface FileRoutesByFullPath {
   '/inscription': typeof InscriptionRoute
   '/inscription-succes': typeof InscriptionSuccesRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/cooperatives': typeof AdminCooperativesRoute
   '/admin/global-settings': typeof AdminGlobalSettingsRoute
+  '/admin/users': typeof AdminUsersRoute
   '/contact/merci': typeof ContactMerciRoute
   '/admin/': typeof AdminIndexRoute
   '/contact': typeof ContactIndexRoute
   '/achats/marche': typeof AuthenticatedAchatsMarcheRoute
   '/achats/mes-encheres': typeof AuthenticatedAchatsMesEncheresRoute
+  '/contrats/mes-contrats': typeof AuthenticatedContratsMesContratsRoute
   '/depots/mes-produits': typeof AuthenticatedDepotsMesProduitsRoute
   '/depots/nouveau-produit': typeof AuthenticatedDepotsNouveauProduitRoute
   '/ventes/mes-encheres': typeof AuthenticatedVentesMesEncheresRoute
   '/ventes/nouvelle-enchere': typeof AuthenticatedVentesNouvelleEnchereRoute
   '/admin/blog': typeof AdminBlogIndexRoute
-  '/admin/cooperatives': typeof AdminCooperativesIndexRoute
-  '/admin/users': typeof AdminUsersIndexRoute
 }
 
 export interface FileRoutesByTo {
@@ -397,19 +415,20 @@ export interface FileRoutesByTo {
   '/inscription': typeof InscriptionRoute
   '/inscription-succes': typeof InscriptionSuccesRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/cooperatives': typeof AdminCooperativesRoute
   '/admin/global-settings': typeof AdminGlobalSettingsRoute
+  '/admin/users': typeof AdminUsersRoute
   '/contact/merci': typeof ContactMerciRoute
   '/admin': typeof AdminIndexRoute
   '/contact': typeof ContactIndexRoute
   '/achats/marche': typeof AuthenticatedAchatsMarcheRoute
   '/achats/mes-encheres': typeof AuthenticatedAchatsMesEncheresRoute
+  '/contrats/mes-contrats': typeof AuthenticatedContratsMesContratsRoute
   '/depots/mes-produits': typeof AuthenticatedDepotsMesProduitsRoute
   '/depots/nouveau-produit': typeof AuthenticatedDepotsNouveauProduitRoute
   '/ventes/mes-encheres': typeof AuthenticatedVentesMesEncheresRoute
   '/ventes/nouvelle-enchere': typeof AuthenticatedVentesNouvelleEnchereRoute
   '/admin/blog': typeof AdminBlogIndexRoute
-  '/admin/cooperatives': typeof AdminCooperativesIndexRoute
-  '/admin/users': typeof AdminUsersIndexRoute
 }
 
 export interface FileRoutesById {
@@ -422,19 +441,20 @@ export interface FileRoutesById {
   '/inscription': typeof InscriptionRoute
   '/inscription-succes': typeof InscriptionSuccesRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/cooperatives': typeof AdminCooperativesRoute
   '/admin/global-settings': typeof AdminGlobalSettingsRoute
+  '/admin/users': typeof AdminUsersRoute
   '/contact/merci': typeof ContactMerciRoute
   '/admin/': typeof AdminIndexRoute
   '/contact/': typeof ContactIndexRoute
   '/_authenticated/achats/marche': typeof AuthenticatedAchatsMarcheRoute
   '/_authenticated/achats/mes-encheres': typeof AuthenticatedAchatsMesEncheresRoute
+  '/_authenticated/contrats/mes-contrats': typeof AuthenticatedContratsMesContratsRoute
   '/_authenticated/depots/mes-produits': typeof AuthenticatedDepotsMesProduitsRoute
   '/_authenticated/depots/nouveau-produit': typeof AuthenticatedDepotsNouveauProduitRoute
   '/_authenticated/ventes/mes-encheres': typeof AuthenticatedVentesMesEncheresRoute
   '/_authenticated/ventes/nouvelle-enchere': typeof AuthenticatedVentesNouvelleEnchereRoute
   '/admin/blog/': typeof AdminBlogIndexRoute
-  '/admin/cooperatives/': typeof AdminCooperativesIndexRoute
-  '/admin/users/': typeof AdminUsersIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -448,19 +468,20 @@ export interface FileRouteTypes {
     | '/inscription'
     | '/inscription-succes'
     | '/admin/analytics'
+    | '/admin/cooperatives'
     | '/admin/global-settings'
+    | '/admin/users'
     | '/contact/merci'
     | '/admin/'
     | '/contact'
     | '/achats/marche'
     | '/achats/mes-encheres'
+    | '/contrats/mes-contrats'
     | '/depots/mes-produits'
     | '/depots/nouveau-produit'
     | '/ventes/mes-encheres'
     | '/ventes/nouvelle-enchere'
     | '/admin/blog'
-    | '/admin/cooperatives'
-    | '/admin/users'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -470,19 +491,20 @@ export interface FileRouteTypes {
     | '/inscription'
     | '/inscription-succes'
     | '/admin/analytics'
+    | '/admin/cooperatives'
     | '/admin/global-settings'
+    | '/admin/users'
     | '/contact/merci'
     | '/admin'
     | '/contact'
     | '/achats/marche'
     | '/achats/mes-encheres'
+    | '/contrats/mes-contrats'
     | '/depots/mes-produits'
     | '/depots/nouveau-produit'
     | '/ventes/mes-encheres'
     | '/ventes/nouvelle-enchere'
     | '/admin/blog'
-    | '/admin/cooperatives'
-    | '/admin/users'
   id:
     | '__root__'
     | '/'
@@ -493,19 +515,20 @@ export interface FileRouteTypes {
     | '/inscription'
     | '/inscription-succes'
     | '/admin/analytics'
+    | '/admin/cooperatives'
     | '/admin/global-settings'
+    | '/admin/users'
     | '/contact/merci'
     | '/admin/'
     | '/contact/'
     | '/_authenticated/achats/marche'
     | '/_authenticated/achats/mes-encheres'
+    | '/_authenticated/contrats/mes-contrats'
     | '/_authenticated/depots/mes-produits'
     | '/_authenticated/depots/nouveau-produit'
     | '/_authenticated/ventes/mes-encheres'
     | '/_authenticated/ventes/nouvelle-enchere'
     | '/admin/blog/'
-    | '/admin/cooperatives/'
-    | '/admin/users/'
   fileRoutesById: FileRoutesById
 }
 
@@ -565,6 +588,7 @@ export const routeTree = rootRoute
       "children": [
         "/_authenticated/achats/marche",
         "/_authenticated/achats/mes-encheres",
+        "/_authenticated/contrats/mes-contrats",
         "/_authenticated/depots/mes-produits",
         "/_authenticated/depots/nouveau-produit",
         "/_authenticated/ventes/mes-encheres",
@@ -575,11 +599,11 @@ export const routeTree = rootRoute
       "filePath": "admin.tsx",
       "children": [
         "/admin/analytics",
+        "/admin/cooperatives",
         "/admin/global-settings",
+        "/admin/users",
         "/admin/",
-        "/admin/blog/",
-        "/admin/cooperatives/",
-        "/admin/users/"
+        "/admin/blog/"
       ]
     },
     "/connexion": {
@@ -595,8 +619,16 @@ export const routeTree = rootRoute
       "filePath": "admin/analytics.tsx",
       "parent": "/admin"
     },
+    "/admin/cooperatives": {
+      "filePath": "admin/cooperatives.tsx",
+      "parent": "/admin"
+    },
     "/admin/global-settings": {
       "filePath": "admin/global-settings.tsx",
+      "parent": "/admin"
+    },
+    "/admin/users": {
+      "filePath": "admin/users.tsx",
       "parent": "/admin"
     },
     "/contact/merci": {
@@ -617,6 +649,10 @@ export const routeTree = rootRoute
       "filePath": "_authenticated/achats/mes-encheres.tsx",
       "parent": "/_authenticated"
     },
+    "/_authenticated/contrats/mes-contrats": {
+      "filePath": "_authenticated/contrats/mes-contrats.tsx",
+      "parent": "/_authenticated"
+    },
     "/_authenticated/depots/mes-produits": {
       "filePath": "_authenticated/depots/mes-produits.tsx",
       "parent": "/_authenticated"
@@ -635,14 +671,6 @@ export const routeTree = rootRoute
     },
     "/admin/blog/": {
       "filePath": "admin/blog/index.tsx",
-      "parent": "/admin"
-    },
-    "/admin/cooperatives/": {
-      "filePath": "admin/cooperatives/index.tsx",
-      "parent": "/admin"
-    },
-    "/admin/users/": {
-      "filePath": "admin/users/index.tsx",
       "parent": "/admin"
     }
   }

@@ -122,6 +122,21 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
     []
   )
 
+  // Display inline auction on custom event (SSE notif's toast action)
+  useEffect(() => {
+    const handler = (event: Event) => {
+      const customEvent = event as CustomEvent<{ auctionId: number }>
+      if (customEvent.detail && customEvent.detail.auctionId) {
+        const found = auctions.find(a => a.id === customEvent.detail.auctionId)
+        if (found) setInlineAuction(found)
+      }
+    }
+    window.addEventListener('auction:showInlineAuction', handler)
+    return () => {
+      window.removeEventListener('auction:showInlineAuction', handler)
+    }
+  }, [auctions])
+
   // Render
   const isInCardDetail = viewMode === 'cards' && inlineAuction
   const cssCard = isInCardDetail ? 'lg:justify-start' : 'lg:justify-end'

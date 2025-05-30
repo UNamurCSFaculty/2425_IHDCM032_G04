@@ -4,6 +4,8 @@ import {
   updateUserMutation,
   deleteUserMutation,
   getUserOptions,
+  listUsersQueryKey,
+  getUserQueryKey,
 } from '@/api/generated/@tanstack/react-query.gen'
 import type { UserDetailDto, UserListDto } from '@/api/generated/types.gen'
 import type { AppUpdateUserDto, AppUserDetailDto } from '@/schemas/api-schemas'
@@ -78,8 +80,7 @@ export function PendingApprovalsPage() {
   const { data: allPendingUsersInitial, isLoading: isLoadingPending } =
     useQuery({
       ...listUsersOptions(),
-      select: data =>
-        data.filter(user => !user.validationDate && user.enabled === false),
+      select: data => data.filter(user => user.enabled === false),
     })
 
   const processedPendingUsers = useMemo(() => {
@@ -117,7 +118,6 @@ export function PendingApprovalsPage() {
           const dateB = valB ? new Date(valB as string).getTime() : 0
           comparison = dateA - dateB
         }
-        // Add other type comparisons if needed for pending users
 
         return sortDirection === 'asc' ? comparison : comparison * -1
       })
@@ -155,51 +155,36 @@ export function PendingApprovalsPage() {
   })
 
   const mutationApprove = useMutation({
-    mutationFn: async (userToApprove: AppUpdateUserDto) => {
-      return updateUserMutation().mutationFn!({
-        path: { id: detailedUserForReview!.id },
-        body: userToApprove,
-      })
-    },
+    ...updateUserMutation(),
     onSuccess: updatedUser => {
-      queryClient.invalidateQueries({ queryKey: listUsersOptions().queryKey })
+      queryClient.invalidateQueries({ queryKey: listUsersQueryKey() })
       queryClient.invalidateQueries({
-        queryKey: getUserOptions({
-          path: { id: updatedUser.id },
-        }).queryKey,
+        queryKey: getUserQueryKey({ path: { id: updatedUser.id } }),
       })
       toast.success(t('admin.user_management.toasts.user_approved_success'))
       setIsReviewDialogOpen(false)
       setUserForReviewId(null)
     },
-    onError: (error: any) => {
-      toast.error(t('common.error'), {
+    onError: error => {
+      toast.error(t('common.error_general'), {
         description:
-          error.message ||
+          error.errors.map(e => e.message).join(' ,') ||
           t('admin.user_management.toasts.user_approved_error'),
       })
     },
   })
 
   const mutationReject = useMutation({
-    mutationFn: (userToReject: UserDetailDto) => {
-      return deleteUserMutation().mutationFn!({
-        path: { id: userToReject.id },
-      })
-    },
-    onSuccess: (_, originalUserPassedToMutate) => {
-      queryClient.invalidateQueries({ queryKey: listUsersOptions().queryKey })
-      queryClient.invalidateQueries({
-        queryKey: getUserOptions({
-          path: { id: originalUserPassedToMutate.id },
-        }).queryKey,
-      })
-      toast.error(t('admin.user_management.toasts.user_rejected_success'))
+    ...deleteUserMutation(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: listUsersQueryKey() })
+
+      toast.success(t('admin.user_management.toasts.user_rejected_success'))
       setIsReviewDialogOpen(false)
       setUserForReviewId(null)
     },
     onError: (error: any) => {
-      toast.error(t('common.error'), {
+      toast.error(t('common.error_general'), {
         description:
           error.message ||
           t('admin.user_management.toasts.user_rejected_error'),
@@ -214,15 +199,18 @@ export function PendingApprovalsPage() {
 
   const handleApprove = () => {
     if (detailedUserForReview) {
-      // Use the fetched detailed user
-      mutationApprove.mutate(detailedUserForReview as AppUpdateUserDto)
+      mutationApprove.mutate({
+        path: { id: detailedUserForReview!.id },
+        body: { ...detailedUserForReview, enabled: true } as AppUpdateUserDto,
+      })
     }
   }
 
   const handleReject = () => {
     if (detailedUserForReview) {
-      // Use the fetched detailed user
-      mutationReject.mutate(detailedUserForReview)
+      mutationReject.mutate({
+        path: { id: detailedUserForReview.id },
+      })
     }
   }
 
@@ -233,7 +221,7 @@ export function PendingApprovalsPage() {
       setSortColumn(column)
       setSortDirection('asc')
     }
-    setCurrentPage(1) // Reset to first page on sort
+    setCurrentPage(1)
   }
 
   const renderSortIcon = (column: SortableColumnPending) => {
@@ -312,7 +300,7 @@ export function PendingApprovalsPage() {
         const fileURL = URL.createObjectURL(actualBlob)
         const newWindow = window.open(fileURL, '_blank')
         if (!newWindow) {
-          toast.error(t('common.popup_blocker_error_title'), {
+          toast.error(t('common.error_general'), {
             description: t('common.popup_blocker_error_description'),
           })
         }
@@ -321,7 +309,7 @@ export function PendingApprovalsPage() {
           'Expected a Blob response for viewing, but received:',
           response
         )
-        toast.error(t('common.download_error'), {
+        toast.error(t('common.error_general'), {
           description: t(
             'admin.user_management.toasts.invalid_file_format_received'
           ),

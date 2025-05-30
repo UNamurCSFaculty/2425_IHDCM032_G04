@@ -54,6 +54,10 @@
       "description_line2": "Your account is pending validation by an administrator.",
       "email_notification": "You will receive an email once your account is activated.",
       "go_to_login": "Go to login page"
+    },
+    "contracts_list_contracts": {
+      "title": "My contracts",
+      "subtitle": "View all your contracts."
     }
   },
   "homepage": {
@@ -141,7 +145,9 @@
     "new_auction": "New Auction",
     "deposits": "Deposits",
     "my_deposits": "My Products",
-    "new_deposit": "New Product"
+    "new_deposit": "New Product",
+    "contracts": "Contracts",
+    "my_contracts": "My contracts"
   },
   "buttons": {
     "cancel": "Cancel",
@@ -273,7 +279,7 @@
     "upload_all": "All files are accepted",
     "upload_click_or_drag": "Click to upload or drag and drop",
     "upload_invalid_type": "Invalid file type",
-    "upload_files": "Files",
+    "upload_files": "File(s)",
     "documents": "Documents",
     "file_type": {
       "image": "Image",
@@ -420,7 +426,7 @@
       "submit_button": "Save Product",
       "section_quality_control_title": "Quality Control",
       "control_date_label": "Control Date",
-      "certificate_label": "Certificate (Photo or PDF)"
+      "certificate_label": "Certificate Document"
     },
     "weight_in_kg_label": "Weight (kg)"
   },
@@ -458,7 +464,13 @@
     "all_regions_placeholder": "All Regions",
     "all_cities_placeholder": "All Cities",
     "expires_before_label": "Expires before",
-    "choose_date_placeholder": "Choose…"
+    "choose_date_placeholder": "Choose…",
+    "user_type": {
+      "undefined": "Undefined",
+      "seller": "Seller",
+      "buyer": "Buyer",
+      "label": "As"
+    }
   },
   "address": {
     "region_label": "Region"
@@ -646,6 +658,14 @@
     "duration_label": "Contract Duration",
     "duration_years_label": "(Years)",
     "duration_months_label": "(Months)",
-    "ends_on_date_label": "Ends on {{date}}"
+    "ends_on_date_label": "Ends on {{date}}",
+    "results_count": "Results: {{count}} contracts",
+    "seller_label": "Seller",
+    "buyer_label": "Buyer",
+    "quality_label": "Quality",
+    "status_label": "Status",
+    "contract_end_label": "Contract end",
+    "label": "Contract No. {{id}}",
+    "price_per_kg_label": "Price per kg"
   }
 }

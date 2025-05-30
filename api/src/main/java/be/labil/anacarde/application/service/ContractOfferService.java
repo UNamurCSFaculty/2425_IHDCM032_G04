@@ -34,7 +34,7 @@ public interface ContractOfferService {
 	 *
 	 * @return Une List de ContractOfferDto représentant tous les contrats.
 	 */
-	List<ContractOfferDto> listContractOffers();
+	List<ContractOfferDto> listContractOffers(Integer traderId);
 
 	/**
 	 * Met à jour du contrat identifié par l'ID donné avec les informations fournies dans le

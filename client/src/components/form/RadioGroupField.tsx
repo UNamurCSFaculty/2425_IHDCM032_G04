@@ -20,6 +20,7 @@ export interface RadioGroupFieldProps
   extends Omit<React.HTMLAttributes<HTMLFieldSetElement>, 'onChange'> {
   label: string
   tooltip?: string
+  readonly?: boolean
   choices: Choice[]
   direction?: 'row' | 'col'
   required?: boolean
@@ -39,16 +40,15 @@ export const RadioGroupField: React.FC<RadioGroupFieldProps> = ({
   tooltip,
   choices,
   direction = 'col',
+  readonly = false,
   className,
   disabled,
-  ...rest // Props passées au <fieldset>
+  ...rest
 }) => {
   const field = useFieldContext<FieldValue>()
   const hasError =
     field.state.meta.isTouched && field.state.meta.errors.length > 0
 
-  // La valeur est directement gérée par TanStack Form.
-  // Le `onValueChange` du RadioGroup de shadcn/ui correspond parfaitement à `field.handleChange`.
   return (
     <fieldset className={cn('space-y-2', className)} {...rest}>
       <legend className="mb-1 text-sm font-medium">
@@ -60,8 +60,9 @@ export const RadioGroupField: React.FC<RadioGroupFieldProps> = ({
       <RadioGroup
         value={field.state.value ?? ''}
         onValueChange={field.handleChange}
+        aria-readonly={readonly}
         onBlur={field.handleBlur}
-        disabled={disabled}
+        disabled={disabled || readonly} // Updated: disable if either disabled or readonly is true
         className={cn(
           'flex gap-4',
           direction === 'col' ? 'flex-col' : 'flex-row flex-wrap',

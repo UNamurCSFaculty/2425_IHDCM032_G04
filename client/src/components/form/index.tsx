@@ -14,6 +14,7 @@ import { TextAreaField } from '@/components/form/textarea-field'
 import { createFormHook, createFormHookContexts } from '@tanstack/react-form'
 import { CityField } from './CityField'
 import { LocationField } from './LocationField'
+import { MultiSelectVirtualField } from './multi-select-virtual-field'
 
 export const { fieldContext, useFieldContext, formContext, useFormContext } =
   createFormHookContexts()
@@ -24,6 +25,7 @@ export const { useAppForm } = createFormHook({
     CheckboxField,
     SelectField,
     MultiSelectField,
+    MultiSelectVirtualField,
     TextAreaField,
     DateTimePickerField,
     FileUploadField,

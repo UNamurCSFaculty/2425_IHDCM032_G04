@@ -8,6 +8,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
@@ -17,21 +18,22 @@ public class QualityControlApiController implements QualityControlApi {
 	private final QualityControlService qualityControlService;
 
 	@Override
-	public ResponseEntity<? extends QualityControlDto> getQualityControl(Integer id) {
+	public ResponseEntity<QualityControlDto> getQualityControl(Integer id) {
 		QualityControlDto qc = qualityControlService.getQualityControlById(id);
 		return ResponseEntity.ok(qc);
 	}
 
 	@Override
-	public ResponseEntity<List<? extends QualityControlDto>> listQualityControls() {
+	public ResponseEntity<List<QualityControlDto>> listQualityControls() {
 		List<QualityControlDto> list = qualityControlService.listQualityControls();
 		return ResponseEntity.ok(list);
 	}
 
 	@Override
 	public ResponseEntity<QualityControlDto> createQualityControl(
-			QualityControlUpdateDto qualityControlDto) {
-		QualityControlDto created = qualityControlService.createQualityControl(qualityControlDto);
+			QualityControlUpdateDto qualityControlDto, List<MultipartFile> documents) {
+		QualityControlDto created = qualityControlService.createQualityControl(qualityControlDto,
+				documents);
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(created.getId()).toUri();
 		return ResponseEntity.created(location).body(created);

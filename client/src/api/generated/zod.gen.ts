@@ -212,7 +212,6 @@ export const zQualityControlUpdateDto = z.object({
   humidity: z.number(),
   qualityInspectorId: z.number().int(),
   qualityId: z.number().int(),
-  documentId: z.number().int().optional(),
 })
 
 export const zUserMiniDto = z.object({
@@ -241,7 +240,7 @@ export const zQualityControlDto = z.object({
   humidity: z.number(),
   qualityInspector: zUserMiniDto,
   quality: zQualityDto,
-  document: zDocumentDto,
+  documents: z.array(zDocumentDto).optional(),
 })
 
 export const zQualityUpdateDto = z.object({
@@ -331,7 +330,7 @@ export const zTransformedProductDto = zProductDto
 
 export const zCooperativeUpdateDto = z.object({
   name: z.string().min(1),
-  creationDate: z.iso.datetime(),
+  creationDate: z.iso.datetime().optional(),
   presidentId: z.number().int(),
 })
 
@@ -680,7 +679,7 @@ export const zTraderListDto = zUserListDto.and(
 export const zProducerListDto = zTraderListDto.and(
   z.object({
     agriculturalIdentifier: z.string().min(1),
-    cooperative: zCooperativeDto,
+    cooperativeId: z.number().int(),
   })
 )
 
@@ -691,6 +690,53 @@ export const zQualityInspectorListDto = zUserListDto.and(
 )
 
 export const zTransformerListDto = zTraderListDto
+
+export const zSseEmitter = z.object({
+  timeout: z.coerce.bigint().optional(),
+})
+
+export const zExportAuctionDto = z.object({
+  auctionId: z.number().int().optional(),
+  auctionStartDate: z.iso.datetime().optional(),
+  auctionEndDate: z.iso.datetime().optional(),
+  auctionStartPrice: z.number().optional(),
+  auctionEnded: z.boolean().optional(),
+  auctionStatus: z.string().optional(),
+  strategyName: z.string().optional(),
+  optionMinPriceKg: z.number().optional(),
+  optionMaxPriceKg: z.number().optional(),
+  optionBuyNowPrice: z.number().optional(),
+  optionShowPublic: z.boolean().optional(),
+  optionMinIncrement: z.number().int().optional(),
+  productId: z.number().int().optional(),
+  productWeightKg: z.number().optional(),
+  productDepositDate: z.iso.datetime().optional(),
+  transformedProductId: z.number().int().optional(),
+  qualityInspectorId: z.number().int().optional(),
+  productQuality: z.string().optional(),
+  productType: z.string().optional(),
+  storeId: z.number().int().optional(),
+  storeName: z.string().optional(),
+  storeCity: z.string().optional(),
+  storeRegion: z.string().optional(),
+  sellerId: z.number().int().optional(),
+  sellerCity: z.string().optional(),
+  sellerRegion: z.string().optional(),
+  sellerCooperative: z.string().optional(),
+  bidCount: z.coerce.bigint().optional(),
+  bidMax: z.number().optional(),
+  bidMin: z.number().optional(),
+  bidAvg: z.number().optional(),
+  bidSum: z.number().optional(),
+  winnerTraderId: z.number().int().optional(),
+  bidWinningAmount: z.number().optional(),
+  winnerCity: z.string().optional(),
+  winnerRegion: z.string().optional(),
+})
+
+export const zApplicationDataDto = z.object({
+  languages: z.array(zLanguageDto),
+})
 
 export const zApiErrorErrors = z.object({
   path: z.string().optional(),
@@ -789,6 +835,8 @@ export const zGetGlobalSettingsResponse = zGlobalSettingsDto
 
 export const zUpdateGlobalSettingsResponse = zGlobalSettingsDto
 
+export const zListUsersResponse = z.array(zUserListDto)
+
 export const zCreateUserResponse = zUserDetailDto
 
 export const zListStoresResponse = z.array(zStoreDetailDto)
@@ -817,7 +865,9 @@ export const zCreateFieldResponse = zFieldDto
 
 export const zListDocumentsByUserResponse = z.array(zDocumentDto)
 
-export const zCreateDocumentResponse = zDocumentDto
+export const zCreateDocumentUserResponse = zDocumentDto
+
+export const zCreateDocumentQualityControlResponse = zDocumentDto
 
 export const zListCooperativesResponse = z.array(zCooperativeDto)
 
@@ -847,6 +897,8 @@ export const zCheckEmailResponse = z.boolean()
 
 export const zListRegionsResponse = z.array(zRegionDto)
 
+export const zSubscribeResponse = zSseEmitter
+
 export const zListAuctions1Response = z.array(zExportAuctionDto)
 
 export const zGetAuction1Response = zExportAuctionDto
@@ -866,7 +918,5 @@ export const zGetDashboardCardsResponse = zDashboardCardsDto
 export const zGetCurrentUserResponse = zUserDetailDto
 
 export const zGetApplicationDataResponse = zApplicationDataDto
-
-export const zListUsersResponse = z.array(zUserListDto)
 
 export const zGetUserResponse = zUserDetailDto

@@ -206,10 +206,10 @@ public class DatabaseServiceImpl implements DatabaseService {
 		tradeStatusRepository.deleteAllInBatch();
 		auctionStrategyRepository.deleteAllInBatch();
 		productRepository.deleteAllInBatch();
+		documentRepository.deleteAllInBatch();
 		qualityControlRepository.deleteAllInBatch();
 		qualityRepository.deleteAllInBatch();
 		qualityTypeRepository.deleteAllInBatch();
-		documentRepository.deleteAllInBatch();
 		fieldRepository.deleteAllInBatch();
 		storeRepository.deleteAllInBatch();
 		userRepository.deleteAllInBatch();
@@ -617,7 +617,6 @@ public class DatabaseServiceImpl implements DatabaseService {
 				qc.setKorTest((float) faker.number().numberBetween(10, 51));
 				qc.setHumidity((float) faker.number().numberBetween(0, 101));
 				qc.setQualityInspectorId(inspector.getId());
-				qc.setDocumentId(document.getId());
 				qc.setQualityId(quality.getId());
 				QualityControl qualityControl = qualityControlRepository
 						.save(qualityControlMapper.toEntity(qc));
@@ -685,7 +684,6 @@ public class DatabaseServiceImpl implements DatabaseService {
 				qc.setKorTest((float) faker.number().numberBetween(10, 51));
 				qc.setHumidity((float) faker.number().numberBetween(0, 101));
 				qc.setQualityInspectorId(inspector.getId());
-				qc.setDocumentId(document.getId());
 				qc.setQualityId(quality.getId());
 				QualityControl qualityControl = qualityControlRepository
 						.save(qualityControlMapper.toEntity(qc));

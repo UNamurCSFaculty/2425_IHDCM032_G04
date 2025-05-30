@@ -3,6 +3,7 @@ package be.labil.anacarde.application.service;
 import be.labil.anacarde.domain.dto.db.QualityControlDto;
 import be.labil.anacarde.domain.dto.write.QualityControlUpdateDto;
 import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Ce service offre des méthodes permettant de créer, récupérer, mettre à jour et supprimer des
@@ -17,7 +18,8 @@ public interface QualityControlService {
 	 *            Le DTO contenant les informations du contrôle qualité à créer.
 	 * @return Un QualityControlDto représentant le contrôle créé.
 	 */
-	QualityControlDto createQualityControl(QualityControlUpdateDto qualityControlDto);
+	QualityControlDto createQualityControl(QualityControlUpdateDto qualityControlDto,
+			List<MultipartFile> documents);
 
 	/**
 	 * Récupère un contrôle qualité par son identifiant.

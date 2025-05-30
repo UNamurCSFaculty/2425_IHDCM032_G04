@@ -1,3 +1,4 @@
+import { LoaderIcon } from 'lucide-react'
 import { useFieldContext } from '.'
 import { Label } from '../ui/label'
 import { MultiSelect } from '../ui/multi-select'
@@ -17,6 +18,7 @@ type MultiSelectFieldProps<T extends string | number> = {
   required?: boolean
   disabled?: boolean
   maxCount?: number
+  loading?: boolean
   parseValue?: (v: string) => T
   onChange?: (value: (string | number)[]) => void
 }
@@ -29,6 +31,7 @@ export function MultiSelectField<T extends string | number>({
   className = 'w-full',
   required = true,
   maxCount = 3,
+  loading = false,
   parseValue,
   onChange,
 }: MultiSelectFieldProps<T>) {
@@ -49,6 +52,7 @@ export function MultiSelectField<T extends string | number>({
         <div className="flex items-center justify-between">
           <Label htmlFor={field.name}>
             {label}
+            {loading && <LoaderIcon className="animate-spin" />}
             {required && <span className="text-red-500">*</span>}
           </Label>
           {hint && (
@@ -67,7 +71,6 @@ export function MultiSelectField<T extends string | number>({
               const newVal = _parse(val)
               newValues.push(newVal)
             }
-            console.log('newValues', newValues)
             // field.handleChange(newValues) TODO TYPE ERROR
             onChange?.(newValues)
           }}

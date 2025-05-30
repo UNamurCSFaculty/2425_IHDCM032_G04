@@ -65,7 +65,21 @@ public interface DocumentApi {
 			@ApiResponse(responseCode = "404", description = "Utilisateur non trouvé", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
 			@ApiResponse(responseCode = "500", description = "Erreur stockage", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
 	@PostMapping(path = "/users/{userId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	ResponseEntity<DocumentDto> createDocument(@ApiValidId @PathVariable("userId") Integer userId,
+	ResponseEntity<DocumentDto> createDocumentUser(
+			@ApiValidId @PathVariable("userId") Integer userId, @Validated({Default.class,
+					ValidationGroups.Create.class}) @RequestPart("file") MultipartFile file);
+
+	@Operation(summary = "Créer un document et téléverser un fichier")
+	@RequestBody(required = true, content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE, schema = @Schema(type = "object", properties = {
+			@StringToClassMapItem(key = "file", value = MultipartFile.class)}), encoding = @Encoding(name = "file", contentType = MediaType.APPLICATION_OCTET_STREAM_VALUE)))
+	@ApiResponses({
+			@ApiResponse(responseCode = "201", description = "Document créé", content = @Content(schema = @Schema(implementation = DocumentDto.class))),
+			@ApiResponse(responseCode = "400", description = "Validation KO", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
+			@ApiResponse(responseCode = "404", description = "Contrôle qualité non trouvé", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
+			@ApiResponse(responseCode = "500", description = "Erreur stockage", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
+	@PostMapping(path = "/quality-controls/{qualityControlId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	ResponseEntity<DocumentDto> createDocumentQualityControl(
+			@ApiValidId @PathVariable("qualityControlId") Integer qualityControlId,
 			@Validated({Default.class,
 					ValidationGroups.Create.class}) @RequestPart("file") MultipartFile file);
 

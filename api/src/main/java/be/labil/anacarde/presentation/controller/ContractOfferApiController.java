@@ -22,8 +22,8 @@ public class ContractOfferApiController implements ContractOfferApi {
 	}
 
 	@Override
-	public ResponseEntity<List<ContractOfferDto>> listContractOffers() {
-		List<ContractOfferDto> contractOffers = contractOfferService.listContractOffers();
+	public ResponseEntity<List<ContractOfferDto>> listContractOffers(Integer traderId) {
+		List<ContractOfferDto> contractOffers = contractOfferService.listContractOffers(traderId);
 		return ResponseEntity.ok(contractOffers);
 	}
 

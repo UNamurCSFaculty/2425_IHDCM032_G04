@@ -2,7 +2,6 @@ package be.labil.anacarde.domain.mapper;
 
 import be.labil.anacarde.domain.dto.db.QualityControlDto;
 import be.labil.anacarde.domain.dto.write.QualityControlUpdateDto;
-import be.labil.anacarde.domain.model.Document;
 import be.labil.anacarde.domain.model.Quality;
 import be.labil.anacarde.domain.model.QualityControl;
 import be.labil.anacarde.domain.model.QualityInspector;
@@ -20,18 +19,18 @@ public abstract class QualityControlMapper {
 
 	@Mapping(source = "qualityInspector", target = "qualityInspector")
 	@Mapping(source = "quality", target = "quality")
-	@Mapping(source = "document", target = "document")
+	@Mapping(source = "documents", target = "documents")
 	public abstract QualityControlDto toDto(QualityControl entity);
 
 	@Mapping(target = "qualityInspector", ignore = true)
 	@Mapping(target = "quality", ignore = true)
-	@Mapping(target = "document", ignore = true)
+	@Mapping(target = "documents", ignore = true)
 	public abstract QualityControl toEntity(QualityControlUpdateDto dto);
 
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 	@Mapping(target = "qualityInspector", ignore = true)
 	@Mapping(target = "quality", ignore = true)
-	@Mapping(target = "document", ignore = true)
+	@Mapping(target = "documents", ignore = true)
 	public abstract QualityControl partialUpdate(QualityControlUpdateDto dto,
 			@MappingTarget QualityControl entity);
 
@@ -43,9 +42,6 @@ public abstract class QualityControlMapper {
 		}
 		if (dto.getQualityId() != null) {
 			c.setQuality(em.getReference(Quality.class, dto.getQualityId()));
-		}
-		if (dto.getDocumentId() != null) {
-			c.setDocument(em.getReference(Document.class, dto.getDocumentId()));
 		}
 	}
 }

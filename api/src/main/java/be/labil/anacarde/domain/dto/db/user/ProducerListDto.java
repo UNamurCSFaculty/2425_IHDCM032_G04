@@ -1,6 +1,5 @@
 package be.labil.anacarde.domain.dto.db.user;
 
-import be.labil.anacarde.domain.dto.db.CooperativeDto;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -27,5 +26,5 @@ public class ProducerListDto extends TraderListDto {
 	/** Coopérative à laquelle appartient le producteur. */
 	@NotNull
 	@Schema(description = "Coopérative du producteur", requiredMode = Schema.RequiredMode.REQUIRED)
-	private CooperativeDto cooperative;
+	private Integer cooperativeId;
 }

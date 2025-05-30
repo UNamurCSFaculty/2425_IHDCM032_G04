@@ -7,20 +7,24 @@ import be.labil.anacarde.domain.dto.db.user.UserDetailDto;
 import be.labil.anacarde.domain.dto.db.user.UserListDto;
 import be.labil.anacarde.domain.dto.write.user.create.ProducerCreateDto;
 import be.labil.anacarde.domain.dto.write.user.create.UserCreateDto;
+import be.labil.anacarde.domain.dto.write.user.update.ProducerUpdateDto;
 import be.labil.anacarde.domain.dto.write.user.update.UserUpdateDto;
 import be.labil.anacarde.domain.mapper.UserDetailMapper;
 import be.labil.anacarde.domain.mapper.UserListMapper;
 import be.labil.anacarde.domain.model.*;
 import be.labil.anacarde.infrastructure.persistence.DocumentRepository;
-import be.labil.anacarde.infrastructure.persistence.user.ProducerRepository;
-import be.labil.anacarde.infrastructure.persistence.user.UserRepository;
+import be.labil.anacarde.infrastructure.persistence.FieldRepository;
+import be.labil.anacarde.infrastructure.persistence.user.*;
 import be.labil.anacarde.infrastructure.util.PersistenceHelper;
+import be.labil.anacarde.presentation.controller.enums.UserType;
+import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -37,6 +41,11 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserServiceImpl implements UserDetailsService, UserService {
 
 	private final ProducerRepository producerRepository;
+	private final TransformerRepository transformerRepository;
+	private final CarrierRepository carrierRepository;
+	private final ExporterRepository exporterRepository;
+	private final QualityInspectorRepository qualityInspectorRepository;
+	private final FieldRepository fieldRepository;
 	private final UserRepository userRepository;
 	private final UserDetailMapper userDetailMapper;
 	private final StorageService storage;
@@ -45,7 +54,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	private final UserListMapper userListMapper;
 	private final PasswordEncoder bCryptPasswordEncoder;
 	private final PersistenceHelper persistenceHelper;
-
+	private final EntityManager em;
 	private final DocumentRepository docRepo;
 	private final FieldService fieldService;
 
@@ -87,6 +96,9 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 		}
 
 		User user = userDetailMapper.toEntity(dto);
+		if (user.isEnabled() && user.getValidationDate() == null) {
+			user.setValidationDate(LocalDateTime.now());
+		}
 		City city = geoService.findCityById(user.getAddress().getCity().getId());
 		user.getAddress().setCity(city);
 		user.getAddress().setRegion(geoService.findRegionByCityId(city));
@@ -118,13 +130,43 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	public UserDetailDto getUserById(Integer id) {
 		User user = userRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé"));
+		if (user instanceof Producer producer) {
+			Hibernate.initialize(producer.getCooperative());
+		}
 		return userDetailMapper.toDto(user);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<UserListDto> listUsers() {
-		return userRepository.findAll().stream().map(userListMapper::toDto)
+	public List<UserListDto> listUsers(UserType userType) {
+		if (userType != null) {
+			switch (userType) {
+				case producer -> {
+					return producerRepository.findAllByOrderByLastNameAsc().stream()
+							.map(userListMapper::toDto).collect(Collectors.toList());
+				}
+				case transformer -> {
+					return transformerRepository.findAllByOrderByLastNameAsc().stream()
+							.map(userListMapper::toDto).collect(Collectors.toList());
+				}
+				case quality_inspector -> {
+					return qualityInspectorRepository.findAllByOrderByLastNameAsc().stream()
+							.map(userListMapper::toDto).collect(Collectors.toList());
+				}
+				case exporter -> {
+					return exporterRepository.findAllByOrderByLastNameAsc().stream()
+							.map(userListMapper::toDto).collect(Collectors.toList());
+				}
+				case carrier -> {
+					return carrierRepository.findAllByOrderByLastNameAsc().stream()
+							.map(userListMapper::toDto).collect(Collectors.toList());
+				}
+				default -> throw new ApiErrorException(HttpStatus.BAD_REQUEST,
+						ApiErrorCode.BAD_REQUEST.code(), List.of(new ErrorDetail("userType",
+								"user.type", "Type utilisateur inconnu")));
+			}
+		}
+		return userRepository.findAllByOrderByLastNameAsc().stream().map(userListMapper::toDto)
 				.collect(Collectors.toList());
 	}
 
@@ -134,6 +176,18 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 				.orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé"));
 		// Mets uniquement à jour les champs non nuls du DTO
 		User user = userDetailMapper.partialUpdate(userUpdateDto, existingUser);
+
+		// Gestion des coopératives.
+		if (userUpdateDto instanceof ProducerUpdateDto producerDto) {
+			if (producerDto.getCooperativeId() != null) {
+				Cooperative reference = em.getReference(Cooperative.class,
+						producerDto.getCooperativeId());
+				((Producer) user).setCooperative(reference);
+			} else {
+				((Producer) user).setCooperative(null);
+			}
+		}
+
 		City city = geoService.findCityById(user.getAddress().getCity().getId());
 		user.getAddress().setCity(city);
 		user.getAddress().setRegion(geoService.findRegionByCityId(city));
@@ -152,9 +206,13 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
 	@Override
 	public void deleteUser(Integer id) {
-		if (!userRepository.existsById(id)) {
-			throw new ResourceNotFoundException("Utilisateur non trouvé");
+		User user = userRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé"));
+		if (user instanceof Producer producer) {
+			List<Field> byProducerId = fieldRepository.findByProducerId(producer.getId());
+			fieldRepository.deleteAll(byProducerId);
 		}
+
 		userRepository.deleteById(id);
 	}
 

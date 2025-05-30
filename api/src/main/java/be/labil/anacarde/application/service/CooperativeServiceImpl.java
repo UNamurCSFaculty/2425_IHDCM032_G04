@@ -9,6 +9,7 @@ import be.labil.anacarde.domain.model.Producer;
 import be.labil.anacarde.infrastructure.persistence.CooperativeRepository;
 import be.labil.anacarde.infrastructure.persistence.user.ProducerRepository;
 import be.labil.anacarde.infrastructure.util.PersistenceHelper;
+import jakarta.persistence.EntityManager;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -24,11 +25,21 @@ public class CooperativeServiceImpl implements CooperativeService {
 	private final CooperativeMapper cooperativeMapper;
 	private final ProducerRepository producerRepository;
 	private final PersistenceHelper persistenceHelper;
+	private final EntityManager em;
 
 	@Override
 	public CooperativeDto createCooperative(CooperativeUpdateDto dto) {
-		Cooperative cooperative = cooperativeMapper.toEntity(dto);
-		Cooperative full = persistenceHelper.saveAndReload(cooperativeRepository, cooperative,
+		Cooperative coop = cooperativeMapper.toEntity(dto);
+
+		if (dto.getPresidentId() != null) {
+			Producer president = em.getReference(Producer.class, dto.getPresidentId());
+			president.setCooperative(coop);
+			coop.setPresident(president);
+		} else if (coop.getPresident() != null) {
+			coop.getPresident().setCooperative(coop);
+		}
+
+		Cooperative full = persistenceHelper.saveAndReload(cooperativeRepository, coop,
 				Cooperative::getId);
 		return cooperativeMapper.toDto(full);
 	}
@@ -44,28 +55,33 @@ public class CooperativeServiceImpl implements CooperativeService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<CooperativeDto> listCooperatives() {
-		List<Cooperative> cooperatives = cooperativeRepository.findAll();
-		return cooperatives.stream().map(cooperativeMapper::toDto).collect(Collectors.toList());
+		return cooperativeRepository.findAll().stream().map(cooperativeMapper::toDto)
+				.collect(Collectors.toList());
 	}
 
 	@Override
 	public CooperativeDto updateCooperative(Integer id, CooperativeUpdateDto dto) {
-		Cooperative existing = cooperativeRepository.findById(id)
+		Cooperative coop = cooperativeRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Coopérative non trouvée"));
 
-		Cooperative updated = cooperativeMapper.partialUpdate(dto, existing);
+		cooperativeMapper.partialUpdate(dto, coop);
 
-		Cooperative full = persistenceHelper.saveAndReload(cooperativeRepository, updated,
-				Cooperative::getId);
-		return cooperativeMapper.toDto(full);
+		if (dto.getPresidentId() != null) {
+			Producer president = em.getReference(Producer.class, dto.getPresidentId());
+			if (coop.getPresident() != null
+					&& !coop.getPresident().getId().equals(dto.getPresidentId())) {
+				coop.getPresident().setCooperative(null);
+			}
+			president.setCooperative(coop);
+			coop.setPresident(president);
+		} else if (coop.getPresident() != null) {
+			coop.getPresident().setCooperative(null);
+			coop.setPresident(null);
+		}
+
+		Cooperative saved = cooperativeRepository.save(coop);
+		return cooperativeMapper.toDto(saved);
 	}
-
-	/**
-	 * @Override public void deleteCooperative(Integer id) { if
-	 *           (!cooperativeRepository.existsById(id)) { throw new
-	 *           ResourceNotFoundException("Coopérative non trouvée"); }
-	 *           cooperativeRepository.deleteById(id); }
-	 */
 
 	@Override
 	public void deleteCooperative(Integer id) {
@@ -76,6 +92,12 @@ public class CooperativeServiceImpl implements CooperativeService {
 		if (president != null) {
 			president.setCooperative(null);
 			producerRepository.save(president);
+		}
+
+		List<Producer> producers = producerRepository.findByCooperativeId(coop.getId());
+		for (Producer producer : producers) {
+			producer.setCooperative(null);
+			producerRepository.save(producer);
 		}
 
 		cooperativeRepository.delete(coop);

@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -54,7 +55,6 @@ public class QualityControlDto extends BaseDto {
 	private QualityDto quality;
 
 	/** Document associé au contrôle qualité. */
-	// @NotNull(message = "Le document est requis") TODO enable document
-	@Schema(description = "Document associé au contrôle qualité", requiredMode = Schema.RequiredMode.REQUIRED)
-	private DocumentDto document;
+	@Schema(description = "Documents associés au contrôle qualité")
+	private List<DocumentDto> documents;
 }

@@ -2,6 +2,7 @@ package be.labil.anacarde.infrastructure.persistence.user;
 
 import be.labil.anacarde.domain.model.User;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -52,6 +53,13 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 			""", nativeQuery = true)
 	void overrideCreationDateNative(@Param("id") Integer id,
 			@Param("newDate") LocalDateTime newDate);
+
+	/**
+	 * Retourne les utilisateurs triés alphabétiquement par nom de famille.
+	 *
+	 * @return Une liste triée d'utilisateurs.
+	 */
+	List<User> findAllByOrderByLastNameAsc();
 
 	/**
 	 * Vérifie si un utilisateur existe avec l'adresse e-mail fournie.
