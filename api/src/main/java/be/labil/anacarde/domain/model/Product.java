@@ -30,7 +30,17 @@ public abstract class Product extends BaseEntity {
 	@Column(nullable = false)
 	private Double weightKg;
 
+	@Column(nullable = false)
+	private Double weightKgAvailable;
+
 	@OneToOne(optional = true)
 	@JoinColumn(name = "qualityControl_id", nullable = true)
 	private QualityControl qualityControl;
+
+	@PrePersist
+	public void prePersist() {
+		if (weightKgAvailable == null || weightKgAvailable > weightKg) {
+			weightKgAvailable = weightKg;
+		}
+	}
 }

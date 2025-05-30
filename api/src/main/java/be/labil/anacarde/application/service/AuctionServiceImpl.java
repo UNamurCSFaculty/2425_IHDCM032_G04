@@ -6,6 +6,7 @@ import be.labil.anacarde.application.exception.ResourceNotFoundException;
 import be.labil.anacarde.application.job.CloseAuctionJob;
 import be.labil.anacarde.domain.dto.db.AuctionDto;
 import be.labil.anacarde.domain.dto.db.GlobalSettingsDto;
+import be.labil.anacarde.domain.dto.db.product.ProductDto;
 import be.labil.anacarde.domain.dto.write.AuctionUpdateDto;
 import be.labil.anacarde.domain.mapper.AuctionMapper;
 import be.labil.anacarde.domain.mapper.AuctionStrategyMapper;
@@ -43,6 +44,7 @@ public class AuctionServiceImpl implements AuctionService {
 	private final GlobalSettingsService globalSettingsService;
 	private final AuctionSseService auctionSseService;
 	private final NotificationSseService notificationSseService;
+	private final ProductService productService;
 
 	private static final Logger log = LoggerFactory.getLogger(CloseAuctionJob.class);
 
@@ -52,6 +54,7 @@ public class AuctionServiceImpl implements AuctionService {
 	@Override
 	public AuctionDto createAuction(AuctionUpdateDto auctionUpdateDto) {
 		checkAuctionSettings(auctionUpdateDto);
+		checkAuctionQuantity(auctionUpdateDto);
 
 		Auction auction = auctionMapper.toEntity(auctionUpdateDto);
 
@@ -80,6 +83,10 @@ public class AuctionServiceImpl implements AuctionService {
 				options.setMinPriceKg(settings.getDefaultMinPriceKg().doubleValue());
 			auction.setOptions(options);
 		}
+
+		// Update available weight of the auctioned product
+		productService.offsetWeightKgAvailable(auctionUpdateDto.getProductId(),
+				-auctionUpdateDto.getProductQuantity());
 
 		Auction full = persistenceHelper.saveAndReload(auctionRepository, auction, Auction::getId);
 
@@ -124,6 +131,7 @@ public class AuctionServiceImpl implements AuctionService {
 				.orElseThrow(() -> new ResourceNotFoundException("Enchère non trouvée"));
 
 		checkAuctionSettings(auctionDetailDto);
+		checkAuctionQuantity(auctionDetailDto);
 
 		if (existingAuction.getStatus().getId()
 				.equals(tradeStatusRepository.findStatusPending().getId())
@@ -155,15 +163,22 @@ public class AuctionServiceImpl implements AuctionService {
 
 		Auction saved = auctionRepository.save(existingAuction);
 		notifyAuctionClosed(saved);
+
 		return auctionMapper.toDto(saved);
 	}
 
 	@Override
 	public void deleteAuction(Integer id) {
-		if (auctionRepository.findById(id).isPresent()) {
+		Optional<Auction> auctionOptional = auctionRepository.findById(id);
+		if (auctionOptional.isPresent()) {
 			AuctionUpdateDto dto = new AuctionUpdateDto();
 			dto.setActive(false);
 			updateAuction(id, dto);
+
+			// update available weight
+			Auction auction = auctionOptional.get();
+			productService.offsetWeightKgAvailable(auction.getProduct().getId(), auction.getProductQuantity());
+
 			deleteAuctionCloseJob(id.longValue());
 		} else {
 			throw new ResourceNotFoundException("Enchère non trouvée");
@@ -199,6 +214,13 @@ public class AuctionServiceImpl implements AuctionService {
 				auction.setStatus(tradeStatusRepository.findStatusExpired());
 				auctionRepository.save(auction);
 				log.info("L'enchère ID {} a été marquée comme CLOSED.", auctionId);
+
+				// Update available weight of the auctioned product
+				productService.offsetWeightKgAvailable(auction.getProduct().getId(),
+						auction.getProductQuantity());
+				log.info("Le poids disponible du produit ID {} a été ré-incrémenté de +{}",
+						auctionId, auction.getProductQuantity());
+
 				notifyAuctionClosed(auction);
 				deleteAuctionCloseJob(auctionId.longValue());
 			} else {
@@ -231,6 +253,16 @@ public class AuctionServiceImpl implements AuctionService {
 			log.error(
 					"Erreur lors de la programmation du job de clôture pour l'enchère ID : {}. Message : {}",
 					auctionId, e.getMessage());
+		}
+	}
+
+	private void checkAuctionQuantity(AuctionUpdateDto auctionUpdateDto) {
+		if (auctionUpdateDto.getProductId() != null) {
+			ProductDto productDto = productService.getProductById(auctionUpdateDto.getProductId());
+			if (auctionUpdateDto.getProductQuantity() > productDto.getWeightKgAvailable()) {
+				throw new ApiErrorException(HttpStatus.BAD_REQUEST, ApiErrorCode.BAD_REQUEST.code(),
+						"weightKgAvailable", "Quantité disponible insuffisante pour le produit");
+			}
 		}
 	}
 
