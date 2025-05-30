@@ -633,6 +633,7 @@
     "info_title": "Informations du produit",
     "lot_number_label": "Numéro du lot",
     "deposited_quantity_label": "Quantité déposée",
+    "deposited_quantity_available_label": "Quantité disponible",
     "deposit_date_label": "Date de dépôt",
     "store_label": "Magasin",
     "lot_label": "Lot n°{{id}}",

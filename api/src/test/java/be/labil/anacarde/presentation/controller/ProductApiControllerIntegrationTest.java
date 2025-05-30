@@ -40,10 +40,10 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 				.andExpect(jsonPath("$.type").value("harvest"))
 				.andExpect(jsonPath("$.store.address.location").value("POINT (3.3522 8.8566)"))
 				.andExpect(jsonPath("$.weightKg").value("2000.0"))
+				.andExpect(jsonPath("$.weightKgAvailable").value("2000.0"))
 				.andExpect(jsonPath("$.qualityControl.identifier").value("QC-002"))
 				.andExpect(jsonPath("$.qualityControl.quality.name").value("WW160"))
-				.andExpect(jsonPath("$.store").isNotEmpty())
-				.andExpect(jsonPath("$.weightKg").value("2000.0"));
+				.andExpect(jsonPath("$.store").isNotEmpty());
 	}
 
 	@Test
@@ -53,6 +53,7 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 				.andExpect(jsonPath("$.type").value("transformed"))
 				.andExpect(jsonPath("$.identifier").value("XYZ"))
 				.andExpect(jsonPath("$.weightKg").value("2000.0"))
+				.andExpect(jsonPath("$.weightKgAvailable").value("2000.0"))
 				.andExpect(jsonPath("$.qualityControl.identifier").value("QC-003"))
 				.andExpect(jsonPath("$.qualityControl.quality.name").value("WW160"));
 	}
@@ -177,6 +178,8 @@ public class ProductApiControllerIntegrationTest extends AbstractIntegrationTest
 		assertEquals(transformedProduct.getHarvestProducts().size(), 1);
 		assertEquals(transformedProduct.getHarvestProducts().getFirst().getId(),
 				getTestHarvestProduct().getId());
+		assertEquals(transformedProduct.getWeightKg(), 1234567);
+		assertEquals(transformedProduct.getWeightKgAvailable(), 1234567);
 	}
 
 	/**

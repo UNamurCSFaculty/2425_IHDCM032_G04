@@ -170,7 +170,7 @@ export const AuctionForm: React.FC = () => {
     const product = products!.find(p => p.id === productId)
     setSelectedProduct(product || null)
     if (product) {
-      form.setFieldValue('productQuantity', product.weightKg)
+      form.setFieldValue('productQuantity', product.weightKgAvailable)
     }
   }
 
@@ -243,6 +243,9 @@ export const AuctionForm: React.FC = () => {
                             isProductsLoading
                               ? []
                               : products!
+                                  .filter(
+                                    product => product.weightKgAvailable > 0
+                                  )
                                   .sort((a, b) => a.id - b.id)
                                   .map(product => ({
                                     value: product.id,
@@ -317,6 +320,16 @@ export const AuctionForm: React.FC = () => {
                           <TableCell>
                             {selectedProduct
                               ? formatWeight(selectedProduct.weightKg)
+                              : 'N/A'}
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell>
+                            {t('product.deposited_quantity_available_label')}
+                          </TableCell>
+                          <TableCell>
+                            {selectedProduct
+                              ? formatWeight(selectedProduct.weightKgAvailable)
                               : 'N/A'}
                           </TableCell>
                         </TableRow>

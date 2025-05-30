@@ -1,5 +1,7 @@
 package be.labil.anacarde.application.service;
 
+import be.labil.anacarde.application.exception.ApiErrorCode;
+import be.labil.anacarde.application.exception.ApiErrorException;
 import be.labil.anacarde.application.exception.ResourceNotFoundException;
 import be.labil.anacarde.domain.dto.db.product.ProductDto;
 import be.labil.anacarde.domain.dto.write.product.ProductUpdateDto;
@@ -18,6 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -97,5 +100,20 @@ public class ProductServiceImpl implements ProductService {
 			throw new ResourceNotFoundException("Produit non trouvé");
 		}
 		productRepository.deleteById(id);
+	}
+
+	@Override
+	public void offsetWeightKgAvailable(Integer productId, double offset) {
+		Product product = productRepository.findById(productId)
+				.orElseThrow(() -> new ResourceNotFoundException("Produit non trouvé"));
+
+		double newWeight = product.getWeightKgAvailable() + offset;
+		if (newWeight < 0) {
+			throw new ApiErrorException(HttpStatus.BAD_REQUEST, ApiErrorCode.BAD_REQUEST.code(),
+					"weightKgAvailable", "Quantité disponible insuffisante pour le produit");
+		}
+
+		product.setWeightKgAvailable(newWeight);
+		productRepository.save(product);
 	}
 }

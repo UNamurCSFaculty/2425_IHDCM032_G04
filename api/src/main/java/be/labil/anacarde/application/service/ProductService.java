@@ -60,4 +60,14 @@ public interface ProductService {
 	 *            L'identifiant unique du produit à supprimer.
 	 */
 	void deleteProduct(Integer id);
+
+	/**
+	 * Met à jour le poids disponible pour un produit
+	 *
+	 * @param productId
+	 *            identifiant du produit à mettre à jour
+	 * @param offset
+	 *            poids à ajouter (positif) ou retrancher (négatif)
+	 */
+	void offsetWeightKgAvailable(Integer productId, double offset);
 }
