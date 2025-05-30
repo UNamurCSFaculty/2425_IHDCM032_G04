@@ -9,6 +9,9 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 
+/**
+ * Entité représentant une actualité sur le blog.
+ */
 @Entity
 @Table(name = "news")
 @Getter

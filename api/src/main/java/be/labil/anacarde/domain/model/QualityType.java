@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * Entité représentant le type de Produit.
+ */
 @Entity
 @Table(name = "quality_type")
 @Getter

@@ -7,6 +7,9 @@ import java.util.List;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * Entité représentant un contrôle de qualité d'un Produit, et réalisé par un qualiticien.
+ */
 @Entity
 @Table(name = "quality_control")
 @Getter

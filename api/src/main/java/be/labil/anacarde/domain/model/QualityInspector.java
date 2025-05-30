@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * Entité représentant un qualiticien, évaluant la qualité des Produit.
+ */
 @Entity
 @Table(name = "quality_inspector")
 @Getter
