@@ -1282,80 +1282,6 @@ export type LoginRequest = {
   password: string
 }
 
-export type ExportAuctionDto = {
-  auctionId?: number
-  auctionStartDate?: string
-  auctionEndDate?: string
-  auctionStartPrice?: number
-  auctionEnded?: boolean
-  auctionStatus?: string
-  strategyName?: string
-  optionMinPriceKg?: number
-  optionMaxPriceKg?: number
-  optionBuyNowPrice?: number
-  optionShowPublic?: boolean
-  optionMinIncrement?: number
-  productId?: number
-  productWeightKg?: number
-  productDepositDate?: string
-  transformedProductId?: number
-  qualityInspectorId?: number
-  productQuality?: string
-  productType?: string
-  storeId?: number
-  storeName?: string
-  storeCity?: string
-  storeRegion?: string
-  sellerId?: number
-  sellerCity?: string
-  sellerRegion?: string
-  sellerCooperative?: string
-  bidCount?: number
-  bidMax?: number
-  bidMin?: number
-  bidAvg?: number
-  bidSum?: number
-  winnerTraderId?: number
-  bidWinningAmount?: number
-  winnerCity?: string
-  winnerRegion?: string
-}
-
-export type DashboardGraphicDto = {
-  date?: string
-  totalOpenAuctions?: number
-  totalNewAuctions?: number
-}
-
-export type DashboardCardsDto = {
-  totalNbUsers?: number
-  totalNbUsersTendency?: number
-  pendingValidation?: number
-  pendingValidationTendency?: number
-  totalAuctions?: number
-  totalAuctionsTendency?: number
-  auctionsConcluded?: number
-  auctionsConcludedTendency?: number
-  totalLotWeightKg?: number
-  totalLotWeightKgTendency?: number
-  totalSoldWeightKg?: number
-  totalSoldWeightKgTendency?: number
-  totalSalesAmount?: number
-  totalSalesAmountTendency?: number
-  monthlySalesAmount?: number
-  monthlySalesAmountTendency?: number
-}
-
-/**
- * Données nécessaires pour l'application cliente.
- */
-export type ApplicationDataDto = {
-  /**
-   * Liste des stratégies d'enchères disponibles.
-   */
-  languages: Array<LanguageDto>
-}
-
 /**
  * Objet de transfert de données pour les administrateurs.
  */
@@ -1563,6 +1489,31 @@ export type ExportAuctionDto = {
   bidWinningAmount?: number
   winnerCity?: string
   winnerRegion?: string
+}
+
+export type DashboardGraphicDto = {
+  date?: string
+  totalOpenAuctions?: number
+  totalNewAuctions?: number
+}
+
+export type DashboardCardsDto = {
+  totalNbUsers?: number
+  totalNbUsersTendency?: number
+  pendingValidation?: number
+  pendingValidationTendency?: number
+  totalAuctions?: number
+  totalAuctionsTendency?: number
+  auctionsConcluded?: number
+  auctionsConcludedTendency?: number
+  totalLotWeightKg?: number
+  totalLotWeightKgTendency?: number
+  totalSoldWeightKg?: number
+  totalSoldWeightKgTendency?: number
+  totalSalesAmount?: number
+  totalSalesAmountTendency?: number
+  monthlySalesAmount?: number
+  monthlySalesAmountTendency?: number
 }
 
 /**

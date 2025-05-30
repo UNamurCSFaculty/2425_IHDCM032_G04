@@ -534,74 +534,6 @@ export const zLoginRequest = z.object({
   password: z.string(),
 })
 
-export const zExportAuctionDto = z.object({
-  auctionId: z.number().int().optional(),
-  auctionStartDate: z.iso.datetime().optional(),
-  auctionEndDate: z.iso.datetime().optional(),
-  auctionStartPrice: z.number().optional(),
-  auctionEnded: z.boolean().optional(),
-  auctionStatus: z.string().optional(),
-  strategyName: z.string().optional(),
-  optionMinPriceKg: z.number().optional(),
-  optionMaxPriceKg: z.number().optional(),
-  optionBuyNowPrice: z.number().optional(),
-  optionShowPublic: z.boolean().optional(),
-  optionMinIncrement: z.number().int().optional(),
-  productId: z.number().int().optional(),
-  productWeightKg: z.number().optional(),
-  productDepositDate: z.iso.datetime().optional(),
-  transformedProductId: z.number().int().optional(),
-  qualityInspectorId: z.number().int().optional(),
-  productQuality: z.string().optional(),
-  productType: z.string().optional(),
-  storeId: z.number().int().optional(),
-  storeName: z.string().optional(),
-  storeCity: z.string().optional(),
-  storeRegion: z.string().optional(),
-  sellerId: z.number().int().optional(),
-  sellerCity: z.string().optional(),
-  sellerRegion: z.string().optional(),
-  sellerCooperative: z.string().optional(),
-  bidCount: z.coerce.bigint().optional(),
-  bidMax: z.number().optional(),
-  bidMin: z.number().optional(),
-  bidAvg: z.number().optional(),
-  bidSum: z.number().optional(),
-  winnerTraderId: z.number().int().optional(),
-  bidWinningAmount: z.number().optional(),
-  winnerCity: z.string().optional(),
-  winnerRegion: z.string().optional(),
-})
-
-export const zDashboardGraphicDto = z.object({
-  date: z.iso.datetime().optional(),
-  totalOpenAuctions: z.coerce.bigint().optional(),
-  totalNewAuctions: z.coerce.bigint().optional(),
-})
-
-export const zDashboardCardsDto = z.object({
-  totalNbUsers: z.coerce.bigint().optional(),
-  totalNbUsersTendency: z.number().optional(),
-  pendingValidation: z.coerce.bigint().optional(),
-  pendingValidationTendency: z.number().optional(),
-  totalAuctions: z.coerce.bigint().optional(),
-  totalAuctionsTendency: z.number().optional(),
-  auctionsConcluded: z.coerce.bigint().optional(),
-  auctionsConcludedTendency: z.number().optional(),
-  totalLotWeightKg: z.number().optional(),
-  totalLotWeightKgTendency: z.number().optional(),
-  totalSoldWeightKg: z.number().optional(),
-  totalSoldWeightKgTendency: z.number().optional(),
-  totalSalesAmount: z.number().optional(),
-  totalSalesAmountTendency: z.number().optional(),
-  monthlySalesAmount: z.number().optional(),
-  monthlySalesAmountTendency: z.number().optional(),
-})
-
-export const zApplicationDataDto = z.object({
-  languages: z.array(zLanguageDto),
-})
-
 export const zUserListDto = z.object({
   id: z.number().int().readonly(),
   firstName: z.string().min(1),
@@ -732,6 +664,31 @@ export const zExportAuctionDto = z.object({
   bidWinningAmount: z.number().optional(),
   winnerCity: z.string().optional(),
   winnerRegion: z.string().optional(),
+})
+
+export const zDashboardGraphicDto = z.object({
+  date: z.iso.datetime().optional(),
+  totalOpenAuctions: z.coerce.bigint().optional(),
+  totalNewAuctions: z.coerce.bigint().optional(),
+})
+
+export const zDashboardCardsDto = z.object({
+  totalNbUsers: z.coerce.bigint().optional(),
+  totalNbUsersTendency: z.number().optional(),
+  pendingValidation: z.coerce.bigint().optional(),
+  pendingValidationTendency: z.number().optional(),
+  totalAuctions: z.coerce.bigint().optional(),
+  totalAuctionsTendency: z.number().optional(),
+  auctionsConcluded: z.coerce.bigint().optional(),
+  auctionsConcludedTendency: z.number().optional(),
+  totalLotWeightKg: z.number().optional(),
+  totalLotWeightKgTendency: z.number().optional(),
+  totalSoldWeightKg: z.number().optional(),
+  totalSoldWeightKgTendency: z.number().optional(),
+  totalSalesAmount: z.number().optional(),
+  totalSalesAmountTendency: z.number().optional(),
+  monthlySalesAmount: z.number().optional(),
+  monthlySalesAmountTendency: z.number().optional(),
 })
 
 export const zApplicationDataDto = z.object({
