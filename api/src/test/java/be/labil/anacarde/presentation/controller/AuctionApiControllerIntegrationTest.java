@@ -125,7 +125,6 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		GlobalSettingsUpdateDto globalSettingsUpdateDto = new GlobalSettingsUpdateDto();
 		globalSettingsUpdateDto.setForceBetterBids(false);
 		globalSettingsUpdateDto.setDefaultMinPriceKg(BigDecimal.valueOf(MIN_PRICE_PER_KG));
-		globalSettingsUpdateDto.setDefaultMaxPriceKg(BigDecimal.valueOf(1000000000));
 		globalSettingsUpdateDto.setMinIncrement(1);
 		globalSettingsUpdateDto.setShowOnlyActive(false);
 		globalSettingsService.updateGlobalSettings(globalSettingsUpdateDto);
@@ -161,8 +160,44 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		final double PRODUCT_PRICE = 1000;
 
 		GlobalSettingsUpdateDto globalSettingsUpdateDto = new GlobalSettingsUpdateDto();
-		globalSettingsUpdateDto.setDefaultMinPriceKg(BigDecimal.valueOf(1));
 		globalSettingsUpdateDto.setDefaultMaxPriceKg(BigDecimal.valueOf(MAX_PRICE_PER_KG));
+		globalSettingsUpdateDto.setForceBetterBids(false);
+		globalSettingsUpdateDto.setMinIncrement(1);
+		globalSettingsUpdateDto.setShowOnlyActive(false);
+		globalSettingsService.updateGlobalSettings(globalSettingsUpdateDto);
+
+		ProducerDetailDto producer = new ProducerDetailDto();
+		producer.setId(getProducerTestUser().getId());
+		ProductDto productDto = new HarvestProductDto();
+		productDto.setId(getTestHarvestProduct().getId());
+
+		AuctionUpdateDto newAuction = new AuctionUpdateDto();
+		newAuction.setPrice(PRODUCT_PRICE);
+		newAuction.setProductQuantity(PRODUCT_QUANTITY_KG);
+		newAuction.setActive(true);
+		newAuction.setExpirationDate(LocalDateTime.now().plusDays(1));
+		newAuction.setProductId(productDto.getId());
+		newAuction.setTraderId(producer.getId());
+
+		ObjectNode node = objectMapper.valueToTree(newAuction);
+		String jsonContent = node.toString();
+
+		mockMvc.perform(
+				post("/api/auctions").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				.andExpect(status().is4xxClientError());
+	}
+
+	/**
+	 * Teste la création d'une nouvelle enchère, avec un prix différent de celui fixé.
+	 */
+	@Test
+	public void testCreateAuctionFailOnFixedPrice() throws Exception {
+		final double FIXED_PRICE_PER_KG = 1;
+		final int PRODUCT_QUANTITY_KG = 1000;
+		final double PRODUCT_PRICE = 2000;
+
+		GlobalSettingsUpdateDto globalSettingsUpdateDto = new GlobalSettingsUpdateDto();
+		globalSettingsUpdateDto.setDefaultFixedPriceKg(BigDecimal.valueOf(FIXED_PRICE_PER_KG));
 		globalSettingsUpdateDto.setForceBetterBids(false);
 		globalSettingsUpdateDto.setMinIncrement(1);
 		globalSettingsUpdateDto.setShowOnlyActive(false);

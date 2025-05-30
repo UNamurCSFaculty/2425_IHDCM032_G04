@@ -239,16 +239,22 @@ public class AuctionServiceImpl implements AuctionService {
 
 		final double pricePerKg = getPricePerKg(auctionUpdateDto);
 
+		if (settings.getDefaultFixedPriceKg() != null) {
+			if (pricePerKg != settings.getDefaultFixedPriceKg().doubleValue())
+				throw new ApiErrorException(HttpStatus.BAD_REQUEST, ApiErrorCode.BAD_REQUEST.code(),
+						"defaultFixedPriceKg", "Prix/kg fixé non respecté");
+		}
+
 		if (settings.getDefaultMinPriceKg() != null) {
 			if (pricePerKg < settings.getDefaultMinPriceKg().doubleValue())
 				throw new ApiErrorException(HttpStatus.BAD_REQUEST, ApiErrorCode.BAD_REQUEST.code(),
-						"defaultMinPriceKg", "Prix minimum non respecté");
+						"defaultMinPriceKg", "Prix/kg minimum non respecté");
 		}
 
 		if (settings.getDefaultMaxPriceKg() != null) {
 			if (pricePerKg > settings.getDefaultMaxPriceKg().doubleValue())
 				throw new ApiErrorException(HttpStatus.BAD_REQUEST, ApiErrorCode.BAD_REQUEST.code(),
-						"defaultMaxPriceKg", "Prix maximum non respecté");
+						"defaultMaxPriceKg", "Prix/kg maximum non respecté");
 		}
 	}
 
