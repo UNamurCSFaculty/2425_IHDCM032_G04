@@ -12,6 +12,7 @@ import * as React from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { getDashboardCardsOptions } from '@/api/generated/@tanstack/react-query.gen.ts'
 import { AppSkeleton } from '@/components/Skeleton/AppSkeleton.tsx'
+import { useTranslation } from 'react-i18next'
 
 type Stats = {
   totalNbUsers: number
@@ -33,6 +34,8 @@ type Stats = {
 }
 
 export function SectionCards() {
+  const { t } = useTranslation()
+
   const {
     data: rawStats,
     isLoading,
@@ -41,7 +44,6 @@ export function SectionCards() {
 
   const stats = React.useMemo<Stats | null>(() => {
     if (!rawStats) return null
-
     const {
       totalNbUsers = 0,
       totalNbUsersTendency = 0,
@@ -81,74 +83,80 @@ export function SectionCards() {
     }
   }, [rawStats])
 
+  const cards = React.useMemo(() => {
+    if (!stats) return []
+    return [
+      {
+        title: t('admin.dashboard.cards.totalNbUsers.title'),
+        value: stats.totalNbUsers.toLocaleString(),
+        tendency: stats.totalNbUsersTendency,
+        description: t('admin.dashboard.cards.totalNbUsers.description'),
+      },
+      {
+        title: t('admin.dashboard.cards.pendingValidation.title'),
+        value: stats.pendingValidation.toLocaleString(),
+        tendency: stats.pendingValidationTendency,
+        description: t('admin.dashboard.cards.pendingValidation.description'),
+      },
+      {
+        title: t('admin.dashboard.cards.totalAuctions.title'),
+        value: stats.totalAuctions.toLocaleString(),
+        tendency: stats.totalAuctionsTendency,
+        description: t('admin.dashboard.cards.totalAuctions.description'),
+      },
+      {
+        title: t('admin.dashboard.cards.auctionsConcluded.title'),
+        value: stats.auctionsConcluded.toLocaleString(),
+        tendency: stats.auctionsConcludedTendency,
+        description: t('admin.dashboard.cards.auctionsConcluded.description'),
+      },
+      {
+        title: t('admin.dashboard.cards.totalLotWeightKg.title'),
+        value:
+          Math.round(stats.totalLotWeightKg * 0.001).toLocaleString() + ' T',
+        tendency: stats.totalLotWeightKgTendency,
+        description: t('admin.dashboard.cards.totalLotWeightKg.description'),
+      },
+      {
+        title: t('admin.dashboard.cards.totalSoldWeightKg.title'),
+        value:
+          Math.round(stats.totalSoldWeightKg * 0.001).toLocaleString() + ' T',
+        tendency: stats.totalSoldWeightKgTendency,
+        description: t('admin.dashboard.cards.totalSoldWeightKg.description'),
+      },
+      {
+        title: t('admin.dashboard.cards.totalSalesAmount.title'),
+        value:
+          Math.round(stats.totalSalesAmount * 0.000001).toLocaleString() +
+          ' M CFA',
+        tendency: stats.totalSalesAmountTendency,
+        description: t('admin.dashboard.cards.totalSalesAmount.description'),
+      },
+      {
+        title: t('admin.dashboard.cards.monthlySalesAmount.title'),
+        value:
+          Math.round(stats.monthlySalesAmount * 0.000001).toLocaleString() +
+          ' M CFA',
+        tendency: stats.monthlySalesAmountTendency,
+        description: t('admin.dashboard.cards.monthlySalesAmount.description'),
+      },
+    ]
+  }, [stats, t])
+
   if (isLoading) {
     return <AppSkeleton />
   }
-  if (error || !stats) {
-    return <div>Error loading dashboard</div>
-  }
 
-  const cards = [
-    {
-      title: "Nombre d'utilisateurs",
-      value: stats.totalNbUsers.toLocaleString(),
-      tendency: stats.totalNbUsersTendency,
-      description: 'Inscriptions',
-    },
-    {
-      title: 'Nouvelles inscriptions',
-      value: stats.pendingValidation.toLocaleString(),
-      tendency: stats.pendingValidationTendency,
-      description: "En attente d'approbation",
-    },
-    {
-      title: 'Nouvelles enchères',
-      value: stats.totalAuctions.toLocaleString(),
-      tendency: stats.totalAuctionsTendency,
-      description: 'Enchères en cours',
-    },
-    {
-      title: 'Enchères conclues',
-      value: stats.auctionsConcluded.toLocaleString(),
-      tendency: stats.auctionsConcludedTendency,
-      description: '30 derniers jours',
-    },
-    {
-      title: 'Volume total',
-      value: Math.round(stats.totalLotWeightKg * 0.001).toLocaleString() + ' T',
-      tendency: stats.totalLotWeightKgTendency,
-      description: 'Poids total vendu',
-    },
-    {
-      title: 'Volume mensuel',
-      value:
-        Math.round(stats.totalSoldWeightKg * 0.001).toLocaleString() + ' T',
-      tendency: stats.totalSoldWeightKgTendency,
-      description: '30 derniers jours',
-    },
-    {
-      title: 'Montant total',
-      value:
-        Math.round(stats.totalSalesAmount * 0.000001).toLocaleString() +
-        ' M CFA',
-      tendency: stats.totalSalesAmountTendency,
-      description: 'Toutes les ventes',
-    },
-    {
-      title: 'Ventes mensuelles',
-      value:
-        Math.round(stats.monthlySalesAmount * 0.000001).toLocaleString() +
-        ' M CFA',
-      tendency: stats.monthlySalesAmountTendency,
-      description: '30 derniers jours',
-    },
-  ] as const
+  if (error || !stats) {
+    return <div>{t('admin.dashboard.cards.error_loading')}</div>
+  }
 
   return (
     <div className="grid grid-cols-1 gap-4 px-4 lg:grid-cols-2 xl:grid-cols-4">
       {cards.map(({ title, value, tendency, description }) => {
         const isUp = tendency >= 0
         const pct = Math.abs(tendency).toFixed(1) + '%'
+
         return (
           <Card key={title} className="@container/card">
             <CardHeader>
@@ -174,7 +182,7 @@ export function SectionCards() {
                 )}
               </div>
               <div className="text-muted-foreground">
-                Par rapport à il y a 30 jours
+                {t('admin.dashboard.cards.compared_to_30_days')}
               </div>
             </CardFooter>
           </Card>

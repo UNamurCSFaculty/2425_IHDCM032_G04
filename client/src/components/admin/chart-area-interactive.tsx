@@ -32,6 +32,16 @@ interface DashboardGraphicDto {
   totalNewAuctions: number
 }
 
+/**
+ * @file        ChartAreaInteractive.tsx
+ * @brief       Composant React d’affichage d’un graphique d’aires interactif
+ * @details
+ *   •Récupère les séries temporelles à l’aide de React-Query.
+ *   •Filtre dynamiquement les données selon une plage de temps (7 / 30 / 90 jours).
+ *   •Affiche deux courbes (enchères en cours / nouvelles enchères) avec Recharts.
+ *   •UX adaptative : sélecteurs <ToggleGroup> sur desktop, <Select> sur mobile.
+ *   •Entièrement typé TypeScript ; toutes les étapes de transformation sont annotées.
+ */
 export function ChartAreaInteractive() {
   const isMobile = useIsMobile()
 
