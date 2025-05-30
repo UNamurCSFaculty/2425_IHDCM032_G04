@@ -59,9 +59,22 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	private final FieldService fieldService;
 
 	@Override
-	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-		return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(
-				"Utilisateur non trouvé avec l'email : " + email));
+	public UserDetails loadUserByUsername(String identifier) throws UsernameNotFoundException {
+		if (identifier.contains("@")) {
+			String email = identifier;
+			return userRepository.findByEmail(email)
+					.orElseThrow(() -> new UsernameNotFoundException(
+							"Utilisateur non trouvé avec l'email : " + email));
+		}
+		String phone = identifier.replace(" ", "");;
+		if (!identifier.startsWith("+")) phone = "+229" + phone;
+		String BENIN_REGEX = "^\\+22901\\d{8}$";
+		if (!phone.matches(BENIN_REGEX))
+			throw new UsernameNotFoundException("Numéro de téléphone invalide : " + phone);
+
+		String finalPhone = phone;
+		return userRepository.findByPhone(phone).orElseThrow(() -> new UsernameNotFoundException(
+				"Utilisateur non trouvé avec l'email : " + finalPhone));
 	}
 
 	@Override
