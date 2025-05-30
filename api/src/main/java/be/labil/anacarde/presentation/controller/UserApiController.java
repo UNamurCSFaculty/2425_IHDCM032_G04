@@ -15,6 +15,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -27,17 +28,27 @@ public class UserApiController implements UserApi {
 
 	@Override
 	public ResponseEntity<UserDetailDto> createUser(UserCreateDto user,
-			List<MultipartFile> documents) {
-		if (user instanceof AdminCreateDto admin) {
-			throw new ApiErrorException(HttpStatus.FORBIDDEN, ApiErrorCode.ACCESS_FORBIDDEN.code(),
-					List.of(new ErrorDetail("user", "user.admin.not.allowed",
-							"Il est interdit de créer un utilisateur admin via cette API.")));
+			List<MultipartFile> documents, Authentication auth) {
+		boolean isAdminCaller = auth != null && auth.getAuthorities().stream()
+				.anyMatch(a -> "ROLE_ADMIN".equals(a.getAuthority()));
+
+		if (!isAdminCaller) {
+			user.setEnabled(false);
+			if (user instanceof AdminCreateDto admin) {
+				throw new ApiErrorException(HttpStatus.FORBIDDEN,
+						ApiErrorCode.ACCESS_FORBIDDEN.code(),
+						List.of(new ErrorDetail("user", "user.admin.not.allowed",
+								"Il est interdit de créer un utilisateur admin via cette API.")));
+			}
+			if (documents == null || documents.isEmpty()) {
+				throw new ApiErrorException(HttpStatus.BAD_REQUEST, ApiErrorCode.BAD_REQUEST.code(),
+						List.of(new ErrorDetail("documents", "user.documents.required",
+								"Le champ documents est requis.")));
+			}
+		} else {
+			user.setEnabled(true);
 		}
-		if (documents == null || documents.isEmpty()) {
-			throw new ApiErrorException(HttpStatus.BAD_REQUEST, ApiErrorCode.BAD_REQUEST.code(),
-					List.of(new ErrorDetail("documents", "user.documents.required",
-							"Le champ documents est requis.")));
-		}
+
 		UserDetailDto created = userService.createUser(user, documents);
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(created.getId()).toUri();

@@ -20,6 +20,7 @@ import jakarta.persistence.EntityManager;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.nio.charset.StandardCharsets;
 import java.time.*;
 import java.util.*;
 import java.util.function.Function;
@@ -29,10 +30,13 @@ import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.datafaker.Faker;
+import org.apache.commons.io.IOUtils;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.PrecisionModel;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -173,138 +177,10 @@ public class DatabaseServiceImpl implements DatabaseService {
 	private final Set<Integer> auctionsWithBids = new HashSet<>();
 
 	private final EntityManager em;
-	private static final String CREATE_VIEW_SQL = """
-			/* ===============================================================
-			   v_auction_bid_analysis  :  1 ligne par enchère + agrégats bids
-			   ===============================================================*/
-			CREATE OR REPLACE VIEW v_auction_bid_analysis AS
-			/* ---------- 1) UNION des produits concrets ---------- */
-			WITH all_products AS (
-			    SELECT hp.id,
-			           hp.weight_kg,
-			           hp.delivery_date,
-			           hp.quality_control_id,
-			           hp.store_id,
-					   hp.transformed_product_id
-			    FROM   harvest_product hp
-
-			    UNION ALL
-
-			    SELECT tp.id,
-			           tp.weight_kg,
-			           tp.delivery_date,
-			           tp.quality_control_id,
-			           tp.store_id,
-					   NULL::bigint AS transformed_product_id
-			    FROM   transformed_product tp
-			),
-			/* ---------- 2) Offre gagnante = bid dont statut 'Conclu' ---------- */
-			winner AS (
-			    SELECT DISTINCT ON (b.auction_id)
-			           b.auction_id,
-			           b.amount      AS winning_bid_amount,
-			           b.trader_id   AS winner_trader_id,
-			           b.status_id
-			    FROM   bid b
-			    WHERE  b.status_id = 2
-			    ORDER  BY b.auction_id, b.amount DESC, b.creation_date DESC
-			)
-			/* ---------- 3) Résultat final ---------- */
-			SELECT
-			    /* ======== auction ======== */
-			    a.id                             AS auction_id,
-			    a.creation_date                  AS auction_start_date,
-			    a.expiration_date                AS auction_end_date,
-			    a.price                          AS auction_start_price,
-			    a.active                         AS auction_ended,
-			    ts.name                          AS auction_status,
-
-			    /* options embarquées */
-			    ast.name                         AS strategy_name,
-			    a.min_price_kg                   AS option_min_price_kg,
-			    a.max_price_kg                   AS option_max_price_kg,
-			    a.buy_now_price                  AS option_buy_now_price,
-			    a.show_public                    AS option_show_public,
-			    a.min_increment                  AS option_min_increment,
-
-			    /* ======== produit ======== */
-			    p.id                             AS product_id,
-			    p.weight_kg                      AS product_weight_kg,
-			    p.delivery_date                  AS product_deposit_date,
-			    p.transformed_product_id         AS transformed_product_id,
-
-			    /* -------- quality control -------- */
-			    qc.quality_inspector_id          AS quality_inspector_id,
-			    q.name                           AS product_quality,
-			    qt.name                          AS product_type,
-
-			    /* ======== store du produit ======== */
-			    st.id                            AS store_id,
-			    st.name                          AS store_name,
-			    stc.name                         AS store_city,
-			    str.name                         AS store_region,
-
-			    /* ======== vendeur ======== */
-			    tr.id                            AS seller_id,
-			    sc.name                          AS seller_city,
-			    sr.name                          AS seller_region,
-			    co.name                          AS seller_cooperative,
-
-			    /* ======== agrégats bids ======== */
-			    COUNT(b.id)                      AS bid_count,
-			    MAX(b.amount)                    AS bid_max,
-			    MIN(b.amount)                    AS bid_min,
-			    ROUND(AVG(b.amount), 2)          AS bid_avg,
-			    SUM(b.amount)                    AS bid_sum,
-
-			    /* ======== offre gagnante ======== */
-			    w.winner_trader_id,
-			    w.winning_bid_amount             AS bid_winning_amount,
-			    wc.name                          AS winner_city,
-			    wr.name                          AS winner_region
-
-			FROM   auction a
-			LEFT   JOIN auction_strategy ast ON ast.id = a.strategy_id
-			JOIN   trade_status ts          ON ts.id = a.status_id
-
-			/* ---------- produit & quality control ---------- */
-			JOIN   all_products p           ON p.id = a.product_id
-			LEFT   JOIN quality_control qc  ON qc.id = p.quality_control_id
-			LEFT   JOIN quality         q   ON q.id  = qc.quality_id
-			LEFT   JOIN quality_type    qt  ON qt.id = q.quality_type_id
-
-			/* ---------- store du produit ---------- */
-			JOIN   store   st  ON st.id = p.store_id
-			JOIN   users   su  ON su.id = st.user_id
-			LEFT   JOIN city   stc ON stc.id = st.city_id
-			LEFT   JOIN region str ON str.id = st.region_id
-
-			/* ---------- vendeur ---------- */
-			JOIN   trader tr ON tr.id = a.trader_id
-			JOIN   users  u  ON u.id = tr.id
-			LEFT   JOIN producer    pr ON pr.id = tr.id
-			LEFT   JOIN cooperative co ON co.id = pr.cooperative_id
-			LEFT   JOIN city   sc ON sc.id = u.city_id
-			LEFT   JOIN region sr ON sr.id = u.region_id
-
-			/* ---------- bids & gagnant ---------- */
-			LEFT   JOIN bid    b  ON b.auction_id = a.id
-			LEFT   JOIN winner w  ON w.auction_id = a.id
-			LEFT   JOIN trader wt ON wt.id = w.winner_trader_id
-			LEFT   JOIN users  wu ON wu.id = wt.id
-			LEFT   JOIN city   wc ON wc.id = wu.city_id
-			LEFT   JOIN region wr ON wr.id = wu.region_id
-
-			GROUP  BY a.id, ts.name,
-			          a.strategy_id, ast.name,
-			          a.min_price_kg, a.max_price_kg, a.buy_now_price, a.show_public, a.min_increment,
-			          p.id, p.weight_kg, p.delivery_date, p.transformed_product_id,
-			          qc.quality_inspector_id, q.name, qt.name,
-			          st.id, st.name, su.first_name, su.last_name, stc.name, str.name,
-			          tr.id, u.first_name, u.last_name, sc.name, sr.name, co.name,
-			          w.winning_bid_amount, w.winner_trader_id,
-			          wu.first_name, wu.last_name, wc.name, wr.name;
-			""";
+	private final ResourceLoader resourceLoader;
+	private static final String CREATE_VIEW_EXPORT_AUCTION = "classpath:sql/export_auctions.sql";
+	private static final String CREATE_VIEW_DASHBOARD_CARDS = "classpath:sql/dashboard_cards.sql";
+	private static final String CREATE_VIEW_DASHBOARD_GRAPHIC = "classpath:sql/dashboard_graphic.sql";
 
 	@Override
 	public boolean isInitialized() {
@@ -348,7 +224,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 		log.info("→ createDatabase() (compatibilité) ←");
 		initDatabase();
 		initTestData();
-		em.createNativeQuery(CREATE_VIEW_SQL).executeUpdate();
+		initViews();
 	}
 
 	/**
@@ -389,6 +265,18 @@ public class DatabaseServiceImpl implements DatabaseService {
 
 		entityManager.flush();
 		log.info("Données de test générées ✔");
+	}
+
+	private void initViews() throws IOException {
+		executeViewScript(CREATE_VIEW_EXPORT_AUCTION);
+		executeViewScript(CREATE_VIEW_DASHBOARD_CARDS);
+		executeViewScript(CREATE_VIEW_DASHBOARD_GRAPHIC);
+	}
+
+	private void executeViewScript(String location) throws IOException {
+		Resource resource = resourceLoader.getResource(location);
+		String sql = IOUtils.toString(resource.getInputStream(), StandardCharsets.UTF_8);
+		em.createNativeQuery(sql).executeUpdate();
 	}
 
 	private void createBaseLookups() {
@@ -513,6 +401,19 @@ public class DatabaseServiceImpl implements DatabaseService {
 				dto -> (QualityInspectorDetailDto) userService.createUser(dto, null),
 				NUM_QUALITY_INSPECTORS);
 
+		// Regroupe les listes dans une seule structure
+		List<List<? extends UserDetailDto>> userGroups = Arrays.asList(createdAdmins,
+				createdProducers, createdTransformers, createdExporters, createdCarriers,
+				createdQualityInspectors);
+
+		// Parcourt chaque groupe puis chaque utilisateur
+		for (List<? extends UserDetailDto> group : userGroups) {
+			for (UserDetailDto user : group) {
+				userRepository.overrideCreationDateNative(user.getId(),
+						generateRandomDateTimeInPast());
+			}
+		}
+
 		log.info("Users created.");
 	}
 
@@ -586,6 +487,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 			coopDto.setPresidentId(presidentDto.getId());
 
 			CooperativeDto createdCoop = cooperativeService.createCooperative(coopDto);
+			cooperativeRepository.overrideCreationDateNative(createdCoop.getId(),
+					generateRandomDateTimeInPast());
 			createdCooperatives.add(createdCoop);
 
 			// Persist le président

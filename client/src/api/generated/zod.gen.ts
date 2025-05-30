@@ -330,7 +330,7 @@ export const zTransformedProductDto = zProductDto
 
 export const zCooperativeUpdateDto = z.object({
   name: z.string().min(1),
-  creationDate: z.iso.datetime(),
+  creationDate: z.iso.datetime().optional(),
   presidentId: z.number().int(),
 })
 
@@ -610,7 +610,7 @@ export const zTraderListDto = zUserListDto.and(
 export const zProducerListDto = zTraderListDto.and(
   z.object({
     agriculturalIdentifier: z.string().min(1),
-    cooperative: zCooperativeDto,
+    cooperativeId: z.number().int(),
   })
 )
 
@@ -621,6 +621,10 @@ export const zQualityInspectorListDto = zUserListDto.and(
 )
 
 export const zTransformerListDto = zTraderListDto
+
+export const zSseEmitter = z.object({
+  timeout: z.coerce.bigint().optional(),
+})
 
 export const zExportAuctionDto = z.object({
   auctionId: z.number().int().optional(),
@@ -663,6 +667,31 @@ export const zExportAuctionDto = z.object({
 
 export const zApplicationDataDto = z.object({
   languages: z.array(zLanguageDto),
+})
+
+export const zDashboardGraphicDto = z.object({
+  date: z.iso.datetime().optional(),
+  totalOpenAuctions: z.coerce.bigint().optional(),
+  totalNewAuctions: z.coerce.bigint().optional(),
+})
+
+export const zDashboardCardsDto = z.object({
+  totalNbUsers: z.coerce.bigint().optional(),
+  totalNbUsersTendency: z.number().optional(),
+  pendingValidation: z.coerce.bigint().optional(),
+  pendingValidationTendency: z.number().optional(),
+  totalAuctions: z.coerce.bigint().optional(),
+  totalAuctionsTendency: z.number().optional(),
+  auctionsConcluded: z.coerce.bigint().optional(),
+  auctionsConcludedTendency: z.number().optional(),
+  totalLotWeightKg: z.number().optional(),
+  totalLotWeightKgTendency: z.number().optional(),
+  totalSoldWeightKg: z.number().optional(),
+  totalSoldWeightKgTendency: z.number().optional(),
+  totalSalesAmount: z.number().optional(),
+  totalSalesAmountTendency: z.number().optional(),
+  monthlySalesAmount: z.number().optional(),
+  monthlySalesAmountTendency: z.number().optional(),
 })
 
 export const zApiErrorErrors = z.object({
@@ -824,6 +853,8 @@ export const zCheckEmailResponse = z.boolean()
 
 export const zListRegionsResponse = z.array(zRegionDto)
 
+export const zSubscribeResponse = zSseEmitter
+
 export const zListAuctions1Response = z.array(zExportAuctionDto)
 
 export const zGetAuction1Response = zExportAuctionDto
@@ -843,3 +874,7 @@ export const zGetAuctionSettingsResponse = zGlobalSettingsDto
 export const zGetApplicationDataResponse = zApplicationDataDto
 
 export const zGetUserResponse = zUserDetailDto
+
+export const zGetDashboardGraphicSeriesResponse = z.array(zDashboardGraphicDto)
+
+export const zGetDashboardCardsResponse = zDashboardCardsDto

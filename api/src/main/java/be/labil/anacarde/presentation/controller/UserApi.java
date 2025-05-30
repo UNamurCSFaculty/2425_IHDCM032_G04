@@ -24,6 +24,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -74,7 +75,8 @@ public interface UserApi {
 	ResponseEntity<? extends UserDetailDto> createUser(
 			@Validated({Default.class,
 					ValidationGroups.Create.class}) @RequestPart("user") @Valid UserCreateDto user,
-			@RequestPart(value = "documents", required = false) List<MultipartFile> documents);
+			@RequestPart(value = "documents", required = false) List<MultipartFile> documents,
+			@Parameter(hidden = true) Authentication auth);
 
 	/**
 	 * Met à jour un utilisateur existant.

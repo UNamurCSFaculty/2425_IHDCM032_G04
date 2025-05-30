@@ -20,6 +20,7 @@ import {
   IconSearch,
   IconSettings,
   IconUsers,
+  IconBuilding,
 } from '@tabler/icons-react'
 import { Link } from '@tanstack/react-router'
 import * as React from 'react'
@@ -52,6 +53,11 @@ const data = {
       title: 'Analyse Business',
       url: '/admin/analytics',
       icon: IconChartBar,
+    },
+    {
+      title: 'Coopératives',
+      url: '/admin/cooperatives',
+      icon: IconBuilding,
     },
     {
       title: 'Paramètres',

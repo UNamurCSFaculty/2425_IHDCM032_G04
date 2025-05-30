@@ -33,10 +33,9 @@ import { Observer } from 'tailwindcss-intersect'
 // Initialise dayjs sur la langue courante
 setDayjsLocale(i18n.language)
 
-// Met à jour dayjs et la direction du document si la langue change dynamiquement
+// Met à jour dayjs et la direction du document si la langue change
 i18n.on('languageChanged', lng => {
   setDayjsLocale(lng)
-  // Met à jour la direction du document
   if (lng === 'ar') {
     document.documentElement.setAttribute('dir', 'rtl')
   } else {

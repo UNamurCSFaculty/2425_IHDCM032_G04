@@ -76,7 +76,6 @@ export enum TradeStatus {
 //}
 
 export type DeepPartial<T> = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [K in keyof T]?: T[K] extends (...args: any[]) => any // Si c'est une fonction, garde-la telle quelle
     ? T[K]
     : // Si c'est un tableau, transforme-le en tableau d'éléments draftés

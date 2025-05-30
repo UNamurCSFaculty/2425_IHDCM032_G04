@@ -1,4 +1,4 @@
-import VirtualizedSelect from './VirtualizedSelect'
+import VirtualizedSelect, { type Option } from './VirtualizedSelect'
 import { Button } from './ui/button'
 import { Calendar } from './ui/calendar'
 import { Input } from './ui/input'
@@ -8,6 +8,7 @@ import { RadioGroup, RadioGroupItem } from './ui/radio-group'
 import { Slider } from './ui/slider'
 import {
   type AuctionDto,
+  type ContractOfferDto,
   type ProductDto,
   ProductType,
   type QualityDto,
@@ -16,6 +17,7 @@ import { listQualitiesOptions } from '@/api/generated/@tanstack/react-query.gen'
 import cities from '@/data/cities.json'
 import regions from '@/data/regions.json'
 import { TradeStatus } from '@/lib/utils'
+import { useAuthUser } from '@/store/userStore'
 import { formatDate, formatPrice } from '@/utils/formatter'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
@@ -38,15 +40,21 @@ const regionOptions = regions.map((n, i) => ({
   label: n,
 }))
 
-interface FiltersPanelProps<T extends AuctionDto | ProductDto> {
-  filterDataType: T extends AuctionDto ? 'auction' : 'product'
+interface FiltersPanelProps<
+  T extends AuctionDto | ProductDto | ContractOfferDto,
+> {
+  filterDataType: T extends AuctionDto
+    ? 'auction'
+    : T extends ProductDto
+      ? 'product'
+      : 'contract'
   filterData: T[]
   onFilteredDataChange: (filteredData: T[]) => void
   filterByAuctionStatus?: boolean
   filterByPrice?: boolean
 }
 
-const FiltersPanel = <T extends AuctionDto | ProductDto>({
+const FiltersPanel = <T extends AuctionDto | ProductDto | ContractOfferDto>({
   filterDataType,
   filterData,
   onFilteredDataChange,
@@ -63,6 +71,9 @@ const FiltersPanel = <T extends AuctionDto | ProductDto>({
   const [productTypeId, setProductTypeId] = useState<number | null>(null)
   const [regionId, setRegionId] = useState<number | null>(null)
   const [cityId, setCityId] = useState<number | null>(null)
+  const [userType, setUserType] = useState<number | null>(1)
+
+  const user = useAuthUser()
 
   // Reset dependent filters
   useEffect(() => setCityId(null), [regionId])
@@ -136,6 +147,44 @@ const FiltersPanel = <T extends AuctionDto | ProductDto>({
         if (cityId && p.store.address.cityId !== cityId) return false
 
         return true
+      } else if (filterDataType === 'contract') {
+        const c = item as ContractOfferDto
+
+        const searchLower = search.toLowerCase()
+        if (
+          search &&
+          !(
+            c.id.toString().includes(searchLower) ||
+            c.seller.firstName.toLowerCase().includes(searchLower) ||
+            c.seller.lastName.toLowerCase().includes(searchLower) ||
+            c.buyer.firstName.toLowerCase().includes(searchLower) ||
+            c.buyer.lastName.toLowerCase().includes(searchLower) ||
+            c.status.toLowerCase().includes(searchLower)
+          )
+        ) {
+          return false
+        }
+
+        if (c.pricePerKg < priceRange[0] || c.pricePerKg > priceRange[1])
+          return false
+
+        if (
+          selectedDate &&
+          dayjs(c.endDate).isAfter(dayjs(selectedDate).endOf('day'))
+        ) {
+          return false
+        }
+
+        if (qualityId && c.quality.id !== qualityId) return false
+
+        if (productTypeId && c.quality.qualityType.id !== productTypeId)
+          return false
+
+        if (userType === 2 && c.seller.id !== user.id) return false
+
+        if (userType === 3 && c.buyer.id !== user.id) return false
+
+        return true
       }
       return true // Should not be reached if filterDataType is correctly 'auction' or 'product'
     },
@@ -149,6 +198,8 @@ const FiltersPanel = <T extends AuctionDto | ProductDto>({
       regionId,
       cityId,
       filterDataType,
+      userType,
+      user.id,
     ]
   )
 
@@ -163,6 +214,11 @@ const FiltersPanel = <T extends AuctionDto | ProductDto>({
     id: i + 1,
     label: t('database.' + n),
   }))
+
+  const userTypeOptions: Option[] = [
+    { id: 2, label: t('filters.user_type.seller') },
+    { id: 3, label: t('filters.user_type.buyer') },
+  ]
 
   const { data: qualitiesData } = useSuspenseQuery(listQualitiesOptions())
 
@@ -245,6 +301,18 @@ const FiltersPanel = <T extends AuctionDto | ProductDto>({
             </RadioGroup>
           )}
 
+          {filterDataType === 'contract' && (
+            <VirtualizedSelect
+              id="user-type-select"
+              label={t('filters.user_type.label')}
+              placeholder={t('filters.user_type.undefined')}
+              placeholderSelectable={true}
+              options={userTypeOptions}
+              value={userType}
+              onChange={v => setUserType(v)}
+            />
+          )}
+
           {filterByPrice && (
             <div className="space-y-2">
               <div className="flex justify-between text-sm font-medium">
@@ -285,57 +353,62 @@ const FiltersPanel = <T extends AuctionDto | ProductDto>({
             onChange={v => setQualityId(v as number)}
           />
           {/* Region / City */}
-          <VirtualizedSelect
-            id="region-select"
-            label={t('address.region_label')}
-            placeholder={t('filters.all_regions_placeholder')}
-            placeholderSelectable={true}
-            options={regionOptions}
-            value={regionId}
-            onChange={v => setRegionId(v as number)}
-          />
-          <VirtualizedSelect
-            id="city-select"
-            label={t('form.city')}
-            placeholder={t('filters.all_cities_placeholder')}
-            placeholderSelectable={true}
-            options={cityOptions}
-            value={cityId}
-            onChange={v => setCityId(v as number)}
-          />
-          {/* Date picker - only for auctions */}
-          {filterDataType === 'auction' && (
-            <div className="space-y-2">
-              <label
-                htmlFor="expiration-date-picker"
-                className="text-sm font-medium"
-              >
-                {t('filters.expires_before_label')}
-              </label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    id="expiration-date-picker"
-                    variant="outline"
-                    className="w-full justify-between"
-                  >
-                    {selectedDate
-                      ? formatDate(selectedDate.toISOString())
-                      : t('filters.choose_date_placeholder')}
-                    <ChevronDown className="size-4 opacity-50" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={selectedDate ?? undefined}
-                    onSelect={d => setSelectedDate(d ?? null)}
-                    disabled={d => d < dayjs().startOf('day').toDate()}
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
+          {filterDataType !== 'contract' && (
+            <VirtualizedSelect
+              id="region-select"
+              label={t('address.region_label')}
+              placeholder={t('filters.all_regions_placeholder')}
+              placeholderSelectable={true}
+              options={regionOptions}
+              value={regionId}
+              onChange={v => setRegionId(v as number)}
+            />
           )}
+          {filterDataType !== 'contract' && (
+            <VirtualizedSelect
+              id="city-select"
+              label={t('form.city')}
+              placeholder={t('filters.all_cities_placeholder')}
+              placeholderSelectable={true}
+              options={cityOptions}
+              value={cityId}
+              onChange={v => setCityId(v as number)}
+            />
+          )}
+          {/* Date picker - only for auctions */}
+          {filterDataType === 'auction' ||
+            (filterDataType === 'contract' && (
+              <div className="space-y-2">
+                <label
+                  htmlFor="expiration-date-picker"
+                  className="text-sm font-medium"
+                >
+                  {t('filters.expires_before_label')}
+                </label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      id="expiration-date-picker"
+                      variant="outline"
+                      className="w-full justify-between"
+                    >
+                      {selectedDate
+                        ? formatDate(selectedDate.toISOString())
+                        : t('filters.choose_date_placeholder')}
+                      <ChevronDown className="size-4 opacity-50" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={selectedDate ?? undefined}
+                      onSelect={d => setSelectedDate(d ?? null)}
+                      disabled={d => d < dayjs().startOf('day').toDate()}
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+            ))}
         </div>
       </div>
     </div>

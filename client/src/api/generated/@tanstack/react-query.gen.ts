@@ -78,6 +78,7 @@ import {
   checkPhone,
   checkEmail,
   listRegions,
+  subscribe,
   listAuctions1,
   getAuction1,
   listAllAuctions,
@@ -88,6 +89,8 @@ import {
   getAuctionSettings,
   getApplicationData,
   getUser,
+  getDashboardGraphicSeries,
+  getDashboardCards,
 } from '../sdk.gen'
 import {
   type UseMutationOptions,
@@ -264,6 +267,7 @@ import type {
   CheckPhoneData,
   CheckEmailData,
   ListRegionsData,
+  SubscribeData,
   ListAuctions1Data,
   ListAuctions1Response,
   GetAuction1Data,
@@ -277,6 +281,8 @@ import type {
   GetAuctionSettingsData,
   GetApplicationDataData,
   GetUserData,
+  GetDashboardGraphicSeriesData,
+  GetDashboardCardsData,
 } from '../types.gen'
 import { client as _heyApiClient } from '../client.gen'
 
@@ -2317,6 +2323,24 @@ export const listRegionsOptions = (options?: Options<ListRegionsData>) => {
   })
 }
 
+export const subscribeQueryKey = (options?: Options<SubscribeData>) =>
+  createQueryKey('subscribe', options)
+
+export const subscribeOptions = (options?: Options<SubscribeData>) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await subscribe({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: subscribeQueryKey(options),
+  })
+}
+
 export const listAuctions1QueryKey = (options: Options<ListAuctions1Data>) =>
   createQueryKey('listAuctions1', options)
 
@@ -2596,5 +2620,47 @@ export const getUserOptions = (options: Options<GetUserData>) => {
       return data
     },
     queryKey: getUserQueryKey(options),
+  })
+}
+
+export const getDashboardGraphicSeriesQueryKey = (
+  options?: Options<GetDashboardGraphicSeriesData>
+) => createQueryKey('getDashboardGraphicSeries', options)
+
+export const getDashboardGraphicSeriesOptions = (
+  options?: Options<GetDashboardGraphicSeriesData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getDashboardGraphicSeries({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: getDashboardGraphicSeriesQueryKey(options),
+  })
+}
+
+export const getDashboardCardsQueryKey = (
+  options?: Options<GetDashboardCardsData>
+) => createQueryKey('getDashboardCards', options)
+
+export const getDashboardCardsOptions = (
+  options?: Options<GetDashboardCardsData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getDashboardCards({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: getDashboardCardsQueryKey(options),
   })
 }

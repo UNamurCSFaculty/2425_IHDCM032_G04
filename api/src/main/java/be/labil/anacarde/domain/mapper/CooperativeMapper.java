@@ -16,6 +16,7 @@ public abstract class CooperativeMapper {
 
 	@Mapping(source = "presidentId", target = "president.id")
 	@Mapping(target = "id", ignore = true)
+	@Mapping(target = "members", ignore = true)
 	public abstract Cooperative toEntity(CooperativeUpdateDto dto);
 
 	// on ignore complètement le mapping automatique de presidentId
@@ -23,7 +24,8 @@ public abstract class CooperativeMapper {
 	public abstract CooperativeDto toDto(Cooperative entity);
 
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-	@Mapping(source = "presidentId", target = "president.id")
+	@Mapping(target = "president", ignore = true)
+	@Mapping(target = "members", ignore = true)
 	@Mapping(target = "id", ignore = true)
 	public abstract Cooperative partialUpdate(CooperativeUpdateDto dto,
 			@MappingTarget Cooperative entity);

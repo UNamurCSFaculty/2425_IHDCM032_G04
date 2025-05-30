@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import {
   listUsersOptions,
-  updateUserMutation,
   deleteUserMutation,
   getUserOptions,
+  listCooperativesOptions,
 } from '@/api/generated/@tanstack/react-query.gen'
 import type { UserDetailDto, UserListDto } from '@/api/generated/types.gen'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
@@ -41,10 +41,9 @@ import {
   Search,
   UserCog,
   Trash2,
-  CheckCircle2,
-  XCircle,
   Loader2,
   ArrowUpDown,
+  PlusCircle, // Added
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { UserForm } from './UserForm'
@@ -53,7 +52,7 @@ import { toast } from 'sonner'
 import PaginationControls from '@/components/PaginationControls'
 import { useMemo } from 'react'
 import { sortData, type SortConfig } from '@/lib/sorting'
-import type { AppUpdateUserDto, AppUserDetailDto } from '@/schemas/api-schemas'
+import type { AppUserDetailDto } from '@/schemas/api-schemas'
 
 type SortableColumn = keyof Pick<
   UserDetailDto,
@@ -63,16 +62,19 @@ type SortableColumn = keyof Pick<
 export function UserListPage() {
   const { t } = useTranslation()
   const queryClient = useQueryClient()
-
   const [searchTerm, setSearchTerm] = useState('')
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
-  const [selectedUserForDelete, setSelectedUserForDelete] =
-    useState<UserListDto | null>(null)
-  const [editingUserId, setEditingUserId] = useState<number | null>(null)
-
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 10
+
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
+  const [editingUserId, setEditingUserId] = useState<number | null>(null)
+
+  const [isCreateUserDialogOpen, setIsCreateUserDialogOpen] = useState(false) // New state for create dialog
+
+  const [isConfirmDeleteDialogOpen, setIsConfirmDeleteDialogOpen] =
+    useState(false)
+  const [selectedUserForDelete, setSelectedUserForDelete] =
+    useState<UserListDto | null>(null)
 
   const [sortColumn, setSortColumn] = useState<SortableColumn | null>(null)
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
@@ -92,21 +94,30 @@ export function UserListPage() {
     ...listUsersOptions(),
   })
 
+  // Ajouter la requête pour récupérer toutes les coopératives
+  const { data: allCooperatives, isLoading: isLoadingCooperatives } = useQuery(
+    listCooperativesOptions()
+  )
+
   const processedUsers = useMemo(() => {
     if (!allUsers) return { paginatedUsers: [], totalPages: 0, totalItems: 0 }
 
     // 1. Filter users
-    const filteredUsers = allUsers.filter(
-      user =>
+
+    const filteredUsers = allUsers.filter(user => {
+      const fullName = user.firstName + ' ' + user.lastName
+      return (
         (user.firstName?.toLowerCase() || '').includes(
           searchTerm.toLowerCase()
         ) ||
         (user.lastName?.toLowerCase() || '').includes(
           searchTerm.toLowerCase()
         ) ||
+        (fullName.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
         (user.email?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
         (user.type?.toLowerCase() || '').includes(searchTerm.toLowerCase())
-    )
+      )
+    })
 
     // 2. Sort users
     const sortConfig: SortConfig<UserListDto> = {
@@ -134,6 +145,7 @@ export function UserListPage() {
     itemsPerPage,
   ])
 
+  /*
   const mutationUpdate = useMutation({
     ...updateUserMutation(),
     onSuccess: (_, variables) => {
@@ -149,20 +161,21 @@ export function UserListPage() {
           error.message || t('admin.user_management.toasts.user_updated_error'),
       })
     },
-  })
+  })*/
 
   const mutationDelete = useMutation({
     ...deleteUserMutation({ path: { id: editingUserId! } }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: listUsersOptions().queryKey })
       toast.success(t('admin.user_management.toasts.user_deleted_success'))
-      setIsDeleteDialogOpen(false)
+      setIsConfirmDeleteDialogOpen(false)
       setSelectedUserForDelete(null)
     },
-    onError: (error: any) => {
-      toast.error(t('common.error'), {
+    onError: error => {
+      toast.error(t('common.error_general'), {
         description:
-          error.message || t('admin.user_management.toasts.user_deleted_error'),
+          error.errors.map(e => e.message).join(' ,') ||
+          t('admin.user_management.toasts.user_deleted_error'),
       })
     },
   })
@@ -174,7 +187,7 @@ export function UserListPage() {
 
   const handleDeleteUser = (user: UserListDto) => {
     setSelectedUserForDelete(user)
-    setIsDeleteDialogOpen(true)
+    setIsConfirmDeleteDialogOpen(true)
   }
 
   const confirmDeleteUser = () => {
@@ -183,6 +196,7 @@ export function UserListPage() {
     }
   }
 
+  /*
   const handleToggleUserStatus = (user: UserListDto) => {
     const updatedUserPayload = {
       type: user.type,
@@ -193,7 +207,7 @@ export function UserListPage() {
       path: { id: user.id },
       body: updatedUserPayload,
     })
-  }
+  }*/
 
   const getStatusVariant = (
     user: UserListDto
@@ -228,7 +242,8 @@ export function UserListPage() {
     )
   }
 
-  if (isLoadingUsers) {
+  if (isLoadingUsers || isLoadingCooperatives) {
+    // Ajouter isLoadingCooperatives à la condition de chargement
     return (
       <div className="flex items-center justify-center py-10">
         <Loader2 className="text-primary h-8 w-8 animate-spin" />
@@ -250,18 +265,21 @@ export function UserListPage() {
             value={searchTerm}
             onChange={e => {
               setSearchTerm(e.target.value)
-              setCurrentPage(1) // Reset to first page on new search
+              setCurrentPage(1)
             }}
           />
         </div>
-        <div className="text-muted-foreground text-sm">
-          {t('admin.user_management.results_count', {
-            count: processedUsers.totalItems,
-            total: allUsers?.length || 0,
-          })}
-        </div>
+        <Button onClick={() => setIsCreateUserDialogOpen(true)}>
+          <PlusCircle className="mr-2 h-4 w-4" />
+          {t('admin.user_management.add_user_button')}
+        </Button>
       </div>
-
+      <div className="text-muted-foreground text-sm">
+        {t('admin.user_management.results_count', {
+          count: processedUsers.totalItems,
+          total: allUsers?.length || 0,
+        })}
+      </div>
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -351,7 +369,7 @@ export function UserListPage() {
                           <UserCog className="mr-2 h-4 w-4" />
                           {t('buttons.edit')}
                         </DropdownMenuItem>
-                        {user.validationDate && ( // Only show activate/deactivate if user is validated
+                        {/*user.validationDate && 
                           <DropdownMenuItem
                             onClick={() => handleToggleUserStatus(user)}
                           >
@@ -364,7 +382,7 @@ export function UserListPage() {
                               ? t('buttons.deactivate')
                               : t('buttons.activate')}
                           </DropdownMenuItem>
-                        )}
+                        )*/}
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
                           onClick={() => handleDeleteUser(user)}
@@ -411,7 +429,7 @@ export function UserListPage() {
         }}
       >
         <DialogContent className="max-h-[90vh] w-full max-w-[80vw]! overflow-y-auto">
-          {isLoadingUserDetails && (
+          {(isLoadingUserDetails || isLoadingCooperatives) && ( // Vérifier aussi isLoadingCooperatives
             <div className="flex h-48 items-center justify-center">
               <Loader2 className="text-primary h-8 w-8 animate-spin" />
             </div>
@@ -423,9 +441,12 @@ export function UserListPage() {
             </div>
           )}
           {!isLoadingUserDetails &&
+            !isLoadingCooperatives &&
             !isErrorUserDetails &&
-            detailedUserToEdit && (
+            detailedUserToEdit &&
+            allCooperatives && (
               <UserForm
+                mode="edit"
                 existingUser={detailedUserToEdit as AppUserDetailDto}
                 onSubmitSuccess={() => {
                   setIsEditDialogOpen(false)
@@ -445,10 +466,42 @@ export function UserListPage() {
         </DialogContent>
       </Dialog>
 
+      {/* Create User Dialog */}
+      <Dialog
+        open={isCreateUserDialogOpen}
+        onOpenChange={isOpen => {
+          setIsCreateUserDialogOpen(isOpen)
+        }}
+      >
+        <DialogContent className="max-h-[90vh] w-full max-w-[80vw]! overflow-y-auto">
+          {isLoadingCooperatives && ( // Only need to check for cooperatives loading for create
+            <div className="flex h-48 items-center justify-center">
+              <Loader2 className="text-primary h-8 w-8 animate-spin" />
+            </div>
+          )}
+          {!isLoadingCooperatives && allCooperatives && (
+            <UserForm
+              mode="create" // Explicitly set mode to create
+              onSubmitSuccess={() => {
+                setIsCreateUserDialogOpen(false)
+              }}
+              onCancel={() => {
+                setIsCreateUserDialogOpen(false)
+              }}
+              formTitle={t('admin.user_management.create_dialog.title')}
+              formDescription={t(
+                'admin.user_management.create_dialog.description'
+              )}
+              submitButtonText={t('buttons.create')}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+
       {/* Delete User Confirmation Dialog */}
       <AlertDialog
-        open={isDeleteDialogOpen}
-        onOpenChange={setIsDeleteDialogOpen}
+        open={isConfirmDeleteDialogOpen}
+        onOpenChange={setIsConfirmDeleteDialogOpen}
       >
         <AlertDialogContent>
           <AlertDialogHeader>

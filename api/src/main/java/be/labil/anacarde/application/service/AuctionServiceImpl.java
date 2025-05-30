@@ -20,6 +20,7 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.quartz.*;
@@ -40,6 +41,8 @@ public class AuctionServiceImpl implements AuctionService {
 	private final AuctionStrategyMapper auctionStrategyMapper;
 	private final PersistenceHelper persistenceHelper;
 	private final GlobalSettingsService globalSettingsService;
+	private final AuctionSseService auctionSseService;
+	private final NotificationSseService notificationSseService;
 
 	private static final Logger log = LoggerFactory.getLogger(CloseAuctionJob.class);
 
@@ -79,6 +82,11 @@ public class AuctionServiceImpl implements AuctionService {
 		}
 
 		Auction full = persistenceHelper.saveAndReload(auctionRepository, auction, Auction::getId);
+
+		// Ajoute le vendeur comme abonné SSE à l'enchère
+		if (full.getTrader() != null && full.getTrader().getUsername() != null) {
+			auctionSseService.addSubscriber(full.getId(), full.getTrader().getUsername());
+		}
 
 		if (full.getExpirationDate() != null) {
 			scheduleAuctionClose(Long.valueOf(full.getId()), full.getExpirationDate());
@@ -146,6 +154,7 @@ public class AuctionServiceImpl implements AuctionService {
 		existingAuction.setExpirationDate(LocalDateTime.now());
 
 		Auction saved = auctionRepository.save(existingAuction);
+		notifyAuctionClosed(saved);
 		return auctionMapper.toDto(saved);
 	}
 
@@ -190,7 +199,7 @@ public class AuctionServiceImpl implements AuctionService {
 				auction.setStatus(tradeStatusRepository.findStatusExpired());
 				auctionRepository.save(auction);
 				log.info("L'enchère ID {} a été marquée comme CLOSED.", auctionId);
-
+				notifyAuctionClosed(auction);
 				deleteAuctionCloseJob(auctionId.longValue());
 			} else {
 				log.warn(
@@ -231,7 +240,7 @@ public class AuctionServiceImpl implements AuctionService {
 		final double pricePerKg = getPricePerKg(auctionUpdateDto);
 
 		if (settings.getDefaultMinPriceKg() != null) {
-			if (pricePerKg< settings.getDefaultMinPriceKg().doubleValue())
+			if (pricePerKg < settings.getDefaultMinPriceKg().doubleValue())
 				throw new ApiErrorException(HttpStatus.BAD_REQUEST, ApiErrorCode.BAD_REQUEST.code(),
 						"defaultMinPriceKg", "Prix minimum non respecté");
 		}
@@ -244,10 +253,23 @@ public class AuctionServiceImpl implements AuctionService {
 	}
 
 	private double getPricePerKg(AuctionUpdateDto auctionUpdateDto) {
-		if (auctionUpdateDto.getProductQuantity() == null || auctionUpdateDto.getProductQuantity() <= 0) {
+		if (auctionUpdateDto.getProductQuantity() == null
+				|| auctionUpdateDto.getProductQuantity() <= 0) {
 			return 0;
 		}
 
 		return auctionUpdateDto.getPrice() / auctionUpdateDto.getProductQuantity();
+	}
+	// Notifie les abonnés SSE de la clôture de l'enchère (acceptation ou expiration)
+	private void notifyAuctionClosed(Auction auction) {
+		Set<String> subscribers = auctionSseService.getSubscribers(auction.getId());
+		AuctionDto auctionDto = auctionMapper.toDto(auction);
+		if (subscribers != null && !subscribers.isEmpty()) {
+			for (String subKey : subscribers) {
+				notificationSseService.publishEvent(subKey, "auctionClosed", auctionDto);
+				log.info("[SSE] Notification envoyée à " + subKey + " pour clôture de l'enchère: "
+						+ auctionDto);
+			}
+		}
 	}
 }

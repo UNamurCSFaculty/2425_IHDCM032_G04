@@ -54,6 +54,10 @@
       "description_line2": "حسابك قيد التحقق من قبل المسؤول.",
       "email_notification": "ستتلقى رسالة بريد إلكتروني بمجرد تفعيل حسابك.",
       "go_to_login": "اذهب إلى صفحة تسجيل الدخول"
+    },
+    "contracts_list_contracts": {
+      "title": "عقودي",
+      "subtitle": "اعرض جميع عقودك."
     }
   },
   "homepage": {
@@ -141,7 +145,9 @@
     "new_auction": "مزاد جديد",
     "deposits": "الودائع",
     "my_deposits": "منتجاتي",
-    "new_deposit": "منتج جديد"
+    "new_deposit": "منتج جديد",
+    "contracts": "العقود",
+    "my_contracts": "عقودي"
   },
   "buttons": {
     "cancel": "إلغاء",
@@ -459,7 +465,13 @@
     "all_regions_placeholder": "جميع المناطق",
     "all_cities_placeholder": "جميع المدن",
     "expires_before_label": "ينتهي قبل",
-    "choose_date_placeholder": "اختر…"
+    "choose_date_placeholder": "اختر…",
+    "user_type": {
+      "undefined": "غير محدد",
+      "seller": "بائع",
+      "buyer": "مشتري",
+      "label": "بصفتي"
+    }
   },
   "address": {
     "region_label": "المنطقة"
@@ -647,6 +659,14 @@
     "duration_label": "مدة العقد",
     "duration_years_label": "(سنوات)",
     "duration_months_label": "(أشهر)",
-    "ends_on_date_label": "ينتهي في {{date}}"
+    "ends_on_date_label": "ينتهي في {{date}}",
+    "results_count": "النتائج: {{count}} عقدًا",
+    "seller_label": "البائع",
+    "buyer_label": "المشتري",
+    "quality_label": "الجودة",
+    "status_label": "الحالة",
+    "contract_end_label": "نهاية العقد",
+    "label": "العقد رقم {{id}}",
+    "price_per_kg_label": "السعر لكل كغ"
   }
 }

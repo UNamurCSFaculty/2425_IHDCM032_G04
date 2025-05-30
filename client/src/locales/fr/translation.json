@@ -54,6 +54,10 @@
       "description_line2": "Votre compte est en attente de validation par un administrateur.",
       "email_notification": "Vous recevrez un e-mail une fois votre compte activé.",
       "go_to_login": "Aller à la page de connexion"
+    },
+    "contracts_list_contracts": {
+      "title": "Mes contrats",
+      "subtitle": "Consultez tous vos contrats."
     }
   },
   "homepage": {
@@ -141,7 +145,9 @@
     "new_auction": "Nouvelle enchère",
     "deposits": "Dépôts",
     "my_deposits": "Mes produits",
-    "new_deposit": "Nouveau produit"
+    "new_deposit": "Nouveau produit",
+    "contracts": "Contrats",
+    "my_contracts": "Mes contrats"
   },
   "common": {
     "add": "Ajouter",
@@ -163,16 +169,21 @@
     "warning": "Avertissement",
     "yes": "Oui",
     "error_loading_data": "Erreur lors du chargement des données.",
+    "error_loading_data_title": "Erreur de chargement des données",
+    "error_loading_users_title": "Erreur de chargement des utilisateurs",
     "download_error": "Erreur de téléchargement",
     "download_successful": "Téléchargement réussi",
     "unknown_error": "Une erreur inconnue s'est produite.",
     "this_user": "cet utilisateur",
     "not_provided": "Non fourni",
-    "confirm_action": "Confirmer l'action"
+    "confirm_action": "Confirmer l'action",
+    "not_applicable_short": "N/A",
+    "unknown": "Inconnu"
   },
   "buttons": {
     "view": "Voir",
     "edit": "Modifier",
+    "create": "Créer",
     "approve": "Approuver",
     "cancel": "Annuler",
     "connection": "Connexion",
@@ -201,10 +212,20 @@
     "rejecting": "Rejet en cours...",
     "approving": "Approbation en cours...",
     "download": "Télécharger",
-    "downloading": "Téléchargement..."
+    "downloading": "Téléchargement...",
+    "back_to_list": "Retour à la liste",
+    "retry": "Réessayer",
+    "save": "Sauvegarder",
+    "add": "Ajouter"
   },
   "form": {
+    "read_only": "Lecture seule",
     "carrier_details": "Détails du transporteur",
+    "cooperative": "Coopérative",
+    "select_cooperative": "Sélectionner une coopérative",
+    "cooperative_name": "Entrez le nom de la coopérative",
+    "creation_date": "Date de création",
+    "president": "Président de la coopérative",
     "accept_terms": "J’accepte les conditions d’utilisation",
     "select.placeholder": "Choisissez une option",
     "price_per_km": "Prix au km",
@@ -248,7 +269,8 @@
     "sections": {
       "user_details": "Détails de l'utilisateur",
       "basic_info": "Informations de base",
-      "change_password": "Changer le mot de passe"
+      "change_password": "Changer le mot de passe",
+      "password": "Mot de passe"
     },
     "enabled": {
       "label": "Activé",
@@ -268,7 +290,10 @@
       "street_example": "Ex.: Rue Principale",
       "email_example": "m@example.com",
       "password_example": "••••••••••",
-      "bid_amount_cfa": "Montant CFA"
+      "bid_amount_cfa": "Montant CFA",
+      "cooperative_name": "Entrez le nom de la coopérative",
+      "select_president": "Sélectionner un président...",
+      "no_users_available": "Aucun utilisateur disponible"
     },
     "file_type": {
       "image": "Image",
@@ -288,12 +313,53 @@
   },
   "admin": {
     "settings": {
-      "title": "Paramèttres de la plateforme",
+      "title": "Paramètres de la plateforme",
       "description": "Gérez les paramètres de la plateforme."
+    },
+    "dashboard": {
+      "title": "Tableau de bord",
+      "description": "Suivez différents indicateurs de la plateforme",
+      "cards": {
+        "totalNbUsers": {
+          "title": "Nombre d'utilisateurs",
+          "description": "Inscriptions"
+        },
+        "pendingValidation": {
+          "title": "Nouvelles inscriptions",
+          "description": "En attente d'approbation"
+        },
+        "totalAuctions": {
+          "title": "Nouvelles enchères",
+          "description": "Enchères en cours"
+        },
+        "auctionsConcluded": {
+          "title": "Enchères conclues",
+          "description": "30 derniers jours"
+        },
+        "totalLotWeightKg": {
+          "title": "Volume total",
+          "description": "Poids total vendu"
+        },
+        "totalSoldWeightKg": {
+          "title": "Volume mensuel",
+          "description": "30 derniers jours"
+        },
+        "totalSalesAmount": {
+          "title": "Montant total",
+          "description": "Toutes les ventes"
+        },
+        "monthlySalesAmount": {
+          "title": "Ventes mensuelles",
+          "description": "30 derniers jours"
+        },
+        "compared_to_30_days": "Par rapport à il y a 30 jours",
+        "error_loading": "Erreur lors du chargement du tableau de bord"
+      }
     },
     "user_management": {
       "title": "Gestion des utilisateurs",
       "description": "Gérez les utilisateurs, approuvez les inscriptions et modifiez les détails des utilisateurs.",
+      "add_user_button": "Ajouter un utilisateur",
       "tabs": {
         "all_users": "Tous les utilisateurs",
         "pending_approvals": "Approbations en attente"
@@ -306,12 +372,22 @@
         "user_approved_success": "Utilisateur approuvé avec succès.",
         "user_approved_error": "Erreur lors de l'approbation de l'utilisateur.",
         "user_rejected_success": "Utilisateur rejeté avec succès.",
-        "user_rejected_error": "Erreur lors du rejet de l'utilisateur."
+        "user_rejected_error": "Erreur lors du rejet de l'utilisateur.",
+        "user_created_success": "Utilisateur créé avec succès.",
+        "user_created_error": "Erreur lors de la création de l'utilisateur."
+      },
+      "no_users_match_search_pending": {
+        "title": "Aucun utilisateur en attente ne correspond à votre recherche.",
+        "description": "Essayez d'élargir vos critères de recherche ou de vérifier les fautes de frappe."
       },
       "search_placeholder": "Rechercher...",
       "no_users_found": "Aucun utilisateur trouvé.",
       "no_users_match_search": "Aucun utilisateur ne correspond à votre recherche.",
       "results_count": "{{count}} sur {{total}} utilisateurs",
+      "create_dialog": {
+        "title": "Créer un nouvel utilisateur",
+        "description": "Remplissez les informations ci-dessous pour ajouter un nouvel utilisateur."
+      },
       "edit_dialog": {
         "title": "Modifier l'utilisateur",
         "description": "Mettez à jour les informations et les paramètres de l'utilisateur."
@@ -329,6 +405,65 @@
         "description": "Vérifiez les informations et les documents de {{userName}}."
       },
       "no_documents_submitted": "Aucun document soumis."
+    },
+    "cooperative_management": {
+      "title": "Gestion des Coopératives",
+      "description": "Gérez les coopératives, leurs membres et leurs informations.",
+      "add_button": "Ajouter une coopérative",
+      "search_placeholder": "Rechercher une coopérative...",
+      "manage_members_button_title": "Gérer les membres",
+      "no_cooperatives_match_search": "Aucune coopérative ne correspond à votre recherche.",
+      "no_cooperatives_found": "Aucune coopérative trouvée.",
+      "members_count_column": "Nombre de membres",
+      "create_dialog": {
+        "title": "Créer une nouvelle coopérative",
+        "description": "Remplissez les informations ci-dessous pour ajouter une nouvelle coopérative."
+      },
+      "delete_dialog": {
+        "title": "Supprimer la Coopérative",
+        "description_confirm": "Êtes-vous sûr de vouloir supprimer cette coopérative ? Cette action est irréversible."
+      },
+      "edit_dialog": {
+        "title": "Modifier la Coopérative",
+        "description": "Mettez à jour les informations de la coopérative."
+      },
+      "form": {
+        "edit_title": "Modifier la Coopérative",
+        "add_title": "Ajouter une Coopérative",
+        "error_loading_cooperative_title": "Erreur chargement de la coopérative",
+        "error_cooperative_not_found": "Données de la coopérative non trouvées."
+      },
+      "toasts": {
+        "deleted_success": "Coopérative supprimée avec succès.",
+        "deleted_error": "Erreur lors de la suppression de la coopérative.",
+        "created_success": "Coopérative créée avec succès.",
+        "created_error_title": "Erreur lors de la création",
+        "created_error_description": "Impossible de créer la coopérative.",
+        "updated_success": "Coopérative mise à jour avec succès.",
+        "updated_error_title": "Erreur lors de la mise à jour",
+        "updated_error_description": "Impossible de mettre à jour la coopérative."
+      },
+      "members_dialog": {
+        "title": "Gérer les Membres de \"{{cooperativeName}}\"",
+        "description": "Ajoutez ou retirez des producteurs membres de cette coopérative.",
+        "error_loading_users": "Erreur chargement utilisateurs: {{errorMessage}}",
+        "current_members_count": "Membres Actuels ({{count}})",
+        "no_current_members": "Aucun membre actuel.",
+        "add_producer_title": "Ajouter un Producteur",
+        "select_available_producer_label": "Sélectionner un producteur non assigné",
+        "select_producer_placeholder": "Choisir un producteur...",
+        "no_available_producers": "Aucun producteur disponible à ajouter.",
+        "toasts": {
+          "member_added_success": "Membre ajouté avec succès.",
+          "member_removed_success": "Membre retiré avec succès.",
+          "member_update_error_title": "Erreur lors de la mise à jour du membre",
+          "member_update_error_description": "Impossible de mettre à jour le statut du membre.",
+          "invalid_selection_title": "Sélection invalide",
+          "invalid_selection_description": "Le producteur sélectionné n'est pas valide ou son identifiant agricole est manquant.",
+          "invalid_member_title": "Membre invalide",
+          "invalid_member_remove_description": "Le membre à retirer n'est pas valide ou son identifiant agricole est manquant."
+        }
+      }
     }
   },
   "languages": {
@@ -354,6 +489,8 @@
     "to": "à"
   },
   "validation": {
+    "default": "Le champ est invalide",
+    "regex": "Le format du champ est invalide",
     "acceptTerms": "Vous devez accepter les conditions d’utilisation",
     "email": "Format d’email invalide",
     "max": "Le champ doit être au plus {{count}}",
@@ -553,7 +690,13 @@
     "all_regions_placeholder": "Toutes les régions",
     "all_cities_placeholder": "Toutes les villes",
     "expires_before_label": "Expire avant",
-    "choose_date_placeholder": "Choisir…"
+    "choose_date_placeholder": "Choisir…",
+    "user_type": {
+      "undefined": "Non-défini",
+      "seller": "Vendeur",
+      "buyer": "Acheteur",
+      "label": "En tant que"
+    }
   },
   "address": {
     "region_label": "Région"
@@ -741,7 +884,15 @@
     "duration_label": "Durée du contrat",
     "duration_years_label": "(Années)",
     "duration_months_label": "(Mois)",
-    "ends_on_date_label": "Se termine le {{date}}"
+    "ends_on_date_label": "Se termine le {{date}}",
+    "results_count": "Résultats : {{count}} contrats",
+    "seller_label": "Vendeur",
+    "buyer_label": "Acheteur",
+    "quality_label": "Qualité",
+    "status_label": "Statut",
+    "contract_end_label": "Fin du contrat",
+    "label": "Contrat n°{{id}}",
+    "price_per_kg_label": "Prix par kg"
   },
   "settings": {
     "update_success": "Paramètres globaux mis à jour avec succès.",

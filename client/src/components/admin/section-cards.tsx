@@ -8,94 +8,186 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { IconTrendingDown, IconTrendingUp } from '@tabler/icons-react'
+import * as React from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { getDashboardCardsOptions } from '@/api/generated/@tanstack/react-query.gen.ts'
+import { AppSkeleton } from '@/components/Skeleton/AppSkeleton.tsx'
+import { useTranslation } from 'react-i18next'
+
+type Stats = {
+  totalNbUsers: number
+  totalNbUsersTendency: number
+  pendingValidation: number
+  pendingValidationTendency: number
+  totalAuctions: number
+  totalAuctionsTendency: number
+  auctionsConcluded: number
+  auctionsConcludedTendency: number
+  totalLotWeightKg: number
+  totalLotWeightKgTendency: number
+  totalSoldWeightKg: number
+  totalSoldWeightKgTendency: number
+  totalSalesAmount: number
+  totalSalesAmountTendency: number
+  monthlySalesAmount: number
+  monthlySalesAmountTendency: number
+}
 
 export function SectionCards() {
+  const { t } = useTranslation()
+
+  const {
+    data: rawStats,
+    isLoading,
+    error,
+  } = useQuery(getDashboardCardsOptions())
+
+  const stats = React.useMemo<Stats | null>(() => {
+    if (!rawStats) return null
+    const {
+      totalNbUsers = 0,
+      totalNbUsersTendency = 0,
+      pendingValidation = 0,
+      pendingValidationTendency = 0,
+      totalAuctions = 0,
+      totalAuctionsTendency = 0,
+      auctionsConcluded = 0,
+      auctionsConcludedTendency = 0,
+      totalLotWeightKg = 0,
+      totalLotWeightKgTendency = 0,
+      totalSoldWeightKg = 0,
+      totalSoldWeightKgTendency = 0,
+      totalSalesAmount = 0,
+      totalSalesAmountTendency = 0,
+      monthlySalesAmount = 0,
+      monthlySalesAmountTendency = 0,
+    } = rawStats
+
+    return {
+      totalNbUsers,
+      totalNbUsersTendency,
+      pendingValidation,
+      pendingValidationTendency,
+      totalAuctions,
+      totalAuctionsTendency,
+      auctionsConcluded,
+      auctionsConcludedTendency,
+      totalLotWeightKg,
+      totalLotWeightKgTendency,
+      totalSoldWeightKg,
+      totalSoldWeightKgTendency,
+      totalSalesAmount,
+      totalSalesAmountTendency,
+      monthlySalesAmount,
+      monthlySalesAmountTendency,
+    }
+  }, [rawStats])
+
+  const cards = React.useMemo(() => {
+    if (!stats) return []
+    return [
+      {
+        title: t('admin.dashboard.cards.totalNbUsers.title'),
+        value: stats.totalNbUsers.toLocaleString(),
+        tendency: stats.totalNbUsersTendency,
+        description: t('admin.dashboard.cards.totalNbUsers.description'),
+      },
+      {
+        title: t('admin.dashboard.cards.pendingValidation.title'),
+        value: stats.pendingValidation.toLocaleString(),
+        tendency: stats.pendingValidationTendency,
+        description: t('admin.dashboard.cards.pendingValidation.description'),
+      },
+      {
+        title: t('admin.dashboard.cards.totalAuctions.title'),
+        value: stats.totalAuctions.toLocaleString(),
+        tendency: stats.totalAuctionsTendency,
+        description: t('admin.dashboard.cards.totalAuctions.description'),
+      },
+      {
+        title: t('admin.dashboard.cards.auctionsConcluded.title'),
+        value: stats.auctionsConcluded.toLocaleString(),
+        tendency: stats.auctionsConcludedTendency,
+        description: t('admin.dashboard.cards.auctionsConcluded.description'),
+      },
+      {
+        title: t('admin.dashboard.cards.totalLotWeightKg.title'),
+        value:
+          Math.round(stats.totalLotWeightKg * 0.001).toLocaleString() + ' T',
+        tendency: stats.totalLotWeightKgTendency,
+        description: t('admin.dashboard.cards.totalLotWeightKg.description'),
+      },
+      {
+        title: t('admin.dashboard.cards.totalSoldWeightKg.title'),
+        value:
+          Math.round(stats.totalSoldWeightKg * 0.001).toLocaleString() + ' T',
+        tendency: stats.totalSoldWeightKgTendency,
+        description: t('admin.dashboard.cards.totalSoldWeightKg.description'),
+      },
+      {
+        title: t('admin.dashboard.cards.totalSalesAmount.title'),
+        value:
+          Math.round(stats.totalSalesAmount * 0.000001).toLocaleString() +
+          ' M CFA',
+        tendency: stats.totalSalesAmountTendency,
+        description: t('admin.dashboard.cards.totalSalesAmount.description'),
+      },
+      {
+        title: t('admin.dashboard.cards.monthlySalesAmount.title'),
+        value:
+          Math.round(stats.monthlySalesAmount * 0.000001).toLocaleString() +
+          ' M CFA',
+        tendency: stats.monthlySalesAmountTendency,
+        description: t('admin.dashboard.cards.monthlySalesAmount.description'),
+      },
+    ]
+  }, [stats, t])
+
+  if (isLoading) {
+    return <AppSkeleton />
+  }
+
+  if (error || !stats) {
+    return <div>{t('admin.dashboard.cards.error_loading')}</div>
+  }
+
   return (
-    <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
-      <Card className="@container/card">
-        <CardHeader>
-          <CardDescription>Total Revenue</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            $1,250.00
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline">
-              <IconTrendingUp />
-              +12.5%
-            </Badge>
-          </CardAction>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Trending up this month <IconTrendingUp className="size-4" />
-          </div>
-          <div className="text-muted-foreground">
-            Visitors for the last 6 months
-          </div>
-        </CardFooter>
-      </Card>
-      <Card className="@container/card">
-        <CardHeader>
-          <CardDescription>New Customers</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            1,234
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline">
-              <IconTrendingDown />
-              -20%
-            </Badge>
-          </CardAction>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Down 20% this period <IconTrendingDown className="size-4" />
-          </div>
-          <div className="text-muted-foreground">
-            Acquisition needs attention
-          </div>
-        </CardFooter>
-      </Card>
-      <Card className="@container/card">
-        <CardHeader>
-          <CardDescription>Active Accounts</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            45,678
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline">
-              <IconTrendingUp />
-              +12.5%
-            </Badge>
-          </CardAction>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Strong user retention <IconTrendingUp className="size-4" />
-          </div>
-          <div className="text-muted-foreground">Engagement exceed targets</div>
-        </CardFooter>
-      </Card>
-      <Card className="@container/card">
-        <CardHeader>
-          <CardDescription>Growth Rate</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            4.5%
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline">
-              <IconTrendingUp />
-              +4.5%
-            </Badge>
-          </CardAction>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Steady performance increase <IconTrendingUp className="size-4" />
-          </div>
-          <div className="text-muted-foreground">Meets growth projections</div>
-        </CardFooter>
-      </Card>
+    <div className="grid grid-cols-1 gap-4 px-4 lg:grid-cols-2 xl:grid-cols-4">
+      {cards.map(({ title, value, tendency, description }) => {
+        const isUp = tendency >= 0
+        const pct = Math.abs(tendency).toFixed(1) + '%'
+
+        return (
+          <Card key={title} className="@container/card">
+            <CardHeader>
+              <CardDescription>{title}</CardDescription>
+              <CardTitle className="text-2xl font-semibold tabular-nums">
+                {value}
+              </CardTitle>
+              <CardAction>
+                <Badge variant="outline" className="flex items-center gap-1">
+                  {isUp ? <IconTrendingUp /> : <IconTrendingDown />}
+                  {isUp ? '+' : '-'}
+                  {pct}
+                </Badge>
+              </CardAction>
+            </CardHeader>
+            <CardFooter className="flex-col items-start gap-1.5 text-sm">
+              <div className="line-clamp-1 flex gap-2 font-medium">
+                {description}{' '}
+                {isUp ? (
+                  <IconTrendingUp className="size-4" />
+                ) : (
+                  <IconTrendingDown className="size-4" />
+                )}
+              </div>
+              <div className="text-muted-foreground">
+                {t('admin.dashboard.cards.compared_to_30_days')}
+              </div>
+            </CardFooter>
+          </Card>
+        )
+      })}
     </div>
   )
 }

@@ -3,6 +3,7 @@ import { Footer } from '@/components/Footer'
 import { FooterCta } from '@/components/FooterCta'
 import { Header } from '@/components/Header'
 import { ContentSkeleton } from '@/components/Skeleton/ContentSkeleton'
+import { SseNotificationsProvider } from '@/components/SseNotificationsProvider'
 import type { QueryClient } from '@tanstack/react-query'
 import {
   Outlet,
@@ -41,7 +42,7 @@ function RootComponent() {
 
   // Layout public
   return (
-    <>
+    <SseNotificationsProvider>
       <Header />
       <Outlet />
       <FooterCta />
@@ -49,6 +50,6 @@ function RootComponent() {
       {import.meta.env.DEV && (
         <TanStackRouterDevtools position="bottom-right" />
       )}
-    </>
+    </SseNotificationsProvider>
   )
 }

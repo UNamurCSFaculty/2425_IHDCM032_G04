@@ -8,6 +8,7 @@ import {
   listBidsQueryKey,
   rejectBidMutation,
 } from '@/api/generated/@tanstack/react-query.gen'
+import { ContractModal } from '@/components/ContractModal'
 import { CountdownTimer } from '@/components/CountDownTimer'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -40,7 +41,7 @@ import {
   UserCircle2,
   XCircle,
 } from 'lucide-react'
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
 
@@ -57,11 +58,17 @@ const AuctionDetailsPanel: React.FC<Props> = ({
   showDetails = false,
   role,
 }) => {
+  const user = useAuthUser()
+  const queryClient = useQueryClient()
   const [amount, setAmount] = useState('')
   const [buyNowPopover, setBuyNowPopover] = useState(false)
   const [makeBidPopover, setMakeBidPopover] = useState(false)
   const [acceptBidPopoverIndex, setAcceptBidPopoverIndex] = useState(-1)
   const [rejectBidPopoverIndex, setRejectBidPopoverIndex] = useState(-1)
+  const [isOpen, setIsOpen] = useState(false)
+
+  const acceptedBid =
+    auction.bids?.find(bid => bid.status!.name === 'Accepté') || null
 
   const { t } = useTranslation()
 
@@ -79,10 +86,23 @@ const AuctionDetailsPanel: React.FC<Props> = ({
     0
   )
 
+  useEffect(() => {
+    const handler = (event: Event) => {
+      const customEvent = event as CustomEvent<{ auctionId: number }>
+      if (customEvent.detail && customEvent.detail.auctionId === auction.id) {
+        queryClient.invalidateQueries({ queryKey: listBidsQueryKey() })
+        queryClient.invalidateQueries({ queryKey: listAuctionsQueryKey() })
+      }
+    }
+    window.addEventListener('auction:newBid', handler)
+    return () => {
+      window.removeEventListener('auction:newBid', handler)
+    }
+  }, [auction.id, queryClient])
+
   const createBidRequest = useMutation({
     ...createBidMutation(),
     onSuccess() {
-      console.log('Create Bid - Success')
       queryClient.invalidateQueries({ queryKey: listBidsQueryKey() })
       queryClient.invalidateQueries({ queryKey: listAuctionsQueryKey() })
     },
@@ -94,7 +114,6 @@ const AuctionDetailsPanel: React.FC<Props> = ({
   const acceptBidRequest = useMutation({
     ...acceptBidMutation(),
     onSuccess() {
-      console.log('Accept Bid - Success')
       queryClient.invalidateQueries({ queryKey: listBidsQueryKey() })
     },
     onError(error) {
@@ -105,7 +124,6 @@ const AuctionDetailsPanel: React.FC<Props> = ({
   const rejectBidRequest = useMutation({
     ...rejectBidMutation(),
     onSuccess() {
-      console.log('Reject Bid - Success')
       queryClient.invalidateQueries({ queryKey: listBidsQueryKey() })
     },
     onError(error) {
@@ -116,17 +134,12 @@ const AuctionDetailsPanel: React.FC<Props> = ({
   const acceptAuctionRequest = useMutation({
     ...acceptAuctionMutation(),
     onSuccess() {
-      console.log('Accept Auction - Success')
       queryClient.invalidateQueries({ queryKey: listAuctionsQueryKey() })
     },
     onError(error) {
       console.error('Accept Auction - Invalid request ', error)
     },
   })
-
-  const user = useAuthUser()
-
-  const queryClient = useQueryClient()
 
   const handleSubmitBid = () => {
     const value = Number(amount)
@@ -199,6 +212,28 @@ const AuctionDetailsPanel: React.FC<Props> = ({
             {auction.trader.firstName} {auction.trader.lastName}
           </span>
         </div>
+
+        {acceptedBid && (
+          <div className="ml-auto">
+            <Button
+              onClick={() => {
+                setIsOpen(true)
+              }}
+            >
+              {t('auction.table.propose_contract_button')}
+            </Button>
+
+            <ContractModal
+              acceptedBid={acceptedBid}
+              auction={auction}
+              isOpen={isOpen}
+              onClose={() => setIsOpen(false)}
+              onSubmit={() => {
+                setIsOpen(false)
+              }}
+            />
+          </div>
+        )}
       </div>
 
       {/* Map */}

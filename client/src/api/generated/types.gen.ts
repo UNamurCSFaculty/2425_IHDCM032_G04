@@ -743,7 +743,7 @@ export type CooperativeUpdateDto = {
   /**
    * Date de création
    */
-  creationDate: string
+  creationDate?: string
   /**
    * Président de la coopérative
    */
@@ -1373,7 +1373,7 @@ export type ProducerListDto = TraderListDto & {
   /**
    * Coopérative du producteur
    */
-  cooperative: CooperativeDto
+  cooperativeId: number
 }
 
 /**
@@ -1444,6 +1444,10 @@ export type UserListDto = {
     | 'trader'
 }
 
+export type SseEmitter = {
+  timeout?: number
+}
+
 export type ExportAuctionDto = {
   auctionId?: number
   auctionStartDate?: string
@@ -1491,6 +1495,31 @@ export type ApplicationDataDto = {
    * Liste des stratégies d'enchères disponibles.
    */
   languages: Array<LanguageDto>
+}
+
+export type DashboardGraphicDto = {
+  date?: string
+  totalOpenAuctions?: number
+  totalNewAuctions?: number
+}
+
+export type DashboardCardsDto = {
+  totalNbUsers?: number
+  totalNbUsersTendency?: number
+  pendingValidation?: number
+  pendingValidationTendency?: number
+  totalAuctions?: number
+  totalAuctionsTendency?: number
+  auctionsConcluded?: number
+  auctionsConcludedTendency?: number
+  totalLotWeightKg?: number
+  totalLotWeightKgTendency?: number
+  totalSoldWeightKg?: number
+  totalSoldWeightKgTendency?: number
+  totalSalesAmount?: number
+  totalSalesAmountTendency?: number
+  monthlySalesAmount?: number
+  monthlySalesAmountTendency?: number
 }
 
 export type ApiError = {
@@ -3496,7 +3525,12 @@ export type CreateCooperativeResponse =
 export type ListContractOffersData = {
   body?: never
   path?: never
-  query?: never
+  query?: {
+    /**
+     * ID du trader pour filtrer les enchères
+     */
+    traderId?: number
+  }
   url: '/api/contracts'
 }
 
@@ -3828,6 +3862,24 @@ export type ListRegionsResponses = {
 export type ListRegionsResponse =
   ListRegionsResponses[keyof ListRegionsResponses]
 
+export type SubscribeData = {
+  body?: never
+  path?: never
+  query?: {
+    token?: string
+  }
+  url: '/api/notifications/stream'
+}
+
+export type SubscribeResponses = {
+  /**
+   * OK
+   */
+  200: SseEmitter
+}
+
+export type SubscribeResponse = SubscribeResponses[keyof SubscribeResponses]
+
 export type ListAuctions1Data = {
   body?: never
   path?: never
@@ -4115,6 +4167,50 @@ export type GetUserResponses = {
 }
 
 export type GetUserResponse = GetUserResponses[keyof GetUserResponses]
+
+export type GetDashboardGraphicSeriesData = {
+  body?: never
+  path?: never
+  query?: never
+  url: '/api/admin/dashboard/graphic'
+}
+
+export type GetDashboardGraphicSeriesResponses = {
+  /**
+   * Liste récupérée
+   */
+  200: Array<DashboardGraphicDto>
+}
+
+export type GetDashboardGraphicSeriesResponse =
+  GetDashboardGraphicSeriesResponses[keyof GetDashboardGraphicSeriesResponses]
+
+export type GetDashboardCardsData = {
+  body?: never
+  path?: never
+  query?: never
+  url: '/api/admin/dashboard/cards'
+}
+
+export type GetDashboardCardsErrors = {
+  /**
+   * Not Found
+   */
+  404: ApiErrorResponse
+}
+
+export type GetDashboardCardsError =
+  GetDashboardCardsErrors[keyof GetDashboardCardsErrors]
+
+export type GetDashboardCardsResponses = {
+  /**
+   * OK
+   */
+  200: DashboardCardsDto
+}
+
+export type GetDashboardCardsResponse =
+  GetDashboardCardsResponses[keyof GetDashboardCardsResponses]
 
 export type ClientOptions = {
   baseUrl: 'http://localhost:8080' | (string & {})
