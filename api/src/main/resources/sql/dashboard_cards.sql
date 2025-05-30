@@ -13,20 +13,22 @@ CREATE OR REPLACE VIEW v_dashboard_cards AS
                     WHERE registration_date < NOW() - INTERVAL '30 days'
                 )                                         AS total_users_30,
                 COUNT(*) FILTER (
-                    WHERE enabled = false
-                      AND registration_date < NOW() - INTERVAL '30 days'
+                    WHERE registration_date < NOW() - INTERVAL '30 days'
+                      AND validation_date > NOW() - INTERVAL '30 days'
                 )                                         AS pending_30
             FROM users
         ),
         /* ------------ 2) ENCHÈRES (table auction) --------------- */
         auction_totals AS (
             SELECT
-                COUNT(*)                                  AS total_auctions_now,
                 COUNT(*) FILTER (
-                    WHERE creation_date < NOW() - INTERVAL '30 days'
+                    WHERE active = true
+                )                                         AS total_auctions_now,
+                COUNT(*) FILTER (
+                    WHERE expiration_date > NOW() - INTERVAL '30 days'
+                      AND creation_date < NOW() - INTERVAL '30 days'
                 )                                         AS total_auctions_30
             FROM auction
-            WHERE active = true
         ),
         /* --- 3) POIDS/AMOUNT MIS EN VENTE (cumulatif, toutes enchères) -- */
         lot_weights AS (

@@ -313,8 +313,48 @@
   },
   "admin": {
     "settings": {
-      "title": "Paramèttres de la plateforme",
+      "title": "Paramètres de la plateforme",
       "description": "Gérez les paramètres de la plateforme."
+    },
+    "dashboard": {
+      "title": "Tableau de bord",
+      "description": "Suivez différents indicateurs de la plateforme",
+      "cards": {
+        "totalNbUsers": {
+          "title": "Nombre d'utilisateurs",
+          "description": "Inscriptions"
+        },
+        "pendingValidation": {
+          "title": "Nouvelles inscriptions",
+          "description": "En attente d'approbation"
+        },
+        "totalAuctions": {
+          "title": "Nouvelles enchères",
+          "description": "Enchères en cours"
+        },
+        "auctionsConcluded": {
+          "title": "Enchères conclues",
+          "description": "30 derniers jours"
+        },
+        "totalLotWeightKg": {
+          "title": "Volume total",
+          "description": "Poids total vendu"
+        },
+        "totalSoldWeightKg": {
+          "title": "Volume mensuel",
+          "description": "30 derniers jours"
+        },
+        "totalSalesAmount": {
+          "title": "Montant total",
+          "description": "Toutes les ventes"
+        },
+        "monthlySalesAmount": {
+          "title": "Ventes mensuelles",
+          "description": "30 derniers jours"
+        },
+        "compared_to_30_days": "Par rapport à il y a 30 jours",
+        "error_loading": "Erreur lors du chargement du tableau de bord"
+      }
     },
     "user_management": {
       "title": "Gestion des utilisateurs",
