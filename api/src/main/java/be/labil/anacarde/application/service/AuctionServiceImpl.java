@@ -228,16 +228,26 @@ public class AuctionServiceImpl implements AuctionService {
 	private void checkAuctionSettings(AuctionUpdateDto auctionUpdateDto) {
 		GlobalSettingsDto settings = globalSettingsService.getGlobalSettings();
 
+		final double pricePerKg = getPricePerKg(auctionUpdateDto);
+
 		if (settings.getDefaultMinPriceKg() != null) {
-			if (auctionUpdateDto.getPrice() < settings.getDefaultMinPriceKg().doubleValue())
+			if (pricePerKg< settings.getDefaultMinPriceKg().doubleValue())
 				throw new ApiErrorException(HttpStatus.BAD_REQUEST, ApiErrorCode.BAD_REQUEST.code(),
 						"defaultMinPriceKg", "Prix minimum non respecté");
 		}
 
 		if (settings.getDefaultMaxPriceKg() != null) {
-			if (auctionUpdateDto.getPrice() > settings.getDefaultMaxPriceKg().doubleValue())
+			if (pricePerKg > settings.getDefaultMaxPriceKg().doubleValue())
 				throw new ApiErrorException(HttpStatus.BAD_REQUEST, ApiErrorCode.BAD_REQUEST.code(),
 						"defaultMaxPriceKg", "Prix maximum non respecté");
 		}
+	}
+
+	private double getPricePerKg(AuctionUpdateDto auctionUpdateDto) {
+		if (auctionUpdateDto.getProductQuantity() == null || auctionUpdateDto.getProductQuantity() <= 0) {
+			return 0;
+		}
+
+		return auctionUpdateDto.getPrice() / auctionUpdateDto.getProductQuantity();
 	}
 }

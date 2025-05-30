@@ -253,7 +253,7 @@ export const AuctionForm: React.FC = () => {
                                       ' - ' +
                                       t('database.' + product.type) +
                                       ' @ ' +
-                                      formatWeight(product.weightKg),
+                                      product.qualityControl.quality.name,
                                   }))
                           }
                           label={t('product.product_label')}

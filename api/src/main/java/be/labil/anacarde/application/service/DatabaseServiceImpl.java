@@ -427,8 +427,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 		GlobalSettingsUpdateDto globalSettingsUpdateDto = new GlobalSettingsUpdateDto();
 		globalSettingsUpdateDto.setDefaultStrategyId(strategyOffer.getId());
 		globalSettingsUpdateDto.setForceBetterBids(false);
-		globalSettingsUpdateDto.setDefaultMinPriceKg(BigDecimal.valueOf(1));
-		globalSettingsUpdateDto.setDefaultMaxPriceKg(BigDecimal.valueOf(1000000000));
+		globalSettingsUpdateDto.setDefaultMinPriceKg(BigDecimal.valueOf(10));
+		globalSettingsUpdateDto.setDefaultMaxPriceKg(BigDecimal.valueOf(1000));
 		globalSettingsUpdateDto.setMinIncrement(0);
 		globalSettingsUpdateDto.setShowOnlyActive(false);
 		globalSettingsService.updateGlobalSettings(globalSettingsUpdateDto);

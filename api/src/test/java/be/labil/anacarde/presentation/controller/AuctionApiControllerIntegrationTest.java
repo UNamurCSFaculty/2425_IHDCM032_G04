@@ -118,11 +118,13 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 	 */
 	@Test
 	public void testCreateAuctionFailOnMinimumPrice() throws Exception {
-		final double TEST_MIN_PRICE = 1000;
+		final double MIN_PRICE_PER_KG = 100;
+		final int PRODUCT_QUANTITY_KG = 1000;
+		final double PRODUCT_PRICE = 1000;
 
 		GlobalSettingsUpdateDto globalSettingsUpdateDto = new GlobalSettingsUpdateDto();
 		globalSettingsUpdateDto.setForceBetterBids(false);
-		globalSettingsUpdateDto.setDefaultMinPriceKg(BigDecimal.valueOf(TEST_MIN_PRICE));
+		globalSettingsUpdateDto.setDefaultMinPriceKg(BigDecimal.valueOf(MIN_PRICE_PER_KG));
 		globalSettingsUpdateDto.setDefaultMaxPriceKg(BigDecimal.valueOf(1000000000));
 		globalSettingsUpdateDto.setMinIncrement(1);
 		globalSettingsUpdateDto.setShowOnlyActive(false);
@@ -134,8 +136,8 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		productDto.setId(getTestHarvestProduct().getId());
 
 		AuctionUpdateDto newAuction = new AuctionUpdateDto();
-		newAuction.setPrice(TEST_MIN_PRICE - 1); // too low
-		newAuction.setProductQuantity(11);
+		newAuction.setPrice(PRODUCT_PRICE);
+		newAuction.setProductQuantity(PRODUCT_QUANTITY_KG);
 		newAuction.setActive(true);
 		newAuction.setExpirationDate(LocalDateTime.now().plusDays(1));
 		newAuction.setProductId(productDto.getId());
@@ -154,11 +156,13 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 	 */
 	@Test
 	public void testCreateAuctionFailOnMaximumPrice() throws Exception {
-		final double TEST_MAX_PRICE = 1000;
+		final double MAX_PRICE_PER_KG = 1;
+		final int PRODUCT_QUANTITY_KG = 100;
+		final double PRODUCT_PRICE = 1000;
 
 		GlobalSettingsUpdateDto globalSettingsUpdateDto = new GlobalSettingsUpdateDto();
 		globalSettingsUpdateDto.setDefaultMinPriceKg(BigDecimal.valueOf(1));
-		globalSettingsUpdateDto.setDefaultMaxPriceKg(BigDecimal.valueOf(TEST_MAX_PRICE));
+		globalSettingsUpdateDto.setDefaultMaxPriceKg(BigDecimal.valueOf(MAX_PRICE_PER_KG));
 		globalSettingsUpdateDto.setForceBetterBids(false);
 		globalSettingsUpdateDto.setMinIncrement(1);
 		globalSettingsUpdateDto.setShowOnlyActive(false);
@@ -170,8 +174,8 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		productDto.setId(getTestHarvestProduct().getId());
 
 		AuctionUpdateDto newAuction = new AuctionUpdateDto();
-		newAuction.setPrice(TEST_MAX_PRICE + 1); // too high
-		newAuction.setProductQuantity(11);
+		newAuction.setPrice(PRODUCT_PRICE);
+		newAuction.setProductQuantity(PRODUCT_QUANTITY_KG);
 		newAuction.setActive(true);
 		newAuction.setExpirationDate(LocalDateTime.now().plusDays(1));
 		newAuction.setProductId(productDto.getId());
