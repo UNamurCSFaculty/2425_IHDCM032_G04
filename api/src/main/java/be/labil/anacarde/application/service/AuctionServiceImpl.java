@@ -1,5 +1,7 @@
 package be.labil.anacarde.application.service;
 
+import be.labil.anacarde.application.exception.ApiErrorCode;
+import be.labil.anacarde.application.exception.ApiErrorException;
 import be.labil.anacarde.application.exception.ResourceNotFoundException;
 import be.labil.anacarde.application.job.CloseAuctionJob;
 import be.labil.anacarde.domain.dto.db.AuctionDto;
@@ -24,6 +26,7 @@ import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,6 +49,8 @@ public class AuctionServiceImpl implements AuctionService {
 	@Override
 	public AuctionDto createAuction(AuctionUpdateDto auctionUpdateDto) {
 		Auction auction = auctionMapper.toEntity(auctionUpdateDto);
+
+		checkAuctionSettings(auctionUpdateDto);
 
 		// Use default status
 		if (auctionUpdateDto.getStatusId() == null) {
@@ -215,6 +220,22 @@ public class AuctionServiceImpl implements AuctionService {
 			log.error(
 					"Erreur lors de la programmation du job de clôture pour l'enchère ID : {}. Message : {}",
 					auctionId, e.getMessage());
+		}
+	}
+
+	private void checkAuctionSettings(AuctionUpdateDto auctionUpdateDto) {
+		GlobalSettingsDto settings = globalSettingsService.getGlobalSettings();
+
+		if (settings.getDefaultMinPriceKg() != null) {
+			if (auctionUpdateDto.getPrice() < settings.getDefaultMinPriceKg().doubleValue())
+				throw new ApiErrorException(HttpStatus.BAD_REQUEST, ApiErrorCode.BAD_REQUEST.code(),
+						"defaultMinPriceKg", "Prix minimum non respecté");
+		}
+
+		if (settings.getDefaultMaxPriceKg() != null) {
+			if (auctionUpdateDto.getPrice() > settings.getDefaultMaxPriceKg().doubleValue())
+				throw new ApiErrorException(HttpStatus.BAD_REQUEST, ApiErrorCode.BAD_REQUEST.code(),
+						"defaultMaxPriceKg", "Prix maximum non respecté");
 		}
 	}
 
