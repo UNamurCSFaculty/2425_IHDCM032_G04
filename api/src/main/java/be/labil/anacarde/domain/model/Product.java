@@ -9,6 +9,9 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 
+/**
+ * Entité représentant un produit pouvant être mis en vente sur la plateforme.
+ */
 @Entity
 @Table(name = "product")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)

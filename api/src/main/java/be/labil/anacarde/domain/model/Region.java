@@ -10,6 +10,9 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import org.locationtech.jts.geom.MultiPolygon;
 
+/**
+ * Entité représentant une région administrative.
+ */
 @Entity
 @Table(name = "region")
 @Getter

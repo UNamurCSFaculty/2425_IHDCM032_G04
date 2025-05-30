@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * Entité représentant un magasin où sont déposés et vendu les Produit.
+ */
 @Entity
 @Table(name = "store")
 @Getter

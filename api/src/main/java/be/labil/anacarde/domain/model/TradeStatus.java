@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * Entité représentant le status d'une offre d'achat ou de vente.
+ */
 @Entity
 @Table(name = "trade_status")
 @Getter

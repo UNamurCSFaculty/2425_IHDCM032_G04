@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * Entité représentant un producteur et héritant de Trader.
+ */
 @Entity
 @Table(name = "producer")
 @Getter
