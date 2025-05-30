@@ -204,6 +204,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 		}
 
 		// Mets uniquement à jour les champs non nuls du DTO
+		if(!userUpdateDto.getEmail().isEmpty()) userUpdateDto.setEmail(userUpdateDto.getEmail().trim().toLowerCase());
 		User user = userDetailMapper.partialUpdate(userUpdateDto, existingUser);
 
 		// Gestion des coopératives.
