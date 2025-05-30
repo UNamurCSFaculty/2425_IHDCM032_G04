@@ -17,8 +17,6 @@ public abstract class BidMapper {
 	@Autowired
 	protected EntityManager em;
 
-	@Mapping(source = "trader", target = "trader")
-	@Mapping(source = "status", target = "status")
 	public abstract BidDto toDto(Bid bid);
 
 	@Mapping(target = "status", ignore = true)

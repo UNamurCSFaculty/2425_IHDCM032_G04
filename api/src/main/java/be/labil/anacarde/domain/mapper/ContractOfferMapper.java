@@ -16,9 +16,6 @@ public abstract class ContractOfferMapper {
 	@Autowired
 	protected EntityManager em;
 
-	@Mapping(source = "seller", target = "seller")
-	@Mapping(source = "buyer", target = "buyer")
-	@Mapping(source = "quality", target = "quality")
 	public abstract ContractOfferDto toDto(ContractOffer offer);
 
 	@Mapping(target = "seller", ignore = true)

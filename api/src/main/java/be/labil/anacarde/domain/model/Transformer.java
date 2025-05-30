@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * Entité représentant un transformateur et héritant de Trader.
+ */
 @Entity
 @Table(name = "transformer")
 @Getter

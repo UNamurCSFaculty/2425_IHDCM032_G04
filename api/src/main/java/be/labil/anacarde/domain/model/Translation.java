@@ -8,6 +8,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Entité représentant une clé d'un litéral pouvant être retranscrit dans une langue donnée
+ */
 @Entity
 @Table(name = "translation")
 @Getter

@@ -1,5 +1,9 @@
 package be.labil.anacarde.application.exception;
 
+/**
+ * Ensemble de code d'erreur pouvant être renvoyé par l'API. Possède une clé i18n afin d'être
+ * transmis dans la langue de l'utilisateur.
+ */
 public enum ApiErrorCode {
 	ACCESS_DENIED("access.denied"),
 	ACCESS_DISABLED("access.disabled"),

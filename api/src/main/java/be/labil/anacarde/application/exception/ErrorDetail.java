@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Dto d'un message d'erreur unique
+ */
 @Getter
 @Setter
 @NoArgsConstructor

@@ -8,13 +8,10 @@ import org.mapstruct.*;
 		NewsCategoryMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class NewsMapper {
 
-	@Mapping(source = "category", target = "category")
 	public abstract NewsDto toDto(News entity);
 
-	@Mapping(source = "category", target = "category")
 	public abstract News toEntity(NewsDto dto);
 
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-	@Mapping(source = "category", target = "category")
 	public abstract News partialUpdate(NewsDto dto, @MappingTarget News entity);
 }
