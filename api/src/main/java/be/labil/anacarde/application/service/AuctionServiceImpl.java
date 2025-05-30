@@ -177,7 +177,8 @@ public class AuctionServiceImpl implements AuctionService {
 
 			// update available weight
 			Auction auction = auctionOptional.get();
-			productService.offsetWeightKgAvailable(auction.getProduct().getId(), auction.getProductQuantity());
+			productService.offsetWeightKgAvailable(auction.getProduct().getId(),
+					auction.getProductQuantity());
 
 			deleteAuctionCloseJob(id.longValue());
 		} else {

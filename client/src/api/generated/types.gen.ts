@@ -621,6 +621,10 @@ export type ProductUpdateDto = {
    */
   weightKg?: number
   /**
+   * Poids en kg du produit disponible à la vente
+   */
+  weightKgAvailable?: number
+  /**
    * Contrôle qualité associé au produit
    */
   qualityControlId: number
@@ -702,6 +706,10 @@ export type ProductDto = {
    * Poids en kg du produit
    */
   weightKg: number
+  /**
+   * Poids en kg du produit disponible à la vente
+   */
+  weightKgAvailable: number
   /**
    * Contrôle qualité associé au produit
    */

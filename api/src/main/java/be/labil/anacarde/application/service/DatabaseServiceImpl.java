@@ -316,7 +316,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 		globalSettingsUpdateDto.setDefaultStrategyId(strategyOffer.getId());
 		globalSettingsUpdateDto.setForceBetterBids(false);
 		globalSettingsUpdateDto.setDefaultMinPriceKg(BigDecimal.valueOf(10));
-		globalSettingsUpdateDto.setDefaultMaxPriceKg(BigDecimal.valueOf(1000));
+		globalSettingsUpdateDto.setDefaultMaxPriceKg(BigDecimal.valueOf(1000000));
 		globalSettingsUpdateDto.setMinIncrement(0);
 		globalSettingsUpdateDto.setShowOnlyActive(false);
 		globalSettingsService.updateGlobalSettings(globalSettingsUpdateDto);
@@ -820,7 +820,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 		AuctionUpdateDto auctionDto = new AuctionUpdateDto();
 		auctionDto.setProductId(product.getId());
 		auctionDto.setTraderId(seller.getId());
-		auctionDto.setProductQuantity(quantity);
+		auctionDto
+				.setProductQuantity(Math.min(quantity, product.getWeightKgAvailable().intValue()));
 		auctionDto.setPrice(price);
 		auctionDto.setActive(isActive);
 		auctionDto.setExpirationDate(expirationDate);

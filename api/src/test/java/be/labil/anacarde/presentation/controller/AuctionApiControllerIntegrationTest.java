@@ -532,7 +532,8 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		product = productRepository.findById(getTestAuction().getProduct().getId())
 				.orElseThrow(() -> new AssertionError("Produit non trouvé"));
 		assertEquals(INITIAL_WEIGHT, product.getWeightKg());
-		assertEquals(INITIAL_WEIGHT_AVAILABLE + getTestAuction().getProductQuantity(), product.getWeightKgAvailable());
+		assertEquals(INITIAL_WEIGHT_AVAILABLE + getTestAuction().getProductQuantity(),
+				product.getWeightKgAvailable());
 	}
 
 	/**

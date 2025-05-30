@@ -253,6 +253,7 @@ export const zProductUpdateDto = z.object({
   deliveryDate: z.iso.datetime().optional(),
   storeId: z.number().int(),
   weightKg: z.number().optional(),
+  weightKgAvailable: z.number().optional(),
   qualityControlId: z.number().int(),
   type: z.string(),
 })
@@ -297,6 +298,7 @@ export const zProductDto = z.object({
   deliveryDate: z.iso.datetime().optional(),
   store: zStoreDetailDto,
   weightKg: z.number(),
+  weightKgAvailable: z.number(),
   qualityControl: zQualityControlDto,
   type: z.enum(['harvest', 'transformed']),
 })
