@@ -392,7 +392,6 @@ export const zAuctionUpdateDto = z.object({
   price: z.number(),
   productQuantity: z.number().int(),
   expirationDate: z.iso.datetime(),
-  creationDate: z.iso.datetime().readonly().optional(),
   active: z.boolean(),
   productId: z.number().int(),
   traderId: z.number().int(),
@@ -875,6 +874,8 @@ export const zDownloadDocumentResponse = z.string()
 export const zGetContractOfferByCriteriaResponse = zContractOfferDto
 
 export const zGetCurrentUserResponse = zUserDetailDto
+
+export const zGetAuctionSettingsResponse = zGlobalSettingsDto
 
 export const zGetApplicationDataResponse = zApplicationDataDto
 

@@ -89,6 +89,7 @@ import {
   downloadDocument,
   getContractOfferByCriteria,
   getCurrentUser,
+  getAuctionSettings,
   getApplicationData,
   getUser,
   getDashboardGraphicSeries,
@@ -287,6 +288,7 @@ import type {
   DownloadDocumentData,
   GetContractOfferByCriteriaData,
   GetCurrentUserData,
+  GetAuctionSettingsData,
   GetApplicationDataData,
   GetUserData,
   GetDashboardGraphicSeriesData,
@@ -2637,6 +2639,27 @@ export const getCurrentUserOptions = (
       return data
     },
     queryKey: getCurrentUserQueryKey(options),
+  })
+}
+
+export const getAuctionSettingsQueryKey = (
+  options?: Options<GetAuctionSettingsData>
+) => createQueryKey('getAuctionSettings', options)
+
+export const getAuctionSettingsOptions = (
+  options?: Options<GetAuctionSettingsData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getAuctionSettings({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: getAuctionSettingsQueryKey(options),
   })
 }
 

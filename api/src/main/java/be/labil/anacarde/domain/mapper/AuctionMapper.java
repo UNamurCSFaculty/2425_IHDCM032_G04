@@ -20,6 +20,7 @@ public abstract class AuctionMapper {
 	@Mapping(target = "product", ignore = true)
 	@Mapping(target = "bids", ignore = true)
 	@Mapping(target = "id", ignore = true)
+	@Mapping(target = "creationDate", ignore = true)
 	public abstract Auction toEntity(AuctionUpdateDto dto);
 
 	@Mapping(source = "product", target = "product")
@@ -36,6 +37,7 @@ public abstract class AuctionMapper {
 	@Mapping(target = "bids", ignore = true)
 	@Mapping(target = "id", ignore = true)
 	@Mapping(target = "options", ignore = true)
+	@Mapping(target = "creationDate", ignore = true)
 	public abstract Auction partialUpdate(AuctionUpdateDto dto, @MappingTarget Auction entity);
 
 	@AfterMapping

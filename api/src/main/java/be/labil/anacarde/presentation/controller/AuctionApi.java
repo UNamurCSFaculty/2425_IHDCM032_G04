@@ -2,6 +2,7 @@ package be.labil.anacarde.presentation.controller;
 
 import be.labil.anacarde.application.exception.ApiErrorResponse;
 import be.labil.anacarde.domain.dto.db.AuctionDto;
+import be.labil.anacarde.domain.dto.db.GlobalSettingsDto;
 import be.labil.anacarde.domain.dto.db.ValidationGroups;
 import be.labil.anacarde.domain.dto.write.AuctionUpdateDto;
 import be.labil.anacarde.presentation.controller.annotations.ApiValidId;
@@ -33,6 +34,13 @@ public interface AuctionApi {
 			@ApiResponse(responseCode = "200", description = "", content = @Content(schema = @Schema(implementation = AuctionDto.class))),
 			@ApiResponse(responseCode = "404", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
 	ResponseEntity<AuctionDto> getAuction(@ApiValidId @PathVariable("id") Integer id);
+
+	@Operation(summary = "Obtenir les paramètres des enchères")
+	@GetMapping("/settings")
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "", content = @Content(schema = @Schema(implementation = GlobalSettingsDto.class))),
+			@ApiResponse(responseCode = "404", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
+	ResponseEntity<GlobalSettingsDto> getAuctionSettings();
 
 	@Operation(summary = "Créer une enchère")
 	@PostMapping
