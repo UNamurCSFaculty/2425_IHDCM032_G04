@@ -31,6 +31,19 @@ public class ContractOfferServiceImpl implements ContractOfferService {
 
 	@Override
 	@Transactional(readOnly = true)
+	public ContractOfferDto getContractOfferByCriteria(Integer qualityId, Integer sellerId,
+			Integer buyerId) {
+
+		ContractOffer contractOffer = contractOfferRepository
+				.findValidContractOffer(qualityId, sellerId, buyerId, "Accepted")
+				.orElseThrow(() -> new ResourceNotFoundException(
+						"Aucun contrat trouvé avec les paramètres fournis"));
+
+		return contractOfferMapper.toDto(contractOffer);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
 	public ContractOfferDto getContractOfferById(Integer id) {
 		ContractOffer ContractOffer = contractOfferRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Contrat non trouvé"));

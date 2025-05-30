@@ -85,6 +85,7 @@ import {
   deleteDocument,
   getDocument,
   downloadDocument,
+  getContractOfferByCriteria,
   getCurrentUser,
   getApplicationData,
   getUser,
@@ -276,6 +277,7 @@ import type {
   DeleteDocumentResponse,
   GetDocumentData,
   DownloadDocumentData,
+  GetContractOfferByCriteriaData,
   GetCurrentUserData,
   GetApplicationDataData,
   GetUserData,
@@ -2538,6 +2540,27 @@ export const downloadDocumentOptions = (
       return data
     },
     queryKey: downloadDocumentQueryKey(options),
+  })
+}
+
+export const getContractOfferByCriteriaQueryKey = (
+  options: Options<GetContractOfferByCriteriaData>
+) => createQueryKey('getContractOfferByCriteria', options)
+
+export const getContractOfferByCriteriaOptions = (
+  options: Options<GetContractOfferByCriteriaData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getContractOfferByCriteria({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: getContractOfferByCriteriaQueryKey(options),
   })
 }
 

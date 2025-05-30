@@ -2,6 +2,7 @@ package be.labil.anacarde.infrastructure.persistence;
 
 import be.labil.anacarde.domain.model.ContractOffer;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,4 +19,30 @@ public interface ContractOfferRepository extends JpaRepository<ContractOffer, In
 	 */
 	@Query("SELECT co FROM ContractOffer co WHERE co.seller.id = :traderId OR co.buyer.id = :traderId")
 	List<ContractOffer> findBySellerOrBuyerId(@Param("traderId") Integer traderId);
+
+	/**
+	 * Recherche une offre de contrat selon l'ID de la qualité, du vendeur et de l'acheteur.
+	 *
+	 * @param qualityId
+	 *            ID de la qualité.
+	 * @param sellerId
+	 *            ID du vendeur.
+	 * @param buyerId
+	 *            ID de l'acheteur.
+	 * @param status
+	 *            status du contrat
+	 * @return Une Optional contenant l'offre de contrat correspondante, si elle existe.
+	 */
+	@Query("""
+			SELECT c FROM ContractOffer c
+			WHERE c.quality.id = :qualityId
+			  AND c.seller.id = :sellerId
+			  AND c.buyer.id = :buyerId
+			  AND c.status = :status
+			  AND CURRENT_TIMESTAMP BETWEEN c.creationDate AND c.endDate
+			ORDER BY c.creationDate DESC
+			""")
+	Optional<ContractOffer> findValidContractOffer(@Param("qualityId") Integer qualityId,
+			@Param("sellerId") Integer sellerId, @Param("buyerId") Integer buyerId,
+			@Param("status") String status);
 }

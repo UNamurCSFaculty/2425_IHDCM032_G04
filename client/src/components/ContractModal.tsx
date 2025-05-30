@@ -60,12 +60,12 @@ export const ContractModal: React.FC<ContractModalProps> = ({
 
       mutation.mutate({
         body: {
-          status: 'Init',
+          status: 'Waiting',
           pricePerKg: value.price,
           endDate: endDate.toISOString(),
           qualityId: Number(value.quality),
-          sellerId: acceptedBid.trader.id,
-          buyerId: auction.trader.id,
+          sellerId: auction.trader.id,
+          buyerId: acceptedBid.trader.id,
           creationDate: creationDate.toISOString(),
         },
       })

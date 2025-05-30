@@ -868,6 +868,8 @@ export const zGetDocumentResponse = zDocumentDto
 
 export const zDownloadDocumentResponse = z.string()
 
+export const zGetContractOfferByCriteriaResponse = zContractOfferDto
+
 export const zGetCurrentUserResponse = zUserDetailDto
 
 export const zGetApplicationDataResponse = zApplicationDataDto

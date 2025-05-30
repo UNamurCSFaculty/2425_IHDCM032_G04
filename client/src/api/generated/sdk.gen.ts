@@ -235,6 +235,9 @@ import type {
   DownloadDocumentData,
   DownloadDocumentResponse,
   DownloadDocumentError,
+  GetContractOfferByCriteriaData,
+  GetContractOfferByCriteriaResponse,
+  GetContractOfferByCriteriaError,
   GetCurrentUserData,
   GetCurrentUserResponse,
   GetCurrentUserError,
@@ -2167,6 +2170,30 @@ export const downloadDocument = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     url: '/api/documents/{id}/download',
+    ...options,
+  })
+}
+
+/**
+ * Obtenir un contrat par critères (qualité, vendeur, acheteur)
+ */
+export const getContractOfferByCriteria = <
+  ThrowOnError extends boolean = false,
+>(
+  options: Options<GetContractOfferByCriteriaData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).get<
+    GetContractOfferByCriteriaResponse,
+    GetContractOfferByCriteriaError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/contracts/by-criteria',
     ...options,
   })
 }

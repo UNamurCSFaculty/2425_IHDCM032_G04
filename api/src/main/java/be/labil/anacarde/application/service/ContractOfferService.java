@@ -30,6 +30,20 @@ public interface ContractOfferService {
 	ContractOfferDto getContractOfferById(Integer id);
 
 	/**
+	 * Retourne le contrat correspondant à la combinaison unique des paramètres fournis.
+	 *
+	 * @param qualityId
+	 *            l'identifiant de la qualité
+	 * @param sellerId
+	 *            l'identifiant du vendeur
+	 * @param buyerId
+	 *            l'identifiant de l'acheteur
+	 * @return Un ContractOfferDto correspondant aux critères
+	 */
+	ContractOfferDto getContractOfferByCriteria(Integer qualityId, Integer sellerId,
+			Integer buyerId);
+
+	/**
 	 * Récupère tous les contrats du système.
 	 *
 	 * @return Une List de ContractOfferDto représentant tous les contrats.

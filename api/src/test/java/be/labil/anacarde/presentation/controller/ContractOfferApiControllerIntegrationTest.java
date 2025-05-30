@@ -36,6 +36,25 @@ public class ContractOfferApiControllerIntegrationTest extends AbstractIntegrati
 	}
 
 	/**
+	 * Teste la récupération d'un contrat existant via les critères (qualité, vendeur, acheteur).
+	 *
+	 * @throws Exception
+	 *             en cas d'erreur lors de l'exécution de la requête MockMvc.
+	 */
+	@Test
+	public void testGetContractOfferByCriteria() throws Exception {
+		mockMvc.perform(get("/api/contracts/by-criteria")
+				.param("qualityId", String.valueOf(getMainTestContractOffer().getQuality().getId()))
+				.param("sellerId", String.valueOf(getProducerTestUser().getId()))
+				.param("buyerId", String.valueOf(getTransformerTestUser().getId()))
+				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+				.andExpect(jsonPath("$.status").value("Accepted"))
+				.andExpect(jsonPath("$.pricePerKg").value("20.0"))
+				.andExpect(jsonPath("$.seller.id").value(getProducerTestUser().getId()))
+				.andExpect(jsonPath("$.buyer.id").value(getTransformerTestUser().getId()));
+	}
+
+	/**
 	 * Teste la création d'un nouvel contrat.
 	 * 
 	 */

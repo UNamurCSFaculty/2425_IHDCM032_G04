@@ -578,8 +578,8 @@ public abstract class AbstractIntegrationTest {
 		// A contract
 		ContractOffer contractOffer = ContractOffer.builder().status("Accepted")
 				.pricePerKg(new BigDecimal("20.0")).creationDate(LocalDateTime.now())
-				.endDate(LocalDateTime.now()).seller(producer).buyer(transformer).quality(quality)
-				.build();
+				.endDate(LocalDateTime.now().plusDays(1)).seller(producer).buyer(transformer)
+				.quality(quality).build();
 		mainTestContractOffer = contractOfferRepository.save(contractOffer);
 	}
 	/**

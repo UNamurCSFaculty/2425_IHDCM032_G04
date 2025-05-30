@@ -393,7 +393,8 @@
       "view_bids_button": "عرض العروض",
       "make_bid_button": "تقديم عرض",
       "propose_contract_button": "اقتراح عقد"
-    }
+    },
+    "contract_price_label": "*السعر التعاقدي"
   },
   "product": {
     "quality_label": "الجودة",
