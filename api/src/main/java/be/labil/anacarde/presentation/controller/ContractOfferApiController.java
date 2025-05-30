@@ -53,6 +53,18 @@ public class ContractOfferApiController implements ContractOfferApi {
 	}
 
 	@Override
+	public ResponseEntity<ContractOfferDto> acceptContractOffer(Integer contractOfferId) {
+		ContractOfferDto updated = contractOfferService.acceptContractOffer(contractOfferId);
+		return ResponseEntity.ok(updated);
+	}
+
+	@Override
+	public ResponseEntity<ContractOfferDto> rejectContractOffer(Integer contractOfferId) {
+		ContractOfferDto updated = contractOfferService.rejectContractOffer(contractOfferId);
+		return ResponseEntity.ok(updated);
+	}
+
+	@Override
 	public ResponseEntity<Void> deleteContractOffer(Integer id) {
 		contractOfferService.deleteContractOffer(id);
 		return ResponseEntity.noContent().build();

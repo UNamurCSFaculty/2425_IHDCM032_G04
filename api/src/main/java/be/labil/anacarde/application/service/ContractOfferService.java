@@ -63,6 +63,24 @@ public interface ContractOfferService {
 	ContractOfferDto updateContractOffer(Integer id, ContractOfferUpdateDto dto);
 
 	/**
+	 * Accepter l'offre de contrat identifiée par l'ID donné.
+	 *
+	 * @param id
+	 *            L'identifiant unique de l'offre de contrat à mettre à jour.
+	 * @return Un ContractOfferDto représentant l'offre de contrat mise à jour.
+	 */
+	ContractOfferDto acceptContractOffer(Integer id);
+
+	/**
+	 * Rejeter l'offre de contrat identifiée par l'ID donné.
+	 *
+	 * @param id
+	 *            L'identifiant unique de l'offre de contrat à mettre à jour.
+	 * @return Un ContractOfferDto représentant l'offre de contrat mise à jour.
+	 */
+	ContractOfferDto rejectContractOffer(Integer id);
+
+	/**
 	 * Supprime le contrat identifié par l'ID donné du système.
 	 *
 	 * @param id

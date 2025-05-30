@@ -66,6 +66,22 @@ public interface ContractOfferApi {
 			@Validated({Default.class,
 					ValidationGroups.Update.class}) @RequestBody ContractOfferUpdateDto storeDetailDto);
 
+	@Operation(summary = "Accepter une offre de contrat")
+	@PutMapping(value = "/{contractOfferId}/accept")
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "Offre de contrat acceptée", content = @Content(schema = @Schema(implementation = ContractOfferDto.class))),
+			@ApiResponse(responseCode = "404", description = "Offre de contrat non trouvée", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
+	ResponseEntity<ContractOfferDto> acceptContractOffer(
+			@ApiValidId @PathVariable("contractOfferId") Integer contractOfferId);
+
+	@Operation(summary = "Rejeter une offre de contrat")
+	@PutMapping(value = "/{contractOfferId}/reject")
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "Offre de contrat rejetée", content = @Content(schema = @Schema(implementation = ContractOfferDto.class))),
+			@ApiResponse(responseCode = "404", description = "Offre de contrat non trouvée", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
+	ResponseEntity<ContractOfferDto> rejectContractOffer(
+			@ApiValidId @PathVariable("contractOfferId") Integer contractOfferId);
+
 	@Operation(summary = "Obtenir tous les contrats")
 	@GetMapping
 	@ApiResponses({

@@ -31,6 +31,8 @@ import {
   deleteContractOffer,
   getContractOffer,
   updateContractOffer,
+  rejectContractOffer,
+  acceptContractOffer,
   deleteBid,
   getBid,
   updateBid,
@@ -169,6 +171,12 @@ import type {
   UpdateContractOfferData,
   UpdateContractOfferError,
   UpdateContractOfferResponse,
+  RejectContractOfferData,
+  RejectContractOfferError,
+  RejectContractOfferResponse,
+  AcceptContractOfferData,
+  AcceptContractOfferError,
+  AcceptContractOfferResponse,
   DeleteBidData,
   DeleteBidError,
   DeleteBidResponse,
@@ -958,6 +966,54 @@ export const updateContractOfferMutation = (
   > = {
     mutationFn: async localOptions => {
       const { data } = await updateContractOffer({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+export const rejectContractOfferMutation = (
+  options?: Partial<Options<RejectContractOfferData>>
+): UseMutationOptions<
+  RejectContractOfferResponse,
+  RejectContractOfferError,
+  Options<RejectContractOfferData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    RejectContractOfferResponse,
+    RejectContractOfferError,
+    Options<RejectContractOfferData>
+  > = {
+    mutationFn: async localOptions => {
+      const { data } = await rejectContractOffer({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+export const acceptContractOfferMutation = (
+  options?: Partial<Options<AcceptContractOfferData>>
+): UseMutationOptions<
+  AcceptContractOfferResponse,
+  AcceptContractOfferError,
+  Options<AcceptContractOfferData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    AcceptContractOfferResponse,
+    AcceptContractOfferError,
+    Options<AcceptContractOfferData>
+  > = {
+    mutationFn: async localOptions => {
+      const { data } = await acceptContractOffer({
         ...options,
         ...localOptions,
         throwOnError: true,

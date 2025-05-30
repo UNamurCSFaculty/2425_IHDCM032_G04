@@ -45,4 +45,19 @@ public interface ContractOfferRepository extends JpaRepository<ContractOffer, In
 	Optional<ContractOffer> findValidContractOffer(@Param("qualityId") Integer qualityId,
 			@Param("sellerId") Integer sellerId, @Param("buyerId") Integer buyerId,
 			@Param("status") String status);
+
+	/**
+	 * Recherche une liste de contrats selon l'ID de la qualité, du vendeur et de l'acheteur.
+	 *
+	 * @param qualityId
+	 *            ID de la qualité.
+	 * @param sellerId
+	 *            ID du vendeur.
+	 * @param buyerId
+	 *            ID de l'acheteur.
+	 * @return Une List contenant les offres de contrat correspondantes.
+	 */
+	List<ContractOffer> findByQualityIdAndSellerIdAndBuyerId(Integer qualityId, Integer sellerId,
+			Integer buyerId);
+
 }

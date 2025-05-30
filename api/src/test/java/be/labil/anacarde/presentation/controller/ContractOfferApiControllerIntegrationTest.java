@@ -142,6 +142,41 @@ public class ContractOfferApiControllerIntegrationTest extends AbstractIntegrati
 	}
 
 	/**
+	 * Teste l'acceptation d'une offre de contrat via l'endpoint PUT /{contractOfferId}/accept.
+	 * Vérifie que le statut est bien mis à jour en "Accepted" et que les données retournées sont
+	 * correctes.
+	 */
+	@Test
+	public void testAcceptContractOffer() throws Exception {
+		Integer contractOfferId = getMainTestContractOffer().getId();
+
+		mockMvc.perform(put("/api/contracts/" + contractOfferId + "/accept")
+				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+				.andExpect(jsonPath("$.id").value(contractOfferId))
+				.andExpect(jsonPath("$.status").value("Accepted"))
+				.andExpect(jsonPath("$.pricePerKg").value("20.0"))
+				.andExpect(jsonPath("$.seller.id").value(getProducerTestUser().getId()))
+				.andExpect(jsonPath("$.buyer.id").value(getTransformerTestUser().getId()));
+	}
+
+	/**
+	 * Teste le rejet d'une offre de contrat via l'endpoint PUT /{contractOfferId}/reject. Vérifie
+	 * que le statut est bien mis à jour en "Rejected" et que les données retournées sont correctes.
+	 */
+	@Test
+	public void testRejectContractOffer() throws Exception {
+		Integer contractOfferId = getMainTestContractOffer().getId();
+
+		mockMvc.perform(put("/api/contracts/" + contractOfferId + "/reject")
+				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+				.andExpect(jsonPath("$.id").value(contractOfferId))
+				.andExpect(jsonPath("$.status").value("Rejected"))
+				.andExpect(jsonPath("$.pricePerKg").value("20.0"))
+				.andExpect(jsonPath("$.seller.id").value(getProducerTestUser().getId()))
+				.andExpect(jsonPath("$.buyer.id").value(getTransformerTestUser().getId()));
+	}
+
+	/**
 	 * Teste la suppression d'un contrat.
 	 * 
 	 */

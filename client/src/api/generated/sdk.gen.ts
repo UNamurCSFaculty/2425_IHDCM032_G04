@@ -94,6 +94,12 @@ import type {
   UpdateContractOfferData,
   UpdateContractOfferResponse,
   UpdateContractOfferError,
+  RejectContractOfferData,
+  RejectContractOfferResponse,
+  RejectContractOfferError,
+  AcceptContractOfferData,
+  AcceptContractOfferResponse,
+  AcceptContractOfferError,
   DeleteBidData,
   DeleteBidResponse,
   DeleteBidError,
@@ -952,6 +958,50 @@ export const updateContractOffer = <ThrowOnError extends boolean = false>(
       'Content-Type': 'application/json',
       ...options?.headers,
     },
+  })
+}
+
+/**
+ * Rejeter une offre de contrat
+ */
+export const rejectContractOffer = <ThrowOnError extends boolean = false>(
+  options: Options<RejectContractOfferData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).put<
+    RejectContractOfferResponse,
+    RejectContractOfferError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/contracts/{contractOfferId}/reject',
+    ...options,
+  })
+}
+
+/**
+ * Accepter une offre de contrat
+ */
+export const acceptContractOffer = <ThrowOnError extends boolean = false>(
+  options: Options<AcceptContractOfferData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).put<
+    AcceptContractOfferResponse,
+    AcceptContractOfferError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/contracts/{contractOfferId}/accept',
+    ...options,
   })
 }
 

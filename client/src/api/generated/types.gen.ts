@@ -2539,6 +2539,70 @@ export type UpdateContractOfferResponses = {
 export type UpdateContractOfferResponse =
   UpdateContractOfferResponses[keyof UpdateContractOfferResponses]
 
+export type RejectContractOfferData = {
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    contractOfferId: number
+  }
+  query?: never
+  url: '/api/contracts/{contractOfferId}/reject'
+}
+
+export type RejectContractOfferErrors = {
+  /**
+   * Offre de contrat non trouvée
+   */
+  404: ApiErrorResponse
+}
+
+export type RejectContractOfferError =
+  RejectContractOfferErrors[keyof RejectContractOfferErrors]
+
+export type RejectContractOfferResponses = {
+  /**
+   * Offre de contrat rejetée
+   */
+  200: ContractOfferDto
+}
+
+export type RejectContractOfferResponse =
+  RejectContractOfferResponses[keyof RejectContractOfferResponses]
+
+export type AcceptContractOfferData = {
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    contractOfferId: number
+  }
+  query?: never
+  url: '/api/contracts/{contractOfferId}/accept'
+}
+
+export type AcceptContractOfferErrors = {
+  /**
+   * Offre de contrat non trouvée
+   */
+  404: ApiErrorResponse
+}
+
+export type AcceptContractOfferError =
+  AcceptContractOfferErrors[keyof AcceptContractOfferErrors]
+
+export type AcceptContractOfferResponses = {
+  /**
+   * Offre de contrat acceptée
+   */
+  200: ContractOfferDto
+}
+
+export type AcceptContractOfferResponse =
+  AcceptContractOfferResponses[keyof AcceptContractOfferResponses]
+
 export type DeleteBidData = {
   body?: never
   path: {
