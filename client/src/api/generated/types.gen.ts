@@ -1491,6 +1491,16 @@ export type ExportAuctionDto = {
   winnerRegion?: string
 }
 
+/**
+ * Données nécessaires pour l'application cliente.
+ */
+export type ApplicationDataDto = {
+  /**
+   * Liste des stratégies d'enchères disponibles.
+   */
+  languages: Array<LanguageDto>
+}
+
 export type DashboardGraphicDto = {
   date?: string
   totalOpenAuctions?: number
@@ -1514,16 +1524,6 @@ export type DashboardCardsDto = {
   totalSalesAmountTendency?: number
   monthlySalesAmount?: number
   monthlySalesAmountTendency?: number
-}
-
-/**
- * Données nécessaires pour l'application cliente.
- */
-export type ApplicationDataDto = {
-  /**
-   * Liste des stratégies d'enchères disponibles.
-   */
-  languages: Array<LanguageDto>
 }
 
 export type ApiError = {
@@ -4061,50 +4061,6 @@ export type DownloadDocumentResponses = {
 export type DownloadDocumentResponse =
   DownloadDocumentResponses[keyof DownloadDocumentResponses]
 
-export type GetDashboardGraphicSeriesData = {
-  body?: never
-  path?: never
-  query?: never
-  url: '/api/dashboard/graphic'
-}
-
-export type GetDashboardGraphicSeriesResponses = {
-  /**
-   * Liste récupérée
-   */
-  200: Array<DashboardGraphicDto>
-}
-
-export type GetDashboardGraphicSeriesResponse =
-  GetDashboardGraphicSeriesResponses[keyof GetDashboardGraphicSeriesResponses]
-
-export type GetDashboardCardsData = {
-  body?: never
-  path?: never
-  query?: never
-  url: '/api/dashboard/cards'
-}
-
-export type GetDashboardCardsErrors = {
-  /**
-   * Not Found
-   */
-  404: ApiErrorResponse
-}
-
-export type GetDashboardCardsError =
-  GetDashboardCardsErrors[keyof GetDashboardCardsErrors]
-
-export type GetDashboardCardsResponses = {
-  /**
-   * OK
-   */
-  200: DashboardCardsDto
-}
-
-export type GetDashboardCardsResponse =
-  GetDashboardCardsResponses[keyof GetDashboardCardsResponses]
-
 export type GetCurrentUserData = {
   body?: never
   path?: never
@@ -4188,6 +4144,50 @@ export type GetUserResponses = {
 }
 
 export type GetUserResponse = GetUserResponses[keyof GetUserResponses]
+
+export type GetDashboardGraphicSeriesData = {
+  body?: never
+  path?: never
+  query?: never
+  url: '/api/admin/dashboard/graphic'
+}
+
+export type GetDashboardGraphicSeriesResponses = {
+  /**
+   * Liste récupérée
+   */
+  200: Array<DashboardGraphicDto>
+}
+
+export type GetDashboardGraphicSeriesResponse =
+  GetDashboardGraphicSeriesResponses[keyof GetDashboardGraphicSeriesResponses]
+
+export type GetDashboardCardsData = {
+  body?: never
+  path?: never
+  query?: never
+  url: '/api/admin/dashboard/cards'
+}
+
+export type GetDashboardCardsErrors = {
+  /**
+   * Not Found
+   */
+  404: ApiErrorResponse
+}
+
+export type GetDashboardCardsError =
+  GetDashboardCardsErrors[keyof GetDashboardCardsErrors]
+
+export type GetDashboardCardsResponses = {
+  /**
+   * OK
+   */
+  200: DashboardCardsDto
+}
+
+export type GetDashboardCardsResponse =
+  GetDashboardCardsResponses[keyof GetDashboardCardsResponses]
 
 export type ClientOptions = {
   baseUrl: 'http://localhost:8080' | (string & {})

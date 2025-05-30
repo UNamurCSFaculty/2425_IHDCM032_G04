@@ -235,11 +235,6 @@ import type {
   DownloadDocumentData,
   DownloadDocumentResponse,
   DownloadDocumentError,
-  GetDashboardGraphicSeriesData,
-  GetDashboardGraphicSeriesResponse,
-  GetDashboardCardsData,
-  GetDashboardCardsResponse,
-  GetDashboardCardsError,
   GetCurrentUserData,
   GetCurrentUserResponse,
   GetCurrentUserError,
@@ -249,6 +244,11 @@ import type {
   GetUserData,
   GetUserResponse,
   GetUserError,
+  GetDashboardGraphicSeriesData,
+  GetDashboardGraphicSeriesResponse,
+  GetDashboardCardsData,
+  GetDashboardCardsResponse,
+  GetDashboardCardsError,
 } from './types.gen'
 import { client as _heyApiClient } from './client.gen'
 
@@ -2172,50 +2172,6 @@ export const downloadDocument = <ThrowOnError extends boolean = false>(
 }
 
 /**
- * Obtenir la série chronologique « Open vs New »
- */
-export const getDashboardGraphicSeries = <ThrowOnError extends boolean = false>(
-  options?: Options<GetDashboardGraphicSeriesData, ThrowOnError>
-) => {
-  return (options?.client ?? _heyApiClient).get<
-    GetDashboardGraphicSeriesResponse,
-    unknown,
-    ThrowOnError
-  >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
-    url: '/api/dashboard/graphic',
-    ...options,
-  })
-}
-
-/**
- * Obtenir la carte des indicateurs globaux
- */
-export const getDashboardCards = <ThrowOnError extends boolean = false>(
-  options?: Options<GetDashboardCardsData, ThrowOnError>
-) => {
-  return (options?.client ?? _heyApiClient).get<
-    GetDashboardCardsResponse,
-    GetDashboardCardsError,
-    ThrowOnError
-  >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
-    url: '/api/dashboard/cards',
-    ...options,
-  })
-}
-
-/**
  * Récupérer l'utilisateur courant
  * Renvoie les détails (UserDetailDto) de l'utilisateur authentifié via le cookie JWT, cette méthode génère aussi un premier token csrf pour l'utilisateur
  */
@@ -2267,6 +2223,50 @@ export const getUser = <ThrowOnError extends boolean = false>(
       },
     ],
     url: '/api/admin/users/{id}',
+    ...options,
+  })
+}
+
+/**
+ * Obtenir la série chronologique « Open vs New »
+ */
+export const getDashboardGraphicSeries = <ThrowOnError extends boolean = false>(
+  options?: Options<GetDashboardGraphicSeriesData, ThrowOnError>
+) => {
+  return (options?.client ?? _heyApiClient).get<
+    GetDashboardGraphicSeriesResponse,
+    unknown,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/admin/dashboard/graphic',
+    ...options,
+  })
+}
+
+/**
+ * Obtenir la carte des indicateurs globaux
+ */
+export const getDashboardCards = <ThrowOnError extends boolean = false>(
+  options?: Options<GetDashboardCardsData, ThrowOnError>
+) => {
+  return (options?.client ?? _heyApiClient).get<
+    GetDashboardCardsResponse,
+    GetDashboardCardsError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/admin/dashboard/cards',
     ...options,
   })
 }

@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
  * End-points « Dashboard » (indicateurs globaux & série chronologique).
  */
 @SecurityRequirement(name = "jwt")
-@RequestMapping(value = "/api/dashboard", produces = "application/json")
+@RequestMapping(value = "/api/admin/dashboard", produces = "application/json")
 @Tag(name = "dashboard", description = "KPI et graphiques du tableau de bord")
 public interface DashboardApi {
 
