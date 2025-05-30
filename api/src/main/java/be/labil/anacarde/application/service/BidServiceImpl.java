@@ -147,7 +147,7 @@ public class BidServiceImpl implements BidService {
 				currentBids = bidRepository.findByAuctionId(bidUpdateDto.getAuctionId());
 			}
 
-			if (currentBids.size() > 0 && bidUpdateDto.getAmount().doubleValue() <= currentBids
+			if (currentBids.size() > 0 && bidUpdateDto.getAmount().doubleValue() < currentBids
 					.getLast().getAmount().doubleValue() + settings.getMinIncrement()) {
 				throw new ApiErrorException(HttpStatus.BAD_REQUEST, ApiErrorCode.BAD_REQUEST.code(),
 						"minIncrement", "Une nouvelle offre doit être meilleure de "

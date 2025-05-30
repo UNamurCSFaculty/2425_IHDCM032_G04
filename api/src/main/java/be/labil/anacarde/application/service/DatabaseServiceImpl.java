@@ -429,12 +429,10 @@ public class DatabaseServiceImpl implements DatabaseService {
 		globalSettingsUpdateDto.setForceBetterBids(false);
 		globalSettingsUpdateDto.setDefaultMinPriceKg(BigDecimal.valueOf(1));
 		globalSettingsUpdateDto.setDefaultMaxPriceKg(BigDecimal.valueOf(1000000000));
-		globalSettingsUpdateDto.setMinIncrement(1);
+		globalSettingsUpdateDto.setMinIncrement(0);
 		globalSettingsUpdateDto.setShowOnlyActive(false);
 		globalSettingsService.updateGlobalSettings(globalSettingsUpdateDto);
 		log.debug("Base lookups created.");
-
-		// TODO: AJOUTE EN DB UNE STRATEGIE GLOBALE
 
 		// create QualityTypes and Qualities
 		QualityType anacardeType = qualityTypeRepository.save(new QualityType("Harvest"));
