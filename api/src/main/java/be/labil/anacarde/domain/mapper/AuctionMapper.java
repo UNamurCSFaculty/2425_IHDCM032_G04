@@ -14,7 +14,6 @@ public abstract class AuctionMapper {
 	@Autowired
 	protected EntityManager em;
 
-	@Mapping(source = "options", target = "options")
 	@Mapping(target = "status", ignore = true)
 	@Mapping(target = "trader", ignore = true)
 	@Mapping(target = "product", ignore = true)
@@ -23,11 +22,6 @@ public abstract class AuctionMapper {
 	@Mapping(target = "creationDate", ignore = true)
 	public abstract Auction toEntity(AuctionUpdateDto dto);
 
-	@Mapping(source = "product", target = "product")
-	@Mapping(source = "trader", target = "trader")
-	@Mapping(source = "status", target = "status")
-	@Mapping(source = "bids", target = "bids")
-	@Mapping(source = "options", target = "options")
 	public abstract AuctionDto toDto(Auction auction);
 
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

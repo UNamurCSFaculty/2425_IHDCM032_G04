@@ -17,9 +17,6 @@ public abstract class QualityControlMapper {
 	@Autowired
 	protected EntityManager em;
 
-	@Mapping(source = "qualityInspector", target = "qualityInspector")
-	@Mapping(source = "quality", target = "quality")
-	@Mapping(source = "documents", target = "documents")
 	public abstract QualityControlDto toDto(QualityControl entity);
 
 	@Mapping(target = "qualityInspector", ignore = true)

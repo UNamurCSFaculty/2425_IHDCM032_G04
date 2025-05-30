@@ -8,16 +8,10 @@ import org.mapstruct.*;
 		AddressMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class FieldMapper {
 
-	@Mapping(source = "producer", target = "producer")
-	@Mapping(source = "address", target = "address")
 	public abstract FieldDto toDto(Field entity);
 
-	@Mapping(source = "producer", target = "producer")
-	@Mapping(source = "address", target = "address")
 	public abstract Field toEntity(FieldDto dto);
 
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-	@Mapping(source = "producer", target = "producer")
-	@Mapping(source = "address", target = "address")
 	public abstract Field partialUpdate(FieldDto dto, @MappingTarget Field entity);
 }

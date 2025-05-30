@@ -9,6 +9,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Dto pour une réponse d'erreur standardisée
+ */
 @Getter
 @Setter
 @NoArgsConstructor
