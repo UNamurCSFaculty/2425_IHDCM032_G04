@@ -244,6 +244,11 @@ import type {
   GetUserData,
   GetUserResponse,
   GetUserError,
+  GetDashboardGraphicSeriesData,
+  GetDashboardGraphicSeriesResponse,
+  GetDashboardCardsData,
+  GetDashboardCardsResponse,
+  GetDashboardCardsError,
 } from './types.gen'
 import { client as _heyApiClient } from './client.gen'
 
@@ -2218,6 +2223,50 @@ export const getUser = <ThrowOnError extends boolean = false>(
       },
     ],
     url: '/api/admin/users/{id}',
+    ...options,
+  })
+}
+
+/**
+ * Obtenir la série chronologique « Open vs New »
+ */
+export const getDashboardGraphicSeries = <ThrowOnError extends boolean = false>(
+  options?: Options<GetDashboardGraphicSeriesData, ThrowOnError>
+) => {
+  return (options?.client ?? _heyApiClient).get<
+    GetDashboardGraphicSeriesResponse,
+    unknown,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/admin/dashboard/graphic',
+    ...options,
+  })
+}
+
+/**
+ * Obtenir la carte des indicateurs globaux
+ */
+export const getDashboardCards = <ThrowOnError extends boolean = false>(
+  options?: Options<GetDashboardCardsData, ThrowOnError>
+) => {
+  return (options?.client ?? _heyApiClient).get<
+    GetDashboardCardsResponse,
+    GetDashboardCardsError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/admin/dashboard/cards',
     ...options,
   })
 }
