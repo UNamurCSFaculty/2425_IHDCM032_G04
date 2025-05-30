@@ -1346,6 +1346,8 @@ export type DashboardCardsDto = {
   totalSoldWeightKgTendency?: number
   totalSalesAmount?: number
   totalSalesAmountTendency?: number
+  monthlySalesAmount?: number
+  monthlySalesAmountTendency?: number
 }
 
 /**

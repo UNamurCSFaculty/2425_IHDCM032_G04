@@ -595,6 +595,8 @@ export const zDashboardCardsDto = z.object({
   totalSoldWeightKgTendency: z.number().optional(),
   totalSalesAmount: z.number().optional(),
   totalSalesAmountTendency: z.number().optional(),
+  monthlySalesAmount: z.number().optional(),
+  monthlySalesAmountTendency: z.number().optional(),
 })
 
 export const zApplicationDataDto = z.object({

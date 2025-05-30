@@ -9,8 +9,11 @@ import {
 } from '@/components/ui/card'
 import { IconTrendingDown, IconTrendingUp } from '@tabler/icons-react'
 import * as React from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { getDashboardCardsOptions } from '@/api/generated/@tanstack/react-query.gen.ts'
+import { AppSkeleton } from '@/components/Skeleton/AppSkeleton.tsx'
 
-interface DashboardCardsDto {
+type Stats = {
   totalNbUsers: number
   totalNbUsersTendency: number
   pendingValidation: number
@@ -25,104 +28,119 @@ interface DashboardCardsDto {
   totalSoldWeightKgTendency: number
   totalSalesAmount: number
   totalSalesAmountTendency: number
+  monthlySalesAmount: number
+  monthlySalesAmountTendency: number
 }
 
 export function SectionCards() {
-  const [stats, setStats] = React.useState<DashboardCardsDto | null>(null)
-  const [loading, setLoading] = React.useState(true)
+  const {
+    data: rawStats,
+    isLoading,
+    error,
+  } = useQuery(getDashboardCardsOptions())
 
-  React.useEffect(() => {
-    const ctl = new AbortController()
+  const stats = React.useMemo<Stats | null>(() => {
+    if (!rawStats) return null
 
-    ;(async () => {
-      try {
-        const res = await fetch('http://localhost:8080/api/dashboard/cards', {
-          credentials: 'include',
-          signal: ctl.signal,
-        })
+    const {
+      totalNbUsers = 0,
+      totalNbUsersTendency = 0,
+      pendingValidation = 0,
+      pendingValidationTendency = 0,
+      totalAuctions = 0,
+      totalAuctionsTendency = 0,
+      auctionsConcluded = 0,
+      auctionsConcludedTendency = 0,
+      totalLotWeightKg = 0,
+      totalLotWeightKgTendency = 0,
+      totalSoldWeightKg = 0,
+      totalSoldWeightKgTendency = 0,
+      totalSalesAmount = 0,
+      totalSalesAmountTendency = 0,
+      monthlySalesAmount = 0,
+      monthlySalesAmountTendency = 0,
+    } = rawStats
 
-        if (res.status === 401) {
-          console.warn('Non autorisé, redirection possible…')
-          return
-        }
-
-        if (!res.ok) {
-          console.error(`Erreur HTTP ${res.status}`)
-          return
-        }
-
-        const contentType = res.headers.get('Content-Type') || ''
-        if (!contentType.includes('application/json')) {
-          console.error('Réponse inattendue, pas du JSON :', contentType)
-          return
-        }
-
-        const data = (await res.json()) as DashboardCardsDto
-        setStats(data)
-      } catch (err: any) {
-        if (err.name === 'AbortError') {
-          return
-        }
-        console.error('Erreur inattendue', err)
-      } finally {
-        setLoading(false)
-      }
-    })()
-
-    return () => {
-      ctl.abort()
+    return {
+      totalNbUsers,
+      totalNbUsersTendency,
+      pendingValidation,
+      pendingValidationTendency,
+      totalAuctions,
+      totalAuctionsTendency,
+      auctionsConcluded,
+      auctionsConcludedTendency,
+      totalLotWeightKg,
+      totalLotWeightKgTendency,
+      totalSoldWeightKg,
+      totalSoldWeightKgTendency,
+      totalSalesAmount,
+      totalSalesAmountTendency,
+      monthlySalesAmount,
+      monthlySalesAmountTendency,
     }
-  }, [])
+  }, [rawStats])
 
-  if (loading) {
-    return <div>Loading dashboard…</div>
+  if (isLoading) {
+    return <AppSkeleton />
   }
-  if (!stats) {
+  if (error || !stats) {
     return <div>Error loading dashboard</div>
   }
 
   const cards = [
     {
-      title: 'Total Users',
+      title: "Nombre d'utilisateurs",
       value: stats.totalNbUsers.toLocaleString(),
       tendency: stats.totalNbUsersTendency,
-      description: 'Registrations',
+      description: 'Inscriptions',
     },
     {
-      title: 'Pending Validation',
+      title: 'Nouvelles inscriptions',
       value: stats.pendingValidation.toLocaleString(),
       tendency: stats.pendingValidationTendency,
-      description: 'Awaiting approval',
+      description: "En attente d'approbation",
     },
     {
-      title: 'Total Auctions',
+      title: 'Nouvelles enchères',
       value: stats.totalAuctions.toLocaleString(),
       tendency: stats.totalAuctionsTendency,
-      description: 'Auctions created',
+      description: 'Enchères en cours',
     },
     {
-      title: 'Auctions Concluded',
+      title: 'Enchères conclues',
       value: stats.auctionsConcluded.toLocaleString(),
       tendency: stats.auctionsConcludedTendency,
-      description: 'Completed auctions',
+      description: '30 derniers jours',
     },
     {
-      title: 'Total Lot Weight (kg)',
-      value: stats.totalLotWeightKg.toLocaleString(),
+      title: 'Volume total',
+      value: Math.round(stats.totalLotWeightKg * 0.001).toLocaleString() + ' T',
       tendency: stats.totalLotWeightKgTendency,
-      description: 'Cumulative weight listed',
+      description: 'Poids total vendu',
     },
     {
-      title: 'Sold Weight (kg)',
-      value: stats.totalSoldWeightKg.toLocaleString(),
+      title: 'Volume mensuel',
+      value:
+        Math.round(stats.totalSoldWeightKg * 0.001).toLocaleString() + ' T',
       tendency: stats.totalSoldWeightKgTendency,
-      description: 'Weight sold last 30 days',
+      description: '30 derniers jours',
     },
     {
-      title: 'Total Sales Amount',
-      value: stats.totalSalesAmount.toLocaleString(),
+      title: 'Montant total',
+      value:
+        Math.round(stats.totalSalesAmount * 0.000001).toLocaleString() +
+        ' M CFA',
       tendency: stats.totalSalesAmountTendency,
-      description: 'Revenue last 30 days',
+      description: 'Toutes les ventes',
+    },
+    {
+      title: 'Ventes mensuelles',
+      value:
+        Math.round(stats.monthlySalesAmount * 0.000001).toLocaleString() +
+        ' M CFA',
+      tendency: stats.monthlySalesAmountTendency,
+      description: '30 derniers jours',
     },
   ] as const
 
@@ -156,7 +174,7 @@ export function SectionCards() {
                 )}
               </div>
               <div className="text-muted-foreground">
-                Compared to 30 days ago
+                Par rapport à il y a 30 jours
               </div>
             </CardFooter>
           </Card>

@@ -7,7 +7,6 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import {
-  type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
@@ -23,6 +22,9 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { useIsMobile } from '@/hooks/use-mobile'
 import * as React from 'react'
 import { Area, AreaChart, CartesianGrid, XAxis } from 'recharts'
+import { useQuery } from '@tanstack/react-query'
+import { getDashboardGraphicSeriesOptions } from '@/api/generated/@tanstack/react-query.gen'
+import { AppSkeleton } from '@/components/Skeleton/AppSkeleton.tsx'
 
 interface DashboardGraphicDto {
   date: string // "2025-01-01T00:00:00"
@@ -33,41 +35,41 @@ interface DashboardGraphicDto {
 export function ChartAreaInteractive() {
   const isMobile = useIsMobile()
 
-  // 1) State pour stocker les données
-  const [chartData, setChartData] = React.useState<
-    { date: string; totalOpenAuctions: number; totalNewAuctions: number }[]
-  >([])
+  // 1) Lancement de la requête, on précise le generic pour rawData
+  const {
+    data: rawData = [],
+    isLoading,
+    error,
+  } = useQuery(getDashboardGraphicSeriesOptions())
 
-  // 2) Chargement des données au montage
-  React.useEffect(() => {
-    const controller = new AbortController()
-    ;(async () => {
-      try {
-        const res = await fetch('http://localhost:8080/api/dashboard/graphic', {
-          signal: controller.signal,
-        })
-        if (!res.ok) throw new Error(`HTTP ${res.status}`)
-        const data = (await res.json()) as DashboardGraphicDto[]
-        setChartData(
-          data.map((item: DashboardGraphicDto) => ({
-            date: item.date.split('T')[0],
-            totalOpenAuctions: item.totalOpenAuctions,
-            totalNewAuctions: item.totalNewAuctions * 10,
-          }))
-        )
-      } catch (err: any) {
-        if (err.name !== 'AbortError') console.error(err)
-      }
-    })()
-    return () => {
-      controller.abort()
-    }
-  }, [])
+  // 2) On filtre / affine le type : on ne garde que les éléments complets
+  const chartData: DashboardGraphicDto[] = React.useMemo(() => {
+    return rawData
+      .filter(
+        (
+          item
+        ): item is Required<DashboardGraphicDto> & {
+          date: string
+          totalOpenAuctions: number
+          totalNewAuctions: number
+        } =>
+          typeof item.date === 'string' &&
+          typeof item.totalOpenAuctions === 'number' &&
+          typeof item.totalNewAuctions === 'number'
+      )
+      .map(item => ({
+        // maintenant TS sait que date est string et les totaux sont bien des nombres
+        date: item.date.split('T')[0],
+        totalOpenAuctions: item.totalOpenAuctions,
+        totalNewAuctions: item.totalNewAuctions * 10,
+      }))
+  }, [rawData])
 
-  // 3) Période sélectionnée + auto 7d sur mobile
-  const [timeRange, setTimeRange] = React.useState<'90d' | '30d' | '7d'>('90d')
+  // 3) Gestion du timeRange comme avant
+  const [timeRange, setTimeRange] = React.useState<'90d' | '30d' | '7d'>(
+    isMobile ? '7d' : '90d'
+  )
 
-  // 4) Filtrage selon timeRange
   const filteredData = React.useMemo(() => {
     const daysMap = { '90d': 90, '30d': 30, '7d': 7 }
     const days = daysMap[timeRange]
@@ -79,17 +81,15 @@ export function ChartAreaInteractive() {
     return chartData.filter(({ date }) => new Date(date) >= cutoff)
   }, [chartData, timeRange])
 
-  // 5) Config du chart
+  // 4) Config du chart
   const chartConfig = {
-    totalOpenAuctions: {
-      label: 'Enchères en cours',
-      color: 'var(--primary)',
-    },
-    totalNewAuctions: {
-      label: 'Nouvelles enchères',
-      color: 'var(--primary)',
-    },
-  } satisfies ChartConfig
+    totalOpenAuctions: { label: 'Enchères en cours', color: 'var(--primary)' },
+    totalNewAuctions: { label: 'Nouvelles enchères', color: 'var(--primary)' },
+  } satisfies Record<string, { label: string; color: string }>
+
+  // 5) Render
+  if (isLoading) return <AppSkeleton />
+  if (error) return <div>Erreur de chargement</div>
 
   return (
     <Card className="@container/card">
