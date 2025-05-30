@@ -94,6 +94,12 @@ import type {
   UpdateContractOfferData,
   UpdateContractOfferResponse,
   UpdateContractOfferError,
+  RejectContractOfferData,
+  RejectContractOfferResponse,
+  RejectContractOfferError,
+  AcceptContractOfferData,
+  AcceptContractOfferResponse,
+  AcceptContractOfferError,
   DeleteBidData,
   DeleteBidResponse,
   DeleteBidError,
@@ -235,6 +241,9 @@ import type {
   DownloadDocumentData,
   DownloadDocumentResponse,
   DownloadDocumentError,
+  GetContractOfferByCriteriaData,
+  GetContractOfferByCriteriaResponse,
+  GetContractOfferByCriteriaError,
   GetCurrentUserData,
   GetCurrentUserResponse,
   GetCurrentUserError,
@@ -949,6 +958,50 @@ export const updateContractOffer = <ThrowOnError extends boolean = false>(
       'Content-Type': 'application/json',
       ...options?.headers,
     },
+  })
+}
+
+/**
+ * Rejeter une offre de contrat
+ */
+export const rejectContractOffer = <ThrowOnError extends boolean = false>(
+  options: Options<RejectContractOfferData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).put<
+    RejectContractOfferResponse,
+    RejectContractOfferError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/contracts/{contractOfferId}/reject',
+    ...options,
+  })
+}
+
+/**
+ * Accepter une offre de contrat
+ */
+export const acceptContractOffer = <ThrowOnError extends boolean = false>(
+  options: Options<AcceptContractOfferData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).put<
+    AcceptContractOfferResponse,
+    AcceptContractOfferError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/contracts/{contractOfferId}/accept',
+    ...options,
   })
 }
 
@@ -2167,6 +2220,30 @@ export const downloadDocument = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     url: '/api/documents/{id}/download',
+    ...options,
+  })
+}
+
+/**
+ * Obtenir un contrat par critères (qualité, vendeur, acheteur)
+ */
+export const getContractOfferByCriteria = <
+  ThrowOnError extends boolean = false,
+>(
+  options: Options<GetContractOfferByCriteriaData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).get<
+    GetContractOfferByCriteriaResponse,
+    GetContractOfferByCriteriaError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/contracts/by-criteria',
     ...options,
   })
 }

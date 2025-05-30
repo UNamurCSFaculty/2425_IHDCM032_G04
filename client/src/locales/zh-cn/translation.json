@@ -393,7 +393,8 @@
       "view_bids_button": "查看出价",
       "make_bid_button": "出价",
       "propose_contract_button": "提议合同"
-    }
+    },
+    "contract_price_label": "*合同价格"
   },
   "product": {
     "quality_label": "质量",

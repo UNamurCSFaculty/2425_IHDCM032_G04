@@ -2539,6 +2539,70 @@ export type UpdateContractOfferResponses = {
 export type UpdateContractOfferResponse =
   UpdateContractOfferResponses[keyof UpdateContractOfferResponses]
 
+export type RejectContractOfferData = {
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    contractOfferId: number
+  }
+  query?: never
+  url: '/api/contracts/{contractOfferId}/reject'
+}
+
+export type RejectContractOfferErrors = {
+  /**
+   * Offre de contrat non trouvée
+   */
+  404: ApiErrorResponse
+}
+
+export type RejectContractOfferError =
+  RejectContractOfferErrors[keyof RejectContractOfferErrors]
+
+export type RejectContractOfferResponses = {
+  /**
+   * Offre de contrat rejetée
+   */
+  200: ContractOfferDto
+}
+
+export type RejectContractOfferResponse =
+  RejectContractOfferResponses[keyof RejectContractOfferResponses]
+
+export type AcceptContractOfferData = {
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    contractOfferId: number
+  }
+  query?: never
+  url: '/api/contracts/{contractOfferId}/accept'
+}
+
+export type AcceptContractOfferErrors = {
+  /**
+   * Offre de contrat non trouvée
+   */
+  404: ApiErrorResponse
+}
+
+export type AcceptContractOfferError =
+  AcceptContractOfferErrors[keyof AcceptContractOfferErrors]
+
+export type AcceptContractOfferResponses = {
+  /**
+   * Offre de contrat acceptée
+   */
+  200: ContractOfferDto
+}
+
+export type AcceptContractOfferResponse =
+  AcceptContractOfferResponses[keyof AcceptContractOfferResponses]
+
 export type DeleteBidData = {
   body?: never
   path: {
@@ -4060,6 +4124,50 @@ export type DownloadDocumentResponses = {
 
 export type DownloadDocumentResponse =
   DownloadDocumentResponses[keyof DownloadDocumentResponses]
+
+export type GetContractOfferByCriteriaData = {
+  body?: never
+  path?: never
+  query: {
+    /**
+     * ID de la qualité
+     */
+    qualityId: number
+    /**
+     * ID du vendeur
+     */
+    sellerId: number
+    /**
+     * ID de l'acheteur
+     */
+    buyerId: number
+  }
+  url: '/api/contracts/by-criteria'
+}
+
+export type GetContractOfferByCriteriaErrors = {
+  /**
+   * Paramètres manquants
+   */
+  400: ApiErrorResponse
+  /**
+   * Aucun contrat trouvé
+   */
+  404: ApiErrorResponse
+}
+
+export type GetContractOfferByCriteriaError =
+  GetContractOfferByCriteriaErrors[keyof GetContractOfferByCriteriaErrors]
+
+export type GetContractOfferByCriteriaResponses = {
+  /**
+   * Contrat trouvé
+   */
+  200: ContractOfferDto
+}
+
+export type GetContractOfferByCriteriaResponse =
+  GetContractOfferByCriteriaResponses[keyof GetContractOfferByCriteriaResponses]
 
 export type GetCurrentUserData = {
   body?: never

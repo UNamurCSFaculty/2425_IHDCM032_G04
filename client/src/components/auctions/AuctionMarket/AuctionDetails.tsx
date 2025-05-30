@@ -3,6 +3,7 @@ import {
   acceptAuctionMutation,
   acceptBidMutation,
   createBidMutation,
+  getContractOfferByCriteriaOptions,
   listAuctionsQueryKey,
   listBidsOptions,
   listBidsQueryKey,
@@ -26,6 +27,7 @@ import dayjs from '@/utils/dayjs-config'
 import { formatPrice, formatWeight } from '@/utils/formatter'
 import {
   useMutation,
+  useQuery,
   useQueryClient,
   useSuspenseQuery,
 } from '@tanstack/react-query'
@@ -52,6 +54,21 @@ interface Props {
   role: UserRole
   showDetails?: boolean
 }
+
+const contractQueryOptions = (
+  qualityId: number,
+  sellerId: number,
+  buyerId: number
+) => ({
+  ...getContractOfferByCriteriaOptions({
+    query: {
+      qualityId: qualityId,
+      sellerId: sellerId,
+      buyerId: buyerId,
+    },
+  }),
+  staleTime: 10_000,
+})
 
 const AuctionDetailsPanel: React.FC<Props> = ({
   auction,
@@ -84,6 +101,14 @@ const AuctionDetailsPanel: React.FC<Props> = ({
   const bestBid = auction.bids.reduce(
     (max, b) => (b.amount > max ? b.amount : max),
     0
+  )
+
+  const { data: contract } = useQuery(
+    contractQueryOptions(
+      auction.product.qualityControl.quality.id,
+      auction.trader.id,
+      user.id
+    )
   )
 
   useEffect(() => {
@@ -330,14 +355,28 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                         onClick={() => setBuyNowPopover(true)}
                       >
                         <ShoppingCart className="mr-2 size-4" />
-                        {formatPrice.format(auction.options.buyNowPrice)}
+                        {contract &&
+                        contract.pricePerKg < auction.options.buyNowPrice ? (
+                          <>
+                            <span className="text-sm line-through opacity-70">
+                              {formatPrice.format(auction.options.buyNowPrice)}
+                            </span>
+                            <span className="text-base font-semibold">
+                              {formatPrice.format(contract.pricePerKg)}
+                            </span>
+                          </>
+                        ) : (
+                          <span className="text-base font-semibold">
+                            {formatPrice.format(auction.options.buyNowPrice)}
+                          </span>
+                        )}
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-64 p-4">
                       <p className="mb-4 text-center text-sm">
                         {t('auction.confirm_buy_now_prompt', {
                           price: formatPrice.format(
-                            auction.options.buyNowPrice
+                            contract?.pricePerKg ?? auction.options.buyNowPrice
                           ),
                         })}
                       </p>
@@ -352,7 +391,10 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                         <Button
                           size="sm"
                           onClick={() => {
-                            handleSubmitBuyNow(auction.options?.buyNowPrice)
+                            handleSubmitBuyNow(
+                              contract?.pricePerKg ??
+                                auction.options?.buyNowPrice
+                            )
                           }}
                         >
                           {t('buttons.confirm')}
@@ -360,6 +402,12 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                       </div>
                     </PopoverContent>
                   </Popover>
+                  {contract &&
+                    contract.pricePerKg < auction.options.buyNowPrice && (
+                      <span className="mt-1 text-sm font-medium text-amber-600">
+                        {t('auction.contract_price_label')}
+                      </span>
+                    )}
                 </div>
               )}
 

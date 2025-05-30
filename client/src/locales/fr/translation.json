@@ -618,7 +618,8 @@
       "view_bids_button": "Voir les offres",
       "make_bid_button": "Faire une offre",
       "propose_contract_button": "Proposer un contrat"
-    }
+    },
+    "contract_price_label": "*Prix contractuel"
   },
   "product": {
     "quality_label": "Qualité",

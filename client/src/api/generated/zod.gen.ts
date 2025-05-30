@@ -764,6 +764,10 @@ export const zGetContractOfferResponse = zContractOfferDto
 
 export const zUpdateContractOfferResponse = zContractOfferDto
 
+export const zRejectContractOfferResponse = zContractOfferDto
+
+export const zAcceptContractOfferResponse = zContractOfferDto
+
 export const zDeleteBidResponse = z.union([z.unknown(), z.void()])
 
 export const zGetBidResponse = zBidDto
@@ -867,6 +871,8 @@ export const zDeleteDocumentResponse = z.void()
 export const zGetDocumentResponse = zDocumentDto
 
 export const zDownloadDocumentResponse = z.string()
+
+export const zGetContractOfferByCriteriaResponse = zContractOfferDto
 
 export const zGetCurrentUserResponse = zUserDetailDto
 

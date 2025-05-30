@@ -31,6 +31,19 @@ public class ContractOfferServiceImpl implements ContractOfferService {
 
 	@Override
 	@Transactional(readOnly = true)
+	public ContractOfferDto getContractOfferByCriteria(Integer qualityId, Integer sellerId,
+			Integer buyerId) {
+
+		ContractOffer contractOffer = contractOfferRepository
+				.findValidContractOffer(qualityId, sellerId, buyerId, "Accepted")
+				.orElseThrow(() -> new ResourceNotFoundException(
+						"Aucun contrat trouvé avec les paramètres fournis"));
+
+		return contractOfferMapper.toDto(contractOffer);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
 	public ContractOfferDto getContractOfferById(Integer id) {
 		ContractOffer ContractOffer = contractOfferRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Contrat non trouvé"));
@@ -57,6 +70,41 @@ public class ContractOfferServiceImpl implements ContractOfferService {
 		ContractOffer full = persistenceHelper.saveAndReload(contractOfferRepository,
 				updatedContractOffer, ContractOffer::getId);
 		return contractOfferMapper.toDto(full);
+	}
+
+	@Override
+	public ContractOfferDto acceptContractOffer(Integer id) {
+
+		// Accept current contract offer
+		ContractOffer existingOffer = contractOfferRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Offre de contrat non trouvée"));
+		existingOffer.setStatus("Accepted");
+
+		ContractOffer acceptedOffer = contractOfferRepository.save(existingOffer);
+
+		// Reject all other contract offers with the same quality, buyer and seller
+		List<ContractOffer> otherOffers = contractOfferRepository
+				.findByQualityIdAndSellerIdAndBuyerId(existingOffer.getQuality().getId(),
+						existingOffer.getSeller().getId(), existingOffer.getBuyer().getId());
+
+		for (ContractOffer offer : otherOffers) {
+			if (!offer.getId().equals(acceptedOffer.getId())) {
+				rejectContractOffer(offer.getId());
+			}
+		}
+
+		return contractOfferMapper.toDto(acceptedOffer);
+	}
+
+	@Override
+	public ContractOfferDto rejectContractOffer(Integer id) {
+
+		ContractOffer existingOffer = contractOfferRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Offre de contrat non trouvée"));
+		existingOffer.setStatus("Rejected");
+
+		ContractOffer saved = contractOfferRepository.save(existingOffer);
+		return contractOfferMapper.toDto(saved);
 	}
 
 	@Override

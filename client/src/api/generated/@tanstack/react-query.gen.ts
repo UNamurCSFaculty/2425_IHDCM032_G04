@@ -31,6 +31,8 @@ import {
   deleteContractOffer,
   getContractOffer,
   updateContractOffer,
+  rejectContractOffer,
+  acceptContractOffer,
   deleteBid,
   getBid,
   updateBid,
@@ -85,6 +87,7 @@ import {
   deleteDocument,
   getDocument,
   downloadDocument,
+  getContractOfferByCriteria,
   getCurrentUser,
   getApplicationData,
   getUser,
@@ -168,6 +171,12 @@ import type {
   UpdateContractOfferData,
   UpdateContractOfferError,
   UpdateContractOfferResponse,
+  RejectContractOfferData,
+  RejectContractOfferError,
+  RejectContractOfferResponse,
+  AcceptContractOfferData,
+  AcceptContractOfferError,
+  AcceptContractOfferResponse,
   DeleteBidData,
   DeleteBidError,
   DeleteBidResponse,
@@ -276,6 +285,7 @@ import type {
   DeleteDocumentResponse,
   GetDocumentData,
   DownloadDocumentData,
+  GetContractOfferByCriteriaData,
   GetCurrentUserData,
   GetApplicationDataData,
   GetUserData,
@@ -956,6 +966,54 @@ export const updateContractOfferMutation = (
   > = {
     mutationFn: async localOptions => {
       const { data } = await updateContractOffer({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+export const rejectContractOfferMutation = (
+  options?: Partial<Options<RejectContractOfferData>>
+): UseMutationOptions<
+  RejectContractOfferResponse,
+  RejectContractOfferError,
+  Options<RejectContractOfferData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    RejectContractOfferResponse,
+    RejectContractOfferError,
+    Options<RejectContractOfferData>
+  > = {
+    mutationFn: async localOptions => {
+      const { data } = await rejectContractOffer({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+export const acceptContractOfferMutation = (
+  options?: Partial<Options<AcceptContractOfferData>>
+): UseMutationOptions<
+  AcceptContractOfferResponse,
+  AcceptContractOfferError,
+  Options<AcceptContractOfferData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    AcceptContractOfferResponse,
+    AcceptContractOfferError,
+    Options<AcceptContractOfferData>
+  > = {
+    mutationFn: async localOptions => {
+      const { data } = await acceptContractOffer({
         ...options,
         ...localOptions,
         throwOnError: true,
@@ -2538,6 +2596,27 @@ export const downloadDocumentOptions = (
       return data
     },
     queryKey: downloadDocumentQueryKey(options),
+  })
+}
+
+export const getContractOfferByCriteriaQueryKey = (
+  options: Options<GetContractOfferByCriteriaData>
+) => createQueryKey('getContractOfferByCriteria', options)
+
+export const getContractOfferByCriteriaOptions = (
+  options: Options<GetContractOfferByCriteriaData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getContractOfferByCriteria({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: getContractOfferByCriteriaQueryKey(options),
   })
 }
 
