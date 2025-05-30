@@ -266,6 +266,7 @@
     "address": "Address",
     "name": "Name",
     "mail": "Email",
+    "mail_or_phone": "Email or phone",
     "sections": {
       "user_details": "User Details",
       "basic_info": "Basic Information",
