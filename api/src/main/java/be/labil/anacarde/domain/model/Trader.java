@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * Entité représentant un trader (un vendeur ou acheteur) et héritant de User.
+ */
 @Entity
 @Table(name = "trader")
 @Getter
