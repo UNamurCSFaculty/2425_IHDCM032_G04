@@ -72,8 +72,8 @@ export function LoginForm() {
                   name="username"
                   children={field => (
                     <field.TextField
-                      label={t('form.mail')}
-                      type="email"
+                      label={t('form.mail_or_phone')}
+                      type="text"
                       endIcon={UserIcon}
                       placeholder={t('form.placeholder.email_example')}
                       disabled={isPending}
