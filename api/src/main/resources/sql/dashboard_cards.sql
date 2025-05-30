@@ -26,15 +26,19 @@ CREATE OR REPLACE VIEW v_dashboard_cards AS
                     WHERE creation_date < NOW() - INTERVAL '30 days'
                 )                                         AS total_auctions_30
             FROM auction
-            -- WHERE active = true -- dé-commente si tu veux seulement les enchères encore actives
+            WHERE active = true
         ),
-        /* --- 3) POIDS MIS EN VENTE (cumulatif, toutes enchères) -- */
+        /* --- 3) POIDS/AMOUNT MIS EN VENTE (cumulatif, toutes enchères) -- */
         lot_weights AS (
             SELECT
-                SUM(product_weight_kg)                                          AS lot_weight_now,
+                SUM(product_weight_kg)                    AS lot_weight_now,
+                SUM(bid_winning_amount)                    AS sales_amount_now,
                 SUM(product_weight_kg) FILTER (
                     WHERE auction_start_date < NOW() - INTERVAL '30 days'
-                )                                                               AS lot_weight_30
+                )                                         AS lot_weight_30,
+                SUM(bid_winning_amount) FILTER (
+                    WHERE auction_start_date < NOW() - INTERVAL '30 days'
+                )                                         AS sales_amount_30
             FROM v_auction_bid_analysis
         ),
         /* ---------- 4) Période P1 = [now-30d ; now[ -------------- */
@@ -100,7 +104,7 @@ CREATE OR REPLACE VIEW v_dashboard_cards AS
                      )
                 END                                             AS auctions_concluded_tendency,
 
-            /* ===== LOT WEIGHT (cumulatif) ===== */
+            /* ===== LOT WEIGHT / SALES AMOUNT (cumulatif) ===== */
             lw.lot_weight_now                               AS total_lot_weight_kg,
             CASE
                 WHEN lw.lot_weight_30 = 0 THEN NULL
@@ -109,6 +113,15 @@ CREATE OR REPLACE VIEW v_dashboard_cards AS
                             / lw.lot_weight_30::numeric, 2
                      )
                 END                                             AS total_lot_weight_kg_tendency,
+
+            lw.sales_amount_now                               AS total_sales_amount,
+            CASE
+                WHEN lw.sales_amount_30 = 0 THEN NULL
+                ELSE ROUND(
+                        (lw.sales_amount_now - lw.sales_amount_30)::numeric * 100
+                            / lw.sales_amount_30::numeric, 2
+                     )
+                END                                             AS total_sales_amount_tendency,
 
             /* ===== SOLD WEIGHT / SALES AMOUNT (30 derniers jours) ===== */
             p1.sold_weight_p1                               AS total_sold_weight_kg,
@@ -120,14 +133,14 @@ CREATE OR REPLACE VIEW v_dashboard_cards AS
                      )
                 END                                             AS total_sold_weight_kg_tendency,
 
-            p1.sales_amount_p1                              AS total_sales_amount,
+            p1.sales_amount_p1                              AS monthly_sales_amount,
             CASE
                 WHEN p2.sales_amount_p2 = 0 THEN NULL
                 ELSE ROUND(
                         (p1.sales_amount_p1 - p2.sales_amount_p2)::numeric * 100
                             / p2.sales_amount_p2::numeric, 2
                      )
-                END                                             AS total_sales_amount_tendency
+                END                                             AS monthly_sales_amount_tendency
         FROM user_counts   uc
                  CROSS JOIN auction_totals  at
         CROSS JOIN lot_weights     lw

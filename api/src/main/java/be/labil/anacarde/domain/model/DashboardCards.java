@@ -66,4 +66,10 @@ public class DashboardCards {
 
 	@Column(name = "total_sales_amount_tendency")
 	private Double totalSalesAmountTendency;
+
+	@Column(name = "monthly_sales_amount")
+	private Double monthlySalesAmount;
+
+	@Column(name = "monthly_sales_amount_tendency")
+	private Double monthlySalesAmountTendency;
 }

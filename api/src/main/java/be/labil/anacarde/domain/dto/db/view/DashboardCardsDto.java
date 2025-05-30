@@ -74,4 +74,13 @@ public class DashboardCardsDto {
 	 * par rapport au 30 d'avant.
 	 */
 	private Double totalSalesAmountTendency;
+
+	/** Montant total vendu (sommes des offres gagnantes) les 30 jours précédents */
+	private Double monthlySalesAmount;
+
+	/**
+	 * Pourcentage d'augmentation/diminution du montant total vendu sur les 30 jours précédents par
+	 * rapport au 30 d'avant.
+	 */
+	private Double monthlySalesAmountTendency;
 }
