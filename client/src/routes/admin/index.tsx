@@ -9,11 +9,11 @@ export const Route = createFileRoute('/admin/')({
 function AdminDashboardComponent() {
   return (
     <div className="@container/main flex flex-1 flex-col gap-4 md:gap-6">
-      <SectionCards />
       <div className="px-0 lg:px-0">
         {' '}
         <ChartAreaInteractive />
       </div>
+      <SectionCards />
     </div>
   )
 }
