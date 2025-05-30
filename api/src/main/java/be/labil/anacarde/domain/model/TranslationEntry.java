@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Entité représentant la traduction d'une clé dans une langue donnée.
+ */
 @Entity
 @Table(name = "translation_entry", uniqueConstraints = {
 		@UniqueConstraint(columnNames = {"translation_id", "language_id"})})

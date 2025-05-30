@@ -10,6 +10,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+/**
+ * Entité représentant un utilisateur dans le système.
+ */
 @Entity
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -18,7 +21,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-/** Entité représentant un utilisateur dans le système. */
 public abstract class User extends BaseEntity implements UserDetails {
 
 	@Column(nullable = false)

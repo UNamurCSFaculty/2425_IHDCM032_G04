@@ -26,7 +26,6 @@ public abstract class UserListMapper {
 
 	public abstract TransformerListDto toDto(Transformer entity);
 
-	@Mapping(source = "agriculturalIdentifier", target = "agriculturalIdentifier")
 	@Mapping(source = "cooperative.id", target = "cooperativeId")
 	public abstract ProducerListDto toDto(Producer entity);
 

@@ -7,7 +7,6 @@ import be.labil.anacarde.domain.model.Producer;
 import be.labil.anacarde.domain.model.Trader;
 import be.labil.anacarde.domain.model.Transformer;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.ObjectFactory;
 import org.mapstruct.ReportingPolicy;
 
@@ -15,12 +14,8 @@ import org.mapstruct.ReportingPolicy;
 		AddressMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class TraderDetailMapper {
 
-	@Mapping(source = "language", target = "language")
-	@Mapping(source = "address", target = "address")
 	public abstract Trader toEntity(TraderDetailDto dto);
 
-	@Mapping(source = "language", target = "language")
-	@Mapping(source = "address", target = "address")
 	public abstract TraderDetailDto toDto(Trader entity);
 
 	@ObjectFactory
