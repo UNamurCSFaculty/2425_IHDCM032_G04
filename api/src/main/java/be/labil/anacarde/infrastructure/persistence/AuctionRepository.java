@@ -60,4 +60,6 @@ public interface AuctionRepository extends JpaRepository<Auction, Integer> {
 			""", nativeQuery = true)
 	void overrideCreationDateNative(@Param("id") Integer id,
 			@Param("newDate") LocalDateTime newDate);
+
+	boolean existsByIdAndTraderId(Integer auctionId, Integer userId);
 }
