@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * Entité représentant un produit cultivé.
+ */
 @Entity
 @Table(name = "harvest_product")
 @Getter

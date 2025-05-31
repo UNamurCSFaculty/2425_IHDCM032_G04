@@ -10,6 +10,9 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 
+/**
+ * Entité représentant une offre de vente d'un Produit.
+ */
 @Entity
 @Table(name = "auction")
 @Getter

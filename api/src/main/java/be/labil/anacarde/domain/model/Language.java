@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * Entité représentant une langue disponible pour l'application.
+ */
 @Entity
 @Table(name = "language")
 @Getter

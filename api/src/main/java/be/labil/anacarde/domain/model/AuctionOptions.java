@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * Entité représentant l'ensemble des options d'une offre de vente.
+ */
 @Embeddable
 @Getter
 @Setter
