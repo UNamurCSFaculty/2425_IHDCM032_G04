@@ -77,7 +77,7 @@ export const SignupForm: React.FC = () => {
   const { t } = useTranslation()
   const appData = useAppData()
   const containerRef = useRef<HTMLDivElement>(null)
-  const isMountedRef = useRef(false) // Référence pour suivre l'état de montage
+  const isMountedRef = useRef(false)
 
   const [step, setStep] = useState(1)
   const [isSubmitting, setIsSubmitting] = useState(false)

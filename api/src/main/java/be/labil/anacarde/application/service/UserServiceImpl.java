@@ -17,6 +17,7 @@ import be.labil.anacarde.infrastructure.persistence.DocumentRepository;
 import be.labil.anacarde.infrastructure.persistence.FieldRepository;
 import be.labil.anacarde.infrastructure.persistence.user.*;
 import be.labil.anacarde.infrastructure.util.PersistenceHelper;
+import be.labil.anacarde.infrastructure.util.SecurityHelper;
 import be.labil.anacarde.presentation.controller.enums.UserType;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;
@@ -130,8 +131,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	@Override
 	@Transactional(readOnly = true)
 	public UserDetailDto getUserById(Integer id) {
-		User user = userRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé"));
+		User user = userRepository.findById(id).orElseThrow(
+				() -> new ResourceNotFoundException("Utilisateur non trouvé avec l'ID: " + id));
 		if (user instanceof Producer producer) {
 			Hibernate.initialize(producer.getCooperative());
 		}
@@ -174,13 +175,25 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
 	@Override
 	public UserDetailDto updateUser(Integer id, UserUpdateDto userUpdateDto) {
-		User existingUser = userRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé"));
+		User existingUser = userRepository.findById(id).orElseThrow(
+				() -> new ResourceNotFoundException("Utilisateur non trouvé avec l'ID: " + id));
+
+		User authenticatedUser = SecurityHelper.getAuthenticatedUserOrFail();
+
+		boolean isAdmin = SecurityHelper.isAdmin(authenticatedUser);
+		boolean isSelfUpdate = authenticatedUser.getId().equals(existingUser.getId());
+
+		if (!isAdmin && !isSelfUpdate) {
+			throw new ApiErrorException(HttpStatus.FORBIDDEN, ApiErrorCode.ACCESS_FORBIDDEN.code(),
+					List.of(new ErrorDetail("user", "user.update.forbidden",
+							"Vous n'êtes pas autorisé à modifier cet utilisateur.")));
+		}
+
 		// Mets uniquement à jour les champs non nuls du DTO
 		User user = userDetailMapper.partialUpdate(userUpdateDto, existingUser);
 
 		// Gestion des coopératives.
-		if (userUpdateDto instanceof ProducerUpdateDto producerDto) {
+		if (userUpdateDto instanceof ProducerUpdateDto producerDto && user instanceof Producer) {
 			if (producerDto.getCooperativeId() != null) {
 				Cooperative reference = em.getReference(Cooperative.class,
 						producerDto.getCooperativeId());
@@ -190,9 +203,13 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 			}
 		}
 
-		City city = geoService.findCityById(user.getAddress().getCity().getId());
-		user.getAddress().setCity(city);
-		user.getAddress().setRegion(geoService.findRegionByCityId(city));
+		// Mise à jour de l'adresse si fournie
+		if (user.getAddress() != null && user.getAddress().getCity() != null
+				&& user.getAddress().getCity().getId() != null) {
+			City city = geoService.findCityById(user.getAddress().getCity().getId());
+			user.getAddress().setCity(city);
+			user.getAddress().setRegion(geoService.findRegionByCityId(city));
+		}
 
 		if (user.isEnabled() && user.getValidationDate() == null) {
 			user.setValidationDate(LocalDateTime.now());
@@ -208,8 +225,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
 	@Override
 	public void deleteUser(Integer id) {
-		User user = userRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé"));
+		User user = userRepository.findById(id).orElseThrow(
+				() -> new ResourceNotFoundException("Utilisateur non trouvé avec l'ID: " + id));
 
 		if (auctionRepository.existsByTraderId(user.getId())) {
 			throw new OperationNotAllowedException(

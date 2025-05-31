@@ -280,9 +280,11 @@ export function NewsArticleManagement() {
               ? filteredArticles.map(article => (
                   <TableRow key={article.id}>
                     <TableCell>{article.id}</TableCell>
-                    <TableCell>{article.title}</TableCell>
+                    <TableCell className="max-w-[200px] truncate md:max-w-[300px] lg:max-w-[400px]">
+                      {article.title}
+                    </TableCell>
                     <TableCell>{article.category?.name || '-'}</TableCell>
-                    <TableCell>
+                    <TableCell className="max-w-[100px] truncate md:max-w-[150px]">
                       {article.authorName || t('common.admin', 'Admin')}
                     </TableCell>
                     <TableCell>

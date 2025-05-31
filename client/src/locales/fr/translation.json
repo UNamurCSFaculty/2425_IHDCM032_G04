@@ -131,6 +131,7 @@
   },
   "breadcrumb": {
     "about": "À propos",
+    "profile": "Profil",
     "auctions": "Enchères",
     "buy": "Acheter",
     "home": "Accueil",
@@ -138,7 +139,6 @@
     "login": "Connexion",
     "marketplace": "Marché des enchères",
     "privacy": "Politique de confidentialité",
-    "profile": "Profil",
     "sell": "Vendre",
     "settings": "Paramètres",
     "signup": "Inscription",
@@ -474,6 +474,30 @@
           "invalid_member_remove_description": "Le membre à retirer n'est pas valide ou son identifiant agricole est manquant."
         }
       }
+    },
+    "analytics": {
+      "title": "Analyses et Exports",
+      "description": "Générez et téléchargez des rapports de données sur les enchères.",
+      "export_options": {
+        "title": "Options d'Exportation",
+        "description": "Configurez les filtres et le format pour votre export de données. Laissez les dates vides pour exporter toutes les données."
+      },
+      "export_filtered": {
+        "start_date_label": "Date de début",
+        "pick_date_placeholder": "Choisir une date",
+        "end_date_label": "Date de fin",
+        "only_ended_label": "Inclure uniquement les enchères terminées",
+        "format_label": "Format d'Export",
+        "format_json": "JSON",
+        "format_csv": "CSV",
+        "button": "Télécharger le rapport",
+        "end_date_after_start": "La date de fin doit être postérieure ou égale à la date de début.",
+        "start_end_both_or_none": "Les dates de début et de fin doivent être fournies ensemble ou toutes deux omises."
+      },
+      "export_success_title": "Exportation Réussie",
+      "export_success_message": "Le fichier {{filename}} a été téléchargé avec succès.",
+      "export_error_title": "Erreur d'Exportation",
+      "export_error_message": "Une erreur est survenue lors de la génération ou du téléchargement du fichier. Veuillez réessayer."
     }
   },
   "languages": {
@@ -966,5 +990,16 @@
       },
       "benin_flag_alt": "Drapeau du Bénin"
     }
+  },
+  "profile": {
+    "page_title": "Mon Profil",
+    "page_subtitle": "Consultez et modifiez vos informations personnelles.",
+    "card_title": "Informations du Profil",
+    "edit_mode_description": "Modifiez vos informations ci-dessous.",
+    "view_mode_description": "Vos informations personnelles et de rôle.",
+    "personal_details_title": "Informations Personnelles",
+    "role_specific_details_title": "Détails Spécifiques au Rôle",
+    "update_success_toast": "Profil mis à jour avec succès !",
+    "update_error_toast": "Erreur lors de la mise à jour"
   }
 }

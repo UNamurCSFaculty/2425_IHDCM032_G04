@@ -24,6 +24,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -104,6 +105,7 @@ public interface UserApi {
 	 * @param id
 	 *            L'identifiant de l'utilisateur à supprimer.
 	 */
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@Operation(summary = "Supprimer un utilisateur", description = "Supprime un utilisateur en fonction de son identifiant.")
 	@ApiResponses({
 			@ApiResponse(responseCode = "204", description = "Utilisateur supprimé avec succès"),

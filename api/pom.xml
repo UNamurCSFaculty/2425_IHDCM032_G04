@@ -76,6 +76,7 @@
         <datafaker.version>2.4.3</datafaker.version>
         <slugify.version>3.0.7</slugify.version>
         <jakarta.annotation.version>3.0.0</jakarta.annotation.version>
+        <jackson.dataformat.xml.version>2.19.0</jackson.dataformat.xml.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <dependencies>
@@ -200,6 +201,15 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-csv</artifactId>
+            <version>${jackson.dataformat.xml.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
         </dependency>
     </dependencies>
 

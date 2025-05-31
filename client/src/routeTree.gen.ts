@@ -29,7 +29,7 @@ import { Route as AdminCooperativesImport } from './routes/admin/cooperatives'
 import { Route as AdminBlogImport } from './routes/admin/blog'
 import { Route as AdminAnalyticsImport } from './routes/admin/analytics'
 import { Route as ActualitesNewsIdImport } from './routes/actualites/$newsId'
-import { Route as AdminBlogIndexImport } from './routes/admin/blog/index'
+import { Route as AuthenticatedProfilImport } from './routes/_authenticated/profil'
 import { Route as AuthenticatedVentesNouvelleEnchereImport } from './routes/_authenticated/ventes/nouvelle-enchere'
 import { Route as AuthenticatedVentesMesEncheresImport } from './routes/_authenticated/ventes/mes-encheres'
 import { Route as AuthenticatedVentesEnchereCreeeImport } from './routes/_authenticated/ventes/enchere-creee'
@@ -148,10 +148,10 @@ const ActualitesNewsIdRoute = ActualitesNewsIdImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const AdminBlogIndexRoute = AdminBlogIndexImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AdminBlogRoute,
+const AuthenticatedProfilRoute = AuthenticatedProfilImport.update({
+  id: '/profil',
+  path: '/profil',
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
 
 const AuthenticatedVentesNouvelleEnchereRoute =
@@ -268,6 +268,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/inscription-succes'
       preLoaderRoute: typeof InscriptionSuccesImport
       parentRoute: typeof rootRoute
+    }
+    '/_authenticated/profil': {
+      id: '/_authenticated/profil'
+      path: '/profil'
+      fullPath: '/profil'
+      preLoaderRoute: typeof AuthenticatedProfilImport
+      parentRoute: typeof AuthenticatedImport
     }
     '/actualites/$newsId': {
       id: '/actualites/$newsId'
@@ -395,19 +402,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedVentesNouvelleEnchereImport
       parentRoute: typeof AuthenticatedImport
     }
-    '/admin/blog/': {
-      id: '/admin/blog/'
-      path: '/'
-      fullPath: '/admin/blog/'
-      preLoaderRoute: typeof AdminBlogIndexImport
-      parentRoute: typeof AdminBlogImport
-    }
   }
 }
 
 // Create and export the route tree
 
 interface AuthenticatedRouteChildren {
+  AuthenticatedProfilRoute: typeof AuthenticatedProfilRoute
   AuthenticatedAchatsMarcheRoute: typeof AuthenticatedAchatsMarcheRoute
   AuthenticatedAchatsMesEncheresRoute: typeof AuthenticatedAchatsMesEncheresRoute
   AuthenticatedContratsMesContratsRoute: typeof AuthenticatedContratsMesContratsRoute
@@ -419,6 +420,7 @@ interface AuthenticatedRouteChildren {
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedProfilRoute: AuthenticatedProfilRoute,
   AuthenticatedAchatsMarcheRoute: AuthenticatedAchatsMarcheRoute,
   AuthenticatedAchatsMesEncheresRoute: AuthenticatedAchatsMesEncheresRoute,
   AuthenticatedContratsMesContratsRoute: AuthenticatedContratsMesContratsRoute,
@@ -435,21 +437,9 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
   AuthenticatedRouteChildren
 )
 
-interface AdminBlogRouteChildren {
-  AdminBlogIndexRoute: typeof AdminBlogIndexRoute
-}
-
-const AdminBlogRouteChildren: AdminBlogRouteChildren = {
-  AdminBlogIndexRoute: AdminBlogIndexRoute,
-}
-
-const AdminBlogRouteWithChildren = AdminBlogRoute._addFileChildren(
-  AdminBlogRouteChildren
-)
-
 interface AdminRouteChildren {
   AdminAnalyticsRoute: typeof AdminAnalyticsRoute
-  AdminBlogRoute: typeof AdminBlogRouteWithChildren
+  AdminBlogRoute: typeof AdminBlogRoute
   AdminCooperativesRoute: typeof AdminCooperativesRoute
   AdminGlobalSettingsRoute: typeof AdminGlobalSettingsRoute
   AdminUsersRoute: typeof AdminUsersRoute
@@ -458,7 +448,7 @@ interface AdminRouteChildren {
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAnalyticsRoute: AdminAnalyticsRoute,
-  AdminBlogRoute: AdminBlogRouteWithChildren,
+  AdminBlogRoute: AdminBlogRoute,
   AdminCooperativesRoute: AdminCooperativesRoute,
   AdminGlobalSettingsRoute: AdminGlobalSettingsRoute,
   AdminUsersRoute: AdminUsersRoute,
@@ -476,9 +466,10 @@ export interface FileRoutesByFullPath {
   '/connexion': typeof ConnexionRoute
   '/inscription': typeof InscriptionRoute
   '/inscription-succes': typeof InscriptionSuccesRoute
+  '/profil': typeof AuthenticatedProfilRoute
   '/actualites/$newsId': typeof ActualitesNewsIdRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
-  '/admin/blog': typeof AdminBlogRouteWithChildren
+  '/admin/blog': typeof AdminBlogRoute
   '/admin/cooperatives': typeof AdminCooperativesRoute
   '/admin/global-settings': typeof AdminGlobalSettingsRoute
   '/admin/users': typeof AdminUsersRoute
@@ -494,7 +485,6 @@ export interface FileRoutesByFullPath {
   '/ventes/enchere-creee': typeof AuthenticatedVentesEnchereCreeeRoute
   '/ventes/mes-encheres': typeof AuthenticatedVentesMesEncheresRoute
   '/ventes/nouvelle-enchere': typeof AuthenticatedVentesNouvelleEnchereRoute
-  '/admin/blog/': typeof AdminBlogIndexRoute
 }
 
 export interface FileRoutesByTo {
@@ -505,8 +495,10 @@ export interface FileRoutesByTo {
   '/connexion': typeof ConnexionRoute
   '/inscription': typeof InscriptionRoute
   '/inscription-succes': typeof InscriptionSuccesRoute
+  '/profil': typeof AuthenticatedProfilRoute
   '/actualites/$newsId': typeof ActualitesNewsIdRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/blog': typeof AdminBlogRoute
   '/admin/cooperatives': typeof AdminCooperativesRoute
   '/admin/global-settings': typeof AdminGlobalSettingsRoute
   '/admin/users': typeof AdminUsersRoute
@@ -522,7 +514,6 @@ export interface FileRoutesByTo {
   '/ventes/enchere-creee': typeof AuthenticatedVentesEnchereCreeeRoute
   '/ventes/mes-encheres': typeof AuthenticatedVentesMesEncheresRoute
   '/ventes/nouvelle-enchere': typeof AuthenticatedVentesNouvelleEnchereRoute
-  '/admin/blog': typeof AdminBlogIndexRoute
 }
 
 export interface FileRoutesById {
@@ -535,9 +526,10 @@ export interface FileRoutesById {
   '/connexion': typeof ConnexionRoute
   '/inscription': typeof InscriptionRoute
   '/inscription-succes': typeof InscriptionSuccesRoute
+  '/_authenticated/profil': typeof AuthenticatedProfilRoute
   '/actualites/$newsId': typeof ActualitesNewsIdRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
-  '/admin/blog': typeof AdminBlogRouteWithChildren
+  '/admin/blog': typeof AdminBlogRoute
   '/admin/cooperatives': typeof AdminCooperativesRoute
   '/admin/global-settings': typeof AdminGlobalSettingsRoute
   '/admin/users': typeof AdminUsersRoute
@@ -553,7 +545,6 @@ export interface FileRoutesById {
   '/_authenticated/ventes/enchere-creee': typeof AuthenticatedVentesEnchereCreeeRoute
   '/_authenticated/ventes/mes-encheres': typeof AuthenticatedVentesMesEncheresRoute
   '/_authenticated/ventes/nouvelle-enchere': typeof AuthenticatedVentesNouvelleEnchereRoute
-  '/admin/blog/': typeof AdminBlogIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -567,6 +558,7 @@ export interface FileRouteTypes {
     | '/connexion'
     | '/inscription'
     | '/inscription-succes'
+    | '/profil'
     | '/actualites/$newsId'
     | '/admin/analytics'
     | '/admin/blog'
@@ -585,7 +577,6 @@ export interface FileRouteTypes {
     | '/ventes/enchere-creee'
     | '/ventes/mes-encheres'
     | '/ventes/nouvelle-enchere'
-    | '/admin/blog/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -595,8 +586,10 @@ export interface FileRouteTypes {
     | '/connexion'
     | '/inscription'
     | '/inscription-succes'
+    | '/profil'
     | '/actualites/$newsId'
     | '/admin/analytics'
+    | '/admin/blog'
     | '/admin/cooperatives'
     | '/admin/global-settings'
     | '/admin/users'
@@ -612,7 +605,6 @@ export interface FileRouteTypes {
     | '/ventes/enchere-creee'
     | '/ventes/mes-encheres'
     | '/ventes/nouvelle-enchere'
-    | '/admin/blog'
   id:
     | '__root__'
     | '/'
@@ -623,6 +615,7 @@ export interface FileRouteTypes {
     | '/connexion'
     | '/inscription'
     | '/inscription-succes'
+    | '/_authenticated/profil'
     | '/actualites/$newsId'
     | '/admin/analytics'
     | '/admin/blog'
@@ -641,7 +634,6 @@ export interface FileRouteTypes {
     | '/_authenticated/ventes/enchere-creee'
     | '/_authenticated/ventes/mes-encheres'
     | '/_authenticated/ventes/nouvelle-enchere'
-    | '/admin/blog/'
   fileRoutesById: FileRoutesById
 }
 
@@ -708,6 +700,7 @@ export const routeTree = rootRoute
     "/_authenticated": {
       "filePath": "_authenticated.tsx",
       "children": [
+        "/_authenticated/profil",
         "/_authenticated/achats/marche",
         "/_authenticated/achats/mes-encheres",
         "/_authenticated/contrats/mes-contrats",
@@ -741,6 +734,10 @@ export const routeTree = rootRoute
     "/inscription-succes": {
       "filePath": "inscription-succes.tsx"
     },
+    "/_authenticated/profil": {
+      "filePath": "_authenticated/profil.tsx",
+      "parent": "/_authenticated"
+    },
     "/actualites/$newsId": {
       "filePath": "actualites/$newsId.tsx"
     },
@@ -750,10 +747,7 @@ export const routeTree = rootRoute
     },
     "/admin/blog": {
       "filePath": "admin/blog.tsx",
-      "parent": "/admin",
-      "children": [
-        "/admin/blog/"
-      ]
+      "parent": "/admin"
     },
     "/admin/cooperatives": {
       "filePath": "admin/cooperatives.tsx",
@@ -811,10 +805,6 @@ export const routeTree = rootRoute
     "/_authenticated/ventes/nouvelle-enchere": {
       "filePath": "_authenticated/ventes/nouvelle-enchere.tsx",
       "parent": "/_authenticated"
-    },
-    "/admin/blog/": {
-      "filePath": "admin/blog/index.tsx",
-      "parent": "/admin/blog"
     }
   }
 }

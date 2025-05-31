@@ -12,12 +12,12 @@ function BlogManagementPage() {
   const { t } = useTranslation()
 
   return (
-    <div className="container mx-auto py-6 lg:py-10">
-      <div className="mb-8">
+    <div className="container mx-auto flex flex-1 flex-col gap-2 lg:py-2">
+      <div className="mb-4">
         <h1 className="text-3xl font-bold tracking-tight">
           {t('admin.blog_management.title', 'Gestion du Blog')}
         </h1>
-        <p className="text-muted-foreground">
+        <p className="text-muted-foreground mt-2 text-lg">
           {t(
             'admin.blog_management.description',
             'Gérez les catégories et les articles de votre blog.'

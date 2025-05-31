@@ -253,13 +253,6 @@ import type {
   ListRegionsResponse,
   SubscribeData,
   SubscribeResponse,
-  ListAuctions1Data,
-  ListAuctions1Response,
-  GetAuction1Data,
-  GetAuction1Response,
-  GetAuction1Error,
-  ListAllAuctionsData,
-  ListAllAuctionsResponse,
   DeleteDocumentData,
   DeleteDocumentResponse,
   DeleteDocumentError,
@@ -284,6 +277,9 @@ import type {
   GetUserData,
   GetUserResponse,
   GetUserError,
+  GetFilteredDataData,
+  GetFilteredDataResponse,
+  GetFilteredDataError,
   GetDashboardGraphicSeriesData,
   GetDashboardGraphicSeriesResponse,
   GetDashboardCardsData,
@@ -2378,72 +2374,6 @@ export const subscribe = <ThrowOnError extends boolean = false>(
 }
 
 /**
- * Lister les enchères entre deux dates (optionnellement terminées)
- */
-export const listAuctions1 = <ThrowOnError extends boolean = false>(
-  options: Options<ListAuctions1Data, ThrowOnError>
-) => {
-  return (options.client ?? _heyApiClient).get<
-    ListAuctions1Response,
-    unknown,
-    ThrowOnError
-  >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
-    url: '/api/export/auctions',
-    ...options,
-  })
-}
-
-/**
- * Obtenir l’analyse d’une enchère
- */
-export const getAuction1 = <ThrowOnError extends boolean = false>(
-  options: Options<GetAuction1Data, ThrowOnError>
-) => {
-  return (options.client ?? _heyApiClient).get<
-    GetAuction1Response,
-    GetAuction1Error,
-    ThrowOnError
-  >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
-    url: '/api/export/auctions/{id}',
-    ...options,
-  })
-}
-
-/**
- * Lister toutes les enchères (aucun filtre)
- */
-export const listAllAuctions = <ThrowOnError extends boolean = false>(
-  options?: Options<ListAllAuctionsData, ThrowOnError>
-) => {
-  return (options?.client ?? _heyApiClient).get<
-    ListAllAuctionsResponse,
-    unknown,
-    ThrowOnError
-  >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
-    url: '/api/export/auctions/all',
-    ...options,
-  })
-}
-
-/**
  * Supprimer un document
  */
 export const deleteDocument = <ThrowOnError extends boolean = false>(
@@ -2589,6 +2519,29 @@ export const getUser = <ThrowOnError extends boolean = false>(
       },
     ],
     url: '/api/admin/users/{id}',
+    ...options,
+  })
+}
+
+/**
+ * Exporter et télécharger les données d'analyse BI des enchères (JSON/CSV)
+ * Permet de récupérer toutes les données ou de filtrer par période. Le résultat est un fichier (JSON ou CSV) à télécharger.
+ */
+export const getFilteredData = <ThrowOnError extends boolean = false>(
+  options?: Options<GetFilteredDataData, ThrowOnError>
+) => {
+  return (options?.client ?? _heyApiClient).get<
+    GetFilteredDataResponse,
+    GetFilteredDataError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/admin/export/auctions',
     ...options,
   })
 }

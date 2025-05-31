@@ -672,45 +672,6 @@ export const zNewsPageDto = z.object({
   empty: z.boolean().optional(),
 })
 
-export const zExportAuctionDto = z.object({
-  auctionId: z.number().int().optional(),
-  auctionStartDate: z.iso.datetime().optional(),
-  auctionEndDate: z.iso.datetime().optional(),
-  auctionStartPrice: z.number().optional(),
-  auctionEnded: z.boolean().optional(),
-  auctionStatus: z.string().optional(),
-  strategyName: z.string().optional(),
-  optionMinPriceKg: z.number().optional(),
-  optionMaxPriceKg: z.number().optional(),
-  optionBuyNowPrice: z.number().optional(),
-  optionShowPublic: z.boolean().optional(),
-  optionMinIncrement: z.number().int().optional(),
-  productId: z.number().int().optional(),
-  productWeightKg: z.number().optional(),
-  productDepositDate: z.iso.datetime().optional(),
-  transformedProductId: z.number().int().optional(),
-  qualityInspectorId: z.number().int().optional(),
-  productQuality: z.string().optional(),
-  productType: z.string().optional(),
-  storeId: z.number().int().optional(),
-  storeName: z.string().optional(),
-  storeCity: z.string().optional(),
-  storeRegion: z.string().optional(),
-  sellerId: z.number().int().optional(),
-  sellerCity: z.string().optional(),
-  sellerRegion: z.string().optional(),
-  sellerCooperative: z.string().optional(),
-  bidCount: z.coerce.bigint().optional(),
-  bidMax: z.number().optional(),
-  bidMin: z.number().optional(),
-  bidAvg: z.number().optional(),
-  bidSum: z.number().optional(),
-  winnerTraderId: z.number().int().optional(),
-  bidWinningAmount: z.number().optional(),
-  winnerCity: z.string().optional(),
-  winnerRegion: z.string().optional(),
-})
-
 export const zApplicationDataDto = z.object({
   languages: z.array(zLanguageDto),
 })
@@ -925,12 +886,6 @@ export const zListRegionsResponse = z.array(zRegionDto)
 
 export const zSubscribeResponse = zSseEmitter
 
-export const zListAuctions1Response = z.array(zExportAuctionDto)
-
-export const zGetAuction1Response = zExportAuctionDto
-
-export const zListAllAuctionsResponse = z.array(zExportAuctionDto)
-
 export const zDeleteDocumentResponse = z.void()
 
 export const zGetDocumentResponse = zDocumentDto
@@ -946,6 +901,8 @@ export const zGetAuctionSettingsResponse = zGlobalSettingsDto
 export const zGetApplicationDataResponse = zApplicationDataDto
 
 export const zGetUserResponse = zUserDetailDto
+
+export const zGetFilteredDataResponse = z.string()
 
 export const zGetDashboardGraphicSeriesResponse = z.array(zDashboardGraphicDto)
 
