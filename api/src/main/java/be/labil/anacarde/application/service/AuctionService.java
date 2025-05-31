@@ -4,6 +4,8 @@ package be.labil.anacarde.application.service;
 import be.labil.anacarde.domain.dto.db.AuctionDto;
 import be.labil.anacarde.domain.dto.write.AuctionUpdateDto;
 import java.util.List;
+import org.springframework.data.repository.query.Param;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
  * Ce service offre des méthodes permettant de créer, récupérer, mettre à jour et supprimer des
@@ -14,20 +16,21 @@ public interface AuctionService {
 	/**
 	 * Crée une nouvelle enchère dans le système en utilisant le AuctionDto fourni.
 	 *
-	 * @param AuctionDto
+	 * @param auctionDto
 	 *            Le AuctionDto contenant les informations de la nouvelle enchère.
 	 * @return Un AuctionDto représentant l'enchère créée.
 	 */
-	AuctionDto createAuction(AuctionUpdateDto AuctionDto);
+	@PreAuthorize("@authz.isAdmin(principal) or (#auctionDto.traderId == principal.id)")
+	AuctionDto createAuction(@Param("auctionDto") AuctionUpdateDto auctionDto);
 
 	/**
 	 * Retourne l'enchère correspondant à l'ID fourni.
 	 *
-	 * @param id
+	 * @param auctionId
 	 *            L'identifiant unique de l'enchère.
 	 * @return Un AuctionDto représentant l'enchère avec l'ID spécifié.
 	 */
-	AuctionDto getAuctionById(Integer id);
+	AuctionDto getAuctionById(Integer auctionId);
 
 	/**
 	 * Récupère toutes les enchères du système.
@@ -47,30 +50,32 @@ public interface AuctionService {
 	 * Mise à jour de l'enchère identifiée par l'ID donné avec les informations fournies dans le
 	 * AuctionDto.
 	 *
-	 * @param id
+	 * @param auctionId
 	 *            L'identifiant unique de l'enchère à mettre à jour.
-	 * @param AuctionDto
+	 * @param auctionDto
 	 *            Le AuctionDto contenant les informations mises à jour.
 	 * @return Un AuctionDto représentant l'enchère mis à jour.
 	 */
-	AuctionDto updateAuction(Integer id, AuctionUpdateDto AuctionDto);
+	@PreAuthorize("@authz.isAdmin(principal) or (#auctionDto.traderId == principal.id)")
+	AuctionDto updateAuction(Integer auctionId, @Param("auctionDto") AuctionUpdateDto auctionDto);
 
 	/**
 	 * Accepter l'enchère identifiée par l'ID donné.
 	 *
-	 * @param id
+	 * @param auctionId
 	 *            L'identifiant unique de l'enchère à mettre à jour.
 	 * @return Un AuctionDto représentant l'enchère mis à jour.
 	 */
-	AuctionDto acceptAuction(Integer id);
+	AuctionDto acceptAuction(Integer auctionId);
 
 	/**
 	 * Supprime l'enchère identifiée par l'ID donné du système.
 	 *
-	 * @param id
+	 * @param auctionId
 	 *            L'identifiant unique de l'enchère à supprimer.
 	 */
-	void deleteAuction(Integer id);
+	@PreAuthorize("@authz.isAdmin(principal) or (@ownership.isAuctionOwner(principal.id, #auctionId))")
+	void deleteAuction(@Param("auctionId") Integer auctionId);
 
 	/**
 	 * Clôture l'enchère identifiée par l'ID donné

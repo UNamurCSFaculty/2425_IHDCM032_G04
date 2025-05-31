@@ -62,4 +62,6 @@ public interface AuctionRepository extends JpaRepository<Auction, Integer> {
 			@Param("newDate") LocalDateTime newDate);
 
 	boolean existsByTraderId(Integer userId);
+
+	boolean existsByIdAndTraderId(Integer auctionId, Integer userId);
 }
