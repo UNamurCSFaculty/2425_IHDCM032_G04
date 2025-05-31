@@ -353,6 +353,26 @@
           "title": "Ventes mensuelles",
           "description": "30 derniers jours"
         },
+        "grade1Price": {
+          "title": "Prix moyen Grade I",
+          "description": "30 derniers jours (CFA/kg)"
+        },
+        "grade2Price": {
+          "title": "Prix moyen Grade II",
+          "description": "30 derniers jours (CFA/kg)"
+        },
+        "grade3Price": {
+          "title": "Prix moyen Grade III",
+          "description": "30 derniers jours (CFA/kg)"
+        },
+        "horsCategoryPrice": {
+          "title": "Prix moyen Hors normes",
+          "description": "30 derniers jours (CFA/kg)"
+        },
+        "transformedPrice": {
+          "title": "Prix moyen Transformés",
+          "description": "30 derniers jours (CFA/kg)"
+        },
         "compared_to_30_days": "Par rapport à il y a 30 jours",
         "error_loading": "Erreur lors du chargement du tableau de bord"
       }
