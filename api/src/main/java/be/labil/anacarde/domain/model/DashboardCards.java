@@ -6,15 +6,9 @@ import lombok.*;
 import org.hibernate.annotations.Immutable;
 
 /**
- * Représentation JPA de la vue SQL <strong>v_dashboard_cards</strong>.
- * <p>
- * ⚠️ ENTITÉ STRICTEMENT EN LECTURE : aucune opération INSERT/UPDATE/DELETE.
- * </p>
- *
- * <p>
- * La vue ne contient qu’une seule ligne ; on désigne {@code total_nb_users} comme clé primaire
- * technique <em>(lecture seule)</em>.
- * </p>
+ * Entité représentant les données agrégées affichées sur le tableau de bord amdin. ENTITÉ
+ * STRICTEMENT EN LECTURE : aucune opération INSERT/UPDATE/DELETE. La vue ne contient qu’une seule
+ * ligne ; on désigne {@code total_nb_users} comme clé primaire technique.
  */
 @Getter
 @Entity

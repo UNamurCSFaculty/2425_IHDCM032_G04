@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * Entité représentant un transporteur de marchandise.
+ */
 @Entity
 @Table(name = "carrier")
 @Getter
