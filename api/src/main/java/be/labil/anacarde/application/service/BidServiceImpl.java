@@ -67,7 +67,7 @@ public class BidServiceImpl implements BidService {
 		Set<String> subscribers = auctionSseService.getSubscribers(dto.getAuctionId());
 		if (subscribers == null || subscribers.isEmpty()) {
 			// fallback & notifie tous utilisateurs liés à l'enchère
-			log.info("[SSE] Aucun abonné trouvé, fallback & notification globale");
+			log.debug("[SSE] Aucun abonné trouvé, fallback & notification globale");
 			List<Bid> allBids = bidRepository.findByAuctionId(dto.getAuctionId());
 			subscribers = allBids.stream()
 					.map(currentBid -> currentBid.getTrader() != null
@@ -78,11 +78,11 @@ public class BidServiceImpl implements BidService {
 				subscribers.add(auction.getTrader().getUsername());
 			}
 		}
-		log.info("[SSE] Liste d'abonnés à notifier pour l'enchère " + dto.getAuctionId() + ": "
+		log.debug("[SSE] Liste d'abonnés à notifier pour l'enchère " + dto.getAuctionId() + ": "
 				+ subscribers);
 		for (String subKey : subscribers) {
 			notificationSseService.publishEvent(subKey, "newBid", bidDto);
-			log.info("[SSE] Notification envoyé à " + subKey + " pour nouvelle offre: " + bidDto);
+			log.debug("[SSE] Notification envoyé à " + subKey + " pour nouvelle offre: " + bidDto);
 		}
 		return bidDto;
 	}
