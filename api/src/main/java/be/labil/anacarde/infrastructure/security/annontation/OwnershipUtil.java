@@ -32,7 +32,8 @@ public class OwnershipUtil {
 	/**
 	 * @return true si l'auction appartient à l'utilisateur.
 	 */
-	// public boolean isBidowner(Integer bidId, Integer traderId) {
-	// return bidRepo.existsByIdAndTraderId(bidId, traderId);
-	// }
+	 public boolean isBidOwner(Integer traderId, Integer bidId) {
+	 	if (traderId == null || bidId == null) return false;
+	 	return bidRepo.existsByIdAndTraderId(bidId, traderId);
+	 }
 }

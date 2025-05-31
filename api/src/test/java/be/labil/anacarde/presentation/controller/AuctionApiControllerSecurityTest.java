@@ -3,30 +3,20 @@ package be.labil.anacarde.presentation.controller;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import be.labil.anacarde.application.service.GlobalSettingsService;
 import be.labil.anacarde.domain.dto.write.AuctionOptionsUpdateDto;
 import be.labil.anacarde.domain.dto.write.AuctionUpdateDto;
-import be.labil.anacarde.domain.mapper.GlobalSettingsMapper;
-import be.labil.anacarde.infrastructure.persistence.HarvestProductRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
-import org.quartz.Scheduler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
 /** Tests de sécurité pour le contrôleur des enchères. */
-// @SpringBootTest(classes = AnacardeApplication.class)
 public class AuctionApiControllerSecurityTest extends AbstractIntegrationTest {
 
 	private @Autowired ObjectMapper objectMapper;
-	private @Autowired HarvestProductRepository harvestProductRepository;
-	private @Autowired Scheduler scheduler;
-	private @Autowired GlobalSettingsService globalSettingsService;
-	private @Autowired GlobalSettingsMapper globalSettingsMapper;
 
 	@Test
 	public void testGetAuctionByUserShouldSucceed() throws Exception {
@@ -154,53 +144,5 @@ public class AuctionApiControllerSecurityTest extends AbstractIntegrationTest {
 
 		mockMvc.perform(delete("/api/auctions/" + getTestAuction().getId()).with(actualUser))
 				.andExpect(status().is4xxClientError());
-	}
-
-	/**
-	 * RequestPostProcessor pour un producer.
-	 */
-	private RequestPostProcessor jwtProducer() {
-		return request -> {
-			UserDetails userDetails = userDetailsService
-					.loadUserByUsername(getProducerTestUser().getEmail());
-			String token = jwtUtil.generateToken(userDetails);
-			jakarta.servlet.http.Cookie userCookie = new jakarta.servlet.http.Cookie("jwt", token);
-			userCookie.setHttpOnly(true);
-			userCookie.setPath("/");
-			request.setCookies(userCookie);
-			return request;
-		};
-	}
-
-	/**
-	 * RequestPostProcessor pour un transformer.
-	 */
-	private RequestPostProcessor jwtTransformer() {
-		return request -> {
-			UserDetails userDetails = userDetailsService
-					.loadUserByUsername(getTransformerTestUser().getEmail());
-			String token = jwtUtil.generateToken(userDetails);
-			jakarta.servlet.http.Cookie userCookie = new jakarta.servlet.http.Cookie("jwt", token);
-			userCookie.setHttpOnly(true);
-			userCookie.setPath("/");
-			request.setCookies(userCookie);
-			return request;
-		};
-	}
-
-	/**
-	 * RequestPostProcessor pour un transformer.
-	 */
-	private RequestPostProcessor jwtCarrier() {
-		return request -> {
-			UserDetails userDetails = userDetailsService
-					.loadUserByUsername(getMainTestCarrier().getEmail());
-			String token = jwtUtil.generateToken(userDetails);
-			jakarta.servlet.http.Cookie userCookie = new jakarta.servlet.http.Cookie("jwt", token);
-			userCookie.setHttpOnly(true);
-			userCookie.setPath("/");
-			request.setCookies(userCookie);
-			return request;
-		};
 	}
 }
