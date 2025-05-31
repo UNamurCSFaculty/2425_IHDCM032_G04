@@ -61,23 +61,36 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	private final DocumentRepository docRepo;
 	private final FieldService fieldService;
 
+	private static final String BENIN_PHONE_COUNTRY_CODE = "+229";
+	private static final String BENIN_PHONE_REGEX = "^\\+22901\\d{8}$";
+
+
 	@Override
 	public UserDetails loadUserByUsername(String identifier) throws UsernameNotFoundException {
-		if (identifier.contains("@")) {
-			String email = identifier.trim().toLowerCase();
+		String trimmedIdentifier = identifier.trim();
+
+		if (trimmedIdentifier.contains("@")) {
+			String email = trimmedIdentifier.toLowerCase();
 			return userRepository.findByEmail(email)
 					.orElseThrow(() -> new UsernameNotFoundException(
 							"Utilisateur non trouvé avec l'email : " + email));
-		}
-		String phone = identifier.trim().replace(" ", "");
-		if (!identifier.startsWith("+")) phone = "+229" + phone;
-		String BENIN_REGEX = "^\\+22901\\d{8}$";
-		if (!phone.matches(BENIN_REGEX))
-			throw new UsernameNotFoundException("Numéro de téléphone invalide : " + phone);
+		} else {
+			String basePourExtractionChiffres = trimmedIdentifier.startsWith("+") ? trimmedIdentifier.substring(1) : trimmedIdentifier;
+			String prefixeTelephone = trimmedIdentifier.startsWith("+") ? "+" : BENIN_PHONE_COUNTRY_CODE;
 
-		String finalPhone = phone;
-		return userRepository.findByPhone(phone).orElseThrow(() -> new UsernameNotFoundException(
-				"Utilisateur non trouvé avec l'email : " + finalPhone));
+			String chiffresUniquement = basePourExtractionChiffres.replaceAll("[^0-9]", "");
+			String normalizedPhone = prefixeTelephone + chiffresUniquement;
+
+			if (!normalizedPhone.matches(BENIN_PHONE_REGEX)) {
+				throw new UsernameNotFoundException(
+						"Format du numéro de téléphone invalide (" + normalizedPhone +
+								"). Le format attendu pour le Bénin est de type " + BENIN_PHONE_REGEX.replace("\\", "") + ".");
+			}
+
+			return userRepository.findByPhone(normalizedPhone)
+					.orElseThrow(() -> new UsernameNotFoundException(
+							"Utilisateur non trouvé avec le téléphone : " + normalizedPhone));
+		}
 	}
 
 	@Override
