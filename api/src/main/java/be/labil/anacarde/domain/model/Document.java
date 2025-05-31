@@ -9,6 +9,9 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 
+/**
+ * Entité représentant un document lié à un utilisateur et/ou un contrôle qualité.
+ */
 @Entity
 @Table(name = "document")
 @Getter

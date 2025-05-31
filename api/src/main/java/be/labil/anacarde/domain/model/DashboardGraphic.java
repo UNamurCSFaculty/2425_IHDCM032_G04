@@ -7,12 +7,16 @@ import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 import lombok.Getter;
 
+/**
+ * Entité représentant les données affichées de manière graphique dans le tableau de bord admin.
+ * ENTITÉ STRICTEMENT EN LECTURE : aucune opération INSERT/UPDATE/DELETE.
+ */
 @Getter
 @Entity
 @Immutable
 public class DashboardGraphic {
 
-	@Id // clé technique : la date suffit
+	@Id
 	@Column(name = "date")
 	private LocalDateTime date;
 

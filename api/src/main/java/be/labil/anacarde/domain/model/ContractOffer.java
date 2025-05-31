@@ -13,6 +13,9 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 
+/**
+ * Entité représentant une offre de contrat faite entre deux Trader (un acheteur et un vendeur).
+ */
 @Entity
 @Table(name = "contract_offer")
 @Getter

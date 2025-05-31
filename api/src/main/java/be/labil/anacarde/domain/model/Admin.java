@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * Entité représentant un administrateur de la plateforme.
+ */
 @Entity
 @Table(name = "admin")
 @Getter

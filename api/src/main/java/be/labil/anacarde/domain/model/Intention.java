@@ -10,6 +10,9 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 
+/**
+ * Entité représentant intention de vente émise par un trader.
+ */
 @Entity
 @Table(name = "intention")
 @Getter

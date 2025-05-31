@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * Entité représentant une stratégie d'enchère (enchère montante, négociations, etc).
+ */
 @Entity
 @Table(name = "auction_strategy")
 @Getter
