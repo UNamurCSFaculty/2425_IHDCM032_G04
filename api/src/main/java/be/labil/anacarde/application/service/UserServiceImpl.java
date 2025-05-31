@@ -64,7 +64,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	private static final String BENIN_PHONE_COUNTRY_CODE = "+229";
 	private static final String BENIN_PHONE_REGEX = "^\\+22901\\d{8}$";
 
-
 	@Override
 	public UserDetails loadUserByUsername(String identifier) throws UsernameNotFoundException {
 		String trimmedIdentifier = identifier.trim();
@@ -75,16 +74,20 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 					.orElseThrow(() -> new UsernameNotFoundException(
 							"Utilisateur non trouvé avec l'email : " + email));
 		} else {
-			String basePourExtractionChiffres = trimmedIdentifier.startsWith("+") ? trimmedIdentifier.substring(1) : trimmedIdentifier;
-			String prefixeTelephone = trimmedIdentifier.startsWith("+") ? "+" : BENIN_PHONE_COUNTRY_CODE;
+			String basePourExtractionChiffres = trimmedIdentifier.startsWith("+")
+					? trimmedIdentifier.substring(1)
+					: trimmedIdentifier;
+			String prefixeTelephone = trimmedIdentifier.startsWith("+")
+					? "+"
+					: BENIN_PHONE_COUNTRY_CODE;
 
 			String chiffresUniquement = basePourExtractionChiffres.replaceAll("[^0-9]", "");
 			String normalizedPhone = prefixeTelephone + chiffresUniquement;
 
 			if (!normalizedPhone.matches(BENIN_PHONE_REGEX)) {
-				throw new UsernameNotFoundException(
-						"Format du numéro de téléphone invalide (" + normalizedPhone +
-								"). Le format attendu pour le Bénin est de type " + BENIN_PHONE_REGEX.replace("\\", "") + ".");
+				throw new UsernameNotFoundException("Format du numéro de téléphone invalide ("
+						+ normalizedPhone + "). Le format attendu pour le Bénin est de type "
+						+ BENIN_PHONE_REGEX.replace("\\", "") + ".");
 			}
 
 			return userRepository.findByPhone(normalizedPhone)

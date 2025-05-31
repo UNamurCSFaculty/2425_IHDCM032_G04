@@ -52,7 +52,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 	 */
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-									FilterChain filterChain) throws ServletException, IOException {
+			FilterChain filterChain) throws ServletException, IOException {
 		try {
 			String jwt = parseJwt(request);
 			if (jwt != null) {
@@ -98,7 +98,9 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
 	/**
 	 * Supprime le cookie JWT en envoyant un cookie avec une date d'expiration passée.
-	 * @param response La HttpServletResponse à laquelle ajouter l'en-tête Set-Cookie.
+	 * 
+	 * @param response
+	 *            La HttpServletResponse à laquelle ajouter l'en-tête Set-Cookie.
 	 */
 	private void clearJwtCookie(HttpServletResponse response) {
 		ResponseCookie jwtClear = ResponseCookie.from("jwt", "").httpOnly(true)
