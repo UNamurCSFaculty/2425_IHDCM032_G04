@@ -107,6 +107,21 @@ public class GlobalExceptionHandler {
 		return buildResponse(ex.getStatus(), ex.getCode(), ex.getErrors(), req);
 	}
 
+	/**
+	 * Gère les exceptions OperationNotAllowedException.
+	 *
+	 * @param ex
+	 *            L'exception OperationNotAllowedException à gérer.
+	 * @param request
+	 *            La requête HTTP à partir de laquelle l'erreur a été générée.
+	 * @return La réponse d'erreur standardisée, typiquement avec un statut 409 Conflict.
+	 */
+	@ExceptionHandler(OperationNotAllowedException.class)
+	public ResponseEntity<ApiErrorResponse> handleOperationNotAllowed(
+			OperationNotAllowedException ex, HttpServletRequest request) {
+		return buildResponse(ex.getStatus(), ex.getCode(), ex.getErrors(), request);
+	}
+
 	/*
 	 * Gère les exceptions de validation des arguments de méthode.
 	 *

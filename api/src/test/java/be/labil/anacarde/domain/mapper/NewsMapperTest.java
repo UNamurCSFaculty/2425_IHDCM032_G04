@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import be.labil.anacarde.domain.dto.db.NewsCategoryDto;
 import be.labil.anacarde.domain.dto.db.NewsDto;
+import be.labil.anacarde.domain.dto.write.NewsCreateDto;
+import be.labil.anacarde.domain.dto.write.NewsUpdateDto;
 import be.labil.anacarde.domain.model.News;
 import be.labil.anacarde.domain.model.NewsCategory;
 import java.time.LocalDateTime;
@@ -48,25 +50,20 @@ class NewsMapperTest {
 		categoryDto.setId(2);
 		categoryDto.setName("Culture");
 
-		NewsDto dto = new NewsDto();
-		dto.setId(20);
+		NewsCreateDto dto = new NewsCreateDto();
 		dto.setTitle("Un article culturel");
 		dto.setContent("Contenu culturel");
-		dto.setCreationDate(LocalDateTime.now().minusHours(2));
 		dto.setPublicationDate(LocalDateTime.now());
-		dto.setCategory(categoryDto);
+		dto.setCategoryId(categoryDto.getId());
 
 		News entity = newsMapper.toEntity(dto);
 
 		assertThat(entity).isNotNull();
-		assertThat(entity.getId()).isEqualTo(dto.getId());
 		assertThat(entity.getTitle()).isEqualTo(dto.getTitle());
 		assertThat(entity.getContent()).isEqualTo(dto.getContent());
-		assertThat(entity.getCreationDate()).isEqualTo(dto.getCreationDate());
 		assertThat(entity.getPublicationDate()).isEqualTo(dto.getPublicationDate());
 		assertThat(entity.getCategory()).isNotNull();
 		assertThat(entity.getCategory().getId()).isEqualTo(categoryDto.getId());
-		assertThat(entity.getCategory().getName()).isEqualTo(categoryDto.getName());
 	}
 
 	@Test
@@ -81,13 +78,13 @@ class NewsMapperTest {
 		existing.setPublicationDate(LocalDateTime.now().minusDays(1));
 		existing.setCategory(existingCategory);
 
-		NewsDto updateDto = new NewsDto();
+		NewsUpdateDto updateDto = new NewsUpdateDto();
 		updateDto.setTitle("Titre mis à jour");
 
 		newsMapper.partialUpdate(updateDto, existing);
 
 		assertThat(existing.getTitle()).isEqualTo("Titre mis à jour");
-		assertThat(existing.getContent()).isEqualTo("Ancien contenu"); // unchanged
-		assertThat(existing.getCategory()).isEqualTo(existingCategory); // unchanged
+		assertThat(existing.getContent()).isEqualTo("Ancien contenu");
+		assertThat(existing.getCategory()).isEqualTo(existingCategory);
 	}
 }

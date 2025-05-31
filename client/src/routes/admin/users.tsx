@@ -1,7 +1,6 @@
 import { PendingApprovalsPage } from '@/components/admin/user-management/PendingApprovalsPage'
 import { UserListPage } from '@/components/admin/user-management/UserListPage'
-import { Tabs, TabsContent, TabsTrigger } from '@/components/ui/tabs'
-import { TabsList } from '@radix-ui/react-tabs'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { createFileRoute } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 

@@ -59,6 +59,15 @@ export const formatDate = (dateString: string | undefined): string => {
   })
 }
 
+export const formatDateOnly = (dateString: string | undefined): string => {
+  if (!dateString) return '—'
+  return new Date(dateString).toLocaleString('fr-FR', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  })
+}
+
 export const formatCoordinates = (wktString: string): string => {
   const match = wktString.match(
     /^POINT\s*\(\s*([+-]?\d+(?:\.\d+)?)\s+([+-]?\d+(?:\.\d+)?)\s*\)$/

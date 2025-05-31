@@ -100,6 +100,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 	private final CityRepository cityRepository;
 	private final RegionRepository regionRepository;
 	private final GlobalSettingsRepository globalSettingsRepository;
+	private final NewsRepository newsRepository;
+	private final NewsCategoryRepository newsCategoryRepository;
 
 	private final StoreService storeService;
 	private final ProductService productService;
@@ -216,6 +218,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 		cityRepository.deleteAllInBatch();
 		regionRepository.deleteAllInBatch();
 		languageRepository.deleteAllInBatch();
+		newsRepository.deleteAllInBatch();
+		newsCategoryRepository.deleteAllInBatch();
 	}
 
 	@Override
@@ -237,6 +241,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 
 		createBaseLookups();
 		createRegionsAndCities();
+		initCategories();
 		entityManager.flush();
 		log.info("Référentiel terminé ✔");
 	}
@@ -262,6 +267,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 		createTransformedProducts();
 		createAuctions(true);
 		createBidsForFinishedAuctions();
+
+		createArticles();
 
 		entityManager.flush();
 		log.info("Données de test générées ✔");
@@ -372,6 +379,32 @@ public class DatabaseServiceImpl implements DatabaseService {
 			System.out
 					.println("Erreur lors de la création des régions et villes: " + e.getMessage());
 		}
+	}
+
+	private void initCategories() {
+
+		Map<String, String> defaults = Map.of("Alertes terrain",
+				"Notifications en temps réel des producteurs sur les aléas (maladies, "
+						+ "infestations, épisodes climatiques extrêmes) et réponses rapides "
+						+ "des experts.",
+
+				"Marché & Prix",
+				"Analyses régulières des cours internationaux de la noix de cajou, "
+						+ "tendances régionales et volumes échangés pour optimiser vos décisions.",
+
+				"Recherche & Innovations",
+				"Vulgarisation des résultats de la recherche scientifique appliquée, "
+						+ "études de cas et technologies émergentes validées par les experts.",
+
+				"Formation & Ressources",
+				"Guides pratiques et capsules vidéo couvrant les meilleures pratiques "
+						+ "culturales, accessibles à tout moment.");
+
+		defaults.forEach((name, desc) -> newsCategoryRepository.findByName(name).orElseGet(() -> {
+			log.info("Création de la catégorie « {} »", name);
+			return newsCategoryRepository
+					.save(NewsCategory.builder().name(name).description(desc).build());
+		}));
 	}
 
 	private void createUsers() {
@@ -969,6 +1002,229 @@ public class DatabaseServiceImpl implements DatabaseService {
 			auctionsWithBids.add(auction.getId());
 		}
 		log.info("Bids generated: {}", bidsCreated);
+	}
+
+	private void createArticles() {
+		if (newsRepository.count() > 0) {
+			log.info("Des articles existent déjà, on ne ré-injecte pas les données de test.");
+			return;
+		}
+
+		/* Récupération des catégories */
+		NewsCategory alertCat = newsCategoryRepository.findByName("Alertes terrain").orElseThrow();
+		NewsCategory marketCat = newsCategoryRepository.findByName("Marché & Prix").orElseThrow();
+		NewsCategory researchCat = newsCategoryRepository.findByName("Recherche & Innovations")
+				.orElseThrow();
+		NewsCategory trainingCat = newsCategoryRepository.findByName("Formation & Ressources")
+				.orElseThrow();
+
+		/* ------------------------------------------------------------------ */
+		/* 1) Alerte terrain – charançon */
+		/* ------------------------------------------------------------------ */
+		newsRepository.save(News.builder()
+				.title("Alerte : foyers de charançon du cajou détectés dans l’Atacora")
+				.content(
+						"""
+								<p>Le Service phytosanitaire du Bénin signale l’apparition de plusieurs foyers
+								de charançon du cajou (<em>Analeptes trifasciata</em>) dans les communes
+								de Natitingou et Boukoumbé. Les premières larves ont été observées sur des
+								vergers de moins de cinq ans.</p>
+
+								<p>Le charançon s’attaque principalement au tronc, provoquant des galeries
+								qui fragilisent les arbres et réduisent le rendement de 20 % en moyenne
+								après deux ans d’infestation.</p>
+
+								<h3>Mesures recommandées (sous 72 h)</h3>
+								<ul>
+								  <li>Retirer et brûler tous les rameaux perforés.</li>
+								  <li>Appliquer une solution de neem (30 ml/L) sur les troncs
+								      ou un pyréthrinoïde homologué.</li>
+								  <li>Mettre en place des pièges lumineux en périphérie du verger.</li>
+								  <li>Signaler toute nouvelle infestation via l’application e-Anacarde,
+								      menu « Signaler un problème ».</li>
+								</ul>
+
+								<p>Des équipes d’experts se déplaceront sur site à partir
+								du <strong>3 juin 2025</strong> pour accompagner les producteurs affectés.
+								Contact : 94 00 00 00 (WhatsApp).</p>
+								""")
+				.publicationDate(LocalDateTime.now().minusDays(2)).category(alertCat)
+				.authorName("Direction de la Protection des Végétaux").build());
+
+		/* ------------------------------------------------------------------ */
+		/* 2) Marché & Prix – hausse CIF Vietnam */
+		/* ------------------------------------------------------------------ */
+		newsRepository.save(News.builder()
+				.title("Marché international : le prix CIF Vietnam progresse de 8 % en mai 2025")
+				.content(
+						"""
+								<p>Les prix CIF des noix brutes d’anacarde livrées à Hô-Chi-Minh-Ville ont
+								atteint <strong>1 470 USD/t</strong> fin mai 2025, soit une hausse de
+								<strong>8 %</strong> par rapport à avril.</p>
+
+								<table style="border-collapse:collapse;text-align:center">
+								  <thead>
+								    <tr><th>Origine</th><th>Avril 2025</th><th>Mai 2025</th><th>Variation</th></tr>
+								  </thead>
+								  <tbody>
+								    <tr><td>Bénin</td><td>1 350 USD</td><td>1 460 USD</td><td>+8,1 %</td></tr>
+								    <tr><td>Côte d’Ivoire</td><td>1 340 USD</td><td>1 440 USD</td><td>+7,5 %</td></tr>
+								  </tbody>
+								</table>
+
+								<p>Cette hausse s’explique par :</p>
+								<ul>
+								  <li>un stock asiatique au plus bas depuis trois ans ;</li>
+								  <li>des pluies précoces ayant retardé la collecte dans le Golfe de Guinée ;</li>
+								  <li>un renforcement de la demande indienne avant le festival de Diwali.</li>
+								</ul>
+
+								<p><strong>Perspectives</strong> – les analystes anticipent un plateau autour
+								de 1 500 USD/t si la qualité des noix reste stable en juin. À court terme,
+								la prime béninoise devrait se maintenir (20 USD/t) grâce aux récents
+								investissements dans la logistique portuaire de Cotonou.</p>
+								""")
+				.publicationDate(LocalDateTime.now().minusDays(5)).category(marketCat)
+				.authorName("Cellule Analyse Marché e-Anacarde").build());
+
+		/* ------------------------------------------------------------------ */
+		/* 3) Recherche & Innovations */
+		/* ------------------------------------------------------------------ */
+		newsRepository.save(News.builder()
+				.title("Fertilisation organique : +15 % de rendement prouvé sur parcelles pilotes")
+				.content("""
+						<p>Une étude de l’Université de Parakou (2023-2024) démontre qu’un apport
+						annuel de <strong>4 t/ha de compost</strong> à base de coques d’anacarde
+						augmente le rendement en noix brutes de 15 % et diminue de moitié les
+						besoins en N-P-K.</p>
+
+						<h3>Méthodologie</h3>
+						<p>Vingt parcelles pilotes (2 ha chacune) réparties entre Borgou et Donga,
+						comparées à des témoins non fertilisés. Mesure continue de la biomasse,
+						de la teneur foliaire en azote et du calibre des noix.</p>
+
+						<h3>Résultats détaillés</h3>
+						<ul>
+						  <li>Gain moyen : +390 kg/ha.</li>
+						  <li>Amélioration du taux de germination à 95 % (+7 pts).</li>
+						  <li>Diminution de 32 % de l’incidence des anthracnoses.</li>
+						</ul>
+
+						<p>Les chercheurs recommandent d’incorporer le compost pendant la courte
+						saison sèche (août-septembre) pour optimiser la minéralisation. Un guide
+						pratique sera publié dans la rubrique <em>Formation &amp; Ressources</em>
+						d’ici juillet 2025.</p>
+						""").publicationDate(LocalDateTime.now().minusDays(10))
+				.category(researchCat).authorName("Dr A. Ogouchi, Univ. de Parakou").build());
+
+		/* ------------------------------------------------------------------ */
+		/* 4) Formation (vidéo) */
+		/* ------------------------------------------------------------------ */
+		newsRepository.save(News.builder()
+				.title("Vidéo : séchage solaire des noix – réduire l’humidité à 10 % en 48 h")
+				.content(
+						"""
+								<p>Apprenez à construire un séchoir solaire tunnel avec des matériaux
+								disponibles localement et à ramener l’humidité des noix brutes sous le
+								seuil critique de 10 % en deux jours.</p>
+
+								<div data-youtube-video="">
+								  <iframe class="aspect-video w-full" src="https://www.youtube-nocookie.com/embed/NsZjHmRaM94?modestbranding=1&amp;rel=1"
+								          allowfullscreen></iframe>
+								</div>
+
+								<h3>Points clés</h3>
+								<ul>
+								  <li>Orientation plein sud pour maximiser le rayonnement.</li>
+								  <li>Film polyéthylène 200 µm : durée de vie estimée 3 ans.</li>
+								  <li>Tamisage toutes les 6 h pour un séchage homogène.</li>
+								</ul>
+								""")
+				.publicationDate(LocalDateTime.now().minusDays(1)).category(trainingCat)
+				.authorName("Centre de Formation Agricole de Savalou").build());
+
+		/* ------------------------------------------------------------------ */
+		/* 5) Formation (guide écrit) */
+		/* ------------------------------------------------------------------ */
+		newsRepository.save(News.builder()
+				.title("Guide pratique : taille des jeunes anacardiers – campagne 2025")
+				.content(
+						"""
+								<p>La taille de formation entre la 2<sup>e</sup> et la 4<sup>e</sup> année est
+								essentielle pour obtenir une ramification équilibrée et faciliter la
+								récolte.</p>
+
+								<h3>Étapes recommandées</h3>
+								<ol>
+								  <li>Supprimer les gourmands et branches basses &lt; 60 cm du sol.</li>
+								  <li>Conserver 3 à 4 charpentières orientées à 120°.</li>
+								  <li>Appliquer une pâte cicatrisante (bouillie bordelaise) sur les coupes.</li>
+								</ol>
+
+								<p>Une bonne taille améliore la circulation de l’air, réduit la pression des
+								maladies fongiques et facilite la pulvérisation.</p>
+
+								<blockquote>
+								  <p><strong>Résultat attendu</strong> : +12 % de rendement moyen sur les trois
+								  premières récoltes, baisse des anthracnoses de 30 %.</p>
+								</blockquote>
+								""")
+				.publicationDate(LocalDateTime.now().minusDays(3)).category(trainingCat)
+				.authorName("Réseau des Producteurs-Experts du Borgou").build());
+
+		/* ------------------------------------------------------------------ */
+		/* 6) Alerte : pluies abondantes et risque fongique */
+		/* ------------------------------------------------------------------ */
+		newsRepository.save(News.builder()
+				.title("Alerte météo : pluies intenses prévues – risque de pourriture brune")
+				.content("""
+						<p>La Direction générale de la Météorologie annonce des précipitations
+						supérieures à 70 mm/24 h entre le 4 et le 6 juin 2025 dans les départements
+						du Mono et du Couffo.</p>
+
+						<p>Ces conditions favorisent la <em>pourriture brune</em>
+						(<em>Phytophthora palmivora</em>). Les producteurs sont invités à :</p>
+						<ul>
+						  <li>assurer un drainage efficace autour des troncs ;</li>
+						  <li>pulvériser préventivement un fongicide à base de cuivre
+						      (dose homologuée) dès la première pluie intense ;</li>
+						  <li>éviter tout piétinement inutile qui tasse le sol.</li>
+						</ul>
+
+						<p>Toute apparition de lésions noirâtres sur les jeunes fruits doit être
+						photographiée et signalée via l’application.</p>
+						""").publicationDate(LocalDateTime.now().minusDays(1)).category(alertCat)
+				.authorName("Service Météo-Agro e-Anacarde").build());
+
+		/* ------------------------------------------------------------------ */
+		/* 7) Formation : densité de plantation */
+		/* ------------------------------------------------------------------ */
+		newsRepository.save(News.builder()
+				.title("Optimiser la densité de plantation : 156 arbres/ha ou 204 arbres/ha ?")
+				.content("""
+						<p>Choisir la bonne densité influence directement le rendement et
+						la facilité de la récolte. Deux spacings dominent dans les vergers
+						béninois :</p>
+
+						<ul>
+						  <li><strong>8 m × 8 m</strong> (156 arbres/ha) : meilleure circulation
+						      de la lumière, idéal pour sols peu fertiles.</li>
+						  <li><strong>7 m × 7 m</strong> (204 arbres/ha) : rendement plus
+						      élevé les huit premières années mais nécessite un éclaircissage
+						      à partir de l’année 12.</li>
+						</ul>
+
+						<h3>Recommandation 2025</h3>
+						<p>Pour les nouveaux vergers sur sols ferrugineux du Borgou,
+						un compromis à 7,5 m × 7,5 m est conseillé, associé à une taille
+						de formation stricte.</p>
+
+						<p>Un calculateur de densité est disponible dans le menu
+						<em>Outils&nbsp;&gt;&nbsp;Calculs techniques</em> de l’application.</p>
+						""").publicationDate(LocalDateTime.now().minusDays(4)).category(trainingCat)
+				.authorName("Projet PADFA Bénin").build());
+
+		log.info("Articles de démonstration initialisés (7).");
 	}
 
 	/** Génère une adresse email unique pour tout le run */

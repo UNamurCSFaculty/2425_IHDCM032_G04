@@ -205,7 +205,7 @@ export const SignupForm: React.FC = () => {
       // Au premier rendu, on marque que le montage est terminé
       isMountedRef.current = true
     }
-  }, [step]) // Ce hook s'exécute à chaque changement de 'step'
+  }, [step])
 
   return (
     <section className="body-font relative text-gray-600">
@@ -487,24 +487,22 @@ export const SignupForm: React.FC = () => {
                     {t('pagination.previous')}
                   </Button>
                 ) : (
-                  <span /> // Pour maintenir l'alignement si le bouton précédent n'est pas là
+                  <span />
                 )}
 
-                {/* Le bouton "Suivant" est toujours dans le DOM, masqué à la dernière étape */}
                 <Button
                   type="button"
                   onClick={nextStep}
-                  className={cn(step >= 3 && 'hidden')} // Masqué si à l'étape 3 ou plus
+                  className={cn(step >= 3 && 'hidden')}
                 >
                   {t('pagination.next')}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
 
-                {/* Le bouton "Soumettre" est toujours dans le DOM, visible uniquement à la dernière étape */}
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className={cn(step < 3 && 'hidden')} // Masqué si avant l'étape 3
+                  className={cn(step < 3 && 'hidden')}
                 >
                   {isSubmitting ? (
                     <>

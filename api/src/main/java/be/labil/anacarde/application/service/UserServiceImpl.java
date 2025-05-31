@@ -12,6 +12,7 @@ import be.labil.anacarde.domain.dto.write.user.update.UserUpdateDto;
 import be.labil.anacarde.domain.mapper.UserDetailMapper;
 import be.labil.anacarde.domain.mapper.UserListMapper;
 import be.labil.anacarde.domain.model.*;
+import be.labil.anacarde.infrastructure.persistence.AuctionRepository;
 import be.labil.anacarde.infrastructure.persistence.DocumentRepository;
 import be.labil.anacarde.infrastructure.persistence.FieldRepository;
 import be.labil.anacarde.infrastructure.persistence.user.*;
@@ -48,6 +49,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	private final FieldRepository fieldRepository;
 	private final UserRepository userRepository;
 	private final UserDetailMapper userDetailMapper;
+	private final AuctionRepository auctionRepository;
 	private final StorageService storage;
 	private final GeoService geoService;
 
@@ -208,6 +210,12 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	public void deleteUser(Integer id) {
 		User user = userRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé"));
+
+		if (auctionRepository.existsByTraderId(user.getId())) {
+			throw new OperationNotAllowedException(
+					"L'utilisateur ne peut pas être supprimé car il est associé à des enchères.");
+		}
+
 		if (user instanceof Producer producer) {
 			List<Field> byProducerId = fieldRepository.findByProducerId(producer.getId());
 			fieldRepository.deleteAll(byProducerId);

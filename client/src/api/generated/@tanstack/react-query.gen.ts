@@ -19,6 +19,12 @@ import {
   deleteProduct,
   getProduct,
   updateProduct,
+  deleteNews,
+  getNews,
+  updateNews,
+  deleteNewsCategory,
+  getNewsCategory,
+  updateNewsCategory,
   deleteLanguage,
   getLanguage,
   updateLanguage,
@@ -57,6 +63,10 @@ import {
   createQuality,
   listProducts,
   createProduct,
+  listNews,
+  createNews,
+  listNewsCategories,
+  createNewsCategory,
   listLanguages,
   createLanguage,
   listFields,
@@ -98,9 +108,9 @@ import {
 import {
   type UseMutationOptions,
   queryOptions,
-  type DefaultError,
   infiniteQueryOptions,
   type InfiniteData,
+  type DefaultError,
 } from '@tanstack/react-query'
 import type {
   DeleteUserData,
@@ -144,6 +154,20 @@ import type {
   UpdateProductData,
   UpdateProductError,
   UpdateProductResponse,
+  DeleteNewsData,
+  DeleteNewsError,
+  DeleteNewsResponse,
+  GetNewsData,
+  UpdateNewsData,
+  UpdateNewsError,
+  UpdateNewsResponse,
+  DeleteNewsCategoryData,
+  DeleteNewsCategoryError,
+  DeleteNewsCategoryResponse,
+  GetNewsCategoryData,
+  UpdateNewsCategoryData,
+  UpdateNewsCategoryError,
+  UpdateNewsCategoryResponse,
   DeleteLanguageData,
   DeleteLanguageError,
   DeleteLanguageResponse,
@@ -232,6 +256,15 @@ import type {
   CreateProductData,
   CreateProductError,
   CreateProductResponse,
+  ListNewsData,
+  ListNewsResponse,
+  CreateNewsData,
+  CreateNewsError,
+  CreateNewsResponse,
+  ListNewsCategoriesData,
+  CreateNewsCategoryData,
+  CreateNewsCategoryError,
+  CreateNewsCategoryResponse,
   ListLanguagesData,
   CreateLanguageData,
   CreateLanguageError,
@@ -701,6 +734,141 @@ export const updateProductMutation = (
   > = {
     mutationFn: async localOptions => {
       const { data } = await updateProduct({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+export const deleteNewsMutation = (
+  options?: Partial<Options<DeleteNewsData>>
+): UseMutationOptions<
+  DeleteNewsResponse,
+  DeleteNewsError,
+  Options<DeleteNewsData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    DeleteNewsResponse,
+    DeleteNewsError,
+    Options<DeleteNewsData>
+  > = {
+    mutationFn: async localOptions => {
+      const { data } = await deleteNews({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+export const getNewsQueryKey = (options: Options<GetNewsData>) =>
+  createQueryKey('getNews', options)
+
+export const getNewsOptions = (options: Options<GetNewsData>) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getNews({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: getNewsQueryKey(options),
+  })
+}
+
+export const updateNewsMutation = (
+  options?: Partial<Options<UpdateNewsData>>
+): UseMutationOptions<
+  UpdateNewsResponse,
+  UpdateNewsError,
+  Options<UpdateNewsData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    UpdateNewsResponse,
+    UpdateNewsError,
+    Options<UpdateNewsData>
+  > = {
+    mutationFn: async localOptions => {
+      const { data } = await updateNews({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+export const deleteNewsCategoryMutation = (
+  options?: Partial<Options<DeleteNewsCategoryData>>
+): UseMutationOptions<
+  DeleteNewsCategoryResponse,
+  DeleteNewsCategoryError,
+  Options<DeleteNewsCategoryData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    DeleteNewsCategoryResponse,
+    DeleteNewsCategoryError,
+    Options<DeleteNewsCategoryData>
+  > = {
+    mutationFn: async localOptions => {
+      const { data } = await deleteNewsCategory({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+export const getNewsCategoryQueryKey = (
+  options: Options<GetNewsCategoryData>
+) => createQueryKey('getNewsCategory', options)
+
+export const getNewsCategoryOptions = (
+  options: Options<GetNewsCategoryData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getNewsCategory({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: getNewsCategoryQueryKey(options),
+  })
+}
+
+export const updateNewsCategoryMutation = (
+  options?: Partial<Options<UpdateNewsCategoryData>>
+): UseMutationOptions<
+  UpdateNewsCategoryResponse,
+  UpdateNewsCategoryError,
+  Options<UpdateNewsCategoryData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    UpdateNewsCategoryResponse,
+    UpdateNewsCategoryError,
+    Options<UpdateNewsCategoryData>
+  > = {
+    mutationFn: async localOptions => {
+      const { data } = await updateNewsCategory({
         ...options,
         ...localOptions,
         throwOnError: true,
@@ -1650,6 +1818,211 @@ export const createProductMutation = (
   return mutationOptions
 }
 
+export const listNewsQueryKey = (options?: Options<ListNewsData>) =>
+  createQueryKey('listNews', options)
+
+export const listNewsOptions = (options?: Options<ListNewsData>) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await listNews({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: listNewsQueryKey(options),
+  })
+}
+
+const createInfiniteParams = <
+  K extends Pick<QueryKey<Options>[0], 'body' | 'headers' | 'path' | 'query'>,
+>(
+  queryKey: QueryKey<Options>,
+  page: K
+) => {
+  const params = queryKey[0]
+  if (page.body) {
+    params.body = {
+      ...(queryKey[0].body as any),
+      ...(page.body as any),
+    }
+  }
+  if (page.headers) {
+    params.headers = {
+      ...queryKey[0].headers,
+      ...page.headers,
+    }
+  }
+  if (page.path) {
+    params.path = {
+      ...(queryKey[0].path as any),
+      ...(page.path as any),
+    }
+  }
+  if (page.query) {
+    params.query = {
+      ...(queryKey[0].query as any),
+      ...(page.query as any),
+    }
+  }
+  return params as unknown as typeof page
+}
+
+export const listNewsInfiniteQueryKey = (
+  options?: Options<ListNewsData>
+): QueryKey<Options<ListNewsData>> => createQueryKey('listNews', options, true)
+
+export const listNewsInfiniteOptions = (options?: Options<ListNewsData>) => {
+  return infiniteQueryOptions<
+    ListNewsResponse,
+    DefaultError,
+    InfiniteData<ListNewsResponse>,
+    QueryKey<Options<ListNewsData>>,
+    | number
+    | Pick<
+        QueryKey<Options<ListNewsData>>[0],
+        'body' | 'headers' | 'path' | 'query'
+      >
+  >(
+    // @ts-ignore
+    {
+      queryFn: async ({ pageParam, queryKey, signal }) => {
+        // @ts-ignore
+        const page: Pick<
+          QueryKey<Options<ListNewsData>>[0],
+          'body' | 'headers' | 'path' | 'query'
+        > =
+          typeof pageParam === 'object'
+            ? pageParam
+            : {
+                query: {
+                  page: pageParam,
+                },
+              }
+        const params = createInfiniteParams(queryKey, page)
+        const { data } = await listNews({
+          ...options,
+          ...params,
+          signal,
+          throwOnError: true,
+        })
+        return data
+      },
+      queryKey: listNewsInfiniteQueryKey(options),
+    }
+  )
+}
+
+export const createNewsQueryKey = (options: Options<CreateNewsData>) =>
+  createQueryKey('createNews', options)
+
+export const createNewsOptions = (options: Options<CreateNewsData>) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await createNews({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: createNewsQueryKey(options),
+  })
+}
+
+export const createNewsMutation = (
+  options?: Partial<Options<CreateNewsData>>
+): UseMutationOptions<
+  CreateNewsResponse,
+  CreateNewsError,
+  Options<CreateNewsData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    CreateNewsResponse,
+    CreateNewsError,
+    Options<CreateNewsData>
+  > = {
+    mutationFn: async localOptions => {
+      const { data } = await createNews({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+export const listNewsCategoriesQueryKey = (
+  options?: Options<ListNewsCategoriesData>
+) => createQueryKey('listNewsCategories', options)
+
+export const listNewsCategoriesOptions = (
+  options?: Options<ListNewsCategoriesData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await listNewsCategories({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: listNewsCategoriesQueryKey(options),
+  })
+}
+
+export const createNewsCategoryQueryKey = (
+  options: Options<CreateNewsCategoryData>
+) => createQueryKey('createNewsCategory', options)
+
+export const createNewsCategoryOptions = (
+  options: Options<CreateNewsCategoryData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await createNewsCategory({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: createNewsCategoryQueryKey(options),
+  })
+}
+
+export const createNewsCategoryMutation = (
+  options?: Partial<Options<CreateNewsCategoryData>>
+): UseMutationOptions<
+  CreateNewsCategoryResponse,
+  CreateNewsCategoryError,
+  Options<CreateNewsCategoryData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    CreateNewsCategoryResponse,
+    CreateNewsCategoryError,
+    Options<CreateNewsCategoryData>
+  > = {
+    mutationFn: async localOptions => {
+      const { data } = await createNewsCategory({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
 export const listLanguagesQueryKey = (options?: Options<ListLanguagesData>) =>
   createQueryKey('listLanguages', options)
 
@@ -2415,40 +2788,6 @@ export const listAuctions1Options = (options: Options<ListAuctions1Data>) => {
     },
     queryKey: listAuctions1QueryKey(options),
   })
-}
-
-const createInfiniteParams = <
-  K extends Pick<QueryKey<Options>[0], 'body' | 'headers' | 'path' | 'query'>,
->(
-  queryKey: QueryKey<Options>,
-  page: K
-) => {
-  const params = queryKey[0]
-  if (page.body) {
-    params.body = {
-      ...(queryKey[0].body as any),
-      ...(page.body as any),
-    }
-  }
-  if (page.headers) {
-    params.headers = {
-      ...queryKey[0].headers,
-      ...page.headers,
-    }
-  }
-  if (page.path) {
-    params.path = {
-      ...(queryKey[0].path as any),
-      ...(page.path as any),
-    }
-  }
-  if (page.query) {
-    params.query = {
-      ...(queryKey[0].query as any),
-      ...(page.query as any),
-    }
-  }
-  return params as unknown as typeof page
 }
 
 export const listAuctions1InfiniteQueryKey = (

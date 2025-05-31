@@ -7,9 +7,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Globe } from 'lucide-react' // Icône pour le sélecteur de langue
+import { Globe } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { useEffect, useState } from 'react' // MODIFICATION: Importer useEffect et useState
+import { useEffect, useState } from 'react'
 
 export function LanguageSwitcher({
   inMobileNav = false,
@@ -37,7 +37,7 @@ export function LanguageSwitcher({
     return () => {
       i18n.off('languageChanged', handleLanguageChange)
     }
-  }, [i18n, currentLanguage]) // Dépendances de l'effet
+  }, [i18n, currentLanguage])
 
   const changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng)

@@ -330,6 +330,20 @@ export const zTransformedProductDto = zProductDto
     })
   )
 
+export const zNewsUpdateDto = z.object({
+  title: z.string().optional(),
+  content: z.string().optional(),
+  publicationDate: z.iso.datetime().optional(),
+  categoryId: z.number().int().optional(),
+  authorName: z.string().optional(),
+})
+
+export const zNewsCategoryDto = z.object({
+  id: z.number().int().readonly(),
+  name: z.string().min(1),
+  description: z.string().optional(),
+})
+
 export const zCooperativeUpdateDto = z.object({
   name: z.string().min(1),
   creationDate: z.iso.datetime().optional(),
@@ -524,6 +538,14 @@ export const zTransformerCreateDto = zUserCreateDto.and(
   })
 )
 
+export const zNewsCreateDto = z.object({
+  title: z.string().min(1),
+  content: z.string().min(1),
+  publicationDate: z.iso.datetime().optional(),
+  categoryId: z.number().int(),
+  authorName: z.string().optional(),
+})
+
 export const zContactRequestDto = z.object({
   name: z.string().min(1),
   email: z.string().min(1),
@@ -626,6 +648,28 @@ export const zTransformerListDto = zTraderListDto
 
 export const zSseEmitter = z.object({
   timeout: z.coerce.bigint().optional(),
+})
+
+export const zNewsDto = z.object({
+  id: z.number().int().readonly(),
+  title: z.string().min(1),
+  content: z.string().optional(),
+  creationDate: z.iso.datetime().readonly().optional(),
+  publicationDate: z.iso.datetime(),
+  category: zNewsCategoryDto,
+  authorName: z.string().optional(),
+})
+
+export const zNewsPageDto = z.object({
+  content: z.array(zNewsDto).optional(),
+  totalPages: z.number().int().optional(),
+  totalElements: z.coerce.bigint().optional(),
+  number: z.number().int().optional(),
+  size: z.number().int().optional(),
+  first: z.boolean().optional(),
+  last: z.boolean().optional(),
+  numberOfElements: z.number().int().optional(),
+  empty: z.boolean().optional(),
 })
 
 export const zExportAuctionDto = z.object({
@@ -741,6 +785,18 @@ export const zGetProductResponse = zProductDto
 
 export const zUpdateProductResponse = zProductDto
 
+export const zDeleteNewsResponse = z.void()
+
+export const zGetNewsResponse = zNewsDto
+
+export const zUpdateNewsResponse = zNewsUpdateDto
+
+export const zDeleteNewsCategoryResponse = z.void()
+
+export const zGetNewsCategoryResponse = zNewsCategoryDto
+
+export const zUpdateNewsCategoryResponse = zNewsCategoryDto
+
 export const zDeleteLanguageResponse = z.void()
 
 export const zGetLanguageResponse = zLanguageDto
@@ -816,6 +872,14 @@ export const zCreateQualityResponse = zQualityDto
 export const zListProductsResponse = z.array(zProductDto)
 
 export const zCreateProductResponse = zProductDto
+
+export const zListNewsResponse = zNewsPageDto
+
+export const zCreateNewsResponse = zNewsCreateDto
+
+export const zListNewsCategoriesResponse = z.array(zNewsCategoryDto)
+
+export const zCreateNewsCategoryResponse = zNewsCategoryDto
 
 export const zListLanguagesResponse = z.array(zLanguageDto)
 

@@ -26,7 +26,7 @@ import {
 import { cn } from '@/lib/utils'
 import { useUserStore } from '@/store/userStore'
 import { Link, useNavigate } from '@tanstack/react-router'
-import { LanguageSwitcher } from '@/components/LanguageSwitcher' // MODIFICATION: Importer LanguageSwitcher
+import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import {
   ArrowLeftRight,
   CircleDollarSign,
