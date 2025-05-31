@@ -55,7 +55,7 @@ public class NotificationSseService {
 			String json = objectMapper.writeValueAsString(event);
 			String channel = "notifications:user:" + userKey;
 			redisTemplate.convertAndSend(channel, json);
-			log.info("[SSE] Event publié sur " + channel + ": " + json);
+			log.debug("[SSE] Event publié sur " + channel + ": " + json);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

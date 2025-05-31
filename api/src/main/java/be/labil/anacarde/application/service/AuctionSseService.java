@@ -49,13 +49,13 @@ public class AuctionSseService {
 
 	public Set<String> getSubscribers(Integer auctionId) {
 		Set<String> subs = redisTemplate.opsForSet().members("auction-subscribers:" + auctionId);
-		log.info("[SSE] Abonnés à l'enchère " + auctionId + ": " + subs);
+		log.debug("[SSE] Abonnés à l'enchère " + auctionId + ": " + subs);
 		return subs;
 	}
 
 	public void addSubscriber(Integer auctionId, String userKey) {
 		redisTemplate.opsForSet().add("auction-subscribers:" + auctionId, userKey); // devrait être
 																					// idempotent
-		log.info("[SSE] Abonné " + userKey + " ajouté à l'enchère ID " + auctionId);
+		log.debug("[SSE] Abonné " + userKey + " ajouté à l'enchère ID " + auctionId);
 	}
 }

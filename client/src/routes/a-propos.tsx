@@ -51,20 +51,38 @@ function AboutPage() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Section Héros */}
-      <section className="relative bg-gradient-to-br from-green-900 to-yellow-900 py-20 text-white">
-        <div className="bg-pattern absolute inset-0 opacity-10" />{' '}
-        <div {...animationProps(0, 'container mx-auto px-6 text-center')}>
+      <section className="animated-background relative overflow-hidden bg-gradient-to-br from-green-500 via-yellow-500 to-green-700 py-20 text-white">
+        <div className="bg-pattern absolute inset-0 opacity-10" />
+
+        <div className="absolute inset-0 z-[1]">
+          <div
+            className="absolute top-[-15%] left-[-15%] h-[280px] w-[280px] animate-pulse rounded-full bg-green-300/20 mix-blend-overlay blur-3xl filter md:h-[420px] md:w-[420px]"
+            style={{ animationDuration: '7s' }}
+          />
+          <div
+            className="absolute right-[-15%] bottom-[-20%] h-[320px] w-[320px] animate-pulse rounded-full bg-yellow-300/30 mix-blend-overlay blur-3xl filter md:h-[480px] md:w-[480px]"
+            style={{ animationDuration: '9s', animationDelay: '1.5s' }}
+          />
+        </div>
+
+        {/* Contenu principal de la section Héros */}
+        <div
+          {...animationProps(
+            0,
+            'container mx-auto px-6 text-center relative z-10'
+          )}
+        >
           <div className="mx-auto mb-8 inline-block p-3">
             <img
               src={logo}
               alt={t('pages.about_page.logo_alt')}
-              className="block h-28 md:h-36"
+              className="block h-28 drop-shadow-[1px_2px_0px_#125d13] md:h-36"
             />
           </div>
           <h1 className="mb-4 text-4xl font-extrabold md:text-5xl">
             {t('pages.about_page.hero.title')}
           </h1>
-          <p className="mx-auto max-w-2xl text-lg text-green-50 md:text-xl">
+          <p className="mx-auto max-w-2xl text-lg text-green-50 drop-shadow-md md:text-xl">
             {t('pages.about_page.hero.subtitle')}
           </p>
         </div>
@@ -76,13 +94,13 @@ function AboutPage() {
           <div {...animationProps(150, 'mx-auto max-w-3xl text-center')}>
             <h2 className="mb-6 text-3xl font-bold text-gray-800 md:text-4xl dark:text-white">
               {t('pages.about_page.project.title')}
-            </h2>{' '}
+            </h2>
             <div className="mb-6 flex justify-center">
               <BeninFlag />
             </div>
             <p className="mb-6 text-lg text-gray-600 dark:text-gray-300">
               {t('pages.about_page.project.paragraph1')}
-            </p>{' '}
+            </p>
             <p className="text-lg text-gray-600 dark:text-gray-300">
               {t('pages.about_page.project.paragraph2')}
             </p>
@@ -96,8 +114,8 @@ function AboutPage() {
           <div {...animationProps(300, 'mx-auto max-w-4xl text-center')}>
             <h2 className="mb-12 text-3xl font-bold text-gray-800 md:text-4xl dark:text-white">
               {t('pages.about_page.objectives.title')}
-            </h2>{' '}
-          </div>{' '}
+            </h2>
+          </div>
           <div className="grid gap-8 md:grid-cols-3">
             {objectives.map((obj, index) => (
               <div key={obj.titleKey} {...animationProps(300 + index * 150)}>
@@ -126,10 +144,9 @@ function AboutPage() {
           <div {...animationProps(600, 'mx-auto max-w-3xl text-center')}>
             <Users className="mx-auto mb-6 h-16 w-16 text-green-600" />
             <h2 className="mb-6 text-3xl font-bold text-gray-800 md:text-4xl dark:text-white">
-              {t('pages.about_page.future.title')}{' '}
-            </h2>{' '}
+              {t('pages.about_page.future.title')}
+            </h2>
             <p className="text-lg text-gray-600 dark:text-gray-300">
-              {' '}
               {t('pages.about_page.future.paragraph')}
             </p>
           </div>

@@ -1,8 +1,3 @@
-CREATE OR REPLACE VIEW product AS
-SELECT id, weight_kg, quality_control_id FROM harvest_product
-UNION ALL
-SELECT id, weight_kg, quality_control_id FROM transformed_product;
-
 /* ===============================================================
    v_dashboard_cards  :  1 ligne contenant tous les KPI “cards”
    VERSION 3 – ajoute les 10 colonnes “prix moyens par qualité”
