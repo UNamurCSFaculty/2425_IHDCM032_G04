@@ -43,7 +43,7 @@ export function FileUpload({
         return name.endsWith(pat)
       }
       if (pat.endsWith('/*')) {
-        return type.startsWith(pat.replace('*', ''))
+        return type.startsWith(pat.replace(/\*/g, ''))
       }
       return type === pat
     })
