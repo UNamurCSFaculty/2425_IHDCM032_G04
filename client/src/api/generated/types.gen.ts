@@ -1017,7 +1017,7 @@ export type AuctionUpdateDto = {
   /**
    * Options d'enchère
    */
-  options?: AuctionOptionsUpdateDto
+  options: AuctionOptionsUpdateDto
 }
 
 /**
@@ -4198,6 +4198,33 @@ export type AuthenticateUserResponses = {
 
 export type AuthenticateUserResponse =
   AuthenticateUserResponses[keyof AuthenticateUserResponses]
+
+export type AuthenticateWithGoogleData = {
+  body: string
+  path?: never
+  query?: never
+  url: '/api/auth/google'
+}
+
+export type AuthenticateWithGoogleErrors = {
+  /**
+   * Token invalide ou données erronées
+   */
+  400: ApiErrorResponse
+}
+
+export type AuthenticateWithGoogleError =
+  AuthenticateWithGoogleErrors[keyof AuthenticateWithGoogleErrors]
+
+export type AuthenticateWithGoogleResponses = {
+  /**
+   * Authentification réussie
+   */
+  200: UserDetailDto
+}
+
+export type AuthenticateWithGoogleResponse =
+  AuthenticateWithGoogleResponses[keyof AuthenticateWithGoogleResponses]
 
 export type ListAuctionsData = {
   body?: never

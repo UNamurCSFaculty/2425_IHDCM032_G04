@@ -904,6 +904,14 @@ public class DatabaseServiceImpl implements DatabaseService {
 				continue;
 			}
 
+			/*
+			 * 4) Liste des acheteurs potentiels dans la même région
+			 */
+			List<TraderDetailDto> sameRegionBidders = potentialBidders.stream()
+					.filter(bidder -> auction.getProduct().getStore().getAddress().getRegionId()
+							.equals(bidder.getAddress().getRegionId()))
+					.toList();
+
 			boolean auctionFinished = !auction.getStatus().getId().equals(statusOpen.getId());
 			boolean auctionConcluded = auction.getStatus().getId().equals(statusConcluded.getId());
 
@@ -912,8 +920,15 @@ public class DatabaseServiceImpl implements DatabaseService {
 			List<BidUpdateDto> bids = new ArrayList<>();
 
 			for (int i = 0; i < numBids; i++) {
-				TraderDetailDto bidder = potentialBidders
-						.get(random.nextInt(potentialBidders.size()));
+				TraderDetailDto bidder;
+				double p = random.nextDouble(); // uniforme [0.0, 1.0)
+				if (p < 0.8 && !sameRegionBidders.isEmpty()) {
+					// 80% de chance et il existe au moins un bidder local
+					bidder = sameRegionBidders.get(random.nextInt(sameRegionBidders.size()));
+				} else {
+					// 20% de chance ou pas de bidder local disponible
+					bidder = potentialBidders.get(random.nextInt(potentialBidders.size()));
+				}
 
 				// borne temporelle max pour cette offre
 				LocalDateTime maxBidTime = auction.getExpirationDate().isBefore(generationTime)

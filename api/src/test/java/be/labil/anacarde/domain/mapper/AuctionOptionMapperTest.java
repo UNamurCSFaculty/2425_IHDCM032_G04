@@ -39,10 +39,10 @@ public class AuctionOptionMapperTest {
 	public void testToEntity() {
 		AuctionOptionsUpdateDto auctionOptionsDto = new AuctionOptionsUpdateDto();
 		auctionOptionsDto.setStrategyId(1);
-		auctionOptionsDto.setFixedPriceKg(150);
-		auctionOptionsDto.setMaxPriceKg(300);
-		auctionOptionsDto.setMinPriceKg(80);
-		auctionOptionsDto.setBuyNowPrice(250);
+		auctionOptionsDto.setFixedPriceKg(150d);
+		auctionOptionsDto.setMaxPriceKg(300d);
+		auctionOptionsDto.setMinPriceKg(80d);
+		auctionOptionsDto.setBuyNowPrice(250d);
 		auctionOptionsDto.setShowPublic(true);
 
 		AuctionOptions auctionOptions = auctionOptionsMapper.toEntity(auctionOptionsDto);

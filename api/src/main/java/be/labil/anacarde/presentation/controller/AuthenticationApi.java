@@ -1,6 +1,7 @@
 package be.labil.anacarde.presentation.controller;
 
 import be.labil.anacarde.application.exception.ApiErrorResponse;
+import be.labil.anacarde.domain.dto.db.ValidationGroups;
 import be.labil.anacarde.domain.dto.db.user.UserDetailDto;
 import be.labil.anacarde.domain.model.User;
 import be.labil.anacarde.presentation.payload.LoginRequest;
@@ -14,7 +15,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.groups.Default;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -57,9 +63,27 @@ public interface AuthenticationApi {
 			HttpServletResponse response);
 
 	/**
+	 * Authentifie un compte utilisateur via Google.
+	 *
+	 * @param token
+	 *            Le token ID de Google à valider, qui doit être non vide.
+	 * @param response
+	 *            La réponse HTTP à laquelle le cookie JWT sera ajouté.
+	 * @return Le JWT applicatif
+	 */
+	@Operation(summary = "S’authentifier avec Google", description = "Vérifie l’ID-token Google, associe le compte Google si besoin, et renvoie un JWT.")
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "Authentification réussie", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = UserDetailDto.class))),
+			@ApiResponse(responseCode = "400", description = "Token invalide ou données erronées", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ApiErrorResponse.class)))})
+	@PostMapping(value = "/google", consumes = MediaType.TEXT_PLAIN_VALUE)
+	ResponseEntity<UserDetailDto> authenticateWithGoogle(
+			@RequestBody @Validated({Default.class,
+					ValidationGroups.Create.class}) @NotBlank String token,
+			HttpServletResponse response) throws GeneralSecurityException, IOException;
+	/**
 	 * Renvoie les détails de l'utilisateur actuellement authentifié et génère un premier token csrf
 	 * pour l'utilisateur.
-	 * 
+	 *
 	 * @param currentUser
 	 *            L'utilisateur actuellement authentifié.
 	 * @param request
