@@ -11,7 +11,7 @@ function AdminDashboardComponent() {
   const { t } = useTranslation()
 
   return (
-    <div className="container mx-auto flex flex-1 flex-col gap-2 lg:py-2">
+    <div className="container mx-auto flex flex-1 flex-col gap-4 lg:py-2">
       <div className="mb-4">
         <h1 className="text-3xl font-bold tracking-tight">
           {t('admin.dashboard.title')}

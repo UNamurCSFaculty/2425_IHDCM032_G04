@@ -329,11 +329,11 @@
     },
     "dashboard": {
       "title": "Tableau de bord",
-      "description": "Suivez différents indicateurs de la plateforme",
+      "description": "Suivez les différents indicateurs de la plateforme",
       "cards": {
         "totalNbUsers": {
           "title": "Nombre d'utilisateurs",
-          "description": "Inscriptions"
+          "description": "Tous les rôles"
         },
         "pendingValidation": {
           "title": "Nouvelles inscriptions",
@@ -365,25 +365,25 @@
         },
         "grade1Price": {
           "title": "Prix moyen Grade I",
-          "description": "30 derniers jours (CFA/kg)"
+          "description": "30 derniers jours"
         },
         "grade2Price": {
           "title": "Prix moyen Grade II",
-          "description": "30 derniers jours (CFA/kg)"
+          "description": "30 derniers jours"
         },
         "grade3Price": {
           "title": "Prix moyen Grade III",
-          "description": "30 derniers jours (CFA/kg)"
+          "description": "30 derniers jours"
         },
         "horsCategoryPrice": {
           "title": "Prix moyen Hors normes",
-          "description": "30 derniers jours (CFA/kg)"
+          "description": "30 derniers jours"
         },
         "transformedPrice": {
           "title": "Prix moyen Transformés",
-          "description": "30 derniers jours (CFA/kg)"
+          "description": "30 derniers jours"
         },
-        "compared_to_30_days": "Par rapport à il y a 30 jours",
+        "compared_to_30_days": "+ Tendance sur 30 jours",
         "error_loading": "Erreur lors du chargement du tableau de bord"
       }
     },
@@ -823,13 +823,33 @@
         }
       },
       "contact": "Contact",
-      "about": "À Propos"
+      "about": "À Propos",
+      "marketplace": {
+        "title": "Marketplace",
+        "browse": "Voir le Marché",
+        "browse_desc": "Parcourez et achetez des produits frais.",
+        "new_sale": "Nouvelle Vente",
+        "new_sale_desc": "Proposez vos produits à la vente.",
+        "new_deposit": "Nouveau Dépôt",
+        "new_deposit_desc": "Déposez vos produits pour de futures ventes.",
+        "how_it_works": "Comment ça marche ?",
+        "how_it_works_desc": "Découvrez comment acheter et vendre sur notre plateforme."
+      },
+      "news": "Actualités",
+      "my_space": {
+        "title": "Mon Espace",
+        "my_purchases": "Mes Achats",
+        "my_sales": "Mes Ventes",
+        "my_deposits": "Mes Dépôts",
+        "my_contracts": "Mes Contrats"
+      }
     },
     "auth": {
       "login": "Connexion",
       "profile": "Profil",
       "settings": "Paramètres",
-      "logout": "Déconnexion"
+      "logout": "Déconnexion",
+      "register": "Inscription"
     },
     "mobile": {
       "toggle_menu_sr": "Ouvrir le menu principal"
