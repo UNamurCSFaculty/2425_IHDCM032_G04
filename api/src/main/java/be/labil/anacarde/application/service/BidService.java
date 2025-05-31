@@ -3,10 +3,9 @@ package be.labil.anacarde.application.service;
 
 import be.labil.anacarde.domain.dto.db.BidDto;
 import be.labil.anacarde.domain.dto.write.BidUpdateDto;
+import java.util.List;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.access.prepost.PreAuthorize;
-
-import java.util.List;
 
 /**
  * Ce service offre des méthodes permettant de créer, récupérer, mettre à jour et supprimer des

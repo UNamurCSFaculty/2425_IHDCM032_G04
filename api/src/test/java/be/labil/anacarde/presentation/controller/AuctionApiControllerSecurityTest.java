@@ -73,7 +73,7 @@ public class AuctionApiControllerSecurityTest extends AbstractIntegrationTest {
 	}
 
 	@Test
-	public void testUpdateAuctionForSameUserShouldFail() throws Exception {
+	public void testUpdateAuctionForSameUserShouldSucceed() throws Exception {
 		final Integer expectedUser = getProducerTestUser().getId();
 		final RequestPostProcessor actualUser = jwtProducer();
 

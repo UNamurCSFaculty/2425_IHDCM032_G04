@@ -1,18 +1,17 @@
 package be.labil.anacarde.presentation.controller;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import be.labil.anacarde.domain.dto.write.BidUpdateDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /** Tests de sécurité pour le contrôleur des offres. */
 public class BidApiControllerSecurityTest extends AbstractIntegrationTest {
@@ -46,9 +45,8 @@ public class BidApiControllerSecurityTest extends AbstractIntegrationTest {
 		ObjectNode node = objectMapper.valueToTree(newBid);
 		String jsonContent = node.toString();
 
-		mockMvc.perform(post("/api/bids").with(actualUser)
-				.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
-				.andExpect(status().isCreated());
+		mockMvc.perform(post("/api/bids").with(actualUser).contentType(MediaType.APPLICATION_JSON)
+				.content(jsonContent)).andExpect(status().isCreated());
 	}
 
 	@Test
@@ -66,13 +64,12 @@ public class BidApiControllerSecurityTest extends AbstractIntegrationTest {
 		ObjectNode node = objectMapper.valueToTree(newBid);
 		String jsonContent = node.toString();
 
-		mockMvc.perform(post("/api/bids").with(actualUser)
-				.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
-				.andExpect(status().is4xxClientError());
+		mockMvc.perform(post("/api/bids").with(actualUser).contentType(MediaType.APPLICATION_JSON)
+				.content(jsonContent)).andExpect(status().is4xxClientError());
 	}
 
 	@Test
-	public void testUpdateBidForSameUserShouldFail() throws Exception {
+	public void testUpdateBidForSameUserShouldSucceed() throws Exception {
 		final Integer expectedUser = getProducerTestUser().getId();
 		final RequestPostProcessor actualUser = jwtProducer();
 

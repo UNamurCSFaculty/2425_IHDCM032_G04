@@ -20,4 +20,5 @@ public interface TransformedProductRepository extends JpaRepository<TransformedP
 			WHERE (:transformerId IS NULL OR t.transformer.id = :transformerId)
 			""")
 	List<TransformedProduct> findByTransformerId(@Param("transformerId") Integer transformerId);
+	boolean existsByIdAndTransformerId(Integer productId, Integer transformerId);
 }
