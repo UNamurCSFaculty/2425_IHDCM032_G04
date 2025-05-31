@@ -1,6 +1,8 @@
 package be.labil.anacarde.domain.dto.db.view;
 
 import java.math.BigDecimal;
+
+import jakarta.persistence.Column;
 import lombok.*;
 
 /**
@@ -123,8 +125,8 @@ public class DashboardCardsDto {
 	private Double horsCategoryPrice;
 
 	/**
-	 * Pourcentage d'augmentation/diminution prix moyen au kg des produits brut de quality
-	 * Hors-Normes vendu sur les 30 jours précédents par rapport au 30 d'avant.
+	 * Pourcentage d'augmentation/diminution prix moyen au kg des produits brut de quality Hors-Normes
+	 * vendu sur les 30 jours précédents par rapport au 30 d'avant.
 	 */
 	private Double horsCategoryTendency;
 
@@ -134,8 +136,8 @@ public class DashboardCardsDto {
 	private Double transformedPrice;
 
 	/**
-	 * Pourcentage d'augmentation/diminution prix moyen au kg des produits transformés vendu sur les
-	 * 30 jours précédents par rapport au 30 d'avant.
+	 * Pourcentage d'augmentation/diminution prix moyen au kg des produits transformés
+	 * vendu sur les 30 jours précédents par rapport au 30 d'avant.
 	 */
 	private Double transformedPriceTendency;
 }
