@@ -66,6 +66,8 @@ public abstract class AbstractIntegrationTest {
 	protected @Autowired ExportAuctionRepository exportAuctionRepository;
 	protected @Autowired ExportAuctionMapper exportAuctionMapper;
 	protected @Autowired GlobalSettingsRepository globalSettingsRepository;
+	protected @Autowired NewsRepository newsRepository;
+	protected @Autowired NewsCategoryRepository newsCategoryRepository;
 
 	private Language mainLanguage;
 	private User mainTestUser;
@@ -92,6 +94,8 @@ public abstract class AbstractIntegrationTest {
 	private QualityType mainQualityType;
 	private ContractOffer mainTestContractOffer;
 	private QualityControl mainTestQualityControl;
+	private NewsCategory mainTestNewsCategory;
+	private News mainTestNews;
 
 	@Getter
 	private Cookie jwtCookie;
@@ -343,6 +347,20 @@ public abstract class AbstractIntegrationTest {
 		return mainTestQualityControl;
 	}
 
+	public NewsCategory getMainTestNewsCategory() {
+		if (mainTestNewsCategory == null) {
+			throw new IllegalStateException("News category de test non initialisée");
+		}
+		return mainTestNewsCategory;
+	}
+
+	public News getMainTestNews() {
+		if (mainTestNews == null) {
+			throw new IllegalStateException("News de test non initialisée");
+		}
+		return mainTestNews;
+	}
+
 	public TradeStatus getTradeStatusRejected() {
 		if (this.rejectedTradeStatus == null) {
 			throw new IllegalStateException("Statut de trade non initialisé");
@@ -355,8 +373,6 @@ public abstract class AbstractIntegrationTest {
 	 * associés.
 	 */
 	public void initUserDatabase() {
-		// userRepository.deleteAll();
-		// languageRepository.deleteAll();
 
 		Language language = Language.builder().name("Français").code("fr").build();
 		mainLanguage = languageRepository.save(language);
@@ -578,9 +594,21 @@ public abstract class AbstractIntegrationTest {
 		// A contract
 		ContractOffer contractOffer = ContractOffer.builder().status("Accepted")
 				.pricePerKg(new BigDecimal("20.0")).creationDate(LocalDateTime.now())
-				.endDate(LocalDateTime.now()).seller(producer).buyer(transformer).quality(quality)
-				.build();
+				.endDate(LocalDateTime.now().plusDays(1)).seller(producer).buyer(transformer)
+				.quality(quality).build();
 		mainTestContractOffer = contractOfferRepository.save(contractOffer);
+
+		// News Category
+		NewsCategory newsCategory = NewsCategory.builder().name("General")
+				.description("Catégorie générale").build();
+		mainTestNewsCategory = newsCategoryRepository.save(newsCategory);
+
+		// News Article
+		News news = News.builder().title("Welcome to Anacarde Blog")
+				.content("This is the first news article on our platform.")
+				.publicationDate(LocalDateTime.now().minusDays(1)).category(mainTestNewsCategory)
+				.authorName("Test Author").build();
+		mainTestNews = newsRepository.save(news);
 	}
 	/**
 	 * Génère un cookie JWT HTTP-only en utilisant les détails de l'utilisateur admin de test.

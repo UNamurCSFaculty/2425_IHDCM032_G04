@@ -1,13 +1,10 @@
 import FormContainer from '../FormContainer'
 import FormSectionTitle from '../FormSectionTitle'
 import {
-  type FieldDto,
   type HarvestProductUpdateDto,
   ProductType,
-  type QualityDto,
   type UserListDto,
   type HarvestProductDto,
-  type StoreDetailDto,
   UserType,
 } from '@/api/generated'
 import {
@@ -253,8 +250,8 @@ export function ProductForm(): React.ReactElement<'div'> {
                 if (!isProducersLoading && !isTransformersLoading) {
                   traders =
                     productType === ProductType.HARVEST
-                      ? (producers as UserListDto[])
-                      : (transformers as UserListDto[])
+                      ? producers!
+                      : transformers!
                 }
 
                 return (
@@ -286,8 +283,8 @@ export function ProductForm(): React.ReactElement<'div'> {
                 children={field => {
                   const gps =
                     !isFieldsLoading &&
-                    (fields as FieldDto[]).find(f => f.id === field.state.value)
-                      ?.address.location
+                    fields!.find(f => f.id === field.state.value)?.address
+                      .location
                   const hintText = gps
                     ? t('form.gps_label', { gps: formatCoordinates(gps) })
                     : ''
@@ -296,7 +293,7 @@ export function ProductForm(): React.ReactElement<'div'> {
                       options={
                         isFieldsLoading
                           ? []
-                          : (fields as FieldDto[])
+                          : fields!
                               .filter(
                                 field => field.producer?.id === producerId
                               )
@@ -354,7 +351,7 @@ export function ProductForm(): React.ReactElement<'div'> {
                   options={
                     isStoresLoading
                       ? []
-                      : (stores as StoreDetailDto[]).map(store => ({
+                      : stores!.map(store => ({
                           value: store.id,
                           label: store.name,
                         }))
@@ -409,7 +406,7 @@ export function ProductForm(): React.ReactElement<'div'> {
                       options={
                         isQualitiesLoading
                           ? []
-                          : (qualities as QualityDto[])
+                          : qualities!
                               .filter(quality => {
                                 return (
                                   !productType ||
@@ -450,7 +447,7 @@ export function ProductForm(): React.ReactElement<'div'> {
                   options={
                     isQualityInspectorsLoading
                       ? []
-                      : (qualityInspectors as UserListDto[]).map(qi => ({
+                      : qualityInspectors!.map(qi => ({
                           value: qi.id,
                           label: qi.lastName + ' ' + qi.firstName,
                         }))

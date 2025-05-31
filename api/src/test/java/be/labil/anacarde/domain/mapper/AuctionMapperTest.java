@@ -70,7 +70,6 @@ public class AuctionMapperTest {
 		auctionDto.setPrice(100.50);
 		auctionDto.setProductQuantity(10);
 		auctionDto.setExpirationDate(LocalDateTime.of(2025, 12, 31, 23, 59, 59, 0));
-		auctionDto.setCreationDate(LocalDateTime.of(2025, 1, 1, 0, 0, 0, 0));
 		auctionDto.setTraderId(1);
 		auctionDto.setStatusId(2);
 		auctionDto.setActive(true);
@@ -83,7 +82,6 @@ public class AuctionMapperTest {
 		assertEquals(auctionDto.getPrice(), auction.getPrice());
 		assertEquals(auctionDto.getProductQuantity(), auction.getProductQuantity());
 		assertEquals(auctionDto.getExpirationDate(), auction.getExpirationDate());
-		assertEquals(auctionDto.getCreationDate(), auction.getCreationDate());
 		assertEquals(auctionDto.getActive(), auction.getActive());
 		assertEquals(auctionDto.getOptions().getStrategyId(),
 				auction.getOptions().getStrategy().getId());
@@ -102,7 +100,6 @@ public class AuctionMapperTest {
 		assertEquals(auctionDto.getPrice(), auction.getPrice());
 		assertEquals(auctionDto.getProductQuantity(), auction.getProductQuantity());
 		assertEquals(auctionDto.getExpirationDate(), auction.getExpirationDate());
-		assertEquals(auctionDto.getCreationDate(), auction.getCreationDate());
 		assertEquals(auctionDto.getActive(), auction.getActive());
 		assertEquals(auctionDto.getOptions().getStrategyId(),
 				auction.getOptions().getStrategy().getId());
@@ -120,7 +117,6 @@ public class AuctionMapperTest {
 		auctionDto.setPrice(100.50);
 		auctionDto.setProductQuantity(10);
 		auctionDto.setExpirationDate(LocalDateTime.of(2025, 12, 31, 23, 59, 59, 0));
-		auctionDto.setCreationDate(LocalDateTime.of(2025, 1, 1, 0, 0, 0, 0));
 		auctionDto.setTraderId(1);
 		auctionDto.setStatusId(2);
 		auctionDto.setOptions(optionsDto);

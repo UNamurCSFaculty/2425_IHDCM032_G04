@@ -22,6 +22,14 @@ public class ContractOfferApiController implements ContractOfferApi {
 	}
 
 	@Override
+	public ResponseEntity<ContractOfferDto> getContractOfferByCriteria(Integer qualityId,
+			Integer sellerId, Integer buyerId) {
+		ContractOfferDto contractOffer = contractOfferService.getContractOfferByCriteria(qualityId,
+				sellerId, buyerId);
+		return ResponseEntity.ok(contractOffer);
+	}
+
+	@Override
 	public ResponseEntity<List<ContractOfferDto>> listContractOffers(Integer traderId) {
 		List<ContractOfferDto> contractOffers = contractOfferService.listContractOffers(traderId);
 		return ResponseEntity.ok(contractOffers);
@@ -41,6 +49,18 @@ public class ContractOfferApiController implements ContractOfferApi {
 			ContractOfferUpdateDto contractOfferDetailDto) {
 		ContractOfferDto updated = contractOfferService.updateContractOffer(id,
 				contractOfferDetailDto);
+		return ResponseEntity.ok(updated);
+	}
+
+	@Override
+	public ResponseEntity<ContractOfferDto> acceptContractOffer(Integer contractOfferId) {
+		ContractOfferDto updated = contractOfferService.acceptContractOffer(contractOfferId);
+		return ResponseEntity.ok(updated);
+	}
+
+	@Override
+	public ResponseEntity<ContractOfferDto> rejectContractOffer(Integer contractOfferId) {
+		ContractOfferDto updated = contractOfferService.rejectContractOffer(contractOfferId);
 		return ResponseEntity.ok(updated);
 	}
 

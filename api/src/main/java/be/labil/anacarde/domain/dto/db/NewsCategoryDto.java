@@ -17,4 +17,9 @@ public class NewsCategoryDto extends BaseDto {
 	@Schema(description = "Nom de la catégorie", example = "Sports", requiredMode = Schema.RequiredMode.REQUIRED)
 	@NotBlank(message = "Le nom de la catégorie est requis")
 	private String name;
+
+	/** Description de la catégorie. */
+	@Schema(description = "Description de la catégorie", example = "Toutes les actualités sportives")
+	private String description;
+
 }

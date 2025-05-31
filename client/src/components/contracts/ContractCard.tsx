@@ -17,9 +17,24 @@ import {
   ShoppingCart,
   Package,
   CalendarX2,
+  CheckCircle,
+  XCircle,
 } from 'lucide-react'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@radix-ui/react-popover'
+import { Button } from '../ui/button'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import {
+  acceptContractOfferMutation,
+  listContractOffersQueryKey,
+  rejectContractOfferMutation,
+} from '@/api/generated/@tanstack/react-query.gen'
+import { useAuthUser } from '@/store/userStore'
 
 export type CardLayout = 'grid' | 'row'
 
@@ -32,6 +47,47 @@ interface ContractCardProps {
 
 const ContractCard: React.FC<ContractCardProps> = ({ contract, layout }) => {
   const { t } = useTranslation()
+  const queryClient = useQueryClient()
+  const [acceptPopoverId, setAcceptPopoverId] = React.useState<number | null>(
+    null
+  )
+  const [rejectPopoverId, setRejectPopoverId] = React.useState<number | null>(
+    null
+  )
+  const user = useAuthUser()
+
+  const acceptContractRequest = useMutation({
+    ...acceptContractOfferMutation(),
+    onSuccess() {
+      queryClient.invalidateQueries({ queryKey: listContractOffersQueryKey() })
+    },
+    onError(error) {
+      console.error('Accept Contract - Invalid request', error)
+    },
+  })
+
+  const rejectContractRequest = useMutation({
+    ...rejectContractOfferMutation(),
+    onSuccess() {
+      queryClient.invalidateQueries({ queryKey: listContractOffersQueryKey() })
+    },
+    onError(error) {
+      console.error('Reject Contract - Invalid request', error)
+    },
+  })
+
+  const handleContractAction = (
+    contractId: number,
+    action: 'accept' | 'reject'
+  ) => {
+    if (action === 'accept') {
+      acceptContractRequest.mutate({ path: { contractOfferId: contractId } })
+      setAcceptPopoverId(-1)
+    } else {
+      rejectContractRequest.mutate({ path: { contractOfferId: contractId } })
+      setRejectPopoverId(-1)
+    }
+  }
 
   if (layout === 'row') {
     return (
@@ -55,7 +111,7 @@ const ContractCard: React.FC<ContractCardProps> = ({ contract, layout }) => {
   return (
     <Card
       className={cn(
-        'flex flex-col gap-2 overflow-hidden bg-gradient-to-b from-blue-50/50 to-indigo-50/50 shadow-sm transition-all hover:scale-102 hover:shadow-lg'
+        'flex flex-col gap-2 bg-gradient-to-b from-blue-50/50 to-indigo-50/50 shadow-sm transition-all hover:scale-102 hover:shadow-lg'
       )}
     >
       <CardHeader className="pb-2">
@@ -106,6 +162,109 @@ const ContractCard: React.FC<ContractCardProps> = ({ contract, layout }) => {
             {formatPrice.format(contract.pricePerKg)}/kg
           </InfoTile>
         </div>
+
+        {contract.status === 'Waiting' && contract.seller.id === user.id && (
+          <div className="flex justify-center gap-2 pt-2">
+            {/* Accept */}
+            <Popover
+              open={acceptPopoverId === contract.id}
+              onOpenChange={open => {
+                if (open) {
+                  setAcceptPopoverId(contract.id)
+                  setRejectPopoverId(-1) // ferme l’autre au cas où
+                } else {
+                  setAcceptPopoverId(-1)
+                }
+              }}
+            >
+              <PopoverTrigger asChild>
+                <div>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="flex items-center border-green-200 bg-green-700 px-2 py-1 text-white"
+                  >
+                    <CheckCircle className="mr-1 h-3 w-3" />
+                    {t('buttons.accept')}
+                  </Button>
+                </div>
+              </PopoverTrigger>
+              <PopoverContent
+                className="z-50 w-48 rounded-md bg-white p-2 shadow-lg"
+                onClick={e => e.stopPropagation()} // empêche les clics de fermer
+              >
+                <p className="mb-2 text-center text-sm">
+                  {t('auction.accept_bid_prompt')}
+                </p>
+                <div className="flex justify-end gap-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setAcceptPopoverId(-1)}
+                  >
+                    {t('buttons.cancel')}
+                  </Button>
+                  <Button
+                    size="sm"
+                    onClick={() => handleContractAction(contract.id, 'accept')}
+                  >
+                    {t('common.yes')}
+                  </Button>
+                </div>
+              </PopoverContent>
+            </Popover>
+
+            {/* Reject */}
+            <Popover
+              open={rejectPopoverId === contract.id}
+              onOpenChange={open => {
+                if (open) {
+                  setRejectPopoverId(contract.id)
+                  setAcceptPopoverId(-1) // ferme l’autre au cas où
+                } else {
+                  setRejectPopoverId(-1)
+                }
+              }}
+            >
+              <PopoverTrigger asChild>
+                <div>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="flex items-center border-red-200 bg-red-600 px-2 py-1 text-white"
+                  >
+                    <XCircle className="mr-1 h-3 w-3" />
+                    {t('buttons.reject')}
+                  </Button>
+                </div>
+              </PopoverTrigger>
+              <PopoverContent
+                className="z-50 w-48 rounded-md bg-white p-2 shadow-lg"
+                onClick={e => e.stopPropagation()} // empêche les clics de fermer
+              >
+                <p className="mb-2 text-center text-sm">
+                  {t('auction.reject_bid_prompt')}
+                </p>
+                <div className="flex justify-end gap-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setRejectPopoverId(-1)}
+                  >
+                    {t('buttons.cancel')}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    onClick={() => handleContractAction(contract.id, 'reject')}
+                  >
+                    {t('common.yes')}
+                  </Button>
+                </div>
+              </PopoverContent>
+            </Popover>
+          </div>
+        )}
       </CardContent>
     </Card>
   )

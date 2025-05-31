@@ -4,7 +4,9 @@ import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import be.labil.anacarde.application.service.GlobalSettingsService;
 import be.labil.anacarde.domain.dto.write.BidUpdateDto;
+import be.labil.anacarde.domain.dto.write.GlobalSettingsUpdateDto;
 import be.labil.anacarde.domain.model.Bid;
 import be.labil.anacarde.infrastructure.persistence.BidRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,6 +22,7 @@ public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 
 	private @Autowired ObjectMapper objectMapper;
 	private @Autowired BidRepository bidRepository;
+	private @Autowired GlobalSettingsService globalSettingsService;
 
 	/**
 	 * Teste la récupération d'une offre existant.
@@ -61,6 +64,65 @@ public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 		Bid createdBid = bidRepository.findAll().stream()
 				.filter(bid -> bid.getAmount().equals(new BigDecimal("999.99"))).findFirst()
 				.orElseThrow(() -> new AssertionError("Offre non trouvée"));
+	}
+
+	/**
+	 * Teste la création d'une nouvelle offre, avec une offre moins bonne.
+	 *
+	 */
+	@Test
+	public void testCreateBidFailOnForceBetterBid() throws Exception {
+		GlobalSettingsUpdateDto globalSettingsUpdateDto = new GlobalSettingsUpdateDto();
+		globalSettingsUpdateDto.setForceBetterBids(true);
+		globalSettingsUpdateDto.setDefaultMinPriceKg(BigDecimal.valueOf(1));
+		globalSettingsUpdateDto.setDefaultMaxPriceKg(BigDecimal.valueOf(1000000000));
+		globalSettingsUpdateDto.setMinIncrement(1);
+		globalSettingsUpdateDto.setShowOnlyActive(false);
+		globalSettingsService.updateGlobalSettings(globalSettingsUpdateDto);
+
+		BidUpdateDto newBid = new BidUpdateDto();
+		newBid.setAmount(BigDecimal.valueOf(getTestBid().getAmount().doubleValue() - 1)); // too low
+		newBid.setStatusId(getTestTradeStatus().getId());
+		newBid.setCreationDate(LocalDateTime.now());
+		newBid.setTraderId(getProducerTestUser().getId());
+		newBid.setAuctionId(getTestAuction().getId());
+
+		ObjectNode node = objectMapper.valueToTree(newBid);
+		String jsonContent = node.toString();
+
+		mockMvc.perform(
+				post("/api/bids").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				.andExpect(status().is4xxClientError());
+	}
+
+	/**
+	 * Teste la création d'une nouvelle offre, avec une offre pas assez élevée.
+	 *
+	 */
+	@Test
+	public void testCreateBidFailOnMinIncrement() throws Exception {
+		GlobalSettingsUpdateDto globalSettingsUpdateDto = new GlobalSettingsUpdateDto();
+		globalSettingsUpdateDto.setForceBetterBids(true);
+		globalSettingsUpdateDto.setDefaultMinPriceKg(BigDecimal.valueOf(1));
+		globalSettingsUpdateDto.setDefaultMaxPriceKg(BigDecimal.valueOf(1000000000));
+		globalSettingsUpdateDto.setMinIncrement(1000);
+		globalSettingsUpdateDto.setShowOnlyActive(false);
+		globalSettingsService.updateGlobalSettings(globalSettingsUpdateDto);
+
+		BidUpdateDto newBid = new BidUpdateDto();
+		newBid.setAmount(BigDecimal.valueOf(getTestBid().getAmount().doubleValue() + 10)); // too
+																							// low
+		newBid.setStatusId(getTestTradeStatus().getId());
+		newBid.setCreationDate(LocalDateTime.now());
+		newBid.setTraderId(getProducerTestUser().getId());
+		newBid.setAuctionId(getTestAuction().getId());
+
+		ObjectNode node = objectMapper.valueToTree(newBid);
+		String jsonContent = node.toString();
+
+		mockMvc.perform(
+				post("/api/bids").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				.andExpect(status().is4xxClientError());
 	}
 
 	/**

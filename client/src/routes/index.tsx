@@ -27,7 +27,18 @@ function RouteComponent() {
             <strong>
               {user.lastName} {user.firstName}
             </strong>
-            ! {t('app.welcome.message')}
+            !
+            {user.type === 'admin' ? (
+              <span className="ml-2 font-bold">
+                {' '}
+                {t('app.welcome.admin')}{' '}
+                <Link to="/admin" className="underline">
+                  {t('app.welcome.admin_link')}
+                </Link>
+              </span>
+            ) : (
+              <span className="ml-1">{t('app.welcome.message')}</span>
+            )}
           </span>
         </div>
       )}

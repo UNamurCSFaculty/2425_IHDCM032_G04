@@ -58,6 +58,24 @@ import type {
   UpdateProductData,
   UpdateProductResponse,
   UpdateProductError,
+  DeleteNewsData,
+  DeleteNewsResponse,
+  DeleteNewsError,
+  GetNewsData,
+  GetNewsResponse,
+  GetNewsError,
+  UpdateNewsData,
+  UpdateNewsResponse,
+  UpdateNewsError,
+  DeleteNewsCategoryData,
+  DeleteNewsCategoryResponse,
+  DeleteNewsCategoryError,
+  GetNewsCategoryData,
+  GetNewsCategoryResponse,
+  GetNewsCategoryError,
+  UpdateNewsCategoryData,
+  UpdateNewsCategoryResponse,
+  UpdateNewsCategoryError,
   DeleteLanguageData,
   DeleteLanguageResponse,
   DeleteLanguageError,
@@ -94,6 +112,12 @@ import type {
   UpdateContractOfferData,
   UpdateContractOfferResponse,
   UpdateContractOfferError,
+  RejectContractOfferData,
+  RejectContractOfferResponse,
+  RejectContractOfferError,
+  AcceptContractOfferData,
+  AcceptContractOfferResponse,
+  AcceptContractOfferError,
   DeleteBidData,
   DeleteBidResponse,
   DeleteBidError,
@@ -161,6 +185,16 @@ import type {
   CreateProductData,
   CreateProductResponse,
   CreateProductError,
+  ListNewsData,
+  ListNewsResponse,
+  CreateNewsData,
+  CreateNewsResponse,
+  CreateNewsError,
+  ListNewsCategoriesData,
+  ListNewsCategoriesResponse,
+  CreateNewsCategoryData,
+  CreateNewsCategoryResponse,
+  CreateNewsCategoryError,
   ListLanguagesData,
   ListLanguagesResponse,
   CreateLanguageData,
@@ -219,13 +253,6 @@ import type {
   ListRegionsResponse,
   SubscribeData,
   SubscribeResponse,
-  ListAuctions1Data,
-  ListAuctions1Response,
-  GetAuction1Data,
-  GetAuction1Response,
-  GetAuction1Error,
-  ListAllAuctionsData,
-  ListAllAuctionsResponse,
   DeleteDocumentData,
   DeleteDocumentResponse,
   DeleteDocumentError,
@@ -235,15 +262,24 @@ import type {
   DownloadDocumentData,
   DownloadDocumentResponse,
   DownloadDocumentError,
+  GetContractOfferByCriteriaData,
+  GetContractOfferByCriteriaResponse,
+  GetContractOfferByCriteriaError,
   GetCurrentUserData,
   GetCurrentUserResponse,
   GetCurrentUserError,
+  GetAuctionSettingsData,
+  GetAuctionSettingsResponse,
+  GetAuctionSettingsError,
   GetApplicationDataData,
   GetApplicationDataResponse,
   GetApplicationDataError,
   GetUserData,
   GetUserResponse,
   GetUserError,
+  GetFilteredDataData,
+  GetFilteredDataResponse,
+  GetFilteredDataError,
   GetDashboardGraphicSeriesData,
   GetDashboardGraphicSeriesResponse,
   GetDashboardCardsData,
@@ -670,6 +706,146 @@ export const updateProduct = <ThrowOnError extends boolean = false>(
 }
 
 /**
+ * Supprimer un article de nouvelles
+ */
+export const deleteNews = <ThrowOnError extends boolean = false>(
+  options: Options<DeleteNewsData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).delete<
+    DeleteNewsResponse,
+    DeleteNewsError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/news/{id}',
+    ...options,
+  })
+}
+
+/**
+ * Obtenir un article de nouvelles par ID
+ */
+export const getNews = <ThrowOnError extends boolean = false>(
+  options: Options<GetNewsData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).get<
+    GetNewsResponse,
+    GetNewsError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/news/{id}',
+    ...options,
+  })
+}
+
+/**
+ * Mettre à jour un article de nouvelles existant
+ */
+export const updateNews = <ThrowOnError extends boolean = false>(
+  options: Options<UpdateNewsData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).put<
+    UpdateNewsResponse,
+    UpdateNewsError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/news/{id}',
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options?.headers,
+    },
+  })
+}
+
+/**
+ * Supprimer une catégorie d'articles de nouvelles
+ */
+export const deleteNewsCategory = <ThrowOnError extends boolean = false>(
+  options: Options<DeleteNewsCategoryData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).delete<
+    DeleteNewsCategoryResponse,
+    DeleteNewsCategoryError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/news-categories/{id}',
+    ...options,
+  })
+}
+
+/**
+ * Obtenir une catégorie d'articles de nouvelles par ID
+ */
+export const getNewsCategory = <ThrowOnError extends boolean = false>(
+  options: Options<GetNewsCategoryData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).get<
+    GetNewsCategoryResponse,
+    GetNewsCategoryError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/news-categories/{id}',
+    ...options,
+  })
+}
+
+/**
+ * Mettre à jour une catégorie d'articles de nouvelles
+ */
+export const updateNewsCategory = <ThrowOnError extends boolean = false>(
+  options: Options<UpdateNewsCategoryData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).put<
+    UpdateNewsCategoryResponse,
+    UpdateNewsCategoryError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/news-categories/{id}',
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options?.headers,
+    },
+  })
+}
+
+/**
  * Supprimer une langue
  * Supprime une langue en fonction de son ID.
  */
@@ -949,6 +1125,50 @@ export const updateContractOffer = <ThrowOnError extends boolean = false>(
       'Content-Type': 'application/json',
       ...options?.headers,
     },
+  })
+}
+
+/**
+ * Rejeter une offre de contrat
+ */
+export const rejectContractOffer = <ThrowOnError extends boolean = false>(
+  options: Options<RejectContractOfferData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).put<
+    RejectContractOfferResponse,
+    RejectContractOfferError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/contracts/{contractOfferId}/reject',
+    ...options,
+  })
+}
+
+/**
+ * Accepter une offre de contrat
+ */
+export const acceptContractOffer = <ThrowOnError extends boolean = false>(
+  options: Options<AcceptContractOfferData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).put<
+    AcceptContractOfferResponse,
+    AcceptContractOfferError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/contracts/{contractOfferId}/accept',
+    ...options,
   })
 }
 
@@ -1520,6 +1740,102 @@ export const createProduct = <ThrowOnError extends boolean = false>(
 }
 
 /**
+ * Obtenir tous les articles de nouvelles avec pagination et filtrage
+ */
+export const listNews = <ThrowOnError extends boolean = false>(
+  options?: Options<ListNewsData, ThrowOnError>
+) => {
+  return (options?.client ?? _heyApiClient).get<
+    ListNewsResponse,
+    unknown,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/news',
+    ...options,
+  })
+}
+
+/**
+ * Créer un article de nouvelles
+ */
+export const createNews = <ThrowOnError extends boolean = false>(
+  options: Options<CreateNewsData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).post<
+    CreateNewsResponse,
+    CreateNewsError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/news',
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options?.headers,
+    },
+  })
+}
+
+/**
+ * Obtenir toutes les catégories d'articles de nouvelles
+ */
+export const listNewsCategories = <ThrowOnError extends boolean = false>(
+  options?: Options<ListNewsCategoriesData, ThrowOnError>
+) => {
+  return (options?.client ?? _heyApiClient).get<
+    ListNewsCategoriesResponse,
+    unknown,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/news-categories',
+    ...options,
+  })
+}
+
+/**
+ * Créer une catégorie d'articles de nouvelles
+ */
+export const createNewsCategory = <ThrowOnError extends boolean = false>(
+  options: Options<CreateNewsCategoryData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).post<
+    CreateNewsCategoryResponse,
+    CreateNewsCategoryError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/news-categories',
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options?.headers,
+    },
+  })
+}
+
+/**
  * Lister toutes les langues
  * Renvoie la liste de toutes les langues présentes dans le système.
  */
@@ -2058,72 +2374,6 @@ export const subscribe = <ThrowOnError extends boolean = false>(
 }
 
 /**
- * Lister les enchères entre deux dates (optionnellement terminées)
- */
-export const listAuctions1 = <ThrowOnError extends boolean = false>(
-  options: Options<ListAuctions1Data, ThrowOnError>
-) => {
-  return (options.client ?? _heyApiClient).get<
-    ListAuctions1Response,
-    unknown,
-    ThrowOnError
-  >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
-    url: '/api/export/auctions',
-    ...options,
-  })
-}
-
-/**
- * Obtenir l’analyse d’une enchère
- */
-export const getAuction1 = <ThrowOnError extends boolean = false>(
-  options: Options<GetAuction1Data, ThrowOnError>
-) => {
-  return (options.client ?? _heyApiClient).get<
-    GetAuction1Response,
-    GetAuction1Error,
-    ThrowOnError
-  >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
-    url: '/api/export/auctions/{id}',
-    ...options,
-  })
-}
-
-/**
- * Lister toutes les enchères (aucun filtre)
- */
-export const listAllAuctions = <ThrowOnError extends boolean = false>(
-  options?: Options<ListAllAuctionsData, ThrowOnError>
-) => {
-  return (options?.client ?? _heyApiClient).get<
-    ListAllAuctionsResponse,
-    unknown,
-    ThrowOnError
-  >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
-    url: '/api/export/auctions/all',
-    ...options,
-  })
-}
-
-/**
  * Supprimer un document
  */
 export const deleteDocument = <ThrowOnError extends boolean = false>(
@@ -2172,6 +2422,30 @@ export const downloadDocument = <ThrowOnError extends boolean = false>(
 }
 
 /**
+ * Obtenir un contrat par critères (qualité, vendeur, acheteur)
+ */
+export const getContractOfferByCriteria = <
+  ThrowOnError extends boolean = false,
+>(
+  options: Options<GetContractOfferByCriteriaData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).get<
+    GetContractOfferByCriteriaResponse,
+    GetContractOfferByCriteriaError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/contracts/by-criteria',
+    ...options,
+  })
+}
+
+/**
  * Récupérer l'utilisateur courant
  * Renvoie les détails (UserDetailDto) de l'utilisateur authentifié via le cookie JWT, cette méthode génère aussi un premier token csrf pour l'utilisateur
  */
@@ -2184,6 +2458,28 @@ export const getCurrentUser = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     url: '/api/auth/me',
+    ...options,
+  })
+}
+
+/**
+ * Obtenir les paramètres des enchères
+ */
+export const getAuctionSettings = <ThrowOnError extends boolean = false>(
+  options?: Options<GetAuctionSettingsData, ThrowOnError>
+) => {
+  return (options?.client ?? _heyApiClient).get<
+    GetAuctionSettingsResponse,
+    GetAuctionSettingsError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/auctions/settings',
     ...options,
   })
 }
@@ -2223,6 +2519,29 @@ export const getUser = <ThrowOnError extends boolean = false>(
       },
     ],
     url: '/api/admin/users/{id}',
+    ...options,
+  })
+}
+
+/**
+ * Exporter et télécharger les données d'analyse BI des enchères (JSON/CSV)
+ * Permet de récupérer toutes les données ou de filtrer par période. Le résultat est un fichier (JSON ou CSV) à télécharger.
+ */
+export const getFilteredData = <ThrowOnError extends boolean = false>(
+  options?: Options<GetFilteredDataData, ThrowOnError>
+) => {
+  return (options?.client ?? _heyApiClient).get<
+    GetFilteredDataResponse,
+    GetFilteredDataError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/admin/export/auctions',
     ...options,
   })
 }

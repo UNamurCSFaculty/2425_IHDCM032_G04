@@ -7,17 +7,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import be.labil.anacarde.application.service.GlobalSettingsService;
 import be.labil.anacarde.domain.dto.db.AuctionStrategyDto;
-import be.labil.anacarde.domain.dto.db.TradeStatusDto;
-import be.labil.anacarde.domain.dto.db.product.HarvestProductDto;
-import be.labil.anacarde.domain.dto.db.product.ProductDto;
-import be.labil.anacarde.domain.dto.db.user.ProducerDetailDto;
 import be.labil.anacarde.domain.dto.write.AuctionOptionsUpdateDto;
 import be.labil.anacarde.domain.dto.write.AuctionUpdateDto;
+import be.labil.anacarde.domain.dto.write.GlobalSettingsUpdateDto;
+import be.labil.anacarde.domain.mapper.GlobalSettingsMapper;
 import be.labil.anacarde.domain.model.Auction;
+import be.labil.anacarde.domain.model.HarvestProduct;
+import be.labil.anacarde.domain.model.Product;
 import be.labil.anacarde.infrastructure.persistence.AuctionRepository;
+import be.labil.anacarde.infrastructure.persistence.HarvestProductRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 import org.quartz.JobKey;
@@ -31,7 +34,10 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 
 	private @Autowired ObjectMapper objectMapper;
 	private @Autowired AuctionRepository auctionRepository;
+	private @Autowired HarvestProductRepository harvestProductRepository;
 	private @Autowired Scheduler scheduler;
+	private @Autowired GlobalSettingsService globalSettingsService;
+	private @Autowired GlobalSettingsMapper globalSettingsMapper;
 
 	/**
 	 * Teste la récupération d'une enchère existante.
@@ -50,39 +56,31 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 	}
 
 	/**
-	 * Teste la création d'une nouvelle enchère.
+	 * Teste la récupération des settings d'enchères.
 	 *
 	 */
 	@Test
+	public void testGetAuctionSettings() throws Exception {
+		mockMvc.perform(get("/api/auctions/settings").accept(MediaType.APPLICATION_JSON))
+				.andExpect(jsonPath("$.defaultStrategy.name").value("Meilleure offre"))
+				.andExpect(jsonPath("$.minIncrement").value("1"));
+	}
+
+	/**
+	 * Teste la création d'une nouvelle enchère, avec un status par défaut et des options par
+	 * défaut.
+	 */
+	@Test
 	public void testCreateAuction() throws Exception {
-		AuctionStrategyDto strategyDto = new AuctionStrategyDto();
-		strategyDto.setId(getTestAuctionStrategy().getId());
-
-		ProducerDetailDto producer = new ProducerDetailDto();
-		producer.setId(getProducerTestUser().getId());
-
-		ProductDto productDto = new HarvestProductDto();
-		productDto.setId(getTestHarvestProduct().getId());
-
-		TradeStatusDto statusDto = new TradeStatusDto();
-		statusDto.setId(getTestTradeStatus().getId());
-
-		AuctionOptionsUpdateDto optionsDto = new AuctionOptionsUpdateDto();
-		strategyDto.setName("BestOffer");
-		optionsDto.setStrategyId(getTestAuctionStrategy().getId());
-		optionsDto.setBuyNowPrice(100.50);
-		optionsDto.setShowPublic(true);
+		final int AUCTION_QUANTITY = 10;
 
 		AuctionUpdateDto newAuction = new AuctionUpdateDto();
 		newAuction.setPrice(111.11);
-		newAuction.setProductQuantity(11);
+		newAuction.setProductQuantity(AUCTION_QUANTITY);
 		newAuction.setActive(true);
-		newAuction.setCreationDate(LocalDateTime.now());
 		newAuction.setExpirationDate(LocalDateTime.now().plusDays(1));
-		newAuction.setOptions(optionsDto);
-		newAuction.setProductId(productDto.getId());
-		newAuction.setTraderId(producer.getId());
-		newAuction.setStatusId(statusDto.getId());
+		newAuction.setProductId(getTestHarvestProduct().getId());
+		newAuction.setTraderId(getProducerTestUser().getId());
 
 		ObjectNode node = objectMapper.valueToTree(newAuction);
 		String jsonContent = node.toString();
@@ -92,11 +90,10 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 				.andExpect(status().isCreated())
 				.andExpect(header().string("Location", containsString("/api/auctions/")))
 				.andExpect(jsonPath("$.price").value("111.11"))
-				.andExpect(jsonPath("$.productQuantity").value("11"))
+				.andExpect(jsonPath("$.productQuantity").value("10"))
 				.andExpect(jsonPath("$.active").value("true"))
-				.andExpect(
-						jsonPath("$.options.strategy.id").value(getTestAuctionStrategy().getId()))
-				.andExpect(jsonPath("$.trader.id").value(getProducerTestUser().getId()));
+				.andExpect(jsonPath("$.trader.id").value(getProducerTestUser().getId()))
+				.andExpect(jsonPath("$.status.name").value("Ouvert"));
 
 		// Vérifie que l'enchère a été enregistrée
 		Auction createdAuction = auctionRepository.findAll().stream()
@@ -113,15 +110,170 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 	}
 
 	/**
-	 * Teste la création d'une nouvelle enchère, avec un status par défaut.
+	 * Teste la création d'une nouvelle enchère, et vérifie les poids du produit associé.
 	 */
 	@Test
-	public void testCreateAuctionWithDefaultStatus() throws Exception {
-		ProducerDetailDto producer = new ProducerDetailDto();
-		producer.setId(getProducerTestUser().getId());
+	public void testCreateAuctionCheckWeights() throws Exception {
+		HarvestProduct product = harvestProductRepository.findById(getTestHarvestProduct().getId())
+				.orElseThrow(() -> new AssertionError("Produit non trouvé"));
 
-		ProductDto productDto = new HarvestProductDto();
-		productDto.setId(getTestHarvestProduct().getId());
+		final double INITIAL_WEIGHT = product.getWeightKg();
+		final int AUCTION_WEIGHT = 10;
+
+		AuctionUpdateDto newAuction = new AuctionUpdateDto();
+		newAuction.setPrice(111.11);
+		newAuction.setProductQuantity(AUCTION_WEIGHT);
+		newAuction.setActive(true);
+		newAuction.setExpirationDate(LocalDateTime.now().plusDays(1));
+		newAuction.setProductId(getTestHarvestProduct().getId());
+		newAuction.setTraderId(getProducerTestUser().getId());
+
+		ObjectNode node = objectMapper.valueToTree(newAuction);
+		String jsonContent = node.toString();
+
+		mockMvc.perform(
+				post("/api/auctions").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				.andExpect(status().isCreated());
+
+		// Vérifie que l'enchère a été enregistrée
+		Auction createdAuction = auctionRepository.findAll().stream()
+				.filter(auction -> auction.getPrice().equals(111.11)).findFirst()
+				.orElseThrow(() -> new AssertionError("Enchère non trouvée"));
+
+		// Vérifie les poids liés au produit
+		product = harvestProductRepository.findById(createdAuction.getProduct().getId())
+				.orElseThrow(() -> new AssertionError("Produit non trouvé"));
+		assertEquals(INITIAL_WEIGHT, product.getWeightKg());
+		assertEquals(INITIAL_WEIGHT - AUCTION_WEIGHT, product.getWeightKgAvailable());
+	}
+
+	/**
+	 * Teste la création d'une nouvelle enchère, avec un prix trop bas.
+	 */
+	@Test
+	public void testCreateAuctionFailOnMinimumPrice() throws Exception {
+		final double MIN_PRICE_PER_KG = 100;
+		final int PRODUCT_QUANTITY_KG = 1000;
+		final double PRODUCT_PRICE = 1000;
+
+		GlobalSettingsUpdateDto globalSettingsUpdateDto = new GlobalSettingsUpdateDto();
+		globalSettingsUpdateDto.setForceBetterBids(false);
+		globalSettingsUpdateDto.setDefaultMinPriceKg(BigDecimal.valueOf(MIN_PRICE_PER_KG));
+		globalSettingsUpdateDto.setMinIncrement(1);
+		globalSettingsUpdateDto.setShowOnlyActive(false);
+		globalSettingsService.updateGlobalSettings(globalSettingsUpdateDto);
+
+		AuctionUpdateDto newAuction = new AuctionUpdateDto();
+		newAuction.setPrice(PRODUCT_PRICE);
+		newAuction.setProductQuantity(PRODUCT_QUANTITY_KG);
+		newAuction.setActive(true);
+		newAuction.setExpirationDate(LocalDateTime.now().plusDays(1));
+		newAuction.setProductId(getTestHarvestProduct().getId());
+		newAuction.setTraderId(getProducerTestUser().getId());
+
+		ObjectNode node = objectMapper.valueToTree(newAuction);
+		String jsonContent = node.toString();
+
+		mockMvc.perform(
+				post("/api/auctions").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				.andExpect(status().is4xxClientError());
+	}
+
+	/**
+	 * Teste la création d'une nouvelle enchère, avec un prix trop haut.
+	 */
+	@Test
+	public void testCreateAuctionFailOnMaximumPrice() throws Exception {
+		final double MAX_PRICE_PER_KG = 1;
+		final int PRODUCT_QUANTITY_KG = 100;
+		final double PRODUCT_PRICE = 1000;
+
+		GlobalSettingsUpdateDto globalSettingsUpdateDto = new GlobalSettingsUpdateDto();
+		globalSettingsUpdateDto.setDefaultMaxPriceKg(BigDecimal.valueOf(MAX_PRICE_PER_KG));
+		globalSettingsUpdateDto.setForceBetterBids(false);
+		globalSettingsUpdateDto.setMinIncrement(1);
+		globalSettingsUpdateDto.setShowOnlyActive(false);
+		globalSettingsService.updateGlobalSettings(globalSettingsUpdateDto);
+
+		AuctionUpdateDto newAuction = new AuctionUpdateDto();
+		newAuction.setPrice(PRODUCT_PRICE);
+		newAuction.setProductQuantity(PRODUCT_QUANTITY_KG);
+		newAuction.setActive(true);
+		newAuction.setExpirationDate(LocalDateTime.now().plusDays(1));
+		newAuction.setProductId(getTestHarvestProduct().getId());
+		newAuction.setTraderId(getProducerTestUser().getId());
+
+		ObjectNode node = objectMapper.valueToTree(newAuction);
+		String jsonContent = node.toString();
+
+		mockMvc.perform(
+				post("/api/auctions").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				.andExpect(status().is4xxClientError());
+	}
+
+	/**
+	 * Teste la création d'une nouvelle enchère, avec un prix différent de celui fixé.
+	 */
+	@Test
+	public void testCreateAuctionFailOnFixedPrice() throws Exception {
+		final double FIXED_PRICE_PER_KG = 1;
+		final int PRODUCT_QUANTITY_KG = 1000;
+		final double PRODUCT_PRICE = 2000;
+
+		GlobalSettingsUpdateDto globalSettingsUpdateDto = new GlobalSettingsUpdateDto();
+		globalSettingsUpdateDto.setDefaultFixedPriceKg(BigDecimal.valueOf(FIXED_PRICE_PER_KG));
+		globalSettingsUpdateDto.setForceBetterBids(false);
+		globalSettingsUpdateDto.setMinIncrement(1);
+		globalSettingsUpdateDto.setShowOnlyActive(false);
+		globalSettingsService.updateGlobalSettings(globalSettingsUpdateDto);
+
+		AuctionUpdateDto newAuction = new AuctionUpdateDto();
+		newAuction.setPrice(PRODUCT_PRICE);
+		newAuction.setProductQuantity(PRODUCT_QUANTITY_KG);
+		newAuction.setActive(true);
+		newAuction.setExpirationDate(LocalDateTime.now().plusDays(1));
+		newAuction.setProductId(getTestHarvestProduct().getId());
+		newAuction.setTraderId(getProducerTestUser().getId());
+
+		ObjectNode node = objectMapper.valueToTree(newAuction);
+		String jsonContent = node.toString();
+
+		mockMvc.perform(
+				post("/api/auctions").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				.andExpect(status().is4xxClientError());
+	}
+
+	/**
+	 * Teste la création d'une nouvelle enchère, avec une quantité trop grande.
+	 */
+	@Test
+	public void testCreateAuctionFailOnAvailableWeight() throws Exception {
+		AuctionUpdateDto newAuction = new AuctionUpdateDto();
+		newAuction.setPrice(100);
+		newAuction
+				.setProductQuantity(getTestHarvestProduct().getWeightKgAvailable().intValue() + 1);
+		newAuction.setActive(true);
+		newAuction.setExpirationDate(LocalDateTime.now().plusDays(1));
+		newAuction.setProductId(getTestHarvestProduct().getId());
+		newAuction.setTraderId(getProducerTestUser().getId());
+
+		ObjectNode node = objectMapper.valueToTree(newAuction);
+		String jsonContent = node.toString();
+
+		mockMvc.perform(
+				post("/api/auctions").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				.andExpect(status().is4xxClientError());
+	}
+
+	/**
+	 * Teste la création d'une nouvelle enchère, en spécifiant un status et une stratégie.
+	 *
+	 */
+	@Test
+	public void testCreateAuctionSpecifyStatusAndStrategy() throws Exception {
+		AuctionStrategyDto strategyDto = new AuctionStrategyDto();
+		strategyDto.setId(getTestAuctionStrategy().getId());
+		strategyDto.setName("BestOffer");
 
 		AuctionOptionsUpdateDto optionsDto = new AuctionOptionsUpdateDto();
 		optionsDto.setStrategyId(getTestAuctionStrategy().getId());
@@ -129,14 +281,14 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		optionsDto.setShowPublic(true);
 
 		AuctionUpdateDto newAuction = new AuctionUpdateDto();
-		newAuction.setOptions(optionsDto);
 		newAuction.setPrice(111.11);
 		newAuction.setProductQuantity(11);
 		newAuction.setActive(true);
-		newAuction.setCreationDate(LocalDateTime.now());
 		newAuction.setExpirationDate(LocalDateTime.now().plusDays(1));
-		newAuction.setProductId(productDto.getId());
-		newAuction.setTraderId(producer.getId());
+		newAuction.setOptions(optionsDto);
+		newAuction.setProductId(getTestHarvestProduct().getId());
+		newAuction.setTraderId(getProducerTestUser().getId());
+		newAuction.setStatusId(getTestTradeStatus().getId());
 
 		ObjectNode node = objectMapper.valueToTree(newAuction);
 		String jsonContent = node.toString();
@@ -148,8 +300,9 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 				.andExpect(jsonPath("$.price").value("111.11"))
 				.andExpect(jsonPath("$.productQuantity").value("11"))
 				.andExpect(jsonPath("$.active").value("true"))
-				.andExpect(jsonPath("$.trader.id").value(getProducerTestUser().getId()))
-				.andExpect(jsonPath("$.status.name").value("Ouvert"));
+				.andExpect(
+						jsonPath("$.options.strategy.id").value(getTestAuctionStrategy().getId()))
+				.andExpect(jsonPath("$.trader.id").value(getProducerTestUser().getId()));
 
 		// Vérifie que l'enchère a été enregistrée
 		Auction createdAuction = auctionRepository.findAll().stream()
@@ -206,20 +359,7 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 	 */
 	@Test
 	public void testUpdateAuction() throws Exception {
-		AuctionStrategyDto strategyDto = new AuctionStrategyDto();
-		strategyDto.setId(getTestAuctionStrategy().getId());
-
-		ProducerDetailDto producer = new ProducerDetailDto();
-		producer.setId(getProducerTestUser().getId());
-
-		ProductDto productDto = new HarvestProductDto();
-		productDto.setId(getTestHarvestProduct().getId());
-
-		TradeStatusDto statusDto = new TradeStatusDto();
-		statusDto.setId(getTestTradeStatus().getId());
-
 		AuctionOptionsUpdateDto optionsDto = new AuctionOptionsUpdateDto();
-		strategyDto.setName("BestOffer");
 		optionsDto.setStrategyId(getTestAuctionStrategy().getId());
 		optionsDto.setBuyNowPrice(100.50);
 		optionsDto.setShowPublic(true);
@@ -228,12 +368,11 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		updateAuction.setPrice(999.99);
 		updateAuction.setProductQuantity(99);
 		updateAuction.setActive(true);
-		updateAuction.setCreationDate(LocalDateTime.now());
 		updateAuction.setExpirationDate(LocalDateTime.now());
 		updateAuction.setOptions(optionsDto);
-		updateAuction.setProductId(productDto.getId());
-		updateAuction.setTraderId(producer.getId());
-		updateAuction.setStatusId(statusDto.getId());
+		updateAuction.setProductId(getTestHarvestProduct().getId());
+		updateAuction.setTraderId(getProducerTestUser().getId());
+		updateAuction.setStatusId(getTestTradeStatus().getId());
 
 		ObjectNode node = objectMapper.valueToTree(updateAuction);
 		String jsonContent = node.toString();
@@ -250,11 +389,11 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 	 */
 	@Test
 	public void testCreateAuctionThenUpdateStatusAndCheckQuartzJobRemoval() throws Exception {
-		ProducerDetailDto producer = new ProducerDetailDto();
-		producer.setId(getProducerTestUser().getId());
+		HarvestProduct product = harvestProductRepository.findById(getTestHarvestProduct().getId())
+				.orElseThrow(() -> new AssertionError("Produit non trouvé"));
 
-		ProductDto productDto = new HarvestProductDto();
-		productDto.setId(getTestHarvestProduct().getId());
+		final double INITIAL_WEIGHT = product.getWeightKg();
+		final int AUCTION_WEIGHT = 10;
 
 		AuctionOptionsUpdateDto optionsDto = new AuctionOptionsUpdateDto();
 		optionsDto.setStrategyId(getTestAuctionStrategy().getId());
@@ -263,12 +402,11 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		AuctionUpdateDto newAuction = new AuctionUpdateDto();
 		newAuction.setOptions(optionsDto);
 		newAuction.setPrice(111.11);
-		newAuction.setProductQuantity(11);
+		newAuction.setProductQuantity(AUCTION_WEIGHT);
 		newAuction.setActive(true);
-		newAuction.setCreationDate(LocalDateTime.now());
 		newAuction.setExpirationDate(LocalDateTime.now().plusDays(1));
-		newAuction.setProductId(productDto.getId());
-		newAuction.setTraderId(producer.getId());
+		newAuction.setProductId(getTestHarvestProduct().getId());
+		newAuction.setTraderId(getProducerTestUser().getId());
 
 		ObjectNode node = objectMapper.valueToTree(newAuction);
 		String jsonContent = node.toString();
@@ -291,11 +429,10 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		updateAuction.setPrice(999.99);
 		updateAuction.setProductQuantity(99);
 		updateAuction.setActive(true);
-		updateAuction.setCreationDate(LocalDateTime.now());
 		updateAuction.setExpirationDate(LocalDateTime.now().plusDays(1));
 		updateAuction.setOptions(optionsDto);
-		updateAuction.setProductId(productDto.getId());
-		updateAuction.setTraderId(producer.getId());
+		updateAuction.setProductId(getTestHarvestProduct().getId());
+		updateAuction.setTraderId(getProducerTestUser().getId());
 		updateAuction.setStatusId(getTradeStatusRejected().getId());
 
 		node = objectMapper.valueToTree(updateAuction);
@@ -308,6 +445,12 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		// Vérification que le job a été supprimé
 		assertFalse(scheduler.checkExists(jobKey),
 				"Le job Quartz doit être supprimé après le changement de statut.");
+
+		// Vérifie les poids liés au produit
+		product = harvestProductRepository.findById(getTestHarvestProduct().getId())
+				.orElseThrow(() -> new AssertionError("Produit non trouvé"));
+		assertEquals(INITIAL_WEIGHT, product.getWeightKg());
+		assertEquals(INITIAL_WEIGHT - AUCTION_WEIGHT, product.getWeightKgAvailable());
 	}
 
 	/**
@@ -330,12 +473,6 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 	 */
 	@Test
 	public void testCreateThenAcceptAuctionAndCheckQuartzJobRemoval() throws Exception {
-		ProducerDetailDto producer = new ProducerDetailDto();
-		producer.setId(getProducerTestUser().getId());
-
-		ProductDto productDto = new HarvestProductDto();
-		productDto.setId(getTestHarvestProduct().getId());
-
 		AuctionOptionsUpdateDto optionsDto = new AuctionOptionsUpdateDto();
 		optionsDto.setStrategyId(getTestAuctionStrategy().getId());
 		optionsDto.setShowPublic(true);
@@ -343,12 +480,11 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		AuctionUpdateDto newAuction = new AuctionUpdateDto();
 		newAuction.setOptions(optionsDto);
 		newAuction.setPrice(123.45);
-		newAuction.setProductQuantity(10);
+		newAuction.setProductQuantity(11);
 		newAuction.setActive(true);
-		newAuction.setCreationDate(LocalDateTime.now());
 		newAuction.setExpirationDate(LocalDateTime.now().plusDays(1));
-		newAuction.setProductId(productDto.getId());
-		newAuction.setTraderId(producer.getId());
+		newAuction.setProductId(getTestHarvestProduct().getId());
+		newAuction.setTraderId(getProducerTestUser().getId());
 
 		ObjectNode node = objectMapper.valueToTree(newAuction);
 		String jsonContent = node.toString();
@@ -366,7 +502,7 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		assertTrue(scheduler.checkExists(jobKey), "Le job Quartz doit exister après la création.");
 		mockMvc.perform(put("/api/auctions/" + auctionId + "/accept")
 				.contentType(MediaType.APPLICATION_JSON).content("")).andExpect(status().isOk())
-				.andExpect(jsonPath("$.productQuantity").value("10"))
+				.andExpect(jsonPath("$.productQuantity").value("11"))
 				.andExpect(jsonPath("$.status.name").value("Accepté"));
 
 		// Vérification que le job Quartz a été supprimé
@@ -380,12 +516,24 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 	 */
 	@Test
 	public void testDeleteAuction() throws Exception {
+		Product product = productRepository.findById(getTestAuction().getProduct().getId())
+				.orElseThrow(() -> new AssertionError("Produit non trouvé"));
+
+		final Double INITIAL_WEIGHT = product.getWeightKg();
+		final Double INITIAL_WEIGHT_AVAILABLE = product.getWeightKgAvailable();
+
 		mockMvc.perform(delete("/api/auctions/" + getTestAuction().getId()))
 				.andExpect(status().isNoContent());
 
 		mockMvc.perform(
 				get("/api/auctions/" + getTestAuction().getId()).accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk()).andExpect(jsonPath("$.active").value(false));
+
+		product = productRepository.findById(getTestAuction().getProduct().getId())
+				.orElseThrow(() -> new AssertionError("Produit non trouvé"));
+		assertEquals(INITIAL_WEIGHT, product.getWeightKg());
+		assertEquals(INITIAL_WEIGHT_AVAILABLE + getTestAuction().getProductQuantity(),
+				product.getWeightKgAvailable());
 	}
 
 	/**
@@ -395,12 +543,6 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 	 */
 	@Test
 	public void testCreateThenDeleteAuctionAndCheckQuartzJobRemoval() throws Exception {
-		ProducerDetailDto producer = new ProducerDetailDto();
-		producer.setId(getProducerTestUser().getId());
-
-		ProductDto productDto = new HarvestProductDto();
-		productDto.setId(getTestHarvestProduct().getId());
-
 		AuctionOptionsUpdateDto optionsDto = new AuctionOptionsUpdateDto();
 		optionsDto.setStrategyId(getTestAuctionStrategy().getId());
 		optionsDto.setShowPublic(true);
@@ -410,10 +552,9 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		newAuction.setPrice(123.45);
 		newAuction.setProductQuantity(10);
 		newAuction.setActive(true);
-		newAuction.setCreationDate(LocalDateTime.now());
 		newAuction.setExpirationDate(LocalDateTime.now().plusDays(1));
-		newAuction.setProductId(productDto.getId());
-		newAuction.setTraderId(producer.getId());
+		newAuction.setProductId(getTestHarvestProduct().getId());
+		newAuction.setTraderId(getProducerTestUser().getId());
 
 		ObjectNode node = objectMapper.valueToTree(newAuction);
 		String jsonContent = node.toString();
@@ -448,13 +589,13 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 	 */
 	@Test
 	public void testCreateThenAutoCloseAuctionAndCheckQuartzJobRemovalSimple() throws Exception {
+		HarvestProduct product = harvestProductRepository.findById(getTestHarvestProduct().getId())
+				.orElseThrow(() -> new AssertionError("Produit non trouvé"));
+
+		final double INITIAL_WEIGHT = product.getWeightKg();
+		final int AUCTION_WEIGHT = 10;
+
 		// --- Création d'une enchère avec expiration rapide ---
-		ProducerDetailDto producer = new ProducerDetailDto();
-		producer.setId(getProducerTestUser().getId());
-
-		ProductDto productDto = new HarvestProductDto();
-		productDto.setId(getTestHarvestProduct().getId());
-
 		AuctionOptionsUpdateDto optionsDto = new AuctionOptionsUpdateDto();
 		optionsDto.setStrategyId(getTestAuctionStrategy().getId());
 		optionsDto.setShowPublic(true);
@@ -462,12 +603,11 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		AuctionUpdateDto newAuction = new AuctionUpdateDto();
 		newAuction.setOptions(optionsDto);
 		newAuction.setPrice(50.0);
-		newAuction.setProductQuantity(2);
+		newAuction.setProductQuantity(AUCTION_WEIGHT);
 		newAuction.setActive(true);
-		newAuction.setCreationDate(LocalDateTime.now());
 		newAuction.setExpirationDate(LocalDateTime.now().plusSeconds(5)); // auto-close rapide
-		newAuction.setProductId(productDto.getId());
-		newAuction.setTraderId(producer.getId());
+		newAuction.setProductId(getTestHarvestProduct().getId());
+		newAuction.setTraderId(getProducerTestUser().getId());
 
 		ObjectNode node = objectMapper.valueToTree(newAuction);
 		String jsonContent = node.toString();
@@ -493,6 +633,11 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		assertEquals("Expiré", statusName, "Le statut de l'enchère doit être 'Expiré'.");
 		assertFalse(scheduler.checkExists(jobKey),
 				"Le job Quartz doit être supprimé après clôture.");
-	}
 
+		// Vérifie les poids liés au produit
+		product = harvestProductRepository.findById(getTestHarvestProduct().getId())
+				.orElseThrow(() -> new AssertionError("Produit non trouvé"));
+		assertEquals(INITIAL_WEIGHT, product.getWeightKg());
+		assertEquals(INITIAL_WEIGHT, product.getWeightKgAvailable());
+	}
 }

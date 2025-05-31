@@ -37,6 +37,9 @@ public abstract class ProductUpdateDto extends BaseDto {
 	@Schema(description = "Poids en kg du produit", example = "100.0")
 	private Double weightKg;
 
+	@Schema(description = "Poids en kg du produit disponible à la vente", example = "100.0")
+	private Double weightKgAvailable;
+
 	@NotNull(message = "Le contrôle qualité est requis")
 	@Schema(description = "Contrôle qualité associé au produit", requiredMode = Schema.RequiredMode.REQUIRED)
 	private Integer qualityControlId;

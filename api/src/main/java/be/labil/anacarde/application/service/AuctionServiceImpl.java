@@ -1,11 +1,17 @@
 package be.labil.anacarde.application.service;
 
+import be.labil.anacarde.application.exception.ApiErrorCode;
+import be.labil.anacarde.application.exception.ApiErrorException;
 import be.labil.anacarde.application.exception.ResourceNotFoundException;
 import be.labil.anacarde.application.job.CloseAuctionJob;
 import be.labil.anacarde.domain.dto.db.AuctionDto;
+import be.labil.anacarde.domain.dto.db.GlobalSettingsDto;
+import be.labil.anacarde.domain.dto.db.product.ProductDto;
 import be.labil.anacarde.domain.dto.write.AuctionUpdateDto;
 import be.labil.anacarde.domain.mapper.AuctionMapper;
+import be.labil.anacarde.domain.mapper.AuctionStrategyMapper;
 import be.labil.anacarde.domain.model.Auction;
+import be.labil.anacarde.domain.model.AuctionOptions;
 import be.labil.anacarde.domain.model.TradeStatus;
 import be.labil.anacarde.infrastructure.persistence.AuctionRepository;
 import be.labil.anacarde.infrastructure.persistence.TradeStatusRepository;
@@ -22,6 +28,7 @@ import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,9 +39,12 @@ public class AuctionServiceImpl implements AuctionService {
 	private final TradeStatusRepository tradeStatusRepository;
 	private final AuctionRepository auctionRepository;
 	private final AuctionMapper auctionMapper;
+	private final AuctionStrategyMapper auctionStrategyMapper;
 	private final PersistenceHelper persistenceHelper;
+	private final GlobalSettingsService globalSettingsService;
 	private final AuctionSseService auctionSseService;
 	private final NotificationSseService notificationSseService;
+	private final ProductService productService;
 
 	private static final Logger log = LoggerFactory.getLogger(CloseAuctionJob.class);
 
@@ -42,16 +52,41 @@ public class AuctionServiceImpl implements AuctionService {
 	private Scheduler scheduler;
 
 	@Override
-	public AuctionDto createAuction(AuctionUpdateDto dto) {
-		Auction auction = auctionMapper.toEntity(dto);
+	public AuctionDto createAuction(AuctionUpdateDto auctionUpdateDto) {
+		checkAuctionSettings(auctionUpdateDto);
+		checkAuctionQuantity(auctionUpdateDto);
 
-		if (dto.getStatusId() == null) {
+		Auction auction = auctionMapper.toEntity(auctionUpdateDto);
+
+		// Use default status
+		if (auctionUpdateDto.getStatusId() == null) {
 			TradeStatus pendingStatus = tradeStatusRepository.findStatusPending();
 			if (pendingStatus == null) {
 				throw new ResourceNotFoundException("Status non trouvé");
 			}
 			auction.setStatus(pendingStatus);
 		}
+
+		// Use default options
+		if (auctionUpdateDto.getOptions() == null) {
+			GlobalSettingsDto settings = globalSettingsService.getGlobalSettings();
+
+			AuctionOptions options = new AuctionOptions();
+			options.setStrategy(auctionStrategyMapper.toEntity(settings.getDefaultStrategy()));
+			options.setMinIncrement(settings.getMinIncrement());
+			options.setForceBetterBids(settings.getForceBetterBids());
+			if (settings.getDefaultFixedPriceKg() != null)
+				options.setFixedPriceKg(settings.getDefaultFixedPriceKg().doubleValue());
+			if (settings.getDefaultMaxPriceKg() != null)
+				options.setMaxPriceKg(settings.getDefaultMaxPriceKg().doubleValue());
+			if (settings.getDefaultMinPriceKg() != null)
+				options.setMinPriceKg(settings.getDefaultMinPriceKg().doubleValue());
+			auction.setOptions(options);
+		}
+
+		// Update available weight of the auctioned product
+		productService.offsetWeightKgAvailable(auctionUpdateDto.getProductId(),
+				-auctionUpdateDto.getProductQuantity());
 
 		Auction full = persistenceHelper.saveAndReload(auctionRepository, auction, Auction::getId);
 
@@ -95,6 +130,9 @@ public class AuctionServiceImpl implements AuctionService {
 		Auction existingAuction = auctionRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Enchère non trouvée"));
 
+		checkAuctionSettings(auctionDetailDto);
+		checkAuctionQuantity(auctionDetailDto);
+
 		if (existingAuction.getStatus().getId()
 				.equals(tradeStatusRepository.findStatusPending().getId())
 				&& !existingAuction.getStatus().getId().equals(auctionDetailDto.getStatusId())) {
@@ -125,15 +163,23 @@ public class AuctionServiceImpl implements AuctionService {
 
 		Auction saved = auctionRepository.save(existingAuction);
 		notifyAuctionClosed(saved);
+
 		return auctionMapper.toDto(saved);
 	}
 
 	@Override
 	public void deleteAuction(Integer id) {
-		if (auctionRepository.findById(id).isPresent()) {
+		Optional<Auction> auctionOptional = auctionRepository.findById(id);
+		if (auctionOptional.isPresent()) {
 			AuctionUpdateDto dto = new AuctionUpdateDto();
 			dto.setActive(false);
 			updateAuction(id, dto);
+
+			// update available weight
+			Auction auction = auctionOptional.get();
+			productService.offsetWeightKgAvailable(auction.getProduct().getId(),
+					auction.getProductQuantity());
+
 			deleteAuctionCloseJob(id.longValue());
 		} else {
 			throw new ResourceNotFoundException("Enchère non trouvée");
@@ -169,6 +215,13 @@ public class AuctionServiceImpl implements AuctionService {
 				auction.setStatus(tradeStatusRepository.findStatusExpired());
 				auctionRepository.save(auction);
 				log.info("L'enchère ID {} a été marquée comme CLOSED.", auctionId);
+
+				// Update available weight of the auctioned product
+				productService.offsetWeightKgAvailable(auction.getProduct().getId(),
+						auction.getProductQuantity());
+				log.info("Le poids disponible du produit ID {} a été ré-incrémenté de +{}",
+						auctionId, auction.getProductQuantity());
+
 				notifyAuctionClosed(auction);
 				deleteAuctionCloseJob(auctionId.longValue());
 			} else {
@@ -204,6 +257,48 @@ public class AuctionServiceImpl implements AuctionService {
 		}
 	}
 
+	private void checkAuctionQuantity(AuctionUpdateDto auctionUpdateDto) {
+		if (auctionUpdateDto.getProductId() != null) {
+			ProductDto productDto = productService.getProductById(auctionUpdateDto.getProductId());
+			if (auctionUpdateDto.getProductQuantity() > productDto.getWeightKgAvailable()) {
+				throw new ApiErrorException(HttpStatus.BAD_REQUEST, ApiErrorCode.BAD_REQUEST.code(),
+						"weightKgAvailable", "Quantité disponible insuffisante pour le produit");
+			}
+		}
+	}
+
+	private void checkAuctionSettings(AuctionUpdateDto auctionUpdateDto) {
+		GlobalSettingsDto settings = globalSettingsService.getGlobalSettings();
+
+		final double pricePerKg = getPricePerKg(auctionUpdateDto);
+
+		if (settings.getDefaultFixedPriceKg() != null) {
+			if (pricePerKg != settings.getDefaultFixedPriceKg().doubleValue())
+				throw new ApiErrorException(HttpStatus.BAD_REQUEST, ApiErrorCode.BAD_REQUEST.code(),
+						"defaultFixedPriceKg", "Prix/kg fixé non respecté");
+		}
+
+		if (settings.getDefaultMinPriceKg() != null) {
+			if (pricePerKg < settings.getDefaultMinPriceKg().doubleValue())
+				throw new ApiErrorException(HttpStatus.BAD_REQUEST, ApiErrorCode.BAD_REQUEST.code(),
+						"defaultMinPriceKg", "Prix/kg minimum non respecté");
+		}
+
+		if (settings.getDefaultMaxPriceKg() != null) {
+			if (pricePerKg > settings.getDefaultMaxPriceKg().doubleValue())
+				throw new ApiErrorException(HttpStatus.BAD_REQUEST, ApiErrorCode.BAD_REQUEST.code(),
+						"defaultMaxPriceKg", "Prix/kg maximum non respecté");
+		}
+	}
+
+	private double getPricePerKg(AuctionUpdateDto auctionUpdateDto) {
+		if (auctionUpdateDto.getProductQuantity() == null
+				|| auctionUpdateDto.getProductQuantity() <= 0) {
+			return 0;
+		}
+
+		return auctionUpdateDto.getPrice() / auctionUpdateDto.getProductQuantity();
+	}
 	// Notifie les abonnés SSE de la clôture de l'enchère (acceptation ou expiration)
 	private void notifyAuctionClosed(Auction auction) {
 		Set<String> subscribers = auctionSseService.getSubscribers(auction.getId());

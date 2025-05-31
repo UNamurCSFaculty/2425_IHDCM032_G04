@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @SecurityRequirement(name = "jwt")
@@ -26,6 +27,7 @@ public interface AdminGlobalSettingsApi {
 			@ApiResponse(responseCode = "404", description = "Réglages globaux non configurés", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
 	ResponseEntity<GlobalSettingsDto> getGlobalSettings();
 
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@Operation(summary = "Mettre à jour les réglages globaux")
 	@PutMapping(consumes = "application/json")
 	@ApiResponses({

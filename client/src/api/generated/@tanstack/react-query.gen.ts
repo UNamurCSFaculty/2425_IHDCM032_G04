@@ -19,6 +19,12 @@ import {
   deleteProduct,
   getProduct,
   updateProduct,
+  deleteNews,
+  getNews,
+  updateNews,
+  deleteNewsCategory,
+  getNewsCategory,
+  updateNewsCategory,
   deleteLanguage,
   getLanguage,
   updateLanguage,
@@ -31,6 +37,8 @@ import {
   deleteContractOffer,
   getContractOffer,
   updateContractOffer,
+  rejectContractOffer,
+  acceptContractOffer,
   deleteBid,
   getBid,
   updateBid,
@@ -55,6 +63,10 @@ import {
   createQuality,
   listProducts,
   createProduct,
+  listNews,
+  createNews,
+  listNewsCategories,
+  createNewsCategory,
   listLanguages,
   createLanguage,
   listFields,
@@ -79,24 +91,24 @@ import {
   checkEmail,
   listRegions,
   subscribe,
-  listAuctions1,
-  getAuction1,
-  listAllAuctions,
   deleteDocument,
   getDocument,
   downloadDocument,
+  getContractOfferByCriteria,
   getCurrentUser,
+  getAuctionSettings,
   getApplicationData,
   getUser,
+  getFilteredData,
   getDashboardGraphicSeries,
   getDashboardCards,
 } from '../sdk.gen'
 import {
   type UseMutationOptions,
   queryOptions,
-  type DefaultError,
   infiniteQueryOptions,
   type InfiniteData,
+  type DefaultError,
 } from '@tanstack/react-query'
 import type {
   DeleteUserData,
@@ -140,6 +152,20 @@ import type {
   UpdateProductData,
   UpdateProductError,
   UpdateProductResponse,
+  DeleteNewsData,
+  DeleteNewsError,
+  DeleteNewsResponse,
+  GetNewsData,
+  UpdateNewsData,
+  UpdateNewsError,
+  UpdateNewsResponse,
+  DeleteNewsCategoryData,
+  DeleteNewsCategoryError,
+  DeleteNewsCategoryResponse,
+  GetNewsCategoryData,
+  UpdateNewsCategoryData,
+  UpdateNewsCategoryError,
+  UpdateNewsCategoryResponse,
   DeleteLanguageData,
   DeleteLanguageError,
   DeleteLanguageResponse,
@@ -168,6 +194,12 @@ import type {
   UpdateContractOfferData,
   UpdateContractOfferError,
   UpdateContractOfferResponse,
+  RejectContractOfferData,
+  RejectContractOfferError,
+  RejectContractOfferResponse,
+  AcceptContractOfferData,
+  AcceptContractOfferError,
+  AcceptContractOfferResponse,
   DeleteBidData,
   DeleteBidError,
   DeleteBidResponse,
@@ -222,6 +254,15 @@ import type {
   CreateProductData,
   CreateProductError,
   CreateProductResponse,
+  ListNewsData,
+  ListNewsResponse,
+  CreateNewsData,
+  CreateNewsError,
+  CreateNewsResponse,
+  ListNewsCategoriesData,
+  CreateNewsCategoryData,
+  CreateNewsCategoryError,
+  CreateNewsCategoryResponse,
   ListLanguagesData,
   CreateLanguageData,
   CreateLanguageError,
@@ -267,18 +308,19 @@ import type {
   CheckEmailData,
   ListRegionsData,
   SubscribeData,
-  ListAuctions1Data,
-  ListAuctions1Response,
-  GetAuction1Data,
-  ListAllAuctionsData,
   DeleteDocumentData,
   DeleteDocumentError,
   DeleteDocumentResponse,
   GetDocumentData,
   DownloadDocumentData,
+  GetContractOfferByCriteriaData,
   GetCurrentUserData,
+  GetAuctionSettingsData,
   GetApplicationDataData,
   GetUserData,
+  GetFilteredDataData,
+  GetFilteredDataError,
+  GetFilteredDataResponse,
   GetDashboardGraphicSeriesData,
   GetDashboardCardsData,
 } from '../types.gen'
@@ -699,6 +741,141 @@ export const updateProductMutation = (
   return mutationOptions
 }
 
+export const deleteNewsMutation = (
+  options?: Partial<Options<DeleteNewsData>>
+): UseMutationOptions<
+  DeleteNewsResponse,
+  DeleteNewsError,
+  Options<DeleteNewsData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    DeleteNewsResponse,
+    DeleteNewsError,
+    Options<DeleteNewsData>
+  > = {
+    mutationFn: async localOptions => {
+      const { data } = await deleteNews({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+export const getNewsQueryKey = (options: Options<GetNewsData>) =>
+  createQueryKey('getNews', options)
+
+export const getNewsOptions = (options: Options<GetNewsData>) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getNews({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: getNewsQueryKey(options),
+  })
+}
+
+export const updateNewsMutation = (
+  options?: Partial<Options<UpdateNewsData>>
+): UseMutationOptions<
+  UpdateNewsResponse,
+  UpdateNewsError,
+  Options<UpdateNewsData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    UpdateNewsResponse,
+    UpdateNewsError,
+    Options<UpdateNewsData>
+  > = {
+    mutationFn: async localOptions => {
+      const { data } = await updateNews({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+export const deleteNewsCategoryMutation = (
+  options?: Partial<Options<DeleteNewsCategoryData>>
+): UseMutationOptions<
+  DeleteNewsCategoryResponse,
+  DeleteNewsCategoryError,
+  Options<DeleteNewsCategoryData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    DeleteNewsCategoryResponse,
+    DeleteNewsCategoryError,
+    Options<DeleteNewsCategoryData>
+  > = {
+    mutationFn: async localOptions => {
+      const { data } = await deleteNewsCategory({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+export const getNewsCategoryQueryKey = (
+  options: Options<GetNewsCategoryData>
+) => createQueryKey('getNewsCategory', options)
+
+export const getNewsCategoryOptions = (
+  options: Options<GetNewsCategoryData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getNewsCategory({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: getNewsCategoryQueryKey(options),
+  })
+}
+
+export const updateNewsCategoryMutation = (
+  options?: Partial<Options<UpdateNewsCategoryData>>
+): UseMutationOptions<
+  UpdateNewsCategoryResponse,
+  UpdateNewsCategoryError,
+  Options<UpdateNewsCategoryData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    UpdateNewsCategoryResponse,
+    UpdateNewsCategoryError,
+    Options<UpdateNewsCategoryData>
+  > = {
+    mutationFn: async localOptions => {
+      const { data } = await updateNewsCategory({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
 export const deleteLanguageMutation = (
   options?: Partial<Options<DeleteLanguageData>>
 ): UseMutationOptions<
@@ -956,6 +1133,54 @@ export const updateContractOfferMutation = (
   > = {
     mutationFn: async localOptions => {
       const { data } = await updateContractOffer({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+export const rejectContractOfferMutation = (
+  options?: Partial<Options<RejectContractOfferData>>
+): UseMutationOptions<
+  RejectContractOfferResponse,
+  RejectContractOfferError,
+  Options<RejectContractOfferData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    RejectContractOfferResponse,
+    RejectContractOfferError,
+    Options<RejectContractOfferData>
+  > = {
+    mutationFn: async localOptions => {
+      const { data } = await rejectContractOffer({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+export const acceptContractOfferMutation = (
+  options?: Partial<Options<AcceptContractOfferData>>
+): UseMutationOptions<
+  AcceptContractOfferResponse,
+  AcceptContractOfferError,
+  Options<AcceptContractOfferData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    AcceptContractOfferResponse,
+    AcceptContractOfferError,
+    Options<AcceptContractOfferData>
+  > = {
+    mutationFn: async localOptions => {
+      const { data } = await acceptContractOffer({
         ...options,
         ...localOptions,
         throwOnError: true,
@@ -1580,6 +1805,211 @@ export const createProductMutation = (
   > = {
     mutationFn: async localOptions => {
       const { data } = await createProduct({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+export const listNewsQueryKey = (options?: Options<ListNewsData>) =>
+  createQueryKey('listNews', options)
+
+export const listNewsOptions = (options?: Options<ListNewsData>) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await listNews({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: listNewsQueryKey(options),
+  })
+}
+
+const createInfiniteParams = <
+  K extends Pick<QueryKey<Options>[0], 'body' | 'headers' | 'path' | 'query'>,
+>(
+  queryKey: QueryKey<Options>,
+  page: K
+) => {
+  const params = queryKey[0]
+  if (page.body) {
+    params.body = {
+      ...(queryKey[0].body as any),
+      ...(page.body as any),
+    }
+  }
+  if (page.headers) {
+    params.headers = {
+      ...queryKey[0].headers,
+      ...page.headers,
+    }
+  }
+  if (page.path) {
+    params.path = {
+      ...(queryKey[0].path as any),
+      ...(page.path as any),
+    }
+  }
+  if (page.query) {
+    params.query = {
+      ...(queryKey[0].query as any),
+      ...(page.query as any),
+    }
+  }
+  return params as unknown as typeof page
+}
+
+export const listNewsInfiniteQueryKey = (
+  options?: Options<ListNewsData>
+): QueryKey<Options<ListNewsData>> => createQueryKey('listNews', options, true)
+
+export const listNewsInfiniteOptions = (options?: Options<ListNewsData>) => {
+  return infiniteQueryOptions<
+    ListNewsResponse,
+    DefaultError,
+    InfiniteData<ListNewsResponse>,
+    QueryKey<Options<ListNewsData>>,
+    | number
+    | Pick<
+        QueryKey<Options<ListNewsData>>[0],
+        'body' | 'headers' | 'path' | 'query'
+      >
+  >(
+    // @ts-ignore
+    {
+      queryFn: async ({ pageParam, queryKey, signal }) => {
+        // @ts-ignore
+        const page: Pick<
+          QueryKey<Options<ListNewsData>>[0],
+          'body' | 'headers' | 'path' | 'query'
+        > =
+          typeof pageParam === 'object'
+            ? pageParam
+            : {
+                query: {
+                  page: pageParam,
+                },
+              }
+        const params = createInfiniteParams(queryKey, page)
+        const { data } = await listNews({
+          ...options,
+          ...params,
+          signal,
+          throwOnError: true,
+        })
+        return data
+      },
+      queryKey: listNewsInfiniteQueryKey(options),
+    }
+  )
+}
+
+export const createNewsQueryKey = (options: Options<CreateNewsData>) =>
+  createQueryKey('createNews', options)
+
+export const createNewsOptions = (options: Options<CreateNewsData>) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await createNews({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: createNewsQueryKey(options),
+  })
+}
+
+export const createNewsMutation = (
+  options?: Partial<Options<CreateNewsData>>
+): UseMutationOptions<
+  CreateNewsResponse,
+  CreateNewsError,
+  Options<CreateNewsData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    CreateNewsResponse,
+    CreateNewsError,
+    Options<CreateNewsData>
+  > = {
+    mutationFn: async localOptions => {
+      const { data } = await createNews({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+export const listNewsCategoriesQueryKey = (
+  options?: Options<ListNewsCategoriesData>
+) => createQueryKey('listNewsCategories', options)
+
+export const listNewsCategoriesOptions = (
+  options?: Options<ListNewsCategoriesData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await listNewsCategories({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: listNewsCategoriesQueryKey(options),
+  })
+}
+
+export const createNewsCategoryQueryKey = (
+  options: Options<CreateNewsCategoryData>
+) => createQueryKey('createNewsCategory', options)
+
+export const createNewsCategoryOptions = (
+  options: Options<CreateNewsCategoryData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await createNewsCategory({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: createNewsCategoryQueryKey(options),
+  })
+}
+
+export const createNewsCategoryMutation = (
+  options?: Partial<Options<CreateNewsCategoryData>>
+): UseMutationOptions<
+  CreateNewsCategoryResponse,
+  CreateNewsCategoryError,
+  Options<CreateNewsCategoryData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    CreateNewsCategoryResponse,
+    CreateNewsCategoryError,
+    Options<CreateNewsCategoryData>
+  > = {
+    mutationFn: async localOptions => {
+      const { data } = await createNewsCategory({
         ...options,
         ...localOptions,
         throwOnError: true,
@@ -2339,145 +2769,6 @@ export const subscribeOptions = (options?: Options<SubscribeData>) => {
   })
 }
 
-export const listAuctions1QueryKey = (options: Options<ListAuctions1Data>) =>
-  createQueryKey('listAuctions1', options)
-
-export const listAuctions1Options = (options: Options<ListAuctions1Data>) => {
-  return queryOptions({
-    queryFn: async ({ queryKey, signal }) => {
-      const { data } = await listAuctions1({
-        ...options,
-        ...queryKey[0],
-        signal,
-        throwOnError: true,
-      })
-      return data
-    },
-    queryKey: listAuctions1QueryKey(options),
-  })
-}
-
-const createInfiniteParams = <
-  K extends Pick<QueryKey<Options>[0], 'body' | 'headers' | 'path' | 'query'>,
->(
-  queryKey: QueryKey<Options>,
-  page: K
-) => {
-  const params = queryKey[0]
-  if (page.body) {
-    params.body = {
-      ...(queryKey[0].body as any),
-      ...(page.body as any),
-    }
-  }
-  if (page.headers) {
-    params.headers = {
-      ...queryKey[0].headers,
-      ...page.headers,
-    }
-  }
-  if (page.path) {
-    params.path = {
-      ...(queryKey[0].path as any),
-      ...(page.path as any),
-    }
-  }
-  if (page.query) {
-    params.query = {
-      ...(queryKey[0].query as any),
-      ...(page.query as any),
-    }
-  }
-  return params as unknown as typeof page
-}
-
-export const listAuctions1InfiniteQueryKey = (
-  options: Options<ListAuctions1Data>
-): QueryKey<Options<ListAuctions1Data>> =>
-  createQueryKey('listAuctions1', options, true)
-
-export const listAuctions1InfiniteOptions = (
-  options: Options<ListAuctions1Data>
-) => {
-  return infiniteQueryOptions<
-    ListAuctions1Response,
-    DefaultError,
-    InfiniteData<ListAuctions1Response>,
-    QueryKey<Options<ListAuctions1Data>>,
-    | string
-    | Pick<
-        QueryKey<Options<ListAuctions1Data>>[0],
-        'body' | 'headers' | 'path' | 'query'
-      >
-  >(
-    // @ts-ignore
-    {
-      queryFn: async ({ pageParam, queryKey, signal }) => {
-        // @ts-ignore
-        const page: Pick<
-          QueryKey<Options<ListAuctions1Data>>[0],
-          'body' | 'headers' | 'path' | 'query'
-        > =
-          typeof pageParam === 'object'
-            ? pageParam
-            : {
-                query: {
-                  start: pageParam,
-                },
-              }
-        const params = createInfiniteParams(queryKey, page)
-        const { data } = await listAuctions1({
-          ...options,
-          ...params,
-          signal,
-          throwOnError: true,
-        })
-        return data
-      },
-      queryKey: listAuctions1InfiniteQueryKey(options),
-    }
-  )
-}
-
-export const getAuction1QueryKey = (options: Options<GetAuction1Data>) =>
-  createQueryKey('getAuction1', options)
-
-export const getAuction1Options = (options: Options<GetAuction1Data>) => {
-  return queryOptions({
-    queryFn: async ({ queryKey, signal }) => {
-      const { data } = await getAuction1({
-        ...options,
-        ...queryKey[0],
-        signal,
-        throwOnError: true,
-      })
-      return data
-    },
-    queryKey: getAuction1QueryKey(options),
-  })
-}
-
-export const listAllAuctionsQueryKey = (
-  options?: Options<ListAllAuctionsData>
-) => createQueryKey('listAllAuctions', options)
-
-export const listAllAuctionsOptions = (
-  options?: Options<ListAllAuctionsData>
-) => {
-  return queryOptions({
-    queryFn: async ({ queryKey, signal }) => {
-      const { data } = await listAllAuctions({
-        ...options,
-        ...queryKey[0],
-        signal,
-        throwOnError: true,
-      })
-      return data
-    },
-    queryKey: listAllAuctionsQueryKey(options),
-  })
-}
-
 export const deleteDocumentMutation = (
   options?: Partial<Options<DeleteDocumentData>>
 ): UseMutationOptions<
@@ -2541,6 +2832,27 @@ export const downloadDocumentOptions = (
   })
 }
 
+export const getContractOfferByCriteriaQueryKey = (
+  options: Options<GetContractOfferByCriteriaData>
+) => createQueryKey('getContractOfferByCriteria', options)
+
+export const getContractOfferByCriteriaOptions = (
+  options: Options<GetContractOfferByCriteriaData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getContractOfferByCriteria({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: getContractOfferByCriteriaQueryKey(options),
+  })
+}
+
 export const getCurrentUserQueryKey = (options?: Options<GetCurrentUserData>) =>
   createQueryKey('getCurrentUser', options)
 
@@ -2558,6 +2870,27 @@ export const getCurrentUserOptions = (
       return data
     },
     queryKey: getCurrentUserQueryKey(options),
+  })
+}
+
+export const getAuctionSettingsQueryKey = (
+  options?: Options<GetAuctionSettingsData>
+) => createQueryKey('getAuctionSettings', options)
+
+export const getAuctionSettingsOptions = (
+  options?: Options<GetAuctionSettingsData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getAuctionSettings({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: getAuctionSettingsQueryKey(options),
   })
 }
 
@@ -2598,6 +2931,75 @@ export const getUserOptions = (options: Options<GetUserData>) => {
     },
     queryKey: getUserQueryKey(options),
   })
+}
+
+export const getFilteredDataQueryKey = (
+  options?: Options<GetFilteredDataData>
+) => createQueryKey('getFilteredData', options)
+
+export const getFilteredDataOptions = (
+  options?: Options<GetFilteredDataData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getFilteredData({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: getFilteredDataQueryKey(options),
+  })
+}
+
+export const getFilteredDataInfiniteQueryKey = (
+  options?: Options<GetFilteredDataData>
+): QueryKey<Options<GetFilteredDataData>> =>
+  createQueryKey('getFilteredData', options, true)
+
+export const getFilteredDataInfiniteOptions = (
+  options?: Options<GetFilteredDataData>
+) => {
+  return infiniteQueryOptions<
+    GetFilteredDataResponse,
+    GetFilteredDataError,
+    InfiniteData<GetFilteredDataResponse>,
+    QueryKey<Options<GetFilteredDataData>>,
+    | string
+    | Pick<
+        QueryKey<Options<GetFilteredDataData>>[0],
+        'body' | 'headers' | 'path' | 'query'
+      >
+  >(
+    // @ts-ignore
+    {
+      queryFn: async ({ pageParam, queryKey, signal }) => {
+        // @ts-ignore
+        const page: Pick<
+          QueryKey<Options<GetFilteredDataData>>[0],
+          'body' | 'headers' | 'path' | 'query'
+        > =
+          typeof pageParam === 'object'
+            ? pageParam
+            : {
+                query: {
+                  start: pageParam,
+                },
+              }
+        const params = createInfiniteParams(queryKey, page)
+        const { data } = await getFilteredData({
+          ...options,
+          ...params,
+          signal,
+          throwOnError: true,
+        })
+        return data
+      },
+      queryKey: getFilteredDataInfiniteQueryKey(options),
+    }
+  )
 }
 
 export const getDashboardGraphicSeriesQueryKey = (

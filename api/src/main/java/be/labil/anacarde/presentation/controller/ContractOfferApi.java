@@ -34,6 +34,19 @@ public interface ContractOfferApi {
 			@ApiResponse(responseCode = "404", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
 	ResponseEntity<ContractOfferDto> getContractOffer(@ApiValidId @PathVariable("id") Integer id);
 
+	@Operation(summary = "Obtenir un contrat par critères (qualité, vendeur, acheteur)")
+	@GetMapping("/by-criteria")
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "Contrat trouvé", content = @Content(schema = @Schema(implementation = ContractOfferDto.class))),
+			@ApiResponse(responseCode = "400", description = "Paramètres manquants", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
+			@ApiResponse(responseCode = "404", description = "Aucun contrat trouvé", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
+	ResponseEntity<ContractOfferDto> getContractOfferByCriteria(
+			@Parameter(description = "ID de la qualité", required = true) @RequestParam("qualityId") Integer qualityId,
+
+			@Parameter(description = "ID du vendeur", required = true) @RequestParam("sellerId") Integer sellerId,
+
+			@Parameter(description = "ID de l'acheteur", required = true) @RequestParam("buyerId") Integer buyerId);
+
 	@Operation(summary = "Créer un contrat")
 	@PostMapping
 	@ApiResponses({
@@ -52,6 +65,22 @@ public interface ContractOfferApi {
 	ResponseEntity<ContractOfferDto> updateContractOffer(@ApiValidId @PathVariable("id") Integer id,
 			@Validated({Default.class,
 					ValidationGroups.Update.class}) @RequestBody ContractOfferUpdateDto storeDetailDto);
+
+	@Operation(summary = "Accepter une offre de contrat")
+	@PutMapping(value = "/{contractOfferId}/accept")
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "Offre de contrat acceptée", content = @Content(schema = @Schema(implementation = ContractOfferDto.class))),
+			@ApiResponse(responseCode = "404", description = "Offre de contrat non trouvée", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
+	ResponseEntity<ContractOfferDto> acceptContractOffer(
+			@ApiValidId @PathVariable("contractOfferId") Integer contractOfferId);
+
+	@Operation(summary = "Rejeter une offre de contrat")
+	@PutMapping(value = "/{contractOfferId}/reject")
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "Offre de contrat rejetée", content = @Content(schema = @Schema(implementation = ContractOfferDto.class))),
+			@ApiResponse(responseCode = "404", description = "Offre de contrat non trouvée", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
+	ResponseEntity<ContractOfferDto> rejectContractOffer(
+			@ApiValidId @PathVariable("contractOfferId") Integer contractOfferId);
 
 	@Operation(summary = "Obtenir tous les contrats")
 	@GetMapping

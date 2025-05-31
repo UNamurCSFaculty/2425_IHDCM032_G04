@@ -253,6 +253,7 @@ export const zProductUpdateDto = z.object({
   deliveryDate: z.iso.datetime().optional(),
   storeId: z.number().int(),
   weightKg: z.number().optional(),
+  weightKgAvailable: z.number().optional(),
   qualityControlId: z.number().int(),
   type: z.string(),
 })
@@ -297,6 +298,7 @@ export const zProductDto = z.object({
   deliveryDate: z.iso.datetime().optional(),
   store: zStoreDetailDto,
   weightKg: z.number(),
+  weightKgAvailable: z.number(),
   qualityControl: zQualityControlDto,
   type: z.enum(['harvest', 'transformed']),
 })
@@ -327,6 +329,20 @@ export const zTransformedProductDto = zProductDto
       harvestProducts: z.array(zHarvestProductDto).optional(),
     })
   )
+
+export const zNewsUpdateDto = z.object({
+  title: z.string().optional(),
+  content: z.string().optional(),
+  publicationDate: z.iso.datetime().optional(),
+  categoryId: z.number().int().optional(),
+  authorName: z.string().optional(),
+})
+
+export const zNewsCategoryDto = z.object({
+  id: z.number().int().readonly(),
+  name: z.string().min(1),
+  description: z.string().optional(),
+})
 
 export const zCooperativeUpdateDto = z.object({
   name: z.string().min(1),
@@ -392,7 +408,6 @@ export const zAuctionUpdateDto = z.object({
   price: z.number(),
   productQuantity: z.number().int(),
   expirationDate: z.iso.datetime(),
-  creationDate: z.iso.datetime().readonly().optional(),
   active: z.boolean(),
   productId: z.number().int(),
   traderId: z.number().int(),
@@ -523,6 +538,14 @@ export const zTransformerCreateDto = zUserCreateDto.and(
   })
 )
 
+export const zNewsCreateDto = z.object({
+  title: z.string().min(1),
+  content: z.string().min(1),
+  publicationDate: z.iso.datetime().optional(),
+  categoryId: z.number().int(),
+  authorName: z.string().optional(),
+})
+
 export const zContactRequestDto = z.object({
   name: z.string().min(1),
   email: z.string().min(1),
@@ -627,43 +650,26 @@ export const zSseEmitter = z.object({
   timeout: z.coerce.bigint().optional(),
 })
 
-export const zExportAuctionDto = z.object({
-  auctionId: z.number().int().optional(),
-  auctionStartDate: z.iso.datetime().optional(),
-  auctionEndDate: z.iso.datetime().optional(),
-  auctionStartPrice: z.number().optional(),
-  auctionEnded: z.boolean().optional(),
-  auctionStatus: z.string().optional(),
-  strategyName: z.string().optional(),
-  optionMinPriceKg: z.number().optional(),
-  optionMaxPriceKg: z.number().optional(),
-  optionBuyNowPrice: z.number().optional(),
-  optionShowPublic: z.boolean().optional(),
-  optionMinIncrement: z.number().int().optional(),
-  productId: z.number().int().optional(),
-  productWeightKg: z.number().optional(),
-  productDepositDate: z.iso.datetime().optional(),
-  transformedProductId: z.number().int().optional(),
-  qualityInspectorId: z.number().int().optional(),
-  productQuality: z.string().optional(),
-  productType: z.string().optional(),
-  storeId: z.number().int().optional(),
-  storeName: z.string().optional(),
-  storeCity: z.string().optional(),
-  storeRegion: z.string().optional(),
-  sellerId: z.number().int().optional(),
-  sellerCity: z.string().optional(),
-  sellerRegion: z.string().optional(),
-  sellerCooperative: z.string().optional(),
-  bidCount: z.coerce.bigint().optional(),
-  bidMax: z.number().optional(),
-  bidMin: z.number().optional(),
-  bidAvg: z.number().optional(),
-  bidSum: z.number().optional(),
-  winnerTraderId: z.number().int().optional(),
-  bidWinningAmount: z.number().optional(),
-  winnerCity: z.string().optional(),
-  winnerRegion: z.string().optional(),
+export const zNewsDto = z.object({
+  id: z.number().int().readonly(),
+  title: z.string().min(1),
+  content: z.string().optional(),
+  creationDate: z.iso.datetime().readonly().optional(),
+  publicationDate: z.iso.datetime(),
+  category: zNewsCategoryDto,
+  authorName: z.string().optional(),
+})
+
+export const zNewsPageDto = z.object({
+  content: z.array(zNewsDto).optional(),
+  totalPages: z.number().int().optional(),
+  totalElements: z.coerce.bigint().optional(),
+  number: z.number().int().optional(),
+  size: z.number().int().optional(),
+  first: z.boolean().optional(),
+  last: z.boolean().optional(),
+  numberOfElements: z.number().int().optional(),
+  empty: z.boolean().optional(),
 })
 
 export const zApplicationDataDto = z.object({
@@ -750,6 +756,18 @@ export const zGetProductResponse = zProductDto
 
 export const zUpdateProductResponse = zProductDto
 
+export const zDeleteNewsResponse = z.void()
+
+export const zGetNewsResponse = zNewsDto
+
+export const zUpdateNewsResponse = zNewsUpdateDto
+
+export const zDeleteNewsCategoryResponse = z.void()
+
+export const zGetNewsCategoryResponse = zNewsCategoryDto
+
+export const zUpdateNewsCategoryResponse = zNewsCategoryDto
+
 export const zDeleteLanguageResponse = z.void()
 
 export const zGetLanguageResponse = zLanguageDto
@@ -773,6 +791,10 @@ export const zDeleteContractOfferResponse = z.union([z.unknown(), z.void()])
 export const zGetContractOfferResponse = zContractOfferDto
 
 export const zUpdateContractOfferResponse = zContractOfferDto
+
+export const zRejectContractOfferResponse = zContractOfferDto
+
+export const zAcceptContractOfferResponse = zContractOfferDto
 
 export const zDeleteBidResponse = z.union([z.unknown(), z.void()])
 
@@ -822,6 +844,14 @@ export const zListProductsResponse = z.array(zProductDto)
 
 export const zCreateProductResponse = zProductDto
 
+export const zListNewsResponse = zNewsPageDto
+
+export const zCreateNewsResponse = zNewsCreateDto
+
+export const zListNewsCategoriesResponse = z.array(zNewsCategoryDto)
+
+export const zCreateNewsCategoryResponse = zNewsCategoryDto
+
 export const zListLanguagesResponse = z.array(zLanguageDto)
 
 export const zCreateLanguageResponse = zLanguageDto
@@ -866,23 +896,23 @@ export const zListRegionsResponse = z.array(zRegionDto)
 
 export const zSubscribeResponse = zSseEmitter
 
-export const zListAuctions1Response = z.array(zExportAuctionDto)
-
-export const zGetAuction1Response = zExportAuctionDto
-
-export const zListAllAuctionsResponse = z.array(zExportAuctionDto)
-
 export const zDeleteDocumentResponse = z.void()
 
 export const zGetDocumentResponse = zDocumentDto
 
 export const zDownloadDocumentResponse = z.string()
 
+export const zGetContractOfferByCriteriaResponse = zContractOfferDto
+
 export const zGetCurrentUserResponse = zUserDetailDto
+
+export const zGetAuctionSettingsResponse = zGlobalSettingsDto
 
 export const zGetApplicationDataResponse = zApplicationDataDto
 
 export const zGetUserResponse = zUserDetailDto
+
+export const zGetFilteredDataResponse = z.string()
 
 export const zGetDashboardGraphicSeriesResponse = z.array(zDashboardGraphicDto)
 
