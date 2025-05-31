@@ -823,13 +823,33 @@
         }
       },
       "contact": "Contact",
-      "about": "À Propos"
+      "about": "À Propos",
+      "marketplace": {
+        "title": "Marketplace",
+        "browse": "Voir le Marché",
+        "browse_desc": "Parcourez et achetez des produits frais.",
+        "new_sale": "Nouvelle Vente",
+        "new_sale_desc": "Proposez vos produits à la vente.",
+        "new_deposit": "Nouveau Dépôt",
+        "new_deposit_desc": "Déposez vos produits pour de futures ventes.",
+        "how_it_works": "Comment ça marche ?",
+        "how_it_works_desc": "Découvrez comment acheter et vendre sur notre plateforme."
+      },
+      "news": "Actualités",
+      "my_space": {
+        "title": "Mon Espace",
+        "my_purchases": "Mes Achats",
+        "my_sales": "Mes Ventes",
+        "my_deposits": "Mes Dépôts",
+        "my_contracts": "Mes Contrats"
+      }
     },
     "auth": {
       "login": "Connexion",
       "profile": "Profil",
       "settings": "Paramètres",
-      "logout": "Déconnexion"
+      "logout": "Déconnexion",
+      "register": "Inscription"
     },
     "mobile": {
       "toggle_menu_sr": "Ouvrir le menu principal"

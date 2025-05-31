@@ -6,6 +6,8 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import {
@@ -29,14 +31,20 @@ import { Link, useNavigate } from '@tanstack/react-router'
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import {
   ArrowLeftRight,
-  CircleDollarSign,
-  History,
   Menu as MenuIcon,
   Package,
   ShoppingCart,
+  ChevronDown,
+  UserCircle,
+  LogOut,
+  HelpCircle,
+  History,
+  PackagePlus,
+  DollarSign,
 } from 'lucide-react'
 import React, { useState } from 'react'
-import { useTranslation } from 'react-i18next' // Added import
+import { useTranslation } from 'react-i18next'
+import type { UserDetailDto } from '@/api/generated/types.gen'
 
 interface MenuItemDefinition {
   titleKey: string
@@ -44,114 +52,202 @@ interface MenuItemDefinition {
   descriptionKey?: string
   icon?: React.ReactNode
   items?: MenuItemDefinition[]
+  requiresAuth?: boolean
+  hideWhenAuth?: boolean
+  allowedUserTypes?: UserDetailDto['type'][]
 }
 
 const activeStyle = { style: { color: 'var(--anacarde-dark-green)' } }
 
-// menu definition will be moved inside the component to use the t function
-
 export function Header() {
-  const { t } = useTranslation() // Added
+  const { t } = useTranslation()
   const user = useUserStore(state => state.user)
-  const logout = useUserStore(state => state.logout)
+  const logoutUserStore = useUserStore(state => state.logout)
   const isLoggedIn = Boolean(user)
   const navigate = useNavigate()
 
-  // Contrôle du drawer mobile
   const [isSheetOpen, setIsSheetOpen] = useState(false)
-  // Pour les sous-menus mobile
   const [openMobileMenuItems, setOpenMobileMenuItems] = useState<
     Record<string, boolean>
   >({})
 
   const handleLogout = () => {
     logoutApiCall()
-    logout()
+    logoutUserStore()
     navigate({ to: '/', replace: true })
+    if (isSheetOpen) setIsSheetOpen(false)
   }
 
-  const toggleMobileSubmenu = (title: string) =>
-    setOpenMobileMenuItems(prev => ({ ...prev, [title]: !prev[title] }))
+  const toggleMobileSubmenu = (titleKey: string) =>
+    setOpenMobileMenuItems(prev => ({ ...prev, [titleKey]: !prev[titleKey] }))
 
-  const handleMobileLinkClick = () => setIsSheetOpen(false)
+  const handleMobileLinkClick = (url?: string) => {
+    setIsSheetOpen(false)
+    if (url) navigate({ to: url })
+  }
 
-  const menu: MenuItemDefinition[] = [
+  const producerAdminTransformerTrader: UserDetailDto['type'][] = [
+    'producer',
+    'admin',
+    'transformer',
+    'trader',
+  ]
+  const allAuthenticatedButCarrierQualityInspector: UserDetailDto['type'][] = [
+    'producer',
+    'admin',
+    'transformer',
+    'exporter',
+    'trader',
+  ]
+
+  const menuItems: MenuItemDefinition[] = [
     { titleKey: 'header.menu.home', url: '/' },
     {
-      titleKey: 'header.menu.purchases.title',
+      titleKey: 'header.menu.marketplace.title',
       url: '#',
       items: [
         {
-          titleKey: 'header.menu.purchases.items.buy_product.title',
-          descriptionKey: 'header.menu.purchases.items.buy_product.description',
+          titleKey: 'header.menu.marketplace.browse',
+          descriptionKey: 'header.menu.marketplace.browse_desc',
           icon: <ShoppingCart className="size-5 shrink-0" />,
           url: '/achats/marche',
         },
         {
-          titleKey: 'header.menu.purchases.items.my_purchases.title',
-          descriptionKey:
-            'header.menu.purchases.items.my_purchases.description',
-          icon: <ArrowLeftRight className="size-5 shrink-0" />,
-          url: '/achats/mes-encheres',
-        },
-      ],
-    },
-    {
-      titleKey: 'header.menu.sales.title',
-      url: '#',
-      items: [
-        {
-          titleKey: 'header.menu.sales.items.sell_product.title',
-          descriptionKey: 'header.menu.sales.items.sell_product.description',
-          icon: <CircleDollarSign className="size-5 shrink-0" />,
+          titleKey: 'header.menu.marketplace.new_sale',
+          descriptionKey: 'header.menu.marketplace.new_sale_desc',
+          icon: <DollarSign className="size-5 shrink-0" />,
           url: '/ventes/nouvelle-enchere',
+          requiresAuth: true,
+          allowedUserTypes: producerAdminTransformerTrader,
         },
         {
-          titleKey: 'header.menu.sales.items.my_sales.title',
-          descriptionKey: 'header.menu.sales.items.my_sales.description',
+          titleKey: 'header.menu.marketplace.new_deposit',
+          descriptionKey: 'header.menu.marketplace.new_deposit_desc',
+          icon: <PackagePlus className="size-5 shrink-0" />,
+          url: '/depots/nouveau-produit',
+          requiresAuth: true,
+          allowedUserTypes: producerAdminTransformerTrader,
+        },
+        {
+          titleKey: 'header.menu.my_space.my_purchases',
+          descriptionKey: 'header.menu.my_space.my_purchases_marketplace_desc',
+          icon: <ShoppingCart className="size-5 shrink-0" />,
+          url: '/achats/mes-encheres',
+          requiresAuth: true,
+          allowedUserTypes: allAuthenticatedButCarrierQualityInspector,
+        },
+        {
+          titleKey: 'header.menu.my_space.my_sales',
+          descriptionKey: 'header.menu.my_space.my_sales_marketplace_desc',
           icon: <ArrowLeftRight className="size-5 shrink-0" />,
           url: '/ventes/mes-encheres',
+          requiresAuth: true,
+          allowedUserTypes: producerAdminTransformerTrader,
         },
-      ],
-    },
-    {
-      titleKey: 'header.menu.deposits.title',
-      url: '#',
-      items: [
         {
-          titleKey: 'header.menu.deposits.items.deposit_product.title',
-          descriptionKey:
-            'header.menu.deposits.items.deposit_product.description',
+          titleKey: 'header.menu.my_space.my_deposits',
+          descriptionKey: 'header.menu.my_space.my_deposits_marketplace_desc',
           icon: <Package className="size-5 shrink-0" />,
-          url: '/depots/nouveau-produit',
-        },
-        {
-          titleKey: 'header.menu.deposits.items.my_products.title',
-          descriptionKey: 'header.menu.deposits.items.my_products.description',
-          icon: <History className="size-5 shrink-0" />,
           url: '/depots/mes-produits',
+          requiresAuth: true,
+          allowedUserTypes: producerAdminTransformerTrader,
         },
-      ],
-    },
-    {
-      titleKey: 'header.menu.contracts.title',
-      url: '#',
-      items: [
         {
-          titleKey: 'header.menu.contracts.items.history.title',
-          descriptionKey: 'header.menu.contracts.items.history.description',
+          titleKey: 'header.menu.my_space.my_contracts',
+          descriptionKey: 'header.menu.my_space.my_contracts_marketplace_desc',
           icon: <History className="size-5 shrink-0" />,
           url: '/contrats/mes-contrats',
+          requiresAuth: true,
+          allowedUserTypes: allAuthenticatedButCarrierQualityInspector,
+        },
+        {
+          titleKey: 'header.menu.marketplace.how_it_works',
+          descriptionKey: 'header.menu.marketplace.how_it_works_desc',
+          icon: <HelpCircle className="size-5 shrink-0" />,
+          url: '/a-propos#guide',
+          hideWhenAuth: true,
         },
       ],
     },
-    { titleKey: 'header.menu.contact', url: '/contact' },
+    {
+      titleKey: 'header.menu.news',
+      url: '/actualites',
+      // icon: <BookText className="size-5 shrink-0" />, // Icône supprimée
+    },
+    {
+      titleKey: 'header.menu.about',
+      url: '/a-propos',
+      // icon: <Users className="size-5 shrink-0" />, // Icône supprimée
+    },
+    {
+      titleKey: 'header.menu.contact',
+      url: '/contact',
+      // icon: <Mail className="size-5 shrink-0" />, // Icône supprimée
+    },
   ]
 
+  const userMenuItemsBase: MenuItemDefinition[] = [
+    {
+      titleKey: 'header.menu.my_space.my_purchases',
+      url: '/achats/mes-encheres',
+      icon: <ShoppingCart className="mr-2 size-4" />,
+      requiresAuth: true,
+      allowedUserTypes: allAuthenticatedButCarrierQualityInspector,
+    },
+    {
+      titleKey: 'header.menu.my_space.my_sales',
+      url: '/ventes/mes-encheres',
+      icon: <ArrowLeftRight className="mr-2 size-4" />,
+      requiresAuth: true,
+      allowedUserTypes: producerAdminTransformerTrader,
+    },
+    {
+      titleKey: 'header.menu.my_space.my_deposits',
+      url: '/depots/mes-produits',
+      icon: <Package className="mr-2 size-4" />,
+      requiresAuth: true,
+      allowedUserTypes: producerAdminTransformerTrader,
+    },
+    {
+      titleKey: 'header.menu.my_space.my_contracts',
+      url: '/contrats/mes-contrats',
+      icon: <History className="mr-2 size-4" />,
+      requiresAuth: true,
+      allowedUserTypes: allAuthenticatedButCarrierQualityInspector,
+    },
+  ]
+
+  const filteredMenuItems = menuItems
+    .map(item => {
+      if (item.items) {
+        const filteredSubItems = item.items.filter(subItem => {
+          const generalAccess = !subItem.requiresAuth && !subItem.hideWhenAuth
+          const hiddenWhenAuthAccess = subItem.hideWhenAuth && !isLoggedIn
+          const authRequiredAccess =
+            subItem.requiresAuth &&
+            isLoggedIn &&
+            (!subItem.allowedUserTypes ||
+              (user &&
+                user.type &&
+                subItem.allowedUserTypes.includes(user.type)))
+          return generalAccess || hiddenWhenAuthAccess || authRequiredAccess
+        })
+        return { ...item, items: filteredSubItems }
+      }
+      return item
+    })
+    .filter(
+      item => !(item.items && item.items.length === 0 && item.url === '#')
+    ) // Cache les triggers de menu si tous leurs enfants sont filtrés
+
+  const filteredUserMenuItems = userMenuItemsBase.filter(item => {
+    if (!isLoggedIn || !user || !user.type) return false
+    return !item.allowedUserTypes || item.allowedUserTypes.includes(user.type)
+  })
+
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-white shadow-sm">
+    <header className="sticky top-0 z-50 w-full border-b bg-white shadow-sm dark:border-gray-700 dark:bg-gray-900">
       <div className="container mx-auto flex h-18 items-center justify-between px-5 lg:px-0">
-        {/* Logo */}
         <Link to="/" className="flex items-center gap-2">
           <img src={logo} alt={t('header.logo_alt')} className="h-16" />
         </Link>
@@ -160,15 +256,17 @@ export function Header() {
         <div className="hidden lg:flex lg:flex-1 lg:justify-center">
           <NavigationMenu delayDuration={0}>
             <NavigationMenuList>
-              {menu.map(item => (
+              {filteredMenuItems.map(item => (
                 <NavigationMenuItem key={item.titleKey}>
-                  {item.items ? (
+                  {item.items && item.items.length > 0 ? (
                     <>
                       <NavigationMenuTrigger>
+                        {item.icon && <span className="mr-2">{item.icon}</span>}{' '}
+                        {/* Pour icône sur le trigger principal si besoin */}
                         {t(item.titleKey)}
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
-                        <ul className="grid w-[400px] gap-3 p-4 lg:w-[500px] lg:w-[600px] lg:grid-cols-2">
+                        <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] lg:w-[600px] lg:grid-cols-2">
                           {item.items.map(subItem => (
                             <ListItem
                               key={subItem.titleKey}
@@ -183,17 +281,19 @@ export function Header() {
                         </ul>
                       </NavigationMenuContent>
                     </>
-                  ) : (
+                  ) : !item.items ? (
                     <NavigationMenuLink asChild>
                       <Link
                         to={item.url}
                         activeProps={activeStyle}
                         className={navigationMenuTriggerStyle()}
                       >
+                        {/* Icône supprimée pour Actualités, A Propos, Contact */}
+                        {/* {item.icon && <span className="mr-2">{item.icon}</span>} */}
                         {t(item.titleKey)}
                       </Link>
                     </NavigationMenuLink>
-                  )}
+                  ) : null}
                 </NavigationMenuItem>
               ))}
             </NavigationMenuList>
@@ -201,38 +301,66 @@ export function Header() {
         </div>
 
         {/* Desktop User / Auth & Language Switcher */}
-        <div className="hidden items-center gap-0 lg:flex">
+        <div className="hidden items-center gap-2 lg:flex">
           {!isLoggedIn ? (
             <>
-              <Button asChild size="sm" className="mr-2">
+              <Button asChild size="sm" variant="outline" className="mr-2">
                 <Link to="/connexion">{t('header.auth.login')}</Link>
+              </Button>
+              <Button asChild size="sm">
+                <Link to="/inscription">{t('header.auth.register')}</Link>
               </Button>
             </>
           ) : (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-2">
-                  <Avatar>
+                <Button variant="ghost" className="flex items-center gap-2">
+                  <Avatar className="size-8">
                     <AvatarFallback>
-                      {user?.firstName?.[0]}
-                      {user?.lastName?.[0]}
+                      {user?.firstName?.[0]?.toUpperCase()}
+                      {user?.lastName?.[0]?.toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
                   <span className="font-medium">
                     {user?.firstName} {user?.lastName}
                   </span>
-                </button>
+                  <ChevronDown className="text-muted-foreground size-4" />
+                </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel className="font-normal">
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm leading-none font-medium">
+                      {user?.firstName} {user?.lastName}
+                    </p>
+                    <p className="text-muted-foreground text-xs leading-none">
+                      {user?.email}
+                    </p>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {filteredUserMenuItems.map(item => (
+                  <DropdownMenuItem key={item.titleKey} asChild>
+                    <Link to={item.url}>
+                      {item.icon}
+                      {t(item.titleKey)}
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+                {filteredUserMenuItems.length > 0 && <DropdownMenuSeparator />}
                 <DropdownMenuItem asChild>
-                  <Link to="/profil">{t('header.auth.profile')}</Link>
+                  <Link to="/profil">
+                    <UserCircle className="mr-2 size-4" />
+                    {t('header.auth.profile')}
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem onSelect={handleLogout}>
+                  <LogOut className="mr-2 size-4" />
                   {t('header.auth.logout')}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          )}{' '}
+          )}
           <LanguageSwitcher />
         </div>
 
@@ -240,40 +368,46 @@ export function Header() {
         <div className="lg:hidden">
           <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="lg:hidden">
+              <Button variant="ghost" size="icon">
                 <MenuIcon className="h-6 w-6" />
                 <span className="sr-only">
                   {t('header.mobile.toggle_menu_sr')}
                 </span>
               </Button>
             </SheetTrigger>
-
             <SheetContent
               side="right"
-              className="w-[300px] overflow-y-auto sm:w-[350px]"
+              className="w-[300px] overflow-y-auto p-0 sm:w-[350px]"
             >
-              <SheetHeader className="flex w-full items-center justify-center pb-5">
+              <SheetHeader className="border-b p-4">
                 <Link
                   to="/"
-                  className="flex w-full items-center justify-center gap-2"
-                  onClick={handleMobileLinkClick}
+                  className="flex items-center justify-center gap-2"
+                  onClick={() => handleMobileLinkClick('/')}
                 >
-                  <img src={logo} alt={t('header.logo_alt')} className="h-16" />
+                  <img src={logo} alt={t('header.logo_alt')} className="h-12" />
                 </Link>
               </SheetHeader>
 
-              <nav className="flex flex-col space-y-4 pr-5 pl-5">
-                {menu.map(item => (
-                  <div key={item.titleKey} className="py-1">
-                    {item.items ? (
+              <nav className="flex flex-col divide-y text-base">
+                {filteredMenuItems.map(item => (
+                  <div key={item.titleKey}>
+                    {item.items && item.items.length > 0 ? (
                       <>
                         <button
-                          className="flex w-full items-center justify-between text-lg font-medium"
+                          className="hover:bg-accent flex w-full items-center justify-between px-4 py-3 text-left font-medium"
                           onClick={() => toggleMobileSubmenu(item.titleKey)}
                         >
-                          {t(item.titleKey)}
-                          <History
-                            className={`h-5 w-5 transform transition-transform ${
+                          <span className="flex items-center">
+                            {item.icon /* Pour icône sur le trigger principal mobile si besoin */ && (
+                              <span className="text-muted-foreground mr-3 size-5">
+                                {item.icon}
+                              </span>
+                            )}
+                            {t(item.titleKey)}
+                          </span>
+                          <ChevronDown
+                            className={`text-muted-foreground size-5 transform transition-transform ${
                               openMobileMenuItems[item.titleKey]
                                 ? 'rotate-180'
                                 : ''
@@ -281,23 +415,29 @@ export function Header() {
                           />
                         </button>
                         {openMobileMenuItems[item.titleKey] && (
-                          <div className="space-y-3 pl-4">
+                          <div className="bg-muted/50">
                             {item.items.map(subItem => (
                               <Link
                                 key={subItem.titleKey}
                                 to={subItem.url}
-                                className="flex items-start gap-3 py-2"
-                                onClick={handleMobileLinkClick}
+                                className="hover:bg-accent flex items-start gap-3 px-4 py-3 pl-8"
+                                onClick={() =>
+                                  handleMobileLinkClick(subItem.url)
+                                }
                               >
-                                <div className="mt-0.5">{subItem.icon}</div>
-                                <div>
-                                  <div className="font-medium">
-                                    {t(subItem.titleKey)}
+                                {subItem.icon && (
+                                  <div className="text-muted-foreground mt-0.5 size-5">
+                                    {subItem.icon}
                                   </div>
+                                )}
+                                <div className="flex flex-col">
+                                  <span className="font-medium">
+                                    {t(subItem.titleKey)}
+                                  </span>
                                   {subItem.descriptionKey && (
-                                    <div className="text-muted-foreground text-sm">
+                                    <span className="text-muted-foreground text-sm">
                                       {t(subItem.descriptionKey)}
-                                    </div>
+                                    </span>
                                   )}
                                 </div>
                               </Link>
@@ -305,57 +445,92 @@ export function Header() {
                           </div>
                         )}
                       </>
-                    ) : (
+                    ) : !item.items ? (
                       <Link
                         to={item.url}
-                        className="text-lg font-medium"
-                        onClick={handleMobileLinkClick}
+                        className="hover:bg-accent flex items-center px-4 py-3 font-medium"
+                        onClick={() => handleMobileLinkClick(item.url)}
                       >
+                        {/* Icônes pour Actualités, A Propos, Contact sont supprimées ici aussi si besoin, sinon elles s'affichent si définies */}
+                        {item.icon && (
+                          <span className="text-muted-foreground mr-3 size-5">
+                            {item.icon}
+                          </span>
+                        )}
                         {t(item.titleKey)}
                       </Link>
-                    )}
+                    ) : null}
                   </div>
                 ))}
 
-                <div className="mt-4 border-t pt-4">
+                <div className="p-4">
                   <LanguageSwitcher inMobileNav={true} />
                 </div>
 
-                {!isLoggedIn && (
-                  <>
-                    <Button asChild size="sm" className="w-full">
-                      <Link to="/connexion" onClick={handleMobileLinkClick}>
-                        {t('header.auth.login')}
-                      </Link>
-                    </Button>
-                  </>
-                )}
-                {isLoggedIn && (
-                  <div className="mt-4 space-y-2 border-t pt-4">
-                    <div className="px-1 py-2">
-                      <div className="text-base font-medium">
+                {isLoggedIn ? (
+                  <div className="pt-2">
+                    <div className="px-4 py-3">
+                      <div className="font-semibold">
                         {user?.firstName} {user?.lastName}
                       </div>
                       <div className="text-muted-foreground text-sm">
                         {user?.email}
                       </div>
                     </div>
+                    {filteredUserMenuItems.map(item => (
+                      <Link
+                        key={item.titleKey}
+                        to={item.url}
+                        className="hover:bg-accent flex items-center px-4 py-3 font-medium"
+                        onClick={() => handleMobileLinkClick(item.url)}
+                      >
+                        {item.icon && (
+                          <span className="text-muted-foreground mr-3 size-5">
+                            {item.icon}
+                          </span>
+                        )}
+                        {t(item.titleKey)}
+                      </Link>
+                    ))}
                     <Link
                       to="/profil"
-                      className="hover:bg-accent block rounded-md px-1 py-2 text-base font-medium"
-                      onClick={handleMobileLinkClick}
+                      className="hover:bg-accent flex items-center px-4 py-3 font-medium"
+                      onClick={() => handleMobileLinkClick('/profil')}
                     >
+                      <UserCircle className="text-muted-foreground mr-3 size-5" />
                       {t('header.auth.profile')}
                     </Link>
                     <button
-                      onClick={() => {
-                        handleLogout()
-                        handleMobileLinkClick()
-                      }}
-                      className="hover:bg-accent block w-full rounded-md px-1 py-2 text-left text-base font-medium"
+                      onClick={handleLogout}
+                      className="hover:bg-accent flex w-full items-center px-4 py-3 text-left font-medium"
                     >
+                      <LogOut className="text-muted-foreground mr-3 size-5" />
                       {t('header.auth.logout')}
                     </button>
+                  </div>
+                ) : (
+                  <div className="space-y-2 p-4">
+                    <Button asChild className="w-full" size="lg">
+                      <Link
+                        to="/connexion"
+                        onClick={() => handleMobileLinkClick('/connexion')}
+                      >
+                        {t('header.auth.login')}
+                      </Link>
+                    </Button>
+                    <Button
+                      asChild
+                      variant="outline"
+                      className="w-full"
+                      size="lg"
+                    >
+                      <Link
+                        to="/inscription"
+                        onClick={() => handleMobileLinkClick('/inscription')}
+                      >
+                        {t('header.auth.register')}
+                      </Link>
+                    </Button>
                   </div>
                 )}
               </nav>
@@ -366,8 +541,6 @@ export function Header() {
     </header>
   )
 }
-
-/* -------------------------------- ListItem ------------------------------- */
 
 const ListItem = React.forwardRef<
   React.ElementRef<'a'>,
@@ -381,7 +554,7 @@ const ListItem = React.forwardRef<
       <a
         ref={ref}
         className={cn(
-          'hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground block space-y-1 rounded-md p-3 leading-none no-underline transition-colors outline-none select-none',
+          'focus:bg-accent focus:text-accent-foreground hover:bg-accent hover:text-accent-foreground block space-y-1 rounded-md p-3 leading-none no-underline transition-colors outline-none select-none',
           className
         )}
         {...props}
