@@ -329,11 +329,11 @@
     },
     "dashboard": {
       "title": "Tableau de bord",
-      "description": "Suivez différents indicateurs de la plateforme",
+      "description": "Suivez les différents indicateurs de la plateforme",
       "cards": {
         "totalNbUsers": {
           "title": "Nombre d'utilisateurs",
-          "description": "Inscriptions"
+          "description": "Tous les rôles"
         },
         "pendingValidation": {
           "title": "Nouvelles inscriptions",
@@ -365,25 +365,25 @@
         },
         "grade1Price": {
           "title": "Prix moyen Grade I",
-          "description": "30 derniers jours (CFA/kg)"
+          "description": "30 derniers jours"
         },
         "grade2Price": {
           "title": "Prix moyen Grade II",
-          "description": "30 derniers jours (CFA/kg)"
+          "description": "30 derniers jours"
         },
         "grade3Price": {
           "title": "Prix moyen Grade III",
-          "description": "30 derniers jours (CFA/kg)"
+          "description": "30 derniers jours"
         },
         "horsCategoryPrice": {
           "title": "Prix moyen Hors normes",
-          "description": "30 derniers jours (CFA/kg)"
+          "description": "30 derniers jours"
         },
         "transformedPrice": {
           "title": "Prix moyen Transformés",
-          "description": "30 derniers jours (CFA/kg)"
+          "description": "30 derniers jours"
         },
-        "compared_to_30_days": "Par rapport à il y a 30 jours",
+        "compared_to_30_days": "+ Tendance sur 30 jours",
         "error_loading": "Erreur lors du chargement du tableau de bord"
       }
     },
