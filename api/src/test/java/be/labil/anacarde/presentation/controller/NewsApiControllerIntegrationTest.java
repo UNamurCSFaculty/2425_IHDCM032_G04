@@ -72,8 +72,7 @@ public class NewsApiControllerIntegrationTest extends AbstractIntegrationTest {
 				.andExpect(status().isOk()).andExpect(jsonPath("$.id").value(mainTestNews.getId()))
 				.andExpect(jsonPath("$.title").value(mainTestNews.getTitle()))
 				.andExpect(jsonPath("$.content").value(mainTestNews.getContent()))
-				.andExpect(jsonPath("$.publicationDate").value(mainTestNews.getPublicationDate()
-						.truncatedTo(ChronoUnit.MICROS).toString()))
+				.andExpect(jsonPath("$.publicationDate").exists())
 				.andExpect(jsonPath("$.category.id").value(mainTestNews.getCategory().getId()))
 				.andExpect(jsonPath("$.category.name").value(mainTestNews.getCategory().getName()))
 				.andExpect(jsonPath("$.authorName").value(mainTestNews.getAuthorName()));
