@@ -52,19 +52,14 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 	 */
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-			FilterChain filterChain) throws ServletException, IOException {
+									FilterChain filterChain) throws ServletException, IOException {
 		try {
 			String jwt = parseJwt(request);
 			if (jwt != null) {
 				String username = jwtUtil.extractUsername(jwt);
 				UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 				if (!jwtUtil.validateToken(jwt, userDetails)) {
-					// delete the cookie
-					ResponseCookie jwtClear = ResponseCookie.from("jwt", "").httpOnly(true)
-							.secure(Arrays.stream(env.getActiveProfiles())
-									.anyMatch(p -> p.equalsIgnoreCase("prod")))
-							.path("/").maxAge(0).sameSite("Strict").build();
-					response.addHeader(HttpHeaders.SET_COOKIE, jwtClear.toString());
+					clearJwtCookie(response);
 					throw new BadCredentialsException("Token JWT invalide ou expiré");
 				}
 				UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
@@ -72,12 +67,10 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 				authentication
 						.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 				SecurityContextHolder.getContext().setAuthentication(authentication);
-
 			}
 		} catch (AuthenticationException ex) {
-			// toute AuthenticationException (BadCredentials, UsernameNotFound, etc.)
-			// sera gérée par le AuthenticationEntryPoint configuré
 			SecurityContextHolder.clearContext();
+			clearJwtCookie(response);
 			throw ex;
 		}
 		filterChain.doFilter(request, response);
@@ -101,5 +94,17 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Supprime le cookie JWT en envoyant un cookie avec une date d'expiration passée.
+	 * @param response La HttpServletResponse à laquelle ajouter l'en-tête Set-Cookie.
+	 */
+	private void clearJwtCookie(HttpServletResponse response) {
+		ResponseCookie jwtClear = ResponseCookie.from("jwt", "").httpOnly(true)
+				.secure(Arrays.stream(env.getActiveProfiles())
+						.anyMatch(p -> p.equalsIgnoreCase("prod")))
+				.path("/").maxAge(0).sameSite("Strict").build();
+		response.addHeader(HttpHeaders.SET_COOKIE, jwtClear.toString());
 	}
 }
