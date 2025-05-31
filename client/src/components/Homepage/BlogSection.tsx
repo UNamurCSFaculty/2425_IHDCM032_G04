@@ -1,14 +1,88 @@
 import { Button } from '../ui/button'
-import avatar from '@/assets/avatar.webp'
 import { Link } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
+import { useQuery } from '@tanstack/react-query'
+import { ChevronRight, Loader2 } from 'lucide-react'
+import { listNewsOptions } from '@/api/generated/@tanstack/react-query.gen'
+import { ArticleCard } from '../ArticleCard'
+import { useEffect } from 'react'
+import { Observer } from 'tailwindcss-intersect'
 
 export function BlogSection() {
   const { t } = useTranslation()
 
+  const {
+    data: articlesPage,
+    isLoading,
+    error,
+  } = useQuery({
+    ...listNewsOptions({
+      query: { page: 0, size: 3, sort: ['publicationDate,desc'] },
+    }),
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+    retry: false,
+  })
+
+  const articles = articlesPage?.content
+
+  useEffect(() => {
+    if (articles && articles.length > 0) {
+      if (typeof Observer !== 'undefined' && Observer.restart) {
+        Observer.restart()
+      }
+    }
+  }, [articles])
+
+  if (isLoading) {
+    return (
+      <section className="bg-gray-50 py-8 lg:py-16 dark:bg-gray-900">
+        <div className="mx-auto max-w-screen-xl px-4 text-center lg:px-6">
+          <Loader2 className="text-primary mx-auto h-12 w-12 animate-spin" />
+          <p className="mt-4 text-gray-500 dark:text-gray-400">
+            {t('common.loading')}
+          </p>
+        </div>
+      </section>
+    )
+  }
+
+  if (error) {
+    if (error.name === 'CancelledError') {
+      return null
+    }
+    return (
+      <section className="bg-gray-50 py-8 lg:py-16 dark:bg-gray-900">
+        <div className="mx-auto max-w-screen-xl px-4 text-center lg:px-6">
+          <p className="text-red-500">{t('common.error_loading_data')}</p>
+        </div>
+      </section>
+    )
+  }
+
+  if (!articles || articles.length === 0) {
+    return (
+      <section className="bg-gray-50 py-8 lg:py-16 dark:bg-gray-900">
+        <div className="intersect-once intersect-half intersect:opacity-100 intersect:translate-y-0 mx-auto max-w-screen-xl translate-y-4 px-4 opacity-0 transition-all duration-500 ease-out lg:px-6">
+          <div className="mx-auto mb-8 max-w-screen-sm text-center lg:mb-16">
+            <h2 className="mb-4 text-3xl font-extrabold tracking-tight text-gray-900 lg:text-4xl dark:text-white">
+              {t('homepage.blog.title')}
+            </h2>
+            <p className="font-light text-gray-500 sm:text-xl dark:text-gray-400">
+              {t(
+                'homepage.blog.no_articles_yet',
+                'Aucun article à afficher pour le moment.'
+              )}
+            </p>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
   return (
-    <section className="bg-gray-50 dark:bg-gray-900">
-      <div className="mx-auto max-w-screen-xl px-4 py-8 lg:px-6 lg:py-16">
+    <section className="bg-gray-50 py-8 lg:py-16 dark:bg-gray-900">
+      <div className="intersect-once intersect-half intersect:opacity-100 intersect:translate-y-0 mx-auto max-w-screen-xl translate-y-4 px-4 opacity-0 transition-all duration-500 ease-out lg:px-6">
         <div className="mx-auto mb-8 max-w-screen-sm text-center lg:mb-16">
           <h2 className="mb-4 text-3xl font-extrabold tracking-tight text-gray-900 lg:text-4xl dark:text-white">
             {t('homepage.blog.title')}
@@ -17,132 +91,26 @@ export function BlogSection() {
             {t('homepage.blog.subtitle')}
           </p>
         </div>
-        <div className="grid gap-8 lg:grid-cols-2">
-          {/** Article 1 **/}
-          <article className="intersect-once intersect:scale-100 intersect:opacity-100 intersect-half scale-50 rounded-lg border border-gray-200 bg-white p-6 opacity-0 shadow-md duration-500 dark:border-gray-700 dark:bg-gray-800">
-            <div className="mb-5 flex items-center justify-between text-gray-500">
-              <span className="bg-primary-100 text-primary-800 dark:bg-primary-200 dark:text-primary-800 inline-flex items-center rounded px-2.5 py-0.5 text-xs font-medium">
-                <svg
-                  className="mr-1 h-3 w-3"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
-                </svg>
-                {t('homepage.blog.article1.category')}
-              </span>
-              <span className="text-sm">
-                {t('homepage.blog.article1.date')}
-              </span>
-            </div>
-            <h3 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-              <Link to="#">{t('homepage.blog.article1.title')}</Link>
-            </h3>
-            <p className="mb-5 font-light text-gray-500 dark:text-gray-400">
-              {t('homepage.blog.article1.description')}
-            </p>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <img
-                  className="h-7 w-7 rounded-full"
-                  src={avatar}
-                  alt={t('homepage.blog.author_avatar_alt')}
-                />
-                <span className="font-medium dark:text-white">
-                  {t('homepage.blog.article1.author')}
-                </span>
-              </div>
-              <Link
-                to="#"
-                className="text-primary-600 dark:text-primary-500 inline-flex items-center font-medium hover:underline"
-              >
-                {t('homepage.blog.read_more')}
-                <svg
-                  className="ml-2 h-4 w-4"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </Link>
-            </div>
-          </article>
-
-          {/** Article 2 **/}
-          <article className="intersect-once intersect:scale-100 intersect:opacity-100 scale-50 rounded-lg border border-gray-200 bg-white p-6 opacity-0 shadow-md duration-500 dark:border-gray-700 dark:bg-gray-800">
-            <div className="mb-5 flex items-center justify-between text-gray-500">
-              <span className="bg-primary-100 text-primary-800 dark:bg-primary-200 dark:text-primary-800 inline-flex items-center rounded px-2.5 py-0.5 text-xs font-medium">
-                <svg
-                  className="mr-1 h-3 w-3"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M2 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 002 2H4a2 2 0 01-2-2V5zm3 1h6v4H5V6zm6 6H5v2h6v-2z"
-                    clipRule="evenodd"
-                  />
-                  <path d="M15 7h1a2 2 0 012 2v5.5a1.5 1.5 0 01-3 0V7z" />
-                </svg>
-                {t('homepage.blog.article2.category')}
-              </span>
-              <span className="text-sm">
-                {t('homepage.blog.article2.date')}
-              </span>
-            </div>
-            <h3 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-              <Link to="#">{t('homepage.blog.article2.title')}</Link>
-            </h3>
-            <p className="mb-5 font-light text-gray-500 dark:text-gray-400">
-              {t('homepage.blog.article2.description')}
-            </p>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <img
-                  className="h-7 w-7 rounded-full"
-                  src={avatar}
-                  alt={t('homepage.blog.author_avatar_alt')}
-                />
-                <span className="font-medium dark:text-white">
-                  {t('homepage.blog.article2.author')}
-                </span>
-              </div>
-              <Link
-                to="#"
-                className="text-primary-600 dark:text-primary-500 inline-flex items-center font-medium hover:underline"
-              >
-                {t('homepage.blog.read_more')}
-                <svg
-                  className="ml-2 h-4 w-4"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </Link>
-            </div>
-          </article>
+        <div className="grid gap-8 lg:grid-cols-3">
+          {articles.map((article, index) => (
+            <ArticleCard
+              key={article.id}
+              article={article}
+              animationDelay={`delay-${index * 150}`}
+            />
+          ))}
         </div>
 
-        <div className="mt-8 text-center">
-          <Link to="/actualites">
-            <Button variant="outline" className="">
-              {t('buttons.view_all_news')}
-            </Button>
-          </Link>
-        </div>
+        {articles && articles.length > 0 && (
+          <div className="mt-12 text-center">
+            <Link to="/actualites">
+              <Button variant="outline" size="lg" className="group">
+                {t('buttons.view_all_news')}
+                <ChevronRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+              </Button>
+            </Link>
+          </div>
+        )}
       </div>
     </section>
   )

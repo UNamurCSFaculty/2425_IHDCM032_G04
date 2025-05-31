@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Entité représentant une notification envoyée à un utilisateur.
+ */
 @Entity
 @Table(name = "notification", indexes = {@Index(columnList = "user_id")})
 @Getter

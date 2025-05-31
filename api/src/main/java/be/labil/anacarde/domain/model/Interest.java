@@ -10,6 +10,9 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 
+/**
+ * Entité représentant une marque d'intérêt emit par un Trader pour une Intention de vente.
+ */
 @Entity
 @Table(name = "interest")
 @Getter

@@ -4,12 +4,20 @@ import {
   createContractOfferMutation,
   listQualitiesOptions,
 } from '@/api/generated/@tanstack/react-query.gen.ts'
-import avatar from '@/assets/avatar.webp'
 import { ContratSchema } from '@/schemas/form-schemas'
-import * as Dialog from '@radix-ui/react-dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogClose,
+} from '@/components/ui/dialog' // Import ShadCN UI Dialog components
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { Button } from './ui/button'
+import { AvatarFallback } from '@radix-ui/react-avatar'
 
 interface ContractModalProps {
   isOpen: boolean
@@ -94,127 +102,121 @@ export const ContractModal: React.FC<ContractModalProps> = ({
   }, [updateEndDate])
 
   return (
-    <Dialog.Root open={isOpen} onOpenChange={open => !open && onClose()}>
-      <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 bg-black/40" />
-        <Dialog.Content className="fixed top-1/2 left-1/2 z-[50] max-h-[90vh] w-full max-w-md -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-xl bg-white p-4 shadow-lg">
-          <Dialog.Title className="mb-4 text-2xl font-bold">
+    <Dialog open={isOpen} onOpenChange={open => !open && onClose()}>
+      <DialogContent className="max-h-[90vh] w-full max-w-md overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle className="mb-4 text-2xl font-bold">
             {t('contract.modal_title')}
-          </Dialog.Title>
-          <Dialog.Close asChild>
-            <button className="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
-              ✕
-            </button>
-          </Dialog.Close>
+          </DialogTitle>
+        </DialogHeader>
+        <DialogClose asChild>
+          <button className="ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-4 right-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:pointer-events-none">
+            ✕<span className="sr-only">Close</span>
+          </button>
+        </DialogClose>
 
-          <div className="mb-4 flex items-center gap-4">
-            <img
-              className="h-10 w-10 rounded-full object-cover"
-              src={avatar}
-              alt={t('contract.avatar_alt')}
+        <div className="mb-4 flex items-center gap-4">
+          <AvatarFallback className="h-10 w-10 rounded-full object-cover" />
+          <div className="text-sm text-gray-700">
+            <p>
+              <strong>{t('form.location')}:</strong>{' '}
+              {auction.product.store.name}
+            </p>
+            <p>
+              <strong>{t('auction.seller_label')}:</strong>{' '}
+              {auction.trader.firstName + ' ' + auction.trader.lastName}
+            </p>
+          </div>
+        </div>
+
+        <form
+          onSubmit={e => {
+            e.preventDefault()
+            e.stopPropagation()
+            form.handleSubmit()
+          }}
+          className="space-y-4"
+        >
+          <form.AppField
+            name="quality"
+            children={field => (
+              <field.SelectField
+                label={t('product.quality_label')}
+                placeholder={t('form.select.placeholder')}
+                options={qualities.map(q => ({
+                  value: q.id.toString(),
+                  label: `${q.name}`,
+                }))}
+              />
+            )}
+          />
+
+          <form.AppField
+            name="price"
+            children={field => (
+              <field.NumberField
+                label={t('contract.guaranteed_price_cfa_kg_label')}
+              />
+            )}
+          />
+
+          <form.AppField
+            name="quantity"
+            children={field => (
+              <field.NumberField
+                label={t('contract.minimum_quantity_kg_label')}
+              />
+            )}
+          />
+
+          <span className="mb-1 block text-sm font-semibold">
+            {t('contract.duration_label')}
+          </span>
+          <div className="flex items-end gap-2">
+            <form.AppField
+              name="lastingYear"
+              children={field => (
+                <field.NumberField
+                  label={t('contract.duration_years_label')}
+                  onChange={e => {
+                    const value = Number(e.target.value)
+                    field.handleChange(value)
+                  }}
+                />
+              )}
             />
-            <div className="text-sm text-gray-700">
-              <p>
-                <strong>{t('form.location')}:</strong>{' '}
-                {auction.product.store.name}
-              </p>
-              <p>
-                <strong>{t('auction.seller_label')}:</strong>{' '}
-                {auction.trader.firstName + ' ' + auction.trader.lastName}
-              </p>
-            </div>
+            <form.AppField
+              name="lastingMonth"
+              children={field => (
+                <field.NumberField
+                  label={t('contract.duration_months_label')}
+                  onChange={e => {
+                    const value = Number(e.target.value)
+                    field.handleChange(value)
+                  }}
+                />
+              )}
+            />
           </div>
 
-          <form
-            onSubmit={e => {
-              e.preventDefault()
-              form.handleSubmit()
-            }}
-            className="space-y-4"
-          >
-            <form.AppField
-              name="quality"
-              children={field => (
-                <field.SelectField
-                  label={t('product.quality_label')}
-                  placeholder={t('form.select.placeholder')}
-                  options={qualities.map(q => ({
-                    value: q.id.toString(),
-                    label: `${q.name}`,
-                  }))}
-                />
-              )}
-            />
+          <p className="mt-1 text-xs text-gray-500">
+            {t('contract.ends_on_date_label', { date: endDateDisplay })}
+          </p>
 
-            <form.AppField
-              name="price"
-              children={field => (
-                <field.NumberField
-                  label={t('contract.guaranteed_price_cfa_kg_label')}
-                />
-              )}
-            />
-
-            <form.AppField
-              name="quantity"
-              children={field => (
-                <field.NumberField
-                  label={t('contract.minimum_quantity_kg_label')}
-                />
-              )}
-            />
-
-            <span className="mb-1 text-sm font-semibold">
-              {t('contract.duration_label')}
-            </span>
-            <div className="flex items-end gap-2">
-              <form.AppField
-                name="lastingYear"
-                children={field => (
-                  <field.NumberField
-                    label={t('contract.duration_years_label')}
-                    onChange={e => {
-                      const value = Number(e.target.value)
-                      field.handleChange(value)
-                      updateEndDate()
-                    }}
-                  />
-                )}
-              />
-              <form.AppField
-                name="lastingMonth"
-                children={field => (
-                  <field.NumberField
-                    label={t('contract.duration_months_label')}
-                    onChange={e => {
-                      const value = Number(e.target.value)
-                      field.handleChange(value)
-                      updateEndDate()
-                    }}
-                  />
-                )}
-              />
-            </div>
-
-            <p className="mt-1 text-xs text-gray-500">
-              {t('contract.ends_on_date_label', { date: endDateDisplay })}
-            </p>
-
-            <div className="mt-6 flex justify-end gap-2">
-              <button
-                type="button"
-                onClick={onClose}
-                className="rounded border px-4 py-2 text-sm"
-              >
-                {t('buttons.cancel')}
-              </button>
-              <form.AppForm>
-                <form.SubmitButton>{t('buttons.submit')}</form.SubmitButton>
-              </form.AppForm>
-            </div>
-          </form>
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+          <DialogFooter className="mt-6 gap-2">
+            <Button type="button" variant="outline" onClick={onClose}>
+              {t('buttons.cancel')}
+            </Button>
+            <form.SubmitButton
+              disabled={mutation.isPending || form.state.isSubmitting}
+            >
+              {mutation.isPending || form.state.isSubmitting
+                ? t('buttons.submitting')
+                : t('buttons.submit')}
+            </form.SubmitButton>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
   )
 }

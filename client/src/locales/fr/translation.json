@@ -22,7 +22,9 @@
     "title": "Mon super app",
     "welcome": {
       "message": "Prêt(e) pour vos prochaines enchères ?",
-      "title": "Bienvenue"
+      "title": "Bienvenue",
+      "admin": "Accédez à votre tableau de bord administrateur :",
+      "admin_link": "Panneau d'Administration"
     },
     "auctions_sales": {
       "title": "Mes ventes",
@@ -99,7 +101,8 @@
         "author": "Kofi Mensah"
       },
       "author_avatar_alt": "Avatar de l'auteur",
-      "read_more": "Lire la suite"
+      "read_more": "Lire la suite",
+      "no_description": "Pas de description disponible."
     },
     "hero": {
       "heading": "Enchères en ligne de noix de cajou",
@@ -128,6 +131,7 @@
   },
   "breadcrumb": {
     "about": "À propos",
+    "profile": "Profil",
     "auctions": "Enchères",
     "buy": "Acheter",
     "home": "Accueil",
@@ -135,7 +139,6 @@
     "login": "Connexion",
     "marketplace": "Marché des enchères",
     "privacy": "Politique de confidentialité",
-    "profile": "Profil",
     "sell": "Vendre",
     "settings": "Paramètres",
     "signup": "Inscription",
@@ -147,7 +150,8 @@
     "my_deposits": "Mes produits",
     "new_deposit": "Nouveau produit",
     "contracts": "Contrats",
-    "my_contracts": "Mes contrats"
+    "my_contracts": "Mes contrats",
+    "news": "Actualités"
   },
   "common": {
     "add": "Ajouter",
@@ -178,7 +182,13 @@
     "not_provided": "Non fourni",
     "confirm_action": "Confirmer l'action",
     "not_applicable_short": "N/A",
-    "unknown": "Inconnu"
+    "unknown": "Inconnue",
+    "admin": "Admin",
+    "search_placeholder": "Rechercher des articles...",
+    "all_categories": "Toutes les catégories",
+    "results_count": "{{count}} résultat",
+    "results_count_plural": "{{count}} résultats",
+    "clear_filters": "Effacer les filtres"
   },
   "buttons": {
     "view": "Voir",
@@ -266,6 +276,7 @@
     "address": "Adresse",
     "name": "Nom",
     "mail": "E-mail",
+    "mail_or_phone": "E-mail ou téléphone",
     "sections": {
       "user_details": "Détails de l'utilisateur",
       "basic_info": "Informations de base",
@@ -351,6 +362,26 @@
         "monthlySalesAmount": {
           "title": "Ventes mensuelles",
           "description": "30 derniers jours"
+        },
+        "grade1Price": {
+          "title": "Prix moyen Grade I",
+          "description": "30 derniers jours (CFA/kg)"
+        },
+        "grade2Price": {
+          "title": "Prix moyen Grade II",
+          "description": "30 derniers jours (CFA/kg)"
+        },
+        "grade3Price": {
+          "title": "Prix moyen Grade III",
+          "description": "30 derniers jours (CFA/kg)"
+        },
+        "horsCategoryPrice": {
+          "title": "Prix moyen Hors normes",
+          "description": "30 derniers jours (CFA/kg)"
+        },
+        "transformedPrice": {
+          "title": "Prix moyen Transformés",
+          "description": "30 derniers jours (CFA/kg)"
         },
         "compared_to_30_days": "Par rapport à il y a 30 jours",
         "error_loading": "Erreur lors du chargement du tableau de bord"
@@ -464,6 +495,30 @@
           "invalid_member_remove_description": "Le membre à retirer n'est pas valide ou son identifiant agricole est manquant."
         }
       }
+    },
+    "analytics": {
+      "title": "Analyses et Exports",
+      "description": "Générez et téléchargez des rapports de données sur les enchères.",
+      "export_options": {
+        "title": "Options d'Exportation",
+        "description": "Configurez les filtres et le format pour votre export de données. Laissez les dates vides pour exporter toutes les données."
+      },
+      "export_filtered": {
+        "start_date_label": "Date de début",
+        "pick_date_placeholder": "Choisir une date",
+        "end_date_label": "Date de fin",
+        "only_ended_label": "Inclure uniquement les enchères terminées",
+        "format_label": "Format d'Export",
+        "format_json": "JSON",
+        "format_csv": "CSV",
+        "button": "Télécharger le rapport",
+        "end_date_after_start": "La date de fin doit être postérieure ou égale à la date de début.",
+        "start_end_both_or_none": "Les dates de début et de fin doivent être fournies ensemble ou toutes deux omises."
+      },
+      "export_success_title": "Exportation Réussie",
+      "export_success_message": "Le fichier {{filename}} a été téléchargé avec succès.",
+      "export_error_title": "Erreur d'Exportation",
+      "export_error_message": "Une erreur est survenue lors de la génération ou du téléchargement du fichier. Veuillez réessayer."
     }
   },
   "languages": {
@@ -767,7 +822,8 @@
           }
         }
       },
-      "contact": "Contact"
+      "contact": "Contact",
+      "about": "À Propos"
     },
     "auth": {
       "login": "Connexion",
@@ -907,5 +963,64 @@
     "show_only_active": "Afficher uniquement les enchères actives par défaut",
     "force_better_bids": "Exiger des offres supérieures par défaut",
     "min_increment": "Incrément minimum pour les offres par défaut"
+  },
+  "categories": {
+    "alerts_terrain": "Alertes terrain",
+    "market_prices": "Marché & Prix",
+    "research_innovations": "Recherche & Innovations",
+    "training_resources": "Formation & Ressources"
+  },
+  "pages": {
+    "news": {
+      "title": "Actualités",
+      "subtitle": "Restez informé des dernières nouvelles et analyses.",
+      "no_articles_found": "Aucun article trouvé",
+      "try_different_search": "Essayez d'ajuster vos filtres de recherche ou de catégorie.",
+      "no_articles_yet": "Il n'y a pas encore d'articles à afficher."
+    },
+    "about_page": {
+      "title": "À Propos d'e-Anacarde",
+      "logo_alt": "Logo e-Anacarde",
+      "hero": {
+        "title": "Découvrez e-Anacarde",
+        "subtitle": "Une initiative universitaire pour dynamiser la filière anacarde au Bénin grâce à une plateforme d'échange innovante et équitable."
+      },
+      "project": {
+        "title": "Notre Projet Universitaire",
+        "paragraph1": "e-Anacarde est né d'un projet universitaire ambitieux visant à concevoir et développer une application e-commerce dédiée au commerce de l'anacarde, spécifiquement dans le contexte du Bénin. Notre démarche se veut collaborative et évolutive.",
+        "paragraph2": "Cette plateforme sert de preuve de concept ('proof-of-concept') pour mieux appréhender les besoins réels des acteurs de la filière anacarde. En offrant un outil concret dès les premières phases, nous facilitons l'identification des attentes, la validation des fonctionnalités et l'amélioration continue de la solution pour un impact positif et durable."
+      },
+      "objectives": {
+        "title": "Nos Objectifs Principaux",
+        "item1": {
+          "title": "Faciliter les Transactions",
+          "description": "Permettre des ventes transparentes et efficaces de produits issus de l'anacarde, notamment par un système de surenchères, pour valoriser au mieux la production locale."
+        },
+        "item2": {
+          "title": "Partager l'Information",
+          "description": "Diffuser des données claires sur les prix du marché et les volumes disponibles ou échangés, offrant une meilleure visibilité à tous les acteurs."
+        },
+        "item3": {
+          "title": "Promouvoir les Bonnes Pratiques",
+          "description": "Servir de canal pour la formation des producteurs aux meilleures techniques agricoles et la vulgarisation des avancées de la recherche pour une filière plus performante."
+        }
+      },
+      "future": {
+        "title": "Un Avenir Évolutif",
+        "paragraph": "Bien qu'initialement axée sur l'anacarde, notre ambition est de construire une plateforme robuste, facile à maintenir et à adapter. Nous espérons qu'elle pourra, à terme, servir de modèle pour d'autres filières agricoles ou produits, contribuant ainsi plus largement au développement économique."
+      },
+      "benin_flag_alt": "Drapeau du Bénin"
+    }
+  },
+  "profile": {
+    "page_title": "Mon Profil",
+    "page_subtitle": "Consultez et modifiez vos informations personnelles.",
+    "card_title": "Informations du Profil",
+    "edit_mode_description": "Modifiez vos informations ci-dessous.",
+    "view_mode_description": "Vos informations personnelles et de rôle.",
+    "personal_details_title": "Informations Personnelles",
+    "role_specific_details_title": "Détails Spécifiques au Rôle",
+    "update_success_toast": "Profil mis à jour avec succès !",
+    "update_error_toast": "Erreur lors de la mise à jour"
   }
 }

@@ -26,7 +26,7 @@ import {
 import { cn } from '@/lib/utils'
 import { useUserStore } from '@/store/userStore'
 import { Link, useNavigate } from '@tanstack/react-router'
-import { LanguageSwitcher } from '@/components/LanguageSwitcher' // MODIFICATION: Importer LanguageSwitcher
+import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import {
   ArrowLeftRight,
   CircleDollarSign,
@@ -227,9 +227,6 @@ export function Header() {
                 <DropdownMenuItem asChild>
                   <Link to="/profil">{t('header.auth.profile')}</Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/parametres">{t('header.auth.settings')}</Link>
-                </DropdownMenuItem>
                 <DropdownMenuItem onSelect={handleLogout}>
                   {t('header.auth.logout')}
                 </DropdownMenuItem>
@@ -349,13 +346,6 @@ export function Header() {
                       onClick={handleMobileLinkClick}
                     >
                       {t('header.auth.profile')}
-                    </Link>
-                    <Link
-                      to="/parametres"
-                      className="hover:bg-accent block rounded-md px-1 py-2 text-base font-medium"
-                      onClick={handleMobileLinkClick}
-                    >
-                      {t('header.auth.settings')}
                     </Link>
                     <button
                       onClick={() => {

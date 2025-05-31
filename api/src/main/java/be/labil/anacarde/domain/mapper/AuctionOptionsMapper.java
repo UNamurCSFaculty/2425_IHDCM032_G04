@@ -15,7 +15,6 @@ public abstract class AuctionOptionsMapper {
 	@Autowired
 	protected EntityManager em;
 
-	@Mapping(source = "strategy", target = "strategy")
 	public abstract AuctionOptionsDto toDto(AuctionOptions options);
 
 	@Mapping(target = "strategy", ignore = true)

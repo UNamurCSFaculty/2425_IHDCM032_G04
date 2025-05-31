@@ -22,7 +22,9 @@
     "title": "My Awesome App",
     "welcome": {
       "message": "Ready for your next auctions?",
-      "title": "Welcome"
+      "title": "Welcome",
+      "admin": "Access your admin dashboard:",
+      "admin_link": "Admin Panel"
     },
     "auctions_sales": {
       "title": "My Sales",
@@ -266,6 +268,7 @@
     "address": "Address",
     "name": "Name",
     "mail": "Email",
+    "mail_or_phone": "Email or phone",
     "sections": {
       "user_details": "User Details",
       "basic_info": "Basic Information",
@@ -758,16 +761,17 @@
         "title": "Contracts",
         "items": {
           "create_contract": {
-            "title": "Create a Contract",
+            "title": "Create Contract",
             "description": "Create a new contract"
           },
           "history": {
             "title": "History",
-            "description": "Details of my contracts"
+            "description": "Detail my contracts"
           }
         }
       },
-      "contact": "Contact"
+      "contact": "Contact",
+      "about": "About"
     },
     "auth": {
       "login": "Login",
@@ -895,5 +899,47 @@
     "contract_end_label": "Contract end",
     "label": "Contract No. {{id}}",
     "price_per_kg_label": "Price per kg"
+  },
+  "pages": {
+    "news": {
+      "title": "News",
+      "subtitle": "Stay informed with the latest news and analysis.",
+      "no_articles_found": "No articles found",
+      "try_different_search": "Try adjusting your search or category filters.",
+      "no_articles_yet": "There are no articles to display yet."
+    },
+    "about_page": {
+      "title": "About e-Anacarde",
+      "logo_alt": "e-Anacarde Logo",
+      "hero": {
+        "title": "Discover e-Anacarde",
+        "subtitle": "A university initiative to boost the cashew sector in Benin through an innovative and equitable trading platform."
+      },
+      "project": {
+        "title": "Our University Project",
+        "paragraph1": "e-Anacarde originated from an ambitious university project aiming to design and develop an e-commerce application dedicated to the cashew trade, specifically within the Benin context. Our approach is collaborative and scalable.",
+        "paragraph2": "This platform serves as a proof-of-concept to better understand the real needs of stakeholders in the cashew industry. By providing a concrete tool from the early stages, we facilitate the identification of expectations, validation of features, and continuous improvement of the solution for a positive and lasting impact."
+      },
+      "objectives": {
+        "title": "Our Main Objectives",
+        "item1": {
+          "title": "Facilitate Transactions",
+          "description": "Enable transparent and efficient sales of cashew products, notably through an auction system, to best valorize local production."
+        },
+        "item2": {
+          "title": "Share Information",
+          "description": "Disseminate clear data on market prices and available or traded volumes, offering better visibility to all stakeholders."
+        },
+        "item3": {
+          "title": "Promote Best Practices",
+          "description": "Serve as a channel for training producers in best agricultural techniques and disseminating research findings for a more efficient sector."
+        }
+      },
+      "future": {
+        "title": "A Scalable Future",
+        "paragraph": "Although initially focused on cashews, our ambition is to build a robust platform that is easy to maintain and adapt. We hope it can eventually serve as a model for other agricultural sectors or products, thus contributing more broadly to economic development."
+      },
+      "benin_flag_alt": "Flag of Benin"
+    }
   }
 }

@@ -11,7 +11,7 @@ import { useEffect, useMemo } from 'react'
 import {
   getGlobalSettingsOptions,
   updateGlobalSettingsMutation,
-  listAuctionStrategiesOptions, // Importation ajoutée
+  listAuctionStrategiesOptions,
 } from '@/api/generated/@tanstack/react-query.gen'
 import { toast } from 'sonner'
 
@@ -39,10 +39,10 @@ export const AdminGlobalSettingsForm: React.FC = () => {
   const form = useAppForm({
     validators: { onChange: zGlobalSettingsForm },
     defaultValues: {
-      defaultStrategyId: globalSettings?.defaultStrategy?.id ?? undefined, // Initialisé à undefined, sera rempli par useEffect
-      defaultFixedPriceKg: globalSettings?.defaultFixedPriceKg ?? undefined,
-      defaultMaxPriceKg: globalSettings?.defaultMaxPriceKg ?? undefined,
-      defaultMinPriceKg: globalSettings?.defaultMinPriceKg ?? undefined,
+      defaultStrategyId: globalSettings?.defaultStrategy?.id ?? '',
+      defaultFixedPriceKg: globalSettings?.defaultFixedPriceKg ?? '',
+      defaultMaxPriceKg: globalSettings?.defaultMaxPriceKg ?? '',
+      defaultMinPriceKg: globalSettings?.defaultMinPriceKg ?? '',
       showOnlyActive: globalSettings?.showOnlyActive ?? false,
       forceBetterBids: globalSettings?.forceBetterBids ?? false,
       minIncrement: globalSettings?.minIncrement ?? 1,
@@ -74,7 +74,7 @@ export const AdminGlobalSettingsForm: React.FC = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-xl">{t('settings.title')}</CardTitle>
+        <CardTitle className="text-lg">{t('settings.title')}</CardTitle>
       </CardHeader>
       <CardContent>
         {isLoading ? (
@@ -173,7 +173,7 @@ export const AdminGlobalSettingsForm: React.FC = () => {
 
             <Button
               type="submit"
-              disabled={mutation.isPending || isLoading} // Désactivé aussi si les données initiales chargent
+              disabled={mutation.isPending || isLoading}
               className="w-full"
             >
               {mutation.isPending ? (

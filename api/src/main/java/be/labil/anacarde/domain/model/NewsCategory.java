@@ -10,6 +10,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * Entité représentant une catégorie d'actualité sur le blog.
+ */
 @Entity
 @Table(name = "category", indexes = {@Index(name = "idx_category_name", columnList = "name")})
 @Getter
@@ -22,4 +25,7 @@ public class NewsCategory extends BaseEntity {
 
 	@Column(nullable = false, unique = true)
 	private String name;
+
+	@Column(columnDefinition = "TEXT")
+	private String description;
 }

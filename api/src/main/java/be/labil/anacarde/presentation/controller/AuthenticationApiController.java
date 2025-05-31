@@ -19,7 +19,6 @@ import org.springframework.security.authentication.AuthenticationCredentialsNotF
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -56,7 +55,7 @@ public class AuthenticationApiController implements AuthenticationApi {
 	}
 
 	@Override
-	public ResponseEntity<UserDetailDto> getCurrentUser(@AuthenticationPrincipal User currentUser,
+	public ResponseEntity<UserDetailDto> getCurrentUser(User currentUser,
 			HttpServletRequest request, HttpServletResponse response) {
 		if (currentUser == null) {
 			throw new AuthenticationCredentialsNotFoundException("Current user is null");

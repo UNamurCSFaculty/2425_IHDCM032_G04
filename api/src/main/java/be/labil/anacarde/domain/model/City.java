@@ -10,6 +10,9 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import org.locationtech.jts.geom.Point;
 
+/**
+ * Entité représentant une ville.
+ */
 @Entity
 @Table(name = "city")
 @Getter

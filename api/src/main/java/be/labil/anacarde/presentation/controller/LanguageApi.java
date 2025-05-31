@@ -17,6 +17,7 @@ import jakarta.validation.constraints.Positive;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,6 +45,7 @@ public interface LanguageApi {
 	/**
 	 * Crée une nouvelle langue dans le système.
 	 */
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@Operation(summary = "Créer une langue", description = "Crée une nouvelle langue dans le système.")
 	@ApiResponses({
 			@ApiResponse(responseCode = "201", description = "Langue créée avec succès", content = @Content(schema = @Schema(implementation = LanguageDto.class))),
@@ -54,6 +56,7 @@ public interface LanguageApi {
 	/**
 	 * Renvoie la liste de toutes les langues présentes dans le système.
 	 */
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@Operation(summary = "Lister toutes les langues", description = "Renvoie la liste de toutes les langues présentes dans le système.")
 	@ApiResponses({
 			@ApiResponse(responseCode = "200", description = "Liste récupérée avec succès", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LanguageDto.class))))})

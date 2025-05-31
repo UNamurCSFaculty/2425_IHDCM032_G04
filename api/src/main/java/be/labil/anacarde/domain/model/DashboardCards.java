@@ -6,15 +6,9 @@ import lombok.*;
 import org.hibernate.annotations.Immutable;
 
 /**
- * Représentation JPA de la vue SQL <strong>v_dashboard_cards</strong>.
- * <p>
- * ⚠️ ENTITÉ STRICTEMENT EN LECTURE : aucune opération INSERT/UPDATE/DELETE.
- * </p>
- *
- * <p>
- * La vue ne contient qu’une seule ligne ; on désigne {@code total_nb_users} comme clé primaire
- * technique <em>(lecture seule)</em>.
- * </p>
+ * Entité représentant les données agrégées affichées sur le tableau de bord amdin. ENTITÉ
+ * STRICTEMENT EN LECTURE : aucune opération INSERT/UPDATE/DELETE. La vue ne contient qu’une seule
+ * ligne ; on désigne {@code total_nb_users} comme clé primaire technique.
  */
 @Getter
 @Entity
@@ -72,4 +66,34 @@ public class DashboardCards {
 
 	@Column(name = "monthly_sales_amount_tendency")
 	private Double monthlySalesAmountTendency;
+
+	@Column(name = "grade1_price")
+	private Double grade1Price;
+
+	@Column(name = "grade1_price_tendency")
+	private Double grade1PriceTendency;
+
+	@Column(name = "grade2_price")
+	private Double grade2Price;
+
+	@Column(name = "grade2_price_tendency")
+	private Double grade2PriceTendency;
+
+	@Column(name = "grade3_price")
+	private Double grade3Price;
+
+	@Column(name = "grade3_price_tendency")
+	private Double grade3PriceTendency;
+
+	@Column(name = "hors_category_price")
+	private Double horsCategoryPrice;
+
+	@Column(name = "hors_category_tendency")
+	private Double horsCategoryTendency;
+
+	@Column(name = "transformed_price")
+	private Double transformedPrice;
+
+	@Column(name = "transformed_price_tendency")
+	private Double transformedPriceTendency;
 }

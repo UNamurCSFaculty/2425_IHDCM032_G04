@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Entité représentant un trader, c'est-à-dire un utilisateur pour vendre et/ou acheter.
+ */
 @Entity
 @Table(name = "exporter")
 @Getter

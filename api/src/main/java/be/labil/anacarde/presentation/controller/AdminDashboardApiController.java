@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequiredArgsConstructor
-public class DashboardApiController implements DashboardApi {
+public class AdminDashboardApiController implements AdminDashboardApi {
 
 	private final DashboardService dashboardService;
 
