@@ -34,7 +34,6 @@ public abstract class ProductMapper {
 	public abstract HarvestProduct toEntity(HarvestProductUpdateDto dto);
 
 	// Mapping vers l'entité
-	@Mapping(source = "identifier", target = "identifier")
 	@Mapping(target = "store", ignore = true)
 	@Mapping(target = "qualityControl", ignore = true)
 	@Mapping(target = "transformer", ignore = true)

@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * Entité représentant un produit transformé et héritant de Produit.
+ */
 @Entity
 @Table(name = "transformed_product")
 @Getter

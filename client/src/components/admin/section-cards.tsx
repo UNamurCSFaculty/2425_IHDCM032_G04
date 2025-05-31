@@ -31,6 +31,16 @@ type Stats = {
   totalSalesAmountTendency: number
   monthlySalesAmount: number
   monthlySalesAmountTendency: number
+  grade1Price: number
+  grade1PriceTendency: number
+  grade2Price: number
+  grade2PriceTendency: number
+  grade3Price: number
+  grade3PriceTendency: number
+  horsCategoryPrice: number
+  horsCategoryTendency: number
+  transformedPrice: number
+  transformedPriceTendency: number
 }
 
 export function SectionCards() {
@@ -61,6 +71,16 @@ export function SectionCards() {
       totalSalesAmountTendency = 0,
       monthlySalesAmount = 0,
       monthlySalesAmountTendency = 0,
+      grade1Price = 0,
+      grade1PriceTendency = 0,
+      grade2Price = 0,
+      grade2PriceTendency = 0,
+      grade3Price = 0,
+      grade3PriceTendency = 0,
+      horsCategoryPrice = 0,
+      horsCategoryTendency = 0,
+      transformedPrice = 0,
+      transformedPriceTendency = 0,
     } = rawStats
 
     return {
@@ -80,6 +100,16 @@ export function SectionCards() {
       totalSalesAmountTendency,
       monthlySalesAmount,
       monthlySalesAmountTendency,
+      grade1Price,
+      grade1PriceTendency,
+      grade2Price,
+      grade2PriceTendency,
+      grade3Price,
+      grade3PriceTendency,
+      horsCategoryPrice,
+      horsCategoryTendency,
+      transformedPrice,
+      transformedPriceTendency,
     }
   }, [rawStats])
 
@@ -139,6 +169,36 @@ export function SectionCards() {
           ' M CFA',
         tendency: stats.monthlySalesAmountTendency,
         description: t('admin.dashboard.cards.monthlySalesAmount.description'),
+      },
+      {
+        title: t('admin.dashboard.cards.grade1Price.title'),
+        value: Math.round(stats.grade1Price).toLocaleString() + ' CFA/kg',
+        tendency: stats.grade1PriceTendency,
+        description: t('admin.dashboard.cards.grade1Price.description'),
+      },
+      {
+        title: t('admin.dashboard.cards.grade2Price.title'),
+        value: Math.round(stats.grade2Price).toLocaleString() + ' CFA/kg',
+        tendency: stats.grade2PriceTendency,
+        description: t('admin.dashboard.cards.grade2Price.description'),
+      },
+      {
+        title: t('admin.dashboard.cards.grade3Price.title'),
+        value: Math.round(stats.grade3Price).toLocaleString() + ' CFA/kg',
+        tendency: stats.grade3PriceTendency,
+        description: t('admin.dashboard.cards.grade3Price.description'),
+      },
+      {
+        title: t('admin.dashboard.cards.horsCategoryPrice.title'),
+        value: Math.round(stats.horsCategoryPrice).toLocaleString() + ' CFA/kg',
+        tendency: stats.horsCategoryTendency,
+        description: t('admin.dashboard.cards.horsCategoryPrice.description'),
+      },
+      {
+        title: t('admin.dashboard.cards.transformedPrice.title'),
+        value: Math.round(stats.transformedPrice).toLocaleString() + ' CFA/kg',
+        tendency: stats.transformedPriceTendency,
+        description: t('admin.dashboard.cards.transformedPrice.description'),
       },
     ]
   }, [stats, t])

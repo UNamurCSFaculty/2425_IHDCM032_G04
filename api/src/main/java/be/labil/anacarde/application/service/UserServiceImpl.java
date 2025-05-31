@@ -62,15 +62,29 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	private final FieldService fieldService;
 
 	@Override
-	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-		return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(
-				"Utilisateur non trouvé avec l'email : " + email));
+	public UserDetails loadUserByUsername(String identifier) throws UsernameNotFoundException {
+		if (identifier.contains("@")) {
+			String email = identifier.trim().toLowerCase();
+			return userRepository.findByEmail(email)
+					.orElseThrow(() -> new UsernameNotFoundException(
+							"Utilisateur non trouvé avec l'email : " + email));
+		}
+		String phone = identifier.trim().replace(" ", "");
+		if (!identifier.startsWith("+")) phone = "+229" + phone;
+		String BENIN_REGEX = "^\\+22901\\d{8}$";
+		if (!phone.matches(BENIN_REGEX))
+			throw new UsernameNotFoundException("Numéro de téléphone invalide : " + phone);
+
+		String finalPhone = phone;
+		return userRepository.findByPhone(phone).orElseThrow(() -> new UsernameNotFoundException(
+				"Utilisateur non trouvé avec l'email : " + finalPhone));
 	}
 
 	@Override
 	public UserDetailDto createUser(UserCreateDto dto, List<MultipartFile> files) {
 		dto.setPassword(bCryptPasswordEncoder.encode(dto.getPassword()));
 
+		dto.setEmail(dto.getEmail().trim().toLowerCase());
 		boolean emailExists = userRepository.findByEmail(dto.getEmail()).isPresent();
 		boolean phoneExists = userRepository.findByPhone(dto.getPhone()).isPresent();
 		boolean agriculturalIdentifierExists = false;
@@ -190,6 +204,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 		}
 
 		// Mets uniquement à jour les champs non nuls du DTO
+		if (!userUpdateDto.getEmail().isEmpty())
+			userUpdateDto.setEmail(userUpdateDto.getEmail().trim().toLowerCase());
 		User user = userDetailMapper.partialUpdate(userUpdateDto, existingUser);
 
 		// Gestion des coopératives.

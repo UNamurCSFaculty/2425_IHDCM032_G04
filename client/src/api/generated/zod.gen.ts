@@ -699,6 +699,16 @@ export const zDashboardCardsDto = z.object({
   totalSalesAmountTendency: z.number().optional(),
   monthlySalesAmount: z.number().optional(),
   monthlySalesAmountTendency: z.number().optional(),
+  grade1Price: z.number().optional(),
+  grade1PriceTendency: z.number().optional(),
+  grade2Price: z.number().optional(),
+  grade2PriceTendency: z.number().optional(),
+  grade3Price: z.number().optional(),
+  grade3PriceTendency: z.number().optional(),
+  horsCategoryPrice: z.number().optional(),
+  horsCategoryTendency: z.number().optional(),
+  transformedPrice: z.number().optional(),
+  transformedPriceTendency: z.number().optional(),
 })
 
 export const zApiErrorErrors = z.object({

@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * Entité représentant un champ agricole d'un producteur.
+ */
 @Entity
 @Table(name = "field")
 @Getter

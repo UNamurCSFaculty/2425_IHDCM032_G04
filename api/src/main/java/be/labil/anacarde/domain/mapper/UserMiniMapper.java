@@ -9,5 +9,6 @@ import org.mapstruct.ReportingPolicy;
 public abstract class UserMiniMapper {
 
 	public abstract UserMiniDto toDto(Trader user);
+
 	public abstract UserMiniDto toDto(User user);
 }
