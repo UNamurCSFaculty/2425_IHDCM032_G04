@@ -15,6 +15,7 @@ import be.labil.anacarde.infrastructure.persistence.user.UserRepository;
 import be.labil.anacarde.infrastructure.persistence.view.ExportAuctionRepository;
 import be.labil.anacarde.infrastructure.security.JwtUtil;
 import jakarta.servlet.http.Cookie;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import lombok.Getter;
@@ -123,7 +124,7 @@ public abstract class AbstractIntegrationTest {
 	}
 
 	@AfterEach
-	public void tearDown() {
+	public void tearDown() throws IOException {
 		databaseService.dropDatabase();
 	}
 
