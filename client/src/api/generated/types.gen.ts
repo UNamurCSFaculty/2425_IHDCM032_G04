@@ -1635,6 +1635,16 @@ export type DashboardCardsDto = {
   totalSalesAmountTendency?: number
   monthlySalesAmount?: number
   monthlySalesAmountTendency?: number
+  grade1Price?: number
+  grade1PriceTendency?: number
+  grade2Price?: number
+  grade2PriceTendency?: number
+  grade3Price?: number
+  grade3PriceTendency?: number
+  horsCategoryPrice?: number
+  horsCategoryTendency?: number
+  transformedPrice?: number
+  transformedPriceTendency?: number
 }
 
 export type ApiError = {
