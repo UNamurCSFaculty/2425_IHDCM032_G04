@@ -110,3 +110,44 @@ export const calculatePasswordStrength = (password: string): number => {
 
   return Math.min(5, strength)
 }
+
+export const getCategoryBackground = (categoryName?: string): string => {
+  if (!categoryName) {
+    return 'bg-gradient-to-br from-gray-500 to-gray-700'
+  }
+
+  const normalizedCategory = categoryName.toLowerCase().trim()
+
+  switch (normalizedCategory) {
+    case 'alertes terrain':
+      return 'bg-gradient-to-br from-red-500 via-orange-500 to-red-600'
+
+    case 'marché & prix':
+    case 'marche & prix':
+      return 'bg-gradient-to-br from-green-500 via-emerald-500 to-green-600'
+
+    case 'recherche & innovations':
+      return 'bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-600'
+
+    case 'formation & ressources':
+      return 'bg-gradient-to-br from-yellow-500 via-amber-500 to-orange-500'
+
+    default: {
+      const hash = categoryName
+        .split('')
+        .reduce((acc, char) => acc + char.charCodeAt(0), 0)
+      const gradients = [
+        'bg-gradient-to-br from-pink-500 to-rose-600',
+        'bg-gradient-to-br from-purple-500 to-indigo-600',
+        'bg-gradient-to-br from-cyan-500 to-blue-600',
+        'bg-gradient-to-br from-teal-500 to-green-600',
+        'bg-gradient-to-br from-orange-500 to-red-600',
+      ]
+      return gradients[hash % gradients.length]
+    }
+  }
+}
+
+export const getCategoryTextColor = (): string => {
+  return 'text-white'
+}

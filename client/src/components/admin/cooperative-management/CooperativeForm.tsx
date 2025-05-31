@@ -8,6 +8,7 @@ import {
   createCooperativeMutation,
   updateCooperativeMutation,
   listCooperativesOptions,
+  listCooperativesQueryKey,
 } from '@/api/generated/@tanstack/react-query.gen'
 import type {
   CooperativeUpdateDto,
@@ -120,7 +121,7 @@ export const CooperativeForm: React.FC<CooperativeFormProps> = ({
     onSuccess: () => {
       toast.success(t('admin.cooperative_management.toasts.created_success'))
       queryClient.invalidateQueries({
-        queryKey: listCooperativesOptions().queryKey,
+        queryKey: listCooperativesQueryKey(),
       })
       if (onSuccess) {
         onSuccess()

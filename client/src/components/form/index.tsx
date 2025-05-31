@@ -12,6 +12,7 @@ import { SubmitButton } from '@/components/form/submit-button'
 import { TextField } from '@/components/form/text-field'
 import { TextAreaField } from '@/components/form/textarea-field'
 import { createFormHook, createFormHookContexts } from '@tanstack/react-form'
+import { RichTextEditorField } from '@/components/form/rich-text-editor-field'
 import { CityField } from './CityField'
 import { LocationField } from './LocationField'
 import { MultiSelectVirtualField } from './multi-select-virtual-field'
@@ -32,6 +33,7 @@ export const { useAppForm } = createFormHook({
     NumberField,
     PhoneField,
     VirtualizedSelectField,
+    RichTextEditorField,
     RadioGroupField,
     CityField,
     LocationField,

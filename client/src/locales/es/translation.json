@@ -22,7 +22,9 @@
     "title": "Mi Súper Aplicación",
     "welcome": {
       "message": "¿Listo/a para sus próximas subastas?",
-      "title": "Bienvenido/a"
+      "title": "Bienvenido/a",
+      "admin": "Acceda a su panel de administrador:",
+      "admin_link": "Panel de Administración"
     },
     "auctions_sales": {
       "title": "Mis Ventas",
@@ -486,7 +488,7 @@
     "quality_inspector": "Inspector de Calidad"
   },
   "header": {
-    "logo_alt": "Logotipo de e-Anacarde",
+    "logo_alt": "Logo de e-Anacarde",
     "menu": {
       "home": "Inicio",
       "purchases": {
@@ -532,16 +534,17 @@
         "title": "Contratos",
         "items": {
           "create_contract": {
-            "title": "Crear un Contrato",
+            "title": "Crear Contrato",
             "description": "Crear un nuevo contrato"
           },
           "history": {
             "title": "Historial",
-            "description": "Detalles de mis contratos"
+            "description": "Detalle de mis contratos"
           }
         }
       },
-      "contact": "Contacto"
+      "contact": "Contacto",
+      "about": "Acerca de"
     },
     "auth": {
       "login": "Iniciar Sesión",
@@ -669,5 +672,47 @@
     "contract_end_label": "Fin del contrato",
     "label": "Contrato n.º {{id}}",
     "price_per_kg_label": "Precio por kg"
+  },
+  "pages": {
+    "news": {
+      "title": "Noticias",
+      "subtitle": "Manténgase informado con las últimas noticias y análisis.",
+      "no_articles_found": "No se encontraron artículos",
+      "try_different_search": "Intente ajustar sus filtros de búsqueda o categoría.",
+      "no_articles_yet": "Aún no hay artículos para mostrar."
+    },
+    "about_page": {
+      "title": "Acerca de e-Anacarde",
+      "logo_alt": "Logo de e-Anacarde",
+      "hero": {
+        "title": "Descubra e-Anacarde",
+        "subtitle": "Una iniciativa universitaria para impulsar el sector del anacardo en Benín a través de una plataforma de intercambio innovadora y equitativa."
+      },
+      "project": {
+        "title": "Nuestro Proyecto Universitario",
+        "paragraph1": "e-Anacarde nació de un ambicioso proyecto universitario con el objetivo de diseñar y desarrollar una aplicación de comercio electrónico dedicada al comercio del anacardo, específicamente en el contexto de Benín. Nuestro enfoque es colaborativo y evolutivo.",
+        "paragraph2": "Esta plataforma sirve como prueba de concepto para comprender mejor las necesidades reales de los actores del sector del anacardo. Al ofrecer una herramienta concreta desde las primeras fases, facilitamos la identificación de expectativas, la validación de funcionalidades y la mejora continua de la solución para un impacto positivo y duradero."
+      },
+      "objectives": {
+        "title": "Nuestros Objetivos Principales",
+        "item1": {
+          "title": "Facilitar las Transacciones",
+          "description": "Permitir ventas transparentes y eficientes de productos derivados del anacardo, especialmente mediante un sistema de subastas, para valorizar al máximo la producción local."
+        },
+        "item2": {
+          "title": "Compartir Información",
+          "description": "Difundir datos claros sobre los precios del mercado y los volúmenes disponibles o intercambiados, ofreciendo una mejor visibilidad a todos los actores."
+        },
+        "item3": {
+          "title": "Promover Buenas Prácticas",
+          "description": "Servir de canal para la formación de los productores en las mejores técnicas agrícolas y la divulgación de los avances de la investigación para un sector más eficiente."
+        }
+      },
+      "future": {
+        "title": "Un Futuro Evolutivo",
+        "paragraph": "Aunque inicialmente centrada en el anacardo, nuestra ambición es construir una plataforma robusta, fácil de mantener y adaptar. Esperamos que, con el tiempo, pueda servir de modelo para otros sectores agrícolas o productos, contribuyendo así más ampliamente al desarrollo económico."
+      },
+      "benin_flag_alt": "Bandera de Benín"
+    }
   }
 }

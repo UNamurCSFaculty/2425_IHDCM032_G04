@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @SecurityRequirement(name = "jwt")
 @RequestMapping(value = "/api/admin/dashboard", produces = "application/json")
 @Tag(name = "dashboard", description = "KPI et graphiques du tableau de bord")
-public interface DashboardApi {
+public interface AdminDashboardApi {
 
 	/* ------------------------------------------------------------------ */
 	/* 1. Cartes KPI (vue v_dashboard_cards) */

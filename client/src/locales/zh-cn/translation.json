@@ -22,7 +22,9 @@
     "title": "我的出色应用",
     "welcome": {
       "message": "准备好参加下一次拍卖了吗？",
-      "title": "欢迎"
+      "title": "欢迎",
+      "admin": "访问您的管理员仪表板：",
+      "admin_link": "管理面板"
     },
     "auctions_sales": {
       "title": "我的销售",
@@ -486,7 +488,7 @@
     "quality_inspector": "质检员"
   },
   "header": {
-    "logo_alt": "e-Anacarde 徽标",
+    "logo_alt": "e-Anacarde 商标",
     "menu": {
       "home": "首页",
       "purchases": {
@@ -533,7 +535,7 @@
         "items": {
           "create_contract": {
             "title": "创建合同",
-            "description": "创建新合同"
+            "description": "创建一个新合同"
           },
           "history": {
             "title": "历史记录",
@@ -541,7 +543,8 @@
           }
         }
       },
-      "contact": "联系"
+      "contact": "联系我们",
+      "about": "关于"
     },
     "auth": {
       "login": "登录",
@@ -669,5 +672,47 @@
     "contract_end_label": "合同结束",
     "label": "合同编号 {{id}}",
     "price_per_kg_label": "每公斤价格"
+  },
+  "pages": {
+    "news": {
+      "title": "新闻",
+      "subtitle": "了解最新的新闻和分析。",
+      "no_articles_found": "未找到文章",
+      "try_different_search": "尝试调整您的搜索或类别过滤器。",
+      "no_articles_yet": "尚无文章显示。"
+    },
+    "about_page": {
+      "title": "关于 e-Anacarde",
+      "logo_alt": "e-Anacarde 商标",
+      "hero": {
+        "title": "探索 e-Anacarde",
+        "subtitle": "一项旨在通过创新和公平的交易平台促进贝宁腰果产业发展的大学倡议。"
+      },
+      "project": {
+        "title": "我们的大学项目",
+        "paragraph1": "e-Anacarde 源于一个雄心勃勃的大学项目，旨在设计和开发一个专门针对贝宁腰果贸易的电子商务应用程序。我们的方法是协作和可扩展的。",
+        "paragraph2": "该平台作为概念验证，以更好地了解腰果行业利益相关者的实际需求。通过从早期阶段提供具体工具，我们促进了期望的确定、功能的验证以及解决方案的持续改进，以产生积极而持久的影响。"
+      },
+      "objectives": {
+        "title": "我们的主要目标",
+        "item1": {
+          "title": "促进交易",
+          "description": "实现腰果产品的透明高效销售，特别是通过拍卖系统，以最佳方式实现本地生产的价值。"
+        },
+        "item2": {
+          "title": "共享信息",
+          "description": "传播关于市场价格和可用或交易量的清晰数据，为所有利益相关者提供更好的可见性。"
+        },
+        "item3": {
+          "title": "推广最佳实践",
+          "description": "作为培训生产者掌握最佳农业技术和传播研究成果的渠道，以提高行业效率。"
+        }
+      },
+      "future": {
+        "title": "可扩展的未来",
+        "paragraph": "虽然最初专注于腰果，但我们的目标是建立一个易于维护和适应的强大平台。我们希望它最终能成为其他农业部门或产品的典范，从而为经济发展做出更广泛的贡献。"
+      },
+      "benin_flag_alt": "贝宁国旗"
+    }
   }
 }

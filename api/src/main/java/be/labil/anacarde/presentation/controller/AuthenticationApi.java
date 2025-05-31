@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -74,8 +75,8 @@ public interface AuthenticationApi {
 			@ApiResponse(responseCode = "200", description = "Utilisateur authentifié", content = @Content(schema = @Schema(implementation = UserDetailDto.class))),
 			@ApiResponse(responseCode = "401", description = "Utilisateur non authentifié", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
 	@GetMapping("/me")
-	ResponseEntity<UserDetailDto> getCurrentUser(User currentUser, HttpServletRequest request,
-			HttpServletResponse response);
+	ResponseEntity<UserDetailDto> getCurrentUser(@AuthenticationPrincipal User currentUser,
+			HttpServletRequest request, HttpServletResponse response);
 
 	/**
 	 * Déconnecte l'utilisateur en supprimant le cookie JWT côté client.
