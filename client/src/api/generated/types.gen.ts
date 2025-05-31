@@ -741,6 +741,50 @@ export type TransformedProductDto = ProductDto & {
 }
 
 /**
+ * Objet de transfert de données pour la mise à jour d'un article de presse.
+ */
+export type NewsUpdateDto = {
+  /**
+   * Nouveau titre de l'article
+   */
+  title?: string
+  /**
+   * Nouveau contenu de l'article
+   */
+  content?: string
+  /**
+   * Nouvelle date de publication de l'article
+   */
+  publicationDate?: string
+  /**
+   * ID de la nouvelle catégorie associée à l'article
+   */
+  categoryId?: number
+  /**
+   * Nom du nouvel auteur de l'article
+   */
+  authorName?: string
+}
+
+/**
+ * Objet de transfert de données pour les catégories de news.
+ */
+export type NewsCategoryDto = {
+  /**
+   * Identifiant unique
+   */
+  readonly id: number
+  /**
+   * Nom de la catégorie
+   */
+  name: string
+  /**
+   * Description de la catégorie
+   */
+  description?: string
+}
+
+/**
  * Objet de transfert pour créer ou mettre à jour une coopérative.
  */
 export type CooperativeUpdateDto = {
@@ -1261,6 +1305,32 @@ export type UserCreateDto = {
 }
 
 /**
+ * Objet de transfert de données pour la mise à jour d'un article de presse.
+ */
+export type NewsCreateDto = {
+  /**
+   * Nouveau titre de l'article
+   */
+  title: string
+  /**
+   * Nouveau contenu de l'article
+   */
+  content: string
+  /**
+   * Nouvelle date de publication de l'article
+   */
+  publicationDate?: string
+  /**
+   * ID de la nouvelle catégorie associée à l'article
+   */
+  categoryId: number
+  /**
+   * Nom du nouvel auteur de l'article
+   */
+  authorName?: string
+}
+
+/**
  * Payload du message de contact
  */
 export type ContactRequestDto = {
@@ -1456,43 +1526,80 @@ export type SseEmitter = {
   timeout?: number
 }
 
-export type ExportAuctionDto = {
-  auctionId?: number
-  auctionStartDate?: string
-  auctionEndDate?: string
-  auctionStartPrice?: number
-  auctionEnded?: boolean
-  auctionStatus?: string
-  strategyName?: string
-  optionMinPriceKg?: number
-  optionMaxPriceKg?: number
-  optionBuyNowPrice?: number
-  optionShowPublic?: boolean
-  optionMinIncrement?: number
-  productId?: number
-  productWeightKg?: number
-  productDepositDate?: string
-  transformedProductId?: number
-  qualityInspectorId?: number
-  productQuality?: string
-  productType?: string
-  storeId?: number
-  storeName?: string
-  storeCity?: string
-  storeRegion?: string
-  sellerId?: number
-  sellerCity?: string
-  sellerRegion?: string
-  sellerCooperative?: string
-  bidCount?: number
-  bidMax?: number
-  bidMin?: number
-  bidAvg?: number
-  bidSum?: number
-  winnerTraderId?: number
-  bidWinningAmount?: number
-  winnerCity?: string
-  winnerRegion?: string
+/**
+ * Objet de transfert de données pour les articles de presse.
+ */
+export type NewsDto = {
+  /**
+   * Identifiant unique
+   */
+  readonly id: number
+  /**
+   * Titre de l'article
+   */
+  title: string
+  /**
+   * Contenu de l'article
+   */
+  content?: string
+  /**
+   * Date de création de l'article
+   */
+  readonly creationDate?: string
+  /**
+   * Date de publication de l'article
+   */
+  publicationDate: string
+  /**
+   * Catégorie associée à l'article
+   */
+  category: NewsCategoryDto
+  /**
+   * Nom de l'auteur de l'article
+   */
+  authorName?: string
+}
+
+/**
+ * Représente une liste paginée d'articles d'actualité.
+ */
+export type NewsPageDto = {
+  /**
+   * Le contenu de cette page.
+   */
+  content?: Array<NewsDto>
+  /**
+   * Le nombre total de pages.
+   */
+  totalPages?: number
+  /**
+   * Le nombre total d'éléments sur toutes les pages.
+   */
+  totalElements?: number
+  /**
+   * Le numéro de la page courante (commence à zéro).
+   */
+  number?: number
+  /**
+   * Le nombre d'éléments dans la page courante.
+   */
+  size?: number
+  /**
+   * Indique s'il s'agit de la première page.
+   */
+  first?: boolean
+  /**
+   * Indique s'il s'agit de la dernière page.
+   */
+  last?: boolean
+  /**
+   * Le nombre d'éléments dans la page courante.
+   */
+  numberOfElements?: number
+  /**
+   * Indique si la page courante est vide.
+   */
+  empty?: boolean
 }
 
 /**
@@ -2127,6 +2234,208 @@ export type UpdateProductResponses = {
 
 export type UpdateProductResponse =
   UpdateProductResponses[keyof UpdateProductResponses]
+
+export type DeleteNewsData = {
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/news/{id}'
+}
+
+export type DeleteNewsErrors = {
+  /**
+   * Article de nouvelles non trouvé
+   */
+  404: ApiErrorResponse
+}
+
+export type DeleteNewsError = DeleteNewsErrors[keyof DeleteNewsErrors]
+
+export type DeleteNewsResponses = {
+  /**
+   * Article de nouvelles supprimé avec succès
+   */
+  204: void
+}
+
+export type DeleteNewsResponse = DeleteNewsResponses[keyof DeleteNewsResponses]
+
+export type GetNewsData = {
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/news/{id}'
+}
+
+export type GetNewsErrors = {
+  /**
+   * Article de nouvelles non trouvé
+   */
+  404: ApiErrorResponse
+}
+
+export type GetNewsError = GetNewsErrors[keyof GetNewsErrors]
+
+export type GetNewsResponses = {
+  /**
+   * Opération réussie
+   */
+  200: NewsDto
+}
+
+export type GetNewsResponse = GetNewsResponses[keyof GetNewsResponses]
+
+export type UpdateNewsData = {
+  body: NewsUpdateDto
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/news/{id}'
+}
+
+export type UpdateNewsErrors = {
+  /**
+   * Entrée invalide
+   */
+  400: ApiErrorResponse
+  /**
+   * Article de nouvelles non trouvé
+   */
+  404: ApiErrorResponse
+}
+
+export type UpdateNewsError = UpdateNewsErrors[keyof UpdateNewsErrors]
+
+export type UpdateNewsResponses = {
+  /**
+   * Article de nouvelles mis à jour
+   */
+  200: NewsUpdateDto
+}
+
+export type UpdateNewsResponse = UpdateNewsResponses[keyof UpdateNewsResponses]
+
+export type DeleteNewsCategoryData = {
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/news-categories/{id}'
+}
+
+export type DeleteNewsCategoryErrors = {
+  /**
+   * Catégorie non trouvée
+   */
+  404: ApiErrorResponse
+  /**
+   * La catégorie ne peut pas être supprimée (par exemple, en cours d'utilisation)
+   */
+  409: ApiErrorResponse
+}
+
+export type DeleteNewsCategoryError =
+  DeleteNewsCategoryErrors[keyof DeleteNewsCategoryErrors]
+
+export type DeleteNewsCategoryResponses = {
+  /**
+   * Catégorie d'articles de nouvelles supprimée avec succès
+   */
+  204: void
+}
+
+export type DeleteNewsCategoryResponse =
+  DeleteNewsCategoryResponses[keyof DeleteNewsCategoryResponses]
+
+export type GetNewsCategoryData = {
+  body?: never
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/news-categories/{id}'
+}
+
+export type GetNewsCategoryErrors = {
+  /**
+   * Catégorie non trouvée
+   */
+  404: ApiErrorResponse
+}
+
+export type GetNewsCategoryError =
+  GetNewsCategoryErrors[keyof GetNewsCategoryErrors]
+
+export type GetNewsCategoryResponses = {
+  /**
+   * Opération réussie
+   */
+  200: NewsCategoryDto
+}
+
+export type GetNewsCategoryResponse =
+  GetNewsCategoryResponses[keyof GetNewsCategoryResponses]
+
+export type UpdateNewsCategoryData = {
+  body: NewsCategoryDto
+  path: {
+    /**
+     * Identifiant de la ressource
+     */
+    id: number
+  }
+  query?: never
+  url: '/api/news-categories/{id}'
+}
+
+export type UpdateNewsCategoryErrors = {
+  /**
+   * Entrée invalide
+   */
+  400: ApiErrorResponse
+  /**
+   * Catégorie non trouvée
+   */
+  404: ApiErrorResponse
+  /**
+   * Le nom de la catégorie existe déjà
+   */
+  409: ApiErrorResponse
+}
+
+export type UpdateNewsCategoryError =
+  UpdateNewsCategoryErrors[keyof UpdateNewsCategoryErrors]
+
+export type UpdateNewsCategoryResponses = {
+  /**
+   * Catégorie d'articles de nouvelles mise à jour
+   */
+  200: NewsCategoryDto
+}
+
+export type UpdateNewsCategoryResponse =
+  UpdateNewsCategoryResponses[keyof UpdateNewsCategoryResponses]
 
 export type DeleteLanguageData = {
   body?: never
@@ -3335,6 +3644,116 @@ export type CreateProductResponses = {
 export type CreateProductResponse =
   CreateProductResponses[keyof CreateProductResponses]
 
+export type ListNewsData = {
+  body?: never
+  path?: never
+  query?: {
+    /**
+     * Filter by author's name (exact match, case-insensitive)
+     */
+    authorName?: string
+    /**
+     * Filter by category ID (interpreted as 'type')
+     */
+    categoryId?: number
+    /**
+     * Zero-based page index (0..N)
+     */
+    page?: number
+    /**
+     * The size of the page to be returned
+     */
+    size?: number
+    /**
+     * Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
+     */
+    sort?: Array<string>
+  }
+  url: '/api/news'
+}
+
+export type ListNewsResponses = {
+  /**
+   * Liste des articles de nouvelles récupérée avec succès
+   */
+  200: NewsPageDto
+}
+
+export type ListNewsResponse = ListNewsResponses[keyof ListNewsResponses]
+
+export type CreateNewsData = {
+  body: NewsCreateDto
+  path?: never
+  query?: never
+  url: '/api/news'
+}
+
+export type CreateNewsErrors = {
+  /**
+   * Entrée invalide
+   */
+  400: ApiErrorResponse
+}
+
+export type CreateNewsError = CreateNewsErrors[keyof CreateNewsErrors]
+
+export type CreateNewsResponses = {
+  /**
+   * Article de nouvelles créé
+   */
+  201: NewsCreateDto
+}
+
+export type CreateNewsResponse = CreateNewsResponses[keyof CreateNewsResponses]
+
+export type ListNewsCategoriesData = {
+  body?: never
+  path?: never
+  query?: never
+  url: '/api/news-categories'
+}
+
+export type ListNewsCategoriesResponses = {
+  /**
+   * Liste des catégories récupérée avec succès
+   */
+  200: Array<NewsCategoryDto>
+}
+
+export type ListNewsCategoriesResponse =
+  ListNewsCategoriesResponses[keyof ListNewsCategoriesResponses]
+
+export type CreateNewsCategoryData = {
+  body: NewsCategoryDto
+  path?: never
+  query?: never
+  url: '/api/news-categories'
+}
+
+export type CreateNewsCategoryErrors = {
+  /**
+   * Entrée invalide
+   */
+  400: ApiErrorResponse
+  /**
+   * La catégorie existe déjà
+   */
+  409: ApiErrorResponse
+}
+
+export type CreateNewsCategoryError =
+  CreateNewsCategoryErrors[keyof CreateNewsCategoryErrors]
+
+export type CreateNewsCategoryResponses = {
+  /**
+   * Catégorie d'articles de nouvelles créée
+   */
+  201: NewsCategoryDto
+}
+
+export type CreateNewsCategoryResponse =
+  CreateNewsCategoryResponses[keyof CreateNewsCategoryResponses]
+
 export type ListLanguagesData = {
   body?: never
   path?: never
@@ -3952,84 +4371,6 @@ export type SubscribeResponses = {
 
 export type SubscribeResponse = SubscribeResponses[keyof SubscribeResponses]
 
-export type ListAuctions1Data = {
-  body?: never
-  path?: never
-  query: {
-    /**
-     * Date/heure de début (inclus)
-     */
-    start: string
-    /**
-     * Date/heure de fin (inclus)
-     */
-    end: string
-    /**
-     * true → ne renvoyer que les enchères terminées
-     */
-    onlyEnded?: boolean
-  }
-  url: '/api/export/auctions'
-}
-
-export type ListAuctions1Responses = {
-  /**
-   * Liste récupérée
-   */
-  200: Array<ExportAuctionDto>
-}
-
-export type ListAuctions1Response =
-  ListAuctions1Responses[keyof ListAuctions1Responses]
-
-export type GetAuction1Data = {
-  body?: never
-  path: {
-    /**
-     * Identifiant de la ressource
-     */
-    id: number
-  }
-  query?: never
-  url: '/api/export/auctions/{id}'
-}
-
-export type GetAuction1Errors = {
-  /**
-   * Not Found
-   */
-  404: ApiErrorResponse
-}
-
-export type GetAuction1Error = GetAuction1Errors[keyof GetAuction1Errors]
-
-export type GetAuction1Responses = {
-  /**
-   * OK
-   */
-  200: ExportAuctionDto
-}
-
-export type GetAuction1Response =
-  GetAuction1Responses[keyof GetAuction1Responses]
-
-export type ListAllAuctionsData = {
-  body?: never
-  path?: never
-  query?: never
-  url: '/api/export/auctions/all'
-}
-
-export type ListAllAuctionsResponses = {
-  /**
-   * Liste complète
-   */
-  200: Array<ExportAuctionDto>
-}
-
-export type ListAllAuctionsResponse =
-  ListAllAuctionsResponses[keyof ListAllAuctionsResponses]
-
 export type DeleteDocumentData = {
   body?: never
   path: {
@@ -4283,6 +4624,54 @@ export type GetUserResponses = {
 }
 
 export type GetUserResponse = GetUserResponses[keyof GetUserResponses]
+
+export type GetFilteredDataData = {
+  body?: never
+  path?: never
+  query?: {
+    /**
+     * Date/heure de début de la période d'analyse (inclus). Laisser vide avec 'end' pour récupérer toutes les données.
+     */
+    start?: string
+    /**
+     * Date/heure de fin de la période d'analyse (inclus). Laisser vide avec 'start' pour récupérer toutes les données.
+     */
+    end?: string
+    /**
+     * Si vrai, ne retourne que les enchères terminées dans la période spécifiée (si période spécifiée) ou toutes les enchères terminées si aucune période n'est spécifiée.
+     */
+    onlyEnded?: boolean
+    /**
+     * Format du fichier exporté : 'json' (défaut) ou 'csv'.
+     */
+    format?: string
+  }
+  url: '/api/admin/export/auctions'
+}
+
+export type GetFilteredDataErrors = {
+  /**
+   * Paramètres de requête invalides.
+   */
+  400: ApiErrorResponse
+  /**
+   * Erreur interne du serveur.
+   */
+  500: ApiErrorResponse
+}
+
+export type GetFilteredDataError =
+  GetFilteredDataErrors[keyof GetFilteredDataErrors]
+
+export type GetFilteredDataResponses = {
+  /**
+   * Fichier JSON contenant les données d'enchères.
+   */
+  200: Blob | File
+}
+
+export type GetFilteredDataResponse =
+  GetFilteredDataResponses[keyof GetFilteredDataResponses]
 
 export type GetDashboardGraphicSeriesData = {
   body?: never

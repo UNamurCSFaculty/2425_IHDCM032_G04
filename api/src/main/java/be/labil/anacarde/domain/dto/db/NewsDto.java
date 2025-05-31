@@ -37,4 +37,8 @@ public class NewsDto extends BaseDto {
 	@Schema(description = "Catégorie associée à l'article")
 	@NotNull(message = "La catégorie est requise")
 	private NewsCategoryDto category;
+
+	/** Nom de l'auteur de l'article. */
+	@Schema(description = "Nom de l'auteur de l'article", example = "John Doe")
+	private String authorName;
 }
