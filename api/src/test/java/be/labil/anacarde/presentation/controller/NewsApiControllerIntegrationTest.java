@@ -58,8 +58,7 @@ public class NewsApiControllerIntegrationTest extends AbstractIntegrationTest {
 				.andExpect(status().isCreated())
 				.andExpect(jsonPath("$.title").value(newNewsDto.getTitle()))
 				.andExpect(jsonPath("$.content").value(newNewsDto.getContent()))
-				.andExpect(jsonPath("$.publicationDate").exists()) // Doit être défini par le
-																	// service
+				.andExpect(jsonPath("$.publicationDate").exists())
 				.andExpect(jsonPath("$.category.id").value(getMainTestNewsCategory().getId()))
 				.andExpect(jsonPath("$.authorName").value(
 						getMainTestUser().getFirstName() + " " + getMainTestUser().getLastName()))
@@ -73,8 +72,8 @@ public class NewsApiControllerIntegrationTest extends AbstractIntegrationTest {
 				.andExpect(status().isOk()).andExpect(jsonPath("$.id").value(mainTestNews.getId()))
 				.andExpect(jsonPath("$.title").value(mainTestNews.getTitle()))
 				.andExpect(jsonPath("$.content").value(mainTestNews.getContent()))
-				.andExpect(jsonPath("$.publicationDate")
-						.value(mainTestNews.getPublicationDate().toString()))
+				.andExpect(jsonPath("$.publicationDate").value(mainTestNews.getPublicationDate()
+						.truncatedTo(ChronoUnit.MICROS).toString()))
 				.andExpect(jsonPath("$.category.id").value(mainTestNews.getCategory().getId()))
 				.andExpect(jsonPath("$.category.name").value(mainTestNews.getCategory().getName()))
 				.andExpect(jsonPath("$.authorName").value(mainTestNews.getAuthorName()));
