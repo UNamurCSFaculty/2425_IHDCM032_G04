@@ -16,6 +16,7 @@ import be.labil.anacarde.domain.model.TradeStatus;
 import be.labil.anacarde.infrastructure.persistence.AuctionRepository;
 import be.labil.anacarde.infrastructure.persistence.TradeStatusRepository;
 import be.labil.anacarde.infrastructure.util.PersistenceHelper;
+import be.labil.anacarde.infrastructure.util.SecurityHelper;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
@@ -266,6 +267,10 @@ public class AuctionServiceImpl implements AuctionService {
 	}
 
 	private void checkAuctionParameters(AuctionUpdateDto auctionUpdateDto) {
+		// Allow fake user for DB initialization
+		if (SecurityHelper.isDbInitDataUser()) {
+			return;
+		}
 		checkAuctionSettings(auctionUpdateDto);
 		checkAuctionQuantity(auctionUpdateDto);
 		checkAuctionExpirationDate(auctionUpdateDto);

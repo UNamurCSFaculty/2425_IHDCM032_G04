@@ -37,6 +37,10 @@ import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.PrecisionModel;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -224,9 +228,11 @@ public class DatabaseServiceImpl implements DatabaseService {
 	@Transactional
 	public void createDatabase() throws IOException {
 		log.info("→ createDatabase() (compatibilité) ←");
+		setupSystemAuthentication();
 		initDatabase();
 		initTestData();
 		initViews();
+		clearSystemAuthentication();
 	}
 
 	/**
@@ -1413,5 +1419,29 @@ public class DatabaseServiceImpl implements DatabaseService {
 	private QualityInspectorCreateDto createRandomQualityInspectorDto() {
 		QualityInspectorCreateDto qualityInspector = new QualityInspectorCreateDto();
 		return (QualityInspectorCreateDto) setUserDetails(qualityInspector);
+	}
+
+	// --- System Authentication Helper Methods ---
+
+	private void setupSystemAuthentication() {
+		Admin systemUserModel = new Admin();
+		systemUserModel.setId(0);
+		systemUserModel.setEmail("system@anacarde.local");
+		systemUserModel.setFirstName("Système");
+		systemUserModel.setLastName("Anacarde");
+		systemUserModel.setEnabled(true);
+		var authorities = List.of(new SimpleGrantedAuthority("ROLE_ADMIN"),
+				new SimpleGrantedAuthority("ROLE_SYSTEM"));
+
+		Authentication authentication = new UsernamePasswordAuthenticationToken(systemUserModel,
+				null, authorities);
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+		log.debug("System authentication set for user: {} with authorities: {}",
+				systemUserModel.getEmail(), authorities);
+	}
+
+	private void clearSystemAuthentication() {
+		SecurityContextHolder.clearContext();
+		log.debug("System authentication cleared.");
 	}
 }

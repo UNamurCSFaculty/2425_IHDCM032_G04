@@ -317,6 +317,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
           {/* 2. La map en dessous */}
           <div className="h-48 w-full overflow-hidden rounded-md">
             <MapContainer
+              key="details-map"
               center={mapCenter}
               zoom={12}
               scrollWheelZoom={false}
