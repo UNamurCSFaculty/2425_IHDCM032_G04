@@ -49,7 +49,7 @@ public interface DocumentService {
 	 *             si l’ID n’existe pas.
 	 */
 	@PreAuthorize("@authz.isAdmin(principal) or @ownership.isDocumentOwner(#id, principal.id)")
-	DocumentDto getDocumentById(Integer id);
+	DocumentDto getDocumentById(@Param("id") Integer id);
 
 	/**
 	 * Supprime un document : - supprime le fichier via StorageService, - supprime la ligne en base.
@@ -60,7 +60,7 @@ public interface DocumentService {
 	 *             si l’ID n’existe pas.
 	 */
 	@PreAuthorize("@authz.isAdmin(principal) or @ownership.isDocumentOwner(#id, principal.id)")
-	void deleteDocument(Integer id);
+	void deleteDocument(@Param("id") Integer id);
 
 	/**
 	 * Liste tous les documents d’un utilisateur.
@@ -84,5 +84,5 @@ public interface DocumentService {
 	 *             si la lecture du fichier échoue.
 	 */
 	@PreAuthorize("@authz.isAdmin(principal) or @ownership.isDocumentOwner(#id, principal.id)")
-	InputStream streamDocumentContent(Integer id) throws DocumentStorageException;
+	InputStream streamDocumentContent(@Param("id") Integer id) throws DocumentStorageException;
 }
