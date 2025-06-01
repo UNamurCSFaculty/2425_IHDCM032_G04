@@ -1,27 +1,27 @@
 import { LoaderIcon } from 'lucide-react'
 import { useFieldContext } from '.'
 import { Label } from '../ui/label'
-import MultipleSelector, { type Option } from '../ui/multiple-selector'
+import Select from 'react-select'
 import { FieldErrors } from './field-errors'
 
-type MultipleSelectorOption = {
+type SelectOption = {
   value: string
   label: string
 }
 
-type MultipleSelectorFieldProps = {
+type SelectFieldProps = {
   label: string
   hint?: string
-  options: MultipleSelectorOption[]
+  options: SelectOption[]
   placeholder?: string
   className?: string
   required?: boolean
   disabled?: boolean
   loading?: boolean
-  onChange?: ((options: Option[]) => void) | undefined
+  onChange?: ((options: string[]) => void) | undefined
 }
 
-export function MultipleSelectorField({
+export function ReactSelectField({
   label,
   hint,
   options,
@@ -29,7 +29,7 @@ export function MultipleSelectorField({
   className = 'w-full',
   loading = false,
   onChange,
-}: MultipleSelectorFieldProps) {
+}: SelectFieldProps) {
   const field = useFieldContext()
 
   return (
@@ -44,19 +44,19 @@ export function MultipleSelectorField({
             <span className="text-xs font-semibold text-gray-500">{hint}</span>
           )}
         </div>
-        <MultipleSelector
+        <Select
           className={className}
           options={options.map(opt => ({
             label: opt.label,
             value: opt.value,
           }))}
           placeholder={placeholder}
-          onChange={onChange}
-          emptyIndicator={
-            <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
-              No data.
-            </p>
-          }
+          onChange={options => {
+            const values = options.map(o => o.value)
+            onChange?.(values)
+          }}
+          isMulti={true}
+          isSearchable={true}
         />
       </div>
       <FieldErrors meta={field.state.meta} />
