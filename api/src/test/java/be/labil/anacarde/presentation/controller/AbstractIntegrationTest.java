@@ -622,4 +622,52 @@ public abstract class AbstractIntegrationTest {
 		jwtCookie.setHttpOnly(true);
 		jwtCookie.setPath("/");
 	}
+
+	/**
+	 * RequestPostProcessor pour un producer.
+	 */
+	protected RequestPostProcessor jwtProducer() {
+		return request -> {
+			UserDetails userDetails = userDetailsService
+					.loadUserByUsername(getProducerTestUser().getEmail());
+			String token = jwtUtil.generateToken(userDetails);
+			jakarta.servlet.http.Cookie userCookie = new jakarta.servlet.http.Cookie("jwt", token);
+			userCookie.setHttpOnly(true);
+			userCookie.setPath("/");
+			request.setCookies(userCookie);
+			return request;
+		};
+	}
+
+	/**
+	 * RequestPostProcessor pour un transformer.
+	 */
+	protected RequestPostProcessor jwtTransformer() {
+		return request -> {
+			UserDetails userDetails = userDetailsService
+					.loadUserByUsername(getTransformerTestUser().getEmail());
+			String token = jwtUtil.generateToken(userDetails);
+			jakarta.servlet.http.Cookie userCookie = new jakarta.servlet.http.Cookie("jwt", token);
+			userCookie.setHttpOnly(true);
+			userCookie.setPath("/");
+			request.setCookies(userCookie);
+			return request;
+		};
+	}
+
+	/**
+	 * RequestPostProcessor pour un transformer.
+	 */
+	protected RequestPostProcessor jwtCarrier() {
+		return request -> {
+			UserDetails userDetails = userDetailsService
+					.loadUserByUsername(getMainTestCarrier().getEmail());
+			String token = jwtUtil.generateToken(userDetails);
+			jakarta.servlet.http.Cookie userCookie = new jakarta.servlet.http.Cookie("jwt", token);
+			userCookie.setHttpOnly(true);
+			userCookie.setPath("/");
+			request.setCookies(userCookie);
+			return request;
+		};
+	}
 }

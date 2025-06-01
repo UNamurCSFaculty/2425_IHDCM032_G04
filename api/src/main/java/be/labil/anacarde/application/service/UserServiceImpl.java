@@ -18,7 +18,6 @@ import be.labil.anacarde.infrastructure.persistence.DocumentRepository;
 import be.labil.anacarde.infrastructure.persistence.FieldRepository;
 import be.labil.anacarde.infrastructure.persistence.user.*;
 import be.labil.anacarde.infrastructure.util.PersistenceHelper;
-import be.labil.anacarde.infrastructure.util.SecurityHelper;
 import be.labil.anacarde.presentation.controller.enums.UserType;
 import jakarta.persistence.EntityManager;
 import java.io.IOException;
@@ -218,17 +217,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	public UserDetailDto updateUser(Integer id, UserUpdateDto userUpdateDto) {
 		User existingUser = userRepository.findById(id).orElseThrow(
 				() -> new ResourceNotFoundException("Utilisateur non trouvé avec l'ID: " + id));
-
-		User authenticatedUser = SecurityHelper.getAuthenticatedUserOrFail();
-
-		boolean isAdmin = SecurityHelper.isAdmin(authenticatedUser);
-		boolean isSelfUpdate = authenticatedUser.getId().equals(existingUser.getId());
-
-		if (!isAdmin && !isSelfUpdate) {
-			throw new ApiErrorException(HttpStatus.FORBIDDEN, ApiErrorCode.ACCESS_FORBIDDEN.code(),
-					List.of(new ErrorDetail("user", "user.update.forbidden",
-							"Vous n'êtes pas autorisé à modifier cet utilisateur.")));
-		}
 
 		// Mets uniquement à jour les champs non nuls du DTO
 		if (!userUpdateDto.getEmail().isEmpty())

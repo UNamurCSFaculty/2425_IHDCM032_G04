@@ -10,6 +10,8 @@ import be.labil.anacarde.presentation.controller.enums.UserType;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.List;
+import org.springframework.data.repository.query.Param;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -30,11 +32,11 @@ public interface UserService {
 	/**
 	 * Retourne l'utilisateur correspondant à l'ID fourni.
 	 *
-	 * @param id
+	 * @param userId
 	 *            L'identifiant unique de l'utilisateur.
 	 * @return Un UserDto représentant l'utilisateur avec l'ID spécifié.
 	 */
-	UserDetailDto getUserById(Integer id);
+	UserDetailDto getUserById(Integer userId);
 
 	/**
 	 * Récupère les utilisateurs du système.
@@ -49,21 +51,24 @@ public interface UserService {
 	 * Met à jour l'utilisateur identifié par l'ID donné avec les informations fournies dans le
 	 * UserDto.
 	 *
-	 * @param id
+	 * @param userId
 	 *            L'identifiant unique de l'utilisateur à mettre à jour.
 	 * @param userUpdateDto
 	 *            Le UserDto contenant les informations mises à jour.
 	 * @return Un UserDto représentant l'utilisateur mis à jour.
 	 */
-	UserDetailDto updateUser(Integer id, UserUpdateDto userUpdateDto);
+	@PreAuthorize("@authz.isAdmin(principal) or (principal.id.equals(#userId))")
+	UserDetailDto updateUser(@Param("userId") Integer userId,
+			@Param("userUpdateDto") UserUpdateDto userUpdateDto);
 
 	/**
 	 * Supprime l'utilisateur identifié par l'ID donné du système.
 	 *
-	 * @param id
+	 * @param userId
 	 *            L'identifiant unique de l'utilisateur à supprimer.
 	 */
-	void deleteUser(Integer id);
+	@PreAuthorize("@authz.isAdmin(principal)")
+	void deleteUser(Integer userId);
 
 	/**
 	 * Vérifie si un utilisateur existe déjà dans le système en fonction de son adresse e-mail.
