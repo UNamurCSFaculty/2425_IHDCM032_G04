@@ -325,7 +325,7 @@ export function ProductForm(): React.ReactElement<'div'> {
                 <form.AppField
                   name="product.harvestProductIds"
                   children={field => (
-                    <field.MultipleSelectorField
+                    <field.ReactSelectField
                       loading={isHarvestProductsLoading}
                       placeholder={t('product.select_lots')}
                       options={
@@ -347,7 +347,7 @@ export function ProductForm(): React.ReactElement<'div'> {
                       }
                       label="Matières premières"
                       onChange={items => {
-                        const ids = items.map(i => Number(i.value))
+                        const ids = items.map(i => Number(i))
                         setSelectedHarvestProductsIds(ids)
                       }}
                     />

@@ -17,6 +17,7 @@ import { CityField } from './CityField'
 import { LocationField } from './LocationField'
 import { MultiSelectVirtualField } from './multi-select-virtual-field'
 import { MultipleSelectorField } from './multiple-selector-field'
+import { ReactSelectField } from './react-select-field'
 
 export const { fieldContext, useFieldContext, formContext, useFormContext } =
   createFormHookContexts()
@@ -29,6 +30,7 @@ export const { useAppForm } = createFormHook({
     MultiSelectField,
     MultiSelectVirtualField,
     MultipleSelectorField,
+    ReactSelectField,
     TextAreaField,
     DateTimePickerField,
     FileUploadField,
