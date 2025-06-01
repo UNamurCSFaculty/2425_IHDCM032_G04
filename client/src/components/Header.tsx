@@ -86,10 +86,21 @@ export function Header() {
     if (url) navigate({ to: url })
   }
 
-  const producerAdminTransformerTrader: UserDetailDto['type'][] = [
+  const authenticatedSeller: UserDetailDto['type'][] = [
     'producer',
     'admin',
     'transformer',
+  ]
+  const authenticatedBuyer: UserDetailDto['type'][] = [
+    'admin',
+    'transformer',
+    'exporter',
+  ]
+  const authenticatedTrader: UserDetailDto['type'][] = [
+    'producer',
+    'admin',
+    'transformer',
+    'exporter',
     'trader',
   ]
   const allAuthenticatedButCarrierQualityInspector: UserDetailDto['type'][] = [
@@ -112,7 +123,7 @@ export function Header() {
           icon: <ShoppingCart className="size-5 shrink-0" />,
           url: '/achats/marche',
           requiresAuth: true,
-          allowedUserTypes: allAuthenticatedButCarrierQualityInspector,
+          allowedUserTypes: authenticatedTrader,
         },
         {
           titleKey: 'header.menu.my_space.my_purchases',
@@ -120,7 +131,7 @@ export function Header() {
           icon: <ShoppingCart className="size-5 shrink-0" />,
           url: '/achats/mes-encheres',
           requiresAuth: true,
-          allowedUserTypes: allAuthenticatedButCarrierQualityInspector,
+          allowedUserTypes: authenticatedBuyer,
         },
         {
           titleKey: 'header.menu.my_space.my_contracts',
@@ -128,7 +139,7 @@ export function Header() {
           icon: <History className="size-5 shrink-0" />,
           url: '/contrats/mes-contrats',
           requiresAuth: true,
-          allowedUserTypes: allAuthenticatedButCarrierQualityInspector,
+          allowedUserTypes: authenticatedBuyer,
         },
       ],
     },
@@ -142,7 +153,7 @@ export function Header() {
           icon: <DollarSign className="size-5 shrink-0" />,
           url: '/ventes/nouvelle-enchere',
           requiresAuth: true,
-          allowedUserTypes: producerAdminTransformerTrader,
+          allowedUserTypes: authenticatedSeller,
         },
         {
           titleKey: 'header.menu.marketplace.new_deposit',
@@ -150,7 +161,7 @@ export function Header() {
           icon: <PackagePlus className="size-5 shrink-0" />,
           url: '/depots/nouveau-produit',
           requiresAuth: true,
-          allowedUserTypes: producerAdminTransformerTrader,
+          allowedUserTypes: authenticatedSeller,
         },
         {
           titleKey: 'header.menu.my_space.my_sales',
@@ -158,7 +169,7 @@ export function Header() {
           icon: <ArrowLeftRight className="size-5 shrink-0" />,
           url: '/ventes/mes-encheres',
           requiresAuth: true,
-          allowedUserTypes: producerAdminTransformerTrader,
+          allowedUserTypes: authenticatedSeller,
         },
         {
           titleKey: 'header.menu.my_space.my_deposits',
@@ -166,7 +177,7 @@ export function Header() {
           icon: <Package className="size-5 shrink-0" />,
           url: '/depots/mes-produits',
           requiresAuth: true,
-          allowedUserTypes: producerAdminTransformerTrader,
+          allowedUserTypes: authenticatedSeller,
         },
         {
           titleKey: 'header.menu.my_space.my_contracts',
@@ -174,7 +185,7 @@ export function Header() {
           icon: <History className="size-5 shrink-0" />,
           url: '/contrats/mes-contrats',
           requiresAuth: true,
-          allowedUserTypes: producerAdminTransformerTrader,
+          allowedUserTypes: authenticatedSeller,
         },
       ],
     },
@@ -221,14 +232,14 @@ export function Header() {
       url: '/ventes/mes-encheres',
       icon: <ArrowLeftRight className="mr-2 size-4" />,
       requiresAuth: true,
-      allowedUserTypes: producerAdminTransformerTrader,
+      allowedUserTypes: authenticatedTrader,
     },
     {
       titleKey: 'header.menu.my_space.my_deposits',
       url: '/depots/mes-produits',
       icon: <Package className="mr-2 size-4" />,
       requiresAuth: true,
-      allowedUserTypes: producerAdminTransformerTrader,
+      allowedUserTypes: authenticatedSeller,
     },
     {
       titleKey: 'header.menu.my_space.my_contracts',
