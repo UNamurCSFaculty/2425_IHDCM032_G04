@@ -564,13 +564,13 @@ public abstract class AbstractIntegrationTest {
 
 		// An accepted bid on an auction
 		Bid bid = Bid.builder().amount(new BigDecimal("10.0")).creationDate(LocalDateTime.now())
-				.auctionId(testAuction.getId()).trader(producer).status(tradeStatusAccepted)
+				.auctionId(testAuction.getId()).trader(transformer).status(tradeStatusAccepted)
 				.build();
 		testBid = bidRepository.save(bid);
 
 		// A pending bid on a different auction
 		Bid bid2 = Bid.builder().amount(new BigDecimal("500.0")).creationDate(LocalDateTime.now())
-				.auctionId(auction2.getId()).trader(producer).status(tradeStatusOpen).build();
+				.auctionId(auction2.getId()).trader(transformer).status(tradeStatusOpen).build();
 		bidRepository.save(bid2);
 
 		// A cooperative who has for president 'producer'

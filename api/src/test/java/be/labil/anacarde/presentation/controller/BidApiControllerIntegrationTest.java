@@ -33,7 +33,7 @@ public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 		mockMvc.perform(get("/api/bids/" + getTestBid().getId()).accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk()).andExpect(jsonPath("$.amount").value("10.0"))
 				.andExpect(jsonPath("$.auctionId").value(getTestAuction().getId()))
-				.andExpect(jsonPath("$.trader.id").value(getProducerTestUser().getId()));
+				.andExpect(jsonPath("$.trader.id").value(getTransformerTestUser().getId()));
 	}
 
 	/**
