@@ -104,6 +104,7 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(ApiErrorException.class)
 	public ResponseEntity<ApiErrorResponse> handleApiError(ApiErrorException ex,
 			HttpServletRequest req) {
+		log.error("ApiErrorException", ex);
 		return buildResponse(ex.getStatus(), ex.getCode(), ex.getErrors(), req);
 	}
 
@@ -119,6 +120,7 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(OperationNotAllowedException.class)
 	public ResponseEntity<ApiErrorResponse> handleOperationNotAllowed(
 			OperationNotAllowedException ex, HttpServletRequest request) {
+		log.error("OperationNotAllowedException", ex);
 		return buildResponse(ex.getStatus(), ex.getCode(), ex.getErrors(), request);
 	}
 
@@ -134,6 +136,7 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<ApiErrorResponse> handleValidation(MethodArgumentNotValidException ex,
 			HttpServletRequest req) {
+		log.error("MethodArgumentNotValidException", ex);
 
 		String code = ApiErrorCode.VALIDATION_ERROR.code();
 		List<ErrorDetail> details = ex.getBindingResult().getFieldErrors().stream()
@@ -155,6 +158,7 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(ResourceNotFoundException.class)
 	public ResponseEntity<ApiErrorResponse> handleNotFound(ResourceNotFoundException ex,
 			HttpServletRequest req) {
+		log.error("ResourceNotFoundException", ex);
 
 		return buildResponse(HttpStatus.NOT_FOUND, ApiErrorCode.RESOURCE_NOT_FOUND.code(),
 				ex.getMessage(), req);
@@ -173,6 +177,7 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(BadRequestException.class)
 	public ResponseEntity<ApiErrorResponse> handleBadRequest(BadRequestException ex,
 			HttpServletRequest req) {
+		log.error("BadRequestException", ex);
 
 		return buildResponse(HttpStatus.BAD_REQUEST, ApiErrorCode.BAD_REQUEST.code(),
 				ex.getMessage(), req);
@@ -190,6 +195,7 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(DataIntegrityViolationException.class)
 	public ResponseEntity<ApiErrorResponse> handleConflict(DataIntegrityViolationException ex,
 			HttpServletRequest req) {
+		log.error("DataIntegrityViolationException", ex);
 
 		/**
 		 * Utilise une expression régulière pour extraire le nom de la contrainte ou le code
@@ -220,6 +226,7 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	public ResponseEntity<ApiErrorResponse> handleUnreadable(HttpMessageNotReadableException ex,
 			HttpServletRequest req) {
+		log.error("HttpMessageNotReadableException", ex);
 
 		Throwable cause = ex.getCause();
 		String detail;
@@ -249,6 +256,7 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
 	public ResponseEntity<ApiErrorResponse> handleMethodNotAllowed(
 			HttpRequestMethodNotSupportedException ex, HttpServletRequest req) {
+		log.error("HttpRequestMethodNotSupportedException", ex);
 
 		String allowed = ex.getSupportedHttpMethods() != null
 				? ex.getSupportedHttpMethods().stream().map(HttpMethod::name)
@@ -274,6 +282,7 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(StaleObjectStateException.class)
 	public ResponseEntity<ApiErrorResponse> handleStale(StaleObjectStateException ex,
 			HttpServletRequest req) {
+		log.error("StaleObjectStateException", ex);
 
 		return buildResponse(HttpStatus.CONFLICT, ApiErrorCode.STALE_OBJECT.code(),
 				"La ressource a été modifiée par un autre utilisateur. Veuillez réessayer.", req);
@@ -291,6 +300,7 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(NoHandlerFoundException.class)
 	public ResponseEntity<ApiErrorResponse> handleNoHandlerFound(NoHandlerFoundException ex,
 			HttpServletRequest req) {
+		log.error("NoHandlerFoundException", ex);
 
 		String detail = "Aucun endpoint ne correspond à l'URL " + ex.getRequestURL();
 		return buildResponse(HttpStatus.NOT_FOUND, ApiErrorCode.NO_HANDLER_FOUND.code(), detail,
@@ -312,6 +322,7 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(MissingPathVariableException.class)
 	public ResponseEntity<ApiErrorResponse> handleMissingPathVariable(
 			MissingPathVariableException ex, HttpServletRequest req) {
+		log.error("MissingPathVariableException", ex);
 
 		String detail = "Le paramètre de chemin manquant : " + ex.getVariableName();
 		return buildResponse(HttpStatus.BAD_REQUEST, ApiErrorCode.MISSING_PATH_VARIABLE.code(),
@@ -332,6 +343,7 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(MissingServletRequestParameterException.class)
 	public ResponseEntity<ApiErrorResponse> handleMissingServletParam(
 			MissingServletRequestParameterException ex, HttpServletRequest req) {
+		log.error("MissingServletRequestParameterException", ex);
 
 		String detail = "Le paramètre de requête manquant : " + ex.getParameterName();
 		return buildResponse(HttpStatus.BAD_REQUEST, ApiErrorCode.MISSING_REQUEST_PARAM.code(),
@@ -350,6 +362,7 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(AuthenticationException.class)
 	public ResponseEntity<ApiErrorResponse> handleAuthenticationException(
 			AuthenticationException ex, HttpServletRequest req) {
+		log.error("AuthenticationException", ex);
 
 		if (ex instanceof DisabledException) {
 			return buildResponse(HttpStatus.UNAUTHORIZED, ApiErrorCode.ACCESS_DISABLED.code(),
@@ -363,6 +376,7 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(AccessDeniedException.class)
 	public ResponseEntity<ApiErrorResponse> handleAccessDenied(AccessDeniedException ex,
 			HttpServletRequest req) {
+		log.error("AuthenticationException", ex);
 
 		return buildResponse(HttpStatus.FORBIDDEN, ApiErrorCode.ACCESS_DENIED.code(),
 				"Accès refusé : vous n’avez pas les droits suffisants.", req);
@@ -379,7 +393,6 @@ public class GlobalExceptionHandler {
 	 */
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ApiErrorResponse> handleGeneric(Exception ex, HttpServletRequest req) {
-
 		log.error("Erreur interne non gérée", ex);
 		return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, ApiErrorCode.INTERNAL_ERROR.code(),
 				"Une erreur interne s'est produite. Contactez le support si le problème persiste.",
