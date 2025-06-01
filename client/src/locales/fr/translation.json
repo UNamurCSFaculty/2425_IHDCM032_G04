@@ -265,7 +265,7 @@
     "type": "Type",
     "upload_accepted": "Formats acceptés",
     "upload_component": "Cliquez pour télécharger ou glisser-déposer",
-    "upload_limit": "La taille maximale de téléchargement est de {{max}} Mo",
+    "upload_limit": "Nombre maximum de fichiers : {{max}}",
     "upload_too_big": "Le fichier est trop volumineux, maximum {{max}} Mo",
     "upload_all": "Tous les fichiers sont acceptés",
     "upload_click_or_drag": "Cliquez pour télécharger ou glisser-déposer",
@@ -664,7 +664,7 @@
       "section_settings_title": "Paramètres de vente",
       "section_general_conditions": "Conditions générales",
       "submit_button": "Ouvrir la vente",
-      "created_ok": "Vente créée avec succès.",
+      "created_ok": "Vente ouverte avec succès !",
       "created_fail": "Erreur lors de la création de la vente.",
       "auction_strategy": "Stratégie d'enchère",
       "auction_fixed_price": "Prix imposé par kg",
@@ -719,7 +719,9 @@
       "submit_button": "Enregistrer le produit",
       "section_quality_control_title": "Contrôle qualité",
       "control_date_label": "Date du contrôle",
-      "certificate_label": "Certificat de contrôle"
+      "certificate_label": "Certificat de contrôle",
+      "created_ok": "Produit déposé avec succès !",
+      "created_fail": "Erreur lors du dépôt du produit."
     },
     "weight_in_kg_label": "Poids (kg)"
   },
