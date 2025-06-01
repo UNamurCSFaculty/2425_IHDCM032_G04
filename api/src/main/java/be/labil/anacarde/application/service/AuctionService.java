@@ -5,6 +5,7 @@ import be.labil.anacarde.domain.dto.db.AuctionDto;
 import be.labil.anacarde.domain.dto.write.AuctionUpdateDto;
 import java.util.List;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
@@ -20,6 +21,7 @@ public interface AuctionService {
 	 *            Le AuctionDto contenant les informations de la nouvelle enchère.
 	 * @return Un AuctionDto représentant l'enchère créée.
 	 */
+	@Secured({"ROLE_ADMIN", "ROLE_SELLER"})
 	@PreAuthorize("@authz.isAdmin(principal) or (#auctionDto.traderId.equals(principal.id))")
 	AuctionDto createAuction(@Param("auctionDto") AuctionUpdateDto auctionDto);
 
@@ -56,6 +58,7 @@ public interface AuctionService {
 	 *            Le AuctionDto contenant les informations mises à jour.
 	 * @return Un AuctionDto représentant l'enchère mis à jour.
 	 */
+	@Secured({"ROLE_ADMIN", "ROLE_SELLER"})
 	@PreAuthorize("@authz.isAdmin(principal) or (#auctionDto.traderId.equals(principal.id))")
 	AuctionDto updateAuction(Integer auctionId, @Param("auctionDto") AuctionUpdateDto auctionDto);
 
@@ -66,6 +69,7 @@ public interface AuctionService {
 	 *            L'identifiant unique de l'enchère à mettre à jour.
 	 * @return Un AuctionDto représentant l'enchère mis à jour.
 	 */
+	@Secured({"ROLE_ADMIN", "ROLE_SELLER"})
 	@PreAuthorize("@authz.isAdmin(principal) or (@ownership.isAuctionOwner(principal.id, #auctionId))")
 	AuctionDto acceptAuction(@Param("auctionId") Integer auctionId);
 
@@ -75,6 +79,7 @@ public interface AuctionService {
 	 * @param auctionId
 	 *            L'identifiant unique de l'enchère à supprimer.
 	 */
+	@Secured({"ROLE_ADMIN", "ROLE_SELLER"})
 	@PreAuthorize("@authz.isAdmin(principal) or (@ownership.isAuctionOwner(principal.id, #auctionId))")
 	void deleteAuction(@Param("auctionId") Integer auctionId);
 

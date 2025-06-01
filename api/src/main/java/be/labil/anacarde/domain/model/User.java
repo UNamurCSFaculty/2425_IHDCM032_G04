@@ -80,12 +80,16 @@ public abstract class User extends BaseEntity implements UserDetails {
 			authorities.add(new SimpleGrantedAuthority("ROLE_QUALITY_INSPECTOR"));
 		} else if (this instanceof Producer) {
 			authorities.add(new SimpleGrantedAuthority("ROLE_PRODUCER"));
+			authorities.add(new SimpleGrantedAuthority("ROLE_SELLER"));
 		} else if (this instanceof Exporter) {
 			authorities.add(new SimpleGrantedAuthority("ROLE_EXPORTER"));
+			authorities.add(new SimpleGrantedAuthority("ROLE_BUYER"));
 		} else if (this instanceof Carrier) {
 			authorities.add(new SimpleGrantedAuthority("ROLE_CARRIER"));
 		} else if (this instanceof Transformer) {
 			authorities.add(new SimpleGrantedAuthority("ROLE_TRANSFORMER"));
+			authorities.add(new SimpleGrantedAuthority("ROLE_BUYER"));
+			authorities.add(new SimpleGrantedAuthority("ROLE_SELLER"));
 		}
 
 		return authorities;

@@ -32,8 +32,8 @@ public class BidApiControllerSecurityTest extends AbstractIntegrationTest {
 
 	@Test
 	public void testCreateBidForSameUserShouldSucceed() throws Exception {
-		final Integer expectedUser = getProducerTestUser().getId();
-		final RequestPostProcessor actualUser = jwtProducer();
+		final Integer expectedUser = getTransformerTestUser().getId();
+		final RequestPostProcessor actualUser = jwtTransformer();
 
 		BidUpdateDto newBid = new BidUpdateDto();
 		newBid.setAmount(new BigDecimal("999.99"));
@@ -69,9 +69,28 @@ public class BidApiControllerSecurityTest extends AbstractIntegrationTest {
 	}
 
 	@Test
-	public void testUpdateBidForSameUserShouldSucceed() throws Exception {
+	public void testCreateBidByNonAllowedRoleShouldFail() throws Exception {
 		final Integer expectedUser = getProducerTestUser().getId();
 		final RequestPostProcessor actualUser = jwtProducer();
+
+		BidUpdateDto newBid = new BidUpdateDto();
+		newBid.setAmount(new BigDecimal("999.99"));
+		newBid.setStatusId(getTestTradeStatus().getId());
+		newBid.setCreationDate(LocalDateTime.now());
+		newBid.setTraderId(expectedUser);
+		newBid.setAuctionId(getTestAuction().getId());
+
+		ObjectNode node = objectMapper.valueToTree(newBid);
+		String jsonContent = node.toString();
+
+		mockMvc.perform(post("/api/bids").with(actualUser).contentType(MediaType.APPLICATION_JSON)
+				.content(jsonContent)).andExpect(status().isForbidden());
+	}
+
+	@Test
+	public void testUpdateBidForSameUserShouldSucceed() throws Exception {
+		final Integer expectedUser = getTransformerTestUser().getId();
+		final RequestPostProcessor actualUser = jwtTransformer();
 
 		BidUpdateDto updateBid = new BidUpdateDto();
 		updateBid.setAmount(new BigDecimal("1234567.01"));
@@ -109,9 +128,29 @@ public class BidApiControllerSecurityTest extends AbstractIntegrationTest {
 	}
 
 	@Test
+	public void testUpdateBidByNonAllowedRoleUserShouldFail() throws Exception {
+		final Integer expectedUser = getProducerTestUser().getId();
+		final RequestPostProcessor actualUser = jwtProducer();
+
+		BidUpdateDto updateBid = new BidUpdateDto();
+		updateBid.setAmount(new BigDecimal("1234567.01"));
+		updateBid.setStatusId(getTestTradeStatus().getId());
+		updateBid.setCreationDate(LocalDateTime.now());
+		updateBid.setTraderId(expectedUser);
+		updateBid.setAuctionId(getTestAuction().getId());
+
+		ObjectNode node = objectMapper.valueToTree(updateBid);
+		String jsonContent = node.toString();
+
+		mockMvc.perform(put("/api/bids/" + getTestBid().getId()).with(actualUser)
+				.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				.andExpect(status().isForbidden());
+	}
+
+	@Test
 	public void testDeleteBidForSameUserShouldSucceed() throws Exception {
 		// expectedUser = producer
-		final RequestPostProcessor actualUser = jwtProducer();
+		final RequestPostProcessor actualUser = jwtTransformer();
 
 		mockMvc.perform(delete("/api/bids/" + getTestBid().getId()).with(actualUser))
 				.andExpect(status().isNoContent());
@@ -169,5 +208,4 @@ public class BidApiControllerSecurityTest extends AbstractIntegrationTest {
 				.contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(actualUser))
 				.andExpect(status().isForbidden());
 	}
-
 }

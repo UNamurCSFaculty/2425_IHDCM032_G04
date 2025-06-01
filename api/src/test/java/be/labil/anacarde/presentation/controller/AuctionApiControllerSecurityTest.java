@@ -76,6 +76,27 @@ public class AuctionApiControllerSecurityTest extends AbstractIntegrationTest {
 	}
 
 	@Test
+	public void testCreateAuctionByNonSellerRoleShouldFail() throws Exception {
+		final Integer expectedUser = getMainTestCarrier().getId();
+		final RequestPostProcessor actualUser = jwtCarrier();
+
+		AuctionUpdateDto newAuction = new AuctionUpdateDto();
+		newAuction.setPrice(111.11);
+		newAuction.setProductQuantity(10);
+		newAuction.setActive(true);
+		newAuction.setExpirationDate(LocalDateTime.now().plusDays(1));
+		newAuction.setProductId(getTestHarvestProduct().getId());
+		newAuction.setTraderId(expectedUser);
+
+		ObjectNode node = objectMapper.valueToTree(newAuction);
+		String jsonContent = node.toString();
+
+		mockMvc.perform(post("/api/auctions").with(actualUser)
+				.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				.andExpect(status().isForbidden());
+	}
+
+	@Test
 	public void testUpdateAuctionForSameUserShouldSucceed() throws Exception {
 		final Integer expectedUser = getProducerTestUser().getId();
 		final RequestPostProcessor actualUser = jwtProducer();
@@ -132,6 +153,34 @@ public class AuctionApiControllerSecurityTest extends AbstractIntegrationTest {
 	}
 
 	@Test
+	public void testUpdateAuctionByNonSellerRoleShouldFail() throws Exception {
+		final Integer expectedUser = getMainTestCarrier().getId();
+		final RequestPostProcessor actualUser = jwtCarrier();
+
+		AuctionOptionsUpdateDto optionsDto = new AuctionOptionsUpdateDto();
+		optionsDto.setStrategyId(getTestAuctionStrategy().getId());
+		optionsDto.setBuyNowPrice(100.50);
+		optionsDto.setShowPublic(true);
+
+		AuctionUpdateDto updateAuction = new AuctionUpdateDto();
+		updateAuction.setPrice(999.99);
+		updateAuction.setProductQuantity(99);
+		updateAuction.setActive(true);
+		updateAuction.setExpirationDate(LocalDateTime.now());
+		updateAuction.setOptions(optionsDto);
+		updateAuction.setProductId(getTestHarvestProduct().getId());
+		updateAuction.setTraderId(expectedUser);
+		updateAuction.setStatusId(getTestTradeStatus().getId());
+
+		ObjectNode node = objectMapper.valueToTree(updateAuction);
+		String jsonContent = node.toString();
+
+		mockMvc.perform(put("/api/auctions/" + getTestAuction().getId()).with(actualUser)
+				.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				.andExpect(status().isForbidden());
+	}
+
+	@Test
 	public void testDeleteAuctionForSameUserShouldSucceed() throws Exception {
 		// expectedUser = producer
 		final RequestPostProcessor actualUser = jwtProducer();
@@ -163,6 +212,18 @@ public class AuctionApiControllerSecurityTest extends AbstractIntegrationTest {
 
 	@Test
 	public void testAcceptAuctionForAnotherUserShouldFail() throws Exception {
+		// expectedUser = producer
+		final RequestPostProcessor actualUser = jwtTransformer();
+
+		String jsonContent = "";
+
+		mockMvc.perform(put("/api/auctions/" + getTestAuction().getId() + "/accept")
+				.with(actualUser).contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				.andExpect(status().isForbidden());
+	}
+
+	@Test
+	public void testAcceptAuctionByNonSellerRoleShouldFail() throws Exception {
 		// expectedUser = producer
 		final RequestPostProcessor actualUser = jwtTransformer();
 

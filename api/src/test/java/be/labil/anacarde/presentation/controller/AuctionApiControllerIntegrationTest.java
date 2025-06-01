@@ -353,7 +353,7 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 	@Test
 	public void testListAuctionsByBuyerId() throws Exception {
 		mockMvc.perform(
-				get("/api/auctions?buyerId=" + getProducerTestUser().getId() + "&status=Accepté")
+				get("/api/auctions?buyerId=" + getTransformerTestUser().getId() + "&status=Accepté")
 						.accept(MediaType.APPLICATION_JSON).with(jwtAndCsrf()))
 				.andExpect(status().isOk()).andExpect(jsonPath("$").isArray())
 				.andExpect(jsonPath("$.length()").value(1));
