@@ -669,7 +669,7 @@
       "auction_strategy": "Stratégie d'enchère",
       "auction_fixed_price": "Prix imposé par kg",
       "auction_max_price": "Prix maximum par kg",
-      "auction_min_price": "Prix minimum par kg"
+      "auction_min_price": "Prix minimum par kg",
       "section_pricing_title": "Fixation du prix",
       "section_sale_conditions_title": "Conditions de vente",
       "price_per_kg_hint": "Soit {{price}} CFA / kg"
