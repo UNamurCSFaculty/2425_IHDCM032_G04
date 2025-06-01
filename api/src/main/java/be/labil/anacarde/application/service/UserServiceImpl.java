@@ -18,6 +18,7 @@ import be.labil.anacarde.infrastructure.persistence.DocumentRepository;
 import be.labil.anacarde.infrastructure.persistence.FieldRepository;
 import be.labil.anacarde.infrastructure.persistence.user.*;
 import be.labil.anacarde.infrastructure.util.PersistenceHelper;
+import be.labil.anacarde.infrastructure.util.SecurityHelper;
 import be.labil.anacarde.presentation.controller.enums.UserType;
 import jakarta.persistence.EntityManager;
 import java.io.IOException;
