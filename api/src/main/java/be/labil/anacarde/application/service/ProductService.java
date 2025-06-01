@@ -5,6 +5,8 @@ import be.labil.anacarde.domain.dto.db.product.ProductDto;
 import be.labil.anacarde.domain.dto.write.product.ProductUpdateDto;
 import be.labil.anacarde.presentation.controller.enums.ProductType;
 import java.util.List;
+import org.springframework.data.repository.query.Param;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
  * Ce service offre des méthodes permettant de créer, récupérer, mettre à jour et supprimer des
@@ -15,11 +17,12 @@ public interface ProductService {
 	/**
 	 * Crée un nouveau produit dans le système en utilisant le ProductDto fourni.
 	 *
-	 * @param ProductDto
+	 * @param productDto
 	 *            Le ProductDto contenant les informations du nouveau produit.
 	 * @return Un ProductDto représentant le produit créé.
 	 */
-	ProductDto createProduct(ProductUpdateDto ProductDto);
+	@PreAuthorize("@authz.isAdmin(principal) or (@ownership.isProductOwner(principal.id, #productDto))")
+	ProductDto createProduct(@Param("productDto") ProductUpdateDto productDto);
 
 	/**
 	 * Retourne le produit correspondant à l'ID fourni.
@@ -45,21 +48,23 @@ public interface ProductService {
 	 * Met à jour le produit identifié par l'ID donné avec les informations fournies dans le
 	 * ProductDto.
 	 *
-	 * @param id
+	 * @param productId
 	 *            L'identifiant unique du produit à mettre à jour.
 	 * @param ProductDto
 	 *            Le ProductDto contenant les informations mises à jour.
 	 * @return Un ProductDto représentant le produit mis à jour.
 	 */
-	ProductDto updateProduct(Integer id, ProductUpdateDto ProductDto);
+	@PreAuthorize("@authz.isAdmin(principal) or (@ownership.isProductOwner(principal.id, #productId))")
+	ProductDto updateProduct(@Param("productId") Integer productId, ProductUpdateDto ProductDto);
 
 	/**
 	 * Supprime le produit identifié par l'ID donné du système.
 	 *
-	 * @param id
+	 * @param productId
 	 *            L'identifiant unique du produit à supprimer.
 	 */
-	void deleteProduct(Integer id);
+	@PreAuthorize("@authz.isAdmin(principal) or (@ownership.isProductOwner(principal.id, #productId))")
+	void deleteProduct(@Param("productId") Integer productId);
 
 	/**
 	 * Met à jour le poids disponible pour un produit

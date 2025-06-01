@@ -16,4 +16,6 @@ public interface HarvestProductRepository extends JpaRepository<HarvestProduct, 
 	 */
 	@Query("SELECT h FROM HarvestProduct h WHERE (:producerId IS NULL OR h.producer.id = :producerId)")
 	List<HarvestProduct> findByProducerId(Integer producerId);
+
+	boolean existsByIdAndProducerId(Integer productId, Integer producerId);
 }

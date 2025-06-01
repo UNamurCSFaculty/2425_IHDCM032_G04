@@ -28,4 +28,6 @@ public interface BidRepository extends JpaRepository<Bid, Integer> {
 			""", nativeQuery = true)
 	void overrideCreationDateNative(@Param("id") Integer id,
 			@Param("newDate") LocalDateTime newDate);
+
+	boolean existsByIdAndTraderId(Integer auctionId, Integer userId);
 }

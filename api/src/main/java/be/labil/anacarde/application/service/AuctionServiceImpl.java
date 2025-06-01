@@ -53,8 +53,7 @@ public class AuctionServiceImpl implements AuctionService {
 
 	@Override
 	public AuctionDto createAuction(AuctionUpdateDto auctionUpdateDto) {
-		checkAuctionSettings(auctionUpdateDto);
-		checkAuctionQuantity(auctionUpdateDto);
+		checkAuctionParameters(auctionUpdateDto);
 
 		Auction auction = auctionMapper.toEntity(auctionUpdateDto);
 
@@ -130,8 +129,7 @@ public class AuctionServiceImpl implements AuctionService {
 		Auction existingAuction = auctionRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Enchère non trouvée"));
 
-		checkAuctionSettings(auctionDetailDto);
-		checkAuctionQuantity(auctionDetailDto);
+		checkAuctionParameters(auctionDetailDto);
 
 		if (existingAuction.getStatus().getId()
 				.equals(tradeStatusRepository.findStatusPending().getId())
@@ -264,6 +262,20 @@ public class AuctionServiceImpl implements AuctionService {
 				throw new ApiErrorException(HttpStatus.BAD_REQUEST, ApiErrorCode.BAD_REQUEST.code(),
 						"weightKgAvailable", "Quantité disponible insuffisante pour le produit");
 			}
+		}
+	}
+
+	private void checkAuctionParameters(AuctionUpdateDto auctionUpdateDto) {
+		checkAuctionSettings(auctionUpdateDto);
+		checkAuctionQuantity(auctionUpdateDto);
+		checkAuctionExpirationDate(auctionUpdateDto);
+	}
+
+	private void checkAuctionExpirationDate(AuctionUpdateDto auctionUpdateDto) {
+		if (auctionUpdateDto.getExpirationDate() != null
+				&& auctionUpdateDto.getExpirationDate().isBefore(LocalDateTime.now())) {
+			throw new ApiErrorException(HttpStatus.BAD_REQUEST, ApiErrorCode.BAD_REQUEST.code(),
+					"expirationDate", "Date d'expiration définie dans le passé.");
 		}
 	}
 

@@ -5,6 +5,7 @@ import be.labil.anacarde.application.exception.ResourceNotFoundException;
 import be.labil.anacarde.domain.dto.db.DocumentDto;
 import java.io.InputStream;
 import java.util.List;
+import org.springframework.data.repository.query.Param;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,8 +25,8 @@ public interface DocumentService {
 	 *            Le fichier à téléverser.
 	 * @return Le DocumentDto complet (id, uploadDate, storagePath, etc.).
 	 */
-	@PreAuthorize("@authz.isAdmin(principal) or #userId == principal.id")
-	DocumentDto createDocumentUser(Integer userId, MultipartFile file);
+	@PreAuthorize("@authz.isAdmin(principal) or #userId.equals(principal.id)")
+	DocumentDto createDocumentUser(@Param("userId") Integer userId, MultipartFile file);
 
 	/**
 	 * Crée un nouveau document en même temps que son upload.
@@ -47,8 +48,8 @@ public interface DocumentService {
 	 * @throws ResourceNotFoundException
 	 *             si l’ID n’existe pas.
 	 */
-	@PreAuthorize("@authz.isAdmin(principal) or @docSecurity.isOwner(#id, principal.id)")
-	DocumentDto getDocumentById(Integer id);
+	@PreAuthorize("@authz.isAdmin(principal) or @ownership.isDocumentOwner(#id, principal.id)")
+	DocumentDto getDocumentById(@Param("id") Integer id);
 
 	/**
 	 * Supprime un document : - supprime le fichier via StorageService, - supprime la ligne en base.
@@ -58,8 +59,8 @@ public interface DocumentService {
 	 * @throws ResourceNotFoundException
 	 *             si l’ID n’existe pas.
 	 */
-	@PreAuthorize("@authz.isAdmin(principal) or @docSecurity.isOwner(#id, principal.id)")
-	void deleteDocument(Integer id);
+	@PreAuthorize("@authz.isAdmin(principal) or @ownership.isDocumentOwner(#id, principal.id)")
+	void deleteDocument(@Param("id") Integer id);
 
 	/**
 	 * Liste tous les documents d’un utilisateur.
@@ -68,8 +69,8 @@ public interface DocumentService {
 	 *            Identifiant du propriétaire.
 	 * @return Liste de DocumentDto.
 	 */
-	@PreAuthorize("@authz.isAdmin(principal) or #userId == principal.id")
-	List<DocumentDto> listDocumentsByUser(Integer userId);
+	@PreAuthorize("@authz.isAdmin(principal) or #userId.equals(principal.id)")
+	List<DocumentDto> listDocumentsByUser(@Param("userId") Integer userId);
 
 	/**
 	 * Fournit un flux {@link InputStream} sur le contenu brut du document.
@@ -82,6 +83,6 @@ public interface DocumentService {
 	 * @throws DocumentStorageException
 	 *             si la lecture du fichier échoue.
 	 */
-	@PreAuthorize("@authz.isAdmin(principal) or @docSecurity.isOwner(#id, principal.id)")
-	InputStream streamDocumentContent(Integer id) throws DocumentStorageException;
+	@PreAuthorize("@authz.isAdmin(principal) or @ownership.isDocumentOwner(#id, principal.id)")
+	InputStream streamDocumentContent(@Param("id") Integer id) throws DocumentStorageException;
 }

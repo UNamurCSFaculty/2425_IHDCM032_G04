@@ -696,7 +696,7 @@
     "product_label": "Product",
     "quantity_in_kg_label": "Quantity (kg)",
     "price_in_cfa_label": "Price (CFA)",
-    "info_title": "Product Information",
+    "info_title": "Details",
     "lot_number_label": "Lot Number",
     "lot_no_label": "Lot #{{id}}",
     "deposited_quantity_label": "Deposited Quantity",

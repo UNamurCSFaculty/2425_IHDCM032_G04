@@ -1,5 +1,9 @@
 import Stepper from '../Stepper'
-import { type ProductDto } from '@/api/generated'
+import {
+  type ApiErrorResponse,
+  type ErrorDetail,
+  type ProductDto,
+} from '@/api/generated'
 import {
   createAuctionMutation,
   getAuctionSettingsOptions,
@@ -28,6 +32,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Table, TableBody, TableCell, TableRow } from '../ui/table'
 import FormSectionTitle from '../FormSectionTitle'
+import { toast } from 'sonner'
 
 const StepPanel: React.FC<{
   index: number
@@ -67,10 +72,17 @@ export const AuctionForm: React.FC = () => {
       queryClient.invalidateQueries({
         queryKey: listAuctionsQueryKey({ query: { traderId: user.id } }),
       })
-      navigate({ to: '/ventes/enchere-creee' })
+
+      toast.success(t('auction.form.created_ok'), {
+        duration: 3000,
+      })
+
+      navigate({ to: '/ventes/mes-encheres' })
     },
-    onError(error) {
-      console.error('Requête invalide :', error)
+    onError(error: ApiErrorResponse) {
+      toast.error(t('auction.form.created_fail') + ' (' + error.code + ')', {
+        duration: 3000,
+      })
     },
   })
 
@@ -97,23 +109,12 @@ export const AuctionForm: React.FC = () => {
     },
   })
 
-  // const stepFields: Record<number, StepField[]> = {
-  //   1: ['productId', 'productQuantity', 'expirationDate', 'traderId'],
-  //   2: ['price'],
-  // }
-
-  /** Valide tous les champs du step et renvoie true s’ils sont OK */
-  const validateStep = async (stepToValidate: number): Promise<boolean> => {
-    console.log(stepToValidate)
-    // if (stepToValidate == 1) {
-    // } else if (stepToValidate == 2) {
-    // }
-
+  const validateStep = async (): Promise<boolean> => {
     return true
   }
 
   const nextStep = async () => {
-    if (await validateStep(step)) {
+    if (await validateStep()) {
       setStep(s => s + 1)
     }
   }
@@ -129,7 +130,7 @@ export const AuctionForm: React.FC = () => {
       let allPreviousStepsValid = true
       // Valider toutes les étapes de l'actuelle (step) jusqu'à targetStep - 1
       for (let i = step; i < targetStep; i++) {
-        const isStepValid = await validateStep(i)
+        const isStepValid = await validateStep()
         if (!isStepValid) {
           allPreviousStepsValid = false
           setStep(i) // Afficher l'étape qui a échoué la validation
@@ -168,7 +169,7 @@ export const AuctionForm: React.FC = () => {
   })
 
   const handleProductChange = (productId: number) => {
-    const product = products!.find(p => p.id === productId)
+    const product = (products as ProductDto[]).find(p => p.id === productId)
     setSelectedProduct(product || null)
     if (product) {
       form.setFieldValue('productQuantity', product.weightKgAvailable)
@@ -233,7 +234,7 @@ export const AuctionForm: React.FC = () => {
                 <div className="flex flex-row gap-10">
                   <div className="flex w-1/2 flex-col gap-6">
                     <FormSectionTitle
-                      text={t('auction.form.section_settings_title')}
+                      text={t('auction.form.section_select_product_title')}
                     />
                     <form.AppField
                       name="productId"
@@ -243,7 +244,7 @@ export const AuctionForm: React.FC = () => {
                           options={
                             isProductsLoading
                               ? []
-                              : products!
+                              : (products as ProductDto[])
                                   .filter(
                                     product => product.weightKgAvailable > 0
                                   )
@@ -259,6 +260,12 @@ export const AuctionForm: React.FC = () => {
                                       ' @ ' +
                                       product.qualityControl.quality.name,
                                   }))
+                          }
+                          disabled={
+                            !isProductsLoading &&
+                            (products as ProductDto[]).filter(
+                              product => product.weightKgAvailable
+                            ).length === 0
                           }
                           label={t('product.product_label')}
                           onChange={productId => {
@@ -279,24 +286,11 @@ export const AuctionForm: React.FC = () => {
                         />
                       )}
                     />
-
-                    <form.AppField
-                      name="expirationDate"
-                      children={field => (
-                        <field.DateTimePickerField
-                          label={t('auction.expiration_date_label')}
-                        />
-                      )}
-                    />
                   </div>
                   <div className="flex w-1/2 flex-col gap-6">
                     <FormSectionTitle text={t('product.info_title')} />
                     <Table>
                       <TableBody>
-                        <TableRow>
-                          <TableCell>{t('product.lot_number_label')}</TableCell>
-                          <TableCell>{selectedProduct?.id || 'N/A'}</TableCell>
-                        </TableRow>
                         <TableRow>
                           <TableCell>
                             {t('product.merchandise_label')}
@@ -370,6 +364,15 @@ export const AuctionForm: React.FC = () => {
                           type="price"
                           placeholder="0.0"
                           fieldType="number"
+                          hint={pricePerKg + ' CFA/kg'}
+                        />
+                      )}
+                    />
+                    <form.AppField
+                      name="expirationDate"
+                      children={field => (
+                        <field.DateTimePickerField
+                          label={t('auction.expiration_date_label')}
                         />
                       )}
                     />
@@ -444,7 +447,7 @@ export const AuctionForm: React.FC = () => {
                   <AlertTitle>{t('common.error')}</AlertTitle>
                   <AlertDescription>
                     <ul className="list-disc pl-4">
-                      {error.errors.map((err, i) => (
+                      {error.errors.map((err: ErrorDetail, i: number) => (
                         <li key={i}>
                           {err.field
                             ? `${t('errors.fields.' + err.field)}: `

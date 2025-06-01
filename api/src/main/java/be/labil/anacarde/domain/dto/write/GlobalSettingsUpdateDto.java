@@ -29,6 +29,6 @@ public class GlobalSettingsUpdateDto {
 	@Schema(description = "Forcer de faire des sur enchères meilleures que la précédente", example = "true", required = true)
 	private Boolean forceBetterBids = false;
 
-	@Schema(description = "Incrément minimum d'une sur enchère")
+	@Schema(description = "Incrément minimum d'une unité sur enchère")
 	private Integer minIncrement = 1;
 }

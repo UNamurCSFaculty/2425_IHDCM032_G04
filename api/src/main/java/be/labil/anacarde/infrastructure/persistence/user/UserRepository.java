@@ -74,6 +74,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	 * Vérifie si un utilisateur existe avec le numéro de téléphone fourni.
 	 * 
 	 * @param phone
+	 *            téléphone de l'utilisateur
 	 * @return true si un utilisateur existe avec ce numéro de téléphone, false sinon.
 	 */
 	boolean existsByPhone(String phone);
