@@ -1,7 +1,6 @@
 package be.labil.anacarde.presentation.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import be.labil.anacarde.domain.dto.write.BidUpdateDto;
@@ -66,7 +65,7 @@ public class BidApiControllerSecurityTest extends AbstractIntegrationTest {
 		String jsonContent = node.toString();
 
 		mockMvc.perform(post("/api/bids").with(actualUser).contentType(MediaType.APPLICATION_JSON)
-				.content(jsonContent)).andExpect(status().is4xxClientError());
+				.content(jsonContent)).andExpect(status().isForbidden());
 	}
 
 	@Test
@@ -106,7 +105,7 @@ public class BidApiControllerSecurityTest extends AbstractIntegrationTest {
 
 		mockMvc.perform(put("/api/bids/" + getTestBid().getId()).with(actualUser)
 				.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
-				.andExpect(status().is4xxClientError());
+				.andExpect(status().isForbidden());
 	}
 
 	@Test
@@ -124,7 +123,7 @@ public class BidApiControllerSecurityTest extends AbstractIntegrationTest {
 		final RequestPostProcessor actualUser = jwtCarrier();
 
 		mockMvc.perform(delete("/api/bids/" + getTestBid().getId()).with(actualUser))
-				.andExpect(status().is4xxClientError());
+				.andExpect(status().isForbidden());
 	}
 
 	@Test
@@ -134,7 +133,7 @@ public class BidApiControllerSecurityTest extends AbstractIntegrationTest {
 		String jsonContent = "";
 
 		mockMvc.perform(put("/api/bids/" + getTestBid().getId() + "/accept").with(actualUser)
-						.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
 				.andExpect(status().isOk());
 	}
 
@@ -145,7 +144,7 @@ public class BidApiControllerSecurityTest extends AbstractIntegrationTest {
 		String jsonContent = "";
 
 		mockMvc.perform(put("/api/bids/" + getTestBid().getId() + "/accept")
-						.contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(actualUser))
+				.contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(actualUser))
 				.andExpect(status().isForbidden());
 	}
 
@@ -156,7 +155,7 @@ public class BidApiControllerSecurityTest extends AbstractIntegrationTest {
 		String jsonContent = "";
 
 		mockMvc.perform(put("/api/bids/" + getTestBid().getId() + "/reject").with(actualUser)
-						.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
 				.andExpect(status().isOk());
 	}
 
@@ -167,7 +166,7 @@ public class BidApiControllerSecurityTest extends AbstractIntegrationTest {
 		String jsonContent = "";
 
 		mockMvc.perform(put("/api/bids/" + getTestBid().getId() + "/reject")
-						.contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(actualUser))
+				.contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(actualUser))
 				.andExpect(status().isForbidden());
 	}
 

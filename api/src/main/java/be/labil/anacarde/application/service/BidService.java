@@ -53,8 +53,8 @@ public interface BidService {
 	BidDto updateBid(Integer bidId, @Param("bidDto") BidUpdateDto bidDto);
 
 	/**
-	 * Accepter l'offre identifiée par l'ID donné. Une offre ne peut être acceptée que par
-	 * le créateur de l'enchère correspondante.
+	 * Accepter l'offre identifiée par l'ID donné. Une offre ne peut être acceptée que par le
+	 * créateur de l'enchère correspondante.
 	 *
 	 * @param bidId
 	 *            L'identifiant unique de l'offre à mettre à jour.
@@ -64,8 +64,8 @@ public interface BidService {
 	BidDto acceptBid(@Param("bidId") Integer bidId);
 
 	/**
-	 * Rejeter l'offre identifiée par l'ID donné. Une offre ne peut être rejetée que par
-	 * le créateur de l'enchère correspondante.
+	 * Rejeter l'offre identifiée par l'ID donné. Une offre ne peut être rejetée que par le créateur
+	 * de l'enchère correspondante.
 	 *
 	 * @param bidId
 	 *            L'identifiant unique de l'offre à mettre à jour.

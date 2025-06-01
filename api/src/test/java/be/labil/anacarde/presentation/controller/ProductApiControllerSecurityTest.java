@@ -83,13 +83,14 @@ public class ProductApiControllerSecurityTest extends AbstractIntegrationTest {
 		newProduct.setWeightKg(200.0);
 		newProduct.setDeliveryDate(LocalDateTime.now().plusMonths(1));
 		newProduct.setQualityControlId(getMainTestQualityControl().getId());
+		newProduct.setIdentifier("brol");
 
 		ObjectNode node = objectMapper.valueToTree(newProduct);
 		String jsonContent = node.toString();
 
 		mockMvc.perform(post("/api/products").with(actualUser)
 				.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
-				.andExpect(status().is4xxClientError());
+				.andExpect(status().isForbidden());
 	}
 
 	@Test
@@ -110,7 +111,7 @@ public class ProductApiControllerSecurityTest extends AbstractIntegrationTest {
 
 		mockMvc.perform(post("/api/products").with(actualUser)
 				.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
-				.andExpect(status().is4xxClientError());
+				.andExpect(status().isForbidden());
 	}
 
 	@Test
@@ -152,7 +153,7 @@ public class ProductApiControllerSecurityTest extends AbstractIntegrationTest {
 
 		mockMvc.perform(put("/api/products/" + getTestHarvestProduct().getId()).with(actualUser)
 				.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
-				.andExpect(status().is4xxClientError());
+				.andExpect(status().isForbidden());
 	}
 
 	@Test
@@ -170,6 +171,6 @@ public class ProductApiControllerSecurityTest extends AbstractIntegrationTest {
 		final RequestPostProcessor actualUser = jwtCarrier();
 
 		mockMvc.perform(delete("/api/products/" + getTestHarvestProduct().getId()).with(actualUser))
-				.andExpect(status().is4xxClientError());
+				.andExpect(status().isForbidden());
 	}
 }

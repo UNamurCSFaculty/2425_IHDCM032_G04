@@ -69,7 +69,7 @@ public class AuctionApiControllerSecurityTest extends AbstractIntegrationTest {
 
 		mockMvc.perform(post("/api/auctions").with(actualUser)
 				.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
-				.andExpect(status().is4xxClientError());
+				.andExpect(status().isForbidden());
 	}
 
 	@Test
@@ -125,7 +125,7 @@ public class AuctionApiControllerSecurityTest extends AbstractIntegrationTest {
 
 		mockMvc.perform(put("/api/auctions/" + getTestAuction().getId()).with(actualUser)
 				.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
-				.andExpect(status().is4xxClientError());
+				.andExpect(status().isForbidden());
 	}
 
 	@Test
@@ -143,7 +143,7 @@ public class AuctionApiControllerSecurityTest extends AbstractIntegrationTest {
 		final RequestPostProcessor actualUser = jwtCarrier();
 
 		mockMvc.perform(delete("/api/auctions/" + getTestAuction().getId()).with(actualUser))
-				.andExpect(status().is4xxClientError());
+				.andExpect(status().isForbidden());
 	}
 
 	@Test
@@ -167,6 +167,6 @@ public class AuctionApiControllerSecurityTest extends AbstractIntegrationTest {
 
 		mockMvc.perform(put("/api/auctions/" + getTestAuction().getId() + "/accept")
 				.with(actualUser).contentType(MediaType.APPLICATION_JSON).content(jsonContent))
-				.andExpect(status().is4xxClientError());
+				.andExpect(status().isForbidden());
 	}
 }
