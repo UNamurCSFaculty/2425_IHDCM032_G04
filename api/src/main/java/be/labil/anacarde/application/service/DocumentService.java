@@ -47,7 +47,7 @@ public interface DocumentService {
 	 * @throws ResourceNotFoundException
 	 *             si l’ID n’existe pas.
 	 */
-	@PreAuthorize("@authz.isAdmin(principal) or @docSecurity.isOwner(#id, principal.id)")
+	@PreAuthorize("@authz.isAdmin(principal) or @ownership.isDocumentOwner(#id, principal.id)")
 	DocumentDto getDocumentById(Integer id);
 
 	/**
@@ -58,7 +58,7 @@ public interface DocumentService {
 	 * @throws ResourceNotFoundException
 	 *             si l’ID n’existe pas.
 	 */
-	@PreAuthorize("@authz.isAdmin(principal) or @docSecurity.isOwner(#id, principal.id)")
+	@PreAuthorize("@authz.isAdmin(principal) or @ownership.isDocumentOwner(#id, principal.id)")
 	void deleteDocument(Integer id);
 
 	/**
@@ -82,6 +82,6 @@ public interface DocumentService {
 	 * @throws DocumentStorageException
 	 *             si la lecture du fichier échoue.
 	 */
-	@PreAuthorize("@authz.isAdmin(principal) or @docSecurity.isOwner(#id, principal.id)")
+	@PreAuthorize("@authz.isAdmin(principal) or @ownership.isDocumentOwner(#id, principal.id)")
 	InputStream streamDocumentContent(Integer id) throws DocumentStorageException;
 }

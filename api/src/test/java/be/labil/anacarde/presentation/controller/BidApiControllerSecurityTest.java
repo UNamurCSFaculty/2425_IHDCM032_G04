@@ -1,6 +1,7 @@
 package be.labil.anacarde.presentation.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import be.labil.anacarde.domain.dto.write.BidUpdateDto;
@@ -125,4 +126,49 @@ public class BidApiControllerSecurityTest extends AbstractIntegrationTest {
 		mockMvc.perform(delete("/api/bids/" + getTestBid().getId()).with(actualUser))
 				.andExpect(status().is4xxClientError());
 	}
+
+	@Test
+	public void testAcceptBidByAuctionOwnerShouldSucceed() throws Exception {
+		final RequestPostProcessor actualUser = jwtProducer();
+
+		String jsonContent = "";
+
+		mockMvc.perform(put("/api/bids/" + getTestBid().getId() + "/accept").with(actualUser)
+						.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				.andExpect(status().isOk());
+	}
+
+	@Test
+	public void testAcceptBidByNonAuctionOwnerShouldFail() throws Exception {
+		final RequestPostProcessor actualUser = jwtTransformer();
+
+		String jsonContent = "";
+
+		mockMvc.perform(put("/api/bids/" + getTestBid().getId() + "/accept")
+						.contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(actualUser))
+				.andExpect(status().isForbidden());
+	}
+
+	@Test
+	public void testRejectBidByAuctionOwnerShouldSucceed() throws Exception {
+		final RequestPostProcessor actualUser = jwtProducer();
+
+		String jsonContent = "";
+
+		mockMvc.perform(put("/api/bids/" + getTestBid().getId() + "/reject").with(actualUser)
+						.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				.andExpect(status().isOk());
+	}
+
+	@Test
+	public void testRejectBidByNonAuctionOwnerShouldFail() throws Exception {
+		final RequestPostProcessor actualUser = jwtTransformer();
+
+		String jsonContent = "";
+
+		mockMvc.perform(put("/api/bids/" + getTestBid().getId() + "/reject")
+						.contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(actualUser))
+				.andExpect(status().isForbidden());
+	}
+
 }

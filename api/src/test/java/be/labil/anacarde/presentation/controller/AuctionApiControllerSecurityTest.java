@@ -145,4 +145,28 @@ public class AuctionApiControllerSecurityTest extends AbstractIntegrationTest {
 		mockMvc.perform(delete("/api/auctions/" + getTestAuction().getId()).with(actualUser))
 				.andExpect(status().is4xxClientError());
 	}
+
+	@Test
+	public void testAcceptAuctionForSameUserShouldSucceed() throws Exception {
+		// expectedUser = producer
+		final RequestPostProcessor actualUser = jwtProducer();
+
+		String jsonContent = "";
+
+		mockMvc.perform(put("/api/auctions/" + getTestAuction().getId() + "/accept")
+				.with(actualUser).contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				.andExpect(status().isOk());
+	}
+
+	@Test
+	public void testAcceptAuctionForAnotherUserShouldFail() throws Exception {
+		// expectedUser = producer
+		final RequestPostProcessor actualUser = jwtTransformer();
+
+		String jsonContent = "";
+
+		mockMvc.perform(put("/api/auctions/" + getTestAuction().getId() + "/accept")
+				.with(actualUser).contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				.andExpect(status().is4xxClientError());
+	}
 }

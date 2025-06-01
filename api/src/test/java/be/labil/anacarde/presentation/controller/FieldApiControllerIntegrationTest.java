@@ -3,7 +3,6 @@ package be.labil.anacarde.presentation.controller;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import be.labil.anacarde.domain.dto.db.FieldDto;
 import be.labil.anacarde.infrastructure.persistence.FieldRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -33,30 +32,30 @@ public class FieldApiControllerIntegrationTest extends AbstractIntegrationTest {
 	 * Teste la création d'un champ.
 	 *
 	 */
-	 @Test
-	 public void testCreateField() throws Exception {
-//	 FieldDto newFieldDto = new FieldDto();
-//	 newFieldDto.setAddress("POINT(2.3522 48.8566)");
-//	 newFieldDto.setIdentifier("FIELD-666");
-//	 ProducerDetailDto producerDetailDto = new ProducerDetailDto();
-//	 producerDetailDto.setId(getProducerTestUser().getId());
-//	 newFieldDto.setProducer(producerDetailDto);
-//
-//	 ObjectNode node = objectMapper.valueToTree(newFieldDto);
-//	 String jsonContent = node.toString();
-//
-//	 mockMvc.perform(
-//	 post("/api/fields").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
-//	 .andExpect(status().isCreated())
-//	 .andExpect(header().string("Location", containsString("/api/fields")))
-//	 .andExpect(jsonPath("$.location").value("POINT (2.3522 48.8566)"))
-//	 .andExpect(jsonPath("$.identifier").value("FIELD-666"))
-//	 .andExpect(jsonPath("$.producer.id").value(getProducerTestUser().getId()));
-//
-//	 Field createdField = fieldRepository.findAll().stream()
-//	 .filter(field -> "FIELD-666".equals(field.getIdentifier())).findFirst()
-//	 .orElseThrow(() -> new AssertionError("Field non trouvé"));
-	 }
+	@Test
+	public void testCreateField() throws Exception {
+		// FieldDto newFieldDto = new FieldDto();
+		// newFieldDto.setAddress("POINT(2.3522 48.8566)");
+		// newFieldDto.setIdentifier("FIELD-666");
+		// ProducerDetailDto producerDetailDto = new ProducerDetailDto();
+		// producerDetailDto.setId(getProducerTestUser().getId());
+		// newFieldDto.setProducer(producerDetailDto);
+		//
+		// ObjectNode node = objectMapper.valueToTree(newFieldDto);
+		// String jsonContent = node.toString();
+		//
+		// mockMvc.perform(
+		// post("/api/fields").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+		// .andExpect(status().isCreated())
+		// .andExpect(header().string("Location", containsString("/api/fields")))
+		// .andExpect(jsonPath("$.location").value("POINT (2.3522 48.8566)"))
+		// .andExpect(jsonPath("$.identifier").value("FIELD-666"))
+		// .andExpect(jsonPath("$.producer.id").value(getProducerTestUser().getId()));
+		//
+		// Field createdField = fieldRepository.findAll().stream()
+		// .filter(field -> "FIELD-666".equals(field.getIdentifier())).findFirst()
+		// .orElseThrow(() -> new AssertionError("Field non trouvé"));
+	}
 
 	/**
 	 * Teste la récupération de la liste de tous les champs.

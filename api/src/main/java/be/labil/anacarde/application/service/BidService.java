@@ -53,22 +53,26 @@ public interface BidService {
 	BidDto updateBid(Integer bidId, @Param("bidDto") BidUpdateDto bidDto);
 
 	/**
-	 * Accepter l'offre identifiée par l'ID donné.
+	 * Accepter l'offre identifiée par l'ID donné. Une offre ne peut être acceptée que par
+	 * le créateur de l'enchère correspondante.
 	 *
 	 * @param bidId
 	 *            L'identifiant unique de l'offre à mettre à jour.
 	 * @return Un BidDto représentant l'offre mis à jour.
 	 */
-	BidDto acceptBid(Integer bidId);
+	@PreAuthorize("@authz.isAdmin(principal) or (@ownership.isBidAuctionOwner(principal.id, #bidId))")
+	BidDto acceptBid(@Param("bidId") Integer bidId);
 
 	/**
-	 * Rejeter l'offre identifiée par l'ID donné.
+	 * Rejeter l'offre identifiée par l'ID donné. Une offre ne peut être rejetée que par
+	 * le créateur de l'enchère correspondante.
 	 *
 	 * @param bidId
 	 *            L'identifiant unique de l'offre à mettre à jour.
 	 * @return Un BidDto représentant l'offre mis à jour.
 	 */
-	BidDto rejectBid(Integer bidId);
+	@PreAuthorize("@authz.isAdmin(principal) or (@ownership.isBidAuctionOwner(principal.id, #bidId))")
+	BidDto rejectBid(@Param("bidId") Integer bidId);
 
 	/**
 	 * Supprime l'offre identifiée par l'ID donné du système.

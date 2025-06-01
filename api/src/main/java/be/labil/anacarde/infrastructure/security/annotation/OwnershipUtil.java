@@ -1,49 +1,51 @@
-package be.labil.anacarde.infrastructure.security.annontation;
+package be.labil.anacarde.infrastructure.security.annotation;
 
 import be.labil.anacarde.domain.dto.write.product.HarvestProductUpdateDto;
 import be.labil.anacarde.domain.dto.write.product.ProductUpdateDto;
 import be.labil.anacarde.domain.dto.write.product.TransformedProductUpdateDto;
+import be.labil.anacarde.domain.model.Bid;
 import be.labil.anacarde.infrastructure.persistence.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 @Component("ownership")
 @RequiredArgsConstructor
 public class OwnershipUtil {
 
-	private final DocumentRepository docRepo;
-	private final AuctionRepository auctionRepo;
-	private final BidRepository bidRepo;
-	private final HarvestProductRepository harvestProductRepo;
-	private final TransformedProductRepository transformedProductRepo;
+	private final DocumentRepository documentRepository;
+	private final AuctionRepository auctionRepository;
+	private final BidRepository bidRepository;
+	private final HarvestProductRepository harvestProductRepository;
+	private final TransformedProductRepository transformedProductRepository;
 
-	/**
-	 * @return true si le document appartient à l’utilisateur.
-	 */
 	public boolean isDocumentOwner(Integer docId, Integer userId) {
-		return docRepo.existsByIdAndUserId(docId, userId);
+		return documentRepository.existsByIdAndUserId(docId, userId);
 	}
 
-	/**
-	 * @return true si l'auction appartient à l'utilisateur.
-	 */
 	public boolean isAuctionOwner(Integer traderId, Integer auctionId) {
 		if (traderId == null || auctionId == null) return false;
-		return auctionRepo.existsByIdAndTraderId(auctionId, traderId);
+		return auctionRepository.existsByIdAndTraderId(auctionId, traderId);
 	}
 
-	/**
-	 * @return true si l'auction appartient à l'utilisateur.
-	 */
 	public boolean isBidOwner(Integer traderId, Integer bidId) {
 		if (traderId == null || bidId == null) return false;
-		return bidRepo.existsByIdAndTraderId(bidId, traderId);
+		return bidRepository.existsByIdAndTraderId(bidId, traderId);
+	}
+
+	public boolean isBidAuctionOwner(Integer traderId, Integer bidId) {
+		if (traderId == null || bidId == null) return false;
+
+		Optional<Bid> bid = bidRepository.findById(bidId);
+		if (!bid.isPresent()) return false;
+		return auctionRepository.existsByIdAndTraderId(bid.get().getAuctionId(), traderId);
 	}
 
 	public boolean isProductOwner(Integer userId, Integer productId) {
 		if (userId == null || productId == null) return false;
-		return harvestProductRepo.existsByIdAndProducerId(productId, userId)
-				|| transformedProductRepo.existsByIdAndTransformerId(productId, userId);
+		return harvestProductRepository.existsByIdAndProducerId(productId, userId)
+				|| transformedProductRepository.existsByIdAndTransformerId(productId, userId);
 	}
 
 	public boolean isProductOwner(Integer userId, ProductUpdateDto productDto) {

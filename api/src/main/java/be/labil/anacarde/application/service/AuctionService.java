@@ -66,7 +66,8 @@ public interface AuctionService {
 	 *            L'identifiant unique de l'enchère à mettre à jour.
 	 * @return Un AuctionDto représentant l'enchère mis à jour.
 	 */
-	AuctionDto acceptAuction(Integer auctionId);
+	@PreAuthorize("@authz.isAdmin(principal) or (@ownership.isAuctionOwner(principal.id, #auctionId))")
+	AuctionDto acceptAuction(@Param("auctionId") Integer auctionId);
 
 	/**
 	 * Supprime l'enchère identifiée par l'ID donné du système.

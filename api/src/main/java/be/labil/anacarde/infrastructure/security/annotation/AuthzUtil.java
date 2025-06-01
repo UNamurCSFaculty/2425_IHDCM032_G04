@@ -1,4 +1,4 @@
-package be.labil.anacarde.infrastructure.security.annontation;
+package be.labil.anacarde.infrastructure.security.annotation;
 
 import be.labil.anacarde.domain.model.Admin;
 import lombok.AccessLevel;
