@@ -1,6 +1,7 @@
 package be.labil.anacarde.presentation.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import be.labil.anacarde.domain.dto.write.AuctionOptionsUpdateDto;
@@ -46,9 +47,11 @@ public class AuctionApiControllerSecurityTest extends AbstractIntegrationTest {
 		ObjectNode node = objectMapper.valueToTree(newAuction);
 		String jsonContent = node.toString();
 
+		System.out.println("JSON sent: " + jsonContent);
+
 		mockMvc.perform(post("/api/auctions").with(actualUser)
 				.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
-				.andExpect(status().isCreated());
+				.andExpect(status().isCreated()).andDo(print());
 	}
 
 	@Test
