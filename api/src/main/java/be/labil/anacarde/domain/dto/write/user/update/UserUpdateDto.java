@@ -51,7 +51,7 @@ public abstract class UserUpdateDto {
 
 	/** Statut d'activation du compte. */
 	@Schema(description = "Compte activé", example = "true")
-	private boolean enabled;
+	private Boolean enabled;
 
 	/** Numéro de téléphone de l'utilisateur. */
 	@Pattern(regexp = "^\\+22901\\d{8}$", message = "Le numéro de téléphone doit commencer par +22901 suivi de 8 chiffres (ex: +2290123456789).")

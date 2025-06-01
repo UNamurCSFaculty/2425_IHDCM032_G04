@@ -327,7 +327,7 @@ export function ProductForm(): React.ReactElement<'div'> {
                   children={field => (
                     <field.MultipleSelectorField
                       loading={isHarvestProductsLoading}
-                      placeholder="Sélectionner les lots"
+                      placeholder={t('product.select_lots')}
                       options={
                         isHarvestProductsLoading
                           ? []

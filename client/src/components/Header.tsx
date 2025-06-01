@@ -86,10 +86,21 @@ export function Header() {
     if (url) navigate({ to: url })
   }
 
-  const producerAdminTransformerTrader: UserDetailDto['type'][] = [
+  const authenticatedSeller: UserDetailDto['type'][] = [
     'producer',
     'admin',
     'transformer',
+  ]
+  const authenticatedBuyer: UserDetailDto['type'][] = [
+    'admin',
+    'transformer',
+    'exporter',
+  ]
+  const authenticatedTrader: UserDetailDto['type'][] = [
+    'producer',
+    'admin',
+    'transformer',
+    'exporter',
     'trader',
   ]
   const allAuthenticatedButCarrierQualityInspector: UserDetailDto['type'][] = [
@@ -103,7 +114,7 @@ export function Header() {
   const menuItems: MenuItemDefinition[] = [
     { titleKey: 'header.menu.home', url: '/' },
     {
-      titleKey: 'header.menu.marketplace.title',
+      titleKey: 'breadcrumb.buy',
       url: '#',
       items: [
         {
@@ -111,22 +122,8 @@ export function Header() {
           descriptionKey: 'header.menu.marketplace.browse_desc',
           icon: <ShoppingCart className="size-5 shrink-0" />,
           url: '/achats/marche',
-        },
-        {
-          titleKey: 'header.menu.marketplace.new_sale',
-          descriptionKey: 'header.menu.marketplace.new_sale_desc',
-          icon: <DollarSign className="size-5 shrink-0" />,
-          url: '/ventes/nouvelle-enchere',
           requiresAuth: true,
-          allowedUserTypes: producerAdminTransformerTrader,
-        },
-        {
-          titleKey: 'header.menu.marketplace.new_deposit',
-          descriptionKey: 'header.menu.marketplace.new_deposit_desc',
-          icon: <PackagePlus className="size-5 shrink-0" />,
-          url: '/depots/nouveau-produit',
-          requiresAuth: true,
-          allowedUserTypes: producerAdminTransformerTrader,
+          allowedUserTypes: authenticatedTrader,
         },
         {
           titleKey: 'header.menu.my_space.my_purchases',
@@ -134,23 +131,7 @@ export function Header() {
           icon: <ShoppingCart className="size-5 shrink-0" />,
           url: '/achats/mes-encheres',
           requiresAuth: true,
-          allowedUserTypes: allAuthenticatedButCarrierQualityInspector,
-        },
-        {
-          titleKey: 'header.menu.my_space.my_sales',
-          descriptionKey: 'header.menu.my_space.my_sales_marketplace_desc',
-          icon: <ArrowLeftRight className="size-5 shrink-0" />,
-          url: '/ventes/mes-encheres',
-          requiresAuth: true,
-          allowedUserTypes: producerAdminTransformerTrader,
-        },
-        {
-          titleKey: 'header.menu.my_space.my_deposits',
-          descriptionKey: 'header.menu.my_space.my_deposits_marketplace_desc',
-          icon: <Package className="size-5 shrink-0" />,
-          url: '/depots/mes-produits',
-          requiresAuth: true,
-          allowedUserTypes: producerAdminTransformerTrader,
+          allowedUserTypes: authenticatedBuyer,
         },
         {
           titleKey: 'header.menu.my_space.my_contracts',
@@ -158,13 +139,65 @@ export function Header() {
           icon: <History className="size-5 shrink-0" />,
           url: '/contrats/mes-contrats',
           requiresAuth: true,
-          allowedUserTypes: allAuthenticatedButCarrierQualityInspector,
+          allowedUserTypes: authenticatedBuyer,
         },
+      ],
+    },
+    {
+      titleKey: 'breadcrumb.sell',
+      url: '#',
+      items: [
+        {
+          titleKey: 'header.menu.marketplace.new_sale',
+          descriptionKey: 'header.menu.marketplace.new_sale_desc',
+          icon: <DollarSign className="size-5 shrink-0" />,
+          url: '/ventes/nouvelle-enchere',
+          requiresAuth: true,
+          allowedUserTypes: authenticatedSeller,
+        },
+        {
+          titleKey: 'header.menu.marketplace.new_deposit',
+          descriptionKey: 'header.menu.marketplace.new_deposit_desc',
+          icon: <PackagePlus className="size-5 shrink-0" />,
+          url: '/depots/nouveau-produit',
+          requiresAuth: true,
+          allowedUserTypes: authenticatedSeller,
+        },
+        {
+          titleKey: 'header.menu.my_space.my_sales',
+          descriptionKey: 'header.menu.my_space.my_sales_marketplace_desc',
+          icon: <ArrowLeftRight className="size-5 shrink-0" />,
+          url: '/ventes/mes-encheres',
+          requiresAuth: true,
+          allowedUserTypes: authenticatedSeller,
+        },
+        {
+          titleKey: 'header.menu.my_space.my_deposits',
+          descriptionKey: 'header.menu.my_space.my_deposits_marketplace_desc',
+          icon: <Package className="size-5 shrink-0" />,
+          url: '/depots/mes-produits',
+          requiresAuth: true,
+          allowedUserTypes: authenticatedSeller,
+        },
+        {
+          titleKey: 'header.menu.my_space.my_contracts',
+          descriptionKey: 'header.menu.my_space.my_contracts_marketplace_desc',
+          icon: <History className="size-5 shrink-0" />,
+          url: '/contrats/mes-contrats',
+          requiresAuth: true,
+          allowedUserTypes: authenticatedSeller,
+        },
+      ],
+    },
+    {
+      titleKey: 'header.menu.marketplace.title',
+      url: '#',
+      items: [
         {
           titleKey: 'header.menu.marketplace.how_it_works',
           descriptionKey: 'header.menu.marketplace.how_it_works_desc',
           icon: <HelpCircle className="size-5 shrink-0" />,
-          url: '/a-propos#guide',
+          url: '/connexion',
           hideWhenAuth: true,
         },
       ],
@@ -199,14 +232,14 @@ export function Header() {
       url: '/ventes/mes-encheres',
       icon: <ArrowLeftRight className="mr-2 size-4" />,
       requiresAuth: true,
-      allowedUserTypes: producerAdminTransformerTrader,
+      allowedUserTypes: authenticatedTrader,
     },
     {
       titleKey: 'header.menu.my_space.my_deposits',
       url: '/depots/mes-produits',
       icon: <Package className="mr-2 size-4" />,
       requiresAuth: true,
-      allowedUserTypes: producerAdminTransformerTrader,
+      allowedUserTypes: authenticatedSeller,
     },
     {
       titleKey: 'header.menu.my_space.my_contracts',
@@ -304,11 +337,8 @@ export function Header() {
         <div className="hidden items-center gap-2 lg:flex">
           {!isLoggedIn ? (
             <>
-              <Button asChild size="sm" variant="outline" className="mr-2">
-                <Link to="/connexion">{t('header.auth.login')}</Link>
-              </Button>
               <Button asChild size="sm">
-                <Link to="/inscription">{t('header.auth.register')}</Link>
+                <Link to="/connexion">{t('header.auth.login')}</Link>
               </Button>
             </>
           ) : (

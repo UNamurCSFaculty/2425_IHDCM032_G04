@@ -122,9 +122,9 @@
       "q3_question": "Comment participer à une enchère ?",
       "q3_answer": "Après validation de votre compte, connectez-vous, rendez-vous sur la page d'enchères, sélectionnez le lot de noix de cajou souhaité et placez votre enchère en indiquant le montant que vous êtes prêt à payer.",
       "q4_question": "Quels sont les frais de service ?",
-      "q4_answer": "e-Anacarde applique une commission de 2% sur le montant final de chaque enchère remportée, sans frais cachés pour les producteurs ou acheteurs.",
+      "q4_answer": "e-Anacarde applique une commission de 1% sur le montant final de chaque enchère remportée, sans frais cachés pour les producteurs ou acheteurs.",
       "q5_question": "Comment se fait le paiement et la livraison ?",
-      "q5_answer": "Une fois l'enchère remportée, le paiement s'effectue via nos partenaires de paiement mobile (MoMo, Flooz) ou virement bancaire. La livraison est organisée par des transporteurs agréés, aux frais de l'acheteur ou selon l'accord conclu.",
+      "q5_answer": "Une fois l'enchère remportée, le paiement s'effectue via nos partenaires de paiement mobile (MoMo, Flooz) ou virement bancaire. Des transporteurs agréés sont proposés pour la livraison, aux frais de l'acheteur ou selon l'accord conclu.",
       "q6_question": "Quelles normes qualité dois-je respecter ?",
       "q6_answer": "Vous devez vous conformer aux nouvelles directives du gouvernement béninois sur le calibrage, la teneur en humidité et le conditionnement de la noix de cajou. Consultez notre article « Nouvelles normes gouvernementales pour la production de cajou » pour tous les détails."
     }
@@ -572,6 +572,8 @@
     "bad_request": "Requête incorrecte",
     "default.error": "Violation de l'intégrité des données",
     "email.exists": "Cet e-mail est déjà utilisé",
+    "error_occurred": "Une erreur s'est produite",
+    "undefined": "Une erreur s'est produite",
     "fields": {
       "agriculturalIdentifier": "Identifiant Agricole",
       "email": "E-mail",
@@ -660,9 +662,7 @@
     "expiration_label": "Expiration",
     "form": {
       "title": "Saisie de l'enchère",
-      "section_select_product_title": "Sélection du produit",
-      "section_settings_title": "Paramètres de vente",
-      "section_general_conditions": "Conditions générales",
+      "section_settings_title": "Paramètres de la vente",
       "submit_button": "Ouvrir la vente",
       "created_ok": "Vente ouverte avec succès !",
       "created_fail": "Erreur lors de la création de la vente.",
@@ -670,6 +670,9 @@
       "auction_fixed_price": "Prix imposé par kg",
       "auction_max_price": "Prix maximum par kg",
       "auction_min_price": "Prix minimum par kg"
+      "section_pricing_title": "Fixation du prix",
+      "section_sale_conditions_title": "Conditions de vente",
+      "price_per_kg_hint": "Soit {{price}} CFA / kg"
     },
     "expiration_date_label": "Expiration de l'enchère",
     "table": {
@@ -682,7 +685,11 @@
       "buyer_header": "Acheteur",
       "view_bids_button": "Voir les offres",
       "make_bid_button": "Faire une offre",
-      "propose_contract_button": "Proposer un contrat"
+      "propose_contract_button": "Proposer un contrat",
+      "strategy_label": "Stratégie d'enchère",
+      "fixed_price_per_kg_label": "Prix imposé par kg",
+      "max_price_per_kg_label": "Prix maximum par kg",
+      "min_price_per_kg_label": "Prix minimum par kg"
     },
     "contract_price_label": "*Prix contractuel"
   },
@@ -697,8 +704,11 @@
     "price_in_cfa_label": "Prix (CFA)",
     "info_title": "Informations détaillées",
     "lot_number_label": "Numéro du lot",
+    "lot_no_label": "Lot n°{{id}}",
     "deposited_quantity_label": "Quantité déposée",
+    "raw_materials_label": "Matières premières",
     "deposited_quantity_available_label": "Quantité disponible",
+    "origin_transformed_default": "Noix de cajou",
     "deposit_date_label": "Date de dépôt",
     "store_label": "Magasin",
     "lot_label": "Lot n°{{id}}",
@@ -712,6 +722,7 @@
     "results_count_plural": "Résultats : {{count}} produits",
     "owner_label": "Propriétaire",
     "warehouse_label": "Entrepôt",
+    "select_lots": "Sélectionner les lots",
     "form": {
       "title": "Saisie du produit",
       "section_deposit_settings_title": "Paramètres du dépôt",
@@ -837,15 +848,15 @@
       "contact": "Contact",
       "about": "À Propos",
       "marketplace": {
-        "title": "Marketplace",
+        "title": "Marché",
         "browse": "Voir le Marché",
         "browse_desc": "Parcourez et achetez des produits frais.",
         "new_sale": "Nouvelle Vente",
         "new_sale_desc": "Proposez vos produits à la vente.",
         "new_deposit": "Nouveau Dépôt",
         "new_deposit_desc": "Déposez vos produits pour de futures ventes.",
-        "how_it_works": "Comment ça marche ?",
-        "how_it_works_desc": "Découvrez comment acheter et vendre sur notre plateforme."
+        "how_it_works": "Accéder au marché",
+        "how_it_works_desc": "Connectez vous pour acheter et vendre sur la plateforme."
       },
       "news": "Actualités",
       "my_space": {
@@ -853,7 +864,11 @@
         "my_purchases": "Mes Achats",
         "my_sales": "Mes Ventes",
         "my_deposits": "Mes Dépôts",
-        "my_contracts": "Mes Contrats"
+        "my_contracts": "Mes Contrats",
+        "my_purchases_marketplace_desc": "Consultez vos achats et vos offres en cours",
+        "my_sales_marketplace_desc": "Consultez vos ventes en cours et terminées",
+        "my_deposits_marketplace_desc": "Consultez vos dépôts",
+        "my_contracts_marketplace_desc": "Consultez vos contrats"
       }
     },
     "auth": {
@@ -990,9 +1005,9 @@
     "title": "Paramètres Globaux",
     "default_strategy": "Stratégie d'enchère par défaut",
     "select_strategy_placeholder": "Sélectionner une stratégie par défaut...",
-    "default_fixed_price_kg": "Prix fixe par défaut (par kg)",
-    "default_max_price_kg": "Prix maximum par défaut (par kg)",
-    "default_min_price_kg": "Prix minimum par défaut (par kg)",
+    "default_fixed_price_kg": "Prix fixe par défaut (CFA par kg)",
+    "default_max_price_kg": "Prix maximum par défaut (CFA par kg)",
+    "default_min_price_kg": "Prix minimum par défaut (CFA par kg)",
     "show_only_active": "Afficher uniquement les enchères actives par défaut",
     "force_better_bids": "Exiger des offres supérieures par défaut",
     "min_increment": "Incrément minimum pour les offres par défaut"
