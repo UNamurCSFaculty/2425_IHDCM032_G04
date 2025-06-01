@@ -81,6 +81,9 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		newAuction.setExpirationDate(LocalDateTime.now().plusDays(1));
 		newAuction.setProductId(getTestHarvestProduct().getId());
 		newAuction.setTraderId(getProducerTestUser().getId());
+		AuctionOptionsUpdateDto auctionOptions = new AuctionOptionsUpdateDto();
+		auctionOptions.setStrategyId(getTestAuctionStrategy().getId());
+		newAuction.setOptions(auctionOptions);
 
 		ObjectNode node = objectMapper.valueToTree(newAuction);
 		String jsonContent = node.toString();
@@ -127,6 +130,9 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		newAuction.setExpirationDate(LocalDateTime.now().plusDays(1));
 		newAuction.setProductId(getTestHarvestProduct().getId());
 		newAuction.setTraderId(getProducerTestUser().getId());
+		AuctionOptionsUpdateDto auctionOptions = new AuctionOptionsUpdateDto();
+		auctionOptions.setStrategyId(getTestAuctionStrategy().getId());
+		newAuction.setOptions(auctionOptions);
 
 		ObjectNode node = objectMapper.valueToTree(newAuction);
 		String jsonContent = node.toString();

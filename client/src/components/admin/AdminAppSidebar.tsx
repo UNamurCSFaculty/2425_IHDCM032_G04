@@ -115,7 +115,7 @@ export function AdminAppSidebar({
               className="relative h-20 data-[slot=sidebar-menu-button]:!p-1.5"
             >
               <Link
-                to="/admin/dashboard"
+                to="/admin"
                 className="flex flex-wrap items-center justify-center gap-2"
               >
                 <img src={logo} alt="Logo e‑Anacarde" className="" />

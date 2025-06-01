@@ -1,7 +1,11 @@
 import i18n from '../i18n'
 import { useAppForm } from './form'
 import { Alert, AlertDescription } from './ui/alert'
-import { authenticateUserMutation } from '@/api/generated/@tanstack/react-query.gen'
+import { toast } from 'sonner'
+import {
+  authenticateUserMutation,
+  authenticateWithGoogleMutation,
+} from '@/api/generated/@tanstack/react-query.gen'
 import logo from '@/assets/logo.svg'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -14,17 +18,84 @@ import { useMutation } from '@tanstack/react-query'
 import { Link, useNavigate, useRouter, useSearch } from '@tanstack/react-router'
 import { AlertCircle, LockIcon, UserIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { useCallback, useEffect } from 'react'
+import type { CredentialResponse } from '@/types/google'
 
 export function LoginForm() {
   const navigate = useNavigate()
-  const { t } = useTranslation()
   const router = useRouter()
-  const setUser = useUserStore(s => s.setUser)
+  const { t } = useTranslation()
   const { redirect: redirectParam } = useSearch({ from: LoginRoute.id })
 
+  const setUser = useUserStore(s => s.setUser)
+
+  /* ---------- MUTATION Google ---------- */
+  const googleMutation = useMutation({
+    ...authenticateWithGoogleMutation(),
+    onSuccess: user => {
+      setUser(user)
+      toast.success(t('login.success_google'))
+      navigate({ to: '/', replace: true })
+    },
+    onError: error => {
+      toast.error(
+        t('errors.' + error.code) ||
+          (error.errors && error.errors[0]?.message) ||
+          t('errors.generic_error_message')
+      )
+    },
+  })
+
+  /* Callback fourni à Google Identity Services */
+  const handleGoogleCredential = useCallback(
+    (response: CredentialResponse) => {
+      console.log('Google Credential Response:', response)
+      if (response.credential) {
+        googleMutation.mutate({
+          body: response.credential,
+        })
+      } else {
+        toast.error(t('errors.google_credential_missing'))
+        console.error('Google credential missing in response')
+      }
+    },
+    [googleMutation, t]
+  )
+
+  useEffect(() => {
+    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID
+    if (!clientId) {
+      console.error('Google Client ID (VITE_GOOGLE_CLIENT_ID) is not defined.')
+      toast.error(t('errors.google_client_id_missing'))
+      return
+    }
+
+    if (
+      typeof window.google !== 'undefined' &&
+      window.google.accounts &&
+      window.google.accounts.id
+    ) {
+      try {
+        window.google.accounts.id.initialize({
+          client_id: clientId,
+          callback: handleGoogleCredential,
+          ux_mode: 'popup',
+        })
+      } catch (error) {
+        console.error('Error initializing Google Sign-In:', error)
+        toast.error(t('errors.google_init_failed'))
+      }
+    } else {
+      console.warn(
+        'Google Identity Services script not loaded at the time of useEffect execution. The Google login button might not work until the script is loaded.'
+      )
+    }
+  }, [handleGoogleCredential, t])
+
+  /* ---------- MUTATION login/password ---------- */
   const loginMutation = useMutation({
     ...authenticateUserMutation(),
-    retry: 0, // Valeur par défaut, ajouté pour être explicite
+    retry: 0,
     onSuccess(user) {
       setUser(user)
       if (redirectParam) {
@@ -35,6 +106,7 @@ export function LoginForm() {
     },
   })
 
+  /* ---------- Form react-form ---------- */
   const form = useAppForm({
     defaultValues: { username: '', password: '' },
     validators: { onChange: LoginSchema },
@@ -42,8 +114,7 @@ export function LoginForm() {
       loginMutation.mutate({ body: value })
     },
   })
-  const canSubmit = useStore(form.store, state => state.canSubmit)
-
+  const canSubmit = useStore(form.store, s => s.canSubmit)
   const isPending = loginMutation.isPending
 
   return (
@@ -148,14 +219,42 @@ export function LoginForm() {
                   </svg>
                   <span className="sr-only">{t('login.social.apple_sr')}</span>
                 </Button>
-                <Button variant="outline" className="w-full">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                    <path
-                      d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"
-                      fill="currentColor"
-                    />
-                  </svg>
-                  <span className="sr-only">{t('login.social.google_sr')}</span>
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => {
+                    if (
+                      window.google &&
+                      window.google.accounts &&
+                      window.google.accounts.id
+                    ) {
+                      try {
+                        window.google.accounts.id.prompt()
+                      } catch (error) {
+                        console.error('Error calling Google prompt:', error)
+                        toast.error(t('errors.google_prompt_failed'))
+                      }
+                    } else {
+                      toast.error(t('errors.google_not_ready'))
+                      console.error(
+                        'Google Identity Services not available for prompt.'
+                      )
+                    }
+                  }}
+                  disabled={googleMutation.isPending}
+                  asChild
+                >
+                  <div>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                      <path
+                        d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                    <span className="sr-only">
+                      {t('login.social.google_sr')}
+                    </span>
+                  </div>
                 </Button>
                 <Button variant="outline" className="w-full">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">

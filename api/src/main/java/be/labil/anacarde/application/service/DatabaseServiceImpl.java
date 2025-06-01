@@ -191,7 +191,6 @@ public class DatabaseServiceImpl implements DatabaseService {
 
 	@Override
 	public void dropDatabase() {
-		// Remove all associations with cooperative
 		userRepository.findAll().forEach(p -> {
 			if (p instanceof Producer c) {
 				c.setCooperative(null);
@@ -200,7 +199,6 @@ public class DatabaseServiceImpl implements DatabaseService {
 		});
 		userRepository.flush();
 		globalSettingsRepository.deleteAllInBatch();
-		// Delete all entities in the correct order to avoid foreign key constraint violations
 		cooperativeRepository.deleteAllInBatch();
 		contractOfferRepository.deleteAllInBatch();
 		bidRepository.deleteAllInBatch();
@@ -906,6 +904,14 @@ public class DatabaseServiceImpl implements DatabaseService {
 				continue;
 			}
 
+			/*
+			 * 4) Liste des acheteurs potentiels dans la même région
+			 */
+			List<TraderDetailDto> sameRegionBidders = potentialBidders.stream()
+					.filter(bidder -> auction.getProduct().getStore().getAddress().getRegionId()
+							.equals(bidder.getAddress().getRegionId()))
+					.toList();
+
 			boolean auctionFinished = !auction.getStatus().getId().equals(statusOpen.getId());
 			boolean auctionConcluded = auction.getStatus().getId().equals(statusConcluded.getId());
 
@@ -914,8 +920,15 @@ public class DatabaseServiceImpl implements DatabaseService {
 			List<BidUpdateDto> bids = new ArrayList<>();
 
 			for (int i = 0; i < numBids; i++) {
-				TraderDetailDto bidder = potentialBidders
-						.get(random.nextInt(potentialBidders.size()));
+				TraderDetailDto bidder;
+				double p = random.nextDouble(); // uniforme [0.0, 1.0)
+				if (p < 0.8 && !sameRegionBidders.isEmpty()) {
+					// 80% de chance et il existe au moins un bidder local
+					bidder = sameRegionBidders.get(random.nextInt(sameRegionBidders.size()));
+				} else {
+					// 20% de chance ou pas de bidder local disponible
+					bidder = potentialBidders.get(random.nextInt(potentialBidders.size()));
+				}
 
 				// borne temporelle max pour cette offre
 				LocalDateTime maxBidTime = auction.getExpirationDate().isBefore(generationTime)
@@ -1339,37 +1352,38 @@ public class DatabaseServiceImpl implements DatabaseService {
 		return regions.getLast();
 	}
 
+	private String capitalize(String s) {
+		return s.isEmpty() ? s : Character.toUpperCase(s.charAt(0)) + s.substring(1).toLowerCase();
+	}
+
+	private UserCreateDto setUserDetails(UserCreateDto user) {
+		String mail = uniqueEmail();
+		String localPart = mail.split("@", 2)[0];
+		String[] nameParts = localPart.split("\\.", 2);
+		user.setEmail(mail);
+		user.setFirstName(nameParts[0]);
+		user.setLastName(nameParts[1]);
+		user.setEmail(uniqueEmail());
+		user.setPassword(DEFAULT_PASSWORD);
+		user.setAddress(createRandomAddress());
+		user.setEnabled(true);
+		user.setRegistrationDate(generateRandomDateTimeInPast());
+		user.setValidationDate(
+				user.getRegistrationDate().plusDays(faker.number().numberBetween(1, 4)));
+		user.setPhone(this.uniquePhone());
+		user.setLanguageId(random.nextBoolean() ? langFr.getId() : langEn.getId());
+		return user;
+	}
+
 	private AdminCreateDto createRandomAdminDto() {
 		AdminCreateDto admin = new AdminCreateDto();
-		admin.setFirstName(faker.name().firstName());
-		admin.setLastName(faker.name().lastName());
-		admin.setEmail(uniqueEmail());
-		admin.setPassword(DEFAULT_PASSWORD);
-		admin.setAddress(createRandomAddress());
-		admin.setEnabled(true);
-		admin.setRegistrationDate(generateRandomDateTimeInPast());
-		admin.setValidationDate(
-				admin.getRegistrationDate().plusDays(faker.number().numberBetween(1, 4))); // Validated
-		admin.setPhone(this.uniquePhone());
-		admin.setLanguageId(langFr.getId()); // Default to French for now
-		return admin;
+		return (AdminCreateDto) setUserDetails(admin);
 	}
 
 	private ProducerCreateDto createRandomProducerDto() {
 		ProducerCreateDto producer = new ProducerCreateDto();
-		producer.setFirstName(faker.name().firstName());
-		producer.setLastName(faker.name().lastName());
-		producer.setEmail(uniqueEmail());
-		producer.setPassword(DEFAULT_PASSWORD);
-		producer.setEnabled(true);
-		producer.setAddress(createRandomAddress());
-		producer.setRegistrationDate(generateRandomDateTimeInPast());
-		producer.setValidationDate(
-				producer.getRegistrationDate().plusDays(faker.number().numberBetween(1, 4)));
-		producer.setPhone(this.uniquePhone());
 		producer.setAgriculturalIdentifier(faker.number().digits(10));
-		producer.setLanguageId(random.nextBoolean() ? langFr.getId() : langEn.getId());
-		return producer;
+		return (ProducerCreateDto) setUserDetails(producer);
 	}
 
 	private ProducerCreateDto createRandomPendingProducerDto() {
@@ -1381,67 +1395,23 @@ public class DatabaseServiceImpl implements DatabaseService {
 
 	private TransformerCreateDto createRandomTransformerDto() {
 		TransformerCreateDto transformer = new TransformerCreateDto();
-		transformer.setFirstName(faker.name().firstName());
-		transformer.setLastName(faker.name().lastName());
-		transformer.setEmail(uniqueEmail());
-		transformer.setPassword(DEFAULT_PASSWORD);
-		transformer.setEnabled(true);
-		transformer.setAddress(createRandomAddress());
-		transformer.setRegistrationDate(generateRandomDateTimeInPast());
-		transformer.setValidationDate(
-				transformer.getRegistrationDate().plusDays(faker.number().numberBetween(1, 4)));
-		transformer.setPhone(this.uniquePhone());
-		transformer.setLanguageId(random.nextBoolean() ? langFr.getId() : langEn.getId());
-		return transformer;
+		return (TransformerCreateDto) setUserDetails(transformer);
 	}
 
 	private ExporterCreateDto createRandomExporterDto() {
 		ExporterCreateDto exporter = new ExporterCreateDto();
-		exporter.setFirstName(faker.name().firstName());
-		exporter.setLastName(faker.name().lastName());
-		exporter.setEmail(uniqueEmail());
-		exporter.setPassword(DEFAULT_PASSWORD);
-		exporter.setEnabled(true);
-		exporter.setAddress(createRandomAddress());
-		exporter.setRegistrationDate(generateRandomDateTimeInPast());
-		exporter.setValidationDate(
-				exporter.getRegistrationDate().plusDays(faker.number().numberBetween(1, 4)));
-		exporter.setPhone(this.uniquePhone());
-		exporter.setLanguageId(random.nextBoolean() ? langFr.getId() : langEn.getId());
-		return exporter;
+		return (ExporterCreateDto) setUserDetails(exporter);
 	}
 
 	private CarrierCreateDto createRandomCarrierDto() {
 		CarrierCreateDto carrier = new CarrierCreateDto();
-		carrier.setFirstName(faker.name().firstName());
-		carrier.setLastName(faker.name().lastName());
-		carrier.setEmail(uniqueEmail());
-		carrier.setPassword(DEFAULT_PASSWORD);
-		carrier.setEnabled(Math.random() >= 0.2);
-		carrier.setAddress(createRandomAddress());
 		carrier.setPricePerKm(faker.number().randomDouble(2, 50, 500) / 100.0);
 		carrier.setRadius(faker.number().randomDouble(0, 10, 100));
-		carrier.setRegistrationDate(generateRandomDateTimeInPast());
-		carrier.setValidationDate(
-				carrier.getRegistrationDate().plusDays(faker.number().numberBetween(1, 4)));
-		carrier.setPhone(this.uniquePhone());
-		carrier.setLanguageId(random.nextBoolean() ? langFr.getId() : langEn.getId());
-		return carrier;
+		return (CarrierCreateDto) setUserDetails(carrier);
 	}
 
 	private QualityInspectorCreateDto createRandomQualityInspectorDto() {
 		QualityInspectorCreateDto qualityInspector = new QualityInspectorCreateDto();
-		qualityInspector.setFirstName(faker.name().firstName());
-		qualityInspector.setLastName(faker.name().lastName());
-		qualityInspector.setEmail(uniqueEmail());
-		qualityInspector.setPassword(DEFAULT_PASSWORD);
-		qualityInspector.setEnabled(Math.random() >= 0.2);
-		qualityInspector.setAddress(createRandomAddress());
-		qualityInspector.setRegistrationDate(generateRandomDateTimeInPast());
-		qualityInspector.setValidationDate(qualityInspector.getRegistrationDate()
-				.plusDays(faker.number().numberBetween(1, 4)));
-		qualityInspector.setPhone(this.uniquePhone());
-		qualityInspector.setLanguageId(random.nextBoolean() ? langFr.getId() : langEn.getId());
-		return qualityInspector;
+		return (QualityInspectorCreateDto) setUserDetails(qualityInspector);
 	}
 }

@@ -10,19 +10,19 @@ public class AuctionOptionsUpdateDto {
 	private Integer strategyId;
 
 	@Schema(description = "Prix fixe au kg", example = "7.50")
-	private double fixedPriceKg;
+	private Double fixedPriceKg;
 
 	@Schema(description = "Prix max au kg", example = "12.00")
-	private double maxPriceKg;
+	private Double maxPriceKg;
 
 	@Schema(description = "Prix min au kg", example = "3.00")
-	private double minPriceKg;
+	private Double minPriceKg;
 
 	@Schema(description = "Prix d'achat immédiat", example = "150.00")
-	private double buyNowPrice;
+	private Double buyNowPrice;
 
 	@Schema(description = "Afficher au public", example = "true")
-	private Boolean showPublic;
+	private Boolean showPublic = false;
 
 	@Schema(description = "Forcer les meilleures enchères", example = "false")
 	private Boolean forceBetterBids = false;

@@ -5,7 +5,10 @@ import be.labil.anacarde.domain.dto.db.user.UserDetailDto;
 import be.labil.anacarde.domain.dto.db.user.UserListDto;
 import be.labil.anacarde.domain.dto.write.user.create.UserCreateDto;
 import be.labil.anacarde.domain.dto.write.user.update.UserUpdateDto;
+import be.labil.anacarde.domain.model.User;
 import be.labil.anacarde.presentation.controller.enums.UserType;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.List;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -82,4 +85,18 @@ public interface UserService {
 	 * @return true si le numéro de téléphone existe déjà, false sinon.
 	 */
 	boolean phoneExists(String phone);
+
+	/**
+	 * Authentifie un utilisateur existant via Google : vérifie l'ID-token Google, associe le
+	 * provider Google à son compte local si nécessaire, et retourne le JWT généré.
+	 *
+	 * @param googleToken
+	 *            DTO contenant l'idToken Google et les informations de profil
+	 * @return Le token JWT de la session utilisateur
+	 * @throws GeneralSecurityException
+	 *             en cas d'échec de la vérification du token Google
+	 * @throws IOException
+	 *             en cas d'erreur lors du traitement des données
+	 */
+	User authenticateWithGoogle(String googleToken) throws GeneralSecurityException, IOException;
 }

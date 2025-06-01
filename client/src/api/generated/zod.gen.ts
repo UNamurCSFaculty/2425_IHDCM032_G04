@@ -412,7 +412,7 @@ export const zAuctionUpdateDto = z.object({
   productId: z.number().int(),
   traderId: z.number().int(),
   statusId: z.number().int().optional(),
-  options: zAuctionOptionsUpdateDto.optional(),
+  options: zAuctionOptionsUpdateDto,
 })
 
 export const zAuctionStrategyDto = z.object({
@@ -879,6 +879,8 @@ export const zListBidsResponse = z.array(zBidDto)
 export const zCreateBidResponse = zBidDto
 
 export const zAuthenticateUserResponse = zUserDetailDto
+
+export const zAuthenticateWithGoogleResponse = zUserDetailDto
 
 export const zListAuctionsResponse = z.array(zAuctionDto)
 

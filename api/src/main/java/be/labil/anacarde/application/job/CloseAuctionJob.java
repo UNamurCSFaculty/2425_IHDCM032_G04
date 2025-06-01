@@ -22,11 +22,11 @@ public class CloseAuctionJob implements Job {
 	public void execute(JobExecutionContext context) throws JobExecutionException {
 		Long auctionIdLong = context.getJobDetail().getJobDataMap().getLong("auctionId");
 		Integer auctionId = auctionIdLong.intValue();
-		log.info("Exécution du Job de clôture pour l'enchère ID : {}", auctionId);
+		log.debug("Exécution du Job de clôture pour l'enchère ID : {}", auctionId);
 
 		try {
 			auctionService.closeAuction(auctionId);
-			log.info("Enchère ID : {} clôturée avec succès.", auctionId);
+			log.debug("Enchère ID : {} clôturée avec succès.", auctionId);
 		} catch (Exception e) {
 			log.error("Erreur lors de la clôture de l'enchère ID : {}. Message : {}", auctionId,
 					e.getMessage());

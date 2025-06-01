@@ -235,6 +235,9 @@ import type {
   AuthenticateUserData,
   AuthenticateUserResponse,
   AuthenticateUserError,
+  AuthenticateWithGoogleData,
+  AuthenticateWithGoogleResponse,
+  AuthenticateWithGoogleError,
   ListAuctionsData,
   ListAuctionsResponse,
   CreateAuctionData,
@@ -2191,6 +2194,28 @@ export const authenticateUser = <ThrowOnError extends boolean = false>(
     ...options,
     headers: {
       'Content-Type': 'application/json',
+      ...options?.headers,
+    },
+  })
+}
+
+/**
+ * S’authentifier avec Google
+ * Vérifie l’ID-token Google, associe le compte Google si besoin, et renvoie un JWT.
+ */
+export const authenticateWithGoogle = <ThrowOnError extends boolean = false>(
+  options: Options<AuthenticateWithGoogleData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).post<
+    AuthenticateWithGoogleResponse,
+    AuthenticateWithGoogleError,
+    ThrowOnError
+  >({
+    bodySerializer: null,
+    url: '/api/auth/google',
+    ...options,
+    headers: {
+      'Content-Type': 'text/plain',
       ...options?.headers,
     },
   })
