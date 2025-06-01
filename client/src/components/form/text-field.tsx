@@ -16,6 +16,7 @@ type TextFieldProps = {
   fieldType?: 'string' | 'number'
   tooltip?: string
   type?: React.HTMLInputTypeAttribute
+  hint?: string
 } & React.InputHTMLAttributes<HTMLInputElement>
 
 export function TextField<T extends string | number>({
@@ -27,6 +28,7 @@ export function TextField<T extends string | number>({
   fieldType = 'string',
   tooltip,
   type = 'text',
+  hint,
   ...restProps
 }: TextFieldProps) {
   const field = useFieldContext<T>()
@@ -60,11 +62,16 @@ export function TextField<T extends string | number>({
   return (
     <div className="space-y-2">
       <div className="space-y-1">
-        <Label htmlFor={field.name}>
-          {label}
-          {required && <span className="text-red-500">*</span>}
-          {tooltip && <SimpleTooltip content={tooltip} />}
-        </Label>
+        <div className="flex items-center justify-between">
+          <Label htmlFor={field.name}>
+            {label}
+            {required && <span className="text-red-500">*</span>}
+            {tooltip && <SimpleTooltip content={tooltip} />}
+          </Label>
+          {hint && (
+            <span className="text-sm font-semibold text-gray-500">{hint}</span>
+          )}
+        </div>
         <Input
           id={field.name}
           value={field.state.value}

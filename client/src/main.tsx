@@ -127,7 +127,16 @@ root.render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <AppWithProvider />
-      <Toaster richColors position="top-center" duration={6000} />
+      <Toaster
+        richColors
+        position="top-center"
+        duration={6000}
+        toastOptions={{
+          style: {
+            fontSize: '16px',
+          },
+        }}
+      />
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   </StrictMode>
