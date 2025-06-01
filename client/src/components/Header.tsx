@@ -103,7 +103,7 @@ export function Header() {
   const menuItems: MenuItemDefinition[] = [
     { titleKey: 'header.menu.home', url: '/' },
     {
-      titleKey: 'header.menu.marketplace.title',
+      titleKey: 'breadcrumb.buy',
       url: '#',
       items: [
         {
@@ -111,7 +111,31 @@ export function Header() {
           descriptionKey: 'header.menu.marketplace.browse_desc',
           icon: <ShoppingCart className="size-5 shrink-0" />,
           url: '/achats/marche',
+          requiresAuth: true,
+          allowedUserTypes: allAuthenticatedButCarrierQualityInspector,
         },
+        {
+          titleKey: 'header.menu.my_space.my_purchases',
+          descriptionKey: 'header.menu.my_space.my_purchases_marketplace_desc',
+          icon: <ShoppingCart className="size-5 shrink-0" />,
+          url: '/achats/mes-encheres',
+          requiresAuth: true,
+          allowedUserTypes: allAuthenticatedButCarrierQualityInspector,
+        },
+        {
+          titleKey: 'header.menu.my_space.my_contracts',
+          descriptionKey: 'header.menu.my_space.my_contracts_marketplace_desc',
+          icon: <History className="size-5 shrink-0" />,
+          url: '/contrats/mes-contrats',
+          requiresAuth: true,
+          allowedUserTypes: allAuthenticatedButCarrierQualityInspector,
+        },
+      ],
+    },
+    {
+      titleKey: 'breadcrumb.sell',
+      url: '#',
+      items: [
         {
           titleKey: 'header.menu.marketplace.new_sale',
           descriptionKey: 'header.menu.marketplace.new_sale_desc',
@@ -127,14 +151,6 @@ export function Header() {
           url: '/depots/nouveau-produit',
           requiresAuth: true,
           allowedUserTypes: producerAdminTransformerTrader,
-        },
-        {
-          titleKey: 'header.menu.my_space.my_purchases',
-          descriptionKey: 'header.menu.my_space.my_purchases_marketplace_desc',
-          icon: <ShoppingCart className="size-5 shrink-0" />,
-          url: '/achats/mes-encheres',
-          requiresAuth: true,
-          allowedUserTypes: allAuthenticatedButCarrierQualityInspector,
         },
         {
           titleKey: 'header.menu.my_space.my_sales',
@@ -158,13 +174,19 @@ export function Header() {
           icon: <History className="size-5 shrink-0" />,
           url: '/contrats/mes-contrats',
           requiresAuth: true,
-          allowedUserTypes: allAuthenticatedButCarrierQualityInspector,
+          allowedUserTypes: producerAdminTransformerTrader,
         },
+      ],
+    },
+    {
+      titleKey: 'header.menu.marketplace.title',
+      url: '#',
+      items: [
         {
           titleKey: 'header.menu.marketplace.how_it_works',
           descriptionKey: 'header.menu.marketplace.how_it_works_desc',
           icon: <HelpCircle className="size-5 shrink-0" />,
-          url: '/a-propos#guide',
+          url: '/connexion',
           hideWhenAuth: true,
         },
       ],
@@ -304,11 +326,8 @@ export function Header() {
         <div className="hidden items-center gap-2 lg:flex">
           {!isLoggedIn ? (
             <>
-              <Button asChild size="sm" variant="outline" className="mr-2">
-                <Link to="/connexion">{t('header.auth.login')}</Link>
-              </Button>
               <Button asChild size="sm">
-                <Link to="/inscription">{t('header.auth.register')}</Link>
+                <Link to="/connexion">{t('header.auth.login')}</Link>
               </Button>
             </>
           ) : (

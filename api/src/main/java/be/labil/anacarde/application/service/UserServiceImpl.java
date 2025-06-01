@@ -230,8 +230,12 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 							"Vous n'êtes pas autorisé à modifier cet utilisateur.")));
 		}
 
+		if (!isAdmin) {
+			userUpdateDto.setEnabled(null);
+		}
+
 		// Mets uniquement à jour les champs non nuls du DTO
-		if (!userUpdateDto.getEmail().isEmpty())
+		if (userUpdateDto.getEmail() != null && !userUpdateDto.getEmail().isBlank())
 			userUpdateDto.setEmail(userUpdateDto.getEmail().trim().toLowerCase());
 		User user = userDetailMapper.partialUpdate(userUpdateDto, existingUser);
 

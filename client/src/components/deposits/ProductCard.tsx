@@ -67,8 +67,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, layout }) => {
           })()}
         </TableCell>
         <TableCell>{formatWeight(product.weightKg)}</TableCell>
-        <TableCell>{product.qualityControl?.quality.name ?? 'N/A'}</TableCell>
-        <TableCell>N/A</TableCell>
+        <TableCell>
+          {product.qualityControl?.quality.name ??
+            t('common.not_applicable_short')}
+        </TableCell>
+        <TableCell>{t('common.not_applicable_short')}</TableCell>
         <TableCell>{formatDate(product.deliveryDate)}</TableCell>
         <TableCell className="truncate">{cityLabel}</TableCell>
         <TableCell className="truncate">{regionLabel}</TableCell>
@@ -135,7 +138,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, layout }) => {
             icon={<ShieldCheck className="size-4" />}
             label={t('product.quality_label')}
           >
-            {product.qualityControl?.quality.name ?? 'N/A'}
+            {product.qualityControl?.quality.name ??
+              t('common.not_applicable_short')}
           </InfoTile>
           <InfoTile
             icon={<Package className="size-4" />}
@@ -149,7 +153,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, layout }) => {
             label={t('product.quality_inspector_label')}
           >
             {!product.qualityControl.qualityInspector
-              ? 'N/A'
+              ? t('common.not_applicable_short')
               : product.qualityControl.qualityInspector.firstName +
                 ' ' +
                 product.qualityControl.qualityInspector.lastName}
@@ -163,9 +167,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, layout }) => {
                 const hp = product as HarvestProductDto
                 return hp.field.identifier
               } else if (product.type === ProductType.TRANSFORMED) {
-                return 'Anacardes'
+                return t('product.origin_transformed_default')
               } else {
-                return 'N/A'
+                return t('common.not_applicable_short')
               }
             })()}
           </InfoTile>
@@ -176,19 +180,20 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, layout }) => {
             return (
               <InfoTile
                 icon={<Wheat className="size-4" />}
-                label="Matières premières"
+                label={t('product.raw_materials_label')}
                 size="sm"
               >
                 {tp.harvestProducts && tp.harvestProducts.length > 0 ? (
                   <ul className="lg">
                     {tp.harvestProducts.map((hp, index) => (
                       <li key={index}>
-                        Lot n°{hp.id} ({hp.qualityControl.quality.name})
+                        t('product.raw_materials_label') (
+                        {hp.qualityControl.quality.name})
                       </li>
                     ))}
                   </ul>
                 ) : (
-                  'N/A'
+                  t('common.not_applicable_short')
                 )}
               </InfoTile>
             )

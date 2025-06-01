@@ -359,7 +359,9 @@ export const AuctionForm: React.FC = () => {
               <StepPanel index={2} current={step}>
                 <div className="flex flex-row gap-10">
                   <div className="flex w-1/2 flex-col gap-6">
-                    <FormSectionTitle text="Fixation du prix" />
+                    <FormSectionTitle
+                      text={t('auction.form.section_pricing_title')}
+                    />
                     <form.AppField
                       name="price"
                       children={field => (
@@ -373,36 +375,58 @@ export const AuctionForm: React.FC = () => {
                     />
                     {pricePerKg > 0 && (
                       <div className="text-sm text-gray-500">
-                        <i>Soit {pricePerKg} CFA / kg</i>
+                        <i>
+                          {t('auction.form.price_per_kg_hint', {
+                            price: pricePerKg,
+                          })}
+                        </i>
                       </div>
                     )}
                   </div>
                   <div className="flex w-1/2 flex-col gap-6">
-                    <FormSectionTitle text="Conditions de vente" />
+                    <FormSectionTitle
+                      text={t('auction.form.section_sale_conditions_title')}
+                    />
+
                     <Table>
                       <TableBody>
                         <TableRow>
-                          <TableCell>Stratégie d'enchère</TableCell>
                           <TableCell>
-                            {auctionSettings?.defaultStrategy?.name || 'N/A'}
+                            {t('auction.table.strategy_label')}
+                          </TableCell>
+                          <TableCell>
+                            {auctionSettings?.defaultStrategy?.name ||
+                              t('common.not_applicable_short')}
                           </TableCell>
                         </TableRow>
+
                         <TableRow>
-                          <TableCell>Prix imposé par kg</TableCell>
                           <TableCell>
-                            {auctionSettings?.defaultFixedPriceKg || 'N/A'}
+                            {t('auction.table.fixed_price_per_kg_label')}
+                          </TableCell>
+                          <TableCell>
+                            {auctionSettings?.defaultFixedPriceKg ??
+                              t('common.not_applicable_short')}
                           </TableCell>
                         </TableRow>
+
                         <TableRow>
-                          <TableCell>Prix maximum par kg</TableCell>
                           <TableCell>
-                            {auctionSettings?.defaultMaxPriceKg || 'N/A'}
+                            {t('auction.table.max_price_per_kg_label')}
+                          </TableCell>
+                          <TableCell>
+                            {auctionSettings?.defaultMaxPriceKg ??
+                              t('common.not_applicable_short')}
                           </TableCell>
                         </TableRow>
+
                         <TableRow>
-                          <TableCell>Prix minimum par kg</TableCell>
                           <TableCell>
-                            {auctionSettings?.defaultMinPriceKg || 'N/A'}
+                            {t('auction.table.min_price_per_kg_label')}
+                          </TableCell>
+                          <TableCell>
+                            {auctionSettings?.defaultMinPriceKg ??
+                              t('common.not_applicable_short')}
                           </TableCell>
                         </TableRow>
                       </TableBody>
@@ -439,24 +463,22 @@ export const AuctionForm: React.FC = () => {
                     {t('pagination.previous')}
                   </Button>
                 ) : (
-                  <span /> // Pour maintenir l'alignement si le bouton précédent n'est pas là
+                  <span />
                 )}
 
-                {/* Le bouton "Suivant" est toujours dans le DOM, masqué à la dernière étape */}
                 <Button
                   type="button"
                   onClick={nextStep}
-                  className={cn(step >= 2 && 'hidden')} // Masqué si à l'étape 3 ou plus
+                  className={cn(step >= 2 && 'hidden')}
                 >
                   {t('pagination.next')}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
 
-                {/* Le bouton "Soumettre" est toujours dans le DOM, visible uniquement à la dernière étape */}
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className={cn(step < 2 && 'hidden')} // Masqué si avant l'étape 3
+                  className={cn(step < 2 && 'hidden')}
                 >
                   {isSubmitting ? (
                     <>
