@@ -54,8 +54,9 @@ public interface UserService {
 	 *            Le UserDto contenant les informations mises à jour.
 	 * @return Un UserDto représentant l'utilisateur mis à jour.
 	 */
-	@PreAuthorize("@authz.isAdmin(principal) or (principal.id == #userId)")
-	UserDetailDto updateUser(Integer userId, @Param("userUpdateDto") UserUpdateDto userUpdateDto);
+	@PreAuthorize("@authz.isAdmin(principal) or (principal.id.equals(#userId))")
+	UserDetailDto updateUser(@Param("userId") Integer userId,
+			@Param("userUpdateDto") UserUpdateDto userUpdateDto);
 
 	/**
 	 * Supprime l'utilisateur identifié par l'ID donné du système.

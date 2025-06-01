@@ -20,7 +20,7 @@ public interface AuctionService {
 	 *            Le AuctionDto contenant les informations de la nouvelle enchère.
 	 * @return Un AuctionDto représentant l'enchère créée.
 	 */
-	@PreAuthorize("@authz.isAdmin(principal) or (#auctionDto.traderId == principal.id)")
+	@PreAuthorize("@authz.isAdmin(principal) or (#auctionDto.traderId.equals(principal.id))")
 	AuctionDto createAuction(@Param("auctionDto") AuctionUpdateDto auctionDto);
 
 	/**
@@ -56,7 +56,7 @@ public interface AuctionService {
 	 *            Le AuctionDto contenant les informations mises à jour.
 	 * @return Un AuctionDto représentant l'enchère mis à jour.
 	 */
-	@PreAuthorize("@authz.isAdmin(principal) or (#auctionDto.traderId == principal.id)")
+	@PreAuthorize("@authz.isAdmin(principal) or (#auctionDto.traderId.equals(principal.id))")
 	AuctionDto updateAuction(Integer auctionId, @Param("auctionDto") AuctionUpdateDto auctionDto);
 
 	/**

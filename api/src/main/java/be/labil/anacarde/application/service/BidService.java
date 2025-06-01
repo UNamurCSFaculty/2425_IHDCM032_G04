@@ -20,7 +20,7 @@ public interface BidService {
 	 *            Le BidDto contenant les informations de la nouvelle offre.
 	 * @return Un BidDto représentant l'offre créée.
 	 */
-	@PreAuthorize("@authz.isAdmin(principal) or (#bidDto.traderId == principal.id)")
+	@PreAuthorize("@authz.isAdmin(principal) or (#bidDto.traderId.equals(principal.id))")
 	BidDto createBid(@Param("bidDto") BidUpdateDto bidDto);
 
 	/**
@@ -49,7 +49,7 @@ public interface BidService {
 	 *            Le BidDto contenant les informations mises à jour.
 	 * @return Un BidDto représentant l'offre mis à jour.
 	 */
-	@PreAuthorize("@authz.isAdmin(principal) or (#bidDto.traderId == principal.id)")
+	@PreAuthorize("@authz.isAdmin(principal) or (#bidDto.traderId.equals(principal.id))")
 	BidDto updateBid(Integer bidId, @Param("bidDto") BidUpdateDto bidDto);
 
 	/**

@@ -51,11 +51,11 @@ public class OwnershipUtil {
 		if (userId == null || productDto == null) return false;
 
 		if (productDto instanceof HarvestProductUpdateDto) {
-			return userId == ((HarvestProductUpdateDto) productDto).getProducerId();
+			return userId.equals(((HarvestProductUpdateDto) productDto).getProducerId());
 		}
 
 		if (productDto instanceof TransformedProductUpdateDto) {
-			return userId == ((TransformedProductUpdateDto) productDto).getTransformerId();
+			return userId.equals(((TransformedProductUpdateDto) productDto).getTransformerId());
 		}
 
 		return false;
