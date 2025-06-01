@@ -36,7 +36,6 @@ public class AuctionUpdateDto {
 	@Schema(description = "Statut de l'enchère")
 	private Integer statusId;
 
-	@NotNull(message = "Les options d'enchère sont requises")
 	@Schema(description = "Options d'enchère")
 	private AuctionOptionsUpdateDto options;
 }
