@@ -16,7 +16,6 @@ import { RichTextEditorField } from '@/components/form/rich-text-editor-field'
 import { CityField } from './CityField'
 import { LocationField } from './LocationField'
 import { MultiSelectVirtualField } from './multi-select-virtual-field'
-import { MultipleSelectorField } from './multiple-selector-field'
 import { ReactSelectField } from './react-select-field'
 
 export const { fieldContext, useFieldContext, formContext, useFormContext } =
@@ -29,7 +28,6 @@ export const { useAppForm } = createFormHook({
     SelectField,
     MultiSelectField,
     MultiSelectVirtualField,
-    MultipleSelectorField,
     ReactSelectField,
     TextAreaField,
     DateTimePickerField,

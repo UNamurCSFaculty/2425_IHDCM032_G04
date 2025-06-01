@@ -12,6 +12,7 @@ import {
   type ErrorDetail,
   type QualityDto,
   type QualityInspectorDetailDto,
+  type ProductDto,
 } from '@/api/generated'
 import {
   createProductMutation,
@@ -90,8 +91,8 @@ export function ProductForm(): React.ReactElement<'div'> {
 
   const createProductRequest = useMutation({
     ...createProductMutation(),
-    onSuccess() {
-      toast.success(t('product.form.created_ok'), {
+    onSuccess(data: ProductDto) {
+      toast.success(t('product.form.created_ok') + ' ID: ' + data.id, {
         duration: 3000,
       })
 
