@@ -265,8 +265,8 @@
     "type": "Type",
     "upload_accepted": "Accepted formats",
     "upload_component": "Click to upload or drag-and-drop",
-    "upload_limit": "Maximum upload size is {{max}} MB",
-    "upload_too_big": "File is too large, maximum {{max}} MB",
+    "upload_limit": "Maximum number of files is {{max}}",
+    "upload_too_big": "File is too large – maximum {{max}} MB",
     "upload_all": "All files are accepted",
     "upload_click_or_drag": "Click to upload or drag-and-drop",
     "upload_invalid_type": "Invalid file type",
@@ -724,7 +724,9 @@
       "submit_button": "Save Product",
       "section_quality_control_title": "Quality Control",
       "control_date_label": "Control Date",
-      "certificate_label": "Control Certificate"
+      "certificate_label": "Certificate Control",
+      "created_ok": "Product added successfully!",
+      "created_fail": "Error while adding product."
     },
     "weight_in_kg_label": "Weight (kg)"
   },

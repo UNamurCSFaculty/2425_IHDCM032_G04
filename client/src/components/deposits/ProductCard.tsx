@@ -187,8 +187,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, layout }) => {
                   <ul className="lg">
                     {tp.harvestProducts.map((hp, index) => (
                       <li key={index}>
-                        t('product.raw_materials_label') (
-                        {hp.qualityControl.quality.name})
+                        lot n°{hp.id} ({hp.qualityControl.quality.name})
                       </li>
                     ))}
                   </ul>

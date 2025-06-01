@@ -6,6 +6,13 @@ import {
   type UserListDto,
   type HarvestProductDto,
   UserType,
+  type ApiErrorResponse,
+  type FieldDto,
+  type StoreDetailDto,
+  type ErrorDetail,
+  type QualityDto,
+  type QualityInspectorDetailDto,
+  type ProductDto,
 } from '@/api/generated'
 import {
   createProductMutation,
@@ -30,6 +37,7 @@ import { useNavigate } from '@tanstack/react-router'
 import { AlertCircle } from 'lucide-react'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 import z from 'zod/v4'
 
 export function ProductForm(): React.ReactElement<'div'> {
@@ -83,18 +91,26 @@ export function ProductForm(): React.ReactElement<'div'> {
 
   const createProductRequest = useMutation({
     ...createProductMutation(),
-    onSuccess() {
+    onSuccess(data: ProductDto) {
+      toast.success(t('product.form.created_ok') + ' ID: ' + data.id, {
+        duration: 3000,
+      })
+
       navigate({ to: '/depots/mes-produits' })
     },
-    onError(error) {
-      console.error('Invalid request:', error)
+    onError(error: ApiErrorResponse) {
+      toast.error(t('product.form.created_fail') + ' (' + error.code + ')', {
+        duration: 3000,
+      })
     },
   })
 
   const createQualityControlRequest = useMutation({
     ...createQualityControlMutation(),
-    onError(error) {
-      console.error('Invalid request:', error)
+    onError(error: ApiErrorResponse) {
+      toast.error(t('product.form.created_fail') + ' (' + error.code + ')', {
+        duration: 3000,
+      })
     },
   })
 
@@ -109,32 +125,28 @@ export function ProductForm(): React.ReactElement<'div'> {
   type ProductRegistration = z.infer<typeof productSchema>
 
   const handleSaveProduct = async (value: ProductRegistration) => {
-    try {
-      const qc = await createQualityControlRequest.mutateAsync({
+    const qc = await createQualityControlRequest.mutateAsync({
+      body: {
+        qualityControl: value.qualityControl,
+        documents: value.documents,
+      },
+    })
+
+    if (value.product.type === ProductType.TRANSFORMED) {
+      createProductRequest.mutate({
         body: {
-          qualityControl: value.qualityControl,
-          documents: value.documents,
+          ...value.product,
+          qualityControlId: qc.id,
+          harvestProductIds: selectedHarvestProductsIds,
         },
       })
-
-      if (value.product.type === ProductType.TRANSFORMED) {
-        createProductRequest.mutate({
-          body: {
-            ...value.product,
-            qualityControlId: qc.id,
-            harvestProductIds: selectedHarvestProductsIds,
-          },
-        })
-      } else if (value.product.type === ProductType.HARVEST) {
-        createProductRequest.mutate({
-          body: {
-            ...value.product,
-            qualityControlId: qc.id,
-          },
-        })
-      }
-    } catch (error) {
-      console.error('Save product failed with error:', error)
+    } else if (value.product.type === ProductType.HARVEST) {
+      createProductRequest.mutate({
+        body: {
+          ...value.product,
+          qualityControlId: qc.id,
+        },
+      })
     }
   }
 
@@ -283,8 +295,8 @@ export function ProductForm(): React.ReactElement<'div'> {
                 children={field => {
                   const gps =
                     !isFieldsLoading &&
-                    fields!.find(f => f.id === field.state.value)?.address
-                      .location
+                    (fields as FieldDto[]).find(f => f.id === field.state.value)
+                      ?.address.location
                   const hintText = gps
                     ? t('form.gps_label', { gps: formatCoordinates(gps) })
                     : ''
@@ -293,7 +305,7 @@ export function ProductForm(): React.ReactElement<'div'> {
                       options={
                         isFieldsLoading
                           ? []
-                          : fields!
+                          : (fields as FieldDto[])
                               .filter(
                                 field => field.producer?.id === producerId
                               )
@@ -314,7 +326,7 @@ export function ProductForm(): React.ReactElement<'div'> {
                 <form.AppField
                   name="product.harvestProductIds"
                   children={field => (
-                    <field.MultiSelectField
+                    <field.ReactSelectField
                       loading={isHarvestProductsLoading}
                       placeholder={t('product.select_lots')}
                       options={
@@ -322,7 +334,7 @@ export function ProductForm(): React.ReactElement<'div'> {
                           ? []
                           : (harvestProducts as HarvestProductDto[]).map(
                               product => ({
-                                value: product.id,
+                                value: String(product.id),
                                 label:
                                   'Lot n°' +
                                   product.id +
@@ -335,9 +347,9 @@ export function ProductForm(): React.ReactElement<'div'> {
                             )
                       }
                       label="Matières premières"
-                      maxCount={2}
-                      onChange={values => {
-                        setSelectedHarvestProductsIds(values as number[])
+                      onChange={items => {
+                        const ids = items.map(i => Number(i))
+                        setSelectedHarvestProductsIds(ids)
                       }}
                     />
                   )}
@@ -351,7 +363,7 @@ export function ProductForm(): React.ReactElement<'div'> {
                   options={
                     isStoresLoading
                       ? []
-                      : stores!.map(store => ({
+                      : (stores as StoreDetailDto[]).map(store => ({
                           value: store.id,
                           label: store.name,
                         }))
@@ -373,7 +385,7 @@ export function ProductForm(): React.ReactElement<'div'> {
                 <AlertTitle>{t('common.error')}</AlertTitle>
                 <AlertDescription>
                   <ul className="list-disc">
-                    {error.errors.map((err, idx) => (
+                    {error.errors.map((err: ErrorDetail, idx: number) => (
                       <li key={idx} className="mb-1">
                         {err.field
                           ? `${t('errors.fields.' + err.field)}: `
@@ -406,7 +418,7 @@ export function ProductForm(): React.ReactElement<'div'> {
                       options={
                         isQualitiesLoading
                           ? []
-                          : qualities!
+                          : (qualities as QualityDto[])
                               .filter(quality => {
                                 return (
                                   !productType ||
@@ -447,10 +459,12 @@ export function ProductForm(): React.ReactElement<'div'> {
                   options={
                     isQualityInspectorsLoading
                       ? []
-                      : qualityInspectors!.map(qi => ({
-                          value: qi.id,
-                          label: qi.lastName + ' ' + qi.firstName,
-                        }))
+                      : (qualityInspectors as QualityInspectorDetailDto[]).map(
+                          qi => ({
+                            value: qi.id,
+                            label: qi.lastName + ' ' + qi.firstName,
+                          })
+                        )
                   }
                   label={t('product.quality_inspector_label')}
                   hint={
