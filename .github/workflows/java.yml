@@ -33,7 +33,7 @@ jobs:
 
       - name: Build project and run tests
         working-directory: ./api
-        run: mvn --batch-mode --update-snapshots verify
+        run: mvn clean verify --batch-mode --update-snapshots
 
       - name: Generate JaCoCo Badge
         if: github.ref == 'refs/heads/main'
