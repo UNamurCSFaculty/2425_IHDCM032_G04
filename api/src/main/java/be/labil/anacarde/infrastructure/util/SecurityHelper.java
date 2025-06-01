@@ -3,6 +3,7 @@ package be.labil.anacarde.infrastructure.util;
 import be.labil.anacarde.application.exception.ApiErrorCode;
 import be.labil.anacarde.application.exception.ApiErrorException;
 import be.labil.anacarde.application.exception.ErrorDetail;
+import be.labil.anacarde.domain.model.Admin;
 import be.labil.anacarde.domain.model.User;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -51,6 +52,11 @@ public class SecurityHelper {
 					List.of(new ErrorDetail("auth", "auth.principal.invalid",
 							"Type de principal d'authentification inattendu.")));
 		}
+	}
+
+	public static boolean isDbInitDataUser() {
+		User user = getAuthenticatedUserOrFail();
+		return user instanceof Admin && user.getEmail().equals("system@anacarde.local");
 	}
 
 	public static boolean isAdmin() {

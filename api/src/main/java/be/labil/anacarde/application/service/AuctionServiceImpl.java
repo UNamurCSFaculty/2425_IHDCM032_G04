@@ -267,8 +267,8 @@ public class AuctionServiceImpl implements AuctionService {
 	}
 
 	private void checkAuctionParameters(AuctionUpdateDto auctionUpdateDto) {
-		// Allow admin to update any auction
-		if (SecurityHelper.isAdmin()) {
+		// Allow fake user for DB initialization
+		if (SecurityHelper.isDbInitDataUser()) {
 			return;
 		}
 		checkAuctionSettings(auctionUpdateDto);
