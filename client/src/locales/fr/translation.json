@@ -577,9 +577,9 @@
       "email": "E-mail",
       "phone": "Téléphone",
       "defaultStrategyId": "Stratégie par défaut",
-      "defaultFixedPriceKg": "Prix fixe par défaut par kg",
-      "defaultMaxPriceKg": "Prix maximum par défaut par kg",
-      "defaultMinPriceKg": "Prix minimum par défaut par kg",
+      "defaultFixedPriceKg": "Prix fixe par kg",
+      "defaultMaxPriceKg": "Prix maximum par kg",
+      "defaultMinPriceKg": "Prix minimum par kg",
       "showOnlyActive": "Afficher uniquement les actifs",
       "forceBetterBids": "Forcer de meilleures offres",
       "minIncrement": "Incrément minimum"
@@ -660,8 +660,16 @@
     "expiration_label": "Expiration",
     "form": {
       "title": "Saisie de l'enchère",
-      "section_settings_title": "Paramètres de la vente",
-      "submit_button": "Ouvrir la vente"
+      "section_select_product_title": "Sélection du produit",
+      "section_settings_title": "Paramètres de vente",
+      "section_general_conditions": "Conditions générales",
+      "submit_button": "Ouvrir la vente",
+      "created_ok": "Vente créée avec succès.",
+      "created_fail": "Erreur lors de la création de la vente.",
+      "auction_strategy": "Stratégie d'enchère",
+      "auction_fixed_price": "Prix imposé par kg",
+      "auction_max_price": "Prix maximum par kg",
+      "auction_min_price": "Prix minimum par kg"
     },
     "expiration_date_label": "Expiration de l'enchère",
     "table": {
@@ -687,7 +695,7 @@
     "product_label": "Produit",
     "quantity_in_kg_label": "Quantité (kg)",
     "price_in_cfa_label": "Prix (CFA)",
-    "info_title": "Informations du produit",
+    "info_title": "Informations détaillées",
     "lot_number_label": "Numéro du lot",
     "deposited_quantity_label": "Quantité déposée",
     "deposited_quantity_available_label": "Quantité disponible",

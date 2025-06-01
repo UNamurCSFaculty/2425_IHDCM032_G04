@@ -606,8 +606,16 @@
     "expiration_label": "Expiration",
     "form": {
       "title": "Auction Entry",
-      "section_settings_title": "Sale Settings",
-      "submit_button": "Open Sale"
+      "section_select_product_title": "Select Product",
+      "section_settings_title": "Auction Settings",
+      "section_general_conditions": "Conditions",
+      "submit_button": "Open Sale",
+      "created_ok": "Auction created successfully.",
+      "created_fail": "Error while creating auction.",
+      "auction_strategy": "Auction strategy",
+      "auction_fixed_price": "Fixed price per kg",
+      "auction_max_price": "Max price per kg",
+      "auction_min_price": "Min price per kg"
     },
     "expiration_date_label": "Auction Expiration",
     "table": {
@@ -633,7 +641,7 @@
     "product_label": "Product",
     "quantity_in_kg_label": "Quantity (kg)",
     "price_in_cfa_label": "Price (CFA)",
-    "info_title": "Product Information",
+    "info_title": "Details",
     "lot_number_label": "Lot Number",
     "deposited_quantity_label": "Deposited Quantity",
     "deposited_quantity_available_label": "Available Quantity",

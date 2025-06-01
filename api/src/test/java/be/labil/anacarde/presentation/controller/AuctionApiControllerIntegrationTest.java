@@ -113,6 +113,32 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 	}
 
 	/**
+	 * Teste la création d'une nouvelle enchère, avec une date déjà expirée.
+	 */
+	@Test
+	public void testCreateAuctionCheckExpirationDate() throws Exception {
+		final int AUCTION_QUANTITY = 10;
+
+		AuctionUpdateDto newAuction = new AuctionUpdateDto();
+		newAuction.setPrice(111.11);
+		newAuction.setProductQuantity(AUCTION_QUANTITY);
+		newAuction.setActive(true);
+		newAuction.setExpirationDate(LocalDateTime.now().minusDays(1));
+		newAuction.setProductId(getTestHarvestProduct().getId());
+		newAuction.setTraderId(getProducerTestUser().getId());
+		AuctionOptionsUpdateDto auctionOptions = new AuctionOptionsUpdateDto();
+		auctionOptions.setStrategyId(getTestAuctionStrategy().getId());
+		newAuction.setOptions(auctionOptions);
+
+		ObjectNode node = objectMapper.valueToTree(newAuction);
+		String jsonContent = node.toString();
+
+		mockMvc.perform(
+				post("/api/auctions").contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				.andExpect(status().is4xxClientError());
+	}
+
+	/**
 	 * Teste la création d'une nouvelle enchère, et vérifie les poids du produit associé.
 	 */
 	@Test
@@ -374,7 +400,7 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		updateAuction.setPrice(999.99);
 		updateAuction.setProductQuantity(99);
 		updateAuction.setActive(true);
-		updateAuction.setExpirationDate(LocalDateTime.now());
+		updateAuction.setExpirationDate(LocalDateTime.now().plusDays(10));
 		updateAuction.setOptions(optionsDto);
 		updateAuction.setProductId(getTestHarvestProduct().getId());
 		updateAuction.setTraderId(getProducerTestUser().getId());

@@ -49,7 +49,6 @@ export function LoginForm() {
   /* Callback fourni à Google Identity Services */
   const handleGoogleCredential = useCallback(
     (response: CredentialResponse) => {
-      console.log('Google Credential Response:', response)
       if (response.credential) {
         googleMutation.mutate({
           body: response.credential,

@@ -110,7 +110,7 @@ public class AuctionApiControllerSecurityTest extends AbstractIntegrationTest {
 		updateAuction.setPrice(999.99);
 		updateAuction.setProductQuantity(99);
 		updateAuction.setActive(true);
-		updateAuction.setExpirationDate(LocalDateTime.now());
+		updateAuction.setExpirationDate(LocalDateTime.now().plusDays(1));
 		updateAuction.setOptions(optionsDto);
 		updateAuction.setProductId(getTestHarvestProduct().getId());
 		updateAuction.setTraderId(expectedUser);
