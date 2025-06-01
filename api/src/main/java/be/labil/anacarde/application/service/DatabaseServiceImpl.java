@@ -1361,8 +1361,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 		String localPart = mail.split("@", 2)[0];
 		String[] nameParts = localPart.split("\\.", 2);
 		user.setEmail(mail);
-		user.setFirstName(nameParts[0]);
-		user.setLastName(nameParts[1]);
+		user.setFirstName(capitalize(nameParts[0]));
+		user.setLastName(capitalize(nameParts[1]));
 		user.setEmail(uniqueEmail());
 		user.setPassword(DEFAULT_PASSWORD);
 		user.setAddress(createRandomAddress());

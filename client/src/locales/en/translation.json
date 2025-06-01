@@ -1,9 +1,9 @@
 {
   "app": {
     "accueil": {
-      "subtitle": "Join the real-time auction platform for cashew nuts and their processed products in Benin. Monitor, outbid and support local producers with confidence.",
-      "title": "Cashew Auctions & Marketplace",
-      "image_alt_cashew_nuts": "Cashew-nuts illustration"
+      "subtitle": "Join the real-time auction platform for cashew nuts and their processed products in Benin. Watch, outbid, and support local producers with confidence.",
+      "title": "Cashew Auctions & Market",
+      "image_alt_cashew_nuts": "Cashew nuts illustration"
     },
     "contact": {
       "title": "Contact Us",
@@ -13,18 +13,18 @@
     "networkError": "Unable to reach the server",
     "signup": {
       "subtitle": "Your registration will be validated within 48 hours after submitting the form.",
-      "title": "Sign-up"
+      "title": "Sign Up"
     },
     "statut": {
-      "connection": "Connecting…",
-      "log_in": "Log in"
+      "connection": "Logging in...",
+      "log_in": "Log In"
     },
     "title": "My Awesome App",
     "welcome": {
-      "message": "Ready for your next auctions?",
+      "message": "Ready for your next auction?",
       "title": "Welcome",
       "admin": "Access your admin dashboard:",
-      "admin_link": "Admin Panel"
+      "admin_link": "Administration Panel"
     },
     "auctions_sales": {
       "title": "My Sales",
@@ -36,26 +36,26 @@
     },
     "auctions_buys": {
       "title": "My Purchases",
-      "subtitle": "View your current purchases and the auctions you have won so far."
+      "subtitle": "View your ongoing purchases and auctions you have won so far."
     },
     "deposits_new_product": {
       "title": "New Product",
-      "subtitle": "Deposit a new product in store."
+      "subtitle": "Deposit a new product into the store."
     },
     "deposits_list_products": {
       "title": "My Products",
-      "subtitle": "View all products you have deposited and that are available for sale."
+      "subtitle": "View all your deposited products available for sale."
     },
     "marketplace": {
       "title": "Auction Marketplace",
       "subtitle": "Buy products online."
     },
     "signup_success": {
-      "title": "Registration Successful!",
-      "description_line1": "Your registration request has been recorded.",
-      "description_line2": "Your account is pending validation by an administrator.",
+      "title": "Signup Successful!",
+      "description_line1": "Your signup request has been received.",
+      "description_line2": "Your account is awaiting approval by an administrator.",
       "email_notification": "You will receive an email once your account is activated.",
-      "go_to_login": "Go to login page"
+      "go_to_login": "Go to Login Page"
     },
     "contracts_list_contracts": {
       "title": "My Contracts",
@@ -67,15 +67,15 @@
       "section_title_prefix": "Why choose ",
       "section_title_brand": "e-Anacarde",
       "section_title_suffix": "?",
-      "section_subtitle": "Discover how our platform is revolutionising cashew-nut auctions with technology, security and social impact.",
+      "section_subtitle": "Discover how our platform is revolutionizing cashew auctions with technology, security, and social impact.",
       "items": {
         "real_time": {
-          "title": "Real-time Auctions",
-          "description": "Follow every auction and never miss the chance to outbid."
+          "title": "Real-Time Auctions",
+          "description": "Follow every auction and never miss an opportunity to bid."
         },
         "secure_transactions": {
           "title": "Secure Transactions",
-          "description": "End-to-end payment and delivery management for total peace of mind."
+          "description": "Payment and delivery managed end-to-end for your peace of mind."
         },
         "industry_support": {
           "title": "Industry Support",
@@ -85,51 +85,53 @@
     },
     "blog": {
       "title": "Our Blog",
-      "subtitle": "Read the latest news, standards and tips to optimise your cashew-nut auctions in Benin.",
+      "subtitle": "Discover the latest news, regulations, and tips to maximize your cashew auction sales in Benin.",
       "article1": {
         "category": "Tutorial",
         "date": "3 days ago",
-        "title": "Mastering Cashew-nut Auctions on e-Anacarde",
-        "description": "A step-by-step guide to understand the auction process, set reserves and maximise your income on Benin’s leading cashew-auction platform.",
+        "title": "How to Master Cashew Auctions on e-Anacarde",
+        "description": "Follow our step-by-step guide to understand the auction process, set your reserves, and maximize your revenue on the first cashew auction platform in Benin.",
         "author": "Aïssatou Adégbidi"
       },
       "article2": {
         "category": "News",
         "date": "7 days ago",
         "title": "New Government Standards for Cashew Production",
-        "description": "Benin’s government has issued new guidelines to improve cashew quality and traceability. Learn the requirements and how to comply.",
+        "description": "The Benin government has issued new guidelines to improve cashew quality and traceability. Learn the requirements and how to comply.",
         "author": "Kofi Mensah"
       },
-      "author_avatar_alt": "Author avatar",
-      "read_more": "Read more"
+      "author_avatar_alt": "Author's avatar",
+      "read_more": "Read More",
+      "no_description": "No description available."
     },
     "hero": {
-      "heading": "Online Cashew-nut Auctions",
-      "description": "Take part in real-time auctions for cashew nuts and derivatives in Benin. Track every bid, outbid others and support local producers confidently.",
+      "heading": "Online Cashew Auctions",
+      "description": "Participate in real-time auctions for cashew nuts and their derivatives in Benin. Watch every bid, outbid, and support local producers with confidence.",
       "buttons": {
         "primary_text": "View Auctions",
         "secondary_text": "Learn More"
       },
-      "image_alt": "e-Anacarde logo – cashew-nut auction platform"
+      "image_alt": "e-Anacarde logo, cashew auction platform"
     },
     "faq": {
       "heading": "Frequently Asked Questions",
       "q1_question": "What is e-Anacarde?",
-      "q1_answer": "e-Anacarde is an online auction platform for cashew nuts in Benin, directly connecting producers and buyers to maximise transparency and value.",
-      "q2_question": "How can I register as a producer?",
-      "q2_answer_part1": "Fill in the form with your production data and upload the required documents for verification.",
-      "q3_question": "How do I take part in an auction?",
-      "q3_answer": "After your account is validated, log in, go to the auctions page, choose the desired lot and place your bid.",
+      "q1_answer": "e-Anacarde is an online auction platform dedicated to cashew nuts in Benin, connecting producers and buyers directly to maximize transparency and transaction value.",
+      "q2_question": "How can I sign up as a producer?",
+      "q2_answer_part1": "To sign up, fill out the form with your production details and upload the required documents for verification.",
+      "q3_question": "How do I participate in an auction?",
+      "q3_answer": "Once your account is approved, log in, go to the auctions page, select the desired cashew lot, and place your bid with the amount you’re willing to pay.",
       "q4_question": "What are the service fees?",
-      "q4_answer": "A 2 % commission is charged on the final price of each won auction – no hidden fees for producers or buyers.",
+      "q4_answer": "e-Anacarde charges a 1% commission on the final amount of each winning bid, with no hidden fees for producers or buyers.",
       "q5_question": "How are payment and delivery handled?",
-      "q5_answer": "Once the auction is won, payment is made via mobile-money partners (MoMo, Flooz) or bank transfer. Delivery is arranged with approved carriers at the buyer’s cost or as agreed.",
-      "q6_question": "Which quality standards must I meet?",
-      "q6_answer": "You must comply with new Beninese guidelines on grading, moisture and packaging. See our article “New Government Standards for Cashew Production” for details."
+      "q5_answer": "Once you win an auction, payment is made through our mobile payment partners (MoMo, Flooz) or by bank transfer. Approved carriers are offered for delivery, at the buyer’s expense or as agreed.",
+      "q6_question": "What quality standards must I meet?",
+      "q6_answer": "You must comply with the new government guidelines on grading, moisture content, and packaging of cashew nuts. See our article “New Government Standards for Cashew Production” for full details."
     }
   },
   "breadcrumb": {
     "about": "About",
+    "profile": "Profile",
     "auctions": "Auctions",
     "buy": "Buy",
     "home": "Home",
@@ -137,10 +139,9 @@
     "login": "Login",
     "marketplace": "Marketplace",
     "privacy": "Privacy Policy",
-    "profile": "Profile",
     "sell": "Sell",
     "settings": "Settings",
-    "signup": "Sign up",
+    "signup": "Sign Up",
     "terms": "Terms of Use",
     "vendre": "Sell",
     "my_auctions": "My Auctions",
@@ -149,7 +150,45 @@
     "my_deposits": "My Products",
     "new_deposit": "New Product",
     "contracts": "Contracts",
-    "my_contracts": "My Contracts"
+    "my_contracts": "My Contracts",
+    "news": "News"
+  },
+  "common": {
+    "add": "Add",
+    "clear": "Clear",
+    "close": "Close",
+    "delete": "Delete",
+    "edit": "Edit",
+    "step": "Step",
+    "error": "Error",
+    "info": "Info",
+    "loading": "Loading…",
+    "no": "No",
+    "ok": "OK",
+    "save": "Save",
+    "search": "Search",
+    "select": "Select",
+    "success": "Success",
+    "view": "View",
+    "warning": "Warning",
+    "yes": "Yes",
+    "error_loading_data": "Error loading data.",
+    "error_loading_data_title": "Data Loading Error",
+    "error_loading_users_title": "User Loading Error",
+    "download_error": "Download Error",
+    "download_successful": "Download Successful",
+    "unknown_error": "An unknown error occurred.",
+    "this_user": "this user",
+    "not_provided": "Not provided",
+    "confirm_action": "Confirm action",
+    "not_applicable_short": "N/A",
+    "unknown": "Unknown",
+    "admin": "Admin",
+    "search_placeholder": "Search articles…",
+    "all_categories": "All categories",
+    "results_count": "{{count}} result",
+    "results_count_plural": "{{count}} results",
+    "clear_filters": "Clear filters"
   },
   "buttons": {
     "view": "View",
@@ -158,11 +197,11 @@
     "approve": "Approve",
     "cancel": "Cancel",
     "connection": "Login",
-    "home_connection": "Start now",
+    "home_connection": "Get Started",
     "reinitialise": "Reset",
-    "submit": "Send",
-    "submitting": "Sending…",
-    "subscribe": "Create Account",
+    "submit": "Submit",
+    "submitting": "Submitting…",
+    "subscribe": "Sign Up",
     "view_all_news": "View All News",
     "details": "Details",
     "buy": "Buy",
@@ -189,76 +228,45 @@
     "save": "Save",
     "add": "Add"
   },
-  "common": {
-    "add": "Add",
-    "clear": "Clear",
-    "close": "Close",
-    "delete": "Delete",
-    "edit": "Edit",
-    "step": "Step",
-    "error": "Error",
-    "info": "Info",
-    "loading": "Loading…",
-    "no": "No",
-    "ok": "OK",
-    "save": "Save",
-    "search": "Search",
-    "select": "Select",
-    "success": "Success",
-    "view": "View",
-    "warning": "Warning",
-    "yes": "Yes",
-    "error_loading_data": "Error while loading data.",
-    "error_loading_data_title": "Data Loading Error",
-    "error_loading_users_title": "User Loading Error",
-    "download_error": "Download error",
-    "download_successful": "Download successful",
-    "unknown_error": "An unknown error occurred.",
-    "this_user": "this user",
-    "not_provided": "Not provided",
-    "confirm_action": "Confirm action",
-    "not_applicable_short": "N/A",
-    "unknown": "Unknown"
-  },
   "form": {
-    "read_only": "Read-only",
+    "read_only": "Read only",
     "carrier_details": "Carrier Details",
-    "cooperative": "Co-operative",
-    "select_cooperative": "Select a co-operative",
-    "cooperative_name": "Enter co-operative name",
-    "creation_date": "Creation date",
-    "president": "Co-operative president",
+    "cooperative": "Cooperative",
+    "select_cooperative": "Select a cooperative",
+    "cooperative_name": "Enter cooperative name",
+    "creation_date": "Creation Date",
+    "president": "Cooperative President",
     "accept_terms": "I accept the terms of use",
     "select.placeholder": "Choose an option",
     "price_per_km": "Price per km",
-    "radius": "Service radius (km)",
-    "agricultural_identifier": "Agricultural ID",
-    "confirm_password": "Confirm password",
-    "first_name": "First name",
-    "last_name": "Last name",
+    "radius": "Service Radius (km)",
+    "agricultural_identifier": "Agricultural Identifier",
+    "confirm_password": "Confirm Password",
+    "first_name": "First Name",
+    "last_name": "Last Name",
     "city": "City",
     "location": "Location",
-    "street_quarter": "Street / Quarter",
+    "street_quarter": "Street/Quarter",
     "message": "Message",
     "password": "Password",
     "phone": "Phone",
     "coordinates_label": "Coordinates:",
     "status": "Status",
-    "created_at": "Created on",
+    "created_at": "Created at",
     "actions": "Actions",
-    "submitted_at": "Submitted on",
-    "full_name": "Full name",
+    "submitted_at": "Submitted at",
+    "full_name": "Full Name",
     "tooltip": {
-      "price_per_km": "Price charged per kilometre travelled for transporting products",
-      "radius": "Service radius in kilometres for transporting products",
-      "city": "Select your city to ease localisation. If it is not listed, pick the closest one.",
-      "location": "Click the map to set your position for easier localisation."
+      "price_per_km": "Price per kilometer traveled for product transport",
+      "radius": "Service radius in kilometers for product transport",
+      "city": "Select your city for easier location. If not listed, choose the nearest.",
+      "location": "Select your position on the map for easier location. Simply click on the map to center."
     },
-    "type": "Role",
+    "type": "Type",
     "upload_accepted": "Accepted formats",
     "upload_component": "Click to upload or drag-and-drop",
-    "upload_limit": "Max number of files is {{max}}",
-    "upload_too_big": "File is too large – max {{max}} MB",
+    "upload_limit": "Maximum number of files is {{max}}",
+    "upload_too_big": "File is too large – maximum {{max}} MB",
     "upload_all": "All files are accepted",
     "upload_click_or_drag": "Click to upload or drag-and-drop",
     "upload_invalid_type": "Invalid file type",
@@ -277,24 +285,24 @@
     },
     "enabled": {
       "label": "Enabled",
-      "description": "If checked, the user can sign in and use the platform."
+      "description": "If checked, the user can log in and use the platform."
     },
-    "new_password": "New password",
+    "new_password": "New Password",
     "placeholder": {
       "language": "Select a language…",
       "leave_blank_password": "Leave blank to keep unchanged",
       "select_region": "Select a region…",
       "select_city": "Select a city…",
       "date": "Select a date",
-      "no_city_found": "No city found",
+      "no_city_found": "No cities found",
       "search": "Search",
       "price_per_km_example": "500",
       "radius_example": "50",
-      "street_example": "e.g. Main Street",
+      "street_example": "Ex.: Main Street",
       "email_example": "m@example.com",
       "password_example": "••••••••••",
-      "bid_amount_cfa": "Amount (CFA)",
-      "cooperative_name": "Enter co-operative name",
+      "bid_amount_cfa": "Amount CFA",
+      "cooperative_name": "Enter cooperative name",
       "select_president": "Select a president…",
       "no_users_available": "No users available"
     },
@@ -304,7 +312,7 @@
       "text": "Text",
       "video": "Video",
       "audio": "Audio",
-      "zip": "ZIP archive"
+      "zip": "ZIP Archive"
     },
     "identifier_label": "identifier: {{id}}",
     "gps_label": "gps: {{gps}}"
@@ -314,99 +322,29 @@
     "active": "Active",
     "inactive": "Inactive"
   },
-  "pagination": {
-    "all": "All",
-    "entries": "entries",
-    "next": "Next",
-    "no_entries": "No entries found",
-    "of": "of",
-    "page": "Page",
-    "previous": "Previous",
-    "showing": "Showing",
-    "to": "to"
-  },
-  "validation": {
-    "default": "The field is invalid",
-    "regex": "The field format is invalid",
-    "acceptTerms": "You must accept the terms of use",
-    "email": "Invalid email format",
-    "max": "The value must be at most {{count}}",
-    "maxLength": "The field must contain at most {{count}} character",
-    "maxLength_plural": "The field must contain at most {{count}} characters",
-    "min": "The value must be at least {{count}}",
-    "minLength": "The field must contain at least {{count}} character",
-    "minLength_plural": "The field must contain at least {{count}} characters",
-    "invalidType": "Invalid field type",
-    "password": "Password must include at least one lowercase, one uppercase, one digit and one special character",
-    "passwordValidation": "Passwords do not match",
-    "phone": "Invalid Beninese phone number",
-    "required": "This field is required",
-    "number_min": "Value must be ≥ {{count}}"
-  },
-  "errors": {
-    "access.denied": "Access denied – insufficient rights.",
-    "access.disabled": "Your account must be activated by an administrator before you can use the platform.",
-    "access.forbidden": "Access forbidden",
-    "access.forbidden.csrf": "CSRF token mismatch",
-    "access.forbidden.csrf.missing": "Missing CSRF token",
-    "access.unauthorized": "Authentication failed",
-    "agriculture_id.exists": "This agricultural ID already exists",
-    "bad_request": "Bad request",
-    "default.error": "Data-integrity violation",
-    "email.exists": "This email address is already in use",
-    "fields": {
-      "agriculturalIdentifier": "Agricultural Identifier",
-      "email": "Email",
-      "phone": "Phone",
-      "defaultStrategyId": "Default strategy",
-      "defaultFixedPriceKg": "Default fixed price /kg",
-      "defaultMaxPriceKg": "Default maximum price /kg",
-      "defaultMinPriceKg": "Default minimum price /kg",
-      "showOnlyActive": "Show active only",
-      "forceBetterBids": "Force better bids",
-      "minIncrement": "Minimum increment"
-    },
-    "internal_error": "An internal error occurred. Please contact support if it persists.",
-    "message.not_readable": "Unreadable HTTP message",
-    "method.not_allowed": "Method not allowed",
-    "missing.path_variable": "Missing path variable",
-    "missing.request_param": "Missing request parameter",
-    "no_handler_found": "No endpoint matches the requested URL",
-    "notFound": "Resource not found",
-    "phone.exists": "This phone number is already in use",
-    "resource.not_found": "Resource not found",
-    "serverError": "Internal server error",
-    "stale.object": "The resource was modified by another user. Please try again.",
-    "unauthorized": "You are not authorised to access this resource",
-    "validation.error": "Validation error",
-    "email.invalid": "Invalid email format",
-    "email.taken": "This email address is already in use",
-    "phone.taken": "This phone number is already in use",
-    "server.unreachable": "The server is unreachable"
-  },
   "admin": {
     "settings": {
       "title": "Platform Settings",
-      "description": "Manage global platform settings."
+      "description": "Manage the platform settings."
     },
     "dashboard": {
       "title": "Dashboard",
-      "description": "Monitor various platform indicators",
+      "description": "Track the various platform metrics",
       "cards": {
         "totalNbUsers": {
-          "title": "Total Users",
-          "description": "Sign-ups"
+          "title": "Number of Users",
+          "description": "All roles"
         },
         "pendingValidation": {
-          "title": "New Sign-ups",
-          "description": "Pending approval"
+          "title": "New Registrations",
+          "description": "Awaiting approval"
         },
         "totalAuctions": {
           "title": "New Auctions",
           "description": "Ongoing auctions"
         },
         "auctionsConcluded": {
-          "title": "Auctions Concluded",
+          "title": "Concluded Auctions",
           "description": "Last 30 days"
         },
         "totalLotWeightKg": {
@@ -425,13 +363,33 @@
           "title": "Monthly Sales",
           "description": "Last 30 days"
         },
-        "compared_to_30_days": "Compared with 30 days ago",
-        "error_loading": "Error while loading dashboard"
+        "grade1Price": {
+          "title": "Average Grade I Price",
+          "description": "Last 30 days"
+        },
+        "grade2Price": {
+          "title": "Average Grade II Price",
+          "description": "Last 30 days"
+        },
+        "grade3Price": {
+          "title": "Average Grade III Price",
+          "description": "Last 30 days"
+        },
+        "horsCategoryPrice": {
+          "title": "Average Off-Grade Price",
+          "description": "Last 30 days"
+        },
+        "transformedPrice": {
+          "title": "Average Transformed Price",
+          "description": "Last 30 days"
+        },
+        "compared_to_30_days": "+ Trend over 30 days",
+        "error_loading": "Error loading the dashboard"
       }
     },
     "user_management": {
       "title": "User Management",
-      "description": "Manage users, approve sign-ups and edit user details.",
+      "description": "Manage users, approve registrations, and edit user details.",
       "add_user_button": "Add User",
       "tabs": {
         "all_users": "All Users",
@@ -439,19 +397,19 @@
       },
       "toasts": {
         "user_updated_success": "User updated successfully.",
-        "user_updated_error": "Error while updating user.",
+        "user_updated_error": "Error updating user.",
         "user_deleted_success": "User deleted successfully.",
-        "user_deleted_error": "Error while deleting user.",
+        "user_deleted_error": "Error deleting user.",
         "user_approved_success": "User approved successfully.",
-        "user_approved_error": "Error while approving user.",
+        "user_approved_error": "Error approving user.",
         "user_rejected_success": "User rejected successfully.",
-        "user_rejected_error": "Error while rejecting user.",
+        "user_rejected_error": "Error rejecting user.",
         "user_created_success": "User created successfully.",
-        "user_created_error": "Error while creating user."
+        "user_created_error": "Error creating user."
       },
       "no_users_match_search_pending": {
         "title": "No pending users match your search.",
-        "description": "Try broadening your search criteria or check for typos."
+        "description": "Try broadening your search criteria or checking for typos."
       },
       "search_placeholder": "Search…",
       "no_users_found": "No users found.",
@@ -459,7 +417,7 @@
       "results_count": "{{count}} of {{total}} users",
       "create_dialog": {
         "title": "Create New User",
-        "description": "Fill in the information below to add a new user."
+        "description": "Fill in the fields below to add a new user."
       },
       "edit_dialog": {
         "title": "Edit User",
@@ -470,93 +428,98 @@
         "description": "This action is irreversible. It will permanently delete {{userName}}’s account and data."
       },
       "no_pending_approvals": {
-        "title": "No Pending Approvals",
-        "description": "There are currently no sign-ups awaiting validation."
+        "title": "No pending approvals",
+        "description": "There are currently no registrations awaiting approval."
       },
       "review_dialog": {
-        "title": "Review Sign-up",
-        "description": "Check {{userName}}’s information and documents."
+        "title": "Review Registration",
+        "description": "Verify {{userName}}’s information and documents."
       },
       "no_documents_submitted": "No documents submitted."
     },
     "cooperative_management": {
-      "title": "Co-operative Management",
-      "description": "Manage co-operatives, their members and information.",
-      "add_button": "Add Co-operative",
-      "search_placeholder": "Search co-operative…",
+      "title": "Cooperative Management",
+      "description": "Manage cooperatives, their members, and related information.",
+      "add_button": "Add Cooperative",
+      "search_placeholder": "Search for a cooperative…",
       "manage_members_button_title": "Manage Members",
-      "no_cooperatives_match_search": "No co-operatives match your search.",
-      "no_cooperatives_found": "No co-operatives found.",
+      "no_cooperatives_match_search": "No cooperatives match your search.",
+      "no_cooperatives_found": "No cooperatives found.",
       "members_count_column": "Member Count",
       "create_dialog": {
-        "title": "Create New Co-operative",
-        "description": "Fill in the information below to add a new co-operative."
+        "title": "Create New Cooperative",
+        "description": "Fill in the fields below to add a new cooperative."
       },
       "delete_dialog": {
-        "title": "Delete Co-operative",
-        "description_confirm": "Are you sure you want to delete this co-operative? This action cannot be undone."
+        "title": "Delete Cooperative",
+        "description_confirm": "Are you sure you want to delete this cooperative? This action is irreversible."
       },
       "edit_dialog": {
-        "title": "Edit Co-operative",
-        "description": "Update the co-operative’s information."
+        "title": "Edit Cooperative",
+        "description": "Update the cooperative’s information."
       },
       "form": {
-        "edit_title": "Edit Co-operative",
-        "add_title": "Add Co-operative",
-        "error_loading_cooperative_title": "Error Loading Co-operative",
-        "error_cooperative_not_found": "Co-operative data not found."
+        "edit_title": "Edit Cooperative",
+        "add_title": "Add Cooperative",
+        "error_loading_cooperative_title": "Error loading cooperative",
+        "error_cooperative_not_found": "Cooperative data not found."
       },
       "toasts": {
-        "deleted_success": "Co-operative deleted successfully.",
-        "deleted_error": "Error while deleting co-operative.",
-        "created_success": "Co-operative created successfully.",
-        "created_error_title": "Creation Error",
-        "created_error_description": "Unable to create the co-operative.",
-        "updated_success": "Co-operative updated successfully.",
-        "updated_error_title": "Update Error",
-        "updated_error_description": "Unable to update the co-operative."
+        "deleted_success": "Cooperative deleted successfully.",
+        "deleted_error": "Error deleting cooperative.",
+        "created_success": "Cooperative created successfully.",
+        "created_error_title": "Error during creation",
+        "created_error_description": "Unable to create cooperative.",
+        "updated_success": "Cooperative updated successfully.",
+        "updated_error_title": "Error during update",
+        "updated_error_description": "Unable to update cooperative."
       },
       "members_dialog": {
-        "title": "Manage Members of “{{cooperativeName}}”",
-        "description": "Add or remove producer members of this co-operative.",
-        "error_loading_users": "User-loading error: {{errorMessage}}",
+        "title": "Manage Members of \"{{cooperativeName}}\"",
+        "description": "Add or remove producer members from this cooperative.",
+        "error_loading_users": "Error loading users: {{errorMessage}}",
         "current_members_count": "Current Members ({{count}})",
         "no_current_members": "No current members.",
         "add_producer_title": "Add Producer",
         "select_available_producer_label": "Select an unassigned producer",
         "select_producer_placeholder": "Choose a producer…",
-        "no_available_producers": "No producers available to add.",
+        "no_available_producers": "No available producers to add.",
         "toasts": {
           "member_added_success": "Member added successfully.",
           "member_removed_success": "Member removed successfully.",
-          "member_update_error_title": "Member Update Error",
+          "member_update_error_title": "Error updating member",
           "member_update_error_description": "Unable to update member status.",
           "invalid_selection_title": "Invalid Selection",
-          "invalid_selection_description": "Selected producer is invalid or missing an agricultural ID.",
+          "invalid_selection_description": "The selected producer is not valid or missing an agricultural identifier.",
           "invalid_member_title": "Invalid Member",
-          "invalid_member_remove_description": "The member to remove is invalid or missing an agricultural ID."
+          "invalid_member_remove_description": "The member to remove is not valid or missing an agricultural identifier."
         }
       }
+    },
+    "analytics": {
+      "title": "Analytics & Exports",
+      "description": "Generate and download auction data reports.",
+      "export_options": {
+        "title": "Export Options",
+        "description": "Configure filters and format for your data export. Leave dates blank to export all data."
+      },
+      "export_filtered": {
+        "start_date_label": "Start Date",
+        "pick_date_placeholder": "Choose a date",
+        "end_date_label": "End Date",
+        "only_ended_label": "Include only ended auctions",
+        "format_label": "Export Format",
+        "format_json": "JSON",
+        "format_csv": "CSV",
+        "button": "Download Report",
+        "end_date_after_start": "End date must be after or equal to start date.",
+        "start_end_both_or_none": "Start and end dates must either both be provided or both be omitted."
+      },
+      "export_success_title": "Export Successful",
+      "export_success_message": "The file {{filename}} was downloaded successfully.",
+      "export_error_title": "Export Error",
+      "export_error_message": "An error occurred while generating or downloading the file. Please try again."
     }
-  },
-  "database": {
-    "harvest": "Raw",
-    "transformed": "Processed",
-    "AdminListDto": "admin",
-    "ProducerListDto": "producer",
-    "TransformerListDto": "processor",
-    "QualityInspectorListDto": "quality-inspector",
-    "ExporterListDto": "exporter",
-    "CarrierListDto": "carrier"
-  },
-  "password_indicator": {
-    "strength": "Password Strength",
-    "very_weak": "Very weak",
-    "weak": "Weak",
-    "fair": "Fair",
-    "good": "Good",
-    "strong": "Strong",
-    "very_strong": "Very strong"
   },
   "languages": {
     "en": "English",
@@ -569,6 +532,99 @@
     "label": "Language",
     "aria_label": "Change language"
   },
+  "pagination": {
+    "all": "All",
+    "entries": "entries",
+    "next": "Next",
+    "no_entries": "No entries found",
+    "of": "of",
+    "page": "Page",
+    "previous": "Previous",
+    "showing": "Showing",
+    "to": "to"
+  },
+  "validation": {
+    "default": "This field is invalid",
+    "regex": "Invalid format",
+    "acceptTerms": "You must accept the terms of use",
+    "email": "Invalid email format",
+    "max": "This field must be at most {{count}}",
+    "maxLength": "This field must have at most {{count}} character",
+    "maxLength_plural": "This field must have at most {{count}} characters",
+    "min": "This field must be at least {{count}}",
+    "minLength": "This field must have at least {{count}} character",
+    "minLength_plural": "This field must have at least {{count}} characters",
+    "invalidType": "Invalid field type",
+    "password": "Password must contain at least one lowercase, one uppercase, one digit, and one special character",
+    "passwordValidation": "Passwords do not match",
+    "phone": "Invalid Beninese phone number",
+    "required": "This field is required",
+    "number_min": "Value must be greater than or equal to {{count}}"
+  },
+  "errors": {
+    "access.denied": "Access denied: insufficient permissions.",
+    "access.disabled": "Your account must be activated by an administrator before accessing the platform.",
+    "access.forbidden": "Access forbidden",
+    "access.forbidden.csrf": "CSRF token mismatch",
+    "access.forbidden.csrf.missing": "CSRF token missing",
+    "access.unauthorized": "Authentication failed",
+    "agriculture_id.exists": "This agricultural identifier is already in use",
+    "bad_request": "Bad request",
+    "default.error": "Data integrity violation",
+    "email.exists": "This email is already in use",
+    "error_occurred": "An error occurred",
+    "undefined": "An error occurred",
+    "fields": {
+      "agriculturalIdentifier": "Agricultural Identifier",
+      "email": "Email",
+      "phone": "Phone",
+      "defaultStrategyId": "Default Strategy",
+      "defaultFixedPriceKg": "Default Fixed Price per Kg",
+      "defaultMaxPriceKg": "Default Maximum Price per Kg",
+      "defaultMinPriceKg": "Default Minimum Price per Kg",
+      "showOnlyActive": "Show only active",
+      "forceBetterBids": "Force better bids",
+      "minIncrement": "Minimum increment"
+    },
+    "internal_error": "An internal error occurred. Please contact support if the issue persists.",
+    "message.not_readable": "Unreadable HTTP message",
+    "method.not_allowed": "Method not allowed",
+    "missing.path_variable": "Path variable missing",
+    "missing.request_param": "Request parameter missing",
+    "no_handler_found": "No endpoint matches the requested URL",
+    "notFound": "Resource not found",
+    "phone.exists": "This phone number is already in use",
+    "resource.not_found": "Resource not found",
+    "serverError": "Internal server error",
+    "stale.object": "The resource has been modified by another user. Please try again.",
+    "unauthorized": "You are not authorized to access this resource",
+    "validation.error": "Validation error",
+    "email.invalid": "Invalid email format",
+    "email.taken": "This email is already taken",
+    "phone.taken": "This phone number is already taken",
+    "server.unreachable": "Server is unreachable",
+    "invalid_google_token": "Invalid Google token",
+    "gmail_account_not_found": "No user account associated with this email. Please register first."
+  },
+  "password_indicator": {
+    "strength": "Password strength",
+    "very_weak": "Very weak",
+    "weak": "Weak",
+    "fair": "Fair",
+    "good": "Good",
+    "strong": "Strong",
+    "very_strong": "Very strong"
+  },
+  "database": {
+    "harvest": "Raw",
+    "transformed": "Transformed",
+    "AdminListDto": "admin",
+    "ProducerListDto": "producer",
+    "TransformerListDto": "transformer",
+    "QualityInspectorListDto": "quality inspector",
+    "ExporterListDto": "exporter",
+    "CarrierListDto": "carrier"
+  },
   "auction": {
     "lot_label": "lot {{id}}",
     "lot_label_short": "lot #{{id}}",
@@ -580,42 +636,37 @@
     "expires_in": "Expires in",
     "asking_price": "Asking Price",
     "best_bid": "Best Bid",
-    "details_title_full": "Product {{productType}} Lot #{{productId}} Auction #{{auctionId}}",
+    "details_title_full": "Product {{productType}} · Lot #{{productId}} · Auction #{{auctionId}}",
     "auction_details_title": "Auction Details",
     "buy_now_label": "Buy Now",
     "buy_now_price": "Buy Now {{price}}",
-    "confirm_buy_now_prompt": "Confirm buy now {{price}}?",
-    "add_bid_label": "Add a Bid",
+    "confirm_buy_now_prompt": "Confirm buy now for {{price}}?",
+    "add_bid_label": "Add Bid",
     "confirm_bid_prompt": "Confirm your bid of {{amount}}?",
     "status": {
       "ended_title": "Auction Ended",
       "ended_message": "This auction has now ended."
     },
-    "bid_count_for_lot_zero": "{{count}} bid for the lot",
-    "bid_count_for_lot_one": "{{count}} bid for the lot",
-    "bid_count_for_lot_other": "{{count}} bids for the lot",
-    "bid_count_for_lot": "{{count}} bid for the lot",
-    "bid_count_for_lot_plural": "{{count}} bids for the lot",
+    "bid_count_for_lot_zero": "{{count}} bid for lot",
+    "bid_count_for_lot_one": "{{count}} bid for lot",
+    "bid_count_for_lot_other": "{{count}} bids for lot",
+    "bid_count_for_lot": "{{count}} bid for lot",
+    "bid_count_for_lot_plural": "{{count}} bids for lot",
     "no_bids_yet": "No bids yet.",
     "accept_bid_prompt": "Accept this bid?",
     "reject_bid_prompt": "Reject this bid?",
     "seller_label": "Seller",
     "no_bids_message": "No bids",
-    "time_remaining_label": "Time remaining",
+    "time_remaining_label": "Time Remaining",
     "click_to_see_details_prompt": "Click to see details →",
     "expiration_label": "Expiration",
     "form": {
       "title": "Auction Entry",
-      "section_select_product_title": "Select Product",
-      "section_settings_title": "Auction Settings",
-      "section_general_conditions": "Conditions",
+      "section_settings_title": "Sale Settings",
       "submit_button": "Open Sale",
-      "created_ok": "Auction created successfully.",
-      "created_fail": "Error while creating auction.",
-      "auction_strategy": "Auction strategy",
-      "auction_fixed_price": "Fixed price per kg",
-      "auction_max_price": "Max price per kg",
-      "auction_min_price": "Min price per kg"
+      "section_pricing_title": "Pricing",
+      "section_sale_conditions_title": "Sale Conditions",
+      "price_per_kg_hint": "At {{price}} CFA / kg"
     },
     "expiration_date_label": "Auction Expiration",
     "table": {
@@ -627,10 +678,14 @@
       "obtained_price_header": "Obtained Price",
       "buyer_header": "Buyer",
       "view_bids_button": "View Bids",
-      "make_bid_button": "Make Bid",
-      "propose_contract_button": "Propose Contract"
+      "make_bid_button": "Place Bid",
+      "propose_contract_button": "Propose Contract",
+      "strategy_label": "Bidding Strategy",
+      "fixed_price_per_kg_label": "Fixed Price per Kg",
+      "max_price_per_kg_label": "Max Price per Kg",
+      "min_price_per_kg_label": "Min Price per Kg"
     },
-    "contract_price_label": "*Contractual Price"
+    "contract_price_label": "*Contract Price"
   },
   "product": {
     "quality_label": "Quality",
@@ -643,12 +698,15 @@
     "price_in_cfa_label": "Price (CFA)",
     "info_title": "Details",
     "lot_number_label": "Lot Number",
+    "lot_no_label": "Lot #{{id}}",
     "deposited_quantity_label": "Deposited Quantity",
+    "raw_materials_label": "Raw Materials",
     "deposited_quantity_available_label": "Available Quantity",
+    "origin_transformed_default": "Cashew Nuts",
     "deposit_date_label": "Deposit Date",
-    "store_label": "Store",
+    "store_label": "Warehouse",
     "lot_label": "Lot #{{id}}",
-    "product_type_label": "{{type}} Product",
+    "product_type_label": "Product {{type}}",
     "origin_label": "Origin",
     "quality_inspector_label": "Quality Inspector",
     "results_count_zero": "Result: {{count}} product",
@@ -658,6 +716,7 @@
     "results_count_plural": "Results: {{count}} products",
     "owner_label": "Owner",
     "warehouse_label": "Warehouse",
+    "select_lots": "Select Lots",
     "form": {
       "title": "Product Entry",
       "section_deposit_settings_title": "Deposit Settings",
@@ -665,22 +724,22 @@
       "submit_button": "Save Product",
       "section_quality_control_title": "Quality Control",
       "control_date_label": "Control Date",
-      "certificate_label": "Certificate Document",
+      "certificate_label": "Certificate Control",
       "created_ok": "Product added successfully!",
       "created_fail": "Error while adding product."
     },
     "weight_in_kg_label": "Weight (kg)"
   },
   "sort": {
-    "expiration_asc": "Expiration ⬆",
-    "expiration_desc": "Expiration ⬇",
-    "price_asc": "Price ⬆",
-    "price_desc": "Price ⬇",
+    "expiration_asc": "Expiration ↑",
+    "expiration_desc": "Expiration ↓",
+    "price_asc": "Price ↑",
+    "price_desc": "Price ↓",
     "label_prefix": "Sort by ",
-    "date_asc": "date ⬆",
-    "date_desc": "date ⬇",
-    "weight_asc": "weight ⬆",
-    "weight_desc": "weight ⬇"
+    "date_asc": "date ↑",
+    "date_desc": "date ↓",
+    "weight_asc": "weight ↑",
+    "weight_desc": "weight ↓"
   },
   "marketplace": {
     "title": "Auction Marketplace",
@@ -704,7 +763,7 @@
     "all_qualities_placeholder": "All Qualities",
     "all_regions_placeholder": "All Regions",
     "all_cities_placeholder": "All Cities",
-    "expires_before_label": "Expires before",
+    "expires_before_label": "Expires Before",
     "choose_date_placeholder": "Choose…",
     "user_type": {
       "undefined": "Undefined",
@@ -719,7 +778,7 @@
   "types": {
     "admin": "Administrator",
     "producer": "Producer",
-    "transformer": "Processor",
+    "transformer": "Transformer",
     "carrier": "Carrier",
     "exporter": "Exporter",
     "quality_inspector": "Quality Inspector"
@@ -733,7 +792,7 @@
         "items": {
           "buy_product": {
             "title": "Buy a Product",
-            "description": "Buy a product through direct sale"
+            "description": "Purchase a product from direct sale"
           },
           "my_purchases": {
             "title": "My Purchases",
@@ -746,7 +805,7 @@
         "items": {
           "sell_product": {
             "title": "Sell a Product",
-            "description": "Create a new sale offer"
+            "description": "Create a new sale listing"
           },
           "my_sales": {
             "title": "My Sales",
@@ -759,7 +818,7 @@
         "items": {
           "deposit_product": {
             "title": "Deposit a Product",
-            "description": "Record a store deposit"
+            "description": "Register a deposit in the warehouse"
           },
           "my_products": {
             "title": "My Products",
@@ -771,23 +830,47 @@
         "title": "Contracts",
         "items": {
           "create_contract": {
-            "title": "Create Contract",
+            "title": "Create a Contract",
             "description": "Create a new contract"
           },
           "history": {
             "title": "History",
-            "description": "Detail my contracts"
+            "description": "View my contract details"
           }
         }
       },
       "contact": "Contact",
-      "about": "About"
+      "about": "About",
+      "marketplace": {
+        "title": "Marketplace",
+        "browse": "Browse Marketplace",
+        "browse_desc": "Browse and buy fresh products.",
+        "new_sale": "New Sale",
+        "new_sale_desc": "List your products for sale.",
+        "new_deposit": "New Deposit",
+        "new_deposit_desc": "Deposit your products for future sales.",
+        "how_it_works": "Access the marketplace",
+        "how_it_works_desc": "Log in to buy and sell on the platform."
+      },
+      "news": "News",
+      "my_space": {
+        "title": "My Space",
+        "my_purchases": "My Purchases",
+        "my_sales": "My Sales",
+        "my_deposits": "My Deposits",
+        "my_contracts": "My Contracts",
+        "my_purchases_marketplace_desc": "View your purchases and active bids",
+        "my_sales_marketplace_desc": "View your ongoing and completed sales",
+        "my_deposits_marketplace_desc": "View your deposits",
+        "my_contracts_marketplace_desc": "View your contracts"
+      }
     },
     "auth": {
       "login": "Login",
       "profile": "Profile",
       "settings": "Settings",
-      "logout": "Logout"
+      "logout": "Logout",
+      "register": "Register"
     },
     "mobile": {
       "toggle_menu_sr": "Open main menu"
@@ -795,20 +878,21 @@
   },
   "login": {
     "title_description": "Log in to your e-Anacarde account",
+    "success_google": "Successfully logged in with Google",
     "forgot_password": "Forgot password?",
     "continue_with_separator": "Or continue with",
     "social": {
-      "apple_sr": "Login with Apple",
-      "google_sr": "Login with Google",
-      "meta_sr": "Login with Meta"
+      "apple_sr": "Log in with Apple",
+      "google_sr": "Log in with Google",
+      "meta_sr": "Log in with Meta"
     },
-    "signup_prompt": "Don't have an account?",
+    "signup_prompt": "Don’t have an account?",
     "terms_prefix": "By clicking Continue, you agree to our ",
     "terms_separator": " and our ",
     "terms_suffix": "."
   },
   "footer_cta": {
-    "title": "Join e-Anacarde today and optimize the sale of your cashew nuts!",
+    "title": "Join e-Anacarde today and optimize your cashew sales!",
     "button_signup": "Sign Up"
   },
   "footer": {
@@ -816,7 +900,7 @@
       "alt": "Cashew Auction Benin Logo",
       "title": "Cashew Auction Benin"
     },
-    "tagline": "Your cashew nut auction platform in Benin — raw materials and processed products",
+    "tagline": "Your cashew auction platform in Benin — raw and processed products",
     "menu": {
       "auctions": {
         "title": "Auctions",
@@ -854,27 +938,27 @@
     },
     "copyright": "© 2025 Group 4 - Software Engineering Laboratory, University of Namur.",
     "bottom_links": {
-      "terms": "General Terms",
+      "terms": "Terms & Conditions",
       "privacy_policy": "Privacy Policy"
     }
   },
   "not_found": {
     "error_code": "404",
     "title": "Page Not Found",
-    "message": "Sorry, we couldn't find the page you're looking for.",
+    "message": "Sorry, we couldn’t find the page you’re looking for.",
     "button_home": "Back to Home",
     "button_contact_support": "Contact Support"
   },
   "forbidden": {
     "error_code": "403",
-    "title": "Access Denied",
-    "message": "Sorry, you do not have the necessary permissions to access this page.",
+    "title": "Forbidden",
+    "message": "Sorry, you don’t have the necessary permissions to access this page.",
     "button_home": "Back to Home",
     "button_contact_support": "Contact Support"
   },
   "error_boundary": {
     "title": "An Error Occurred",
-    "message": "Sorry, something went wrong. Please try again later or return to home.",
+    "message": "Sorry, something went wrong. Please try again later or return to the home page.",
     "button_home": "Back to Home"
   },
   "empty_state": {
@@ -906,16 +990,34 @@
     "buyer_label": "Buyer",
     "quality_label": "Quality",
     "status_label": "Status",
-    "contract_end_label": "Contract end",
-    "label": "Contract No. {{id}}",
-    "price_per_kg_label": "Price per kg"
+    "contract_end_label": "Contract End",
+    "label": "Contract #{{id}}",
+    "price_per_kg_label": "Price per Kg"
+  },
+  "settings": {
+    "update_success": "Global settings updated successfully.",
+    "title": "Global Settings",
+    "default_strategy": "Default Bidding Strategy",
+    "select_strategy_placeholder": "Select a default strategy…",
+    "default_fixed_price_kg": "Default Fixed Price (CFA per kg)",
+    "default_max_price_kg": "Default Max Price (CFA per kg)",
+    "default_min_price_kg": "Default Min Price (CFA per kg)",
+    "show_only_active": "Show only active auctions by default",
+    "force_better_bids": "Require higher bids by default",
+    "min_increment": "Default Minimum Increment"
+  },
+  "categories": {
+    "alerts_terrain": "Field Alerts",
+    "market_prices": "Market & Pricing",
+    "research_innovations": "Research & Innovations",
+    "training_resources": "Training & Resources"
   },
   "pages": {
     "news": {
       "title": "News",
-      "subtitle": "Stay informed with the latest news and analysis.",
+      "subtitle": "Stay informed with the latest news and analyses.",
       "no_articles_found": "No articles found",
-      "try_different_search": "Try adjusting your search or category filters.",
+      "try_different_search": "Try adjusting your search filters or category.",
       "no_articles_yet": "There are no articles to display yet."
     },
     "about_page": {
@@ -923,18 +1025,18 @@
       "logo_alt": "e-Anacarde Logo",
       "hero": {
         "title": "Discover e-Anacarde",
-        "subtitle": "A university initiative to boost the cashew sector in Benin through an innovative and equitable trading platform."
+        "subtitle": "A university initiative to boost Benin’s cashew sector through an innovative and equitable exchange platform."
       },
       "project": {
         "title": "Our University Project",
-        "paragraph1": "e-Anacarde originated from an ambitious university project aiming to design and develop an e-commerce application dedicated to the cashew trade, specifically within the Benin context. Our approach is collaborative and scalable.",
-        "paragraph2": "This platform serves as a proof-of-concept to better understand the real needs of stakeholders in the cashew industry. By providing a concrete tool from the early stages, we facilitate the identification of expectations, validation of features, and continuous improvement of the solution for a positive and lasting impact."
+        "paragraph1": "e-Anacarde was born from an ambitious university project aimed at designing and developing an e-commerce application dedicated to the cashew trade, specifically in the context of Benin. Our approach is collaborative and iterative.",
+        "paragraph2": "This platform serves as a proof-of-concept to better understand the real needs of stakeholders in the cashew value chain. By providing a concrete tool from the early stages, we facilitate expectation identification, feature validation, and continuous improvement for positive and sustainable impact."
       },
       "objectives": {
         "title": "Our Main Objectives",
         "item1": {
           "title": "Facilitate Transactions",
-          "description": "Enable transparent and efficient sales of cashew products, notably through an auction system, to best valorize local production."
+          "description": "Enable transparent and efficient sales of cashew products, notably through an auction system, to maximize the value of local production."
         },
         "item2": {
           "title": "Share Information",
@@ -942,14 +1044,25 @@
         },
         "item3": {
           "title": "Promote Best Practices",
-          "description": "Serve as a channel for training producers in best agricultural techniques and disseminating research findings for a more efficient sector."
+          "description": "Provide a channel for training producers on best agricultural techniques and sharing research advancements for a more efficient value chain."
         }
       },
       "future": {
-        "title": "A Scalable Future",
-        "paragraph": "Although initially focused on cashews, our ambition is to build a robust platform that is easy to maintain and adapt. We hope it can eventually serve as a model for other agricultural sectors or products, thus contributing more broadly to economic development."
+        "title": "An Evolving Future",
+        "paragraph": "Although initially focused on cashews, our ambition is to build a robust, maintainable, and adaptable platform. We hope it can eventually serve as a model for other agricultural value chains or products, contributing more broadly to economic development."
       },
       "benin_flag_alt": "Flag of Benin"
     }
+  },
+  "profile": {
+    "page_title": "My Profile",
+    "page_subtitle": "View and edit your personal information.",
+    "card_title": "Profile Information",
+    "edit_mode_description": "Edit your information below.",
+    "view_mode_description": "Your personal and role information.",
+    "personal_details_title": "Personal Details",
+    "role_specific_details_title": "Role-Specific Details",
+    "update_success_toast": "Profile updated successfully!",
+    "update_error_toast": "Error updating profile"
   }
 }
