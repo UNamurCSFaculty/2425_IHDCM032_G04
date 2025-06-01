@@ -17,7 +17,12 @@ const AuctionMap: React.FC<{
   const center: [number, number] = [9.3, 2.3] // centre Bénin
   const { t } = useTranslation()
   return (
-    <MapContainer center={center} zoom={7} className="h-[70vh] rounded-md">
+    <MapContainer
+      key="acution-map"
+      center={center}
+      zoom={7}
+      className="h-[70vh] rounded-md"
+    >
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution="© OpenStreetMap"

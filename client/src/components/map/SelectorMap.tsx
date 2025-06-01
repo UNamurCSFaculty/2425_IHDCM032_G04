@@ -232,6 +232,7 @@ export const SelectorMap: React.FC<SelectorMapProps> = ({
       )}
 
       <MapContainer
+        key="selector-map"
         center={selectedPosition || defaultCenter}
         zoom={defaultZoom}
         style={{ height: mapHeight, width: '100%' }}

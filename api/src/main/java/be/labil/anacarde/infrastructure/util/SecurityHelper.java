@@ -53,6 +53,11 @@ public class SecurityHelper {
 		}
 	}
 
+	public static boolean isAdmin() {
+		User admin = getAuthenticatedUserOrFail();
+		return isAdmin(admin);
+	}
+
 	public static boolean isAdmin(User user) {
 		if (user == null || user.getAuthorities() == null) {
 			return false;
