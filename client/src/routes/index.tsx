@@ -25,7 +25,7 @@ function RouteComponent() {
           <span>
             {t('app.welcome.title')},{' '}
             <strong>
-              {user.lastName} {user.firstName}
+              {user.firstName} {user.lastName}
             </strong>
             !
             {user.type === 'admin' ? (

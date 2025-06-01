@@ -1,50 +1,50 @@
 {
   "app": {
     "accueil": {
-      "subtitle": "加入贝宁腰果及其加工产品的实时拍卖平台。监测、出价并自信地支持当地生产者。",
+      "subtitle": "加入贝宁腰果及其加工产品实时拍卖平台。实时监控、出价，并充分信任地支持当地生产者。",
       "title": "腰果拍卖与市场",
       "image_alt_cashew_nuts": "腰果插图"
     },
     "contact": {
       "title": "联系我们",
-      "subtitle": "我们随时为您提供帮助。给我们发送消息，我们会尽快回复您。"
+      "subtitle": "我们随时为您提供帮助。发送消息给我们，我们会尽快回复您。"
     },
     "loading": "加载中…",
-    "networkError": "无法连接到服务器",
+    "networkError": "无法连接服务器",
     "signup": {
-      "subtitle": "您的注册将在提交表格后48小时内得到验证。",
+      "subtitle": "提交表单后，您的注册将在 48 小时内获得验证。",
       "title": "注册"
     },
     "statut": {
-      "connection": "连接中...",
+      "connection": "正在连接…",
       "log_in": "登录"
     },
-    "title": "我的出色应用",
+    "title": "我的超级应用",
     "welcome": {
-      "message": "准备好参加下一次拍卖了吗？",
+      "message": "准备好参加下次拍卖了吗？",
       "title": "欢迎",
       "admin": "访问您的管理员仪表板：",
       "admin_link": "管理面板"
     },
     "auctions_sales": {
-      "title": "我的销售",
-      "subtitle": "在线销售您的产品并查看您拍卖品的出价。"
+      "title": "我的出售",
+      "subtitle": "在线出售您的产品，并查看拍卖报价。"
     },
     "auctions_new_sale": {
-      "title": "新的销售",
-      "subtitle": "为您的产品创建新的拍卖。"
+      "title": "新出售",
+      "subtitle": "为您的产品创建新的拍卖出售。"
     },
     "auctions_buys": {
       "title": "我的购买",
-      "subtitle": "查看您当前的购买和迄今为止赢得的拍卖。"
+      "subtitle": "查看您当前的购买和已中拍的拍卖。"
     },
     "deposits_new_product": {
       "title": "新产品",
-      "subtitle": "在商店存放新产品。"
+      "subtitle": "将新产品存入仓库。"
     },
     "deposits_list_products": {
       "title": "我的产品",
-      "subtitle": "查看您所有可供销售的已存放产品。"
+      "subtitle": "查看您所有已存入并可供出售的产品。"
     },
     "marketplace": {
       "title": "拍卖市场",
@@ -52,9 +52,9 @@
     },
     "signup_success": {
       "title": "注册成功！",
-      "description_line1": "您的注册请求已成功记录。",
-      "description_line2": "您的帐户正在等待管理员验证。",
-      "email_notification": "您的帐户激活后，您将收到一封电子邮件。",
+      "description_line1": "您的注册申请已成功提交。",
+      "description_line2": "您的帐户正在等待管理员批准。",
+      "email_notification": "帐户激活后，您将收到电子邮件通知。",
       "go_to_login": "前往登录页面"
     },
     "contracts_list_contracts": {
@@ -67,69 +67,71 @@
       "section_title_prefix": "为什么选择 ",
       "section_title_brand": "e-Anacarde",
       "section_title_suffix": "？",
-      "section_subtitle": "了解我们的平台如何通过技术、安全和社会影响彻底改变腰果拍卖。",
+      "section_subtitle": "了解我们的平台如何通过技术、安全性和社会影响革新腰果拍卖。",
       "items": {
         "real_time": {
           "title": "实时拍卖",
-          "description": "关注每一次拍卖，不错过任何出价机会。"
+          "description": "关注每一次拍卖，不错过任何加价机会。"
         },
         "secure_transactions": {
           "title": "安全交易",
-          "description": "端到端支付和交付管理，让您安心无忧。"
+          "description": "支付和配送由头到尾管理，让您高枕无忧。"
         },
         "industry_support": {
           "title": "行业支持",
-          "description": "支持当地生产者，为可持续发展做出贡献。"
+          "description": "提升当地生产者价值，助力可持续发展。"
         }
       }
     },
     "blog": {
       "title": "我们的博客",
-      "subtitle": "了解最新新闻、标准和技巧，以优化您在贝宁的腰果拍卖。",
+      "subtitle": "了解最新动态、规范和优化您在贝宁腰果拍卖中的销售技巧。",
       "article1": {
         "category": "教程",
-        "date": "3天前",
-        "title": "如何在e-Anacarde上掌握腰果拍卖",
-        "description": "遵循我们的分步指南，了解拍卖流程，设置您的保留价，并在贝宁领先的腰果拍卖平台上最大化您的收入。",
+        "date": "3 天前",
+        "title": "如何在 e-Anacarde 上精通腰果拍卖",
+        "description": "按照我们的分步指南，了解拍卖流程、设定底价并在贝宁首个腰果拍卖平台上最大化收益。",
         "author": "Aïssatou Adégbidi"
       },
       "article2": {
         "category": "新闻",
-        "date": "7天前",
-        "title": "新的腰果生产政府标准",
-        "description": "贝宁政府发布了新的指导方针，以提高腰果的质量和可追溯性。了解相关要求以及如何遵守。",
+        "date": "7 天前",
+        "title": "贝宁政府发布腰果生产新标准",
+        "description": "贝宁政府发布了改进腰果质量和可追溯性的新指南。了解要求及如何遵循这些新规范。",
         "author": "Kofi Mensah"
       },
       "author_avatar_alt": "作者头像",
-      "read_more": "阅读更多"
+      "read_more": "阅读更多",
+      "no_description": "无可用描述。"
     },
     "hero": {
       "heading": "在线腰果拍卖",
-      "description": "参与贝宁腰果及其衍生品的实时拍卖。监测每一次出价，出价并自信地支持当地生产者。",
+      "description": "参与贝宁腰果及其衍生产品的实时拍卖。监控每次报价，加价，并充满信心地支持当地生产者。",
       "buttons": {
         "primary_text": "查看拍卖",
         "secondary_text": "了解更多"
       },
-      "image_alt": "e-Anacarde徽标，腰果拍卖平台"
+      "image_alt": "e-Anacarde 标志，腰果拍卖平台"
     },
     "faq": {
       "heading": "常见问题",
-      "q1_question": "什么是e-Anacarde？",
-      "q1_answer": "e-Anacarde是一个致力于贝宁腰果的在线拍卖平台，直接连接生产者和买家，以最大化交易的透明度和价值。",
-      "q2_question": "我如何注册成为生产者？",
-      "q2_answer_part1": "要注册，请填写包含您的生产信息的表格，并上传所需文件以供验证。",
+      "q1_question": "什么是 e-Anacarde？",
+      "q1_answer": "e-Anacarde 是一个专注于贝宁腰果的在线拍卖平台，直接连接生产者和买家，以最大化交易的透明度和价值。",
+      "q2_question": "如何以生产者身份注册？",
+      "q2_answer_part1": "要注册，请填写您的生产信息表单并上传所需的验证文件。",
       "q3_question": "如何参与拍卖？",
-      "q3_answer": "您的帐户通过验证后，登录，转到拍卖页面，选择所需的腰果批次，然后出价，注明您愿意支付的金额。",
-      "q4_question": "服务费是多少？",
-      "q4_answer": "e-Anacarde对每次成功拍卖的最终金额收取2%的佣金，对生产者或买家没有隐藏费用。",
-      "q5_question": "付款和交付如何处理？",
-      "q5_answer": "拍卖成功后，通过我们的移动支付合作伙伴（MoMo、Flooz）或银行转账付款。交付由经批准的承运人组织，费用由买方承担或根据协议。",
-      "q6_question": "我必须符合哪些质量标准？",
-      "q6_answer": "您必须遵守贝宁政府关于腰果校准、水分含量和包装的新指导方针。请查看我们的文章“新的腰果生产政府标准”以获取所有详细信息。"
+      "q3_answer": "帐户验证后，登录并前往拍卖页面，选择您要竞拍的腰果批次，然后输入您的出价金额进行出价。",
+      "q4_question": "服务费用是多少？",
+      "q4_answer": "e-Anacarde 对每个成功竞拍的拍卖收取成交金额的 1% 佣金，生产者和买家无需支付其他隐藏费用。",
+      "q5_question": "如何付款和配送？",
+      "q5_answer": "拍卖成功后，可通过我们的移动支付合作伙伴（MoMo、Flooz）或银行转账付款。我们提供认证物流商进行配送，费用由买家承担或按协议执行。",
+      "q6_question": "我需要遵守哪些质量标准？",
+      "q6_answer": "您必须遵守贝宁政府最新发布的腰果筛选、含水量和包装指导。请参阅我们的文章《贝宁腰果生产新标准》了解详细信息。"
     }
   },
   "breadcrumb": {
     "about": "关于",
+    "profile": "个人资料",
     "auctions": "拍卖",
     "buy": "购买",
     "home": "首页",
@@ -137,39 +139,19 @@
     "login": "登录",
     "marketplace": "拍卖市场",
     "privacy": "隐私政策",
-    "profile": "个人资料",
     "sell": "出售",
     "settings": "设置",
     "signup": "注册",
     "terms": "使用条款",
     "vendre": "出售",
     "my_auctions": "我的拍卖",
-    "new_auction": "新的拍卖",
-    "deposits": "存款",
+    "new_auction": "新拍卖",
+    "deposits": "存货",
     "my_deposits": "我的产品",
     "new_deposit": "新产品",
     "contracts": "合同",
-    "my_contracts": "我的合同"
-  },
-  "buttons": {
-    "cancel": "取消",
-    "connection": "登录",
-    "home_connection": "立即开始",
-    "reinitialise": "重置",
-    "submit": "发送",
-    "submitting": "发送中...",
-    "subscribe": "创建账户",
-    "view_all_news": "查看所有新闻",
-    "details": "详情",
-    "buy": "购买",
-    "view_details": "查看详情",
-    "confirm": "确认",
-    "place_bid": "出价",
-    "accept": "接受",
-    "reject": "拒绝",
-    "back": "返回",
-    "reset": "重置",
-    "delete": "删除"
+    "my_contracts": "我的合同",
+    "news": "新闻"
   },
   "common": {
     "add": "添加",
@@ -189,212 +171,519 @@
     "success": "成功",
     "view": "查看",
     "warning": "警告",
-    "yes": "是"
+    "yes": "是",
+    "error_loading_data": "加载数据时出错。",
+    "error_loading_data_title": "数据加载错误",
+    "error_loading_users_title": "加载用户时出错",
+    "download_error": "下载错误",
+    "download_successful": "下载成功",
+    "unknown_error": "发生未知错误。",
+    "this_user": "此用户",
+    "not_provided": "未提供",
+    "confirm_action": "确认操作",
+    "not_applicable_short": "不适用",
+    "unknown": "未知",
+    "admin": "管理员",
+    "search_placeholder": "搜索文章...",
+    "all_categories": "所有类别",
+    "results_count": "{{count}} 条结果",
+    "results_count_plural": "{{count}} 条结果",
+    "clear_filters": "清除筛选"
   },
-  "errors": {
-    "access.denied": "访问被拒绝：您没有足够的权限。",
-    "access.disabled": "您的帐户必须由管理员激活才能访问平台。",
-    "access.forbidden": "禁止访问",
-    "access.forbidden.csrf": "CSRF令牌不匹配",
-    "access.forbidden.csrf.missing": "缺少CSRF令牌",
-    "access.unauthorized": "身份验证失败",
-    "agriculture_id.exists": "此农业标识符已被使用",
-    "bad_request": "错误的请求",
-    "default.error": "数据完整性冲突",
-    "email.exists": "此电子邮件已被使用",
-    "fields": {
-      "agriculturalIdentifier": "农业标识符",
-      "email": "电子邮件",
-      "phone": "电话"
-    },
-    "internal_error": "发生内部错误。如果问题仍然存在，请联系支持人员。",
-    "message.not_readable": "HTTP消息不可读",
-    "method.not_allowed": "方法不允许",
-    "missing.path_variable": "缺少路径变量",
-    "missing.request_param": "缺少请求参数",
-    "no_handler_found": "没有与请求的URL匹配的端点",
-    "notFound": "未找到资源",
-    "phone.exists": "此电话号码已被使用",
-    "resource.not_found": "未找到资源",
-    "serverError": "内部服务器错误",
-    "stale.object": "资源已被其他用户修改。请重试。",
-    "unauthorized": "您无权访问此资源",
-    "validation.error": "验证错误",
-    "email.invalid": "电子邮件格式无效",
-    "email.taken": "此电子邮件已被使用",
-    "phone.taken": "此电话号码已被使用",
-    "server.unreachable": "服务器无法访问"
-  },
-  "password_indicator": {
-    "strength": "密码强度",
-    "very_weak": "非常弱",
-    "weak": "弱",
-    "fair": "一般",
-    "good": "良好",
-    "strong": "强",
-    "very_strong": "非常强"
+  "buttons": {
+    "view": "查看",
+    "edit": "编辑",
+    "create": "创建",
+    "approve": "批准",
+    "cancel": "取消",
+    "connection": "连接",
+    "home_connection": "立即开始",
+    "reinitialise": "重置",
+    "submit": "提交",
+    "submitting": "提交中...",
+    "subscribe": "创建账户",
+    "view_all_news": "查看所有新闻",
+    "details": "详情",
+    "buy": "购买",
+    "view_details": "查看详情",
+    "confirm": "确认",
+    "place_bid": "出价",
+    "accept": "接受",
+    "reject": "拒绝",
+    "back": "返回",
+    "reset": "重置",
+    "delete": "删除",
+    "deactivate": "停用",
+    "activate": "激活",
+    "save_changes": "保存更改",
+    "deleting": "删除中...",
+    "review": "审核",
+    "close": "关闭",
+    "rejecting": "拒绝中...",
+    "approving": "批准中...",
+    "download": "下载",
+    "downloading": "下载中...",
+    "back_to_list": "返回列表",
+    "retry": "重试",
+    "save": "保存",
+    "add": "添加"
   },
   "form": {
+    "read_only": "只读",
     "carrier_details": "承运人详情",
+    "cooperative": "合作社",
+    "select_cooperative": "选择合作社",
+    "cooperative_name": "输入合作社名称",
+    "creation_date": "创建日期",
+    "president": "合作社主席",
     "accept_terms": "我接受使用条款",
-    "select.placeholder": "选择一个选项",
-    "address": "地址",
+    "select.placeholder": "请选择一个选项",
     "price_per_km": "每公里价格",
-    "radius": "公里交货半径",
+    "radius": "服务半径（公里）",
     "agricultural_identifier": "农业标识符",
     "confirm_password": "确认密码",
     "first_name": "名字",
-    "language": "语言",
     "last_name": "姓氏",
-    "mail": "电子邮件地址",
     "city": "城市",
     "location": "位置",
-    "street_quarter": "社区/街道",
+    "street_quarter": "街道/社区",
     "message": "消息",
     "password": "密码",
     "phone": "电话",
     "coordinates_label": "坐标：",
-    "placeholder": {
-      "leave_blank_password": "如果不想更改密码，请留空",
-      "date": "选择日期",
-      "no_city_found": "未找到城市",
-      "search": "搜索",
-      "select_city": "选择城市",
-      "language": "选择语言",
-      "price_per_km_example": "500",
-      "radius_example": "50",
-      "street_example": "例如：主街",
-      "email_example": "m@example.com",
-      "password_example": "••••••••••",
-      "bid_amount_cfa": "金额 CFA"
-    },
+    "status": "状态",
+    "created_at": "创建于",
+    "actions": "操作",
+    "submitted_at": "提交于",
+    "full_name": "全名",
     "tooltip": {
-      "price_per_km": "产品运输每公里价格",
-      "radius": "产品运输服务半径（公里）",
-      "city": "选择您的城市以便于定位。如果列表中没有，请选择最近的城市。",
-      "location": "在地图上选择您的位置以便于定位。只需点击地图即可将位置居中。"
+      "price_per_km": "运输产品每公里的价格",
+      "radius": "运输产品的服务半径（公里）",
+      "city": "请选择您的城市以便定位。如果列表中没有，请选择最近的城市。",
+      "location": "在地图上选择您的位置以便定位。只需点击地图以确定位置。"
     },
-    "type": "我是",
+    "type": "类型",
     "upload_accepted": "接受的格式",
     "upload_component": "点击上传或拖放",
     "upload_limit": "最大上传大小为 {{max}} MB",
-    "upload_too_big": "文件太大，最大 {{max}} MB",
+    "upload_too_big": "文件过大，最大 {{max}} MB",
     "upload_all": "接受所有文件",
     "upload_click_or_drag": "点击上传或拖放",
     "upload_invalid_type": "无效的文件类型",
     "upload_files": "文件",
-    "documents": "文档",
+    "documents": "文件",
+    "language": "语言",
+    "address": "地址",
+    "name": "名称",
+    "mail": "电子邮件",
+    "mail_or_phone": "电子邮件或电话",
+    "sections": {
+      "user_details": "用户详情",
+      "basic_info": "基本信息",
+      "change_password": "更改密码",
+      "password": "密码"
+    },
+    "enabled": {
+      "label": "启用",
+      "description": "选中后，用户可以登录并使用平台。"
+    },
+    "new_password": "新密码",
+    "placeholder": {
+      "language": "选择一种语言…",
+      "leave_blank_password": "留空以保持不变",
+      "select_region": "选择区域…",
+      "select_city": "选择城市…",
+      "date": "选择日期",
+      "no_city_found": "未找到城市",
+      "search": "搜索",
+      "price_per_km_example": "500",
+      "radius_example": "50",
+      "street_example": "例如：主要街道",
+      "email_example": "m@example.com",
+      "password_example": "••••••••••",
+      "bid_amount_cfa": "CFA 金额",
+      "cooperative_name": "输入合作社名称",
+      "select_president": "选择主席…",
+      "no_users_available": "暂无可用用户"
+    },
     "file_type": {
       "image": "图片",
       "pdf": "PDF",
       "text": "文本",
       "video": "视频",
       "audio": "音频",
-      "zip": "ZIP压缩包"
+      "zip": "ZIP 压缩"
     },
-    "identifier_label": "标识符：{{id}}",
-    "gps_label": "GPS：{{gps}}"
+    "identifier_label": "标识符： {{id}}",
+    "gps_label": "GPS： {{gps}}"
+  },
+  "status": {
+    "pending": "待定",
+    "active": "激活",
+    "inactive": "未激活"
+  },
+  "admin": {
+    "settings": {
+      "title": "平台设置",
+      "description": "管理平台的各项设置。"
+    },
+    "dashboard": {
+      "title": "仪表板",
+      "description": "跟踪平台的各项指标",
+      "cards": {
+        "totalNbUsers": {
+          "title": "用户总数",
+          "description": "所有角色"
+        },
+        "pendingValidation": {
+          "title": "新注册",
+          "description": "待审核"
+        },
+        "totalAuctions": {
+          "title": "新拍卖",
+          "description": "进行中的拍卖"
+        },
+        "auctionsConcluded": {
+          "title": "已结束拍卖",
+          "description": "最近 30 天"
+        },
+        "totalLotWeightKg": {
+          "title": "总量",
+          "description": "售出总重量"
+        },
+        "totalSoldWeightKg": {
+          "title": "月度成交量",
+          "description": "最近 30 天"
+        },
+        "totalSalesAmount": {
+          "title": "总销售额",
+          "description": "所有销售"
+        },
+        "monthlySalesAmount": {
+          "title": "月度销售额",
+          "description": "最近 30 天"
+        },
+        "grade1Price": {
+          "title": "一级均价",
+          "description": "最近 30 天"
+        },
+        "grade2Price": {
+          "title": "二级均价",
+          "description": "最近 30 天"
+        },
+        "grade3Price": {
+          "title": "三级均价",
+          "description": "最近 30 天"
+        },
+        "horsCategoryPrice": {
+          "title": "非标均价",
+          "description": "最近 30 天"
+        },
+        "transformedPrice": {
+          "title": "加工品均价",
+          "description": "最近 30 天"
+        },
+        "compared_to_30_days": "+ 30 天趋势",
+        "error_loading": "加载仪表板时出错"
+      }
+    },
+    "user_management": {
+      "title": "用户管理",
+      "description": "管理用户、审核注册并修改用户详细信息。",
+      "add_user_button": "添加用户",
+      "tabs": {
+        "all_users": "所有用户",
+        "pending_approvals": "待审批"
+      },
+      "toasts": {
+        "user_updated_success": "用户更新成功。",
+        "user_updated_error": "更新用户时出错。",
+        "user_deleted_success": "用户删除成功。",
+        "user_deleted_error": "删除用户时出错。",
+        "user_approved_success": "用户审核通过。",
+        "user_approved_error": "审核用户时出错。",
+        "user_rejected_success": "用户拒绝成功。",
+        "user_rejected_error": "拒绝用户时出错。",
+        "user_created_success": "用户创建成功。",
+        "user_created_error": "创建用户时出错。"
+      },
+      "no_users_match_search_pending": {
+        "title": "没有符合您搜索条件的待审核用户。",
+        "description": "请尝试放宽搜索条件或检查拼写。"
+      },
+      "search_placeholder": "搜索…",
+      "no_users_found": "未找到任何用户。",
+      "no_users_match_search": "没有符合您搜索条件的用户。",
+      "results_count": "{{count}} / {{total}} 用户",
+      "create_dialog": {
+        "title": "创建新用户",
+        "description": "填写以下信息以添加新用户。"
+      },
+      "edit_dialog": {
+        "title": "编辑用户",
+        "description": "更新用户信息和设置。"
+      },
+      "delete_dialog": {
+        "title": "确定要删除该用户吗？",
+        "description": "此操作不可撤销，将永久删除 {{userName}} 的账户及其数据。"
+      },
+      "no_pending_approvals": {
+        "title": "暂无待审批",
+        "description": "当前没有任何待审核的注册。"
+      },
+      "review_dialog": {
+        "title": "审核注册",
+        "description": "请检查 {{userName}} 的信息和文件。"
+      },
+      "no_documents_submitted": "未提交任何文件。"
+    },
+    "cooperative_management": {
+      "title": "合作社管理",
+      "description": "管理合作社及其成员信息。",
+      "add_button": "添加合作社",
+      "search_placeholder": "搜索合作社…",
+      "manage_members_button_title": "管理成员",
+      "no_cooperatives_match_search": "没有符合您搜索条件的合作社。",
+      "no_cooperatives_found": "未找到任何合作社。",
+      "members_count_column": "成员数量",
+      "create_dialog": {
+        "title": "创建新合作社",
+        "description": "填写以下信息以添加新合作社。"
+      },
+      "delete_dialog": {
+        "title": "删除合作社",
+        "description_confirm": "确定要删除此合作社吗？此操作不可撤销。"
+      },
+      "edit_dialog": {
+        "title": "编辑合作社",
+        "description": "更新合作社信息。"
+      },
+      "form": {
+        "edit_title": "编辑合作社",
+        "add_title": "添加合作社",
+        "error_loading_cooperative_title": "加载合作社时出错",
+        "error_cooperative_not_found": "未找到合作社数据。"
+      },
+      "toasts": {
+        "deleted_success": "合作社删除成功。",
+        "deleted_error": "删除合作社时出错。",
+        "created_success": "合作社创建成功。",
+        "created_error_title": "创建错误",
+        "created_error_description": "无法创建合作社。",
+        "updated_success": "合作社更新成功。",
+        "updated_error_title": "更新错误",
+        "updated_error_description": "无法更新合作社。"
+      },
+      "members_dialog": {
+        "title": "管理 “{{cooperativeName}}” 成员",
+        "description": "添加或移除该合作社的生产者成员。",
+        "error_loading_users": "加载用户时出错：{{errorMessage}}",
+        "current_members_count": "当前成员 ({{count}})",
+        "no_current_members": "暂无当前成员。",
+        "add_producer_title": "添加生产者",
+        "select_available_producer_label": "选择未分配的生产者",
+        "select_producer_placeholder": "选择生产者…",
+        "no_available_producers": "暂无可添加的生产者。",
+        "toasts": {
+          "member_added_success": "成员添加成功。",
+          "member_removed_success": "成员移除成功。",
+          "member_update_error_title": "更新成员时出错",
+          "member_update_error_description": "无法更新成员状态。",
+          "invalid_selection_title": "选择无效",
+          "invalid_selection_description": "所选生产者无效或缺少农业标识符。",
+          "invalid_member_title": "成员无效",
+          "invalid_member_remove_description": "要移除的成员无效或缺少农业标识符。"
+        }
+      }
+    },
+    "analytics": {
+      "title": "分析与导出",
+      "description": "生成并下载拍卖数据报告。",
+      "export_options": {
+        "title": "导出选项",
+        "description": "配置筛选器和格式以导出数据。留空日期可导出所有数据。"
+      },
+      "export_filtered": {
+        "start_date_label": "开始日期",
+        "pick_date_placeholder": "选择日期",
+        "end_date_label": "结束日期",
+        "only_ended_label": "仅包含已结束拍卖",
+        "format_label": "导出格式",
+        "format_json": "JSON",
+        "format_csv": "CSV",
+        "button": "下载报告",
+        "end_date_after_start": "结束日期必须晚于或等于开始日期。",
+        "start_end_both_or_none": "开始和结束日期必须同时提供或同时省略。"
+      },
+      "export_success_title": "导出成功",
+      "export_success_message": "文件 {{filename}} 下载成功。",
+      "export_error_title": "导出错误",
+      "export_error_message": "生成或下载文件时出错。请重试。"
+    }
   },
   "languages": {
     "en": "英语",
     "fr": "法语",
     "ar": "阿拉伯语",
-    "zh-CN": "普通话",
+    "zh-CN": "中文",
     "es": "西班牙语"
   },
   "language_switcher": {
     "label": "语言",
-    "aria_label": "更改语言"
+    "aria_label": "切换语言"
   },
   "pagination": {
     "all": "全部",
     "entries": "条目",
     "next": "下一页",
-    "no_entries": "未找到条目",
-    "of": "的",
+    "no_entries": "未找到任何条目",
+    "of": "共",
     "page": "页",
     "previous": "上一页",
     "showing": "显示",
-    "to": "到"
+    "to": "至"
   },
   "validation": {
+    "default": "字段无效",
+    "regex": "字段格式无效",
     "acceptTerms": "您必须接受使用条款",
     "email": "电子邮件格式无效",
-    "max": "该字段最多为 {{count}}",
-    "maxLength": "该字段最多包含 {{count}} 个字符",
-    "maxLength_plural": "该字段最多包含 {{count}} 个字符",
-    "min": "该字段至少为 {{count}}",
-    "minLength": "该字段至少包含 {{count}} 个字符",
-    "minLength_plural": "该字段至少包含 {{count}} 个字符",
+    "max": "字段最大值为 {{count}}",
+    "maxLength": "字段长度不能超过 {{count}} 个字符",
+    "maxLength_plural": "字段长度不能超过 {{count}} 个字符",
+    "min": "字段最小值为 {{count}}",
+    "minLength": "字段长度至少为 {{count}} 个字符",
+    "minLength_plural": "字段长度至少为 {{count}} 个字符",
     "invalidType": "字段类型无效",
-    "password": "密码必须至少包含一个小写字母、一个大写字母、一个数字和一个特殊字符",
-    "passwordValidation": "密码不匹配",
-    "phone": "贝宁号码无效",
-    "required": "此字段为必填项",
+    "password": "密码必须包含小写字母、大写字母、数字和特殊字符",
+    "passwordValidation": "两次输入的密码不匹配",
+    "phone": "无效的贝宁电话号码",
+    "required": "此字段为必填",
     "number_min": "值必须大于或等于 {{count}}"
+  },
+  "errors": {
+    "access.denied": "访问被拒绝：权限不足。",
+    "access.disabled": "您的账户需管理员激活后才能访问平台。",
+    "access.forbidden": "禁止访问",
+    "access.forbidden.csrf": "CSRF 令牌不匹配",
+    "access.forbidden.csrf.missing": "缺少 CSRF 令牌",
+    "access.unauthorized": "身份验证失败",
+    "agriculture_id.exists": "该农业标识符已被使用",
+    "bad_request": "请求错误",
+    "default.error": "数据完整性冲突",
+    "email.exists": "该电子邮件已被使用",
+    "error_occurred": "发生错误",
+    "undefined": "发生错误",
+    "fields": {
+      "agriculturalIdentifier": "农业标识符",
+      "email": "电子邮件",
+      "phone": "电话",
+      "defaultStrategyId": "默认策略",
+      "defaultFixedPriceKg": "默认固定单价 (每公斤)",
+      "defaultMaxPriceKg": "默认最高单价 (每公斤)",
+      "defaultMinPriceKg": "默认最低单价 (每公斤)",
+      "showOnlyActive": "仅显示活跃",
+      "forceBetterBids": "强制更高出价",
+      "minIncrement": "最小加价幅度"
+    },
+    "internal_error": "发生内部错误。如问题持续，请联系支持。",
+    "message.not_readable": "HTTP 消息不可读",
+    "method.not_allowed": "方法不被允许",
+    "missing.path_variable": "缺少路径变量",
+    "missing.request_param": "缺少请求参数",
+    "no_handler_found": "没有与请求 URL 匹配的端点",
+    "notFound": "资源未找到",
+    "phone.exists": "该电话号码已被使用",
+    "resource.not_found": "资源未找到",
+    "serverError": "服务器内部错误",
+    "stale.object": "资源已被其他用户修改。请重试。",
+    "unauthorized": "您无权访问此资源",
+    "validation.error": "验证错误",
+    "email.invalid": "电子邮件格式无效",
+    "email.taken": "该电子邮件已被使用",
+    "phone.taken": "该电话号码已被使用",
+    "server.unreachable": "服务器不可访问",
+    "invalid_google_token": "无效的 Google 令牌",
+    "gmail_account_not_found": "没有与此电子邮件关联的用户。请先注册。"
+  },
+  "password_indicator": {
+    "strength": "密码强度",
+    "very_weak": "非常弱",
+    "weak": "弱",
+    "fair": "一般",
+    "good": "好",
+    "strong": "强",
+    "very_strong": "非常强"
   },
   "database": {
     "harvest": "原料",
-    "transformed": "加工品",
+    "transformed": "加工",
     "AdminListDto": "管理员",
     "ProducerListDto": "生产者",
     "TransformerListDto": "加工商",
     "QualityInspectorListDto": "质检员",
     "ExporterListDto": "出口商",
-    "CarrierListDto": "承运人"
+    "CarrierListDto": "运输商"
   },
   "auction": {
-    "lot_label": "批次 {{id}}",
-    "lot_label_short": "批次 #{{id}}",
-    "bid_count_zero": "{{count}} 个出价",
-    "bid_count_one": "{{count}} 个出价",
-    "bid_count_other": "{{count}} 个出价",
-    "bid_count": "{{count}} 个出价",
-    "bid_count_plural": "{{count}} 个出价",
-    "expires_in": "到期时间",
-    "asking_price": "要价",
+    "lot_label": "拍品 {{id}}",
+    "lot_label_short": "拍品 #{{id}}",
+    "bid_count_zero": "{{count}} 次竞价",
+    "bid_count_one": "{{count}} 次竞价",
+    "bid_count_other": "{{count}} 次竞价",
+    "bid_count": "{{count}} 次竞价",
+    "bid_count_plural": "{{count}} 次竞价",
+    "expires_in": "剩余时间",
+    "asking_price": "起拍价",
     "best_bid": "最高出价",
-    "details_title_full": "产品 {{productType}} 批次 #{{productId}} 拍卖 #{{auctionId}}",
+    "details_title_full": "产品 {{productType}} · 拍品编号 {{productId}} · 拍卖编号 {{auctionId}}",
     "auction_details_title": "拍卖详情",
     "buy_now_label": "立即购买",
     "buy_now_price": "立即购买 {{price}}",
-    "confirm_buy_now_prompt": "确认立即购买 {{price}}？",
-    "add_bid_label": "添加出价",
-    "confirm_bid_prompt": "确认您的出价 {{amount}}？",
+    "confirm_buy_now_prompt": "确认以 {{price}} 立即购买？",
+    "add_bid_label": "出价",
+    "confirm_bid_prompt": "确认出价 {{amount}}？",
     "status": {
       "ended_title": "拍卖已结束",
-      "ended_message": "此拍卖现已结束。"
+      "ended_message": "此拍卖已结束。"
     },
-    "bid_count_for_lot_zero": "该批次有 {{count}} 个出价",
-    "bid_count_for_lot_one": "该批次有 {{count}} 个出价",
-    "bid_count_for_lot_other": "该批次有 {{count}} 个出价",
-    "bid_count_for_lot": "该批次有 {{count}} 个出价",
-    "bid_count_for_lot_plural": "该批次有 {{count}} 个出价",
-    "no_bids_yet": "暂无出价。",
+    "bid_count_for_lot_zero": "{{count}} 次竞价（针对该拍品）",
+    "bid_count_for_lot_one": "{{count}} 次竞价（针对该拍品）",
+    "bid_count_for_lot_other": "{{count}} 次竞价（针对该拍品）",
+    "bid_count_for_lot": "{{count}} 次竞价（针对该拍品）",
+    "bid_count_for_lot_plural": "{{count}} 次竞价（针对该拍品）",
+    "no_bids_yet": "暂无竞价。",
     "accept_bid_prompt": "接受此出价？",
     "reject_bid_prompt": "拒绝此出价？",
     "seller_label": "卖家",
-    "no_bids_message": "无出价",
+    "no_bids_message": "暂无出价",
     "time_remaining_label": "剩余时间",
     "click_to_see_details_prompt": "点击查看详情 →",
-    "expiration_label": "到期",
+    "expiration_label": "截止时间",
     "form": {
-      "title": "拍卖录入",
-      "section_settings_title": "销售设置",
-      "submit_button": "开始销售"
+      "title": "拍卖设置",
+      "section_settings_title": "拍卖参数",
+      "submit_button": "开启拍卖",
+      "section_pricing_title": "定价",
+      "section_sale_conditions_title": "销售条款",
+      "price_per_kg_hint": "每公斤 {{price}} CFA"
     },
-    "expiration_date_label": "拍卖到期",
+    "expiration_date_label": "拍卖截止日期",
     "table": {
-      "no_auctions": "没有列出的拍卖。",
-      "transactions_list_message": "交易列表可在下方查看。",
+      "no_auctions": "暂无拍卖列表。",
+      "transactions_list_message": "可在下方查看交易列表。",
       "start_date_header": "拍卖开始",
       "end_date_header": "拍卖结束",
       "status_header": "状态",
-      "obtained_price_header": "获得价格",
+      "obtained_price_header": "成交价",
       "buyer_header": "买家",
       "view_bids_button": "查看出价",
       "make_bid_button": "出价",
-      "propose_contract_button": "提议合同"
+      "propose_contract_button": "提出合同",
+      "strategy_label": "竞价策略",
+      "fixed_price_per_kg_label": "固定单价（每公斤）",
+      "max_price_per_kg_label": "最高单价（每公斤）",
+      "min_price_per_kg_label": "最低单价（每公斤）"
     },
     "contract_price_label": "*合同价格"
   },
@@ -405,15 +694,19 @@
     "merchandise_label": "商品",
     "price_label": "价格",
     "product_label": "产品",
-    "quantity_in_kg_label": "数量 (公斤)",
-    "price_in_cfa_label": "价格 (非洲金融共同体法郎)",
+    "quantity_in_kg_label": "数量（公斤）",
+    "price_in_cfa_label": "价格（CFA）",
     "info_title": "产品信息",
-    "lot_number_label": "批号",
+    "lot_number_label": "拍品编号",
+    "lot_no_label": "拍品编号 {{id}}",
     "deposited_quantity_label": "存放数量",
+    "raw_materials_label": "原材料",
+    "deposited_quantity_available_label": "可用数量",
+    "origin_transformed_default": "腰果",
     "deposit_date_label": "存放日期",
-    "store_label": "商店",
-    "lot_label": "批次 #{{id}}",
-    "product_type_label": "{{type}} 产品",
+    "store_label": "仓库",
+    "lot_label": "拍品编号 {{id}}",
+    "product_type_label": "产品类型 {{type}}",
     "origin_label": "产地",
     "quality_inspector_label": "质检员",
     "results_count_zero": "结果：{{count}} 个产品",
@@ -423,23 +716,24 @@
     "results_count_plural": "结果：{{count}} 个产品",
     "owner_label": "所有者",
     "warehouse_label": "仓库",
+    "select_lots": "选择拍品",
     "form": {
       "title": "产品录入",
-      "section_deposit_settings_title": "存款设置",
-      "cultivated_field_label": "耕地",
+      "section_deposit_settings_title": "存放设置",
+      "cultivated_field_label": "种植田地",
       "submit_button": "保存产品",
       "section_quality_control_title": "质量控制",
-      "control_date_label": "控制日期",
-      "certificate_label": "证书（照片或PDF）"
+      "control_date_label": "质检日期",
+      "certificate_label": "质检证书"
     },
-    "weight_in_kg_label": "重量 (公斤)"
+    "weight_in_kg_label": "重量（公斤）"
   },
   "sort": {
-    "expiration_asc": "到期时间 ⬆",
-    "expiration_desc": "到期时间 ⬇",
+    "expiration_asc": "截止时间 ⬆",
+    "expiration_desc": "截止时间 ⬇",
     "price_asc": "价格 ⬆",
     "price_desc": "价格 ⬇",
-    "label_prefix": "排序方式 ",
+    "label_prefix": "排序方式：",
     "date_asc": "日期 ⬆",
     "date_desc": "日期 ⬇",
     "weight_asc": "重量 ⬆",
@@ -460,20 +754,20 @@
     "map_label": "地图"
   },
   "filters": {
-    "panel_title": "筛选器",
-    "auctions_in_progress_label": "进行中的拍卖",
-    "auctions_ended_label": "已结束的拍卖",
+    "panel_title": "筛选",
+    "auctions_in_progress_label": "进行中拍卖",
+    "auctions_ended_label": "已结束拍卖",
     "all_types_placeholder": "所有类型",
     "all_qualities_placeholder": "所有质量",
     "all_regions_placeholder": "所有地区",
     "all_cities_placeholder": "所有城市",
-    "expires_before_label": "在此之前到期",
-    "choose_date_placeholder": "选择…",
+    "expires_before_label": "截止于",
+    "choose_date_placeholder": "请选择…",
     "user_type": {
       "undefined": "未定义",
-      "seller": "卖方",
-      "buyer": "买方",
-      "label": "作为"
+      "seller": "卖家",
+      "buyer": "买家",
+      "label": "身份"
     }
   },
   "address": {
@@ -483,24 +777,24 @@
     "admin": "管理员",
     "producer": "生产者",
     "transformer": "加工商",
-    "carrier": "承运人",
+    "carrier": "运输商",
     "exporter": "出口商",
     "quality_inspector": "质检员"
   },
   "header": {
-    "logo_alt": "e-Anacarde 商标",
+    "logo_alt": "e-Anacarde 徽标",
     "menu": {
       "home": "首页",
       "purchases": {
-        "title": "购买",
+        "title": "采购",
         "items": {
           "buy_product": {
             "title": "购买产品",
-            "description": "通过直接销售购买产品"
+            "description": "直接购买产品"
           },
           "my_purchases": {
-            "title": "我的购买",
-            "description": "查看我的所有购买"
+            "title": "我的采购",
+            "description": "查看我的所有采购"
           }
         }
       },
@@ -508,8 +802,8 @@
         "title": "销售",
         "items": {
           "sell_product": {
-            "title": "销售产品",
-            "description": "创建新的销售要约"
+            "title": "出售产品",
+            "description": "创建新的销售商品"
           },
           "my_sales": {
             "title": "我的销售",
@@ -518,15 +812,15 @@
         }
       },
       "deposits": {
-        "title": "存款",
+        "title": "存放",
         "items": {
           "deposit_product": {
             "title": "存放产品",
-            "description": "记录商店存款"
+            "description": "在仓库录入存放"
           },
           "my_products": {
             "title": "我的产品",
-            "description": "查看我的所有存款"
+            "description": "查看我的所有存放"
           }
         }
       },
@@ -535,39 +829,64 @@
         "items": {
           "create_contract": {
             "title": "创建合同",
-            "description": "创建一个新合同"
+            "description": "创建新的合同"
           },
           "history": {
             "title": "历史记录",
-            "description": "我的合同详情"
+            "description": "查看我的合同详情"
           }
         }
       },
       "contact": "联系我们",
-      "about": "关于"
+      "about": "关于",
+      "marketplace": {
+        "title": "市场",
+        "browse": "浏览市场",
+        "browse_desc": "浏览并购买新鲜产品。",
+        "new_sale": "新销售",
+        "new_sale_desc": "发布您的产品销售。",
+        "new_deposit": "新存放",
+        "new_deposit_desc": "将您的产品存放以备后续销售。",
+        "how_it_works": "访问市场",
+        "how_it_works_desc": "登录以在平台上买卖。"
+      },
+      "news": "新闻",
+      "my_space": {
+        "title": "我的空间",
+        "my_purchases": "我的采购",
+        "my_sales": "我的销售",
+        "my_deposits": "我的存放",
+        "my_contracts": "我的合同",
+        "my_purchases_marketplace_desc": "查看您的采购和正在进行的出价",
+        "my_sales_marketplace_desc": "查看您的进行中和已结束的销售",
+        "my_deposits_marketplace_desc": "查看您的存放",
+        "my_contracts_marketplace_desc": "查看您的合同"
+      }
     },
     "auth": {
       "login": "登录",
       "profile": "个人资料",
       "settings": "设置",
-      "logout": "登出"
+      "logout": "登出",
+      "register": "注册"
     },
     "mobile": {
       "toggle_menu_sr": "打开主菜单"
     }
   },
   "login": {
-    "title_description": "登录您的 e-Anacarde 帐户",
+    "title_description": "登录您的 e-Anacarde 账户",
+    "success_google": "Google 登录成功",
     "forgot_password": "忘记密码？",
-    "continue_with_separator": "或继续使用",
+    "continue_with_separator": "或使用以下方式继续",
     "social": {
       "apple_sr": "使用 Apple 登录",
       "google_sr": "使用 Google 登录",
       "meta_sr": "使用 Meta 登录"
     },
-    "signup_prompt": "没有帐户？",
-    "terms_prefix": "点击继续，即表示您同意我们的 ",
-    "terms_separator": " 和我们的 ",
+    "signup_prompt": "还没有账户？",
+    "terms_prefix": "点击“继续”即表示您同意我们的",
+    "terms_separator": "和我们的",
     "terms_suffix": "。"
   },
   "footer_cta": {
@@ -576,10 +895,10 @@
   },
   "footer": {
     "logo": {
-      "alt": "贝宁腰果拍卖徽标",
-      "title": "贝宁腰果拍卖"
+      "alt": "Cashew Auction Bénin 徽标",
+      "title": "Cashew Auction Bénin"
     },
-    "tagline": "您在贝宁的腰果拍卖平台——原材料和加工产品",
+    "tagline": "您在贝宁的腰果拍卖平台 — 原材料及加工产品",
     "menu": {
       "auctions": {
         "title": "拍卖",
@@ -595,7 +914,7 @@
           "about_us": "关于我们",
           "team": "团队",
           "careers": "招聘",
-          "contact": "联系"
+          "contact": "联系我们"
         }
       },
       "resources": {
@@ -615,23 +934,23 @@
         }
       }
     },
-    "copyright": "© 2025 第4组 - 那慕尔大学软件工程实验室。",
+    "copyright": "© 2025 第四组 - 软件工程实验室，纳穆尔大学。",
     "bottom_links": {
-      "terms": "通用条款",
+      "terms": "使用条款",
       "privacy_policy": "隐私政策"
     }
   },
   "not_found": {
     "error_code": "404",
-    "title": "未找到页面",
-    "message": "抱歉，我们找不到您要查找的页面。",
+    "title": "页面未找到",
+    "message": "抱歉，我们找不到您要访问的页面。",
     "button_home": "返回首页",
     "button_contact_support": "联系支持"
   },
   "forbidden": {
     "error_code": "403",
     "title": "禁止访问",
-    "message": "抱歉，您没有访问此页面所需的权限。",
+    "message": "抱歉，您没有权限访问此页面。",
     "button_home": "返回首页",
     "button_contact_support": "联系支持"
   },
@@ -642,7 +961,7 @@
   },
   "empty_state": {
     "title": "未找到结果",
-    "message": "调整您的筛选器或重置搜索。"
+    "message": "请调整筛选条件或重置搜索。"
   },
   "countdown_timer": {
     "auction_ended": "拍卖已结束",
@@ -656,63 +975,92 @@
     "seconds_other": "{{count}} 秒"
   },
   "contract": {
-    "modal_title": "合同提案",
+    "modal_title": "合同提议",
     "avatar_alt": "头像",
-    "guaranteed_price_cfa_kg_label": "保证价格 (非洲金融共同体法郎/公斤)",
-    "minimum_quantity_kg_label": "最小数量 (公斤)",
+    "guaranteed_price_cfa_kg_label": "保证价格（CFA/公斤）",
+    "minimum_quantity_kg_label": "最低数量（公斤）",
     "duration_label": "合同期限",
-    "duration_years_label": "(年)",
-    "duration_months_label": "(月)",
-    "ends_on_date_label": "截止日期 {{date}}",
+    "duration_years_label": "（年）",
+    "duration_months_label": "（月）",
+    "ends_on_date_label": "于 {{date}} 结束",
     "results_count": "结果：{{count}} 个合同",
-    "seller_label": "卖方",
-    "buyer_label": "买方",
+    "seller_label": "卖家",
+    "buyer_label": "买家",
     "quality_label": "质量",
     "status_label": "状态",
     "contract_end_label": "合同结束",
     "label": "合同编号 {{id}}",
-    "price_per_kg_label": "每公斤价格"
+    "price_per_kg_label": "单价（每公斤）"
+  },
+  "settings": {
+    "update_success": "全局设置更新成功。",
+    "title": "全局设置",
+    "default_strategy": "默认竞价策略",
+    "select_strategy_placeholder": "选择默认策略…",
+    "default_fixed_price_kg": "默认固定单价（CFA/公斤）",
+    "default_max_price_kg": "默认最高单价（CFA/公斤）",
+    "default_min_price_kg": "默认最低单价（CFA/公斤）",
+    "show_only_active": "默认仅显示进行中拍卖",
+    "force_better_bids": "默认要求更高出价",
+    "min_increment": "默认最低加价幅度"
+  },
+  "categories": {
+    "alerts_terrain": "实地警报",
+    "market_prices": "市场与价格",
+    "research_innovations": "研究与创新",
+    "training_resources": "培训与资源"
   },
   "pages": {
     "news": {
       "title": "新闻",
-      "subtitle": "了解最新的新闻和分析。",
-      "no_articles_found": "未找到文章",
-      "try_different_search": "尝试调整您的搜索或类别过滤器。",
-      "no_articles_yet": "尚无文章显示。"
+      "subtitle": "获取最新新闻和分析。",
+      "no_articles_found": "未找到相关文章",
+      "try_different_search": "尝试调整搜索过滤或分类。",
+      "no_articles_yet": "目前暂无可显示的文章。"
     },
     "about_page": {
       "title": "关于 e-Anacarde",
-      "logo_alt": "e-Anacarde 商标",
+      "logo_alt": "e-Anacarde 徽标",
       "hero": {
-        "title": "探索 e-Anacarde",
-        "subtitle": "一项旨在通过创新和公平的交易平台促进贝宁腰果产业发展的大学倡议。"
+        "title": "了解 e-Anacarde",
+        "subtitle": "一项大学计划，通过创新公平的平台推动贝宁腰果行业发展。"
       },
       "project": {
         "title": "我们的大学项目",
-        "paragraph1": "e-Anacarde 源于一个雄心勃勃的大学项目，旨在设计和开发一个专门针对贝宁腰果贸易的电子商务应用程序。我们的方法是协作和可扩展的。",
-        "paragraph2": "该平台作为概念验证，以更好地了解腰果行业利益相关者的实际需求。通过从早期阶段提供具体工具，我们促进了期望的确定、功能的验证以及解决方案的持续改进，以产生积极而持久的影响。"
+        "paragraph1": "e-Anacarde 源于一个宏大的大学项目，旨在设计和开发一个专门针对贝宁腰果贸易的电子商务应用。我们的目标是协作且不断演进。",
+        "paragraph2": "该平台作为概念验证（proof-of-concept），帮助更好地了解腰果产业相关方的真实需求。通过在早期阶段提供一个实用工具，我们可以更轻松地识别期望、验证功能并持续改进解决方案，实现长期且积极的影响。"
       },
       "objectives": {
         "title": "我们的主要目标",
         "item1": {
-          "title": "促进交易",
-          "description": "实现腰果产品的透明高效销售，特别是通过拍卖系统，以最佳方式实现本地生产的价值。"
+          "title": "简化交易流程",
+          "description": "通过竞价系统，让腰果产品的销售更加透明高效，从而最大化本地生产价值。"
         },
         "item2": {
-          "title": "共享信息",
-          "description": "传播关于市场价格和可用或交易量的清晰数据，为所有利益相关者提供更好的可见性。"
+          "title": "信息共享",
+          "description": "传播清晰的市场价格和可用或已交易的数量数据，为所有参与者提供更好的可视性。"
         },
         "item3": {
           "title": "推广最佳实践",
-          "description": "作为培训生产者掌握最佳农业技术和传播研究成果的渠道，以提高行业效率。"
+          "description": "作为渠道，为生产者提供最佳农业技术培训，并推广研究成果，以提升产业绩效。"
         }
       },
       "future": {
-        "title": "可扩展的未来",
-        "paragraph": "虽然最初专注于腰果，但我们的目标是建立一个易于维护和适应的强大平台。我们希望它最终能成为其他农业部门或产品的典范，从而为经济发展做出更广泛的贡献。"
+        "title": "可持续发展未来",
+        "paragraph": "虽然最初聚焦于腰果，我们的愿景是构建一个易于维护和适应的平台。我们希望最终它能够成为其他农产品或产业的示范，进一步促进经济发展。"
       },
       "benin_flag_alt": "贝宁国旗"
     }
+  },
+  "profile": {
+    "page_title": "我的个人资料",
+    "page_subtitle": "查看并修改您的个人信息。",
+    "card_title": "个人资料信息",
+    "edit_mode_description": "在下方编辑您的信息。",
+    "view_mode_description": "您的个人及角色信息。",
+    "personal_details_title": "个人信息",
+    "role_specific_details_title": "角色特定信息",
+    "update_success_toast": "个人资料更新成功！",
+    "update_error_toast": "更新时出错"
   }
 }

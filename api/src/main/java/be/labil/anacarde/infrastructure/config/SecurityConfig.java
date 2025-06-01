@@ -99,7 +99,7 @@ public class SecurityConfig {
 
 		// Autorisations
 		http.authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.POST, "/api/users")
-				.permitAll().requestMatchers(HttpMethod.GET, "/api/app", "/api/news").permitAll()
+				.permitAll().requestMatchers(HttpMethod.GET, "/api/app", "/api/news/**").permitAll()
 				.requestMatchers(HttpMethod.POST, "/api/contact").permitAll()
 				.requestMatchers("/api/auth/**", "/v3/api-docs**", "/swagger-ui/**",
 						"/api/users/check/**")

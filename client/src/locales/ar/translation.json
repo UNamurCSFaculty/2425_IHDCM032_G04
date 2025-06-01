@@ -1,65 +1,65 @@
 {
   "app": {
     "accueil": {
-      "subtitle": "انضم إلى منصة المزاد العلني في الوقت الفعلي للكاجو ومنتجاته المصنعة في بنين. راقب، زايد، وادعم المنتجين المحليين بثقة.",
+      "subtitle": "انضمّ إلى منصّة المزادات الفوريّة لحَبّة الكاجو ومنتجاتها المُحوَّلة في بنين. راقِبْ، وازايدْ، وادعمْ المنتجين المحليّين بكل ثقة.",
       "title": "مزادات وسوق الكاجو",
-      "image_alt_cashew_nuts": "رسم توضيحي للكاجو"
+      "image_alt_cashew_nuts": "رسم توضيحي لحبّة كاجو"
     },
     "contact": {
       "title": "اتصل بنا",
-      "subtitle": "نحن هنا للمساعدة. أرسل لنا رسالة وسنرد عليك في أقرب وقت ممكن."
+      "subtitle": "نحن هنا لمساعدتك. أرسِل لنا رسالة وسنردّ عليك في أقرب وقت."
     },
-    "loading": "جار التحميل…",
-    "networkError": "تعذر الوصول إلى الخادم",
+    "loading": "جارٍ التحميل…",
+    "networkError": "تعذّر الاتصال بالخادم",
     "signup": {
-      "subtitle": "سيتم التحقق من تسجيلك في غضون 48 ساعة بعد إرسال النموذج.",
-      "title": "اشتراك"
+      "subtitle": "سيتمّ تفعيل تسجيلك خلال ٤٨ ساعة بعد إرسال النموذج.",
+      "title": "إنشاء حساب"
     },
     "statut": {
-      "connection": "جار الاتصال...",
+      "connection": "جارٍ تسجيل الدخول...",
       "log_in": "تسجيل الدخول"
     },
     "title": "تطبيقي الرائع",
     "welcome": {
-      "message": "هل أنت مستعد لمزاداتك القادمة؟",
-      "title": "مرحباً",
-      "admin": "ادخل إلى لوحة تحكم المسؤول الخاصة بك:",
+      "message": "جاهز(ة) لمزادك التالي؟",
+      "title": "مرحباً بك",
+      "admin": "الوصول إلى لوحة تحكم المشرف:",
       "admin_link": "لوحة الإدارة"
     },
     "auctions_sales": {
       "title": "مبيعاتي",
-      "subtitle": "بع منتجاتك عبر الإنترنت وتحقق من العروض على مزاداتك."
+      "subtitle": "بِع منتجاتك عبر الإنترنت وتابع العروض على مزاداتك."
     },
     "auctions_new_sale": {
       "title": "بيع جديد",
-      "subtitle": "أنشئ مزادًا جديدًا لمنتجك."
+      "subtitle": "أنشئ مزاداً جديداً لمنتجك."
     },
     "auctions_buys": {
       "title": "مشترياتي",
-      "subtitle": "تحقق من مشترياتك الحالية والمزادات التي فزت بها حتى الآن."
+      "subtitle": "تابع مشترياتك الجارية والمزادات التي ربحتها حتى الآن."
     },
     "deposits_new_product": {
       "title": "منتج جديد",
-      "subtitle": "إيداع منتج جديد في المتجر."
+      "subtitle": "أضف منتجاً جديداً إلى المخزن."
     },
     "deposits_list_products": {
       "title": "منتجاتي",
-      "subtitle": "عرض جميع منتجاتك المودعة المتاحة للبيع."
+      "subtitle": "استعرض كل منتجاتك المودَعة والمتاحة للبيع."
     },
     "marketplace": {
       "title": "سوق المزادات",
-      "subtitle": "شراء المنتجات عبر الإنترنت."
+      "subtitle": "اشترِ المنتجات عبر الإنترنت."
     },
     "signup_success": {
-      "title": "تم التسجيل بنجاح!",
-      "description_line1": "تم تسجيل طلب التسجيل الخاص بك بنجاح.",
-      "description_line2": "حسابك قيد التحقق من قبل المسؤول.",
-      "email_notification": "ستتلقى رسالة بريد إلكتروني بمجرد تفعيل حسابك.",
-      "go_to_login": "اذهب إلى صفحة تسجيل الدخول"
+      "title": "تمّ التسجيل بنجاح!",
+      "description_line1": "تمّ استلام طلب تسجيلك.",
+      "description_line2": "حسابك بانتظار الموافقة من قِبَل المشرف.",
+      "email_notification": "ستتلقّى بريداً إلكترونياً عند تفعيل الحساب.",
+      "go_to_login": "الانتقال إلى صفحة تسجيل الدخول"
     },
     "contracts_list_contracts": {
       "title": "عقودي",
-      "subtitle": "اعرض جميع عقودك."
+      "subtitle": "استعرض كل عقودك."
     }
   },
   "homepage": {
@@ -67,80 +67,81 @@
       "section_title_prefix": "لماذا تختار ",
       "section_title_brand": "e-Anacarde",
       "section_title_suffix": "؟",
-      "section_subtitle": "اكتشف كيف تُحدث منصتنا ثورة في مزادات الكاجو بالتكنولوجيا والأمان والتأثير الاجتماعي.",
+      "section_subtitle": "اكتشف كيف تُحدِث منصّتنا ثورة في مزادات الكاجو بالتقنية والأمان والأثر الاجتماعي.",
       "items": {
         "real_time": {
-          "title": "مزادات في الوقت الفعلي",
-          "description": "تابع كل مزاد ولا تفوت فرصة للمزايدة."
+          "title": "مزادات فوريّة",
+          "description": "تابع كل مزاد ولا تفوّت أي فرصة للمزايدة."
         },
         "secure_transactions": {
           "title": "معاملات آمنة",
-          "description": "إدارة دفع وتسليم شاملة لراحة بالك."
+          "description": "الدفع والتسليم مُداران من البداية إلى النهاية لراحتك."
         },
         "industry_support": {
-          "title": "دعم الصناعة",
-          "description": "ادعم المنتجين المحليين وساهم في التنمية المستدامة."
+          "title": "دعم القطاع",
+          "description": "قم بتمكين المنتجين المحليين وساهم في التنمية المستدامة."
         }
       }
     },
     "blog": {
       "title": "مدونتنا",
-      "subtitle": "اكتشف آخر الأخبار والمعايير والنصائح لتحسين مزادات الكاجو الخاصة بك في بنين.",
+      "subtitle": "اطّلع على آخر الأخبار والمعايير والنصائح لتعظيم مبيعاتك في مزادات الكاجو ببنين.",
       "article1": {
-        "category": "برنامج تعليمي",
-        "date": "منذ 3 أيام",
+        "category": "دليل",
+        "date": "قبل 3 أيام",
         "title": "كيف تتقن مزادات الكاجو على e-Anacarde",
-        "description": "اتبع دليلنا خطوة بخطوة لفهم عملية المزاد، وتحديد احتياطياتك، وزيادة دخلك على منصة مزادات الكاجو الرائدة في بنين.",
-        "author": "عائشاتو أديغبيدي"
+        "description": "اتبع دليلنا خطوة بخطوة لفهم عملية المزاد وتحديد الأسعار القصوى وزيادة أرباحك على أول منصة مزادات كاجو في بنين.",
+        "author": "عائشة أديغبيدي"
       },
       "article2": {
-        "category": "أخبار",
-        "date": "منذ 7 أيام",
+        "category": "خبر",
+        "date": "قبل 7 أيام",
         "title": "معايير حكومية جديدة لإنتاج الكاجو",
-        "description": "أصدرت حكومة بنين مبادئ توجيهية جديدة لتحسين جودة الكاجو وإمكانية تتبعه. اكتشف المتطلبات وكيفية الامتثال لها.",
-        "author": "كوفي مينساه"
+        "description": "أصدرت حكومة بنين توجيهات جديدة لتحسين جودة الكاجو وتتبعها. اكتشف المتطلبات وكيفية الالتزام بها.",
+        "author": "كوفي منساه"
       },
-      "author_avatar_alt": "الصورة الرمزية للمؤلف",
-      "read_more": "اقرأ المزيد"
+      "author_avatar_alt": "صورة الكاتب",
+      "read_more": "اقرأ المزيد",
+      "no_description": "لا يوجد وصف."
     },
     "hero": {
       "heading": "مزادات الكاجو عبر الإنترنت",
-      "description": "شارك في مزادات الكاجو ومشتقاته في الوقت الفعلي في بنين. راقب كل عرض، زايد، وادعم المنتجين المحليين بثقة.",
+      "description": "شارك في مزادات الكاجو ومنتجاته في الوقت الحقيقي داخل بنين. راقِب كل عرض، وازايد، وادعم المنتجين المحليين بثقة.",
       "buttons": {
         "primary_text": "عرض المزادات",
-        "secondary_text": "اعرف المزيد"
+        "secondary_text": "معرفة المزيد"
       },
       "image_alt": "شعار e-Anacarde، منصة مزادات الكاجو"
     },
     "faq": {
-      "heading": "أسئلة مكررة",
-      "q1_question": "ما هو e-Anacarde؟",
-      "q1_answer": "e-Anacarde هي منصة مزادات عبر الإنترنت مخصصة للكاجو في بنين، تربط المنتجين والمشترين مباشرة لزيادة الشفافية وقيمة المعاملات.",
-      "q2_question": "كيف يمكنني التسجيل كمنتج؟",
-      "q2_answer_part1": "للتسجيل، املأ النموذج بمعلومات الإنتاج الخاصة بك وقم بتحميل المستندات المطلوبة للتحقق.",
+      "heading": "الأسئلة الشائعة",
+      "q1_question": "ما هي e-Anacarde؟",
+      "q1_answer": "e-Anacarde هي منصة مزادات إلكترونية مخصصة لحبّة الكاجو في بنين، تربط المنتجين بالمشترين مباشرة لزيادة الشفافية وقيمة الصفقات.",
+      "q2_question": "كيف أسجّل كمنتِج؟",
+      "q2_answer_part1": "للتسجيل، املأ النموذج بمعلومات الإنتاج الخاصة بك وارفع المستندات المطلوبة للتحقق.",
       "q3_question": "كيف أشارك في مزاد؟",
-      "q3_answer": "بعد التحقق من حسابك، قم بتسجيل الدخول، وانتقل إلى صفحة المزاد، وحدد دفعة الكاجو المطلوبة، وقدم عرضك مع الإشارة إلى المبلغ الذي ترغب في دفعه.",
+      "q3_answer": "بعد تفعيل حسابك، سجّل الدخول، انتقل إلى صفحة المزادات، اختر الدفعة المرغوبة وضع مزايدتك بالمبلغ الذي ترغب بدفعه.",
       "q4_question": "ما هي رسوم الخدمة؟",
-      "q4_answer": "تطبق e-Anacarde عمولة بنسبة 2٪ على المبلغ النهائي لكل مزاد فائز، بدون رسوم خفية للمنتجين أو المشترين.",
+      "q4_answer": "تفرض e-Anacarde عمولة 1% على القيمة النهائية لكل مزاد فائز، دون أي رسوم مخفية.",
       "q5_question": "كيف يتم الدفع والتسليم؟",
-      "q5_answer": "بمجرد الفوز بالمزاد، يتم الدفع عبر شركائنا في الدفع عبر الهاتف المحمول (MoMo، Flooz) أو التحويل المصرفي. يتم تنظيم التسليم من قبل شركات نقل معتمدة، على نفقة المشتري أو وفقًا للاتفاقية.",
-      "q6_question": "ما هي معايير الجودة التي يجب أن ألتزم بها؟",
-      "q6_answer": "يجب أن تمتثل للمبادئ التوجيهية الحكومية الجديدة في بنين بشأن معايرة الكاجو ومحتوى الرطوبة والتعبئة والتغليف. تحقق من مقالتنا 'معايير حكومية جديدة لإنتاج الكاجو' للحصول على جميع التفاصيل."
+      "q5_answer": "بعد الفوز بالمزاد، يتم الدفع عبر شركائنا للدفع الجوّال (مو-مو، فلووز) أو عن طريق تحويل بنكي. ويُقترح ناقلون معتمدون للتسليم حسب الاتفاق.",
+      "q6_question": "ما معايير الجودة المطلوبة؟",
+      "q6_answer": "يجب الالتزام بالتوجيهات الحكومية الجديدة حول الفرز، ونسبة الرطوبة، والتعبئة. اطلع على مقالنا «معايير حكومية جديدة لإنتاج الكاجو» للتفاصيل."
     }
   },
   "breadcrumb": {
-    "about": "عنا",
-    "auctions": "المزادات",
+    "about": "حول",
+    "profile": "الملف الشخصي",
+    "auctions": "مزادات",
     "buy": "شراء",
     "home": "الرئيسية",
-    "contact": "اتصال",
+    "contact": "اتصل",
     "login": "تسجيل الدخول",
     "marketplace": "سوق المزادات",
     "privacy": "سياسة الخصوصية",
-    "profile": "الملف الشخصي",
     "sell": "بيع",
     "settings": "الإعدادات",
-    "signup": "اشتراك",
+    "signup": "التسجيل",
     "terms": "شروط الاستخدام",
     "vendre": "بيع",
     "my_auctions": "مزاداتي",
@@ -149,27 +150,8 @@
     "my_deposits": "منتجاتي",
     "new_deposit": "منتج جديد",
     "contracts": "العقود",
-    "my_contracts": "عقودي"
-  },
-  "buttons": {
-    "cancel": "إلغاء",
-    "connection": "تسجيل الدخول",
-    "home_connection": "ابدأ الآن",
-    "reinitialise": "إعادة تعيين",
-    "submit": "إرسال",
-    "submitting": "جار الإرسال...",
-    "subscribe": "إنشاء حساب",
-    "view_all_news": "عرض جميع الأخبار",
-    "details": "تفاصيل",
-    "buy": "شراء",
-    "view_details": "عرض التفاصيل",
-    "confirm": "تأكيد",
-    "place_bid": "تقديم عرض",
-    "accept": "قبول",
-    "reject": "رفض",
-    "back": "رجوع",
-    "reset": "إعادة تعيين",
-    "delete": "حذف"
+    "my_contracts": "عقودي",
+    "news": "الأخبار"
   },
   "common": {
     "add": "إضافة",
@@ -179,111 +161,151 @@
     "edit": "تعديل",
     "step": "خطوة",
     "error": "خطأ",
-    "info": "معلومات",
-    "loading": "جار التحميل...",
+    "info": "معلومة",
+    "loading": "جارٍ التحميل...",
     "no": "لا",
     "ok": "موافق",
     "save": "حفظ",
     "search": "بحث",
-    "select": "تحديد",
+    "select": "اختيار",
     "success": "نجاح",
     "view": "عرض",
     "warning": "تحذير",
-    "yes": "نعم"
+    "yes": "نعم",
+    "error_loading_data": "حدث خطأ أثناء تحميل البيانات.",
+    "error_loading_data_title": "خطأ في تحميل البيانات",
+    "error_loading_users_title": "خطأ في تحميل المستخدمين",
+    "download_error": "خطأ في التنزيل",
+    "download_successful": "تم التنزيل بنجاح",
+    "unknown_error": "حدث خطأ غير معروف.",
+    "this_user": "هذا المستخدم",
+    "not_provided": "غير متوفر",
+    "confirm_action": "تأكيد الإجراء",
+    "not_applicable_short": "غير متاح",
+    "unknown": "غير معروف",
+    "admin": "مسؤول",
+    "search_placeholder": "ابحث عن مقالات...",
+    "all_categories": "كل الفئات",
+    "results_count": "{{count}} نتيجة",
+    "results_count_plural": "{{count}} نتائج",
+    "clear_filters": "مسح المرشّحات"
   },
-  "errors": {
-    "access.denied": "تم رفض الوصول: ليس لديك الحقوق الكافية.",
-    "access.disabled": "يجب تفعيل حسابك من قبل مسؤول قبل أن تتمكن من الوصول إلى المنصة.",
-    "access.forbidden": "الوصول محظور",
-    "access.forbidden.csrf": "رمز CSRF غير متطابق",
-    "access.forbidden.csrf.missing": "رمز CSRF مفقود",
-    "access.unauthorized": "فشل المصادقة",
-    "agriculture_id.exists": "معرف الزراعة هذا مستخدم بالفعل",
-    "bad_request": "طلب غير صالح",
-    "default.error": "انتهاك سلامة البيانات",
-    "email.exists": "هذا البريد الإلكتروني مستخدم بالفعل",
-    "fields": {
-      "agriculturalIdentifier": "معرف الزراعة",
-      "email": "البريد الإلكتروني",
-      "phone": "الهاتف"
-    },
-    "internal_error": "حدث خطأ داخلي. اتصل بالدعم إذا استمرت المشكلة.",
-    "message.not_readable": "رسالة HTTP غير قابلة للقراءة",
-    "method.not_allowed": "الطريقة غير مسموح بها",
-    "missing.path_variable": "متغير المسار مفقود",
-    "missing.request_param": "معلمة الطلب مفقودة",
-    "no_handler_found": "لا يوجد نقطة نهاية تطابق عنوان URL المطلوب",
-    "notFound": "المورد غير موجود",
-    "phone.exists": "رقم الهاتف هذا مستخدم بالفعل",
-    "resource.not_found": "المورد غير موجود",
-    "serverError": "خطأ داخلي في الخادم",
-    "stale.object": "تم تعديل المورد من قبل مستخدم آخر. يرجى المحاولة مرة أخرى.",
-    "unauthorized": "غير مصرح لك بالوصول إلى هذا المورد",
-    "validation.error": "خطأ في التحقق",
-    "email.invalid": "تنسيق البريد الإلكتروني غير صالح",
-    "email.taken": "هذا البريد الإلكتروني مستخدم بالفعل",
-    "phone.taken": "رقم الهاتف هذا مستخدم بالفعل",
-    "server.unreachable": "الخادم غير قابل للوصول"
-  },
-  "password_indicator": {
-    "strength": "قوة كلمة المرور",
-    "very_weak": "ضعيفة جدا",
-    "weak": "ضعيفة",
-    "fair": "مقبولة",
-    "good": "جيدة",
-    "strong": "قوية",
-    "very_strong": "قوية جدا"
+  "buttons": {
+    "view": "عرض",
+    "edit": "تعديل",
+    "create": "إنشاء",
+    "approve": "اعتماد",
+    "cancel": "إلغاء",
+    "connection": "تسجيل الدخول",
+    "home_connection": "ابدأ الآن",
+    "reinitialise": "إعادة ضبط",
+    "submit": "إرسال",
+    "submitting": "جارٍ الإرسال...",
+    "subscribe": "إنشاء حساب",
+    "view_all_news": "عرض كل الأخبار",
+    "details": "تفاصيل",
+    "buy": "شراء",
+    "view_details": "عرض التفاصيل",
+    "confirm": "تأكيد",
+    "place_bid": "وضع عرض",
+    "accept": "قبول",
+    "reject": "رفض",
+    "back": "عودة",
+    "reset": "إعادة",
+    "delete": "حذف",
+    "deactivate": "تعطيل",
+    "activate": "تفعيل",
+    "save_changes": "حفظ التغييرات",
+    "deleting": "جارٍ الحذف...",
+    "review": "مراجعة",
+    "close": "إغلاق",
+    "rejecting": "جارٍ الرفض...",
+    "approving": "جارٍ الاعتماد...",
+    "download": "تنزيل",
+    "downloading": "جارٍ التنزيل...",
+    "back_to_list": "عودة إلى القائمة",
+    "retry": "إعادة المحاولة",
+    "save": "حفظ",
+    "add": "إضافة"
   },
   "form": {
+    "read_only": "للقراءة فقط",
     "carrier_details": "تفاصيل الناقل",
+    "cooperative": "تعاونية",
+    "select_cooperative": "اختر تعاونية",
+    "cooperative_name": "أدخل اسم التعاونية",
+    "creation_date": "تاريخ التأسيس",
+    "president": "رئيس التعاونية",
     "accept_terms": "أوافق على شروط الاستخدام",
     "select.placeholder": "اختر خيارًا",
-    "address": "العنوان",
-    "price_per_km": "السعر لكل كيلومتر",
-    "radius": "نطاق التسليم بالكيلومتر",
-    "agricultural_identifier": "معرف الزراعة",
+    "price_per_km": "السعر لكل كلم",
+    "radius": "نطاق الخدمة (كم)",
+    "agricultural_identifier": "المعرّف الزراعي",
     "confirm_password": "تأكيد كلمة المرور",
     "first_name": "الاسم الأول",
-    "language": "اللغة",
-    "last_name": "اسم العائلة",
-    "mail": "عنوان البريد الإلكتروني",
+    "last_name": "الاسم الأخير",
     "city": "المدينة",
     "location": "الموقع",
-    "street_quarter": "الحي / الشارع",
+    "street_quarter": "الشارع / الحي",
     "message": "رسالة",
     "password": "كلمة المرور",
     "phone": "الهاتف",
     "coordinates_label": "الإحداثيات:",
+    "status": "الحالة",
+    "created_at": "أُنشئ في",
+    "actions": "الإجراءات",
+    "submitted_at": "قُدِّم في",
+    "full_name": "الاسم الكامل",
+    "tooltip": {
+      "price_per_km": "السعر لكل كيلومتر لنقل المنتجات",
+      "radius": "نطاق الخدمة بالكيلومترات لنقل المنتجات",
+      "city": "اختر مدينتك لتسهيل تحديد الموقع. إن لم تكن بالقائمة اختر الأقرب.",
+      "location": "حدد موقعك على الخريطة لتسهيل التحديد. انقر على الخريطة للتمركز."
+    },
+    "type": "النوع",
+    "upload_accepted": "الصيغ المقبولة",
+    "upload_component": "انقر للرفع أو اسحب وأسقط",
+    "upload_limit": "الحجم الأقصى للملف {{max}} م.ب",
+    "upload_too_big": "الملف كبير جدًا، الحد {{max}} م.ب",
+    "upload_all": "يتم قبول جميع الملفات",
+    "upload_click_or_drag": "انقر للرفع أو اسحب وأسقط",
+    "upload_invalid_type": "نوع ملف غير صالح",
+    "upload_files": "ملف/ملفات",
+    "documents": "مستندات",
+    "language": "اللغة",
+    "address": "العنوان",
+    "name": "الاسم",
+    "mail": "البريد الإلكتروني",
+    "mail_or_phone": "البريد الإلكتروني أو الهاتف",
+    "sections": {
+      "user_details": "تفاصيل المستخدم",
+      "basic_info": "معلومات أساسية",
+      "change_password": "تغيير كلمة المرور",
+      "password": "كلمة المرور"
+    },
+    "enabled": {
+      "label": "مفعل",
+      "description": "عند التفعيل يمكن للمستخدم تسجيل الدخول إلى المنصة."
+    },
+    "new_password": "كلمة مرور جديدة",
     "placeholder": {
-      "leave_blank_password": "اترك هذا الحقل فارغًا إذا كنت لا تريد تغيير كلمة المرور",
-      "date": "حدد تاريخًا",
-      "no_city_found": "لم يتم العثور على مدينة",
+      "language": "اختر لغة...",
+      "leave_blank_password": "اتركه فارغًا لعدم التغيير",
+      "select_region": "اختر منطقة...",
+      "select_city": "اختر مدينة...",
+      "date": "اختر تاريخًا",
+      "no_city_found": "لا توجد مدن",
       "search": "بحث",
-      "select_city": "حدد مدينة",
-      "language": "حدد لغة",
       "price_per_km_example": "500",
       "radius_example": "50",
-      "street_example": "مثال: الشارع الرئيسي",
+      "street_example": "مثلاً: الشارع الرئيسي",
       "email_example": "m@example.com",
       "password_example": "••••••••••",
-      "bid_amount_cfa": "المبلغ بالفرنك الأفريقي"
+      "bid_amount_cfa": "المبلغ CFA",
+      "cooperative_name": "أدخل اسم التعاونية",
+      "select_president": "اختر رئيسًا...",
+      "no_users_available": "لا يوجد مستخدمون متاحون"
     },
-    "tooltip": {
-      "price_per_km": "السعر لكل كيلومتر يتم قطعه لنقل المنتجات",
-      "radius": "نطاق الخدمة بالكيلومتر لنقل المنتجات",
-      "city": "حدد مدينتك لتسهيل تحديد الموقع. إذا لم تكن في القائمة، فحدد الأقرب.",
-      "location": "حدد موقعك على الخريطة لتسهيل تحديد الموقع. ما عليك سوى النقر على الخريطة لتوسيع الموقع."
-    },
-    "type": "أنا",
-    "upload_accepted": "التنسيقات المقبولة",
-    "upload_component": "انقر للتحميل أو السحب والإفلات",
-    "upload_limit": "الحد الأقصى لحجم التحميل هو {{max}} ميغابايت",
-    "upload_too_big": "الملف كبير جدًا، الحد الأقصى {{max}} ميغابايت",
-    "upload_all": "جميع الملفات مقبولة",
-    "upload_click_or_drag": "انقر للتحميل أو السحب والإفلات",
-    "upload_invalid_type": "نوع ملف غير صالح",
-    "upload_files": "الملفات",
-    "documents": "المستندات",
     "file_type": {
       "image": "صورة",
       "pdf": "PDF",
@@ -292,25 +314,30 @@
       "audio": "صوت",
       "zip": "أرشيف ZIP"
     },
-    "identifier_label": "المعرف: {{id}}",
+    "identifier_label": "المعرّف: {{id}}",
     "gps_label": "GPS: {{gps}}"
+  },
+  "status": {
+    "pending": "قيد الانتظار",
+    "active": "نشط",
+    "inactive": "غير نشط"
   },
   "languages": {
     "en": "الإنجليزية",
     "fr": "الفرنسية",
     "ar": "العربية",
-    "zh-CN": "الماندرين",
+    "zh-CN": "الصينية",
     "es": "الإسبانية"
   },
   "language_switcher": {
     "label": "اللغة",
-    "aria_label": "تغيير اللغة"
+    "aria_label": "تبديل اللغة"
   },
   "pagination": {
     "all": "الكل",
     "entries": "إدخالات",
     "next": "التالي",
-    "no_entries": "لم يتم العثور على إدخالات",
+    "no_entries": "لا توجد إدخالات",
     "of": "من",
     "page": "صفحة",
     "previous": "السابق",
@@ -318,29 +345,85 @@
     "to": "إلى"
   },
   "validation": {
-    "acceptTerms": "يجب أن توافق على شروط الاستخدام",
-    "email": "تنسيق البريد الإلكتروني غير صالح",
-    "max": "يجب أن يكون الحقل {{count}} على الأكثر",
-    "maxLength": "يجب أن يحتوي الحقل على {{count}} حرف على الأكثر",
-    "maxLength_plural": "يجب أن يحتوي الحقل على {{count}} أحرف على الأكثر",
-    "min": "يجب أن يكون الحقل {{count}} على الأقل",
-    "minLength": "يجب أن يحتوي الحقل على {{count}} حرف على الأقل",
-    "minLength_plural": "يجب أن يحتوي الحقل على {{count}} أحرف على الأقل",
-    "invalidType": "نوع الحقل غير صالح",
-    "password": "يجب أن تحتوي كلمة المرور على حرف صغير واحد على الأقل، وحرف كبير واحد، ورقم واحد، وحرف خاص واحد",
-    "passwordValidation": "كلمات المرور غير متطابقة",
-    "phone": "رقم بنيني غير صالح",
+    "default": "الحقل غير صالح",
+    "regex": "تنسيق الحقل غير صالح",
+    "acceptTerms": "يجب قبول شروط الاستخدام",
+    "email": "تنسيق بريد إلكتروني غير صالح",
+    "max": "يجب أن يكون الحقل بحد أقصى {{count}}",
+    "maxLength": "يجب ألا يتجاوز الحقل {{count}} حرفًا",
+    "maxLength_plural": "يجب ألا يتجاوز الحقل {{count}} حرفًا",
+    "min": "يجب أن يكون الحقل على الأقل {{count}}",
+    "minLength": "يجب أن يحتوي الحقل على الأقل على {{count}} حرف",
+    "minLength_plural": "يجب أن يحتوي الحقل على الأقل على {{count}} حرف",
+    "invalidType": "نوع حقل غير صالح",
+    "password": "يجب أن تحتوي كلمة المرور على حرف كبير وصغير ورقم ورمز",
+    "passwordValidation": "كلمتا المرور غير متطابقتين",
+    "phone": "رقم هاتف بنيني غير صالح",
     "required": "هذا الحقل مطلوب",
-    "number_min": "يجب أن تكون القيمة أكبر من أو تساوي {{count}}"
+    "number_min": "يجب أن تكون القيمة أكبر أو تساوي {{count}}"
+  },
+  "errors": {
+    "access.denied": "تم رفض الوصول: لا تملك الصلاحيات الكافية.",
+    "access.disabled": "يجب تفعيل حسابك من قِبل المشرف قبل استخدام المنصة.",
+    "access.forbidden": "وصول ممنوع",
+    "access.forbidden.csrf": "عدم تطابق رمز CSRF",
+    "access.forbidden.csrf.missing": "رمز CSRF مفقود",
+    "access.unauthorized": "فشل المصادقة",
+    "agriculture_id.exists": "رقم التعريف الزراعي مستخدم بالفعل",
+    "bad_request": "طلب غير صالح",
+    "default.error": "انتهاك تكامل البيانات",
+    "email.exists": "هذا البريد الإلكتروني مستخدم بالفعل",
+    "error_occurred": "حدث خطأ",
+    "undefined": "حدث خطأ",
+    "fields": {
+      "agriculturalIdentifier": "المعرّف الزراعي",
+      "email": "البريد الإلكتروني",
+      "phone": "الهاتف",
+      "defaultStrategyId": "الاستراتيجية الافتراضية",
+      "defaultFixedPriceKg": "السعر الثابت الافتراضي للكلغ",
+      "defaultMaxPriceKg": "السعر الأقصى الافتراضي للكلغ",
+      "defaultMinPriceKg": "السعر الأدنى الافتراضي للكلغ",
+      "showOnlyActive": "إظهار النشط فقط",
+      "forceBetterBids": "فرض عروض أفضل",
+      "minIncrement": "الزيادة الدنيا"
+    },
+    "internal_error": "حدث خطأ داخلي. يرجى الاتصال بالدعم إذا استمرّ.",
+    "message.not_readable": "رسالة HTTP غير قابلة للقراءة",
+    "method.not_allowed": "طريقة غير مسموحة",
+    "missing.path_variable": "متغير المسار مفقود",
+    "missing.request_param": "معامل الطلب مفقود",
+    "no_handler_found": "لا يوجد مسار يطابق عنوان URL المطلوب",
+    "notFound": "المورد غير موجود",
+    "phone.exists": "رقم الهاتف مستخدم بالفعل",
+    "resource.not_found": "المورد غير موجود",
+    "serverError": "خطأ داخلي في الخادم",
+    "stale.object": "تم تعديل المورد من قِبل مستخدم آخر، يرجى المحاولة مجددًا.",
+    "unauthorized": "غير مصرح لك بالوصول إلى هذا المورد",
+    "validation.error": "خطأ في التحقق",
+    "email.invalid": "تنسيق البريد الإلكتروني غير صالح",
+    "email.taken": "هذا البريد الإلكتروني مستخدم بالفعل",
+    "phone.taken": "رقم الهاتف مستخدم بالفعل",
+    "server.unreachable": "الخادم غير متاح",
+    "invalid_google_token": "رمز Google غير صالح",
+    "gmail_account_not_found": "لا يوجد حساب مرتبط بهذا البريد الإلكتروني. يرجى التسجيل أولًا."
+  },
+  "password_indicator": {
+    "strength": "قوة كلمة المرور",
+    "very_weak": "ضعيفة جدًا",
+    "weak": "ضعيفة",
+    "fair": "متوسطة",
+    "good": "جيدة",
+    "strong": "قوية",
+    "very_strong": "قوية جدًا"
   },
   "database": {
     "harvest": "خام",
-    "transformed": "معالج",
-    "AdminListDto": "مسؤول",
+    "transformed": "محول",
+    "AdminListDto": "مشرف",
     "ProducerListDto": "منتج",
-    "TransformerListDto": "معالج",
-    "QualityInspectorListDto": "مفتش جودة",
-    "ExporterListDto": "مصدر",
+    "TransformerListDto": "محول",
+    "QualityInspectorListDto": "فاحص جودة",
+    "ExporterListDto": "مصدّر",
     "CarrierListDto": "ناقل"
   },
   "auction": {
@@ -351,18 +434,18 @@
     "bid_count_other": "{{count}} عروض",
     "bid_count": "{{count}} عرض",
     "bid_count_plural": "{{count}} عروض",
-    "expires_in": "ينتهي في",
+    "expires_in": "تنتهي خلال",
     "asking_price": "السعر المطلوب",
     "best_bid": "أفضل عرض",
-    "details_title_full": "منتج {{productType}} دفعة #{{productId}} مزاد #{{auctionId}}",
+    "details_title_full": "منتج {{productType}} · دفعة رقم {{productId}} · مزاد رقم {{auctionId}}",
     "auction_details_title": "تفاصيل المزاد",
-    "buy_now_label": "اشتر الآن",
-    "buy_now_price": "اشتر الآن {{price}}",
-    "confirm_buy_now_prompt": "تأكيد الشراء الآن {{price}}؟",
+    "buy_now_label": "شراء فوري",
+    "buy_now_price": "شراء فوري {{price}}",
+    "confirm_buy_now_prompt": "تأكيد الشراء الفوري {{price}}؟",
     "add_bid_label": "إضافة عرض",
-    "confirm_bid_prompt": "تأكيد عرضك بمبلغ {{amount}}؟",
+    "confirm_bid_prompt": "تأكيد عرضك بقيمة {{amount}}؟",
     "status": {
-      "ended_title": "انتهى المزاد",
+      "ended_title": "المزاد منتهٍ",
       "ended_message": "انتهى هذا المزاد الآن."
     },
     "bid_count_for_lot_zero": "{{count}} عرض للدفعة",
@@ -370,76 +453,88 @@
     "bid_count_for_lot_other": "{{count}} عروض للدفعة",
     "bid_count_for_lot": "{{count}} عرض للدفعة",
     "bid_count_for_lot_plural": "{{count}} عروض للدفعة",
-    "no_bids_yet": "لا توجد عروض حتى الآن.",
-    "accept_bid_prompt": "هل تقبل هذا العرض؟",
-    "reject_bid_prompt": "هل ترفض هذا العرض؟",
+    "no_bids_yet": "لا توجد عروض بعد.",
+    "accept_bid_prompt": "قبول هذا العرض؟",
+    "reject_bid_prompt": "رفض هذا العرض؟",
     "seller_label": "البائع",
-    "no_bids_message": "لا توجد عروض",
+    "no_bids_message": "لا عروض",
     "time_remaining_label": "الوقت المتبقي",
-    "click_to_see_details_prompt": "انقر لرؤية التفاصيل ←",
-    "expiration_label": "انتهاء الصلاحية",
+    "click_to_see_details_prompt": "انقر لعرض التفاصيل →",
+    "expiration_label": "الانتهاء",
     "form": {
       "title": "إدخال المزاد",
       "section_settings_title": "إعدادات البيع",
-      "submit_button": "فتح البيع"
+      "submit_button": "فتح البيع",
+      "section_pricing_title": "تحديد السعر",
+      "section_sale_conditions_title": "شروط البيع",
+      "price_per_kg_hint": "أي {{price}} فرنك CFA / كغ"
     },
-    "expiration_date_label": "انتهاء صلاحية المزاد",
+    "expiration_date_label": "انتهاء المزاد",
     "table": {
       "no_auctions": "لا توجد مزادات مدرجة.",
-      "transactions_list_message": "يمكن الاطلاع على قائمة المعاملات أدناه.",
-      "start_date_header": "بدء المزاد",
-      "end_date_header": "انتهاء المزاد",
+      "transactions_list_message": "يمكنك الاطلاع على قائمة الصفقات أدناه.",
+      "start_date_header": "بداية المزاد",
+      "end_date_header": "نهاية المزاد",
       "status_header": "الحالة",
       "obtained_price_header": "السعر المحصل",
       "buyer_header": "المشتري",
       "view_bids_button": "عرض العروض",
       "make_bid_button": "تقديم عرض",
-      "propose_contract_button": "اقتراح عقد"
+      "propose_contract_button": "اقتراح عقد",
+      "strategy_label": "استراتيجية المزاد",
+      "fixed_price_per_kg_label": "السعر المفروض لكل كغ",
+      "max_price_per_kg_label": "السعر الأقصى لكل كغ",
+      "min_price_per_kg_label": "السعر الأدنى لكل كغ"
     },
-    "contract_price_label": "*السعر التعاقدي"
+    "contract_price_label": "*سعر العقد"
   },
   "product": {
     "quality_label": "الجودة",
     "quantity_label": "الكمية",
     "type_label": "النوع",
-    "merchandise_label": "البضائع",
+    "merchandise_label": "البضاعة",
     "price_label": "السعر",
     "product_label": "المنتج",
-    "quantity_in_kg_label": "الكمية (كجم)",
-    "price_in_cfa_label": "السعر (فرنك أفريقي)",
+    "quantity_in_kg_label": "الكمية (كغ)",
+    "price_in_cfa_label": "السعر (فرنك CFA)",
     "info_title": "معلومات المنتج",
     "lot_number_label": "رقم الدفعة",
+    "lot_no_label": "دفعة رقم {{id}}",
     "deposited_quantity_label": "الكمية المودعة",
+    "raw_materials_label": "المواد الخام",
+    "deposited_quantity_available_label": "الكمية المتاحة",
+    "origin_transformed_default": "الكاجو",
     "deposit_date_label": "تاريخ الإيداع",
-    "store_label": "المتجر",
-    "lot_label": "دفعة #{{id}}",
+    "store_label": "المخزن",
+    "lot_label": "دفعة رقم {{id}}",
     "product_type_label": "منتج {{type}}",
-    "origin_label": "الأصل",
-    "quality_inspector_label": "مفتش الجودة",
-    "results_count_zero": "النتيجة: {{count}} منتج",
-    "results_count_one": "النتيجة: {{count}} منتج",
-    "results_count_other": "النتائج: {{count}} منتجات",
-    "results_count": "النتيجة: {{count}} منتج",
-    "results_count_plural": "النتائج: {{count}} منتجات",
+    "origin_label": "المصدر",
+    "quality_inspector_label": "فاحص الجودة",
+    "results_count_zero": "نتيجة: {{count}} منتج",
+    "results_count_one": "نتيجة: {{count}} منتج",
+    "results_count_other": "نتائج: {{count}} منتجات",
+    "results_count": "نتيجة: {{count}} منتج",
+    "results_count_plural": "نتائج: {{count}} منتجات",
     "owner_label": "المالك",
     "warehouse_label": "المستودع",
+    "select_lots": "اختر الدفعات",
     "form": {
       "title": "إدخال المنتج",
       "section_deposit_settings_title": "إعدادات الإيداع",
       "cultivated_field_label": "الحقل المزروع",
       "submit_button": "حفظ المنتج",
-      "section_quality_control_title": "مراقبة الجودة",
-      "control_date_label": "تاريخ المراقبة",
-      "certificate_label": "شهادة (صورة أو PDF)"
+      "section_quality_control_title": "فحص الجودة",
+      "control_date_label": "تاريخ الفحص",
+      "certificate_label": "شهادة الفحص"
     },
-    "weight_in_kg_label": "الوزن (كجم)"
+    "weight_in_kg_label": "الوزن (كغ)"
   },
   "sort": {
-    "expiration_asc": "انتهاء الصلاحية ⬆",
-    "expiration_desc": "انتهاء الصلاحية ⬇",
+    "expiration_asc": "انتهاء ⬆",
+    "expiration_desc": "انتهاء ⬇",
     "price_asc": "السعر ⬆",
     "price_desc": "السعر ⬇",
-    "label_prefix": "فرز حسب ",
+    "label_prefix": "ترتيب حسب ",
     "date_asc": "التاريخ ⬆",
     "date_desc": "التاريخ ⬇",
     "weight_asc": "الوزن ⬆",
@@ -447,7 +542,7 @@
   },
   "marketplace": {
     "title": "سوق المزادات",
-    "subtitle": "شراء المنتجات عبر الإنترنت.",
+    "subtitle": "اشترِ منتجات عبر الإنترنت.",
     "results_count_zero": "النتيجة: {{count}} مزاد",
     "results_count_one": "النتيجة: {{count}} مزاد",
     "results_count_other": "النتائج: {{count}} مزادات",
@@ -461,34 +556,34 @@
   },
   "filters": {
     "panel_title": "مرشحات",
-    "auctions_in_progress_label": "المزادات الجارية",
-    "auctions_ended_label": "المزادات المنتهية",
+    "auctions_in_progress_label": "مزادات جارية",
+    "auctions_ended_label": "مزادات منتهية",
     "all_types_placeholder": "جميع الأنواع",
-    "all_qualities_placeholder": "جميع الصفات",
+    "all_qualities_placeholder": "جميع الجودات",
     "all_regions_placeholder": "جميع المناطق",
     "all_cities_placeholder": "جميع المدن",
-    "expires_before_label": "ينتهي قبل",
+    "expires_before_label": "تنتهي قبل",
     "choose_date_placeholder": "اختر…",
     "user_type": {
       "undefined": "غير محدد",
       "seller": "بائع",
       "buyer": "مشتري",
-      "label": "بصفتي"
+      "label": "بصفتك"
     }
   },
   "address": {
     "region_label": "المنطقة"
   },
   "types": {
-    "admin": "مسؤول",
+    "admin": "مشرف",
     "producer": "منتج",
-    "transformer": "معالج",
-    "carrier": "ناقل",
-    "exporter": "مصدر",
+    "transformer": "محول",
+    "carrier": "ناقِل",
+    "exporter": "مصدّر",
     "quality_inspector": "مفتش جودة"
   },
   "header": {
-    "logo_alt": "شعار e-Anacarde",
+    "logo_alt": "شعار إي-أنكارد",
     "menu": {
       "home": "الرئيسية",
       "purchases": {
@@ -496,7 +591,7 @@
         "items": {
           "buy_product": {
             "title": "شراء منتج",
-            "description": "شراء منتج من خلال البيع المباشر"
+            "description": "شراء منتج من البيع المباشر"
           },
           "my_purchases": {
             "title": "مشترياتي",
@@ -518,15 +613,15 @@
         }
       },
       "deposits": {
-        "title": "الودائع",
+        "title": "الإيداعات",
         "items": {
           "deposit_product": {
             "title": "إيداع منتج",
-            "description": "تسجيل إيداع في المتجر"
+            "description": "تسجيل إيداع في المخزن"
           },
           "my_products": {
             "title": "منتجاتي",
-            "description": "عرض جميع ودائعي"
+            "description": "عرض جميع إيداعاتي"
           }
         }
       },
@@ -544,58 +639,83 @@
         }
       },
       "contact": "اتصل بنا",
-      "about": "حول"
+      "about": "حول",
+      "marketplace": {
+        "title": "السوق",
+        "browse": "عرض السوق",
+        "browse_desc": "تصفح واشترِ منتجات طازجة.",
+        "new_sale": "عرض جديد",
+        "new_sale_desc": "اقترح منتجاتك للبيع.",
+        "new_deposit": "إيداع جديد",
+        "new_deposit_desc": "أودع منتجاتك للبيع لاحقاً.",
+        "how_it_works": "الوصول إلى السوق",
+        "how_it_works_desc": "قم بتسجيل الدخول للشراء والبيع على المنصة."
+      },
+      "news": "أخبار",
+      "my_space": {
+        "title": "مساحتي",
+        "my_purchases": "مشترياتي",
+        "my_sales": "مبيعاتي",
+        "my_deposits": "إيداعاتي",
+        "my_contracts": "عقودي",
+        "my_purchases_marketplace_desc": "عرض مشترياتك وعروضك الجارية",
+        "my_sales_marketplace_desc": "عرض مبيعاتك الجارية والمنتهية",
+        "my_deposits_marketplace_desc": "عرض إيداعاتك",
+        "my_contracts_marketplace_desc": "عرض عقودك"
+      }
     },
     "auth": {
       "login": "تسجيل الدخول",
       "profile": "الملف الشخصي",
       "settings": "الإعدادات",
-      "logout": "تسجيل الخروج"
+      "logout": "تسجيل الخروج",
+      "register": "إنشاء حساب"
     },
     "mobile": {
-      "toggle_menu_sr": "فتح القائمة الرئيسية"
+      "toggle_menu_sr": "افتح القائمة الرئيسية"
     }
   },
   "login": {
-    "title_description": "تسجيل الدخول إلى حساب e-Anacarde الخاص بك",
-    "forgot_password": "هل نسيت كلمة المرور؟",
-    "continue_with_separator": "أو المتابعة باستخدام",
+    "title_description": "سجّل الدخول إلى حسابك في إي-أنكارد",
+    "success_google": "تم تسجيل الدخول بنجاح عبر Google",
+    "forgot_password": "نسيت كلمة المرور؟",
+    "continue_with_separator": "أو تابع عبر",
     "social": {
-      "apple_sr": "تسجيل الدخول باستخدام Apple",
-      "google_sr": "تسجيل الدخول باستخدام Google",
-      "meta_sr": "تسجيل الدخول باستخدام Meta"
+      "apple_sr": "تسجيل الدخول عبر Apple",
+      "google_sr": "تسجيل الدخول عبر Google",
+      "meta_sr": "تسجيل الدخول عبر Meta"
     },
     "signup_prompt": "ليس لديك حساب؟",
-    "terms_prefix": "بالنقر على متابعة، فإنك توافق على ",
+    "terms_prefix": "بالضغط على متابعة، فإنك توافق على ",
     "terms_separator": " و ",
-    "terms_suffix": " الخاصة بنا."
+    "terms_suffix": "."
   },
   "footer_cta": {
-    "title": "انضم إلى e-Anacarde اليوم وحسّن مبيعات الكاجو الخاصة بك!",
-    "button_signup": "اشتراك"
+    "title": "انضم إلى إي-أنكارد اليوم وحسِّن بيع منتجات الكاجو الخاصة بك!",
+    "button_signup": "تسجيل"
   },
   "footer": {
     "logo": {
-      "alt": "شعار مزاد الكاجو في بنين",
-      "title": "مزاد الكاجو في بنين"
+      "alt": "شعار Cashew Auction Benin",
+      "title": "Cashew Auction Bénين"
     },
-    "tagline": "منصتك لمزادات الكاجو في بنين — المواد الخام والمنتجات المصنعة",
+    "tagline": "منصة مزادات الكاجو في بنين — المواد الخام والمنتجات المصنعة",
     "menu": {
       "auctions": {
         "title": "المزادات",
         "links": {
           "raw_materials": "المواد الخام",
-          "processed_products": "المنتجات المصنعة",
+          "processed_products": "منتجات مُصنَّعة",
           "my_offers": "عروضي"
         }
       },
       "company": {
         "title": "الشركة",
         "links": {
-          "about_us": "عنا",
+          "about_us": "معلومات عنا",
           "team": "الفريق",
-          "careers": "وظائف",
-          "contact": "اتصال"
+          "careers": "الوظائف",
+          "contact": "اتصل بنا"
         }
       },
       "resources": {
@@ -607,15 +727,15 @@
         }
       },
       "social_media": {
-        "title": "وسائل التواصل الاجتماعي",
+        "title": "وسائل التواصل",
         "links": {
           "facebook": "فيسبوك",
           "twitter": "تويتر",
-          "linkedin": "لينكد إن"
+          "linkedin": "لينكدإن"
         }
       }
     },
-    "copyright": "© 2025 المجموعة 4 - مختبر هندسة البرمجيات، جامعة نامور.",
+    "copyright": "© 2025 المجموعة 4 – مختبر هندسة البرمجيات، جامعة نامور.",
     "bottom_links": {
       "terms": "الشروط العامة",
       "privacy_policy": "سياسة الخصوصية"
@@ -624,25 +744,25 @@
   "not_found": {
     "error_code": "404",
     "title": "الصفحة غير موجودة",
-    "message": "عذرًا، لم نتمكن من العثور على الصفحة التي تبحث عنها.",
+    "message": "عذراً، لم نعثر على الصفحة التي تبحث عنها.",
     "button_home": "العودة إلى الرئيسية",
     "button_contact_support": "اتصل بالدعم"
   },
   "forbidden": {
     "error_code": "403",
-    "title": "الوصول ممنوع",
+    "title": "دخول ممنوع",
     "message": "عذراً، ليس لديك الأذونات اللازمة للوصول إلى هذه الصفحة.",
     "button_home": "العودة إلى الرئيسية",
     "button_contact_support": "اتصل بالدعم"
   },
   "error_boundary": {
     "title": "حدث خطأ",
-    "message": "عذرًا، حدث خطأ ما. يرجى المحاولة مرة أخرى لاحقًا أو العودة إلى الصفحة الرئيسية.",
+    "message": "عذراً، حدثت مشكلة. يرجى المحاولة لاحقاً أو العودة إلى الرئيسية.",
     "button_home": "العودة إلى الرئيسية"
   },
   "empty_state": {
-    "title": "لم يتم العثور على نتائج",
-    "message": "اضبط عوامل التصفية أو أعد تعيين البحث."
+    "title": "لا توجد نتائج",
+    "message": "قم بضبط المرشحات أو إعادة تعيين البحث."
   },
   "countdown_timer": {
     "auction_ended": "انتهى المزاد",
@@ -653,18 +773,18 @@
     "minutes_one": "{{count}} دقيقة",
     "minutes_other": "{{count}} دقائق",
     "seconds_one": "{{count}} ثانية",
-    "seconds_other": "{{count}} ثواني"
+    "seconds_other": "{{count}} ثوانٍ"
   },
   "contract": {
     "modal_title": "اقتراح عقد",
     "avatar_alt": "الصورة الرمزية",
-    "guaranteed_price_cfa_kg_label": "السعر المضمون (فرنك أفريقي/كجم)",
-    "minimum_quantity_kg_label": "الكمية الدنيا (كجم)",
+    "guaranteed_price_cfa_kg_label": "السعر المضمون (CFA/كغ)",
+    "minimum_quantity_kg_label": "الكمية الأدنى (كغ)",
     "duration_label": "مدة العقد",
     "duration_years_label": "(سنوات)",
     "duration_months_label": "(أشهر)",
     "ends_on_date_label": "ينتهي في {{date}}",
-    "results_count": "النتائج: {{count}} عقدًا",
+    "results_count": "النتائج: {{count}} عقود",
     "seller_label": "البائع",
     "buyer_label": "المشتري",
     "quality_label": "الجودة",
@@ -673,46 +793,274 @@
     "label": "العقد رقم {{id}}",
     "price_per_kg_label": "السعر لكل كغ"
   },
+  "settings": {
+    "update_success": "تم تحديث الإعدادات العامة بنجاح.",
+    "title": "الإعدادات العامة",
+    "default_strategy": "الاستراتيجية الافتراضية للمزاد",
+    "select_strategy_placeholder": "اختر استراتيجية افتراضية…",
+    "default_fixed_price_kg": "السعر الثابت الافتراضي (CFA لكل كغ)",
+    "default_max_price_kg": "السعر الأقصى الافتراضي (CFA لكل كغ)",
+    "default_min_price_kg": "السعر الأدنى الافتراضي (CFA لكل كغ)",
+    "show_only_active": "عرض المزادات الجارية افتراضياً",
+    "force_better_bids": "فرض عروض أعلى افتراضياً",
+    "min_increment": "الزيادة الدنيا للعروض افتراضياً"
+  },
+  "categories": {
+    "alerts_terrain": "تنبيهات الميدان",
+    "market_prices": "السوق والأسعار",
+    "research_innovations": "البحث والابتكار",
+    "training_resources": "التدريب والموارد"
+  },
   "pages": {
     "news": {
       "title": "الأخبار",
-      "subtitle": "ابق على اطلاع بآخر الأخبار والتحليلات.",
-      "no_articles_found": "لم يتم العثور على مقالات",
-      "try_different_search": "حاول تعديل فلاتر البحث أو الفئة.",
-      "no_articles_yet": "لا توجد مقالات لعرضها بعد."
+      "subtitle": "ابقَ مُطَّلعاً على أحدث الأخبار والتحليلات.",
+      "no_articles_found": "لا توجد مقالات",
+      "try_different_search": "حاول تعديل مرشحات البحث أو الفئة.",
+      "no_articles_yet": "لا توجد مقالات للعرض حالياً."
     },
     "about_page": {
-      "title": "حول e-Anacarde",
-      "logo_alt": "شعار e-Anacarde",
+      "title": "حول إي-أنكارد",
+      "logo_alt": "شعار إي-أنكارد",
       "hero": {
-        "title": "اكتشف e-Anacarde",
+        "title": "اكتشف إي-أنكارد",
         "subtitle": "مبادرة جامعية لتعزيز قطاع الكاجو في بنين من خلال منصة تبادل مبتكرة وعادلة."
       },
       "project": {
         "title": "مشروعنا الجامعي",
-        "paragraph1": "نشأ مشروع e-Anacarde من مشروع جامعي طموح يهدف إلى تصميم وتطوير تطبيق للتجارة الإلكترونية مخصص لتجارة الكاجو، وتحديداً في سياق بنين. نهجنا تعاوني وقابل للتطوير.",
-        "paragraph2": "تعمل هذه المنصة كإثبات للمفهوم لفهم الاحتياجات الحقيقية للفاعلين في قطاع الكاجو بشكل أفضل. من خلال توفير أداة ملموسة منذ المراحل الأولى، نسهل تحديد التوقعات والتحقق من صحة الميزات والتحسين المستمر للحل لتحقيق تأثير إيجابي ودائم."
+        "paragraph1": "وُلدت إي-أنكارد من مشروع جامعي طموح يهدف إلى تصميم وتطوير تطبيق تجارة إلكترونية مخصص لتجارة الكاجو، خاصة في سياق بنين. نقدّم أداة ملموسة في المراحل الأولى لفهم احتياجات الفاعلين على أرض الواقع، والتحقق من الوظائف وتحسين الحل باستمرار.",
+        "paragraph2": "تعمل هذه المنصة كدليل إثبات مفهوم ('proof-of-concept') لفهم الاحتياجات الحقيقية للفاعلين في قطاع الكاجو، مما يُيسِّر عملية تحديد التوقعات، والتحقق من الوظائف الأساسية، والتطوير المستمر لتحقيق تأثير إيجابي ومستدام."
       },
       "objectives": {
         "title": "أهدافنا الرئيسية",
         "item1": {
           "title": "تسهيل المعاملات",
-          "description": "تمكين مبيعات شفافة وفعالة لمنتجات الكاجو، لا سيما من خلال نظام المزايدة، لتقدير الإنتاج المحلي على أفضل وجه."
+          "description": "تمكين بيع منتجات الكاجو بشفافية وكفاءة من خلال نظام المزاد، لتعظيم قيمة الإنتاج المحلي."
         },
         "item2": {
           "title": "مشاركة المعلومات",
-          "description": "نشر بيانات واضحة حول أسعار السوق والكميات المتاحة أو المتداولة، مما يوفر رؤية أفضل لجميع الفاعلين."
+          "description": "نشر بيانات واضحة عن أسعار السوق والكميات المتوفرة أو المتداولة، لتوفير رؤية أفضل لجميع الفاعلين."
         },
         "item3": {
-          "title": "تعزيز أفضل الممارسات",
-          "description": "العمل كقناة لتدريب المنتجين على أفضل التقنيات الزراعية ونشر نتائج البحوث لقطاع أكثر كفاءة."
+          "title": "تعزيز الممارسات الجيدة",
+          "description": "تقديم منصة للتدريب على أفضل الممارسات الزراعية ونشر أحدث نتائج البحث لتحسين أداء القطاع."
         }
       },
       "future": {
-        "title": "مستقبل قابل للتطوير",
-        "paragraph": "على الرغم من التركيز المبدئي على الكاجو، فإن طموحنا هو بناء منصة قوية سهلة الصيانة والتكيف. نأمل أن تتمكن في النهاية من أن تكون نموذجًا للقطاعات الزراعية أو المنتجات الأخرى، وبالتالي المساهمة على نطاق أوسع في التنمية الاقتصادية."
+        "title": "مستقبل متطور",
+        "paragraph": "على الرغم من تركيزها المبدئي على الكاجو، إلا أن طموحنا هو بناء منصة قوية وسهلة الصيانة والتطوير. نأمل أن تُصبح نموذجاً لبناء منصات لقطاعات زراعية أخرى أو منتجات أخرى، مما يساهم أوسع في التنمية الاقتصادية."
       },
       "benin_flag_alt": "علم بنين"
+    }
+  },
+  "profile": {
+    "page_title": "ملفي الشخصي",
+    "page_subtitle": "اطّلع وحرّر معلوماتك الشخصية.",
+    "card_title": "معلومات الملف الشخصي",
+    "edit_mode_description": "حرِّر معلوماتك أدناه.",
+    "view_mode_description": "معلوماتك الشخصية ودورك.",
+    "personal_details_title": "المعلومات الشخصية",
+    "role_specific_details_title": "تفاصيل خاصة بالدور",
+    "update_success_toast": "تم تحديث الملف الشخصي بنجاح!",
+    "update_error_toast": "حدث خطأ أثناء التحديث"
+  },
+  "admin": {
+    "settings": {
+      "title": "إعدادات المنصة",
+      "description": "قم بإدارة إعدادات المنصة."
+    },
+    "dashboard": {
+      "title": "لوحة القيادة",
+      "description": "تابع المؤشرات المختلفة للمنصة",
+      "cards": {
+        "totalNbUsers": {
+          "title": "عدد المستخدمين",
+          "description": "جميع الأدوار"
+        },
+        "pendingValidation": {
+          "title": "التسجيلات الجديدة",
+          "description": "في انتظار الموافقة"
+        },
+        "totalAuctions": {
+          "title": "المزادات الجديدة",
+          "description": "مزادات جارية"
+        },
+        "auctionsConcluded": {
+          "title": "المزادات المنتهية",
+          "description": "آخر 30 يوماً"
+        },
+        "totalLotWeightKg": {
+          "title": "الإجمالي بالوزن",
+          "description": "إجمالي الوزن المباع"
+        },
+        "totalSoldWeightKg": {
+          "title": "الحجم الشهري",
+          "description": "آخر 30 يوماً"
+        },
+        "totalSalesAmount": {
+          "title": "إجمالي المبيعات",
+          "description": "جميع المبيعات"
+        },
+        "monthlySalesAmount": {
+          "title": "مبيعات شهرية",
+          "description": "آخر 30 يوماً"
+        },
+        "grade1Price": {
+          "title": "متوسط سعر الدرجة الأولى",
+          "description": "آخر 30 يوماً"
+        },
+        "grade2Price": {
+          "title": "متوسط سعر الدرجة الثانية",
+          "description": "آخر 30 يوماً"
+        },
+        "grade3Price": {
+          "title": "متوسط سعر الدرجة الثالثة",
+          "description": "آخر 30 يوماً"
+        },
+        "horsCategoryPrice": {
+          "title": "متوسط سعر خارج الفئات",
+          "description": "آخر 30 يوماً"
+        },
+        "transformedPrice": {
+          "title": "متوسط سعر المنتجات المحوَّلة",
+          "description": "آخر 30 يوماً"
+        },
+        "compared_to_30_days": "+ اتجاه خلال 30 يوماً",
+        "error_loading": "خطأ أثناء تحميل لوحة القيادة"
+      }
+    },
+    "user_management": {
+      "title": "إدارة المستخدمين",
+      "description": "قم بإدارة المستخدمين، واعتمد التسجيلات، وعدّل تفاصيل المستخدمين.",
+      "add_user_button": "إضافة مستخدم",
+      "tabs": {
+        "all_users": "جميع المستخدمين",
+        "pending_approvals": "الموافقات المعلقة"
+      },
+      "toasts": {
+        "user_updated_success": "تم تحديث المستخدم بنجاح.",
+        "user_updated_error": "خطأ أثناء تحديث المستخدم.",
+        "user_deleted_success": "تم حذف المستخدم بنجاح.",
+        "user_deleted_error": "خطأ أثناء حذف المستخدم.",
+        "user_approved_success": "تم اعتماد المستخدم بنجاح.",
+        "user_approved_error": "خطأ أثناء اعتماد المستخدم.",
+        "user_rejected_success": "تم رفض المستخدم بنجاح.",
+        "user_rejected_error": "خطأ أثناء رفض المستخدم.",
+        "user_created_success": "تم إنشاء المستخدم بنجاح.",
+        "user_created_error": "خطأ أثناء إنشاء المستخدم."
+      },
+      "no_users_match_search_pending": {
+        "title": "لا يوجد مستخدم قيد الانتظار يطابق بحثك.",
+        "description": "حاول توسيع معايير البحث أو التحقق من الأخطاء الإملائية."
+      },
+      "search_placeholder": "بحث...",
+      "no_users_found": "لم يتم العثور على أي مستخدم.",
+      "no_users_match_search": "لا يوجد مستخدم يطابق بحثك.",
+      "results_count": "{{count}} من أصل {{total}} مستخدم",
+      "create_dialog": {
+        "title": "إنشاء مستخدم جديد",
+        "description": "املأ المعلومات أدناه لإضافة مستخدم جديد."
+      },
+      "edit_dialog": {
+        "title": "تعديل المستخدم",
+        "description": "قم بتحديث معلومات المستخدم وإعداداته."
+      },
+      "delete_dialog": {
+        "title": "هل أنت متأكد أنك تريد حذف هذا المستخدم؟",
+        "description": "هذا الإجراء لا رجعة فيه. سيؤدي إلى حذف حساب {{userName}} وبياناته نهائياً."
+      },
+      "no_pending_approvals": {
+        "title": "لا توجد موافقات معلقة",
+        "description": "لا توجد حالياً تسجيلات في انتظار الموافقة."
+      },
+      "review_dialog": {
+        "title": "مراجعة التسجيل",
+        "description": "تحقق من معلومات ومستندات {{userName}}."
+      },
+      "no_documents_submitted": "لم يتم تقديم أي مستند."
+    },
+    "cooperative_management": {
+      "title": "إدارة التعاونيات",
+      "description": "قم بإدارة التعاونيات وأعضائها ومعلوماتهم.",
+      "add_button": "إضافة تعاونية",
+      "search_placeholder": "ابحث عن تعاونية...",
+      "manage_members_button_title": "إدارة الأعضاء",
+      "no_cooperatives_match_search": "لا توجد تعاونية تطابق بحثك.",
+      "no_cooperatives_found": "لم يتم العثور على أي تعاونية.",
+      "members_count_column": "عدد الأعضاء",
+      "create_dialog": {
+        "title": "إنشاء تعاونية جديدة",
+        "description": "املأ المعلومات أدناه لإضافة تعاونية جديدة."
+      },
+      "delete_dialog": {
+        "title": "حذف التعاونية",
+        "description_confirm": "هل أنت متأكد أنك تريد حذف هذه التعاونية؟ هذا الإجراء لا رجعة فيه."
+      },
+      "edit_dialog": {
+        "title": "تعديل التعاونية",
+        "description": "قم بتحديث معلومات التعاونية."
+      },
+      "form": {
+        "edit_title": "تعديل التعاونية",
+        "add_title": "إضافة تعاونية",
+        "error_loading_cooperative_title": "خطأ في تحميل التعاونية",
+        "error_cooperative_not_found": "بيانات التعاونية غير موجودة."
+      },
+      "toasts": {
+        "deleted_success": "تم حذف التعاونية بنجاح.",
+        "deleted_error": "خطأ أثناء حذف التعاونية.",
+        "created_success": "تم إنشاء التعاونية بنجاح.",
+        "created_error_title": "خطأ أثناء الإنشاء",
+        "created_error_description": "تعذّر إنشاء التعاونية.",
+        "updated_success": "تم تحديث التعاونية بنجاح.",
+        "updated_error_title": "خطأ أثناء التحديث",
+        "updated_error_description": "تعذّر تحديث التعاونية."
+      },
+      "members_dialog": {
+        "title": "إدارة أعضاء \"{{cooperativeName}}\"",
+        "description": "أضف أو أزل المنتجين كأعضاء من هذه التعاونية.",
+        "error_loading_users": "خطأ في تحميل المستخدمين: {{errorMessage}}",
+        "current_members_count": "الأعضاء الحاليون ({{count}})",
+        "no_current_members": "لا يوجد أعضاء حالياً.",
+        "add_producer_title": "إضافة منتج",
+        "select_available_producer_label": "اختر منتجاً غير مخصّص",
+        "select_producer_placeholder": "اختر منتجاً...",
+        "no_available_producers": "لا يوجد منتجون متاحون للإضافة.",
+        "toasts": {
+          "member_added_success": "تمت إضافة العضو بنجاح.",
+          "member_removed_success": "تمت إزالة العضو بنجاح.",
+          "member_update_error_title": "خطأ أثناء تحديث العضو",
+          "member_update_error_description": "تعذّر تحديث حالة العضو.",
+          "invalid_selection_title": "اختيار غير صالح",
+          "invalid_selection_description": "المنتج المختار غير صالح أو رقم التعريف الزراعي مفقود.",
+          "invalid_member_title": "عضو غير صالح",
+          "invalid_member_remove_description": "العضو المراد إزالته غير صالح أو رقم التعريف الزراعي للعضو مفقود."
+        }
+      }
+    },
+    "analytics": {
+      "title": "التحليلات والتصدير",
+      "description": "أنشئ وحمّل تقارير بيانات المزادات.",
+      "export_options": {
+        "title": "خيارات التصدير",
+        "description": "قم بتكوين المرشحات والصيغة لتصدير البيانات. اترك التواريخ فارغة لتصدير كل البيانات."
+      },
+      "export_filtered": {
+        "start_date_label": "تاريخ البدء",
+        "pick_date_placeholder": "اختر تاريخاً",
+        "end_date_label": "تاريخ الانتهاء",
+        "only_ended_label": "تشمل المزادات المنتهية فقط",
+        "format_label": "صيغة التصدير",
+        "format_json": "JSON",
+        "format_csv": "CSV",
+        "button": "تحميل التقرير",
+        "end_date_after_start": "يجب أن يكون تاريخ الانتهاء مساوي أو بعد تاريخ البدء.",
+        "start_end_both_or_none": "يجب تحديد تاريخي البدء والانتهاء معاً أو تركهما فارغين."
+      },
+      "export_success_title": "تم التصدير بنجاح",
+      "export_success_message": "تم تحميل الملف {{filename}} بنجاح.",
+      "export_error_title": "خطأ في التصدير",
+      "export_error_message": "حدث خطأ أثناء إنشاء الملف أو تحميله، يرجى المحاولة مجدداً."
     }
   }
 }

@@ -105,7 +105,7 @@ export const AdminGlobalSettingsForm: React.FC = () => {
               {f => (
                 <f.NumberField
                   label={t('settings.default_fixed_price_kg')}
-                  required
+                  required={false}
                 />
               )}
             </form.AppField>
@@ -132,7 +132,7 @@ export const AdminGlobalSettingsForm: React.FC = () => {
               {f => (
                 <f.CheckboxField
                   label={t('settings.show_only_active')}
-                  required
+                  required={false}
                 />
               )}
             </form.AppField>
@@ -141,7 +141,7 @@ export const AdminGlobalSettingsForm: React.FC = () => {
               {f => (
                 <f.CheckboxField
                   label={t('settings.force_better_bids')}
-                  required
+                  required={false}
                 />
               )}
             </form.AppField>
