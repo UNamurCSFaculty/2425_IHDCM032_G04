@@ -97,7 +97,6 @@ export const AuctionForm: React.FC = () => {
       expirationDate: '',
       traderId: user.id,
       active: true,
-      options: {},
     },
     async onSubmit({ value }) {
       try {
