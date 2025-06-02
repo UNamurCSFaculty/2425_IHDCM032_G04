@@ -661,12 +661,18 @@
     "click_to_see_details_prompt": "Haz clic para ver detalles →",
     "expiration_label": "Expiración",
     "form": {
-      "title": "Ingreso de la subasta",
-      "section_settings_title": "Configuración de la venta",
+      "title": "Entrada de la subasta",
+      "section_settings_title": "Configuración de venta",
       "submit_button": "Abrir venta",
-      "section_pricing_title": "Fijación de precio",
-      "section_sale_conditions_title": "Condiciones de venta",
-      "price_per_kg_hint": "Equivale a {{price}} CFA / kg"
+      "created_ok": "¡Venta abierta con éxito!",
+      "created_fail": "Error al crear la venta.",
+      "auction_strategy": "Estrategia de subasta",
+      "auction_fixed_price": "Precio fijo por kg",
+      "auction_max_price": "Precio máximo por kg",
+      "auction_min_price": "Precio mínimo por kg",
+      "section_select_product_title": "Selección del lote",
+      "section_pricing_title": "Precio y fecha",
+      "section_sale_conditions_title": "Configuración general"
     },
     "expiration_date_label": "Expiración de la subasta",
     "table": {
