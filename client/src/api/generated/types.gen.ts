@@ -1017,7 +1017,7 @@ export type AuctionUpdateDto = {
   /**
    * Options d'enchère
    */
-  options: AuctionOptionsUpdateDto
+  options?: AuctionOptionsUpdateDto
 }
 
 /**
@@ -1151,7 +1151,7 @@ export type GlobalSettingsUpdateDto = {
    */
   forceBetterBids: boolean
   /**
-   * Incrément minimum d'une sur enchère
+   * Incrément minimum d'une unité sur enchère
    */
   minIncrement?: number
 }
