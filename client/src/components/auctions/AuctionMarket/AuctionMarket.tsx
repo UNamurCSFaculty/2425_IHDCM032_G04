@@ -137,14 +137,10 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
 
   const handleFilteredDataChange = useCallback(
     (newFilteredData: AuctionDto[]) => {
-      if (userRole === 'buyer' && filterByAuctionStatus) {
-        // filter only auctions that the user won
+      if (userRole === 'buyer' && traderId) {
+        // show only auctions where user placed bids
         newFilteredData = newFilteredData.filter(auction =>
-          auction.bids.some(
-            bid =>
-              bid.status.name === TradeStatus.ACCEPTED &&
-              bid.trader.id === user.id
-          )
+          auction.bids.some(bid => bid.trader.id === traderId)
         )
       }
       setFilteredAuctions(newFilteredData)
