@@ -47,7 +47,7 @@
       "subtitle": "Consultez tous vos produits déposés et disponibles pour la vente."
     },
     "marketplace": {
-      "title": "Marché des enchères",
+      "title": "Marché aux enchères",
       "subtitle": "Achetez des produits en ligne."
     },
     "signup_success": {
@@ -652,6 +652,8 @@
     "bid_count_for_lot_other": "{{count}} offres pour le lot",
     "bid_count_for_lot": "{{count}} offre pour le lot",
     "bid_count_for_lot_plural": "{{count}} offres pour le lot",
+    "bid_created_ok": "Offre ajoutée avec succès !",
+    "bid_created_fail": "Erreur lors de l'ajout de l'offre.",
     "no_bids_yet": "Aucune offre pour le moment.",
     "accept_bid_prompt": "Accepter cette offre ?",
     "reject_bid_prompt": "Refuser cette offre ?",
@@ -745,7 +747,7 @@
     "weight_desc": "poids ⬇"
   },
   "marketplace": {
-    "title": "Marché des enchères",
+    "title": "Marché aux enchères",
     "subtitle": "Achetez des produits en ligne.",
     "results_count_zero": "Résultat : {{count}} enchère",
     "results_count_one": "Résultat : {{count}} enchère",

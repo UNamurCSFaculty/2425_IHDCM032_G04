@@ -1,4 +1,4 @@
-import type { AuctionDto, BidDto } from '@/api/generated'
+import type { ApiErrorResponse, AuctionDto, BidDto } from '@/api/generated'
 import {
   acceptAuctionMutation,
   acceptBidMutation,
@@ -43,6 +43,7 @@ import {
 import React, { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
+import { toast } from 'sonner'
 
 export type UserRole = 'buyer' | 'seller'
 
@@ -123,9 +124,20 @@ const AuctionDetailsPanel: React.FC<Props> = ({
     onSuccess() {
       queryClient.invalidateQueries({ queryKey: listBidsQueryKey() })
       queryClient.invalidateQueries({ queryKey: listAuctionsQueryKey() })
+
+      toast.success(t('auction.bid_created_ok'), {
+        duration: 5000,
+      })
     },
-    onError(error) {
-      console.error('Create Bid - Invalid request ', error)
+    onError(error: ApiErrorResponse) {
+      const detail =
+        error && error.errors.length > 0 ? ' ' + error.errors[0].message : ''
+      toast.error(
+        t('auction.bid_created_fail') + ' ' + error.code + ':' + detail,
+        {
+          duration: 5000,
+        }
+      )
     },
   })
 

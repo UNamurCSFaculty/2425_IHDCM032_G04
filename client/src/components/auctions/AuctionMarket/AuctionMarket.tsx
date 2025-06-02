@@ -120,7 +120,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
 
   const handleFilteredDataChange = useCallback(
     (newFilteredData: AuctionDto[]) => {
-      if (userRole === 'buyer') {
+      if (userRole === 'buyer' && filterByAuctionStatus) {
         // filter only auctions that the user won
         newFilteredData = newFilteredData.filter(auction =>
           auction.bids.some(
@@ -132,7 +132,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
       }
       setFilteredAuctions(newFilteredData)
     },
-    []
+    [filterByAuctionStatus, userRole, user.id]
   )
 
   // Display inline auction on custom event (SSE notif's toast action)

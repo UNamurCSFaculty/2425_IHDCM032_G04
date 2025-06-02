@@ -633,6 +633,8 @@
     "bid_count_other": "{{count}} bids",
     "bid_count": "{{count}} bid",
     "bid_count_plural": "{{count}} bids",
+    "bid_created_ok": "Bid added successfully!",
+    "bid_created_fail": "Error while adding bid.",
     "expires_in": "Expires in",
     "asking_price": "Asking Price",
     "best_bid": "Best Bid",
