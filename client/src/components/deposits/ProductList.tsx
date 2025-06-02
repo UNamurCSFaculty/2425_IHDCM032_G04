@@ -210,12 +210,7 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
               {inlineProduct ? (
                 <>
-                  <ProductCard
-                    product={inlineProduct}
-                    layout="grid"
-                    isDetail
-                    onDetails={() => {}}
-                  />
+                  <ProductCard product={inlineProduct} layout="grid" isDetail />
                   <div className="col-span-full lg:col-span-2"></div>
                 </>
               ) : filteredProducts.length === 0 ? (
@@ -223,12 +218,7 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
               ) : (
                 <>
                   {paginated.map(p => (
-                    <ProductCard
-                      key={p.id}
-                      product={p}
-                      layout="grid"
-                      onDetails={() => console.log('TODO')}
-                    />
+                    <ProductCard key={p.id} product={p} layout="grid" />
                   ))}
                   {totalPages > 1 && (
                     <div className="col-span-full flex justify-center">
@@ -263,12 +253,7 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
                   </TableHeader>
                   <TableBody>
                     {paginated.map(p => (
-                      <ProductCard
-                        key={p.id}
-                        product={p}
-                        layout="row"
-                        onDetails={() => console.log('DETAILS')}
-                      />
+                      <ProductCard key={p.id} product={p} layout="row" />
                     ))}
                   </TableBody>
                 </Table>

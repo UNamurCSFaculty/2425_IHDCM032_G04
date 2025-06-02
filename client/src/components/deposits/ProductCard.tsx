@@ -38,7 +38,6 @@ interface ProductCardProps {
   product: ProductDto
   layout: CardLayout
   isDetail?: boolean
-  onDetails: () => void
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, layout }) => {
