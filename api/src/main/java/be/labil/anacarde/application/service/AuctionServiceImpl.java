@@ -323,7 +323,7 @@ public class AuctionServiceImpl implements AuctionService {
 		if (subscribers != null && !subscribers.isEmpty()) {
 			for (String subKey : subscribers) {
 				notificationSseService.publishEvent(subKey, "auctionClosed", auctionDto);
-				log.info("[SSE] Notification envoyée à " + subKey + " pour clôture de l'enchère: "
+				log.debug("[SSE] Notification envoyée à " + subKey + " pour clôture de l'enchère: "
 						+ auctionDto);
 			}
 		}

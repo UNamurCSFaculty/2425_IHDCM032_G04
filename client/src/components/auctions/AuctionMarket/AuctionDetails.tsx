@@ -25,12 +25,7 @@ import { TradeStatus, wktToLatLon } from '@/lib/utils'
 import { useAuthUser } from '@/store/userStore'
 import dayjs from '@/utils/dayjs-config'
 import { formatPrice, formatWeight } from '@/utils/formatter'
-import {
-  useMutation,
-  useQuery,
-  useQueryClient,
-  useSuspenseQuery,
-} from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import 'leaflet/dist/leaflet.css'
 import {
   CheckCircle,
@@ -42,6 +37,7 @@ import {
   TrendingUp,
   UserCircle2,
   XCircle,
+  Loader2,
 } from 'lucide-react'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -61,11 +57,7 @@ const contractQueryOptions = (
   buyerId: number
 ) => ({
   ...getContractOfferByCriteriaOptions({
-    query: {
-      qualityId: qualityId,
-      sellerId: sellerId,
-      buyerId: buyerId,
-    },
+    query: { qualityId, sellerId, buyerId },
   }),
   staleTime: 10_000,
 })
@@ -89,7 +81,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
 
   const { t } = useTranslation()
 
-  const { data: bids } = useSuspenseQuery(
+  const { data: bids = [], isLoading: bidsLoading } = useQuery(
     listBidsOptions({ query: { auctionId: auction.id } })
   )
 
@@ -171,11 +163,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
     if (!value || value <= 0) return
 
     createBidRequest.mutate({
-      body: {
-        amount: value,
-        auctionId: auction.id,
-        traderId: user.id,
-      },
+      body: { amount: value, auctionId: auction.id, traderId: user.id },
     })
 
     setAmount('')
@@ -186,17 +174,11 @@ const AuctionDetailsPanel: React.FC<Props> = ({
     if (!buyNowPrice) return
 
     const newBid = await createBidRequest.mutateAsync({
-      body: {
-        amount: buyNowPrice,
-        auctionId: auction.id,
-        traderId: user.id,
-      },
+      body: { amount: buyNowPrice, auctionId: auction.id, traderId: user.id },
     })
 
     acceptBidRequest.mutate({ path: { bidId: newBid.id } })
-
     acceptAuctionRequest.mutate({ path: { id: auction.id } })
-
     setBuyNowPopover(false)
   }
 
@@ -205,24 +187,23 @@ const AuctionDetailsPanel: React.FC<Props> = ({
     bidId: number,
     action: 'accept' | 'reject'
   ) => {
-    if (action == 'accept') {
-      acceptBidRequest.mutate({ path: { bidId: bidId } })
+    if (action === 'accept') {
+      acceptBidRequest.mutate({ path: { bidId } })
       acceptAuctionRequest.mutate({ path: { id: auctionId } })
       setAcceptBidPopoverIndex(-1)
     } else {
-      rejectBidRequest.mutate({ path: { bidId: bidId } })
+      rejectBidRequest.mutate({ path: { bidId } })
       setRejectBidPopoverIndex(-1)
     }
   }
 
-  // Position map
   const coords = wktToLatLon(auction.product.store.address.location)
   const mapCenter = (coords ?? [0, 0]) as [number, number]
   const endsIn = new Date(auction.expirationDate)
   const ended = endsIn < new Date()
+
   return (
     <div className="mx-auto flex w-full flex-col gap-6 p-4">
-      {/* Header */}
       <div className="flex flex-wrap space-y-1">
         <h2 className="flex items-center gap-2 text-2xl font-semibold">
           {t('auction.details_title_full', {
@@ -240,11 +221,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
 
         {acceptedBid && (
           <div className="ml-auto">
-            <Button
-              onClick={() => {
-                setIsOpen(true)
-              }}
-            >
+            <Button onClick={() => setIsOpen(true)}>
               {t('auction.table.propose_contract_button')}
             </Button>
 
@@ -253,9 +230,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
               auction={auction}
               isOpen={isOpen}
               onClose={() => setIsOpen(false)}
-              onSubmit={() => {
-                setIsOpen(false)
-              }}
+              onSubmit={() => setIsOpen(false)}
             />
           </div>
         )}
@@ -391,12 +366,12 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                         </Button>
                         <Button
                           size="sm"
-                          onClick={() => {
+                          onClick={() =>
                             handleSubmitBuyNow(
                               contract?.pricePerKg ??
                                 auction.options?.buyNowPrice
                             )
-                          }}
+                          }
                         >
                           {t('buttons.confirm')}
                         </Button>
@@ -469,6 +444,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
             </Card>
           </div>
         )}
+
         {role === 'buyer' && ended && (
           <div>
             <Card className="rounded-lg bg-neutral-100 p-4 shadow">
@@ -483,6 +459,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
             </Card>
           </div>
         )}
+
         <div className="flex-2">
           <Card className="overflow-hidden">
             <CardHeader>
@@ -490,134 +467,140 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                 {t('auction.bid_count_for_lot', { count: sortedBids.length })}
               </CardTitle>
             </CardHeader>
-            <CardContent className="max-h-80 divide-y overflow-y-auto bg-neutral-100 p-2">
-              {sortedBids.length === 0 ? (
-                <div className="py-8 text-center text-gray-500">
-                  {t('auction.no_bids_yet')}
-                </div>
-              ) : (
-                sortedBids.map(bid => (
-                  <div
-                    key={bid.id}
-                    className="flex items-center justify-between py-2"
-                  >
-                    <div>
-                      <div className="font-medium">
-                        {bid.trader.firstName} {bid.trader.lastName}
-                      </div>
-                      <div className="text-xs text-gray-600">
-                        {dayjs(bid.creationDate).fromNow()}
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <span className="font-semibold">
-                        {formatPrice.format(bid.amount)}
-                      </span>
-                      {role === 'seller' &&
-                        auction.status.name == TradeStatus.OPEN &&
-                        bid.status.name === TradeStatus.OPEN && (
-                          <div className="flex gap-1">
-                            {/* Accept */}
-                            <Popover open={acceptBidPopoverIndex == bid.id}>
-                              <PopoverTrigger asChild>
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  className="flex items-center border-green-200 bg-green-700 px-2 py-1 text-white"
-                                  onClick={() => {
-                                    setAcceptBidPopoverIndex(bid.id)
-                                  }}
-                                >
-                                  <CheckCircle className="mr-1 h-3 w-3" />{' '}
-                                  {t('buttons.accept')}
-                                </Button>
-                              </PopoverTrigger>
-                              <PopoverContent className="w-48 p-2">
-                                <p className="mb-2 text-center text-sm">
-                                  {t('auction.accept_bid_prompt')}
-                                </p>
-                                <div className="flex justify-end gap-2">
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => {
-                                      setAcceptBidPopoverIndex(-1)
-                                    }}
-                                  >
-                                    {t('buttons.cancel')}
-                                  </Button>
-                                  <Button
-                                    size="sm"
-                                    onClick={() =>
-                                      handleBidAction(
-                                        auction.id,
-                                        bid.id,
-                                        'accept'
-                                      )
-                                    }
-                                  >
-                                    {t('common.yes')}
-                                  </Button>
-                                </div>
-                              </PopoverContent>
-                            </Popover>
-                            {/* Reject */}
-                            <Popover open={rejectBidPopoverIndex == bid.id}>
-                              <PopoverTrigger asChild>
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  className="flex items-center border-red-200 bg-red-600 px-2 py-1 text-white"
-                                  onClick={() => {
-                                    setRejectBidPopoverIndex(bid.id)
-                                  }}
-                                >
-                                  <XCircle className="mr-1 h-3 w-3" />{' '}
-                                  {t('buttons.reject')}
-                                </Button>
-                              </PopoverTrigger>
-                              <PopoverContent className="w-48 p-2">
-                                <p className="mb-2 text-center text-sm">
-                                  {t('auction.reject_bid_prompt')}
-                                </p>
-                                <div className="flex justify-end gap-2">
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => {
-                                      setRejectBidPopoverIndex(-1)
-                                    }}
-                                  >
-                                    {t('buttons.cancel')}
-                                  </Button>
-                                  <Button
-                                    size="sm"
-                                    variant="destructive"
-                                    onClick={() =>
-                                      handleBidAction(
-                                        auction.id,
-                                        bid.id,
-                                        'reject'
-                                      )
-                                    }
-                                  >
-                                    {t('common.yes')}
-                                  </Button>
-                                </div>
-                              </PopoverContent>
-                            </Popover>
-                          </div>
-                        )}
-                      {bid.status.name !== TradeStatus.OPEN && (
-                        <Badge variant="outline" className="text-xs">
-                          {bid.status.name}
-                        </Badge>
-                      )}
-                    </div>
+
+            {bidsLoading ? (
+              <div className="flex justify-center py-8">
+                <Loader2 className="text-muted-foreground size-8 animate-spin" />
+              </div>
+            ) : (
+              <CardContent className="max-h-80 divide-y overflow-y-auto bg-neutral-100 p-2">
+                {sortedBids.length === 0 ? (
+                  <div className="py-8 text-center text-gray-500">
+                    {t('auction.no_bids_yet')}
                   </div>
-                ))
-              )}
-            </CardContent>
+                ) : (
+                  sortedBids.map(bid => (
+                    <div
+                      key={bid.id}
+                      className="flex items-center justify-between py-2"
+                    >
+                      <div>
+                        <div className="font-medium">
+                          {bid.trader.firstName} {bid.trader.lastName}
+                        </div>
+                        <div className="text-xs text-gray-600">
+                          {dayjs(bid.creationDate).fromNow()}
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-4">
+                        <span className="font-semibold">
+                          {formatPrice.format(bid.amount)}
+                        </span>
+                        {role === 'seller' &&
+                          auction.status.name === TradeStatus.OPEN &&
+                          bid.status.name === TradeStatus.OPEN && (
+                            <div className="flex gap-1">
+                              <Popover open={acceptBidPopoverIndex === bid.id}>
+                                <PopoverTrigger asChild>
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="flex items-center border-green-200 bg-green-700 px-2 py-1 text-white"
+                                    onClick={() =>
+                                      setAcceptBidPopoverIndex(bid.id)
+                                    }
+                                  >
+                                    <CheckCircle className="mr-1 h-3 w-3" />
+                                    {t('buttons.accept')}
+                                  </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-48 p-2">
+                                  <p className="mb-2 text-center text-sm">
+                                    {t('auction.accept_bid_prompt')}
+                                  </p>
+                                  <div className="flex justify-end gap-2">
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() =>
+                                        setAcceptBidPopoverIndex(-1)
+                                      }
+                                    >
+                                      {t('buttons.cancel')}
+                                    </Button>
+                                    <Button
+                                      size="sm"
+                                      onClick={() =>
+                                        handleBidAction(
+                                          auction.id,
+                                          bid.id,
+                                          'accept'
+                                        )
+                                      }
+                                    >
+                                      {t('common.yes')}
+                                    </Button>
+                                  </div>
+                                </PopoverContent>
+                              </Popover>
+
+                              <Popover open={rejectBidPopoverIndex === bid.id}>
+                                <PopoverTrigger asChild>
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="flex items-center border-red-200 bg-red-600 px-2 py-1 text-white"
+                                    onClick={() =>
+                                      setRejectBidPopoverIndex(bid.id)
+                                    }
+                                  >
+                                    <XCircle className="mr-1 h-3 w-3" />
+                                    {t('buttons.reject')}
+                                  </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-48 p-2">
+                                  <p className="mb-2 text-center text-sm">
+                                    {t('auction.reject_bid_prompt')}
+                                  </p>
+                                  <div className="flex justify-end gap-2">
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() =>
+                                        setRejectBidPopoverIndex(-1)
+                                      }
+                                    >
+                                      {t('buttons.cancel')}
+                                    </Button>
+                                    <Button
+                                      size="sm"
+                                      variant="destructive"
+                                      onClick={() =>
+                                        handleBidAction(
+                                          auction.id,
+                                          bid.id,
+                                          'reject'
+                                        )
+                                      }
+                                    >
+                                      {t('common.yes')}
+                                    </Button>
+                                  </div>
+                                </PopoverContent>
+                              </Popover>
+                            </div>
+                          )}
+                        {bid.status.name !== TradeStatus.OPEN && (
+                          <Badge variant="outline" className="text-xs">
+                            {bid.status.name}
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+                  ))
+                )}
+              </CardContent>
+            )}
           </Card>
         </div>
       </div>
