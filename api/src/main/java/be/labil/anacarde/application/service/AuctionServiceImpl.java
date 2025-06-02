@@ -95,7 +95,7 @@ public class AuctionServiceImpl implements AuctionService {
 			auctionSseService.addSubscriber(full.getId(), full.getTrader().getUsername());
 		}
 
-		if (full.getExpirationDate() != null) {
+		if (full.getExpirationDate() != null && full.getStatus().getName().equals("Ouvert")) {
 			scheduleAuctionClose(Long.valueOf(full.getId()), full.getExpirationDate());
 		}
 

@@ -187,6 +187,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 	private static final String CREATE_VIEW_EXPORT_AUCTION = "classpath:sql/export_auctions.sql";
 	private static final String CREATE_VIEW_DASHBOARD_CARDS = "classpath:sql/dashboard_cards.sql";
 	private static final String CREATE_VIEW_DASHBOARD_GRAPHIC = "classpath:sql/dashboard_graphic.sql";
+	private static final String QUARTZ_INIT_SCHEMA_SQL = "classpath:quartz-custom-init.sql";
 
 	@Override
 	public boolean isInitialized() {
@@ -195,6 +196,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 
 	@Override
 	public void dropDatabase() {
+		log.info("Dropping application tables...");
 		userRepository.findAll().forEach(p -> {
 			if (p instanceof Producer c) {
 				c.setCooperative(null);
@@ -222,6 +224,43 @@ public class DatabaseServiceImpl implements DatabaseService {
 		languageRepository.deleteAllInBatch();
 		newsRepository.deleteAllInBatch();
 		newsCategoryRepository.deleteAllInBatch();
+		log.info("Application tables dropped.");
+
+		log.info("Dropping Quartz tables...");
+		// L'ordre est important à cause des clés étrangères
+		entityManager.createNativeQuery("DROP TABLE IF EXISTS QRTZ_FIRED_TRIGGERS CASCADE;")
+				.executeUpdate();
+		entityManager.createNativeQuery("DROP TABLE IF EXISTS QRTZ_PAUSED_TRIGGER_GRPS CASCADE;")
+				.executeUpdate();
+		entityManager.createNativeQuery("DROP TABLE IF EXISTS QRTZ_SCHEDULER_STATE CASCADE;")
+				.executeUpdate();
+		entityManager.createNativeQuery("DROP TABLE IF EXISTS QRTZ_LOCKS CASCADE;").executeUpdate();
+		entityManager.createNativeQuery("DROP TABLE IF EXISTS QRTZ_SIMPLE_TRIGGERS CASCADE;")
+				.executeUpdate();
+		entityManager.createNativeQuery("DROP TABLE IF EXISTS QRTZ_SIMPROP_TRIGGERS CASCADE;")
+				.executeUpdate();
+		entityManager.createNativeQuery("DROP TABLE IF EXISTS QRTZ_CRON_TRIGGERS CASCADE;")
+				.executeUpdate();
+		entityManager.createNativeQuery("DROP TABLE IF EXISTS QRTZ_BLOB_TRIGGERS CASCADE;")
+				.executeUpdate();
+		entityManager.createNativeQuery("DROP TABLE IF EXISTS QRTZ_TRIGGERS CASCADE;")
+				.executeUpdate();
+		entityManager.createNativeQuery("DROP TABLE IF EXISTS QRTZ_JOB_DETAILS CASCADE;")
+				.executeUpdate();
+		entityManager.createNativeQuery("DROP TABLE IF EXISTS QRTZ_CALENDARS CASCADE;")
+				.executeUpdate();
+
+		log.info("Quartz tables dropped.");
+		log.info("Creating Quartz tables...");
+		try {
+			executeScript(QUARTZ_INIT_SCHEMA_SQL);
+			log.info("Quartz tables created.");
+		} catch (IOException e) {
+			log.error("Failed to create Quartz tables: {}", e.getMessage());
+			throw new RuntimeException("Failed to create Quartz tables", e);
+		}
+		entityManager.flush();
+
 	}
 
 	@Override
@@ -279,12 +318,12 @@ public class DatabaseServiceImpl implements DatabaseService {
 	}
 
 	private void initViews() throws IOException {
-		executeViewScript(CREATE_VIEW_EXPORT_AUCTION);
-		executeViewScript(CREATE_VIEW_DASHBOARD_CARDS);
-		executeViewScript(CREATE_VIEW_DASHBOARD_GRAPHIC);
+		executeScript(CREATE_VIEW_EXPORT_AUCTION);
+		executeScript(CREATE_VIEW_DASHBOARD_CARDS);
+		executeScript(CREATE_VIEW_DASHBOARD_GRAPHIC);
 	}
 
-	private void executeViewScript(String location) throws IOException {
+	private void executeScript(String location) throws IOException {
 		Resource resource = resourceLoader.getResource(location);
 		String sql = IOUtils.toString(resource.getInputStream(), StandardCharsets.UTF_8);
 		em.createNativeQuery(sql).executeUpdate();
