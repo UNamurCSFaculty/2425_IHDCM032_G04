@@ -666,9 +666,15 @@
       "title": "Auction Entry",
       "section_settings_title": "Sale Settings",
       "submit_button": "Open Sale",
-      "section_pricing_title": "Pricing",
-      "section_sale_conditions_title": "Sale Conditions",
-      "price_per_kg_hint": "At {{price}} CFA / kg"
+      "created_ok": "Sale opened successfully!",
+      "created_fail": "Error while creating sale.",
+      "auction_strategy": "Auction Strategy",
+      "auction_fixed_price": "Fixed Price per Kg",
+      "auction_max_price": "Max Price per Kg",
+      "auction_min_price": "Min Price per Kg",
+      "section_select_product_title": "Lot Selection",
+      "section_pricing_title": "Price & Date",
+      "section_sale_conditions_title": "General Settings"
     },
     "expiration_date_label": "Auction Expiration",
     "table": {

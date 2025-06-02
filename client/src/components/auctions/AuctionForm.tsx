@@ -375,15 +375,6 @@ export const AuctionForm: React.FC = () => {
                         />
                       )}
                     />
-                    {pricePerKg > 0 && (
-                      <div className="text-sm text-gray-500">
-                        <i>
-                          {t('auction.form.price_per_kg_hint', {
-                            price: pricePerKg,
-                          })}
-                        </i>
-                      </div>
-                    )}
                   </div>
                   <div className="flex w-1/2 flex-col gap-6">
                     <FormSectionTitle

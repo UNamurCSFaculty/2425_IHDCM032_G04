@@ -464,10 +464,16 @@
     "form": {
       "title": "إدخال المزاد",
       "section_settings_title": "إعدادات البيع",
-      "submit_button": "فتح البيع",
-      "section_pricing_title": "تحديد السعر",
-      "section_sale_conditions_title": "شروط البيع",
-      "price_per_kg_hint": "أي {{price}} فرنك CFA / كغ"
+      "submit_button": "افتح البيع",
+      "created_ok": "تم فتح البيع بنجاح!",
+      "created_fail": "حدث خطأ أثناء إنشاء البيع.",
+      "auction_strategy": "استراتيجية المزاد",
+      "auction_fixed_price": "سعر ثابت لكل كغ",
+      "auction_max_price": "السعر الأقصى لكل كغ",
+      "auction_min_price": "السعر الأدنى لكل كغ",
+      "section_select_product_title": "اختيار الدفعة",
+      "section_pricing_title": "السعر والتاريخ",
+      "section_sale_conditions_title": "الإعدادات العامة"
     },
     "expiration_date_label": "انتهاء المزاد",
     "table": {
