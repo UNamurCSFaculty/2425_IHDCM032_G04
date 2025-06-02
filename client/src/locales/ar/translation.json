@@ -492,7 +492,12 @@
       "max_price_per_kg_label": "السعر الأقصى لكل كغ",
       "min_price_per_kg_label": "السعر الأدنى لكل كغ"
     },
-    "contract_price_label": "*سعر العقد"
+    "contract_price_label": "*سعر العقد",
+    "status_accepted": "مقبول",
+    "status_rejected": "مرفوض",
+    "status_open": "مفتوح",
+    "status_expired": "منتهي",
+    "status_unknown": "غير معروف"
   },
   "product": {
     "quality_label": "الجودة",

@@ -691,7 +691,12 @@
       "max_price_per_kg_label": "Precio máximo por kg",
       "min_price_per_kg_label": "Precio mínimo por kg"
     },
-    "contract_price_label": "*Precio contractual"
+    "contract_price_label": "*Precio contractual",
+    "status_accepted": "Aceptado",
+    "status_rejected": "Rechazado",
+    "status_open": "Abierto",
+    "status_expired": "Expirado",
+    "status_unknown": "Desconocido"
   },
   "product": {
     "quality_label": "Calidad",

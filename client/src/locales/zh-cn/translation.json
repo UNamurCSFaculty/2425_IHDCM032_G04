@@ -691,7 +691,12 @@
       "max_price_per_kg_label": "最高单价（每公斤）",
       "min_price_per_kg_label": "最低单价（每公斤）"
     },
-    "contract_price_label": "*合同价格"
+    "contract_price_label": "*合同价格",
+    "status_accepted": "已接受",
+    "status_rejected": "已拒绝",
+    "status_open": "进行中",
+    "status_expired": "已结束",
+    "status_unknown": "未知状态"
   },
   "product": {
     "quality_label": "质量",

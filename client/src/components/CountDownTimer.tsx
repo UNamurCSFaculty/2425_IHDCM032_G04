@@ -1,8 +1,10 @@
+import { TradeStatus } from '@/lib/utils'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 interface CountdownTimerProps {
   endDate: Date
+  status?: string
 }
 
 function calculateTimeLeft(endDate: Date) {
@@ -29,7 +31,10 @@ function calculateTimeLeft(endDate: Date) {
   }
 }
 
-export function CountdownTimer({ endDate }: CountdownTimerProps) {
+export function CountdownTimer({
+  endDate,
+  status = 'Expiré',
+}: CountdownTimerProps) {
   const { t } = useTranslation()
   const [timeLeft, setTimeLeft] = useState(() => calculateTimeLeft(endDate))
 
@@ -43,12 +48,25 @@ export function CountdownTimer({ endDate }: CountdownTimerProps) {
 
   const { days, hours, minutes, seconds, difference } = timeLeft
 
+  const statusColor =
+    status === TradeStatus.ACCEPTED ? 'text-green-600' : 'text-red-500'
+
+  const getStatusLabel = () => {
+    if (status === TradeStatus.ACCEPTED) {
+      return t('auction.status_accepted')
+    } else if (status === TradeStatus.REJECTED) {
+      return t('auction.status_rejected')
+    } else if (status === TradeStatus.EXPIRED) {
+      return t('auction.status_expired')
+    } else if (status === TradeStatus.OPEN) {
+      return t('auction.status_open')
+    } else {
+      return t('auction.status_unknown')
+    }
+  }
+
   if (difference <= 0) {
-    return (
-      <div className="font-bold text-red-500">
-        {t('countdown_timer.auction_ended')}
-      </div>
-    )
+    return <div className={`font-bold ${statusColor}`}>{getStatusLabel()}</div>
   }
 
   const isLast24h = difference <= 24 * 60 * 60 * 1000
