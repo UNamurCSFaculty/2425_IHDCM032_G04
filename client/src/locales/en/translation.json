@@ -668,6 +668,13 @@
       "submit_button": "Open Sale",
       "created_ok": "Sale opened successfully!",
       "created_fail": "Error while creating sale.",
+      "bid_created_ok": "Bid added successfully!",
+      "bid_created_fail": "Error while adding bid.",
+      "accept_bid_ok": "Bid accepted!",
+      "accept_bid_fail": "Error while accepting the bid.",
+      "reject_bid_ok": "Bid rejected!",
+      "reject_bid_fail": "Error while rejecting the bid.",
+      "accept_auction_fail": "Error while accepting the auction.",
       "auction_strategy": "Auction Strategy",
       "auction_fixed_price": "Fixed Price per Kg",
       "auction_max_price": "Max Price per Kg",
@@ -693,7 +700,12 @@
       "max_price_per_kg_label": "Max Price per Kg",
       "min_price_per_kg_label": "Min Price per Kg"
     },
-    "contract_price_label": "*Contract Price"
+    "contract_price_label": "*Contract Price",
+    "status_accepted": "Accepted",
+    "status_rejected": "Rejected",
+    "status_open": "Open",
+    "status_expired": "Expired",
+    "status_unknown": "Unknown status"
   },
   "product": {
     "quality_label": "Quality",
@@ -973,6 +985,10 @@
   "empty_state": {
     "title": "No Results Found",
     "message": "Adjust your filters or reset the search."
+  },
+  "loading_state": {
+    "title": "Loading…",
+    "message": "Please wait while we load the data."
   },
   "countdown_timer": {
     "auction_ended": "Auction Ended",

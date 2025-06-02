@@ -145,9 +145,14 @@ const AuctionDetailsPanel: React.FC<Props> = ({
     ...acceptBidMutation(),
     onSuccess() {
       queryClient.invalidateQueries({ queryKey: listBidsQueryKey() })
+      toast.success(t('auction.form.accept_bid_ok'), {
+        duration: 4000,
+      })
     },
-    onError(error) {
-      console.error('Accept Bid - Invalid request ', error)
+    onError(error: ApiErrorResponse) {
+      toast.error(t('auction.form.accept_bid_fail') + ' (' + error.code + ')', {
+        duration: 4000,
+      })
     },
   })
 
@@ -155,9 +160,14 @@ const AuctionDetailsPanel: React.FC<Props> = ({
     ...rejectBidMutation(),
     onSuccess() {
       queryClient.invalidateQueries({ queryKey: listBidsQueryKey() })
+      toast.success(t('auction.form.reject_bid_ok'), {
+        duration: 4000,
+      })
     },
-    onError(error) {
-      console.error('Reject Bid - Invalid request ', error)
+    onError(error: ApiErrorResponse) {
+      toast.error(t('auction.form.reject_bid_fail') + ' (' + error.code + ')', {
+        duration: 4000,
+      })
     },
   })
 
@@ -166,8 +176,13 @@ const AuctionDetailsPanel: React.FC<Props> = ({
     onSuccess() {
       queryClient.invalidateQueries({ queryKey: listAuctionsQueryKey() })
     },
-    onError(error) {
-      console.error('Accept Auction - Invalid request ', error)
+    onError(error: ApiErrorResponse) {
+      toast.error(
+        t('auction.form.accept_auction_fail') + ' (' + error.code + ')',
+        {
+          duration: 4000,
+        }
+      )
     },
   })
 

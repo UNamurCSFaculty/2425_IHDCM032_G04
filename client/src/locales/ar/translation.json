@@ -467,6 +467,13 @@
       "submit_button": "افتح البيع",
       "created_ok": "تم فتح البيع بنجاح!",
       "created_fail": "حدث خطأ أثناء إنشاء البيع.",
+      "bid_created_ok": "تم إضافة العرض بنجاح!",
+      "bid_created_fail": "حدث خطأ أثناء إضافة العرض.",
+      "accept_bid_ok": "تم قبول العرض بنجاح!",
+      "accept_bid_fail": "حدث خطأ أثناء قبول العرض.",
+      "reject_bid_ok": "تم رفض العرض بنجاح!",
+      "reject_bid_fail": "حدث خطأ أثناء رفض العرض.",
+      "accept_auction_fail": "حدث خطأ أثناء قبول المزاد.",
       "auction_strategy": "استراتيجية المزاد",
       "auction_fixed_price": "سعر ثابت لكل كغ",
       "auction_max_price": "السعر الأقصى لكل كغ",
@@ -492,7 +499,12 @@
       "max_price_per_kg_label": "السعر الأقصى لكل كغ",
       "min_price_per_kg_label": "السعر الأدنى لكل كغ"
     },
-    "contract_price_label": "*سعر العقد"
+    "contract_price_label": "*سعر العقد",
+    "status_accepted": "مقبول",
+    "status_rejected": "مرفوض",
+    "status_open": "مفتوح",
+    "status_expired": "منتهي",
+    "status_unknown": "غير معروف"
   },
   "product": {
     "quality_label": "الجودة",

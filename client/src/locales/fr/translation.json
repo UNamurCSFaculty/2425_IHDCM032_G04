@@ -668,13 +668,20 @@
       "submit_button": "Ouvrir la vente",
       "created_ok": "Vente ouverte avec succès !",
       "created_fail": "Erreur lors de la création de la vente.",
+      "bid_created_ok": "Offre ajoutée avec succès !",
+      "bid_created_fail": "Erreur lors de l'ajout de l'offre.",
+      "accept_bid_ok": "Offre acceptée avec succès !",
+      "accept_bid_fail": "Erreur lors de l'acceptation de l'offre.",
+      "reject_bid_ok": "Offre rejetée !",
+      "reject_bid_fail": "Erreur lors du refus de l'offre.",
+      "accept_auction_fail": "Erreur lors de l'acceptation de l'enchère.",
       "auction_strategy": "Stratégie d'enchère",
       "auction_fixed_price": "Prix imposé par kg",
       "auction_max_price": "Prix maximum par kg",
       "auction_min_price": "Prix minimum par kg",
-      "section_select_product_title": "Selection du lot",
+      "section_select_product_title": "Sélection du lot",
       "section_pricing_title": "Prix et date",
-      "section_sale_conditions_title": "Paramètres généraux"
+      "section_sale_conditions_title": "Conditions de vente"
     },
     "expiration_date_label": "Expiration de l'enchère",
     "table": {
@@ -693,7 +700,12 @@
       "max_price_per_kg_label": "Prix maximum par kg",
       "min_price_per_kg_label": "Prix minimum par kg"
     },
-    "contract_price_label": "*Prix contractuel"
+    "contract_price_label": "*Prix contractuel",
+    "status_accepted": "Accepté",
+    "status_rejected": "Rejeté",
+    "status_open": "Ouvert",
+    "status_expired": "Expiré",
+    "status_unknown": "Statut inconnu"
   },
   "product": {
     "quality_label": "Qualité",
@@ -973,6 +985,10 @@
   "empty_state": {
     "title": "Aucun résultat trouvé",
     "message": "Ajustez vos filtres ou réinitialisez la recherche."
+  },
+  "loading_state": {
+    "title": "Chargement en cours",
+    "message": "Veuillez patienter pendant que nous chargeons les données."
   },
   "countdown_timer": {
     "auction_ended": "Enchère terminée",
