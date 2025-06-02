@@ -38,9 +38,9 @@ import {
   UserCircle,
   LogOut,
   HelpCircle,
-  History,
   PackagePlus,
   DollarSign,
+  ScrollText,
 } from 'lucide-react'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -128,7 +128,7 @@ export function Header() {
         {
           titleKey: 'header.menu.my_space.my_purchases',
           descriptionKey: 'header.menu.my_space.my_purchases_marketplace_desc',
-          icon: <ShoppingCart className="size-5 shrink-0" />,
+          icon: <ArrowLeftRight className="size-5 shrink-0" />,
           url: '/achats/mes-encheres',
           requiresAuth: true,
           allowedUserTypes: authenticatedBuyer,
@@ -136,7 +136,7 @@ export function Header() {
         {
           titleKey: 'header.menu.my_space.my_contracts',
           descriptionKey: 'header.menu.my_space.my_contracts_marketplace_desc',
-          icon: <History className="size-5 shrink-0" />,
+          icon: <ScrollText className="size-5 shrink-0" />,
           url: '/contrats/mes-contrats',
           requiresAuth: true,
           allowedUserTypes: authenticatedBuyer,
@@ -156,18 +156,18 @@ export function Header() {
           allowedUserTypes: authenticatedSeller,
         },
         {
-          titleKey: 'header.menu.marketplace.new_deposit',
-          descriptionKey: 'header.menu.marketplace.new_deposit_desc',
-          icon: <PackagePlus className="size-5 shrink-0" />,
-          url: '/depots/nouveau-produit',
-          requiresAuth: true,
-          allowedUserTypes: authenticatedSeller,
-        },
-        {
           titleKey: 'header.menu.my_space.my_sales',
           descriptionKey: 'header.menu.my_space.my_sales_marketplace_desc',
           icon: <ArrowLeftRight className="size-5 shrink-0" />,
           url: '/ventes/mes-encheres',
+          requiresAuth: true,
+          allowedUserTypes: authenticatedSeller,
+        },
+        {
+          titleKey: 'header.menu.marketplace.new_deposit',
+          descriptionKey: 'header.menu.marketplace.new_deposit_desc',
+          icon: <PackagePlus className="size-5 shrink-0" />,
+          url: '/depots/nouveau-produit',
           requiresAuth: true,
           allowedUserTypes: authenticatedSeller,
         },
@@ -182,7 +182,7 @@ export function Header() {
         {
           titleKey: 'header.menu.my_space.my_contracts',
           descriptionKey: 'header.menu.my_space.my_contracts_marketplace_desc',
-          icon: <History className="size-5 shrink-0" />,
+          icon: <ScrollText className="size-5 shrink-0" />,
           url: '/contrats/mes-contrats',
           requiresAuth: true,
           allowedUserTypes: authenticatedSeller,
@@ -244,7 +244,7 @@ export function Header() {
     {
       titleKey: 'header.menu.my_space.my_contracts',
       url: '/contrats/mes-contrats',
-      icon: <History className="mr-2 size-4" />,
+      icon: <ScrollText className="mr-2 size-4" />,
       requiresAuth: true,
       allowedUserTypes: allAuthenticatedButCarrierQualityInspector,
     },

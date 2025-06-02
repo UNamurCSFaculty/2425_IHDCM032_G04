@@ -29,6 +29,8 @@ import {
 } from '@/components/ui/table'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { useMediaQuery } from '@/hooks/use-mobile'
+import { TradeStatus } from '@/lib/utils'
+import { useAuthUser } from '@/store/userStore'
 import dayjs from '@/utils/dayjs-config'
 import {
   ArrowLeft,
@@ -66,6 +68,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
 }) => {
   const isDesktop = useMediaQuery('(min-width: 1024px)')
   const { t } = useTranslation()
+  const user = useAuthUser()
 
   // UI state
   const [viewMode, setViewMode] = useState<ViewMode>('cards')
@@ -117,6 +120,16 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
 
   const handleFilteredDataChange = useCallback(
     (newFilteredData: AuctionDto[]) => {
+      if (userRole === 'buyer') {
+        // filter only auctions that the user won
+        newFilteredData = newFilteredData.filter(auction =>
+          auction.bids.some(
+            bid =>
+              bid.status.name === TradeStatus.ACCEPTED &&
+              bid.trader.id === user.id
+          )
+        )
+      }
       setFilteredAuctions(newFilteredData)
     },
     []

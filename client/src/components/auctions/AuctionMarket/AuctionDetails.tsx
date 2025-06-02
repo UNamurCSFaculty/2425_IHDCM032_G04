@@ -38,6 +38,7 @@ import {
   UserCircle2,
   XCircle,
   Loader2,
+  Star,
 } from 'lucide-react'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -77,7 +78,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
   const [isOpen, setIsOpen] = useState(false)
 
   const acceptedBid =
-    auction.bids?.find(bid => bid.status!.name === 'Accepté') || null
+    auction.bids?.find(bid => bid.status!.name === TradeStatus.ACCEPTED) || null
 
   const { t } = useTranslation()
 
@@ -486,7 +487,13 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                     >
                       <div>
                         <div className="font-medium">
-                          {bid.trader.firstName} {bid.trader.lastName}
+                          {bid.trader.id === user.id ? (
+                            <b className="text-green-600">
+                              {bid.trader.firstName} {bid.trader.lastName}
+                            </b>
+                          ) : (
+                            bid.trader.firstName + ' ' + bid.trader.lastName
+                          )}
                         </div>
                         <div className="text-xs text-gray-600">
                           {dayjs(bid.creationDate).fromNow()}
@@ -592,6 +599,9 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                           )}
                         {bid.status.name !== TradeStatus.OPEN && (
                           <Badge variant="outline" className="text-xs">
+                            {bid.status.name === TradeStatus.ACCEPTED && (
+                              <Star />
+                            )}
                             {bid.status.name}
                           </Badge>
                         )}

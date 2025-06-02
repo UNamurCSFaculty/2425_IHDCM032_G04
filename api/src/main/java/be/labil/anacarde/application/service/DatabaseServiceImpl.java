@@ -160,9 +160,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 	private TradeStatusDto statusOpen;
 	private TradeStatusDto statusAccepted;
 	private TradeStatusDto statusExpired;
-	private TradeStatusDto statusConcluded; // Assuming 'Conclu' might be another finished status
 	private TradeStatusDto statusRejected;
-	private TradeStatusDto statusCancelled;
 	private AuctionStrategyDto strategyOffer;
 
 	private List<Region> regions;
@@ -347,9 +345,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 		statusOpen = tradeStatusService.createTradeStatus(createTradeStatusDto("Ouvert"));
 		statusAccepted = tradeStatusService.createTradeStatus(createTradeStatusDto("Accepté"));
 		statusExpired = tradeStatusService.createTradeStatus(createTradeStatusDto("Expiré"));
-		statusConcluded = tradeStatusService.createTradeStatus(createTradeStatusDto("Conclu"));
 		statusRejected = tradeStatusService.createTradeStatus(createTradeStatusDto("Refusé"));
-		statusCancelled = tradeStatusService.createTradeStatus(createTradeStatusDto("Annulé"));
 
 		// Auction Strategies
 		AuctionStrategyDto dto = new AuctionStrategyDto();
@@ -860,14 +856,11 @@ public class DatabaseServiceImpl implements DatabaseService {
 				faker.number().numberBetween(MIN_AUCTION_DURATION_DAYS, MAX_AUCTION_DURATION_DAYS));
 
 		TradeStatusDto status;
-		boolean isActive;
 		if (expirationDate.isAfter(generationTime)) {
 			status = statusOpen;
-			isActive = true;
 		} else {
 			int statusChoice = random.nextInt(10);
-			status = statusChoice < 8 ? statusConcluded : statusExpired;
-			isActive = false;
+			status = statusChoice < 8 ? statusAccepted : statusExpired;
 		}
 
 		String qualityName = product.getQualityControl().getQuality().getName();
@@ -899,7 +892,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 		auctionDto
 				.setProductQuantity(Math.min(quantity, product.getWeightKgAvailable().intValue()));
 		auctionDto.setPrice(price);
-		auctionDto.setActive(isActive);
+		auctionDto.setActive(true); // isActive means entity is not DELETED from database
 		auctionDto.setExpirationDate(expirationDate);
 		auctionDto.setStatusId(status.getId());
 		auctionDto.setOptions(opt);
@@ -958,7 +951,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 					.toList();
 
 			boolean auctionFinished = !auction.getStatus().getId().equals(statusOpen.getId());
-			boolean auctionConcluded = auction.getStatus().getId().equals(statusConcluded.getId());
+			boolean auctionAccepted = auction.getStatus().getId().equals(statusAccepted.getId());
 
 			BigDecimal currentHighest = BigDecimal.valueOf(auction.getPrice());
 			LocalDateTime lastBidTime = auction.getCreationDate();
@@ -1012,7 +1005,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 				BigDecimal buyNowTotal = BigDecimal.valueOf(auction.getOptions().getBuyNowPrice());
 
 				if (amount.compareTo(buyNowTotal) >= 0) {
-					if (auctionConcluded) {
+					if (auctionAccepted) {
 						bid.setStatusId(statusAccepted.getId());
 						bid.setAmount(buyNowTotal);
 						bids.add(bid);
@@ -1029,7 +1022,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 			/*
 			 * 4) Acceptation de la meilleure offre si vente conclue
 			 */
-			if (auctionFinished && auctionConcluded && !bids.isEmpty()) {
+			if (auctionFinished && auctionAccepted && !bids.isEmpty()) {
 				BidUpdateDto winner = bids.stream()
 						.max(Comparator.comparing(BidUpdateDto::getAmount)).orElseThrow();
 				winner.setStatusId(statusAccepted.getId());
