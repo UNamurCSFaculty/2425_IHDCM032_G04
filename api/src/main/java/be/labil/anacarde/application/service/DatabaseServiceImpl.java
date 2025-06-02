@@ -63,6 +63,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 	private static final int NUM_STORES = NUM_PRODUCERS + NUM_TRANSFORMERS;
 	private static final int MIN_FIELDS_PER_PRODUCER = 1;
 	private static final int MAX_FIELDS_PER_PRODUCER = 5;
+	private static final int NUM_CONTRACTS = 50;
 	private static final int MIN_PRODUCTS_PER_PRODUCER = 3;
 	private static final int MAX_PRODUCTS_PER_PRODUCER = 10;
 	private static final int MIN_PRODUCTS_PER_TRANSFORMER = 5;
@@ -310,6 +311,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 		createTransformedProducts();
 		createAuctions(true);
 		createBidsForFinishedAuctions();
+		createContrats();
 
 		createArticles();
 
@@ -1460,6 +1462,76 @@ public class DatabaseServiceImpl implements DatabaseService {
 		return (QualityInspectorCreateDto) setUserDetails(qualityInspector);
 	}
 
+	private void clearSystemAuthentication() {
+		SecurityContextHolder.clearContext();
+		log.debug("System authentication cleared.");
+	}
+
+	private void createContrats() {
+		log.info("Création des ContractOffer à partir des enchères conclues…");
+		List<Auction> concludedAuctions = auctionRepository.findAll().stream()
+				.filter(a -> a.getStatus().getId().equals(statusConcluded.getId()))
+				.collect(Collectors.toList());
+
+		if (concludedAuctions.isEmpty()) {
+			log.warn("Aucune enchère conclue trouvée, on ne peut pas créer de contrats.");
+			return;
+		}
+
+		Collections.shuffle(concludedAuctions);
+		int contractsToCreate = Math.min(NUM_CONTRACTS, concludedAuctions.size());
+		for (int i = 0; i < contractsToCreate; i++) {
+			Auction auction = concludedAuctions.get(i);
+
+			Optional<Bid> winningBidOpt = bidRepository.findAll().stream()
+					.filter(b -> b.getAuctionId().equals(auction.getId())
+							&& b.getStatus().getId().equals(statusAccepted.getId()))
+					.findFirst();
+			if (winningBidOpt.isEmpty()) {
+				log.warn("L'enchère conclue {} n'a pas d'offres acceptée.", auction.getId());
+				continue;
+			}
+
+			Bid winningBid = winningBidOpt.get();
+			Trader sellerEntity = auction.getTrader();
+			Trader buyerEntity = winningBid.getTrader();
+			Quality qualityEntity = auction.getProduct().getQualityControl().getQuality();
+			BigDecimal totalAmount = winningBid.getAmount();
+			int quantity = auction.getProductQuantity();
+			if (quantity <= 0) {
+				log.warn("L'enchère conclue {} portent sur une quantité de 0 kg", auction.getId());
+				continue;
+			}
+			BigDecimal unitPriceRaw = totalAmount.divide(BigDecimal.valueOf(quantity), 0,
+					RoundingMode.FLOOR);
+			BigDecimal pricePerKg = unitPriceRaw.divide(BigDecimal.TEN, 0, RoundingMode.FLOOR)
+					.multiply(BigDecimal.TEN);
+			LocalDateTime creationDate = auction.getExpirationDate();
+			int randomMonths = 3 + random.nextInt(7);
+			LocalDateTime endDate = creationDate.plusMonths(randomMonths);
+			String statut;
+			if (endDate.isBefore(LocalDateTime.now())) {
+				statut = statusExpired.getName();
+			} else {
+				double r = random.nextDouble();
+				if (r < 0.6) {
+					statut = statusAccepted.getName();
+				} else if (r < 0.8) {
+					statut = statusOpen.getName();
+				} else {
+					statut = statusRejected.getName();
+				}
+			}
+
+			ContractOffer contract = ContractOffer.builder().status(statut).pricePerKg(pricePerKg)
+					.endDate(endDate).seller(sellerEntity).buyer(buyerEntity).quality(qualityEntity)
+					.build();
+			ContractOffer saved = contractOfferRepository.save(contract);
+			contractOfferRepository.overrideCreationDateNative(saved.getId(), creationDate);
+		}
+		log.info("→ {} ContractOffer(s) créés à partir des enchères conclues.", contractsToCreate);
+	}
+
 	// --- System Authentication Helper Methods ---
 
 	private void setupSystemAuthentication() {
@@ -1477,10 +1549,5 @@ public class DatabaseServiceImpl implements DatabaseService {
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		log.debug("System authentication set for user: {} with authorities: {}",
 				systemUserModel.getEmail(), authorities);
-	}
-
-	private void clearSystemAuthentication() {
-		SecurityContextHolder.clearContext();
-		log.debug("System authentication cleared.");
 	}
 }
