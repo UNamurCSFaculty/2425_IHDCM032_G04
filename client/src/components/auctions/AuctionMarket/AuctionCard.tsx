@@ -38,8 +38,6 @@ interface AuctionCardProps {
   layout: CardLayout
   isDetail?: boolean
   role: UserRole
-  // onBuyNow?: (auctionId: number) => void // TODO: implement buy now
-  // onMakeBid?: (auctionId: number) => void // TODO: implement make bid
   onDetails: () => void
 }
 

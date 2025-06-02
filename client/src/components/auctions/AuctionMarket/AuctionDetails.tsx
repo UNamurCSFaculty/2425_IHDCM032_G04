@@ -1,4 +1,4 @@
-import type { AuctionDto, BidDto } from '@/api/generated'
+import type { ApiErrorResponse, AuctionDto, BidDto } from '@/api/generated'
 import {
   acceptAuctionMutation,
   acceptBidMutation,
@@ -38,10 +38,12 @@ import {
   UserCircle2,
   XCircle,
   Loader2,
+  Star,
 } from 'lucide-react'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
+import { toast } from 'sonner'
 
 export type UserRole = 'buyer' | 'seller'
 
@@ -77,7 +79,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
   const [isOpen, setIsOpen] = useState(false)
 
   const acceptedBid =
-    auction.bids?.find(bid => bid.status!.name === 'Accepté') || null
+    auction.bids?.find(bid => bid.status!.name === TradeStatus.ACCEPTED) || null
 
   const { t } = useTranslation()
 
@@ -122,9 +124,20 @@ const AuctionDetailsPanel: React.FC<Props> = ({
     onSuccess() {
       queryClient.invalidateQueries({ queryKey: listBidsQueryKey() })
       queryClient.invalidateQueries({ queryKey: listAuctionsQueryKey() })
+
+      toast.success(t('auction.bid_created_ok'), {
+        duration: 5000,
+      })
     },
-    onError(error) {
-      console.error('Create Bid - Invalid request ', error)
+    onError(error: ApiErrorResponse) {
+      const detail =
+        error && error.errors.length > 0 ? ' ' + error.errors[0].message : ''
+      toast.error(
+        t('auction.bid_created_fail') + ' ' + error.code + ':' + detail,
+        {
+          duration: 5000,
+        }
+      )
     },
   })
 
@@ -486,7 +499,13 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                     >
                       <div>
                         <div className="font-medium">
-                          {bid.trader.firstName} {bid.trader.lastName}
+                          {bid.trader.id === user.id ? (
+                            <b className="text-green-600">
+                              {bid.trader.firstName} {bid.trader.lastName}
+                            </b>
+                          ) : (
+                            bid.trader.firstName + ' ' + bid.trader.lastName
+                          )}
                         </div>
                         <div className="text-xs text-gray-600">
                           {dayjs(bid.creationDate).fromNow()}
@@ -592,6 +611,9 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                           )}
                         {bid.status.name !== TradeStatus.OPEN && (
                           <Badge variant="outline" className="text-xs">
+                            {bid.status.name === TradeStatus.ACCEPTED && (
+                              <Star />
+                            )}
                             {bid.status.name}
                           </Badge>
                         )}
