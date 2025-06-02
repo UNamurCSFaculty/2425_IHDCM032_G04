@@ -30,7 +30,6 @@ import {
 } from '@/components/ui/table'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { useMediaQuery } from '@/hooks/use-mobile'
-import { TradeStatus } from '@/lib/utils'
 import { useAuthUser } from '@/store/userStore'
 import dayjs from '@/utils/dayjs-config'
 import { useQuery } from '@tanstack/react-query'
