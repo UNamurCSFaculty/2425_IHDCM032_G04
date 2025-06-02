@@ -43,6 +43,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.core.env.Environment;
 
 @Service
 @Transactional
@@ -121,6 +122,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 	private final GlobalSettingsService globalSettingsService;
 
 	private final EntityManager entityManager;
+	private final Environment environment;
 
 	// --- Internal State ---
 	private final Faker faker = new Faker(Locale.of("fr")); // Use French Faker locale
@@ -230,7 +232,9 @@ public class DatabaseServiceImpl implements DatabaseService {
 		log.info("→ createDatabase() (compatibilité) ←");
 		setupSystemAuthentication();
 		initDatabase();
-		initTestData();
+		if (java.util.Arrays.asList(environment.getActiveProfiles()).contains("dev")) {
+			initTestData();
+		}
 		initViews();
 		clearSystemAuthentication();
 	}

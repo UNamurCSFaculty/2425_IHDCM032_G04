@@ -9,7 +9,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - anacarde-database:/var/lib/postgresql/data
+      - /opt/docker-data/postgres:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U anacarde -d anacarde"]
       interval: 30s
@@ -31,68 +31,41 @@ services:
     volumes: 
       - ./api/servers.json:/pgadmin4/servers.json
 
-  mailpit:
-    image: axllent/mailpit:latest
-    restart: unless-stopped
-    ports: 
-      - "1025:1025" 
-      - "8025:8025" 
-    volumes: 
-      - mailpit-data:/data
-    environment:
-      MP_MAX_MESSAGES: 5000
-      MP_DATABASE: /data/mailpit.db
-      MP_SMTP_AUTH_ACCEPT_ANY: 1
-      MP_SMTP_AUTH_ALLOW_INSECURE: 1
-    healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:8025 || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
   redis:
-    image: redis:7
+    image: redis:7-alpine
+    restart: always
     ports:
       - "6379:6379"
+    volumes:
+      - /opt/docker-data/redis:/data
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 5s
+      interval: 30s
+      timeout: 10s
       retries: 5
 
   api:
-    build:
-      context: ./api
-      dockerfile: Dockerfile
+    image: ibonmr/anacarde-api:latest
     depends_on:
       db:
         condition: service_healthy
       redis:
         condition: service_healthy
     environment:
-      #SPRING_PROFILES_ACTIVE: prod
+      SPRING_PROFILES_ACTIVE: prod
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/anacarde
       SPRING_DATASOURCE_USERNAME: anacarde
       SPRING_DATASOURCE_PASSWORD: S5mhPe(+6CvWZbhj
-      SPRING_MAIL_HOST: mailpit
-      SPRING_MAIL_PORT: 1025
-      SPRING_REDIS_HOST: redis
-      SPRING_REDIS_PORT: 6379
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
     ports:
       - "8080:8080" 
     volumes:
-      - uploads:/opt/anacarde/uploads
+      - /opt/docker-data/uploads:/opt/anacarde/uploads
 
   client:
-    build:
-      context: ./client
-      dockerfile: Dockerfile
+    image: ibonmr/anacarde-client:latest
     depends_on:
       - api 
     ports:
-      - "3000:80" 
-
-volumes:
-  anacarde-database:
-  mailpit-data:
-  uploads:
+      - "3000:80"
