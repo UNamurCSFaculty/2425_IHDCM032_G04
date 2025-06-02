@@ -412,7 +412,7 @@ export const zAuctionUpdateDto = z.object({
   productId: z.number().int(),
   traderId: z.number().int(),
   statusId: z.number().int().optional(),
-  options: zAuctionOptionsUpdateDto,
+  options: zAuctionOptionsUpdateDto.optional(),
 })
 
 export const zAuctionStrategyDto = z.object({
