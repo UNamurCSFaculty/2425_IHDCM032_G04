@@ -963,6 +963,10 @@
     "title": "No se encontraron resultados",
     "message": "Ajusta tus filtros o restablece la búsqueda."
   },
+  "loading_state": {
+    "title": "Cargando datos",
+    "message": "Por favor, espera mientras cargamos la información."
+  },
   "countdown_timer": {
     "auction_ended": "Subasta finalizada",
     "days_one": "{{count}} día",

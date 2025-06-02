@@ -1,3 +1,4 @@
+import { listAuctionsOptions } from '@/api/generated/@tanstack/react-query.gen'
 import EmptyState from '../../EmptyState'
 import AuctionCard from './AuctionCard'
 import AuctionMap from './AuctionMap'
@@ -32,6 +33,7 @@ import { useMediaQuery } from '@/hooks/use-mobile'
 import { TradeStatus } from '@/lib/utils'
 import { useAuthUser } from '@/store/userStore'
 import dayjs from '@/utils/dayjs-config'
+import { useQuery } from '@tanstack/react-query'
 import {
   ArrowLeft,
   LayoutGrid,
@@ -41,6 +43,7 @@ import {
 } from 'lucide-react'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import LoadingState from '@/components/LoadingState'
 
 export type ViewMode = 'cards' | 'table' | 'map'
 export type UserRole = 'buyer' | 'seller'
@@ -56,19 +59,33 @@ export type SortOptionValue = (typeof sortOptions)[number]['value']
 export const perPage = 12
 
 interface MarketplaceProps {
-  auctions: AuctionDto[]
   userRole: UserRole
+  buyerId?: number
+  traderId?: number
   filterByAuctionStatus?: boolean
 }
 
 const AuctionMarketplace: React.FC<MarketplaceProps> = ({
-  auctions,
   userRole,
+  buyerId,
+  traderId,
   filterByAuctionStatus,
 }) => {
   const isDesktop = useMediaQuery('(min-width: 1024px)')
   const { t } = useTranslation()
   const user = useAuthUser()
+
+  // Queries
+  const listAuctionsQueryOptions = () => ({
+    ...listAuctionsOptions({
+      query: { buyerId: buyerId, traderId: traderId },
+    }),
+    staleTime: 10_000,
+  })
+
+  const { data: auctions, isLoading: isAuctionsLoading } = useQuery({
+    ...listAuctionsQueryOptions(),
+  })
 
   // UI state
   const [viewMode, setViewMode] = useState<ViewMode>('cards')
@@ -140,7 +157,9 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
     const handler = (event: Event) => {
       const customEvent = event as CustomEvent<{ auctionId: number }>
       if (customEvent.detail && customEvent.detail.auctionId) {
-        const found = auctions.find(a => a.id === customEvent.detail.auctionId)
+        const found = (auctions as AuctionDto[]).find(
+          a => a.id === customEvent.detail.auctionId
+        )
         if (found) setInlineAuction(found)
       }
     }
@@ -250,7 +269,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                     className="w-[300px] overflow-y-auto py-7 sm:w-[380px]"
                   >
                     <FiltersPanel
-                      filterData={auctions}
+                      filterData={auctions as AuctionDto[]}
                       filterDataType="auction"
                       onFilteredDataChange={handleFilteredDataChange}
                       filterByAuctionStatus={filterByAuctionStatus}
@@ -265,10 +284,10 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
       </div>
 
       <div className="grid items-start gap-6 lg:grid-cols-[260px_1fr]">
-        {isDesktop && (
+        {isDesktop && !isAuctionsLoading && (
           <div className="bg-background sticky top-20 self-start rounded-lg border shadow-sm">
             <FiltersPanel
-              filterData={auctions}
+              filterData={auctions as AuctionDto[]}
               filterDataType="auction"
               onFilteredDataChange={handleFilteredDataChange}
               filterByAuctionStatus={filterByAuctionStatus}
@@ -277,101 +296,117 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
           </div>
         )}
 
-        <div className="relative w-full min-w-0">
-          {/* Cards */}
-          {viewMode === 'cards' && (
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
-              {inlineAuction ? (
-                <>
-                  <AuctionCard
-                    auction={inlineAuction}
-                    layout="grid"
-                    isDetail
-                    role={userRole}
-                    onDetails={() => {}}
-                  />
-                  <div className="col-span-full lg:col-span-2">
-                    <AuctionDetails auction={inlineAuction} role={userRole} />
-                  </div>
-                </>
-              ) : filteredAuctions.length === 0 ? (
-                <EmptyState className="col-span-full" />
-              ) : (
-                <>
-                  {paginated.map(a => (
-                    <AuctionCard
-                      key={a.id}
-                      auction={a}
-                      layout="grid"
-                      role={userRole}
-                      onDetails={() => setInlineAuction(a)}
-                    />
-                  ))}
-                  {totalPages > 1 && (
-                    <div className="col-span-full flex justify-center">
-                      <PaginationControls
-                        current={currentPage}
-                        total={totalPages}
-                        onChange={handlePageChange}
+        {isAuctionsLoading ? (
+          <LoadingState className="col-span-full" />
+        ) : (
+          <>
+            <div className="relative w-full min-w-0">
+              {/* Cards */}
+              {viewMode === 'cards' && (
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
+                  {inlineAuction ? (
+                    <>
+                      <AuctionCard
+                        auction={inlineAuction}
+                        layout="grid"
+                        isDetail
+                        role={userRole}
+                        onDetails={() => {}}
                       />
-                    </div>
+                      <div className="col-span-full lg:col-span-2">
+                        <AuctionDetails
+                          auction={inlineAuction}
+                          role={userRole}
+                        />
+                      </div>
+                    </>
+                  ) : filteredAuctions.length === 0 ? (
+                    <EmptyState className="col-span-full" />
+                  ) : (
+                    <>
+                      {paginated.map(a => (
+                        <AuctionCard
+                          key={a.id}
+                          auction={a}
+                          layout="grid"
+                          role={userRole}
+                          onDetails={() => setInlineAuction(a)}
+                        />
+                      ))}
+                      {totalPages > 1 && (
+                        <div className="col-span-full flex justify-center">
+                          <PaginationControls
+                            current={currentPage}
+                            total={totalPages}
+                            onChange={handlePageChange}
+                          />
+                        </div>
+                      )}
+                    </>
+                  )}
+                </div>
+              )}
+
+              {/* Table */}
+              {viewMode === 'table' && (
+                <>
+                  <div className="bg-background overflow-x-auto rounded-lg border">
+                    <Table className="table-auto text-sm">
+                      <TableHeader className="supports-[backdrop-filter]:bg-muted/60 sticky top-0 z-10 backdrop-blur">
+                        <TableRow className="h-9 bg-neutral-100">
+                          <TableHead>
+                            {t('product.merchandise_label')}
+                          </TableHead>
+                          <TableHead>{t('auction.expiration_label')}</TableHead>
+                          <TableHead>{t('address.region_label')}</TableHead>
+                          <TableHead>{t('form.city')}</TableHead>
+                          <TableHead>{t('product.quantity_label')}</TableHead>
+                          <TableHead>{t('product.quality_label')}</TableHead>
+                          <TableHead className="text-right">
+                            {t('product.price_label')}
+                          </TableHead>
+                          <TableHead className="text-right">
+                            {t('auction.best_bid')}
+                          </TableHead>
+                          <TableHead></TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {paginated.map(a => (
+                          <AuctionCard
+                            key={a.id}
+                            auction={a}
+                            layout="row"
+                            role={userRole}
+                            onDetails={() => setDialogAuction(a)}
+                          />
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                  {totalPages > 1 && (
+                    <PaginationControls
+                      current={currentPage}
+                      total={totalPages}
+                      onChange={setCurrentPage}
+                    />
+                  )}
+                  {paginated.length === 0 && (
+                    <EmptyState className="col-span-3" />
                   )}
                 </>
               )}
-            </div>
-          )}
 
-          {/* Table */}
-          {viewMode === 'table' && (
-            <>
-              <div className="bg-background overflow-x-auto rounded-lg border">
-                <Table className="table-auto text-sm">
-                  <TableHeader className="supports-[backdrop-filter]:bg-muted/60 sticky top-0 z-10 backdrop-blur">
-                    <TableRow className="h-9 bg-neutral-100">
-                      <TableHead>{t('product.merchandise_label')}</TableHead>
-                      <TableHead>{t('auction.expiration_label')}</TableHead>
-                      <TableHead>{t('address.region_label')}</TableHead>
-                      <TableHead>{t('form.city')}</TableHead>
-                      <TableHead>{t('product.quantity_label')}</TableHead>
-                      <TableHead>{t('product.quality_label')}</TableHead>
-                      <TableHead className="text-right">
-                        {t('product.price_label')}
-                      </TableHead>
-                      <TableHead className="text-right">
-                        {t('auction.best_bid')}
-                      </TableHead>
-                      <TableHead></TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {paginated.map(a => (
-                      <AuctionCard
-                        key={a.id}
-                        auction={a}
-                        layout="row"
-                        role={userRole}
-                        onDetails={() => setDialogAuction(a)}
-                      />
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-              {totalPages > 1 && (
-                <PaginationControls
-                  current={currentPage}
-                  total={totalPages}
-                  onChange={setCurrentPage}
+              {/* Map */}
+              {viewMode === 'map' && (
+                <AuctionMap
+                  auctions={sorted}
+                  onSelect={a => setDialogAuction(a)}
                 />
               )}
-              {paginated.length === 0 && <EmptyState className="col-span-3" />}
-            </>
-          )}
-
-          {/* Map */}
-          {viewMode === 'map' && (
-            <AuctionMap auctions={sorted} onSelect={a => setDialogAuction(a)} />
-          )}
-        </div>
+            </div>
+          </>
+        )}
       </div>
 
       {/* Dialog */}

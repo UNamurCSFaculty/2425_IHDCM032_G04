@@ -971,6 +971,10 @@
     "title": "Aucun résultat trouvé",
     "message": "Ajustez vos filtres ou réinitialisez la recherche."
   },
+  "loading_state": {
+    "title": "Chargement en cours",
+    "message": "Veuillez patienter pendant que nous chargeons les données."
+  },
   "countdown_timer": {
     "auction_ended": "Enchère terminée",
     "days_one": "{{count}} jour",

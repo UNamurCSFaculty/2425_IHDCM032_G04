@@ -968,6 +968,10 @@
     "title": "No Results Found",
     "message": "Adjust your filters or reset the search."
   },
+  "loading_state": {
+    "title": "Loading…",
+    "message": "Please wait while we load the data."
+  },
   "countdown_timer": {
     "auction_ended": "Auction Ended",
     "days_one": "{{count}} day",
