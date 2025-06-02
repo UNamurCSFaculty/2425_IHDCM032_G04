@@ -672,9 +672,9 @@
       "auction_fixed_price": "Prix imposé par kg",
       "auction_max_price": "Prix maximum par kg",
       "auction_min_price": "Prix minimum par kg",
-      "section_select_product_title": "Selection du lot",
+      "section_select_product_title": "Sélection du lot",
       "section_pricing_title": "Prix et date",
-      "section_sale_conditions_title": "Paramètres généraux"
+      "section_sale_conditions_title": "Conditions de vente"
     },
     "expiration_date_label": "Expiration de l'enchère",
     "table": {
