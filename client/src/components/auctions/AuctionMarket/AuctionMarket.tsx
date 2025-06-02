@@ -144,7 +144,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
       }
       setFilteredAuctions(newFilteredData)
     },
-    [filterByAuctionStatus, userRole, user.id]
+    [filterByAuctionStatus, userRole, user.id, traderId]
   )
 
   // Display inline auction on custom event (SSE notif's toast action)
