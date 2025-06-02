@@ -1062,5 +1062,10 @@
     "role_specific_details_title": "角色特定信息",
     "update_success_toast": "个人资料更新成功！",
     "update_error_toast": "更新时出错"
+  },
+  "notification": {
+    "list_description": "查看报价列表以获取更多详情。",
+    "see_auction": "查看拍卖",
+    "historic": "查看历史记录以获取更多详情。"
   }
 }

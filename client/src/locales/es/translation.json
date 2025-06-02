@@ -1062,5 +1062,10 @@
     "role_specific_details_title": "Detalles específicos del rol",
     "update_success_toast": "¡Perfil actualizado con éxito!",
     "update_error_toast": "Error al actualizar"
+  },
+  "notification": {
+    "list_description": "Ver la lista de ofertas para más detalles.",
+    "see_auction": "Ver la subasta",
+    "historic": "Consulte el historial para más detalles."
   }
 }

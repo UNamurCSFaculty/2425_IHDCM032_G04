@@ -1070,5 +1070,10 @@
     "role_specific_details_title": "Détails Spécifiques au Rôle",
     "update_success_toast": "Profil mis à jour avec succès !",
     "update_error_toast": "Erreur lors de la mise à jour"
+  },
+  "notification": {
+    "list_description": "Voir la liste des offres pour plus de détails.",
+    "see_auction": "Voir l'enchère",
+    "historic": "Consultez l’historique pour plus de détails."
   }
 }

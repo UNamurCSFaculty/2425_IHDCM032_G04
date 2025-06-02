@@ -1067,5 +1067,10 @@
     "role_specific_details_title": "Role-Specific Details",
     "update_success_toast": "Profile updated successfully!",
     "update_error_toast": "Error updating profile"
+  },
+  "notification": {
+    "list_description": "See the list of offers for more details.",
+    "see_auction": "See the auction",
+    "historic": "Check the history for more details."
   }
 }

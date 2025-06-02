@@ -4,6 +4,7 @@ import { formatPrice } from '@/utils/formatter'
 import { client } from '@/api/generated/client.gen.ts'
 import { toast } from 'sonner'
 import { useNavigate } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
 
 interface SseNotificationsProviderProps {
   children: React.ReactNode
@@ -16,6 +17,7 @@ export const SseNotificationsProvider: React.FC<
   const eventSourceRef = useRef<EventSource | null>(null)
   const notifiedBids = useRef<Set<number>>(new Set())
   const navigate = useNavigate() // useNavigate is called inside the component
+  const { t } = useTranslation()
 
   // Define notification handlers inside the component and memoize them
   const showBidNotification = useCallback(
@@ -33,10 +35,10 @@ export const SseNotificationsProvider: React.FC<
           <b>{formatPrice.format(newBid.amount)}</b>
         </span>,
         {
-          description: 'Voir la liste des offres pour plus de détails.',
+          description: t('notification.list_description'),
           duration: 10000,
           action: {
-            label: 'Voir l’enchère',
+            label: t('notification.see_auction'),
             onClick: () => {
               navigate({
                 to: '/achats/marche',
@@ -65,7 +67,7 @@ export const SseNotificationsProvider: React.FC<
           L’enchère n°{auction.id} est terminée.
         </span>,
         {
-          description: 'Consultez l’historique pour plus de détails.',
+          description: t('notification.historic'),
           duration: 10000,
           action: {
             label: 'Voir l’enchère',
