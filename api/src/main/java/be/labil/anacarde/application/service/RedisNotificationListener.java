@@ -33,7 +33,7 @@ public class RedisNotificationListener {
 
 	@PostConstruct
 	public void subscribe() {
-		log.info("[SSE] Listener Redis démarré sur notifications:user:*");
+		log.debug("[SSE] Listener Redis démarré sur notifications:user:*");
 		listenerContainer.addMessageListener(new MessageListenerAdapter(new MessageListener() {
 			@Override
 			public void onMessage(Message message, byte[] pattern) {
