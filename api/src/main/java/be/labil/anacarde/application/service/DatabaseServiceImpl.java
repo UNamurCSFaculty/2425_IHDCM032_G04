@@ -1470,7 +1470,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 	private void createContrats() {
 		log.info("Création des ContractOffer à partir des enchères conclues…");
 		List<Auction> concludedAuctions = auctionRepository.findAll().stream()
-				.filter(a -> a.getStatus().getId().equals(statusConcluded.getId()))
+				.filter(a -> a.getStatus().getId().equals(statusAccepted.getId()))
 				.collect(Collectors.toList());
 
 		if (concludedAuctions.isEmpty()) {
