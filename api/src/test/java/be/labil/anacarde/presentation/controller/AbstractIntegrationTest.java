@@ -262,7 +262,6 @@ public abstract class AbstractIntegrationTest {
 		return testAuctionByTransformer;
 	}
 
-
 	public Bid getTestBid() {
 		if (testBid == null) {
 			throw new IllegalStateException("Enchère de test non initialisée");

@@ -6,7 +6,6 @@ import be.labil.anacarde.domain.dto.write.product.ProductUpdateDto;
 import be.labil.anacarde.domain.dto.write.product.TransformedProductUpdateDto;
 import be.labil.anacarde.domain.model.Bid;
 import be.labil.anacarde.infrastructure.persistence.*;
-
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -56,8 +55,7 @@ public class OwnershipUtil {
 
 		// trader cannot bid twice in a row
 		List<Bid> bids = bidRepository.findByAuctionIdOrderByIdAsc(bidDto.getAuctionId());
-		if (bids.size() > 0 && bids.getLast().getTrader().getId().equals(traderId))
-			return false;
+		if (bids.size() > 0 && bids.getLast().getTrader().getId().equals(traderId)) return false;
 
 		return true;
 	}
