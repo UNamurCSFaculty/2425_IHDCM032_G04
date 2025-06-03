@@ -55,4 +55,13 @@ public interface StoreService {
 	 *            L'identifiant unique du magasin à supprimer.
 	 */
 	void deleteStore(Integer id);
+
+	/**
+	 * Vérifie si un magasin existe pour l'utilisateur spécifié.
+	 *
+	 * @param userId
+	 *            L'identifiant de l'utilisateur.
+	 * @return true si un magasin existe pour l'utilisateur, false sinon.
+	 */
+	boolean existsStoreByUserId(Integer userId);
 }

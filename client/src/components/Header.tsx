@@ -112,7 +112,6 @@ export function Header() {
   ]
 
   const menuItems: MenuItemDefinition[] = [
-    { titleKey: 'header.menu.home', url: '/' },
     {
       titleKey: 'breadcrumb.buy',
       url: '#',
@@ -205,17 +204,14 @@ export function Header() {
     {
       titleKey: 'header.menu.news',
       url: '/actualites',
-      // icon: <BookText className="size-5 shrink-0" />, // Icône supprimée
     },
     {
       titleKey: 'header.menu.about',
       url: '/a-propos',
-      // icon: <Users className="size-5 shrink-0" />, // Icône supprimée
     },
     {
       titleKey: 'header.menu.contact',
       url: '/contact',
-      // icon: <Mail className="size-5 shrink-0" />, // Icône supprimée
     },
   ]
 
@@ -256,13 +252,19 @@ export function Header() {
         const filteredSubItems = item.items.filter(subItem => {
           const generalAccess = !subItem.requiresAuth && !subItem.hideWhenAuth
           const hiddenWhenAuthAccess = subItem.hideWhenAuth && !isLoggedIn
-          const authRequiredAccess =
+          let authRequiredAccess =
             subItem.requiresAuth &&
             isLoggedIn &&
             (!subItem.allowedUserTypes ||
               (user &&
                 user.type &&
                 subItem.allowedUserTypes.includes(user.type)))
+
+          if (authRequiredAccess && subItem.url === '/depots/nouveau-produit') {
+            authRequiredAccess =
+              authRequiredAccess && user && user.storeAssociated === true
+          }
+
           return generalAccess || hiddenWhenAuthAccess || authRequiredAccess
         })
         return { ...item, items: filteredSubItems }
@@ -271,10 +273,11 @@ export function Header() {
     })
     .filter(
       item => !(item.items && item.items.length === 0 && item.url === '#')
-    ) // Cache les triggers de menu si tous leurs enfants sont filtrés
+    )
 
   const filteredUserMenuItems = userMenuItemsBase.filter(item => {
     if (!isLoggedIn || !user || !user.type) return false
+    // if (item.url === '/depots/mes-produits') {}
     return !item.allowedUserTypes || item.allowedUserTypes.includes(user.type)
   })
 
@@ -295,7 +298,6 @@ export function Header() {
                     <>
                       <NavigationMenuTrigger>
                         {item.icon && <span className="mr-2">{item.icon}</span>}{' '}
-                        {/* Pour icône sur le trigger principal si besoin */}
                         {t(item.titleKey)}
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
@@ -321,8 +323,6 @@ export function Header() {
                         activeProps={activeStyle}
                         className={navigationMenuTriggerStyle()}
                       >
-                        {/* Icône supprimée pour Actualités, A Propos, Contact */}
-                        {/* {item.icon && <span className="mr-2">{item.icon}</span>} */}
                         {t(item.titleKey)}
                       </Link>
                     </NavigationMenuLink>
@@ -333,7 +333,6 @@ export function Header() {
           </NavigationMenu>
         </div>
 
-        {/* Desktop User / Auth & Language Switcher */}
         <div className="hidden items-center gap-2 lg:flex">
           {!isLoggedIn ? (
             <>
@@ -573,15 +572,18 @@ export function Header() {
 }
 
 const ListItem = React.forwardRef<
-  React.ElementRef<'a'>,
-  React.ComponentPropsWithoutRef<'a'> & {
+  React.ElementRef<typeof Link>,
+  Omit<React.ComponentPropsWithoutRef<typeof Link>, 'children' | 'to'> & {
     title: string
     icon?: React.ReactNode
+    href: string
+    children?: React.ReactNode
   }
->(({ className, title, children, icon, ...props }, ref) => (
+>(({ className, title, children, icon, href, ...props }, ref) => (
   <li>
     <NavigationMenuLink asChild>
-      <a
+      <Link
+        to={href} // Use 'to' prop for Link component
         ref={ref}
         className={cn(
           'focus:bg-accent focus:text-accent-foreground hover:bg-accent hover:text-accent-foreground block space-y-1 rounded-md p-3 leading-none no-underline transition-colors outline-none select-none',
@@ -598,7 +600,7 @@ const ListItem = React.forwardRef<
             {children}
           </p>
         )}
-      </a>
+      </Link>
     </NavigationMenuLink>
   </li>
 ))
