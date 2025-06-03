@@ -645,7 +645,8 @@
     "confirm_bid_prompt": "Confirmer votre offre de {{amount}} ?",
     "status": {
       "ended_title": "Enchère terminée",
-      "ended_message": "Cette enchère est maintenant terminée."
+      "ended_message": "Cette enchère est maintenant terminée.",
+      "offer_contract": "Proposer un contrat au vendeur ?"
     },
     "bid_count_for_lot_zero": "{{count}} offre pour le lot",
     "bid_count_for_lot_one": "{{count}} offre pour le lot",
@@ -694,7 +695,7 @@
       "buyer_header": "Acheteur",
       "view_bids_button": "Voir les offres",
       "make_bid_button": "Faire une offre",
-      "propose_contract_button": "Proposer un contrat",
+      "propose_contract_button": "Nouveau contrat",
       "strategy_label": "Stratégie d'enchère",
       "fixed_price_per_kg_label": "Prix imposé par kg",
       "max_price_per_kg_label": "Prix maximum par kg",
@@ -1019,7 +1020,9 @@
     "label": "Contrat n°{{id}}",
     "price_per_kg_label": "Prix par kg",
     "accept_offer_prompt": "Accepter cette offre ?",
-    "reject_offer_prompt": "Refuser cette offre ?"
+    "reject_offer_prompt": "Refuser cette offre ?",
+    "created_ok": "Offre de contrat ouverte avec succès !",
+    "created_fail": "Erreur lors de la création du contrat."
   },
   "settings": {
     "update_success": "Paramètres globaux mis à jour avec succès.",

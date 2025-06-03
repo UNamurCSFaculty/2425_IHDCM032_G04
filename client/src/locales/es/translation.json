@@ -645,7 +645,8 @@
     "confirm_bid_prompt": "¿Confirmar tu oferta de {{amount}}?",
     "status": {
       "ended_title": "Subasta finalizada",
-      "ended_message": "Esta subasta ha finalizado."
+      "ended_message": "Esta subasta ha finalizado.",
+      "offer_contract": "Oferta aceptada, contrato propuesto"
     },
     "bid_count_for_lot_zero": "{{count}} oferta para el lote",
     "bid_count_for_lot_one": "{{count}} oferta para el lote",
@@ -1014,7 +1015,9 @@
     "label": "Contrato n.º {{id}}",
     "price_per_kg_label": "Precio por kg",
     "accept_offer_prompt": "¿Aceptar esta oferta?",
-    "reject_offer_prompt": "¿Rechazar esta oferta?"
+    "reject_offer_prompt": "¿Rechazar esta oferta?",
+    "created_ok": "¡Contrato creado con éxito!",
+    "created_fail": "Error al crear el contrato."
   },
   "settings": {
     "update_success": "Configuración global actualizada con éxito.",

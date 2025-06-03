@@ -151,3 +151,8 @@ export const getCategoryBackground = (categoryName?: string): string => {
 export const getCategoryTextColor = (): string => {
   return 'text-white'
 }
+
+export const getPricePerKg = (price: number, quantity: number) => {
+  if (quantity <= 0) return 0
+  return Math.round(price / quantity)
+}
