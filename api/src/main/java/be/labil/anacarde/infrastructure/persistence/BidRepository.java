@@ -19,6 +19,15 @@ public interface BidRepository extends JpaRepository<Bid, Integer> {
 	 */
 	List<Bid> findByAuctionId(Integer auctionId);
 
+	/**
+	 * Recherche les offres correspondant à une enchère donnée, par ordre de création (id).
+	 *
+	 * @param auctionId
+	 *            L'ID de l'enchère correspondante.
+	 * @return Une liste d'offres correspondant à l'enchère.
+	 */
+	List<Bid> findByAuctionIdOrderByIdAsc(Integer auctionId);
+
 	@Modifying
 	@Transactional
 	@Query(value = """

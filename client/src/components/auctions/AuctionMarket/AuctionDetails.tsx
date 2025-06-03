@@ -39,6 +39,7 @@ import {
   XCircle,
   Loader2,
   Star,
+  User,
 } from 'lucide-react'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -516,11 +517,16 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                       <div>
                         <div className="font-medium">
                           {bid.trader.id === user.id ? (
-                            <b className="text-green-600">
-                              {bid.trader.firstName} {bid.trader.lastName}
-                            </b>
+                            <div className="flex items-center space-x-2">
+                              <b className="text-green-600">
+                                {bid.trader.firstName} {bid.trader.lastName}
+                              </b>
+                              <User size={18} className="text-green-600" />
+                            </div>
                           ) : (
-                            bid.trader.firstName + ' ' + bid.trader.lastName
+                            <>
+                              {bid.trader.firstName} {bid.trader.lastName}
+                            </>
                           )}
                         </div>
                         <div className="text-xs text-gray-600">
@@ -626,7 +632,10 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                             </div>
                           )}
                         {bid.status.name !== TradeStatus.OPEN && (
-                          <Badge variant="outline" className="text-xs">
+                          <Badge
+                            variant="outline"
+                            className={`text-xs ${bid.status.name === TradeStatus.ACCEPTED ? 'bg-yellow-400' : 'bg-gray-200'}`}
+                          >
                             {bid.status.name === TradeStatus.ACCEPTED && (
                               <Star />
                             )}

@@ -365,7 +365,7 @@ public class GlobalExceptionHandler {
 			HttpServletRequest req) {
 
 		return buildResponse(HttpStatus.FORBIDDEN, ApiErrorCode.ACCESS_DENIED.code(),
-				"Accès refusé : vous n’avez pas les droits suffisants.", req);
+				"Accès refusé : l'opération est interdite.", req);
 	}
 
 	/**

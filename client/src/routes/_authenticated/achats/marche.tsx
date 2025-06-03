@@ -18,7 +18,7 @@ export function RouteComponent() {
         ]}
       />
       <div className="container mx-auto mt-16 mb-16">
-        <AuctionMarketplace userRole="buyer" />
+        <AuctionMarketplace userRole="buyer" marketMode="marketplace" />
       </div>
     </>
   )

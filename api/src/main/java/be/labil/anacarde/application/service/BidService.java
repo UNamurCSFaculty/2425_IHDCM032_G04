@@ -15,14 +15,15 @@ import org.springframework.security.access.prepost.PreAuthorize;
 public interface BidService {
 
 	/**
-	 * Crée une nouvelle offre dans le système en utilisant le BidDto fourni.
+	 * Crée une nouvelle offre dans le système en utilisant le BidDto fourni. Un utilisateur ne peut
+	 * pas enchérir sur ses propres ventes, ni enchérir au nom d'un autre utilisateur.
 	 *
 	 * @param bidDto
 	 *            Le BidDto contenant les informations de la nouvelle offre.
 	 * @return Un BidDto représentant l'offre créée.
 	 */
 	@Secured({"ROLE_ADMIN", "ROLE_BUYER"})
-	@PreAuthorize("@authz.isAdmin(principal) or (#bidDto.traderId.equals(principal.id))")
+	@PreAuthorize("@authz.isAdmin(principal) or @ownership.isBidAuthorized(principal.id, #bidDto)")
 	BidDto createBid(@Param("bidDto") BidUpdateDto bidDto);
 
 	/**
@@ -53,7 +54,7 @@ public interface BidService {
 	 */
 	@Secured({"ROLE_ADMIN", "ROLE_BUYER"})
 	@PreAuthorize("@authz.isAdmin(principal) or (#bidDto.traderId.equals(principal.id))")
-	BidDto updateBid(Integer bidId, @Param("bidDto") BidUpdateDto bidDto);
+	BidDto updateBid(@Param("bidId") Integer bidId, @Param("bidDto") BidUpdateDto bidDto);
 
 	/**
 	 * Accepter l'offre identifiée par l'ID donné. Une offre ne peut être acceptée que par le

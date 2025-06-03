@@ -30,7 +30,6 @@ import {
 } from '@/components/ui/table'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { useMediaQuery } from '@/hooks/use-mobile'
-import { useAuthUser } from '@/store/userStore'
 import dayjs from '@/utils/dayjs-config'
 import { useQuery } from '@tanstack/react-query'
 import {
@@ -43,9 +42,12 @@ import {
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import LoadingState from '@/components/LoadingState'
+import { useAuthUser } from '@/store/userStore'
+import { TradeStatus } from '@/lib/utils'
 
 export type ViewMode = 'cards' | 'table' | 'map'
 export type UserRole = 'buyer' | 'seller'
+export type MarketMode = 'marketplace' | 'my-purchases' | 'my-sales'
 
 export const sortOptions = [
   { value: 'endDate-asc', label: 'sort.expiration_asc' },
@@ -58,16 +60,14 @@ export type SortOptionValue = (typeof sortOptions)[number]['value']
 export const perPage = 12
 
 interface MarketplaceProps {
+  marketMode?: MarketMode
   userRole: UserRole
-  buyerId?: number
-  traderId?: number
   filterByAuctionStatus?: boolean
 }
 
 const AuctionMarketplace: React.FC<MarketplaceProps> = ({
+  marketMode = 'marketplace',
   userRole,
-  buyerId,
-  traderId,
   filterByAuctionStatus,
 }) => {
   const isDesktop = useMediaQuery('(min-width: 1024px)')
@@ -75,9 +75,21 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
   const user = useAuthUser()
 
   // Queries
+  let buyerId = undefined
+  let traderId = undefined
+  let auctionStatus = undefined
+
+  if (marketMode === 'my-purchases') {
+    buyerId = user.id // query all auctions where user placed bids
+  } else if (marketMode === 'my-sales') {
+    traderId = user.id // query all auctions where user is the seller
+  } else if (marketMode === 'marketplace') {
+    auctionStatus = TradeStatus.OPEN // default to open auctions
+  }
+
   const listAuctionsQueryOptions = () => ({
     ...listAuctionsOptions({
-      query: { buyerId: buyerId, traderId: traderId },
+      query: { buyerId: buyerId, traderId: traderId, status: auctionStatus },
     }),
     staleTime: 10_000,
   })
@@ -135,16 +147,26 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
   }
 
   const handleFilteredDataChange = useCallback(
-    (newFilteredData: AuctionDto[]) => {
-      if (userRole === 'buyer' && traderId) {
-        // show only auctions where user placed bids
+    (newFilteredData: AuctionDto[], selectedAuctionStatus: TradeStatus) => {
+      if (
+        marketMode === 'my-purchases' &&
+        selectedAuctionStatus !== TradeStatus.OPEN
+      ) {
+        // show only auctions won by user
         newFilteredData = newFilteredData.filter(auction =>
-          auction.bids.some(bid => bid.trader.id === traderId)
+          auction.bids.some(
+            bid =>
+              bid.trader.id === user.id &&
+              bid.status.name === TradeStatus.ACCEPTED
+          )
         )
       }
       setFilteredAuctions(newFilteredData)
+
+      // reset view to list when user selects a filter in FilterPanel
+      setInlineAuction(null)
     },
-    [filterByAuctionStatus, userRole, user.id, traderId]
+    [user.id, marketMode]
   )
 
   // Display inline auction on custom event (SSE notif's toast action)
@@ -183,7 +205,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
           {isInCardDetail ? (
             <div className="pl-4">
               <Button
-                variant="outline"
+                variant="default"
                 className="flex w-40 items-center gap-1"
                 onClick={() => setInlineAuction(null)}
               >

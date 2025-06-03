@@ -2,7 +2,8 @@ package be.labil.anacarde.infrastructure.persistence;
 
 import be.labil.anacarde.domain.model.Auction;
 import java.time.LocalDateTime;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -26,10 +27,9 @@ public interface AuctionRepository extends JpaRepository<Auction, Integer> {
 			    WHERE a.active = true
 			      AND (:traderId IS NULL OR a.trader.id = :traderId)
 			      AND (:status IS NULL OR a.status.name = :status)
-			    ORDER BY a.id DESC
 			""")
-	List<Auction> findByTraderAndStatus(@Param("traderId") Integer traderId,
-			@Param("status") String status);
+	Page<Auction> findByTraderAndStatus(@Param("traderId") Integer traderId,
+			@Param("status") String status, Pageable pageable);
 
 	/**
 	 * Recherche les enchères actives, selon des paramètres de filtrage. Une enchère est active si
@@ -46,10 +46,9 @@ public interface AuctionRepository extends JpaRepository<Auction, Integer> {
 			   SELECT a FROM Auction a
 			   LEFT JOIN Bid b ON b.auctionId = a.id
 			   WHERE a.active = true AND b.trader.id = :buyerId AND (:status IS NULL OR b.status.name = :status)
-			   ORDER BY a.id DESC
 			""")
-	List<Auction> findByBuyerAndStatus(@Param("buyerId") Integer buyerId,
-			@Param("status") String status);
+	Page<Auction> findByBuyerAndStatus(@Param("buyerId") Integer buyerId,
+			@Param("status") String status, Pageable pageable);
 
 	@Modifying
 	@Transactional
