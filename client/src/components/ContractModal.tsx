@@ -25,6 +25,7 @@ import { useTranslation } from 'react-i18next'
 import { Button } from './ui/button'
 import { Avatar, AvatarFallback } from '@radix-ui/react-avatar'
 import { toast } from 'sonner'
+import { getPricePerKg } from '@/lib/utils'
 
 interface ContractModalProps {
   isOpen: boolean
@@ -78,7 +79,7 @@ export const ContractModal: React.FC<ContractModalProps> = ({
   const defaultValues = React.useMemo(
     () => ({
       quality: auction.product.qualityControl.quality.id.toString(),
-      price: acceptedBid.amount,
+      price: getPricePerKg(acceptedBid.amount, auction.productQuantity),
       quantity: auction.productQuantity,
       lastingYear: 0,
       lastingMonth: 6,
