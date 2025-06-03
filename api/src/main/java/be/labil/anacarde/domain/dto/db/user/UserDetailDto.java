@@ -39,4 +39,7 @@ public abstract class UserDetailDto extends UserListDto {
 
 	@Schema(description = "Détails complets d’un utilisateur")
 	private List<DocumentDto> documents;
+
+	@Schema(description = "Indique si l'utilisateur est associé à un store")
+	private boolean isStoreAssociated = false;
 }

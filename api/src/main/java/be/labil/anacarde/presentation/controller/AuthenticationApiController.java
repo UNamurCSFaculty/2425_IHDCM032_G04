@@ -1,5 +1,6 @@
 package be.labil.anacarde.presentation.controller;
 
+import be.labil.anacarde.application.service.StoreService;
 import be.labil.anacarde.application.service.UserService;
 import be.labil.anacarde.domain.dto.db.user.UserDetailDto;
 import be.labil.anacarde.domain.mapper.UserDetailMapper;
@@ -35,6 +36,7 @@ public class AuthenticationApiController implements AuthenticationApi {
 	private final Environment environment;
 	private final UserDetailMapper userDetailMapper;
 	private final UserService userService;
+	private final StoreService storeService;
 
 	@Value("${jwt.token.validity.months}")
 	private int tokenValidityMonths;
@@ -47,16 +49,12 @@ public class AuthenticationApiController implements AuthenticationApi {
 				.anyMatch(p -> p.equalsIgnoreCase("prod"));
 
 		ResponseCookie jwtCookie = ResponseCookie.from("jwt", jwt).httpOnly(true).secure(isProd)
-				.path("/").maxAge(Duration.ofDays(tokenValidityMonths * 30L)) // Correction:
-																				// Duration.ofDays
-																				// prend un long
-				.sameSite("Strict").build();
+				.path("/").maxAge(Duration.ofDays(tokenValidityMonths * 30L)).sameSite("Strict")
+				.build();
 		response.addHeader(HttpHeaders.SET_COOKIE, jwtCookie.toString());
 
-		// Assurez-vous que userDetails peut être casté en User ou que userDetailMapper peut gérer
-		// UserDetails
-		// Si votre User implémente UserDetails, le cast est sûr.
 		UserDetailDto dto = userDetailMapper.toDto((User) userDetails);
+		dto.setStoreAssociated(storeService.existsStoreByUserId(((User) userDetails).getId()));
 		return ResponseEntity.ok(dto);
 	}
 
@@ -89,6 +87,7 @@ public class AuthenticationApiController implements AuthenticationApi {
 			throw new AuthenticationCredentialsNotFoundException("Current user is null");
 		}
 		UserDetailDto dto = userDetailMapper.toDto(currentUser);
+		dto.setStoreAssociated(storeService.existsStoreByUserId(dto.getId()));
 		return ResponseEntity.ok(dto);
 	}
 

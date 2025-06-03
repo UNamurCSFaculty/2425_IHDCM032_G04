@@ -205,17 +205,14 @@ export function Header() {
     {
       titleKey: 'header.menu.news',
       url: '/actualites',
-      // icon: <BookText className="size-5 shrink-0" />, // Icône supprimée
     },
     {
       titleKey: 'header.menu.about',
       url: '/a-propos',
-      // icon: <Users className="size-5 shrink-0" />, // Icône supprimée
     },
     {
       titleKey: 'header.menu.contact',
       url: '/contact',
-      // icon: <Mail className="size-5 shrink-0" />, // Icône supprimée
     },
   ]
 
@@ -256,13 +253,19 @@ export function Header() {
         const filteredSubItems = item.items.filter(subItem => {
           const generalAccess = !subItem.requiresAuth && !subItem.hideWhenAuth
           const hiddenWhenAuthAccess = subItem.hideWhenAuth && !isLoggedIn
-          const authRequiredAccess =
+          let authRequiredAccess =
             subItem.requiresAuth &&
             isLoggedIn &&
             (!subItem.allowedUserTypes ||
               (user &&
                 user.type &&
                 subItem.allowedUserTypes.includes(user.type)))
+
+          if (authRequiredAccess && subItem.url === '/depots/nouveau-produit') {
+            authRequiredAccess =
+              authRequiredAccess && user && user.storeAssociated === true
+          }
+
           return generalAccess || hiddenWhenAuthAccess || authRequiredAccess
         })
         return { ...item, items: filteredSubItems }
@@ -275,6 +278,13 @@ export function Header() {
 
   const filteredUserMenuItems = userMenuItemsBase.filter(item => {
     if (!isLoggedIn || !user || !user.type) return false
+    // Additional check for '/depots/nouveau-produit' if it were in userMenuItemsBase
+    // For now, it's in the main menu, so the logic above handles it.
+    // If '/depots/mes-produits' also needs this check for userMenuItemsBase:
+    if (item.url === '/depots/mes-produits') {
+      // Assuming authenticatedSeller implies storeAssociated for this specific item in this list
+      // or add a specific check: return user.storeAssociated === true && (!item.allowedUserTypes || item.allowedUserTypes.includes(user.type))
+    }
     return !item.allowedUserTypes || item.allowedUserTypes.includes(user.type)
   })
 
@@ -295,7 +305,6 @@ export function Header() {
                     <>
                       <NavigationMenuTrigger>
                         {item.icon && <span className="mr-2">{item.icon}</span>}{' '}
-                        {/* Pour icône sur le trigger principal si besoin */}
                         {t(item.titleKey)}
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
@@ -321,8 +330,6 @@ export function Header() {
                         activeProps={activeStyle}
                         className={navigationMenuTriggerStyle()}
                       >
-                        {/* Icône supprimée pour Actualités, A Propos, Contact */}
-                        {/* {item.icon && <span className="mr-2">{item.icon}</span>} */}
                         {t(item.titleKey)}
                       </Link>
                     </NavigationMenuLink>
@@ -333,7 +340,6 @@ export function Header() {
           </NavigationMenu>
         </div>
 
-        {/* Desktop User / Auth & Language Switcher */}
         <div className="hidden items-center gap-2 lg:flex">
           {!isLoggedIn ? (
             <>

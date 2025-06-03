@@ -1,8 +1,16 @@
 import { BreadcrumbSection } from '@/components/BreadcrumbSection'
 import { ProductForm } from '@/components/deposits/ProductForm'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_authenticated/depots/nouveau-produit')({
+  beforeLoad: async ({ context }) => {
+    console.log(context.user)
+    if (!context.user || context.user.storeAssociated !== true) {
+      throw redirect({
+        to: '/403',
+      })
+    }
+  },
   component: RouteComponent,
 })
 
