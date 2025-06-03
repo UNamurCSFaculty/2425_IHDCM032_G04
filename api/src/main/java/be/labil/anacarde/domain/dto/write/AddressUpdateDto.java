@@ -1,4 +1,4 @@
-package be.labil.anacarde.domain.dto.write.user.update;
+package be.labil.anacarde.domain.dto.write;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;

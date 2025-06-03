@@ -34,6 +34,7 @@ interface Props {
   options: Option[] // Assure que les options ont un id de type number
   placeholder?: string
   value: number | null // La valeur peut être un id ou null pour le placeholder
+  modal?: boolean // Indique si le sélecteur est utilisé dans un modal
   onChange: (val: number | null) => void
   /**
    * Détermine si le placeholder est une option sélectionnable.
@@ -54,6 +55,7 @@ const VirtualizedSelect: React.FC<Props> = ({
   tooltip,
   placeholder = '',
   required = false,
+  modal = false,
   value,
   onChange,
   placeholderSelectable = false,
@@ -152,6 +154,7 @@ const VirtualizedSelect: React.FC<Props> = ({
             if (!openState) setSearch('') // Réinitialise la recherche à la fermeture
             setOpen(openState)
           }}
+          modal={modal}
         >
           <PopoverTrigger asChild>
             <Button
@@ -177,7 +180,11 @@ const VirtualizedSelect: React.FC<Props> = ({
                 onKeyDown={handleKeyDown}
               />
 
-              <CommandList>
+              <CommandList
+                // Add these styles to prevent CommandList from interfering with Virtuoso's scrolling
+                // and to remove its default max-height.
+                style={{ overflowY: 'visible', maxHeight: 'none' }}
+              >
                 <CommandEmpty>Aucun résultat</CommandEmpty>
                 {filteredOptions.length > 0 && (
                   <CommandGroup>

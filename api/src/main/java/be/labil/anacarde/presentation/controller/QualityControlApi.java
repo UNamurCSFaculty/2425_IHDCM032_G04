@@ -25,6 +25,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+/**
+ * API pour la gestion des contrôles qualité.
+ */
 @Validated
 @SecurityRequirement(name = "jwt")
 @RequestMapping(value = "/api/quality-controls", produces = "application/json")

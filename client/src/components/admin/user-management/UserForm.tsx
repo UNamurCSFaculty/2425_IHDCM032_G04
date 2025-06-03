@@ -276,6 +276,7 @@ export const UserForm: React.FC<UserFormProps> = ({
                   label: t('languages.' + l.code),
                 }))}
                 label={t('form.language')}
+                modal={true}
               />
             )}
           </form.AppField>
@@ -362,7 +363,13 @@ export const UserForm: React.FC<UserFormProps> = ({
             name="address.cityId"
             validators={{ onChange: zAddressDto.shape.cityId.optional() }}
           >
-            {f => <f.CityField label={t('form.city')} required={false} />}
+            {f => (
+              <f.CityField
+                label={t('form.city')}
+                required={false}
+                modal={true}
+              />
+            )}
           </form.AppField>
           <form.AppField name="address.street">
             {f => (

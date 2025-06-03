@@ -2,6 +2,7 @@ package be.labil.anacarde.presentation.controller;
 
 import be.labil.anacarde.application.service.FieldService;
 import be.labil.anacarde.domain.dto.db.FieldDto;
+import be.labil.anacarde.domain.dto.write.FieldUpdateDto;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,7 @@ public class FieldApiController implements FieldApi {
 	}
 
 	@Override
-	public ResponseEntity<FieldDto> createField(FieldDto fieldDto) {
+	public ResponseEntity<FieldDto> createField(FieldUpdateDto fieldDto) {
 		FieldDto created = fieldService.createField(fieldDto);
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(created.getId()).toUri();
@@ -36,7 +37,7 @@ public class FieldApiController implements FieldApi {
 	}
 
 	@Override
-	public ResponseEntity<FieldDto> updateField(Integer id, FieldDto fieldDto) {
+	public ResponseEntity<FieldDto> updateField(Integer id, FieldUpdateDto fieldDto) {
 		FieldDto updated = fieldService.updateField(id, fieldDto);
 		return ResponseEntity.ok(updated);
 	}

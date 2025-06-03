@@ -21,6 +21,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * End-points « Offres » (API de gestion des offres). Permet de gérer les opérations relatives aux
+ * offres, telles que la création, la mise à jour, l'acceptation et la suppression d'offres.
+ */
 @Validated
 @SecurityRequirement(name = "jwt")
 @RequestMapping(value = "/api/bids", produces = "application/json")

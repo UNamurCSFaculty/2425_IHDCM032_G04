@@ -7,6 +7,10 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import org.springframework.web.multipart.MultipartFile;
 
+/**
+ * Utilitaires pour la gestion des documents stockés sur disque. Fournit des méthodes pour
+ * construire des objets Document à partir de fichiers et d'utilisateurs.
+ */
 public class DiskStorageUtils {
 
 	public static Document buildDocument(User user, MultipartFile f, String path) {

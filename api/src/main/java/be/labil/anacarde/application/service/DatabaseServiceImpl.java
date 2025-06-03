@@ -606,9 +606,10 @@ public class DatabaseServiceImpl implements DatabaseService {
 
 		for (int i = 0; i < NUM_STORES; i++) {
 			UserDetailDto manager = potentialManagers.get(random.nextInt(potentialManagers.size()));
-			StoreDetailDto storeDto = new StoreDetailDto();
+			StoreUpdateDto storeDto = new StoreUpdateDto();
 			storeDto.setName(faker.company().suffix() + " " + faker.address().city() + " Dépôt");
-			storeDto.setAddress(createVariationAddress(manager.getAddress()));
+			AddressUpdateDto variationAddress = createVariationAddress(manager.getAddress());
+			storeDto.setAddress(variationAddress);
 			storeDto.setUserId(manager.getId());
 			try {
 				createdStores.add(storeService.createStore(storeDto));
@@ -632,10 +633,10 @@ public class DatabaseServiceImpl implements DatabaseService {
 					+ MIN_FIELDS_PER_PRODUCER;
 			List<FieldDto> fieldsForProducer = new ArrayList<>();
 			for (int i = 0; i < numFields; i++) {
-				FieldDto fieldDto = new FieldDto();
+				FieldUpdateDto fieldDto = new FieldUpdateDto();
 				fieldDto.setIdentifier("FIELD-" + faker.number().digits(10));
 				fieldDto.setAddress(createVariationAddress(producer.getAddress()));
-				fieldDto.setProducer(producer);
+				fieldDto.setProducerId(producer.getId());
 				try {
 					fieldsForProducer.add(fieldService.createField(fieldDto));
 				} catch (Exception e) {
@@ -1355,7 +1356,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 	 * Construit une AddressDto pour un champ en reprenant la même région et ville que le
 	 * producteur, mais avec rue aléatoire et décalage ±0.1° sur le point.
 	 */
-	private AddressDto createVariationAddress(AddressDto addressDto) {
+	private AddressUpdateDto createVariationAddress(AddressDto addressDto) {
 		Integer regionId = addressDto.getRegionId();
 		Integer cityId = addressDto.getCityId();
 
@@ -1369,7 +1370,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 		double lat = lat0 + (random.nextDouble() * 0.2 - 0.1);
 		Point newPoint = geometryFactory.createPoint(new Coordinate(lon, lat));
 
-		return AddressDto.builder().street(faker.address().streetAddress()) // rue aléatoire
+		return AddressUpdateDto.builder().street(faker.address().streetAddress()) // rue aléatoire
 				.location(newPoint.toText()) // WKT du nouveau point
 				.regionId(regionId) // même région que le producteur
 				.cityId(cityId) // même ville que le producteur

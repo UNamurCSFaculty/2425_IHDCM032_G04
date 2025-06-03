@@ -12,6 +12,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+/**
+ * End-point pour récupérer les données de l'application. Fournit des informations nécessaires à un
+ * client, telles que la version de l'application, les paramètres de configuration, etc.
+ */
 @Validated
 @RequestMapping(value = "/api/app", produces = "application/json")
 @Tag(name = "application", description = "Récupération des données nécessaire à un client")

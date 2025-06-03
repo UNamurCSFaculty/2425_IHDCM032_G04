@@ -15,6 +15,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+/**
+ * End-point pour envoyer un message de contact. Permet à un visiteur d'envoyer un message via le
+ * formulaire de contact.
+ */
 @Tag(name = "Contact", description = "API pour envoyer un message de contact")
 @RequestMapping(value = "/api/contact", produces = "application/json")
 public interface ContactApi {

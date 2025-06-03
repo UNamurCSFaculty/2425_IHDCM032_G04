@@ -24,6 +24,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * API pour la gestion des produits. Permet de gérer les opérations relatives aux produits, telles
+ * que la création, la mise à jour, la suppression et la récupération des produits.
+ */
 @Validated
 @SecurityRequirement(name = "jwt")
 @RequestMapping(value = "/api/products", produces = "application/json")

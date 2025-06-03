@@ -15,6 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * End-points « Réglages globaux » (API pour la gestion des réglages globaux du système).
+ */
 @SecurityRequirement(name = "jwt")
 @RequestMapping(value = "/api/admin/global-settings", produces = "application/json")
 @Tag(name = "admin-global-settings", description = "Gestion des réglages globaux du système")

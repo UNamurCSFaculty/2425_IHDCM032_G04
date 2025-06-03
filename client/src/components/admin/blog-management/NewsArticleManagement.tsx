@@ -449,6 +449,7 @@ export function NewsArticleManagement() {
                       )}
                       required
                       disabled={isLoadingCategories}
+                      modal={true}
                     />
                   )}
                 </form.AppField>

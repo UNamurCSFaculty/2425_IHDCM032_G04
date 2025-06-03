@@ -192,11 +192,10 @@ export const zApiErrorResponse = z.object({
   errors: z.array(zErrorDetail),
 })
 
-export const zStoreDetailDto = z.object({
-  id: z.number().int().readonly(),
+export const zStoreUpdateDto = z.object({
   name: z.string(),
   userId: z.number().int(),
-  address: zAddressDto,
+  address: zAddressUpdateDto,
 })
 
 export const zRegionDto = z.object({
@@ -293,6 +292,13 @@ export const zFieldDto = z.object({
   producer: zProducerDetailDto.optional(),
 })
 
+export const zStoreDetailDto = z.object({
+  id: z.number().int().readonly(),
+  name: z.string(),
+  userId: z.number().int(),
+  address: zAddressDto,
+})
+
 export const zProductDto = z.object({
   id: z.number().int().readonly(),
   deliveryDate: z.iso.datetime().optional(),
@@ -342,6 +348,12 @@ export const zNewsCategoryDto = z.object({
   id: z.number().int().readonly(),
   name: z.string().min(1),
   description: z.string().optional(),
+})
+
+export const zFieldUpdateDto = z.object({
+  identifier: z.string().optional(),
+  address: zAddressUpdateDto,
+  producerId: z.number().int(),
 })
 
 export const zCooperativeUpdateDto = z.object({
@@ -730,7 +742,7 @@ export const zDeleteStoreResponse = z.union([z.unknown(), z.void()])
 
 export const zGetStoreResponse = zStoreDetailDto
 
-export const zUpdateStoreResponse = zStoreDetailDto
+export const zUpdateStoreResponse = zStoreUpdateDto
 
 export const zDeleteRegionResponse = z.union([z.unknown(), z.void()])
 
@@ -778,7 +790,7 @@ export const zDeleteFieldResponse = z.union([z.unknown(), z.void()])
 
 export const zGetFieldResponse = zFieldDto
 
-export const zUpdateFieldResponse = zFieldDto
+export const zUpdateFieldResponse = zFieldUpdateDto
 
 export const zDeleteCooperativeResponse = z.union([z.unknown(), z.void()])
 
@@ -830,7 +842,7 @@ export const zCreateUserResponse = zUserDetailDto
 
 export const zListStoresResponse = z.array(zStoreDetailDto)
 
-export const zCreateStoreResponse = zStoreDetailDto
+export const zCreateStoreResponse = zStoreUpdateDto
 
 export const zListQualityControlsResponse = z.array(zQualityControlDto)
 
@@ -858,7 +870,7 @@ export const zCreateLanguageResponse = zLanguageDto
 
 export const zListFieldsResponse = z.array(zFieldDto)
 
-export const zCreateFieldResponse = zFieldDto
+export const zCreateFieldResponse = zFieldUpdateDto
 
 export const zListDocumentsByUserResponse = z.array(zDocumentDto)
 

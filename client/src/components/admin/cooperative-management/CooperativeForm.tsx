@@ -306,6 +306,7 @@ export const CooperativeForm: React.FC<CooperativeFormProps> = ({
                   disabled={
                     isLoadingSubmit || usersQuery.isLoading || !usersQuery.data
                   }
+                  modal={true}
                 />
               )}
             </form.AppField>

@@ -21,6 +21,7 @@ import {
   IconSettings,
   IconUsers,
   IconBuilding,
+  IconShoppingBag,
 } from '@tabler/icons-react'
 import { Link } from '@tanstack/react-router'
 import * as React from 'react'
@@ -58,6 +59,11 @@ const data = {
       title: 'Coopératives',
       url: '/admin/cooperatives',
       icon: IconBuilding,
+    },
+    {
+      title: 'Magasins',
+      url: '/admin/magasin',
+      icon: IconShoppingBag,
     },
     {
       title: 'Paramètres',

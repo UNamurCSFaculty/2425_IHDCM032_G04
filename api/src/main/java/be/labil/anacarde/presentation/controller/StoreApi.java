@@ -3,6 +3,7 @@ package be.labil.anacarde.presentation.controller;
 import be.labil.anacarde.application.exception.ApiErrorResponse;
 import be.labil.anacarde.domain.dto.db.StoreDetailDto;
 import be.labil.anacarde.domain.dto.db.ValidationGroups;
+import be.labil.anacarde.domain.dto.write.StoreUpdateDto;
 import be.labil.anacarde.presentation.controller.annotations.ApiValidId;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -19,6 +20,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * API pour la gestion des magasins. Permet de gérer les opérations relatives aux magasins, telles
+ * que la création, la mise à jour, la suppression et la récupération des magasins.
+ */
 @Validated
 @SecurityRequirement(name = "jwt")
 @RequestMapping(value = "/api/stores", produces = "application/json")
@@ -35,21 +40,21 @@ public interface StoreApi {
 	@Operation(summary = "Créer un magasin")
 	@PostMapping
 	@ApiResponses({
-			@ApiResponse(responseCode = "201", description = "", content = @Content(schema = @Schema(implementation = StoreDetailDto.class))),
+			@ApiResponse(responseCode = "201", description = "", content = @Content(schema = @Schema(implementation = StoreUpdateDto.class))),
 			@ApiResponse(responseCode = "400", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
 			@ApiResponse(responseCode = "409", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
 	ResponseEntity<StoreDetailDto> createStore(@Validated({Default.class,
-			ValidationGroups.Create.class}) @RequestBody StoreDetailDto storeDetailDto);
+			ValidationGroups.Create.class}) @RequestBody StoreUpdateDto storeUpdateDto);
 
 	@Operation(summary = "Mettre à jour un magasin")
 	@PutMapping(value = "/{id}", consumes = "application/json")
 	@ApiResponses({
-			@ApiResponse(responseCode = "201", description = "", content = @Content(schema = @Schema(implementation = StoreDetailDto.class))),
+			@ApiResponse(responseCode = "201", description = "", content = @Content(schema = @Schema(implementation = StoreUpdateDto.class))),
 			@ApiResponse(responseCode = "400", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
 			@ApiResponse(responseCode = "409", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
 	ResponseEntity<StoreDetailDto> updateStore(@ApiValidId @PathVariable("id") Integer id,
 			@Validated({Default.class,
-					ValidationGroups.Update.class}) @RequestBody StoreDetailDto storeDetailDto);
+					ValidationGroups.Update.class}) @RequestBody StoreUpdateDto storeUpdateDto);
 
 	@Operation(summary = "Obtenir tous les magasins")
 	@GetMapping

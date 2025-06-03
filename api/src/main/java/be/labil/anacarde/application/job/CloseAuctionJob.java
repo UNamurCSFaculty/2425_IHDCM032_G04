@@ -9,15 +9,27 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component // Important pour l'injection de dépendances Spring
+/**
+ * Job Quartz pour la clôture des enchères. Ce job est déclenché par le scheduler pour fermer une
+ * enchère spécifique.
+ */
+@Component
 public class CloseAuctionJob implements Job {
 
 	private static final Logger log = LoggerFactory.getLogger(CloseAuctionJob.class);
 
 	@Autowired
-	private AuctionService auctionService; // Service pour interagir avec la logique métier des
-											// enchères
+	private AuctionService auctionService;
 
+	/**
+	 * Méthode exécutée par Quartz pour fermer une enchère. Elle récupère l'ID de l'enchère depuis
+	 * le contexte du job et appelle le service d'enchères pour la clôturer.
+	 *
+	 * @param context
+	 *            le contexte d'exécution du job
+	 * @throws JobExecutionException
+	 *             si une erreur se produit lors de la clôture de l'enchère
+	 */
 	@Override
 	public void execute(JobExecutionContext context) throws JobExecutionException {
 		Long auctionIdLong = context.getJobDetail().getJobDataMap().getLong("auctionId");
