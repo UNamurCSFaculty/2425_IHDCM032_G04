@@ -79,7 +79,8 @@ public interface AuctionApi {
 	ResponseEntity<List<AuctionDto>> listAuctions(
 			@Parameter(description = "ID du trader ayant créé les enchères") @RequestParam(value = "traderId", required = false) Integer traderId,
 			@Parameter(description = "ID du trader ayant remporté les enchères") @RequestParam(value = "buyerId", required = false) Integer buyerId,
-			@Parameter(description = "Status pour filtrer les enchères") @RequestParam(value = "status", required = false) String auctionStatus);
+			@Parameter(description = "Status pour filtrer les enchères") @RequestParam(value = "status", required = false) String auctionStatus,
+			@Parameter(description = "Nombre maximum d'enchères à obtenir") @RequestParam(value = "limit", required = false) Integer limit);
 
 	@Operation(summary = "Supprimer une enchère")
 	@DeleteMapping("/{id}")
