@@ -43,13 +43,10 @@ public interface AuctionService {
 	 *            L'identifiant du trader ayant remporté les enchères.
 	 * @param auctionStatus
 	 *            Le status de l'enchère.
-	 * @param limit
-	 *            Le nombre maximum d'enchères à obtenir.
 	 *
 	 * @return Une List de AuctionDto représentant toutes les enchères.
 	 */
-	List<AuctionDto> listAuctions(Integer traderId, Integer buyerId, String auctionStatus,
-			Integer limit);
+	List<AuctionDto> listAuctions(Integer traderId, Integer buyerId, String auctionStatus);
 
 	/**
 	 * Mise à jour de l'enchère identifiée par l'ID donné avec les informations fournies dans le
