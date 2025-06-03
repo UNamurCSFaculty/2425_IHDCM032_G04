@@ -439,10 +439,8 @@ export const AuctionForm: React.FC = () => {
                     <ul className="list-disc pl-4">
                       {error.errors.map((err: ErrorDetail, i: number) => (
                         <li key={i}>
-                          {err.field
-                            ? `${t('errors.fields.' + err.field)}: `
-                            : ''}
                           {t('errors.' + err.code)}
+                          {err.field ? `: ${t(err.message)}` : ''}
                         </li>
                       ))}
                     </ul>

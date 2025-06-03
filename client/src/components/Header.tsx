@@ -112,7 +112,6 @@ export function Header() {
   ]
 
   const menuItems: MenuItemDefinition[] = [
-    { titleKey: 'header.menu.home', url: '/' },
     {
       titleKey: 'breadcrumb.buy',
       url: '#',
