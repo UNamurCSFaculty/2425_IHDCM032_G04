@@ -573,15 +573,18 @@ export function Header() {
 }
 
 const ListItem = React.forwardRef<
-  React.ElementRef<'a'>,
-  React.ComponentPropsWithoutRef<'a'> & {
+  React.ElementRef<typeof Link>,
+  Omit<React.ComponentPropsWithoutRef<typeof Link>, 'children' | 'to'> & {
     title: string
     icon?: React.ReactNode
+    href: string
+    children?: React.ReactNode
   }
->(({ className, title, children, icon, ...props }, ref) => (
+>(({ className, title, children, icon, href, ...props }, ref) => (
   <li>
     <NavigationMenuLink asChild>
-      <a
+      <Link
+        to={href} // Use 'to' prop for Link component
         ref={ref}
         className={cn(
           'focus:bg-accent focus:text-accent-foreground hover:bg-accent hover:text-accent-foreground block space-y-1 rounded-md p-3 leading-none no-underline transition-colors outline-none select-none',
@@ -598,7 +601,7 @@ const ListItem = React.forwardRef<
             {children}
           </p>
         )}
-      </a>
+      </Link>
     </NavigationMenuLink>
   </li>
 ))
