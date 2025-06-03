@@ -1,61 +1,52 @@
 package be.labil.anacarde.application.service;
 
-import java.io.IOException;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.CopyOnWriteArrayList;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-@Service
-public class AuctionSseService {
-	private static final Logger log = LoggerFactory.getLogger(AuctionSseService.class);
-	private final ConcurrentMap<Integer, CopyOnWriteArrayList<SseEmitter>> emitters = new ConcurrentHashMap<>();
-	private final StringRedisTemplate redisTemplate;
+/**
+ * Service pour gérer les abonnements et les événements SSE (Server-Sent Events) pour les enchères.
+ */
+public interface AuctionSseService {
 
-	@Autowired
-	public AuctionSseService(StringRedisTemplate redisTemplate) {
-		this.redisTemplate = redisTemplate;
-	}
+	/**
+	 * Abonne un utilisateur à une enchère spécifique.
+	 *
+	 * @param auctionId
+	 *            l'ID de l'enchère
+	 * @param userKey
+	 *            la clé de l'utilisateur
+	 * @return un SseEmitter pour envoyer des événements à l'utilisateur
+	 */
+	SseEmitter subscribe(Integer auctionId, String userKey);
 
-	public SseEmitter subscribe(Integer auctionId, String userKey) {
-		SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
-		emitters.computeIfAbsent(auctionId, k -> new CopyOnWriteArrayList<>()).add(emitter);
-		redisTemplate.opsForSet().add("auction-subscribers:" + auctionId, userKey);
+	/**
+	 * Envoie un événement à tous les abonnés d'une enchère.
+	 *
+	 * @param auctionId
+	 *            l'ID de l'enchère
+	 * @param eventName
+	 *            le nom de l'événement
+	 * @param data
+	 *            les données à envoyer avec l'événement
+	 */
+	void sendEvent(Integer auctionId, String eventName, Object data);
 
-		emitter.onCompletion(() -> emitters.get(auctionId).remove(emitter));
-		emitter.onTimeout(() -> emitters.get(auctionId).remove(emitter));
-		return emitter;
-	}
+	/**
+	 * Récupère les abonnés d'une enchère spécifique.
+	 *
+	 * @param auctionId
+	 *            l'ID de l'enchère
+	 * @return un ensemble de clés d'utilisateurs abonnés à l'enchère
+	 */
+	Set<String> getSubscribers(Integer auctionId);
 
-	public void sendEvent(Integer auctionId, String eventName, Object data) {
-		var list = emitters.getOrDefault(auctionId, new CopyOnWriteArrayList<>());
-		for (SseEmitter emitter : list) {
-			try {
-				emitter.send(
-						SseEmitter.event().name(eventName).data(data, MediaType.APPLICATION_JSON));
-			} catch (IOException e) {
-				emitter.complete();
-				list.remove(emitter);
-			}
-		}
-	}
-
-	public Set<String> getSubscribers(Integer auctionId) {
-		Set<String> subs = redisTemplate.opsForSet().members("auction-subscribers:" + auctionId);
-		log.debug("[SSE] Abonnés à l'enchère " + auctionId + ": " + subs);
-		return subs;
-	}
-
-	public void addSubscriber(Integer auctionId, String userKey) {
-		redisTemplate.opsForSet().add("auction-subscribers:" + auctionId, userKey); // devrait être
-																					// idempotent
-		log.debug("[SSE] Abonné " + userKey + " ajouté à l'enchère ID " + auctionId);
-	}
+	/**
+	 * Ajoute un utilisateur comme abonné à une enchère.
+	 *
+	 * @param auctionId
+	 *            l'ID de l'enchère
+	 * @param userKey
+	 *            la clé de l'utilisateur à ajouter comme abonné
+	 */
+	void addSubscriber(Integer auctionId, String userKey);
 }

@@ -43,8 +43,8 @@ public class AuctionServiceImpl implements AuctionService {
 	private final AuctionStrategyMapper auctionStrategyMapper;
 	private final PersistenceHelper persistenceHelper;
 	private final GlobalSettingsService globalSettingsService;
-	private final AuctionSseService auctionSseService;
-	private final NotificationSseService notificationSseService;
+	private final AuctionSseServiceImpl auctionSseService;
+	private final NotificationSseServiceImpl notificationSseService;
 	private final ProductService productService;
 
 	private static final Logger log = LoggerFactory.getLogger(CloseAuctionJob.class);
@@ -95,7 +95,7 @@ public class AuctionServiceImpl implements AuctionService {
 			auctionSseService.addSubscriber(full.getId(), full.getTrader().getUsername());
 		}
 
-		if (full.getExpirationDate() != null) {
+		if (full.getExpirationDate() != null && full.getStatus().getName().equals("Ouvert")) {
 			scheduleAuctionClose(Long.valueOf(full.getId()), full.getExpirationDate());
 		}
 
@@ -323,7 +323,7 @@ public class AuctionServiceImpl implements AuctionService {
 		if (subscribers != null && !subscribers.isEmpty()) {
 			for (String subKey : subscribers) {
 				notificationSseService.publishEvent(subKey, "auctionClosed", auctionDto);
-				log.info("[SSE] Notification envoyée à " + subKey + " pour clôture de l'enchère: "
+				log.debug("[SSE] Notification envoyée à " + subKey + " pour clôture de l'enchère: "
 						+ auctionDto);
 			}
 		}

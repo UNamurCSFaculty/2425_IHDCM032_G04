@@ -26,9 +26,15 @@ interface CityFieldProps {
   label: string
   tooltip?: string
   required?: boolean
+  modal?: boolean
 }
 
-export function CityField({ label, tooltip, required = true }: CityFieldProps) {
+export function CityField({
+  label,
+  tooltip,
+  required = true,
+  modal = false,
+}: CityFieldProps) {
   const { t } = useTranslation()
   const field = useFieldContext<number>()
   const hasError =
@@ -94,6 +100,7 @@ export function CityField({ label, tooltip, required = true }: CityFieldProps) {
           setOpen(o)
           if (!o) setSearch('')
         }}
+        modal={modal}
       >
         <PopoverTrigger asChild>
           <Button

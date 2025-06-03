@@ -408,13 +408,9 @@ export type ErrorDetail = {
 }
 
 /**
- * Objet de transfert de données pour un entrepôt (store).
+ * Écriture d'un magasin (store)
  */
-export type StoreDetailDto = {
-  /**
-   * Identifiant unique
-   */
-  readonly id: number
+export type StoreUpdateDto = {
   /**
    * Nom du store
    */
@@ -426,7 +422,7 @@ export type StoreDetailDto = {
   /**
    * Adresse de l'utilisateur
    */
-  address: AddressDto
+  address: AddressUpdateDto
 }
 
 /**
@@ -721,6 +717,28 @@ export type ProductDto = {
 }
 
 /**
+ * Objet de transfert de données pour un entrepôt (store).
+ */
+export type StoreDetailDto = {
+  /**
+   * Identifiant unique
+   */
+  readonly id: number
+  /**
+   * Nom du store
+   */
+  name: string
+  /**
+   * Identifiant de l'utilisateur lié au store
+   */
+  userId: number
+  /**
+   * Adresse de l'utilisateur
+   */
+  address: AddressDto
+}
+
+/**
  * Objet de transfert de données pour les produits transformés.
  */
 export type TransformedProductDto = ProductDto & {
@@ -782,6 +800,24 @@ export type NewsCategoryDto = {
    * Description de la catégorie
    */
   description?: string
+}
+
+/**
+ * Objet de transfert pour créer ou mettre à jour un field.
+ */
+export type FieldUpdateDto = {
+  /**
+   * Identifiant du champ (code unique)
+   */
+  identifier?: string
+  /**
+   * Adresse du champ
+   */
+  address: AddressUpdateDto
+  /**
+   * Producteur associé au champ.
+   */
+  producerId: number
 }
 
 /**
@@ -1017,7 +1053,7 @@ export type AuctionUpdateDto = {
   /**
    * Options d'enchère
    */
-  options: AuctionOptionsUpdateDto
+  options?: AuctionOptionsUpdateDto
 }
 
 /**
@@ -1151,7 +1187,7 @@ export type GlobalSettingsUpdateDto = {
    */
   forceBetterBids: boolean
   /**
-   * Incrément minimum d'une sur enchère
+   * Incrément minimum d'une unité sur enchère
    */
   minIncrement?: number
 }
@@ -1807,7 +1843,7 @@ export type GetStoreResponses = {
 export type GetStoreResponse = GetStoreResponses[keyof GetStoreResponses]
 
 export type UpdateStoreData = {
-  body: StoreDetailDto
+  body: StoreUpdateDto
   path: {
     /**
      * Identifiant de la ressource
@@ -1835,7 +1871,7 @@ export type UpdateStoreResponses = {
   /**
    * Created
    */
-  201: StoreDetailDto
+  201: StoreUpdateDto
 }
 
 export type UpdateStoreResponse =
@@ -2620,7 +2656,7 @@ export type GetFieldResponses = {
 export type GetFieldResponse = GetFieldResponses[keyof GetFieldResponses]
 
 export type UpdateFieldData = {
-  body: FieldDto
+  body: FieldUpdateDto
   path: {
     /**
      * Identifiant de la ressource
@@ -2648,7 +2684,7 @@ export type UpdateFieldResponses = {
   /**
    * Created
    */
-  201: FieldDto
+  201: FieldUpdateDto
 }
 
 export type UpdateFieldResponse =
@@ -3463,7 +3499,7 @@ export type ListStoresResponses = {
 export type ListStoresResponse = ListStoresResponses[keyof ListStoresResponses]
 
 export type CreateStoreData = {
-  body: StoreDetailDto
+  body: StoreUpdateDto
   path?: never
   query?: never
   url: '/api/stores'
@@ -3486,7 +3522,7 @@ export type CreateStoreResponses = {
   /**
    * Created
    */
-  201: StoreDetailDto
+  201: StoreUpdateDto
 }
 
 export type CreateStoreResponse =
@@ -3830,7 +3866,7 @@ export type ListFieldsResponses = {
 export type ListFieldsResponse = ListFieldsResponses[keyof ListFieldsResponses]
 
 export type CreateFieldData = {
-  body: FieldDto
+  body: FieldUpdateDto
   path?: never
   query?: never
   url: '/api/fields'
@@ -3853,7 +3889,7 @@ export type CreateFieldResponses = {
   /**
    * Created
    */
-  201: FieldDto
+  201: FieldUpdateDto
 }
 
 export type CreateFieldResponse =

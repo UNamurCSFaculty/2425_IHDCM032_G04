@@ -20,6 +20,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * End-points « Coopératives » (API de gestion des coopératives). Permet de gérer les opérations
+ * relatives aux coopératives, telles que la création, la mise à jour, la suppression et la
+ * récupération des coopératives.
+ */
 @Validated
 @SecurityRequirement(name = "jwt")
 @RequestMapping(value = "/api/cooperatives", produces = "application/json")

@@ -2393,6 +2393,12 @@ export const subscribe = <ThrowOnError extends boolean = false>(
     unknown,
     ThrowOnError
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/api/notifications/stream',
     ...options,
   })

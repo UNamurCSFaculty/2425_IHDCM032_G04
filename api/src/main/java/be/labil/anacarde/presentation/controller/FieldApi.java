@@ -3,6 +3,7 @@ package be.labil.anacarde.presentation.controller;
 import be.labil.anacarde.application.exception.ApiErrorResponse;
 import be.labil.anacarde.domain.dto.db.FieldDto;
 import be.labil.anacarde.domain.dto.db.ValidationGroups;
+import be.labil.anacarde.domain.dto.write.FieldUpdateDto;
 import be.labil.anacarde.presentation.controller.annotations.ApiResponseDelete;
 import be.labil.anacarde.presentation.controller.annotations.ApiValidId;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,6 +22,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * End-points « Champs » (API de gestion des champs). Permet de gérer les opérations relatives aux
+ * champs, telles que la création, la mise à jour, la suppression et la récupération des champs.
+ */
 @Validated
 @SecurityRequirement(name = "jwt")
 @RequestMapping(value = "/api/fields", produces = "application/json")
@@ -37,20 +42,20 @@ public interface FieldApi {
 	@Operation(summary = "Créer un champ")
 	@PostMapping
 	@ApiResponses({
-			@ApiResponse(responseCode = "201", description = "", content = @Content(schema = @Schema(implementation = FieldDto.class))),
+			@ApiResponse(responseCode = "201", description = "", content = @Content(schema = @Schema(implementation = FieldUpdateDto.class))),
 			@ApiResponse(responseCode = "400", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
 			@ApiResponse(responseCode = "409", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
 	ResponseEntity<FieldDto> createField(@Validated({Default.class,
-			ValidationGroups.Create.class}) @RequestBody FieldDto fieldDto);
+			ValidationGroups.Create.class}) @RequestBody FieldUpdateDto fieldDto);
 
 	@Operation(summary = "Mettre à jour un champ")
 	@PutMapping(value = "/{id}", consumes = "application/json")
 	@ApiResponses({
-			@ApiResponse(responseCode = "201", description = "", content = @Content(schema = @Schema(implementation = FieldDto.class))),
+			@ApiResponse(responseCode = "201", description = "", content = @Content(schema = @Schema(implementation = FieldUpdateDto.class))),
 			@ApiResponse(responseCode = "400", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
 			@ApiResponse(responseCode = "409", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
 	ResponseEntity<FieldDto> updateField(@ApiValidId @PathVariable("id") Integer id, @Validated({
-			Default.class, ValidationGroups.Update.class}) @RequestBody FieldDto fieldDto);
+			Default.class, ValidationGroups.Update.class}) @RequestBody FieldUpdateDto fieldDto);
 
 	@Operation(summary = "Obtenir tous les champs")
 	@GetMapping

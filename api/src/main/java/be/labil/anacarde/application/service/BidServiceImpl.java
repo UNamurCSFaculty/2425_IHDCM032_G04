@@ -36,8 +36,8 @@ public class BidServiceImpl implements BidService {
 	private final PersistenceHelper persistenceHelper;
 	private final GlobalSettingsService globalSettingsService;
 	private final AuctionRepository auctionRepository;
-	private final NotificationSseService notificationSseService;
-	private final AuctionSseService auctionSseService;
+	private final NotificationSseServiceImpl notificationSseService;
+	private final AuctionSseServiceImpl auctionSseService;
 
 	@Override
 	public BidDto createBid(BidUpdateDto dto) {
@@ -178,11 +178,12 @@ public class BidServiceImpl implements BidService {
 			if (currentBids.size() > 0 && bidUpdateDto.getAmount().doubleValue() <= currentBids
 					.getLast().getAmount().doubleValue()) {
 				throw new ApiErrorException(HttpStatus.BAD_REQUEST, ApiErrorCode.BAD_REQUEST.code(),
-						"forceBetterBids", "Une nouvelle offre doit être meilleure");
+						"forceBetterBids",
+						"Une nouvelle offre doit être meilleure que la dernière");
 			}
 		}
 
-		if (settings.getMinIncrement() != null) {
+		if (settings.getMinIncrement() != null && settings.getMinIncrement() > 0) {
 			if (currentBids == null) {
 				currentBids = bidRepository.findByAuctionId(bidUpdateDto.getAuctionId());
 			}
@@ -191,7 +192,7 @@ public class BidServiceImpl implements BidService {
 					.getLast().getAmount().doubleValue() + settings.getMinIncrement()) {
 				throw new ApiErrorException(HttpStatus.BAD_REQUEST, ApiErrorCode.BAD_REQUEST.code(),
 						"minIncrement", "Une nouvelle offre doit être meilleure de "
-								+ settings.getMinIncrement() + " CFA");
+								+ settings.getMinIncrement() + " CFA que la dernière");
 			}
 		}
 	}

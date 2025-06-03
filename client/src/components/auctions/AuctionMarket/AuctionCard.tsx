@@ -15,7 +15,7 @@ import { TableCell, TableRow } from '@/components/ui/table'
 // Simple JSON import (no async fetch) -----------------------------------------
 import cities from '@/data/cities.json'
 import regions from '@/data/regions.json'
-import { cn } from '@/lib/utils'
+import { TradeStatus, cn } from '@/lib/utils'
 import dayjs from '@/utils/dayjs-config'
 import { formatPrice, formatWeight } from '@/utils/formatter'
 import {
@@ -38,8 +38,6 @@ interface AuctionCardProps {
   layout: CardLayout
   isDetail?: boolean
   role: UserRole
-  // onBuyNow?: (auctionId: number) => void // TODO: implement buy now
-  // onMakeBid?: (auctionId: number) => void // TODO: implement make bid
   onDetails: () => void
 }
 
@@ -101,7 +99,9 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
     <Card
       className={cn(
         'flex flex-col gap-2 overflow-hidden bg-gradient-to-b from-green-50/50 to-yellow-50/50 shadow-sm transition-all hover:scale-102 hover:shadow-lg',
-        isEndingSoon && 'bg-red-50/50 ring-2 ring-red-400'
+        isEndingSoon &&
+          auction.status.name !== TradeStatus.ACCEPTED &&
+          'bg-red-50/50 ring-2 ring-red-400'
       )}
     >
       <CardHeader className="pb-2">
@@ -137,13 +137,25 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
       </CardHeader>
       <CardContent className="flex-grow space-y-3 pt-0">
         <div className="flex items-center justify-between">
-          <InfoTile
-            icon={<Clock className="size-4" />}
-            label={t('auction.expires_in')}
-            size="lg"
-          >
-            <CountdownTimer endDate={expires.toDate()} />
-          </InfoTile>
+          {auction.status.name === TradeStatus.OPEN ? (
+            <InfoTile
+              icon={<Clock className="size-4" />}
+              label={t('auction.expires_in')}
+              size="lg"
+            >
+              <CountdownTimer
+                status={auction.status.name}
+                endDate={expires.toDate()}
+              />
+            </InfoTile>
+          ) : (
+            <InfoTile label="" size="lg">
+              <CountdownTimer
+                status={auction.status.name}
+                endDate={expires.toDate()}
+              />
+            </InfoTile>
+          )}
         </div>
         <div className="grid grid-cols-2 gap-3 text-sm">
           <InfoTile

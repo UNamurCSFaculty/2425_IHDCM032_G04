@@ -17,7 +17,7 @@ import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from './ui/button'
-import { AvatarFallback } from '@radix-ui/react-avatar'
+import { Avatar, AvatarFallback } from '@radix-ui/react-avatar'
 
 interface ContractModalProps {
   isOpen: boolean
@@ -68,7 +68,7 @@ export const ContractModal: React.FC<ContractModalProps> = ({
 
       mutation.mutate({
         body: {
-          status: 'Waiting',
+          status: 'Ouvert',
           pricePerKg: value.price,
           endDate: endDate.toISOString(),
           qualityId: Number(value.quality),
@@ -109,14 +109,16 @@ export const ContractModal: React.FC<ContractModalProps> = ({
             {t('contract.modal_title')}
           </DialogTitle>
         </DialogHeader>
-        <DialogClose asChild>
-          <button className="ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-4 right-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:pointer-events-none">
-            ✕<span className="sr-only">Close</span>
-          </button>
-        </DialogClose>
+        <DialogClose asChild></DialogClose>
 
         <div className="mb-4 flex items-center gap-4">
-          <AvatarFallback className="h-10 w-10 rounded-full object-cover" />
+          {/* <AvatarFallback className="h-10 w-10 rounded-full object-cover" /> */}
+          <Avatar className="bg-muted flex size-8 items-center justify-center rounded-full font-medium text-gray-800">
+            <AvatarFallback>
+              {auction.trader?.firstName?.[0]?.toUpperCase()}
+              {auction.trader?.lastName?.[0]?.toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
           <div className="text-sm text-gray-700">
             <p>
               <strong>{t('form.location')}:</strong>{' '}
@@ -207,13 +209,15 @@ export const ContractModal: React.FC<ContractModalProps> = ({
             <Button type="button" variant="outline" onClick={onClose}>
               {t('buttons.cancel')}
             </Button>
-            <form.SubmitButton
-              disabled={mutation.isPending || form.state.isSubmitting}
-            >
-              {mutation.isPending || form.state.isSubmitting
-                ? t('buttons.submitting')
-                : t('buttons.submit')}
-            </form.SubmitButton>
+            <form.AppForm>
+              <form.SubmitButton
+                disabled={mutation.isPending || form.state.isSubmitting}
+              >
+                {mutation.isPending || form.state.isSubmitting
+                  ? t('buttons.submitting')
+                  : t('buttons.submit')}
+              </form.SubmitButton>
+            </form.AppForm>
           </DialogFooter>
         </form>
       </DialogContent>

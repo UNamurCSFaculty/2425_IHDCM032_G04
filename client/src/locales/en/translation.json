@@ -633,6 +633,8 @@
     "bid_count_other": "{{count}} bids",
     "bid_count": "{{count}} bid",
     "bid_count_plural": "{{count}} bids",
+    "bid_created_ok": "Bid added successfully!",
+    "bid_created_fail": "Error while adding bid.",
     "expires_in": "Expires in",
     "asking_price": "Asking Price",
     "best_bid": "Best Bid",
@@ -664,9 +666,22 @@
       "title": "Auction Entry",
       "section_settings_title": "Sale Settings",
       "submit_button": "Open Sale",
-      "section_pricing_title": "Pricing",
-      "section_sale_conditions_title": "Sale Conditions",
-      "price_per_kg_hint": "At {{price}} CFA / kg"
+      "created_ok": "Sale opened successfully!",
+      "created_fail": "Error while creating sale.",
+      "bid_created_ok": "Bid added successfully!",
+      "bid_created_fail": "Error while adding bid.",
+      "accept_bid_ok": "Bid accepted!",
+      "accept_bid_fail": "Error while accepting the bid.",
+      "reject_bid_ok": "Bid rejected!",
+      "reject_bid_fail": "Error while rejecting the bid.",
+      "accept_auction_fail": "Error while accepting the auction.",
+      "auction_strategy": "Auction Strategy",
+      "auction_fixed_price": "Fixed Price per Kg",
+      "auction_max_price": "Max Price per Kg",
+      "auction_min_price": "Min Price per Kg",
+      "section_select_product_title": "Lot Selection",
+      "section_pricing_title": "Price & Date",
+      "section_sale_conditions_title": "General Settings"
     },
     "expiration_date_label": "Auction Expiration",
     "table": {
@@ -685,7 +700,12 @@
       "max_price_per_kg_label": "Max Price per Kg",
       "min_price_per_kg_label": "Min Price per Kg"
     },
-    "contract_price_label": "*Contract Price"
+    "contract_price_label": "*Contract Price",
+    "status_accepted": "Accepted",
+    "status_rejected": "Rejected",
+    "status_open": "Open",
+    "status_expired": "Expired",
+    "status_unknown": "Unknown status"
   },
   "product": {
     "quality_label": "Quality",
@@ -757,7 +777,8 @@
   },
   "filters": {
     "panel_title": "Filters",
-    "auctions_in_progress_label": "Auctions in Progress",
+    "auctions_in_progress_label": "Open Auctions",
+    "auctions_won_label": "Won Auctions",
     "auctions_ended_label": "Ended Auctions",
     "all_types_placeholder": "All Types",
     "all_qualities_placeholder": "All Qualities",
@@ -844,13 +865,13 @@
       "marketplace": {
         "title": "Marketplace",
         "browse": "Browse Marketplace",
-        "browse_desc": "Browse and buy fresh products.",
+        "browse_desc": "Browse and buy fresh products",
         "new_sale": "New Sale",
-        "new_sale_desc": "List your products for sale.",
+        "new_sale_desc": "List your products for sale",
         "new_deposit": "New Deposit",
-        "new_deposit_desc": "Deposit your products for future sales.",
+        "new_deposit_desc": "Deposit your products for future sales",
         "how_it_works": "Access the marketplace",
-        "how_it_works_desc": "Log in to buy and sell on the platform."
+        "how_it_works_desc": "Log in to buy and sell on the platform"
       },
       "news": "News",
       "my_space": {
@@ -965,6 +986,10 @@
     "title": "No Results Found",
     "message": "Adjust your filters or reset the search."
   },
+  "loading_state": {
+    "title": "Loading…",
+    "message": "Please wait while we load the data."
+  },
   "countdown_timer": {
     "auction_ended": "Auction Ended",
     "days_one": "{{count}} day",
@@ -992,7 +1017,9 @@
     "status_label": "Status",
     "contract_end_label": "Contract End",
     "label": "Contract #{{id}}",
-    "price_per_kg_label": "Price per Kg"
+    "price_per_kg_label": "Price per Kg",
+    "accept_offer_prompt": "Accept this offer?",
+    "reject_offer_prompt": "Reject this offer?"
   },
   "settings": {
     "update_success": "Global settings updated successfully.",
@@ -1064,5 +1091,10 @@
     "role_specific_details_title": "Role-Specific Details",
     "update_success_toast": "Profile updated successfully!",
     "update_error_toast": "Error updating profile"
+  },
+  "notification": {
+    "list_description": "See the list of offers for more details.",
+    "see_auction": "See the auction",
+    "historic": "Check the history for more details."
   }
 }

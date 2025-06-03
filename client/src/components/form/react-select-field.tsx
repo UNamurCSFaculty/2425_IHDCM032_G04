@@ -1,7 +1,7 @@
 import { LoaderIcon } from 'lucide-react'
 import { useFieldContext } from '.'
 import { Label } from '../ui/label'
-import Select from 'react-select'
+import Select, { createFilter } from 'react-select'
 import { FieldErrors } from './field-errors'
 
 type SelectOption = {
@@ -57,6 +57,7 @@ export function ReactSelectField({
           }}
           isMulti={true}
           isSearchable={true}
+          filterOption={createFilter({ ignoreAccents: false })}
         />
       </div>
       <FieldErrors meta={field.state.meta} />

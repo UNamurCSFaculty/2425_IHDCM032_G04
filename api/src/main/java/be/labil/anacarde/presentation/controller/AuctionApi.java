@@ -22,6 +22,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * End-points « Enchères » (API de gestion des enchères). Permet de gérer les opérations relatives
+ * aux enchères, telles que la création, la mise à jour, l'acceptation et la suppression d'enchères.
+ */
 @Validated
 @SecurityRequirement(name = "jwt")
 @RequestMapping(value = "/api/auctions", produces = "application/json")

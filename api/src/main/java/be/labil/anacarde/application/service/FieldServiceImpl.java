@@ -2,6 +2,7 @@ package be.labil.anacarde.application.service;
 
 import be.labil.anacarde.application.exception.ResourceNotFoundException;
 import be.labil.anacarde.domain.dto.db.FieldDto;
+import be.labil.anacarde.domain.dto.write.FieldUpdateDto;
 import be.labil.anacarde.domain.mapper.FieldMapper;
 import be.labil.anacarde.domain.model.Field;
 import be.labil.anacarde.infrastructure.persistence.FieldRepository;
@@ -20,7 +21,7 @@ public class FieldServiceImpl implements FieldService {
 	private final FieldMapper fieldMapper;
 
 	@Override
-	public FieldDto createField(FieldDto dto) {
+	public FieldDto createField(FieldUpdateDto dto) {
 		Field field = fieldMapper.toEntity(dto);
 		Field saved = fieldRepository.save(field);
 		return fieldMapper.toDto(saved);
@@ -47,7 +48,7 @@ public class FieldServiceImpl implements FieldService {
 	}
 
 	@Override
-	public FieldDto updateField(Integer id, FieldDto fieldDto) {
+	public FieldDto updateField(Integer id, FieldUpdateDto fieldDto) {
 		Field existingField = fieldRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Champ non trouvé"));
 

@@ -64,6 +64,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 	private static final int NUM_STORES = NUM_PRODUCERS + NUM_TRANSFORMERS;
 	private static final int MIN_FIELDS_PER_PRODUCER = 1;
 	private static final int MAX_FIELDS_PER_PRODUCER = 5;
+	private static final int NUM_CONTRACTS = 50;
 	private static final int MIN_PRODUCTS_PER_PRODUCER = 3;
 	private static final int MAX_PRODUCTS_PER_PRODUCER = 10;
 	private static final int MIN_PRODUCTS_PER_TRANSFORMER = 5;
@@ -162,9 +163,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 	private TradeStatusDto statusOpen;
 	private TradeStatusDto statusAccepted;
 	private TradeStatusDto statusExpired;
-	private TradeStatusDto statusConcluded; // Assuming 'Conclu' might be another finished status
 	private TradeStatusDto statusRejected;
-	private TradeStatusDto statusCancelled;
 	private AuctionStrategyDto strategyOffer;
 
 	private List<Region> regions;
@@ -189,6 +188,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 	private static final String CREATE_VIEW_EXPORT_AUCTION = "classpath:sql/export_auctions.sql";
 	private static final String CREATE_VIEW_DASHBOARD_CARDS = "classpath:sql/dashboard_cards.sql";
 	private static final String CREATE_VIEW_DASHBOARD_GRAPHIC = "classpath:sql/dashboard_graphic.sql";
+	private static final String QUARTZ_INIT_SCHEMA_SQL = "classpath:quartz-custom-init.sql";
 
 	@Override
 	public boolean isInitialized() {
@@ -197,6 +197,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 
 	@Override
 	public void dropDatabase() {
+		log.info("Dropping application tables...");
 		userRepository.findAll().forEach(p -> {
 			if (p instanceof Producer c) {
 				c.setCooperative(null);
@@ -224,6 +225,43 @@ public class DatabaseServiceImpl implements DatabaseService {
 		languageRepository.deleteAllInBatch();
 		newsRepository.deleteAllInBatch();
 		newsCategoryRepository.deleteAllInBatch();
+		log.info("Application tables dropped.");
+
+		log.info("Dropping Quartz tables...");
+		// L'ordre est important à cause des clés étrangères
+		entityManager.createNativeQuery("DROP TABLE IF EXISTS QRTZ_FIRED_TRIGGERS CASCADE;")
+				.executeUpdate();
+		entityManager.createNativeQuery("DROP TABLE IF EXISTS QRTZ_PAUSED_TRIGGER_GRPS CASCADE;")
+				.executeUpdate();
+		entityManager.createNativeQuery("DROP TABLE IF EXISTS QRTZ_SCHEDULER_STATE CASCADE;")
+				.executeUpdate();
+		entityManager.createNativeQuery("DROP TABLE IF EXISTS QRTZ_LOCKS CASCADE;").executeUpdate();
+		entityManager.createNativeQuery("DROP TABLE IF EXISTS QRTZ_SIMPLE_TRIGGERS CASCADE;")
+				.executeUpdate();
+		entityManager.createNativeQuery("DROP TABLE IF EXISTS QRTZ_SIMPROP_TRIGGERS CASCADE;")
+				.executeUpdate();
+		entityManager.createNativeQuery("DROP TABLE IF EXISTS QRTZ_CRON_TRIGGERS CASCADE;")
+				.executeUpdate();
+		entityManager.createNativeQuery("DROP TABLE IF EXISTS QRTZ_BLOB_TRIGGERS CASCADE;")
+				.executeUpdate();
+		entityManager.createNativeQuery("DROP TABLE IF EXISTS QRTZ_TRIGGERS CASCADE;")
+				.executeUpdate();
+		entityManager.createNativeQuery("DROP TABLE IF EXISTS QRTZ_JOB_DETAILS CASCADE;")
+				.executeUpdate();
+		entityManager.createNativeQuery("DROP TABLE IF EXISTS QRTZ_CALENDARS CASCADE;")
+				.executeUpdate();
+
+		log.info("Quartz tables dropped.");
+		log.info("Creating Quartz tables...");
+		try {
+			executeScript(QUARTZ_INIT_SCHEMA_SQL);
+			log.info("Quartz tables created.");
+		} catch (IOException e) {
+			log.error("Failed to create Quartz tables: {}", e.getMessage());
+			throw new RuntimeException("Failed to create Quartz tables", e);
+		}
+		entityManager.flush();
+
 	}
 
 	@Override
@@ -275,6 +313,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 		createTransformedProducts();
 		createAuctions(true);
 		createBidsForFinishedAuctions();
+		createContrats();
 
 		createArticles();
 
@@ -283,12 +322,12 @@ public class DatabaseServiceImpl implements DatabaseService {
 	}
 
 	private void initViews() throws IOException {
-		executeViewScript(CREATE_VIEW_EXPORT_AUCTION);
-		executeViewScript(CREATE_VIEW_DASHBOARD_CARDS);
-		executeViewScript(CREATE_VIEW_DASHBOARD_GRAPHIC);
+		executeScript(CREATE_VIEW_EXPORT_AUCTION);
+		executeScript(CREATE_VIEW_DASHBOARD_CARDS);
+		executeScript(CREATE_VIEW_DASHBOARD_GRAPHIC);
 	}
 
-	private void executeViewScript(String location) throws IOException {
+	private void executeScript(String location) throws IOException {
 		Resource resource = resourceLoader.getResource(location);
 		String sql = IOUtils.toString(resource.getInputStream(), StandardCharsets.UTF_8);
 		em.createNativeQuery(sql).executeUpdate();
@@ -312,9 +351,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 		statusOpen = tradeStatusService.createTradeStatus(createTradeStatusDto("Ouvert"));
 		statusAccepted = tradeStatusService.createTradeStatus(createTradeStatusDto("Accepté"));
 		statusExpired = tradeStatusService.createTradeStatus(createTradeStatusDto("Expiré"));
-		statusConcluded = tradeStatusService.createTradeStatus(createTradeStatusDto("Conclu"));
 		statusRejected = tradeStatusService.createTradeStatus(createTradeStatusDto("Refusé"));
-		statusCancelled = tradeStatusService.createTradeStatus(createTradeStatusDto("Annulé"));
 
 		// Auction Strategies
 		AuctionStrategyDto dto = new AuctionStrategyDto();
@@ -573,9 +610,10 @@ public class DatabaseServiceImpl implements DatabaseService {
 
 		for (int i = 0; i < NUM_STORES; i++) {
 			UserDetailDto manager = potentialManagers.get(random.nextInt(potentialManagers.size()));
-			StoreDetailDto storeDto = new StoreDetailDto();
+			StoreUpdateDto storeDto = new StoreUpdateDto();
 			storeDto.setName(faker.company().suffix() + " " + faker.address().city() + " Dépôt");
-			storeDto.setAddress(createVariationAddress(manager.getAddress()));
+			AddressUpdateDto variationAddress = createVariationAddress(manager.getAddress());
+			storeDto.setAddress(variationAddress);
 			storeDto.setUserId(manager.getId());
 			try {
 				createdStores.add(storeService.createStore(storeDto));
@@ -599,10 +637,10 @@ public class DatabaseServiceImpl implements DatabaseService {
 					+ MIN_FIELDS_PER_PRODUCER;
 			List<FieldDto> fieldsForProducer = new ArrayList<>();
 			for (int i = 0; i < numFields; i++) {
-				FieldDto fieldDto = new FieldDto();
+				FieldUpdateDto fieldDto = new FieldUpdateDto();
 				fieldDto.setIdentifier("FIELD-" + faker.number().digits(10));
 				fieldDto.setAddress(createVariationAddress(producer.getAddress()));
-				fieldDto.setProducer(producer);
+				fieldDto.setProducerId(producer.getId());
 				try {
 					fieldsForProducer.add(fieldService.createField(fieldDto));
 				} catch (Exception e) {
@@ -825,14 +863,11 @@ public class DatabaseServiceImpl implements DatabaseService {
 				faker.number().numberBetween(MIN_AUCTION_DURATION_DAYS, MAX_AUCTION_DURATION_DAYS));
 
 		TradeStatusDto status;
-		boolean isActive;
 		if (expirationDate.isAfter(generationTime)) {
 			status = statusOpen;
-			isActive = true;
 		} else {
 			int statusChoice = random.nextInt(10);
-			status = statusChoice < 8 ? statusConcluded : statusExpired;
-			isActive = false;
+			status = statusChoice < 8 ? statusAccepted : statusExpired;
 		}
 
 		String qualityName = product.getQualityControl().getQuality().getName();
@@ -864,7 +899,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 		auctionDto
 				.setProductQuantity(Math.min(quantity, product.getWeightKgAvailable().intValue()));
 		auctionDto.setPrice(price);
-		auctionDto.setActive(isActive);
+		auctionDto.setActive(true); // isActive means entity is not DELETED from database
 		auctionDto.setExpirationDate(expirationDate);
 		auctionDto.setStatusId(status.getId());
 		auctionDto.setOptions(opt);
@@ -923,7 +958,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 					.toList();
 
 			boolean auctionFinished = !auction.getStatus().getId().equals(statusOpen.getId());
-			boolean auctionConcluded = auction.getStatus().getId().equals(statusConcluded.getId());
+			boolean auctionAccepted = auction.getStatus().getId().equals(statusAccepted.getId());
 
 			BigDecimal currentHighest = BigDecimal.valueOf(auction.getPrice());
 			LocalDateTime lastBidTime = auction.getCreationDate();
@@ -977,7 +1012,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 				BigDecimal buyNowTotal = BigDecimal.valueOf(auction.getOptions().getBuyNowPrice());
 
 				if (amount.compareTo(buyNowTotal) >= 0) {
-					if (auctionConcluded) {
+					if (auctionAccepted) {
 						bid.setStatusId(statusAccepted.getId());
 						bid.setAmount(buyNowTotal);
 						bids.add(bid);
@@ -994,7 +1029,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 			/*
 			 * 4) Acceptation de la meilleure offre si vente conclue
 			 */
-			if (auctionFinished && auctionConcluded && !bids.isEmpty()) {
+			if (auctionFinished && auctionAccepted && !bids.isEmpty()) {
 				BidUpdateDto winner = bids.stream()
 						.max(Comparator.comparing(BidUpdateDto::getAmount)).orElseThrow();
 				winner.setStatusId(statusAccepted.getId());
@@ -1325,7 +1360,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 	 * Construit une AddressDto pour un champ en reprenant la même région et ville que le
 	 * producteur, mais avec rue aléatoire et décalage ±0.1° sur le point.
 	 */
-	private AddressDto createVariationAddress(AddressDto addressDto) {
+	private AddressUpdateDto createVariationAddress(AddressDto addressDto) {
 		Integer regionId = addressDto.getRegionId();
 		Integer cityId = addressDto.getCityId();
 
@@ -1339,7 +1374,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 		double lat = lat0 + (random.nextDouble() * 0.2 - 0.1);
 		Point newPoint = geometryFactory.createPoint(new Coordinate(lon, lat));
 
-		return AddressDto.builder().street(faker.address().streetAddress()) // rue aléatoire
+		return AddressUpdateDto.builder().street(faker.address().streetAddress()) // rue aléatoire
 				.location(newPoint.toText()) // WKT du nouveau point
 				.regionId(regionId) // même région que le producteur
 				.cityId(cityId) // même ville que le producteur
@@ -1425,6 +1460,76 @@ public class DatabaseServiceImpl implements DatabaseService {
 		return (QualityInspectorCreateDto) setUserDetails(qualityInspector);
 	}
 
+	private void clearSystemAuthentication() {
+		SecurityContextHolder.clearContext();
+		log.debug("System authentication cleared.");
+	}
+
+	private void createContrats() {
+		log.info("Création des ContractOffer à partir des enchères conclues…");
+		List<Auction> concludedAuctions = auctionRepository.findAll().stream()
+				.filter(a -> a.getStatus().getId().equals(statusAccepted.getId()))
+				.collect(Collectors.toList());
+
+		if (concludedAuctions.isEmpty()) {
+			log.warn("Aucune enchère conclue trouvée, on ne peut pas créer de contrats.");
+			return;
+		}
+
+		Collections.shuffle(concludedAuctions);
+		int contractsToCreate = Math.min(NUM_CONTRACTS, concludedAuctions.size());
+		for (int i = 0; i < contractsToCreate; i++) {
+			Auction auction = concludedAuctions.get(i);
+
+			Optional<Bid> winningBidOpt = bidRepository.findAll().stream()
+					.filter(b -> b.getAuctionId().equals(auction.getId())
+							&& b.getStatus().getId().equals(statusAccepted.getId()))
+					.findFirst();
+			if (winningBidOpt.isEmpty()) {
+				log.warn("L'enchère conclue {} n'a pas d'offres acceptée.", auction.getId());
+				continue;
+			}
+
+			Bid winningBid = winningBidOpt.get();
+			Trader sellerEntity = auction.getTrader();
+			Trader buyerEntity = winningBid.getTrader();
+			Quality qualityEntity = auction.getProduct().getQualityControl().getQuality();
+			BigDecimal totalAmount = winningBid.getAmount();
+			int quantity = auction.getProductQuantity();
+			if (quantity <= 0) {
+				log.warn("L'enchère conclue {} portent sur une quantité de 0 kg", auction.getId());
+				continue;
+			}
+			BigDecimal unitPriceRaw = totalAmount.divide(BigDecimal.valueOf(quantity), 0,
+					RoundingMode.FLOOR);
+			BigDecimal pricePerKg = unitPriceRaw.divide(BigDecimal.TEN, 0, RoundingMode.FLOOR)
+					.multiply(BigDecimal.TEN);
+			LocalDateTime creationDate = auction.getExpirationDate();
+			int randomMonths = 3 + random.nextInt(7);
+			LocalDateTime endDate = creationDate.plusMonths(randomMonths);
+			String statut;
+			if (endDate.isBefore(LocalDateTime.now())) {
+				statut = statusExpired.getName();
+			} else {
+				double r = random.nextDouble();
+				if (r < 0.6) {
+					statut = statusAccepted.getName();
+				} else if (r < 0.8) {
+					statut = statusOpen.getName();
+				} else {
+					statut = statusRejected.getName();
+				}
+			}
+
+			ContractOffer contract = ContractOffer.builder().status(statut).pricePerKg(pricePerKg)
+					.endDate(endDate).seller(sellerEntity).buyer(buyerEntity).quality(qualityEntity)
+					.build();
+			ContractOffer saved = contractOfferRepository.save(contract);
+			contractOfferRepository.overrideCreationDateNative(saved.getId(), creationDate);
+		}
+		log.info("→ {} ContractOffer(s) créés à partir des enchères conclues.", contractsToCreate);
+	}
+
 	// --- System Authentication Helper Methods ---
 
 	private void setupSystemAuthentication() {
@@ -1442,10 +1547,5 @@ public class DatabaseServiceImpl implements DatabaseService {
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		log.debug("System authentication set for user: {} with authorities: {}",
 				systemUserModel.getEmail(), authorities);
-	}
-
-	private void clearSystemAuthentication() {
-		SecurityContextHolder.clearContext();
-		log.debug("System authentication cleared.");
 	}
 }

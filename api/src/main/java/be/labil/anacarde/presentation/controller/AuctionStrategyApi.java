@@ -19,6 +19,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * End-points « Stratégies d'enchères » (API pour la gestion des stratégies d'enchères). Permet de
+ * gérer les opérations relatives aux stratégies d'enchères, telles que la création, la mise à jour,
+ * la suppression et la récupération des stratégies.
+ */
 @Validated
 @SecurityRequirement(name = "jwt")
 @RequestMapping(value = "/api/auctions/strategies", produces = "application/json")

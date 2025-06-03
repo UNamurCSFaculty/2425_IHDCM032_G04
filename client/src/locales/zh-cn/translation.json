@@ -661,12 +661,25 @@
     "click_to_see_details_prompt": "点击查看详情 →",
     "expiration_label": "截止时间",
     "form": {
-      "title": "拍卖设置",
-      "section_settings_title": "拍卖参数",
-      "submit_button": "开启拍卖",
-      "section_pricing_title": "定价",
-      "section_sale_conditions_title": "销售条款",
-      "price_per_kg_hint": "每公斤 {{price}} CFA"
+      "title": "拍卖录入",
+      "section_settings_title": "销售设置",
+      "submit_button": "开启销售",
+      "created_ok": "销售已成功开启！",
+      "created_fail": "创建销售时出错。",
+      "bid_created_ok": "出价已成功添加！",
+      "bid_created_fail": "添加出价时出错。",
+      "accept_bid_ok": "出价已接受！",
+      "accept_bid_fail": "接受出价时出错。",
+      "reject_bid_ok": "出价已拒绝！",
+      "reject_bid_fail": "拒绝出价时出错。",
+      "accept_auction_fail": "接受拍卖时出错。",
+      "auction_strategy": "竞拍策略",
+      "auction_fixed_price": "每公斤固定价格",
+      "auction_max_price": "每公斤最高价格",
+      "auction_min_price": "每公斤最低价格",
+      "section_select_product_title": "选择批次",
+      "section_pricing_title": "价格和日期",
+      "section_sale_conditions_title": "常规设置"
     },
     "expiration_date_label": "拍卖截止日期",
     "table": {
@@ -685,7 +698,12 @@
       "max_price_per_kg_label": "最高单价（每公斤）",
       "min_price_per_kg_label": "最低单价（每公斤）"
     },
-    "contract_price_label": "*合同价格"
+    "contract_price_label": "*合同价格",
+    "status_accepted": "已接受",
+    "status_rejected": "已拒绝",
+    "status_open": "进行中",
+    "status_expired": "已结束",
+    "status_unknown": "未知状态"
   },
   "product": {
     "quality_label": "质量",
@@ -990,7 +1008,9 @@
     "status_label": "状态",
     "contract_end_label": "合同结束",
     "label": "合同编号 {{id}}",
-    "price_per_kg_label": "单价（每公斤）"
+    "price_per_kg_label": "单价（每公斤）",
+    "accept_offer_prompt": "接受这个报价？",
+    "reject_offer_prompt": "拒绝这个报价？"
   },
   "settings": {
     "update_success": "全局设置更新成功。",
@@ -1062,5 +1082,10 @@
     "role_specific_details_title": "角色特定信息",
     "update_success_toast": "个人资料更新成功！",
     "update_error_toast": "更新时出错"
+  },
+  "notification": {
+    "list_description": "查看报价列表以获取更多详情。",
+    "see_auction": "查看拍卖",
+    "historic": "查看历史记录以获取更多详情。"
   }
 }

@@ -1,20 +1,33 @@
 package be.labil.anacarde.domain.mapper;
 
 import be.labil.anacarde.domain.dto.db.StoreDetailDto;
-import be.labil.anacarde.domain.model.Store;
+import be.labil.anacarde.domain.dto.write.StoreUpdateDto;
+import be.labil.anacarde.domain.model.*;
+import jakarta.persistence.EntityManager;
 import org.mapstruct.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {
-		MapperHelpers.class, AddressMapper.class})
+		MapperHelpers.class, AddressMapper.class, AddressUpdateMapper.class})
 public abstract class StoreMapper {
+
+	@Autowired
+	protected EntityManager em;
 
 	@Mapping(source = "user.id", target = "userId")
 	public abstract StoreDetailDto toDto(Store store);
 
-	@Mapping(source = "userId", target = "user", qualifiedByName = "userIdToUser")
-	public abstract Store toEntity(StoreDetailDto dto);
+	@Mapping(target = "user", ignore = true)
+	public abstract Store toEntity(StoreUpdateDto dto);
 
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-	@Mapping(source = "userId", target = "user", qualifiedByName = "userIdToUser")
-	public abstract Store partialUpdate(StoreDetailDto dto, @MappingTarget Store entity);
+	@Mapping(target = "user", ignore = true)
+	public abstract Store partialUpdate(StoreUpdateDto dto, @MappingTarget Store entity);
+
+	@AfterMapping
+	protected void afterUpdateDto(StoreUpdateDto dto, @MappingTarget Store store) {
+		if (dto.getUserId() != null) {
+			store.setUser(em.getReference(User.class, dto.getUserId()));
+		}
+	}
 }

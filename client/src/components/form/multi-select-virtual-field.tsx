@@ -17,6 +17,7 @@ type MultiSelectVirtualFieldProps<T extends string | number> = {
   required?: boolean
   disabled?: boolean
   maxCount?: number
+  modal?: boolean
   parseValue?: (v: string) => T
   onChange?: (value: (string | number)[]) => void
 }
@@ -29,6 +30,7 @@ export function MultiSelectVirtualField<T extends string | number>({
   className = 'w-full',
   required = true,
   maxCount = 3,
+  modal = false,
   parseValue,
   onChange,
 }: MultiSelectVirtualFieldProps<T>) {
@@ -73,6 +75,7 @@ export function MultiSelectVirtualField<T extends string | number>({
           placeholder={placeholder}
           variant="inverted"
           maxCount={maxCount}
+          modalPopover={modal}
         />
       </div>
       <FieldErrors meta={field.state.meta} />

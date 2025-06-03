@@ -30,10 +30,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- * Cette API offre un point d'accès pour l'authentification des utilisateurs.
- *
- * En cas de succès, un token JWT est généré et renvoyé sous forme de cookie HTTP-only, et le détail
- * de l'utilisateur est renvoyé dans le corps de la réponse.
+ * Cette API offre un point d'accès pour l'authentification des utilisateurs. En cas de succès, un
+ * token JWT est généré et renvoyé sous forme de cookie HTTP-only, et le détail de l'utilisateur est
+ * renvoyé dans le corps de la réponse.
  */
 @Validated
 @Tag(name = "Authentication", description = "API pour l'authentification des utilisateurs")

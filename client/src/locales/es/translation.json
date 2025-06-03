@@ -661,12 +661,25 @@
     "click_to_see_details_prompt": "Haz clic para ver detalles →",
     "expiration_label": "Expiración",
     "form": {
-      "title": "Ingreso de la subasta",
-      "section_settings_title": "Configuración de la venta",
+      "title": "Entrada de la subasta",
+      "section_settings_title": "Configuración de venta",
       "submit_button": "Abrir venta",
-      "section_pricing_title": "Fijación de precio",
-      "section_sale_conditions_title": "Condiciones de venta",
-      "price_per_kg_hint": "Equivale a {{price}} CFA / kg"
+      "created_ok": "¡Venta abierta con éxito!",
+      "created_fail": "Error al crear la venta.",
+      "bid_created_ok": "¡Oferta añadida con éxito!",
+      "bid_created_fail": "Error al añadir la oferta.",
+      "accept_bid_ok": "¡Oferta aceptada con éxito!",
+      "accept_bid_fail": "Error al aceptar la oferta.",
+      "reject_bid_ok": "¡Oferta rechazada con éxito!",
+      "reject_bid_fail": "Error al rechazar la oferta.",
+      "accept_auction_fail": "Error al aceptar la subasta.",
+      "auction_strategy": "Estrategia de subasta",
+      "auction_fixed_price": "Precio fijo por kg",
+      "auction_max_price": "Precio máximo por kg",
+      "auction_min_price": "Precio mínimo por kg",
+      "section_select_product_title": "Selección del lote",
+      "section_pricing_title": "Precio y fecha",
+      "section_sale_conditions_title": "Configuración general"
     },
     "expiration_date_label": "Expiración de la subasta",
     "table": {
@@ -685,7 +698,12 @@
       "max_price_per_kg_label": "Precio máximo por kg",
       "min_price_per_kg_label": "Precio mínimo por kg"
     },
-    "contract_price_label": "*Precio contractual"
+    "contract_price_label": "*Precio contractual",
+    "status_accepted": "Aceptado",
+    "status_rejected": "Rechazado",
+    "status_open": "Abierto",
+    "status_expired": "Expirado",
+    "status_unknown": "Desconocido"
   },
   "product": {
     "quality_label": "Calidad",
@@ -963,6 +981,10 @@
     "title": "No se encontraron resultados",
     "message": "Ajusta tus filtros o restablece la búsqueda."
   },
+  "loading_state": {
+    "title": "Cargando datos",
+    "message": "Por favor, espera mientras cargamos la información."
+  },
   "countdown_timer": {
     "auction_ended": "Subasta finalizada",
     "days_one": "{{count}} día",
@@ -990,7 +1012,9 @@
     "status_label": "Estado",
     "contract_end_label": "Fin del contrato",
     "label": "Contrato n.º {{id}}",
-    "price_per_kg_label": "Precio por kg"
+    "price_per_kg_label": "Precio por kg",
+    "accept_offer_prompt": "¿Aceptar esta oferta?",
+    "reject_offer_prompt": "¿Rechazar esta oferta?"
   },
   "settings": {
     "update_success": "Configuración global actualizada con éxito.",
@@ -1062,5 +1086,10 @@
     "role_specific_details_title": "Detalles específicos del rol",
     "update_success_toast": "¡Perfil actualizado con éxito!",
     "update_error_toast": "Error al actualizar"
+  },
+  "notification": {
+    "list_description": "Ver la lista de ofertas para más detalles.",
+    "see_auction": "Ver la subasta",
+    "historic": "Consulte el historial para más detalles."
   }
 }

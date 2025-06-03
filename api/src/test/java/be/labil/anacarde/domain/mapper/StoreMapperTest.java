@@ -2,8 +2,9 @@ package be.labil.anacarde.domain.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import be.labil.anacarde.domain.dto.db.AddressDto;
 import be.labil.anacarde.domain.dto.db.StoreDetailDto;
+import be.labil.anacarde.domain.dto.write.AddressUpdateDto;
+import be.labil.anacarde.domain.dto.write.StoreUpdateDto;
 import be.labil.anacarde.domain.model.*;
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -45,16 +46,15 @@ class StoreMapperTest {
 
 	@Test
 	void shouldMapDtoToEntity() {
-		StoreDetailDto dto = new StoreDetailDto();
-		dto.setId(1);
+		StoreUpdateDto dto = new StoreUpdateDto();
 		dto.setName("Nassara");
-		dto.setAddress(AddressDto.builder().street("Rue de la paix").cityId(1).regionId(1).build());
+		dto.setAddress(
+				AddressUpdateDto.builder().street("Rue de la paix").cityId(1).regionId(1).build());
 		dto.setUserId(42);
 
 		Store entity = storeMapper.toEntity(dto);
 
 		assertThat(entity).isNotNull();
-		assertThat(entity.getId()).isEqualTo(dto.getId());
 		assertThat(entity.getName()).isEqualTo("Nassara");
 		assertThat(entity.getAddress()).isNotNull();
 		assertThat(entity.getUser().getId()).isEqualTo(dto.getUserId());
@@ -62,9 +62,8 @@ class StoreMapperTest {
 
 	@Test
 	void shouldHandleNullValuesInDto() {
-		StoreDetailDto dto = new StoreDetailDto();
+		StoreUpdateDto dto = new StoreUpdateDto();
 		dto.setName(null);
-		dto.setId(null);
 		dto.setAddress(null);
 		dto.setUserId(null);
 
@@ -96,10 +95,10 @@ class StoreMapperTest {
 
 	@Test
 	void shouldMapPartialUpdate() {
-		StoreDetailDto dto = new StoreDetailDto();
-		dto.setId(1);
+		StoreUpdateDto dto = new StoreUpdateDto();
 		dto.setName("Nassara");
-		dto.setAddress(AddressDto.builder().street("Rue de la paix").cityId(1).regionId(1).build());
+		dto.setAddress(
+				AddressUpdateDto.builder().street("Rue de la paix").cityId(1).regionId(1).build());
 		dto.setUserId(42);
 
 		Store entity = new Store();
@@ -115,7 +114,6 @@ class StoreMapperTest {
 		storeMapper.partialUpdate(dto, entity);
 
 		assertThat(entity).isNotNull();
-		assertThat(entity.getId()).isEqualTo(dto.getId());
 		assertThat(entity.getName()).isEqualTo(dto.getName());
 		assertThat(dto.getAddress().getStreet()).isEqualTo("Rue de la paix");
 		assertThat(dto.getAddress().getCityId()).isEqualTo(1);

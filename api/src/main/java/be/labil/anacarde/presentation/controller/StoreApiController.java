@@ -2,6 +2,7 @@ package be.labil.anacarde.presentation.controller;
 
 import be.labil.anacarde.application.service.StoreService;
 import be.labil.anacarde.domain.dto.db.StoreDetailDto;
+import be.labil.anacarde.domain.dto.write.StoreUpdateDto;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,7 @@ public class StoreApiController implements StoreApi {
 	}
 
 	@Override
-	public ResponseEntity<StoreDetailDto> createStore(StoreDetailDto storeDetailDto) {
+	public ResponseEntity<StoreDetailDto> createStore(StoreUpdateDto storeDetailDto) {
 		StoreDetailDto created = storeService.createStore(storeDetailDto);
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(created.getId()).toUri();
@@ -35,7 +36,7 @@ public class StoreApiController implements StoreApi {
 	}
 
 	@Override
-	public ResponseEntity<StoreDetailDto> updateStore(Integer id, StoreDetailDto storeDetailDto) {
+	public ResponseEntity<StoreDetailDto> updateStore(Integer id, StoreUpdateDto storeDetailDto) {
 		StoreDetailDto updated = storeService.updateStore(id, storeDetailDto);
 		return ResponseEntity.ok(updated);
 	}

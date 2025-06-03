@@ -47,7 +47,7 @@
       "subtitle": "Consultez tous vos produits déposés et disponibles pour la vente."
     },
     "marketplace": {
-      "title": "Marché des enchères",
+      "title": "Marché aux enchères",
       "subtitle": "Achetez des produits en ligne."
     },
     "signup_success": {
@@ -652,6 +652,8 @@
     "bid_count_for_lot_other": "{{count}} offres pour le lot",
     "bid_count_for_lot": "{{count}} offre pour le lot",
     "bid_count_for_lot_plural": "{{count}} offres pour le lot",
+    "bid_created_ok": "Offre ajoutée avec succès !",
+    "bid_created_fail": "Erreur lors de l'ajout de l'offre.",
     "no_bids_yet": "Aucune offre pour le moment.",
     "accept_bid_prompt": "Accepter cette offre ?",
     "reject_bid_prompt": "Refuser cette offre ?",
@@ -666,10 +668,20 @@
       "submit_button": "Ouvrir la vente",
       "created_ok": "Vente ouverte avec succès !",
       "created_fail": "Erreur lors de la création de la vente.",
+      "bid_created_ok": "Offre ajoutée avec succès !",
+      "bid_created_fail": "Erreur lors de l'ajout de l'offre.",
+      "accept_bid_ok": "Offre acceptée avec succès !",
+      "accept_bid_fail": "Erreur lors de l'acceptation de l'offre.",
+      "reject_bid_ok": "Offre rejetée !",
+      "reject_bid_fail": "Erreur lors du refus de l'offre.",
+      "accept_auction_fail": "Erreur lors de l'acceptation de l'enchère.",
       "auction_strategy": "Stratégie d'enchère",
       "auction_fixed_price": "Prix imposé par kg",
       "auction_max_price": "Prix maximum par kg",
-      "auction_min_price": "Prix minimum par kg"
+      "auction_min_price": "Prix minimum par kg",
+      "section_select_product_title": "Sélection du lot",
+      "section_pricing_title": "Prix et date",
+      "section_sale_conditions_title": "Conditions de vente"
     },
     "expiration_date_label": "Expiration de l'enchère",
     "table": {
@@ -688,7 +700,12 @@
       "max_price_per_kg_label": "Prix maximum par kg",
       "min_price_per_kg_label": "Prix minimum par kg"
     },
-    "contract_price_label": "*Prix contractuel"
+    "contract_price_label": "*Prix contractuel",
+    "status_accepted": "Accepté",
+    "status_rejected": "Rejeté",
+    "status_open": "Ouvert",
+    "status_expired": "Expiré",
+    "status_unknown": "Statut inconnu"
   },
   "product": {
     "quality_label": "Qualité",
@@ -745,7 +762,7 @@
     "weight_desc": "poids ⬇"
   },
   "marketplace": {
-    "title": "Marché des enchères",
+    "title": "Marché aux enchères",
     "subtitle": "Achetez des produits en ligne.",
     "results_count_zero": "Résultat : {{count}} enchère",
     "results_count_one": "Résultat : {{count}} enchère",
@@ -760,7 +777,8 @@
   },
   "filters": {
     "panel_title": "Filtres",
-    "auctions_in_progress_label": "Enchères en cours",
+    "auctions_in_progress_label": "Enchères ouvertes",
+    "auctions_won_label": "Enchères remportées",
     "auctions_ended_label": "Enchères terminées",
     "all_types_placeholder": "Tous les types",
     "all_qualities_placeholder": "Toutes les qualités",
@@ -843,25 +861,25 @@
         }
       },
       "contact": "Contact",
-      "about": "À Propos",
+      "about": "À propos",
       "marketplace": {
         "title": "Marché",
-        "browse": "Voir le Marché",
-        "browse_desc": "Parcourez et achetez des produits frais.",
-        "new_sale": "Nouvelle Vente",
-        "new_sale_desc": "Proposez vos produits à la vente.",
-        "new_deposit": "Nouveau Dépôt",
-        "new_deposit_desc": "Déposez vos produits pour de futures ventes.",
+        "browse": "Marché aux enchères",
+        "browse_desc": "Parcourez et achetez des produits frais",
+        "new_sale": "Nouvelle vente",
+        "new_sale_desc": "Proposez vos produits à la vente",
+        "new_deposit": "Nouveau dépôt",
+        "new_deposit_desc": "Déposez vos produits pour de futures ventes",
         "how_it_works": "Accéder au marché",
         "how_it_works_desc": "Connectez vous pour acheter et vendre sur la plateforme."
       },
       "news": "Actualités",
       "my_space": {
-        "title": "Mon Espace",
-        "my_purchases": "Mes Achats",
-        "my_sales": "Mes Ventes",
-        "my_deposits": "Mes Dépôts",
-        "my_contracts": "Mes Contrats",
+        "title": "Mon espace",
+        "my_purchases": "Mes achats",
+        "my_sales": "Mes ventes",
+        "my_deposits": "Mes dépôts",
+        "my_contracts": "Mes contrats",
         "my_purchases_marketplace_desc": "Consultez vos achats et vos offres en cours",
         "my_sales_marketplace_desc": "Consultez vos ventes en cours et terminées",
         "my_deposits_marketplace_desc": "Consultez vos dépôts",
@@ -968,6 +986,10 @@
     "title": "Aucun résultat trouvé",
     "message": "Ajustez vos filtres ou réinitialisez la recherche."
   },
+  "loading_state": {
+    "title": "Chargement en cours",
+    "message": "Veuillez patienter pendant que nous chargeons les données."
+  },
   "countdown_timer": {
     "auction_ended": "Enchère terminée",
     "days_one": "{{count}} jour",
@@ -995,7 +1017,9 @@
     "status_label": "Statut",
     "contract_end_label": "Fin du contrat",
     "label": "Contrat n°{{id}}",
-    "price_per_kg_label": "Prix par kg"
+    "price_per_kg_label": "Prix par kg",
+    "accept_offer_prompt": "Accepter cette offre ?",
+    "reject_offer_prompt": "Refuser cette offre ?"
   },
   "settings": {
     "update_success": "Paramètres globaux mis à jour avec succès.",
@@ -1067,5 +1091,10 @@
     "role_specific_details_title": "Détails Spécifiques au Rôle",
     "update_success_toast": "Profil mis à jour avec succès !",
     "update_error_toast": "Erreur lors de la mise à jour"
+  },
+  "notification": {
+    "list_description": "Voir la liste des offres pour plus de détails.",
+    "see_auction": "Voir l'enchère",
+    "historic": "Consultez l’historique pour plus de détails."
   }
 }

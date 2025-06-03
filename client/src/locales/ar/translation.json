@@ -464,10 +464,23 @@
     "form": {
       "title": "إدخال المزاد",
       "section_settings_title": "إعدادات البيع",
-      "submit_button": "فتح البيع",
-      "section_pricing_title": "تحديد السعر",
-      "section_sale_conditions_title": "شروط البيع",
-      "price_per_kg_hint": "أي {{price}} فرنك CFA / كغ"
+      "submit_button": "افتح البيع",
+      "created_ok": "تم فتح البيع بنجاح!",
+      "created_fail": "حدث خطأ أثناء إنشاء البيع.",
+      "bid_created_ok": "تم إضافة العرض بنجاح!",
+      "bid_created_fail": "حدث خطأ أثناء إضافة العرض.",
+      "accept_bid_ok": "تم قبول العرض بنجاح!",
+      "accept_bid_fail": "حدث خطأ أثناء قبول العرض.",
+      "reject_bid_ok": "تم رفض العرض بنجاح!",
+      "reject_bid_fail": "حدث خطأ أثناء رفض العرض.",
+      "accept_auction_fail": "حدث خطأ أثناء قبول المزاد.",
+      "auction_strategy": "استراتيجية المزاد",
+      "auction_fixed_price": "سعر ثابت لكل كغ",
+      "auction_max_price": "السعر الأقصى لكل كغ",
+      "auction_min_price": "السعر الأدنى لكل كغ",
+      "section_select_product_title": "اختيار الدفعة",
+      "section_pricing_title": "السعر والتاريخ",
+      "section_sale_conditions_title": "الإعدادات العامة"
     },
     "expiration_date_label": "انتهاء المزاد",
     "table": {
@@ -486,7 +499,12 @@
       "max_price_per_kg_label": "السعر الأقصى لكل كغ",
       "min_price_per_kg_label": "السعر الأدنى لكل كغ"
     },
-    "contract_price_label": "*سعر العقد"
+    "contract_price_label": "*سعر العقد",
+    "status_accepted": "مقبول",
+    "status_rejected": "مرفوض",
+    "status_open": "مفتوح",
+    "status_expired": "منتهي",
+    "status_unknown": "غير معروف"
   },
   "product": {
     "quality_label": "الجودة",
@@ -791,7 +809,9 @@
     "status_label": "الحالة",
     "contract_end_label": "نهاية العقد",
     "label": "العقد رقم {{id}}",
-    "price_per_kg_label": "السعر لكل كغ"
+    "price_per_kg_label": "السعر لكل كغ",
+    "accept_offer_prompt": "هل تقبل هذا العرض؟",
+    "reject_offer_prompt": "هل ترفض هذا العرض؟"
   },
   "settings": {
     "update_success": "تم تحديث الإعدادات العامة بنجاح.",
@@ -1062,5 +1082,10 @@
       "export_error_title": "خطأ في التصدير",
       "export_error_message": "حدث خطأ أثناء إنشاء الملف أو تحميله، يرجى المحاولة مجدداً."
     }
+  },
+  "notification": {
+    "list_description": "عرض قائمة العروض لمزيد من التفاصيل.",
+    "see_auction": "عرض المزاد",
+    "historic": "راجع السجل لمزيد من التفاصيل."
   }
 }

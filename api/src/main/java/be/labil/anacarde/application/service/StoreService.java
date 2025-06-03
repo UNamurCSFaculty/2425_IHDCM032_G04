@@ -2,6 +2,7 @@
 package be.labil.anacarde.application.service;
 
 import be.labil.anacarde.domain.dto.db.StoreDetailDto;
+import be.labil.anacarde.domain.dto.write.StoreUpdateDto;
 import java.util.List;
 
 /**
@@ -13,11 +14,11 @@ public interface StoreService {
 	/**
 	 * Crée un nouveau magasin dans le système en utilisant le StoreDto fourni.
 	 *
-	 * @param StoreDetailDto
+	 * @param storeUpdateDto
 	 *            Le StoreDto contenant les informations du nouveau magasin.
 	 * @return Un StoreDto représentant le magasin créé.
 	 */
-	StoreDetailDto createStore(StoreDetailDto StoreDetailDto);
+	StoreDetailDto createStore(StoreUpdateDto storeUpdateDto);
 
 	/**
 	 * Retourne le magasin correspondant à l'ID fourni.
@@ -41,11 +42,11 @@ public interface StoreService {
 	 *
 	 * @param id
 	 *            L'identifiant unique du magasin à mettre à jour.
-	 * @param StoreDetailDto
+	 * @param storeUpdateDto
 	 *            Le StoreDto contenant les informations mises à jour.
 	 * @return Un StoreDto représentant le magasin mis à jour.
 	 */
-	StoreDetailDto updateStore(Integer id, StoreDetailDto StoreDetailDto);
+	StoreDetailDto updateStore(Integer id, StoreUpdateDto storeUpdateDto);
 
 	/**
 	 * Supprime le magasin identifié par l'ID donné du système.
