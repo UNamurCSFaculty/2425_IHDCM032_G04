@@ -29,9 +29,6 @@ import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -115,21 +112,15 @@ public class AuctionServiceImpl implements AuctionService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<AuctionDto> listAuctions(Integer traderId, Integer buyerId, String status,
-			Integer limit) {
+	public List<AuctionDto> listAuctions(Integer traderId, Integer buyerId, String status) {
 		if (traderId != null && buyerId != null) {
 			throw new IllegalArgumentException(
 					"TraderId et BuyerId ne peuvent pas être spécifiés en même temps.");
-		}
-
-		Sort sort = Sort.by(Sort.Direction.DESC, "id");
-		Pageable pageable = (limit != null) ? PageRequest.of(0, limit, sort) : Pageable.unpaged();
-
-		if (buyerId != null) {
-			return auctionRepository.findByBuyerAndStatus(buyerId, status, pageable).stream()
+		} else if (buyerId != null) {
+			return auctionRepository.findByBuyerAndStatus(buyerId, status).stream()
 					.map(auctionMapper::toDto).collect(Collectors.toList());
 		} else {
-			return auctionRepository.findByTraderAndStatus(traderId, status, pageable).stream()
+			return auctionRepository.findByTraderAndStatus(traderId, status).stream()
 					.map(auctionMapper::toDto).collect(Collectors.toList());
 		}
 	}
