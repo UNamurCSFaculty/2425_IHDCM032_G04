@@ -2,9 +2,10 @@ package be.labil.anacarde.domain.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import be.labil.anacarde.domain.dto.db.AddressDto;
 import be.labil.anacarde.domain.dto.db.FieldDto;
 import be.labil.anacarde.domain.dto.db.user.ProducerDetailDto;
+import be.labil.anacarde.domain.dto.write.AddressUpdateDto;
+import be.labil.anacarde.domain.dto.write.FieldUpdateDto;
 import be.labil.anacarde.domain.model.*;
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -52,16 +53,15 @@ class FieldMapperTest {
 		ProducerDetailDto producerDto = new ProducerDetailDto();
 		producerDto.setId(1);
 
-		FieldDto dto = new FieldDto();
-		dto.setId(100);
+		FieldUpdateDto dto = new FieldUpdateDto();
 		dto.setIdentifier("F123");
-		dto.setAddress(AddressDto.builder().street("Rue de la paix").cityId(1).regionId(1).build());
-		dto.setProducer(producerDto);
+		dto.setAddress(
+				AddressUpdateDto.builder().street("Rue de la paix").cityId(1).regionId(1).build());
+		dto.setProducerId(producerDto.getId());
 
 		Field entity = mapper.toEntity(dto);
 
 		assertThat(entity).isNotNull();
-		assertThat(entity.getId()).isEqualTo(100);
 		assertThat(entity.getIdentifier()).isEqualTo("F123");
 		assertThat(entity.getAddress()).isNotNull();
 		assertThat(entity.getProducer()).isNotNull();

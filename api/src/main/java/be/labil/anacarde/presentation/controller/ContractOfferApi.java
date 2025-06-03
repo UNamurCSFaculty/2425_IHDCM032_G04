@@ -21,6 +21,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * End-points « Contrats » (API de gestion des contrats). Permet de gérer les opérations relatives
+ * aux contrats, telles que la création, la mise à jour, l'acceptation et la suppression de
+ * contrats.
+ */
 @Validated
 @SecurityRequirement(name = "jwt")
 @RequestMapping(value = "/api/contracts", produces = "application/json")

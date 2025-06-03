@@ -36,8 +36,8 @@ public class BidServiceImpl implements BidService {
 	private final PersistenceHelper persistenceHelper;
 	private final GlobalSettingsService globalSettingsService;
 	private final AuctionRepository auctionRepository;
-	private final NotificationSseService notificationSseService;
-	private final AuctionSseService auctionSseService;
+	private final NotificationSseServiceImpl notificationSseService;
+	private final AuctionSseServiceImpl auctionSseService;
 
 	@Override
 	public BidDto createBid(BidUpdateDto dto) {

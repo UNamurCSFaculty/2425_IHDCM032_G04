@@ -23,10 +23,10 @@ public class Address {
 	private Point location;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "city_id", updatable = false)
+	@JoinColumn(name = "city_id")
 	private City city;
 
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "region_id", updatable = false)
+	@JoinColumn(name = "region_id")
 	private Region region;
 }

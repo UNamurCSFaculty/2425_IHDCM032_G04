@@ -7,11 +7,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import be.labil.anacarde.domain.dto.db.AddressDto;
+import be.labil.anacarde.domain.dto.write.AddressUpdateDto;
 import be.labil.anacarde.domain.dto.write.user.create.AdminCreateDto;
 import be.labil.anacarde.domain.dto.write.user.create.ExporterCreateDto;
 import be.labil.anacarde.domain.dto.write.user.create.ProducerCreateDto;
 import be.labil.anacarde.domain.dto.write.user.create.UserCreateDto;
-import be.labil.anacarde.domain.dto.write.user.update.AddressUpdateDto;
 import be.labil.anacarde.domain.dto.write.user.update.AdminUpdateDto;
 import be.labil.anacarde.domain.dto.write.user.update.UserUpdateDto;
 import be.labil.anacarde.domain.model.Field;

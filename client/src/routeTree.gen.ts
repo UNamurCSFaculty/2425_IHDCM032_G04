@@ -24,6 +24,7 @@ import { Route as AdminIndexImport } from './routes/admin/index'
 import { Route as ActualitesIndexImport } from './routes/actualites/index'
 import { Route as ContactMerciImport } from './routes/contact/merci'
 import { Route as AdminUsersImport } from './routes/admin/users'
+import { Route as AdminMagasinImport } from './routes/admin/magasin'
 import { Route as AdminGlobalSettingsImport } from './routes/admin/global-settings'
 import { Route as AdminCooperativesImport } from './routes/admin/cooperatives'
 import { Route as AdminBlogImport } from './routes/admin/blog'
@@ -115,6 +116,12 @@ const ContactMerciRoute = ContactMerciImport.update({
 const AdminUsersRoute = AdminUsersImport.update({
   id: '/users',
   path: '/users',
+  getParentRoute: () => AdminRoute,
+} as any)
+
+const AdminMagasinRoute = AdminMagasinImport.update({
+  id: '/magasin',
+  path: '/magasin',
   getParentRoute: () => AdminRoute,
 } as any)
 
@@ -311,6 +318,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminGlobalSettingsImport
       parentRoute: typeof AdminImport
     }
+    '/admin/magasin': {
+      id: '/admin/magasin'
+      path: '/magasin'
+      fullPath: '/admin/magasin'
+      preLoaderRoute: typeof AdminMagasinImport
+      parentRoute: typeof AdminImport
+    }
     '/admin/users': {
       id: '/admin/users'
       path: '/users'
@@ -442,6 +456,7 @@ interface AdminRouteChildren {
   AdminBlogRoute: typeof AdminBlogRoute
   AdminCooperativesRoute: typeof AdminCooperativesRoute
   AdminGlobalSettingsRoute: typeof AdminGlobalSettingsRoute
+  AdminMagasinRoute: typeof AdminMagasinRoute
   AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
@@ -451,6 +466,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminBlogRoute: AdminBlogRoute,
   AdminCooperativesRoute: AdminCooperativesRoute,
   AdminGlobalSettingsRoute: AdminGlobalSettingsRoute,
+  AdminMagasinRoute: AdminMagasinRoute,
   AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
@@ -472,6 +488,7 @@ export interface FileRoutesByFullPath {
   '/admin/blog': typeof AdminBlogRoute
   '/admin/cooperatives': typeof AdminCooperativesRoute
   '/admin/global-settings': typeof AdminGlobalSettingsRoute
+  '/admin/magasin': typeof AdminMagasinRoute
   '/admin/users': typeof AdminUsersRoute
   '/contact/merci': typeof ContactMerciRoute
   '/actualites': typeof ActualitesIndexRoute
@@ -501,6 +518,7 @@ export interface FileRoutesByTo {
   '/admin/blog': typeof AdminBlogRoute
   '/admin/cooperatives': typeof AdminCooperativesRoute
   '/admin/global-settings': typeof AdminGlobalSettingsRoute
+  '/admin/magasin': typeof AdminMagasinRoute
   '/admin/users': typeof AdminUsersRoute
   '/contact/merci': typeof ContactMerciRoute
   '/actualites': typeof ActualitesIndexRoute
@@ -532,6 +550,7 @@ export interface FileRoutesById {
   '/admin/blog': typeof AdminBlogRoute
   '/admin/cooperatives': typeof AdminCooperativesRoute
   '/admin/global-settings': typeof AdminGlobalSettingsRoute
+  '/admin/magasin': typeof AdminMagasinRoute
   '/admin/users': typeof AdminUsersRoute
   '/contact/merci': typeof ContactMerciRoute
   '/actualites/': typeof ActualitesIndexRoute
@@ -564,6 +583,7 @@ export interface FileRouteTypes {
     | '/admin/blog'
     | '/admin/cooperatives'
     | '/admin/global-settings'
+    | '/admin/magasin'
     | '/admin/users'
     | '/contact/merci'
     | '/actualites'
@@ -592,6 +612,7 @@ export interface FileRouteTypes {
     | '/admin/blog'
     | '/admin/cooperatives'
     | '/admin/global-settings'
+    | '/admin/magasin'
     | '/admin/users'
     | '/contact/merci'
     | '/actualites'
@@ -621,6 +642,7 @@ export interface FileRouteTypes {
     | '/admin/blog'
     | '/admin/cooperatives'
     | '/admin/global-settings'
+    | '/admin/magasin'
     | '/admin/users'
     | '/contact/merci'
     | '/actualites/'
@@ -721,6 +743,7 @@ export const routeTree = rootRoute
         "/admin/blog",
         "/admin/cooperatives",
         "/admin/global-settings",
+        "/admin/magasin",
         "/admin/users",
         "/admin/"
       ]
@@ -755,6 +778,10 @@ export const routeTree = rootRoute
     },
     "/admin/global-settings": {
       "filePath": "admin/global-settings.tsx",
+      "parent": "/admin"
+    },
+    "/admin/magasin": {
+      "filePath": "admin/magasin.tsx",
       "parent": "/admin"
     },
     "/admin/users": {

@@ -1,6 +1,7 @@
 package be.labil.anacarde.application.service;
 
 import be.labil.anacarde.domain.dto.db.FieldDto;
+import be.labil.anacarde.domain.dto.write.FieldUpdateDto;
 import java.util.List;
 
 /**
@@ -16,7 +17,7 @@ public interface FieldService {
 	 *            Le FieldDetailDto contenant les informations du nouveau champ.
 	 * @return Un FieldDetailDto représentant le champ créé.
 	 */
-	FieldDto createField(FieldDto fieldDto);
+	FieldDto createField(FieldUpdateDto fieldDto);
 
 	/**
 	 * Retourne le champ correspondant à l'ID fourni.
@@ -46,7 +47,7 @@ public interface FieldService {
 	 *            Le FieldDetailDto contenant les informations mises à jour.
 	 * @return Un FieldDetailDto représentant le champ mis à jour.
 	 */
-	FieldDto updateField(Integer id, FieldDto fieldDto);
+	FieldDto updateField(Integer id, FieldUpdateDto fieldDto);
 
 	/**
 	 * Supprime le champ identifié par l'ID donné du système.

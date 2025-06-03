@@ -2,10 +2,10 @@ package be.labil.anacarde.application.service;
 
 import be.labil.anacarde.application.exception.*;
 import be.labil.anacarde.application.service.storage.StorageService;
-import be.labil.anacarde.domain.dto.db.AddressDto;
-import be.labil.anacarde.domain.dto.db.FieldDto;
 import be.labil.anacarde.domain.dto.db.user.UserDetailDto;
 import be.labil.anacarde.domain.dto.db.user.UserListDto;
+import be.labil.anacarde.domain.dto.write.AddressUpdateDto;
+import be.labil.anacarde.domain.dto.write.FieldUpdateDto;
 import be.labil.anacarde.domain.dto.write.user.create.ProducerCreateDto;
 import be.labil.anacarde.domain.dto.write.user.create.UserCreateDto;
 import be.labil.anacarde.domain.dto.write.user.update.ProducerUpdateDto;
@@ -144,19 +144,14 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
 		// création et association d'un champ à la même adresse
 		if (dto instanceof ProducerCreateDto producerDto) {
-			FieldDto fieldDto = new FieldDto();
+			FieldUpdateDto fieldDto = new FieldUpdateDto();
 			fieldDto.setIdentifier("FIELD-" + user.getId().toString() + "001");
-			AddressDto addressDto = AddressDto.builder().cityId(city.getId())
+			AddressUpdateDto addressDto = AddressUpdateDto.builder().cityId(city.getId())
 					.regionId(region.getId()).street(user.getAddress().getStreet()).build();
 			fieldDto.setAddress(addressDto);
-			Producer producer = (Producer) user;
-			fieldDto.setProducer(userDetailMapper.toDto(producer));
+			fieldDto.setProducerId(user.getId());
 			fieldService.createField(fieldDto);
 		}
-
-		// org.hibernate.TransientPropertyValueException: Not-null property references a transient
-		// value - transient instance must be saved before current operation:
-		// be.labil.anacarde.domain.model.Field.region -> be.labil.anacarde.domain.model.Region
 
 		// stockage des documents
 		if (files != null && !files.isEmpty()) {

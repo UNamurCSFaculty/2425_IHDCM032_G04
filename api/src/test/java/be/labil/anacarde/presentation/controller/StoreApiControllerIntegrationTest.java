@@ -4,8 +4,8 @@ import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import be.labil.anacarde.domain.dto.db.AddressDto;
-import be.labil.anacarde.domain.dto.db.StoreDetailDto;
+import be.labil.anacarde.domain.dto.write.AddressUpdateDto;
+import be.labil.anacarde.domain.dto.write.StoreUpdateDto;
 import be.labil.anacarde.infrastructure.persistence.StoreRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -52,10 +52,10 @@ public class StoreApiControllerIntegrationTest extends AbstractIntegrationTest {
 	 */
 	@Test
 	public void testCreateStore() throws Exception {
-		StoreDetailDto newStore = new StoreDetailDto();
+		StoreUpdateDto newStore = new StoreUpdateDto();
 		newStore.setName("Nassara");
-		newStore.setAddress(AddressDto.builder().street("Rue de la paix").cityId(1).regionId(1)
-				.location("POINT(2.3522 48.8566)").build());
+		newStore.setAddress(AddressUpdateDto.builder().street("Rue de la paix").cityId(1)
+				.regionId(1).location("POINT(2.3522 48.8566)").build());
 		newStore.setUserId(getMainTestUser().getId());
 
 		ObjectNode node = objectMapper.valueToTree(newStore);
@@ -90,12 +90,10 @@ public class StoreApiControllerIntegrationTest extends AbstractIntegrationTest {
 	 */
 	@Test
 	public void testUpdateStore() throws Exception {
-		StoreDetailDto updateStore = new StoreDetailDto();
+		StoreUpdateDto updateStore = new StoreUpdateDto();
 		updateStore.setName("Casimir");
 		updateStore.setAddress(
-				AddressDto.builder().street("Rue de la paix").cityId(1).regionId(1).build());
-		updateStore.setAddress(
-				AddressDto.builder().street("Rue de la paix").cityId(1).regionId(1).build());
+				AddressUpdateDto.builder().street("Rue de la paix").cityId(1).regionId(1).build());
 		updateStore.setUserId(getMainTestUser().getId());
 
 		ObjectNode node = objectMapper.valueToTree(updateStore);

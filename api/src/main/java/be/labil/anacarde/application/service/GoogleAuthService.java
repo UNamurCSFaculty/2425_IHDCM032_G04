@@ -4,6 +4,10 @@ import be.labil.anacarde.domain.model.User;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
+/**
+ * Service pour la gestion de l'authentification via Google. Permet de vérifier l'ID-token Google et
+ * d'associer le compte Google à un utilisateur existant.
+ */
 public interface GoogleAuthService {
 	/**
 	 * Vérifie l'ID-token Google, associe le compte Google à l'utilisateur existant (par email), et

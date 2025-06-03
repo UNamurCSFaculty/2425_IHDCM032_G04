@@ -3,7 +3,7 @@ package be.labil.anacarde.presentation.controller;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import be.labil.anacarde.domain.dto.write.user.update.AddressUpdateDto;
+import be.labil.anacarde.domain.dto.write.AddressUpdateDto;
 import be.labil.anacarde.domain.dto.write.user.update.ProducerUpdateDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;

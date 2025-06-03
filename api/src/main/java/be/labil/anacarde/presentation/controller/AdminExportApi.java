@@ -18,6 +18,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+/**
+ * End-points « Export des données d'enchères » (API de Business Intelligence pour l'export de
+ * données d'enchères anonymisées et enrichies).
+ */
 @SecurityRequirement(name = "jwt")
 @RequestMapping(value = "/api/admin/export/auctions")
 @Tag(name = "export-auctions", description = "API de Business Intelligence pour l'export de données d'enchères anonymisées et enrichies (régions, vendeurs, etc.) à des fins d'analyse. Permet de télécharger les données au format JSON ou CSV.")

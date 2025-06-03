@@ -18,6 +18,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+/**
+ * End-points « Utilisateurs » (API de gestion des utilisateurs Administrateur). Permet de récupérer
+ * les informations détaillées d'un utilisateur à partir de son identifiant.
+ */
 @Validated
 @Tag(name = "Users", description = "API de gestion des utilisateurs Administrateur")
 @SecurityRequirement(name = "jwt")

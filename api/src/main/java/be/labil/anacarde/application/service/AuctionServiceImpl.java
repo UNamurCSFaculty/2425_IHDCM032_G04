@@ -43,8 +43,8 @@ public class AuctionServiceImpl implements AuctionService {
 	private final AuctionStrategyMapper auctionStrategyMapper;
 	private final PersistenceHelper persistenceHelper;
 	private final GlobalSettingsService globalSettingsService;
-	private final AuctionSseService auctionSseService;
-	private final NotificationSseService notificationSseService;
+	private final AuctionSseServiceImpl auctionSseService;
+	private final NotificationSseServiceImpl notificationSseService;
 	private final ProductService productService;
 
 	private static final Logger log = LoggerFactory.getLogger(CloseAuctionJob.class);

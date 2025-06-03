@@ -11,6 +11,7 @@ type VirtualizedSelectFieldProps = Omit<
   label: string
   tooltip?: string
   required?: boolean
+  modal?: boolean
 }
 
 export const VirtualizedSelectField: React.FC<VirtualizedSelectFieldProps> = ({
@@ -19,6 +20,7 @@ export const VirtualizedSelectField: React.FC<VirtualizedSelectFieldProps> = ({
   tooltip,
   required = false,
   placeholder,
+  modal = false,
   ...rest
 }) => {
   const field = useFieldContext<number | null>()
@@ -36,6 +38,7 @@ export const VirtualizedSelectField: React.FC<VirtualizedSelectFieldProps> = ({
         placeholder={placeholder}
         required={required}
         value={field.state.value}
+        modal={modal}
         onChange={val => field.handleChange(val)}
       />
       {hasError && <FieldErrors meta={field.state.meta} />}
