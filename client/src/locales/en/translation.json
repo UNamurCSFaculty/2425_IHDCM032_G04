@@ -736,7 +736,7 @@
     "results_count": "Result: {{count}} product",
     "results_count_plural": "Results: {{count}} products",
     "owner_label": "Owner",
-    "warehouse_label": "Warehouse",
+    "warehouse_label": "Your Warehouse",
     "select_lots": "Select Lots",
     "form": {
       "title": "Product Entry",

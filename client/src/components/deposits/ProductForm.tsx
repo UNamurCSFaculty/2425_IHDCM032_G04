@@ -13,10 +13,13 @@ import {
   type QualityDto,
   type QualityInspectorDetailDto,
   type ProductDto,
+  type TransformedProductUpdateDto,
+  type AuctionDto,
 } from '@/api/generated'
 import {
   createProductMutation,
   createQualityControlMutation,
+  listAuctionsOptions,
   listFieldsOptions,
   listProductsOptions,
   listQualitiesOptions,
@@ -30,6 +33,8 @@ import {
 } from '@/api/generated/zod.gen'
 import { useAppForm } from '@/components/form'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { TradeStatus } from '@/lib/utils'
+import { useAuthUser } from '@/store/userStore'
 import { formatCoordinates } from '@/utils/formatter'
 import { useStore } from '@tanstack/react-form'
 import { useMutation, useQuery } from '@tanstack/react-query'
@@ -42,6 +47,8 @@ import z from 'zod/v4'
 
 export function ProductForm(): React.ReactElement<'div'> {
   const navigate = useNavigate()
+
+  const user = useAuthUser()
 
   const { t } = useTranslation()
 
@@ -199,6 +206,25 @@ export function ProductForm(): React.ReactElement<'div'> {
     return -1
   })
 
+  const transformerId = useStore(form.store, state => {
+    if (productType === ProductType.TRANSFORMED) {
+      return (state.values.product as TransformedProductUpdateDto).transformerId
+    }
+    return -1
+  })
+
+  const listAuctionsQueryOptions = () => ({
+    ...listAuctionsOptions({
+      query: { buyerId: transformerId, status: TradeStatus.ACCEPTED },
+    }),
+    staleTime: 10_000,
+  })
+
+  const { data: auctions, isLoading: isAuctionsLoading } = useQuery({
+    ...listAuctionsQueryOptions(),
+    enabled: !!transformerId && transformerId !== -1,
+  })
+
   return (
     <FormContainer title={t('product.form.title')}>
       <form
@@ -327,24 +353,30 @@ export function ProductForm(): React.ReactElement<'div'> {
                   name="product.harvestProductIds"
                   children={field => (
                     <field.ReactSelectField
-                      loading={isHarvestProductsLoading}
+                      loading={isAuctionsLoading}
                       placeholder={t('product.select_lots')}
                       options={
-                        isHarvestProductsLoading
+                        isAuctionsLoading || auctions === undefined
                           ? []
-                          : (harvestProducts as HarvestProductDto[]).map(
-                              product => ({
-                                value: String(product.id),
+                          : (auctions as AuctionDto[])
+                              .filter(auction =>
+                                auction.bids.some(
+                                  bid =>
+                                    bid.trader.id === user.id &&
+                                    bid.status.name === TradeStatus.ACCEPTED
+                                )
+                              )
+                              .map(auction => ({
+                                value: String(auction.product.id),
                                 label:
                                   'Lot n°' +
-                                  product.id +
+                                  auction.product.id +
                                   ' - ' +
-                                  t('database.' + product.type) +
+                                  t('database.' + auction.product.type) +
                                   ' (' +
-                                  product.qualityControl.quality.name +
+                                  auction.product.qualityControl.quality.name +
                                   ')',
-                              })
-                            )
+                              }))
                       }
                       label="Matières premières"
                       onChange={items => {
@@ -363,16 +395,14 @@ export function ProductForm(): React.ReactElement<'div'> {
                   options={
                     isStoresLoading
                       ? []
-                      : (stores as StoreDetailDto[]).map(store => ({
-                          value: store.id,
-                          label: store.name,
-                        }))
+                      : (stores as StoreDetailDto[])
+                          .filter(store => store.userId === user.id)
+                          .map(store => ({
+                            value: store.id,
+                            label: store.name,
+                          }))
                   }
-                  label={
-                    productType === ProductType.HARVEST
-                      ? t('product.store_label')
-                      : t('product.warehouse_label')
-                  }
+                  label={t('product.warehouse_label')}
                 />
               )}
             />

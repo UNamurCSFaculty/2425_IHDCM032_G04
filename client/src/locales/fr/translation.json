@@ -736,7 +736,7 @@
     "results_count": "Résultat : {{count}} produit",
     "results_count_plural": "Résultats : {{count}} produits",
     "owner_label": "Propriétaire",
-    "warehouse_label": "Entrepôt",
+    "warehouse_label": "Votre entrepôt",
     "select_lots": "Sélectionner les lots",
     "form": {
       "title": "Saisie du produit",
