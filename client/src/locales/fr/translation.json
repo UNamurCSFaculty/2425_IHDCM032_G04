@@ -1021,7 +1021,7 @@
     "price_per_kg_label": "Prix par kg",
     "accept_offer_prompt": "Accepter cette offre ?",
     "reject_offer_prompt": "Refuser cette offre ?",
-    "created_ok": "Contrat créé avec succès !",
+    "created_ok": "Offre de contrat ouverte avec succès !",
     "created_fail": "Erreur lors de la création du contrat."
   },
   "settings": {
