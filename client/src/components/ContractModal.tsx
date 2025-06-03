@@ -1,5 +1,11 @@
 import { useAppForm } from './form'
-import { type AuctionDto, type BidDto, type QualityDto } from '@/api/generated'
+import {
+  ProductType,
+  type ApiErrorResponse,
+  type AuctionDto,
+  type BidDto,
+  type QualityDto,
+} from '@/api/generated'
 import {
   createContractOfferMutation,
   listQualitiesOptions,
@@ -18,6 +24,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from './ui/button'
 import { Avatar, AvatarFallback } from '@radix-ui/react-avatar'
+import { toast } from 'sonner'
 
 interface ContractModalProps {
   isOpen: boolean
@@ -41,9 +48,32 @@ export const ContractModal: React.FC<ContractModalProps> = ({
   const { t } = useTranslation()
   const [endDateDisplay, setEndDateDisplay] = React.useState<string>('')
   const { data } = useSuspenseQuery(listQualitiesQueryOptions())
-  const qualities = data as QualityDto[]
 
-  const mutation = useMutation(createContractOfferMutation())
+  // filter quality type
+  const qualities = (data as QualityDto[]).filter(quality => {
+    return (
+      (auction.product.type === ProductType.HARVEST &&
+        quality.qualityType.name.toLowerCase() ==
+          ProductType.HARVEST.toLowerCase()) ||
+      (auction.product.type === ProductType.TRANSFORMED &&
+        quality.qualityType.name.toLowerCase() ==
+          ProductType.TRANSFORMED.toLowerCase())
+    )
+  })
+
+  const mutation = useMutation({
+    ...createContractOfferMutation(),
+    onSuccess: () => {
+      toast.success(t('contract.created_ok'), {
+        duration: 3000,
+      })
+    },
+    onError(error: ApiErrorResponse) {
+      toast.error(t('contract.created_fail') + ' (' + error.code + ')', {
+        duration: 3000,
+      })
+    },
+  })
 
   const defaultValues = React.useMemo(
     () => ({

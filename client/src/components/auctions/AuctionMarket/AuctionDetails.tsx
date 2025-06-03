@@ -40,6 +40,7 @@ import {
   Loader2,
   Star,
   User,
+  ScrollText,
 } from 'lucide-react'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -248,22 +249,6 @@ const AuctionDetailsPanel: React.FC<Props> = ({
             {auction.trader.firstName} {auction.trader.lastName}
           </span>
         </div>
-
-        {acceptedBid && user.id === acceptedBid.trader.id && (
-          <div className="ml-auto">
-            <Button onClick={() => setIsOpen(true)}>
-              {t('auction.table.propose_contract_button')}
-            </Button>
-
-            <ContractModal
-              acceptedBid={acceptedBid}
-              auction={auction}
-              isOpen={isOpen}
-              onClose={() => setIsOpen(false)}
-              onSubmit={() => setIsOpen(false)}
-            />
-          </div>
-        )}
       </div>
 
       {/* Map */}
@@ -476,15 +461,35 @@ const AuctionDetailsPanel: React.FC<Props> = ({
         )}
 
         {role === 'buyer' && ended && (
-          <div>
+          <div className="flex w-2/5 flex-col">
             <Card className="rounded-lg bg-neutral-100 p-4 shadow">
-              <div className="flex flex-col items-center text-center">
-                <span className="mb-2 text-base font-medium text-gray-700">
+              <div className="flex flex-col">
+                <span className="mb-2 text-center text-base font-medium text-gray-700">
                   {t('auction.status.ended_title')}
                 </span>
                 <div className="text-sm text-gray-500">
-                  {t('auction.status.ended_message')}
+                  <p>
+                    {t('auction.status.ended_message')}{' '}
+                    {t('auction.status.offer_contract')}
+                  </p>
                 </div>
+
+                {acceptedBid && user.id === acceptedBid.trader.id && (
+                  <div className="mt-2 flex justify-center">
+                    <Button onClick={() => setIsOpen(true)}>
+                      <ScrollText />
+                      {t('auction.table.propose_contract_button')}
+                    </Button>
+
+                    <ContractModal
+                      acceptedBid={acceptedBid}
+                      auction={auction}
+                      isOpen={isOpen}
+                      onClose={() => setIsOpen(false)}
+                      onSubmit={() => setIsOpen(false)}
+                    />
+                  </div>
+                )}
               </div>
             </Card>
           </div>

@@ -647,7 +647,8 @@
     "confirm_bid_prompt": "Confirm your bid of {{amount}}?",
     "status": {
       "ended_title": "Auction Ended",
-      "ended_message": "This auction has now ended."
+      "ended_message": "This auction has now ended.",
+      "offer_contract": "Offer contract to the seller?"
     },
     "bid_count_for_lot_zero": "{{count}} bid for lot",
     "bid_count_for_lot_one": "{{count}} bid for lot",
@@ -694,7 +695,7 @@
       "buyer_header": "Buyer",
       "view_bids_button": "View Bids",
       "make_bid_button": "Place Bid",
-      "propose_contract_button": "Propose Contract",
+      "propose_contract_button": "New Contract",
       "strategy_label": "Bidding Strategy",
       "fixed_price_per_kg_label": "Fixed Price per Kg",
       "max_price_per_kg_label": "Max Price per Kg",
@@ -1019,7 +1020,9 @@
     "label": "Contract #{{id}}",
     "price_per_kg_label": "Price per Kg",
     "accept_offer_prompt": "Accept this offer?",
-    "reject_offer_prompt": "Reject this offer?"
+    "reject_offer_prompt": "Reject this offer?",
+    "created_ok": "Contract created successfully!",
+    "created_fail": "Error while creating contract."
   },
   "settings": {
     "update_success": "Global settings updated successfully.",

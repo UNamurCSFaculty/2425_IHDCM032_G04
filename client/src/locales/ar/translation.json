@@ -446,7 +446,8 @@
     "confirm_bid_prompt": "تأكيد عرضك بقيمة {{amount}}؟",
     "status": {
       "ended_title": "المزاد منتهٍ",
-      "ended_message": "انتهى هذا المزاد الآن."
+      "ended_message": "انتهى هذا المزاد الآن.",
+      "offer_contract": "عرض عقد"
     },
     "bid_count_for_lot_zero": "{{count}} عرض للدفعة",
     "bid_count_for_lot_one": "{{count}} عرض للدفعة",
@@ -811,7 +812,9 @@
     "label": "العقد رقم {{id}}",
     "price_per_kg_label": "السعر لكل كغ",
     "accept_offer_prompt": "هل تقبل هذا العرض؟",
-    "reject_offer_prompt": "هل ترفض هذا العرض؟"
+    "reject_offer_prompt": "هل ترفض هذا العرض؟",
+    "created_ok": "تم إنشاء العقد بنجاح!",
+    "created_fail": "حدث خطأ أثناء إنشاء العقد."
   },
   "settings": {
     "update_success": "تم تحديث الإعدادات العامة بنجاح.",
