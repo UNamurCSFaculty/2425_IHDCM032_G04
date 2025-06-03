@@ -1017,7 +1017,9 @@
     "status_label": "Statut",
     "contract_end_label": "Fin du contrat",
     "label": "Contrat n°{{id}}",
-    "price_per_kg_label": "Prix par kg"
+    "price_per_kg_label": "Prix par kg",
+    "accept_offer_prompt": "Accepter cette offre ?",
+    "reject_offer_prompt": "Refuser cette offre ?"
   },
   "settings": {
     "update_success": "Paramètres globaux mis à jour avec succès.",

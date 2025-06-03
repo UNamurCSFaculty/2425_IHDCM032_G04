@@ -29,7 +29,7 @@ public class ContractOfferApiControllerIntegrationTest extends AbstractIntegrati
 	public void testGetContractOffer() throws Exception {
 		mockMvc.perform(get("/api/contracts/" + getMainTestContractOffer().getId())
 				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
-				.andExpect(jsonPath("$.status").value("Accepted"))
+				.andExpect(jsonPath("$.status").value("Accepté"))
 				.andExpect(jsonPath("$.pricePerKg").value("20.0"))
 				.andExpect(jsonPath("$.seller.id").value(getProducerTestUser().getId()))
 				.andExpect(jsonPath("$.buyer.id").value(getTransformerTestUser().getId()));
@@ -48,7 +48,7 @@ public class ContractOfferApiControllerIntegrationTest extends AbstractIntegrati
 				.param("sellerId", String.valueOf(getProducerTestUser().getId()))
 				.param("buyerId", String.valueOf(getTransformerTestUser().getId()))
 				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
-				.andExpect(jsonPath("$.status").value("Accepted"))
+				.andExpect(jsonPath("$.status").value("Accepté"))
 				.andExpect(jsonPath("$.pricePerKg").value("20.0"))
 				.andExpect(jsonPath("$.seller.id").value(getProducerTestUser().getId()))
 				.andExpect(jsonPath("$.buyer.id").value(getTransformerTestUser().getId()));
@@ -66,7 +66,7 @@ public class ContractOfferApiControllerIntegrationTest extends AbstractIntegrati
 		Integer transformerId = getTransformerTestUser().getId();
 
 		ContractOfferUpdateDto newContractOffer = new ContractOfferUpdateDto();
-		newContractOffer.setStatus("Waiting");
+		newContractOffer.setStatus("Ouvert");
 		newContractOffer.setPricePerKg(new BigDecimal("999.99"));
 		newContractOffer.setCreationDate(LocalDateTime.now());
 		newContractOffer.setEndDate(LocalDateTime.now());
@@ -82,7 +82,7 @@ public class ContractOfferApiControllerIntegrationTest extends AbstractIntegrati
 				.andExpect(status().isCreated())
 				.andExpect(header().string("Location", containsString("/api/contracts/")))
 				.andExpect(jsonPath("$.pricePerKg").value("999.99"))
-				.andExpect(jsonPath("$.status").value("Waiting"))
+				.andExpect(jsonPath("$.status").value("Ouvert"))
 				.andExpect(jsonPath("$.seller.id").value(producerId))
 				.andExpect(jsonPath("$.buyer.id").value(transformerId))
 				.andExpect(jsonPath("$.quality.id").value(qualityId));
@@ -143,7 +143,7 @@ public class ContractOfferApiControllerIntegrationTest extends AbstractIntegrati
 
 	/**
 	 * Teste l'acceptation d'une offre de contrat via l'endpoint PUT /{contractOfferId}/accept.
-	 * Vérifie que le statut est bien mis à jour en "Accepted" et que les données retournées sont
+	 * Vérifie que le statut est bien mis à jour en "Accepté" et que les données retournées sont
 	 * correctes.
 	 */
 	@Test
@@ -153,7 +153,7 @@ public class ContractOfferApiControllerIntegrationTest extends AbstractIntegrati
 		mockMvc.perform(put("/api/contracts/" + contractOfferId + "/accept")
 				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
 				.andExpect(jsonPath("$.id").value(contractOfferId))
-				.andExpect(jsonPath("$.status").value("Accepted"))
+				.andExpect(jsonPath("$.status").value("Accepté"))
 				.andExpect(jsonPath("$.pricePerKg").value("20.0"))
 				.andExpect(jsonPath("$.seller.id").value(getProducerTestUser().getId()))
 				.andExpect(jsonPath("$.buyer.id").value(getTransformerTestUser().getId()));
@@ -170,7 +170,7 @@ public class ContractOfferApiControllerIntegrationTest extends AbstractIntegrati
 		mockMvc.perform(put("/api/contracts/" + contractOfferId + "/reject")
 				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
 				.andExpect(jsonPath("$.id").value(contractOfferId))
-				.andExpect(jsonPath("$.status").value("Rejected"))
+				.andExpect(jsonPath("$.status").value("Refusé"))
 				.andExpect(jsonPath("$.pricePerKg").value("20.0"))
 				.andExpect(jsonPath("$.seller.id").value(getProducerTestUser().getId()))
 				.andExpect(jsonPath("$.buyer.id").value(getTransformerTestUser().getId()));

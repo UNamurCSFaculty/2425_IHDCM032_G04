@@ -593,7 +593,7 @@ public abstract class AbstractIntegrationTest {
 		mainTestQuality = qualityRepository.save(quality2);
 
 		// A contract
-		ContractOffer contractOffer = ContractOffer.builder().status("Accepted")
+		ContractOffer contractOffer = ContractOffer.builder().status("Accepté")
 				.pricePerKg(new BigDecimal("20.0")).creationDate(LocalDateTime.now())
 				.endDate(LocalDateTime.now().plusDays(1)).seller(producer).buyer(transformer)
 				.quality(quality).build();

@@ -62,6 +62,7 @@ const contractQueryOptions = (
     query: { qualityId, sellerId, buyerId },
   }),
   staleTime: 10_000,
+  retry: false,
 })
 
 const AuctionDetailsPanel: React.FC<Props> = ({
@@ -247,7 +248,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
           </span>
         </div>
 
-        {acceptedBid && (
+        {acceptedBid && user.id === acceptedBid.trader.id && (
           <div className="ml-auto">
             <Button onClick={() => setIsOpen(true)}>
               {t('auction.table.propose_contract_button')}

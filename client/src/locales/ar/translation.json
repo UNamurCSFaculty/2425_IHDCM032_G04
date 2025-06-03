@@ -809,7 +809,9 @@
     "status_label": "الحالة",
     "contract_end_label": "نهاية العقد",
     "label": "العقد رقم {{id}}",
-    "price_per_kg_label": "السعر لكل كغ"
+    "price_per_kg_label": "السعر لكل كغ",
+    "accept_offer_prompt": "هل تقبل هذا العرض؟",
+    "reject_offer_prompt": "هل ترفض هذا العرض؟"
   },
   "settings": {
     "update_success": "تم تحديث الإعدادات العامة بنجاح.",

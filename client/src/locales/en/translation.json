@@ -1017,7 +1017,9 @@
     "status_label": "Status",
     "contract_end_label": "Contract End",
     "label": "Contract #{{id}}",
-    "price_per_kg_label": "Price per Kg"
+    "price_per_kg_label": "Price per Kg",
+    "accept_offer_prompt": "Accept this offer?",
+    "reject_offer_prompt": "Reject this offer?"
   },
   "settings": {
     "update_success": "Global settings updated successfully.",
