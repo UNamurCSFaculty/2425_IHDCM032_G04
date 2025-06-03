@@ -35,7 +35,7 @@ public class ContractOfferServiceImpl implements ContractOfferService {
 			Integer buyerId) {
 
 		ContractOffer contractOffer = contractOfferRepository
-				.findValidContractOffer(qualityId, sellerId, buyerId, "Accepted")
+				.findValidContractOffer(qualityId, sellerId, buyerId, "Accepté")
 				.orElseThrow(() -> new ResourceNotFoundException(
 						"Aucun contrat trouvé avec les paramètres fournis"));
 
@@ -78,7 +78,7 @@ public class ContractOfferServiceImpl implements ContractOfferService {
 		// Accept current contract offer
 		ContractOffer existingOffer = contractOfferRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Offre de contrat non trouvée"));
-		existingOffer.setStatus("Accepted");
+		existingOffer.setStatus("Accepté");
 
 		ContractOffer acceptedOffer = contractOfferRepository.save(existingOffer);
 
@@ -101,7 +101,7 @@ public class ContractOfferServiceImpl implements ContractOfferService {
 
 		ContractOffer existingOffer = contractOfferRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Offre de contrat non trouvée"));
-		existingOffer.setStatus("Rejected");
+		existingOffer.setStatus("Refusé");
 
 		ContractOffer saved = contractOfferRepository.save(existingOffer);
 		return contractOfferMapper.toDto(saved);

@@ -1012,7 +1012,9 @@
     "status_label": "Estado",
     "contract_end_label": "Fin del contrato",
     "label": "Contrato n.º {{id}}",
-    "price_per_kg_label": "Precio por kg"
+    "price_per_kg_label": "Precio por kg",
+    "accept_offer_prompt": "¿Aceptar esta oferta?",
+    "reject_offer_prompt": "¿Rechazar esta oferta?"
   },
   "settings": {
     "update_success": "Configuración global actualizada con éxito.",

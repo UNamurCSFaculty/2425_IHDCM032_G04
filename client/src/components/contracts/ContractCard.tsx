@@ -163,7 +163,7 @@ const ContractCard: React.FC<ContractCardProps> = ({ contract, layout }) => {
           </InfoTile>
         </div>
 
-        {contract.status === 'Waiting' && contract.seller.id === user.id && (
+        {contract.status === 'Ouvert' && contract.seller.id === user.id && (
           <div className="flex justify-center gap-2 pt-2">
             {/* Accept */}
             <Popover
@@ -194,7 +194,7 @@ const ContractCard: React.FC<ContractCardProps> = ({ contract, layout }) => {
                 onClick={e => e.stopPropagation()} // empêche les clics de fermer
               >
                 <p className="mb-2 text-center text-sm">
-                  {t('auction.accept_bid_prompt')}
+                  {t('contract.accept_offer_prompt')}
                 </p>
                 <div className="flex justify-end gap-2">
                   <Button
@@ -243,7 +243,7 @@ const ContractCard: React.FC<ContractCardProps> = ({ contract, layout }) => {
                 onClick={e => e.stopPropagation()} // empêche les clics de fermer
               >
                 <p className="mb-2 text-center text-sm">
-                  {t('auction.reject_bid_prompt')}
+                  {t('contract.reject_offer_prompt')}
                 </p>
                 <div className="flex justify-end gap-2">
                   <Button

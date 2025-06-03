@@ -1008,7 +1008,9 @@
     "status_label": "状态",
     "contract_end_label": "合同结束",
     "label": "合同编号 {{id}}",
-    "price_per_kg_label": "单价（每公斤）"
+    "price_per_kg_label": "单价（每公斤）",
+    "accept_offer_prompt": "接受这个报价？",
+    "reject_offer_prompt": "拒绝这个报价？"
   },
   "settings": {
     "update_success": "全局设置更新成功。",
