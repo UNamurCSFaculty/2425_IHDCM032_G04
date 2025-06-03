@@ -1,6 +1,5 @@
 import { BreadcrumbSection } from '@/components/BreadcrumbSection'
 import AuctionMarketplace from '@/components/auctions/AuctionMarket/AuctionMarket'
-import { TradeStatus } from '@/lib/utils'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_authenticated/achats/marche')({
@@ -19,7 +18,7 @@ export function RouteComponent() {
         ]}
       />
       <div className="container mx-auto mt-16 mb-16">
-        <AuctionMarketplace userRole="buyer" auctionStatus={TradeStatus.OPEN} />
+        <AuctionMarketplace userRole="buyer" marketMode="marketplace" />
       </div>
     </>
   )

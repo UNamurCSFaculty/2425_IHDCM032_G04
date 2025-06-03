@@ -42,9 +42,12 @@ import {
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import LoadingState from '@/components/LoadingState'
+import { useAuthUser } from '@/store/userStore'
+import { TradeStatus } from '@/lib/utils'
 
 export type ViewMode = 'cards' | 'table' | 'map'
 export type UserRole = 'buyer' | 'seller'
+export type MarketMode = 'marketplace' | 'my-purchases' | 'my-sales'
 
 export const sortOptions = [
   { value: 'endDate-asc', label: 'sort.expiration_asc' },
@@ -57,58 +60,43 @@ export type SortOptionValue = (typeof sortOptions)[number]['value']
 export const perPage = 12
 
 interface MarketplaceProps {
+  marketMode?: MarketMode
   userRole: UserRole
-  buyerId?: number
-  traderId?: number
-  auctionStatus?: string
   filterByAuctionStatus?: boolean
 }
 
 const AuctionMarketplace: React.FC<MarketplaceProps> = ({
+  marketMode = 'marketplace',
   userRole,
-  buyerId,
-  traderId,
-  auctionStatus,
   filterByAuctionStatus,
 }) => {
   const isDesktop = useMediaQuery('(min-width: 1024px)')
   const { t } = useTranslation()
+  const user = useAuthUser()
 
   // Queries
+  let buyerId = undefined
+  let traderId = undefined
+  let auctionStatus = undefined
+
+  if (marketMode === 'my-purchases') {
+    buyerId = user.id // query all auctions where user placed bids
+  } else if (marketMode === 'my-sales') {
+    traderId = user.id // query all auctions where user is the seller
+  } else if (marketMode === 'marketplace') {
+    auctionStatus = TradeStatus.OPEN // default to open auctions
+  }
+
   const listAuctionsQueryOptions = () => ({
-    ...listAuctionsOptions({
-      query: { buyerId: buyerId, traderId: traderId, limit: 1 },
-    }),
-    staleTime: 10_000,
-  })
-
-  const { data: firstAuctions, isLoading: isAuctionsLoading } = useQuery({
-    ...listAuctionsQueryOptions(),
-  })
-
-  const listAllAuctionsQueryOptions = () => ({
     ...listAuctionsOptions({
       query: { buyerId: buyerId, traderId: traderId, status: auctionStatus },
     }),
     staleTime: 10_000,
-    enabled: !isAuctionsLoading,
   })
 
-  const { data: allAuctions } = useQuery({
-    ...listAllAuctionsQueryOptions(),
+  const { data: auctions, isLoading: isAuctionsLoading } = useQuery({
+    ...listAuctionsQueryOptions(),
   })
-
-  let auctions: AuctionDto[]
-  if (allAuctions) {
-    auctions = allAuctions as AuctionDto[]
-    console.log('loading all auctions', auctions.length)
-  } else if (firstAuctions) {
-    auctions = firstAuctions as AuctionDto[]
-    console.log('loading first auctions', auctions.length)
-  } else {
-    auctions = []
-    console.log('no auctions loaded')
-  }
 
   // UI state
   const [viewMode, setViewMode] = useState<ViewMode>('cards')
@@ -159,17 +147,26 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
   }
 
   const handleFilteredDataChange = useCallback(
-    (newFilteredData: AuctionDto[]) => {
-      if (userRole === 'buyer' && traderId) {
-        // show only auctions where user placed bids
+    (newFilteredData: AuctionDto[], selectedAuctionStatus: TradeStatus) => {
+      if (
+        marketMode === 'my-purchases' &&
+        selectedAuctionStatus !== TradeStatus.OPEN
+      ) {
+        // show only auctions won by user
         newFilteredData = newFilteredData.filter(auction =>
-          auction.bids.some(bid => bid.trader.id === traderId)
+          auction.bids.some(
+            bid =>
+              bid.trader.id === user.id &&
+              bid.status.name === TradeStatus.ACCEPTED
+          )
         )
       }
-      console.log('newFilteredData', newFilteredData.length)
       setFilteredAuctions(newFilteredData)
+
+      // reset view to list when user clicks on "opened/closed auctions" selector
+      setInlineAuction(null)
     },
-    [userRole, traderId]
+    [user.id, marketMode]
   )
 
   // Display inline auction on custom event (SSE notif's toast action)

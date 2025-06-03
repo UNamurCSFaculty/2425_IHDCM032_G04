@@ -49,7 +49,7 @@ interface FiltersPanelProps<
       ? 'product'
       : 'contract'
   filterData: T[]
-  onFilteredDataChange: (filteredData: T[]) => void
+  onFilteredDataChange: (filteredData: T[], auctionStatus: TradeStatus) => void
   filterByAuctionStatus?: boolean
   filterByPrice?: boolean
 }
@@ -84,6 +84,7 @@ const FiltersPanel = <T extends AuctionDto | ProductDto | ContractOfferDto>({
     (item: T): boolean => {
       if (filterDataType === 'auction') {
         const a = item as AuctionDto
+
         if (
           search &&
           !`${a.product.type} ${a.product.store.name} ${a.id} ${a.trader.firstName} ${a.trader.lastName}`
@@ -104,9 +105,7 @@ const FiltersPanel = <T extends AuctionDto | ProductDto | ContractOfferDto>({
         )
           return false
 
-        if (a.price < priceRange[0] || a.price > priceRange[1]) {
-          return false
-        }
+        if (a.price < priceRange[0] || a.price > priceRange[1]) return false
 
         if (
           selectedDate &&
@@ -206,8 +205,8 @@ const FiltersPanel = <T extends AuctionDto | ProductDto | ContractOfferDto>({
 
   useEffect(() => {
     const filtered = filterData.filter(filterFunction)
-    onFilteredDataChange(filtered)
-  }, [filterData, filterFunction, onFilteredDataChange])
+    onFilteredDataChange(filtered, auctionStatus)
+  }, [filterData, filterFunction, onFilteredDataChange, auctionStatus])
 
   const { t } = useTranslation()
 

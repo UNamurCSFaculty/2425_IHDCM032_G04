@@ -122,7 +122,7 @@ public class AuctionServiceImpl implements AuctionService {
 					"TraderId et BuyerId ne peuvent pas être spécifiés en même temps.");
 		}
 
-		Sort sort = Sort.by(Sort.Direction.DESC, "id");
+		Sort sort = Sort.by(Sort.Direction.ASC, "expirationDate");
 		Pageable pageable = (limit != null) ? PageRequest.of(0, limit, sort) : Pageable.unpaged();
 
 		if (buyerId != null) {

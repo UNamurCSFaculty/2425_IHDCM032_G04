@@ -1,6 +1,5 @@
 import { BreadcrumbSection } from '@/components/BreadcrumbSection'
 import AuctionMarketplace from '@/components/auctions/AuctionMarket/AuctionMarket'
-import { useAuthUser } from '@/store/userStore'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_authenticated/ventes/mes-encheres')({
@@ -8,8 +7,6 @@ export const Route = createFileRoute('/_authenticated/ventes/mes-encheres')({
 })
 
 export function RouteComponent() {
-  const user = useAuthUser()
-
   return (
     <>
       <BreadcrumbSection
@@ -23,7 +20,7 @@ export function RouteComponent() {
       <div className="container mx-auto mt-16 mb-16">
         <AuctionMarketplace
           userRole="seller"
-          traderId={user.id}
+          marketMode="my-sales"
           filterByAuctionStatus={true}
         />
       </div>
