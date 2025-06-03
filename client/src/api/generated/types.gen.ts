@@ -4242,6 +4242,10 @@ export type ListAuctionsData = {
      * Status pour filtrer les enchères
      */
     status?: string
+    /**
+     * Nombre maximum d'enchères à obtenir
+     */
+    limit?: number
   }
   url: '/api/auctions'
 }

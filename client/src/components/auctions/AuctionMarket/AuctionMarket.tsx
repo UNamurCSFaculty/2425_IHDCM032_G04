@@ -30,7 +30,6 @@ import {
 } from '@/components/ui/table'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { useMediaQuery } from '@/hooks/use-mobile'
-import { useAuthUser } from '@/store/userStore'
 import dayjs from '@/utils/dayjs-config'
 import { useQuery } from '@tanstack/react-query'
 import {
@@ -61,6 +60,7 @@ interface MarketplaceProps {
   userRole: UserRole
   buyerId?: number
   traderId?: number
+  auctionStatus?: string
   filterByAuctionStatus?: boolean
 }
 
@@ -68,23 +68,47 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
   userRole,
   buyerId,
   traderId,
+  auctionStatus,
   filterByAuctionStatus,
 }) => {
   const isDesktop = useMediaQuery('(min-width: 1024px)')
   const { t } = useTranslation()
-  const user = useAuthUser()
 
   // Queries
   const listAuctionsQueryOptions = () => ({
     ...listAuctionsOptions({
-      query: { buyerId: buyerId, traderId: traderId },
+      query: { buyerId: buyerId, traderId: traderId, limit: 1 },
     }),
     staleTime: 10_000,
   })
 
-  const { data: auctions, isLoading: isAuctionsLoading } = useQuery({
+  const { data: firstAuctions, isLoading: isAuctionsLoading } = useQuery({
     ...listAuctionsQueryOptions(),
   })
+
+  const listAllAuctionsQueryOptions = () => ({
+    ...listAuctionsOptions({
+      query: { buyerId: buyerId, traderId: traderId, status: auctionStatus },
+    }),
+    staleTime: 10_000,
+    enabled: !isAuctionsLoading,
+  })
+
+  const { data: allAuctions } = useQuery({
+    ...listAllAuctionsQueryOptions(),
+  })
+
+  let auctions: AuctionDto[]
+  if (allAuctions) {
+    auctions = allAuctions as AuctionDto[]
+    console.log('loading all auctions', auctions.length)
+  } else if (firstAuctions) {
+    auctions = firstAuctions as AuctionDto[]
+    console.log('loading first auctions', auctions.length)
+  } else {
+    auctions = []
+    console.log('no auctions loaded')
+  }
 
   // UI state
   const [viewMode, setViewMode] = useState<ViewMode>('cards')
@@ -142,9 +166,10 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
           auction.bids.some(bid => bid.trader.id === traderId)
         )
       }
+      console.log('newFilteredData', newFilteredData.length)
       setFilteredAuctions(newFilteredData)
     },
-    [filterByAuctionStatus, userRole, user.id, traderId]
+    [userRole, traderId]
   )
 
   // Display inline auction on custom event (SSE notif's toast action)
