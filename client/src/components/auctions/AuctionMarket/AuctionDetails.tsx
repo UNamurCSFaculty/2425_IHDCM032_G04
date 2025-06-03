@@ -126,10 +126,9 @@ const AuctionDetailsPanel: React.FC<Props> = ({
       queryClient.invalidateQueries({ queryKey: listBidsQueryKey() })
       queryClient.invalidateQueries({ queryKey: listAuctionsQueryKey() })
 
-      // redundant with redis notif
-      // toast.success(t('auction.bid_created_ok'), {
-      //   duration: 5000,
-      // })
+      toast.success(t('auction.bid_created_ok'), {
+        duration: 5000,
+      })
     },
     onError(error: ApiErrorResponse) {
       const detail =

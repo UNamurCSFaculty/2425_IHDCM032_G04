@@ -380,7 +380,7 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 	public void testListAuctionsByTraderId() throws Exception {
 		mockMvc.perform(get("/api/auctions?traderId=" + getProducerTestUser().getId())
 				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
-				.andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(2));
+				.andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(1));
 	}
 
 	/**

@@ -163,7 +163,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
       }
       setFilteredAuctions(newFilteredData)
 
-      // reset view to list when user clicks on "opened/closed auctions" selector
+      // reset view to list when user selects a filter in FilterPanel
       setInlineAuction(null)
     },
     [user.id, marketMode]
@@ -205,7 +205,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
           {isInCardDetail ? (
             <div className="pl-4">
               <Button
-                variant="outline"
+                variant="default"
                 className="flex w-40 items-center gap-1"
                 onClick={() => setInlineAuction(null)}
               >
