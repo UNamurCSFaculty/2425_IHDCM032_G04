@@ -274,17 +274,11 @@ export function Header() {
     })
     .filter(
       item => !(item.items && item.items.length === 0 && item.url === '#')
-    ) // Cache les triggers de menu si tous leurs enfants sont filtrés
+    )
 
   const filteredUserMenuItems = userMenuItemsBase.filter(item => {
     if (!isLoggedIn || !user || !user.type) return false
-    // Additional check for '/depots/nouveau-produit' if it were in userMenuItemsBase
-    // For now, it's in the main menu, so the logic above handles it.
-    // If '/depots/mes-produits' also needs this check for userMenuItemsBase:
-    if (item.url === '/depots/mes-produits') {
-      // Assuming authenticatedSeller implies storeAssociated for this specific item in this list
-      // or add a specific check: return user.storeAssociated === true && (!item.allowedUserTypes || item.allowedUserTypes.includes(user.type))
-    }
+    // if (item.url === '/depots/mes-produits') {}
     return !item.allowedUserTypes || item.allowedUserTypes.includes(user.type)
   })
 
