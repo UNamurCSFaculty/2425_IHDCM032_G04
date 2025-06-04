@@ -174,20 +174,33 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
             icon={<DollarSign className="size-4" />}
             label={t('auction.asking_price')}
           >
-            {formatPrice.format(
-              getPricePerKg(auction.price, auction.productQuantity)
-            )}
-            /kg
+            {formatPrice.format(auction.price)}
+            <br />
+            <span className="text-xs font-normal text-neutral-700">
+              {formatPrice.format(
+                getPricePerKg(auction.price, auction.productQuantity)
+              )}
+              /kg
+            </span>
           </InfoTile>
           <InfoTile
             icon={<TrendingUp className="size-4" />}
             label={t('auction.best_bid')}
           >
-            {bestBid
-              ? formatPrice.format(
-                  getPricePerKg(bestBid, auction.productQuantity)
-                ) + '/kg'
-              : '—'}
+            {bestBid ? (
+              <>
+                {formatPrice.format(bestBid)}
+                <br />
+                <span className="text-xs font-normal text-neutral-700">
+                  {formatPrice.format(
+                    getPricePerKg(bestBid, auction.productQuantity)
+                  )}
+                  /kg
+                </span>
+              </>
+            ) : (
+              '—'
+            )}
           </InfoTile>
         </div>
       </CardContent>

@@ -437,6 +437,7 @@
     "bid_count_plural": "{{count}} عروض",
     "expires_in": "تنتهي خلال",
     "asking_price": "السعر المطلوب",
+    "asking_price_total": "السعر المطلوب الإجمالي",
     "best_bid": "أفضل عرض",
     "details_title_full": "منتج {{productType}} · دفعة رقم {{productId}} · مزاد رقم {{auctionId}}",
     "auction_details_title": "تفاصيل المزاد",
