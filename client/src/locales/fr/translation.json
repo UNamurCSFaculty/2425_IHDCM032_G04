@@ -1,8 +1,8 @@
 {
   "app": {
     "accueil": {
-      "subtitle": "Rejoignez la plateforme d’enchères en temps réel pour la noix de\n cajou et ses produits transformés au Bénin. Surveillez,\n surenchérissez et soutenez les producteurs locaux en toute\n confiance.",
-      "title": "Enchères & Marché du Cajou",
+      "subtitle": "Rejoignez la plateforme d’enchères en temps réel pour la noix de\n cajou et ses produits transformés au Bénin. Surveillez,\n enchérissez et soutenez les producteurs locaux en toute\n confiance.",
+      "title": "Marché de la noix de cajou",
       "image_alt_cashew_nuts": "Illustration noix de cajou"
     },
     "contact": {
@@ -559,7 +559,8 @@
     "passwordValidation": "Les mots de passe ne correspondent pas",
     "phone": "Numéro béninois invalide",
     "required": "Ce champ est requis",
-    "number_min": "La valeur doit être supérieure ou égale à {{count}}"
+    "number_min": "La valeur doit être supérieure ou égale à {{count}}",
+    "datetime": "La date est invalide"
   },
   "errors": {
     "access.denied": "Accès refusé : vous n'avez pas les droits suffisants.",

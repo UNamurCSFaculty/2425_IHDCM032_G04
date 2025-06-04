@@ -231,7 +231,7 @@ const ContractList: React.FC<ContractListProps> = ({ contracts }) => {
                       key={c.id}
                       contract={c}
                       layout="grid"
-                      onDetails={() => console.log('TODO')}
+                      onDetails={() => {}}
                     />
                   ))}
                   {totalPages > 1 && (
@@ -273,7 +273,7 @@ const ContractList: React.FC<ContractListProps> = ({ contracts }) => {
                         key={c.id}
                         contract={c}
                         layout="row"
-                        onDetails={() => console.log('DETAILS contract', c.id)}
+                        onDetails={() => {}}
                       />
                     ))}
                   </TableBody>
