@@ -487,12 +487,13 @@ export function ProductForm(): React.ReactElement<'div'> {
             <form.AppField
               name="qualityControl.qualityInspectorId"
               children={field => (
-                <field.SelectField
+                <field.VirtualizedSelectField
                   options={
                     isQualityInspectorsLoading
                       ? []
                       : (qualityInspectors as QualityInspectorDetailDto[]).map(
                           qi => ({
+                            id: qi.id,
                             value: qi.id,
                             label: qi.lastName + ' ' + qi.firstName,
                           })
