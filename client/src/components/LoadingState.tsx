@@ -4,11 +4,11 @@ import { LoaderCircle } from 'lucide-react'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 
-interface EmptyStateProps {
+interface LoadingStateProps {
   className?: string
 }
 
-const EmptyState: React.FC<EmptyStateProps> = ({ className }) => {
+const LoadingState: React.FC<LoadingStateProps> = ({ className }) => {
   const { t } = useTranslation()
 
   return (
@@ -32,4 +32,4 @@ const EmptyState: React.FC<EmptyStateProps> = ({ className }) => {
   )
 }
 
-export default EmptyState
+export default LoadingState

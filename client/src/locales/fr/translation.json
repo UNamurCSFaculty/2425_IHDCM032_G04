@@ -737,7 +737,7 @@
     "results_count_plural": "Résultats : {{count}} produits",
     "owner_label": "Propriétaire",
     "warehouse_label": "Votre entrepôt",
-    "select_lots": "Sélectionner les lots",
+    "select_lots": "Sélectionnez les lots",
     "form": {
       "title": "Saisie du produit",
       "section_deposit_settings_title": "Paramètres du dépôt",

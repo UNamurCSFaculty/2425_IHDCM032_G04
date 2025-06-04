@@ -78,7 +78,7 @@ export function LoginForm() {
           callback: handleGoogleCredential,
           ux_mode: 'popup',
         })
-      } catch (error) {
+      } catch {
         toast.error(t('errors.google_init_failed'))
       }
     } else {
@@ -226,7 +226,7 @@ export function LoginForm() {
                     ) {
                       try {
                         window.google.accounts.id.prompt()
-                      } catch (error) {
+                      } catch {
                         toast.error(t('errors.google_prompt_failed'))
                       }
                     } else {

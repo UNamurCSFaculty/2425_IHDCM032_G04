@@ -92,14 +92,14 @@ export function ProductForm(): React.ReactElement<'div'> {
     ...createProductMutation(),
     onSuccess(data: ProductDto) {
       toast.success(t('product.form.created_ok') + ' ID: ' + data.id, {
-        duration: 3000,
+        duration: 4000,
       })
 
       navigate({ to: '/depots/mes-produits' })
     },
     onError(error: ApiErrorResponse) {
       toast.error(t('product.form.created_fail') + ' (' + error.code + ')', {
-        duration: 3000,
+        duration: 4000,
       })
     },
   })
@@ -108,7 +108,7 @@ export function ProductForm(): React.ReactElement<'div'> {
     ...createQualityControlMutation(),
     onError(error: ApiErrorResponse) {
       toast.error(t('product.form.created_fail') + ' (' + error.code + ')', {
-        duration: 3000,
+        duration: 4000,
       })
     },
   })
@@ -346,9 +346,14 @@ export function ProductForm(): React.ReactElement<'div'> {
                 <form.AppField
                   name="product.harvestProductIds"
                   children={field => (
-                    <field.ReactSelectField
+                    <field.MultiSelectField
                       loading={isAuctionsLoading}
                       placeholder={t('product.select_lots')}
+                      selectAllLabel="Tout"
+                      searchLabel="Recherche..."
+                      closeLabel="Fermer"
+                      clearLabel="Effacer"
+                      emptySearchLabel="Aucun lot"
                       options={
                         isAuctionsLoading || auctions === undefined
                           ? []
