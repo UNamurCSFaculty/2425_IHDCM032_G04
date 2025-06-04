@@ -40,7 +40,8 @@ import {
   Loader2,
   Star,
 } from 'lucide-react'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState, useRef } from 'react'
+import { client } from '@/api/generated/client.gen.ts'
 import { useTranslation } from 'react-i18next'
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
 import { toast } from 'sonner'
@@ -79,6 +80,8 @@ const AuctionDetailsPanel: React.FC<Props> = ({
   const [rejectBidPopoverIndex, setRejectBidPopoverIndex] = useState(-1)
   const [isOpen, setIsOpen] = useState(false)
 
+  const sseRef = useRef<EventSource | null>(null) // Visitor SSE
+
   const acceptedBid =
     auction.bids?.find(bid => bid.status!.name === TradeStatus.ACCEPTED) || null
 
@@ -116,7 +119,38 @@ const AuctionDetailsPanel: React.FC<Props> = ({
     }
     window.addEventListener('auction:newBid', handler)
     return () => {
-      window.removeEventListener('auction:newBid', handler)
+      window.removeEventListener("auction:newBid", handler)
+      if (sseRef.current) {
+        sseRef.current.close()
+        sseRef.current = null
+      }
+    }
+  }, [auction.id, queryClient])
+
+  useEffect(() => { // SSE visitors
+    const baseUrl = client.getConfig().baseUrl?.replace(/\/$/, "") ?? ""
+    const sseUrl = `${baseUrl}/api/auctions/${auction.id}/sse?visitor=true`
+    const es = new window.EventSource(sseUrl, { withCredentials: true })
+    sseRef.current = es
+
+    es.addEventListener("refreshBids", () => {
+      queryClient.invalidateQueries({ queryKey: listBidsQueryKey() })
+      queryClient.invalidateQueries({ queryKey: listAuctionsQueryKey() })
+      window.dispatchEvent(
+        new CustomEvent("auction:newBid", {
+          detail: { auctionId: auction.id },
+        })
+      )
+    })
+    es.addEventListener("auctionClosed", () => {
+      queryClient.invalidateQueries({ queryKey: listAuctionsQueryKey() })
+    })
+    es.onerror = () => {
+      console.error("[SSE] Erreur EventSource enchère")
+    }
+    return () => {
+      es.close()
+      sseRef.current = null
     }
   }, [auction.id, queryClient])
 
