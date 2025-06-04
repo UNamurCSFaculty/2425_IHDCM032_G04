@@ -35,6 +35,7 @@ import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.PrecisionModel;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -43,7 +44,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.core.env.Environment;
 
 @Service
 @Transactional
@@ -270,9 +270,10 @@ public class DatabaseServiceImpl implements DatabaseService {
 		log.info("→ createDatabase() (compatibilité) ←");
 		setupSystemAuthentication();
 		initDatabase();
-		if (java.util.Arrays.asList(environment.getActiveProfiles()).contains("dev")) {
-			initTestData();
-		}
+		// if (Arrays.asList(environment.getActiveProfiles()).contains("dev")) {
+		// initTestData();
+		// }
+		initTestData();
 		initViews();
 		clearSystemAuthentication();
 	}
