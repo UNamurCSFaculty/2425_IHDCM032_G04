@@ -116,9 +116,17 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
     const list = [...filteredAuctions]
     switch (sort) {
       case 'price-asc':
-        return list.sort((a, b) => a.price - b.price)
+        return list.sort(
+          (a, b) =>
+            getPricePerKg(a.price, a.productQuantity) -
+            getPricePerKg(b.price, b.productQuantity)
+        )
       case 'price-desc':
-        return list.sort((a, b) => b.price - a.price)
+        return list.sort(
+          (a, b) =>
+            getPricePerKg(b.price, b.productQuantity) -
+            getPricePerKg(a.price, a.productQuantity)
+        )
       case 'endDate-desc':
         return list.sort(
           (a, b) =>
