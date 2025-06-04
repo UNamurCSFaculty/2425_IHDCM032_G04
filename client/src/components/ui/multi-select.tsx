@@ -227,7 +227,10 @@ export const MultiSelect = React.forwardRef<
           <Button
             ref={ref}
             {...props}
-            onClick={handleTogglePopover}
+            onClick={(event: React.MouseEvent) => {
+              event.preventDefault()
+              handleTogglePopover()
+            }}
             className={cn(
               'flex h-auto min-h-10 w-full items-center justify-between rounded-md border bg-inherit p-1 hover:bg-inherit [&_svg]:pointer-events-auto',
               className
