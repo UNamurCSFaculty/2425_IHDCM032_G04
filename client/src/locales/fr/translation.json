@@ -569,6 +569,7 @@
     "access.forbidden.csrf": "Non-concordance du jeton CSRF",
     "access.forbidden.csrf.missing": "Jeton CSRF manquant",
     "access.unauthorized": "Échec de l'authentification",
+    "access.unauthorized.gmail_not_found": "Aucun compte utilisateur associé à cette adresse e-mail. Veuillez vous enregistrer d'abord.",
     "agriculture_id.exists": "Cet identifiant agricole est déjà utilisé",
     "bad_request": "Requête incorrecte",
     "default.error": "Violation de l'intégrité des données",

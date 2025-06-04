@@ -569,6 +569,7 @@
     "access.forbidden.csrf": "CSRF token mismatch",
     "access.forbidden.csrf.missing": "CSRF token missing",
     "access.unauthorized": "Authentication failed",
+    "access.unauthorized.gmail_not_found": "No user account associated with this email address. Please register first.",
     "agriculture_id.exists": "This agricultural identifier is already in use",
     "bad_request": "Bad request",
     "default.error": "Data integrity violation",

@@ -12,6 +12,7 @@ public enum ApiErrorCode {
 	ACCESS_FORBIDDEN_CSRF("access.forbidden.csrf"),
 	ACCESS_FORBIDDEN_CSRF_MISSING("access.forbidden.csrf.missing"),
 	ACCESS_UNAUTHORIZED("access.unauthorized"),
+	ACCESS_UNAUTHORIZED_GOOGLE_AUTH("access.unauthorized.gmail_not_found"),
 	BAD_REQUEST("bad_request"),
 	CONFLICT("conflict"),
 	CONFLICT_EMAIL_EXISTS("email.exists"),
