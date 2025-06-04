@@ -1,7 +1,7 @@
 {
   "app": {
     "accueil": {
-      "subtitle": "Rejoignez la plateforme d’enchères en temps réel pour la noix de\n cajou et ses produits transformés au Bénin. Surveillez,\n enchérissez et soutenez les producteurs locaux en toute\n confiance.",
+      "subtitle": "Une plateforme d’enchères en temps réel pour la noix de\n cajou et ses produits transformés au Bénin. Achetez, vendez, et soutenez les producteurs locaux en toute\n confiance.",
       "title": "Marché de la noix de cajou",
       "image_alt_cashew_nuts": "Illustration noix de cajou"
     },
@@ -1031,7 +1031,7 @@
   },
   "settings": {
     "update_success": "Paramètres globaux mis à jour avec succès.",
-    "title": "Paramètres Globaux",
+    "title": "Paramètres globaux",
     "default_strategy": "Stratégie d'enchère par défaut",
     "select_strategy_placeholder": "Sélectionner une stratégie par défaut...",
     "default_fixed_price_kg": "Prix fixe par défaut (CFA par kg)",
@@ -1063,36 +1063,36 @@
         "subtitle": "Une initiative universitaire pour dynamiser la filière anacarde au Bénin grâce à une plateforme d'échange innovante et équitable."
       },
       "project": {
-        "title": "Notre Projet Universitaire",
-        "paragraph1": "e-Anacarde est né d'un projet universitaire ambitieux visant à concevoir et développer une application e-commerce dédiée au commerce de l'anacarde, spécifiquement dans le contexte du Bénin. Notre démarche se veut collaborative et évolutive.",
+        "title": "Notre projet universitaire",
+        "paragraph1": "e-Anacarde est né d'un projet universitaire ambitieux visant à concevoir et développer une application dédiée au commerce de l'anacarde, spécifiquement dans le contexte du Bénin. Notre démarche se veut collaborative et évolutive.",
         "paragraph2": "Cette plateforme sert de preuve de concept ('proof-of-concept') pour mieux appréhender les besoins réels des acteurs de la filière anacarde. En offrant un outil concret dès les premières phases, nous facilitons l'identification des attentes, la validation des fonctionnalités et l'amélioration continue de la solution pour un impact positif et durable."
       },
       "objectives": {
-        "title": "Nos Objectifs Principaux",
+        "title": "Nos objectifs principaux",
         "item1": {
           "title": "Faciliter les Transactions",
           "description": "Permettre des ventes transparentes et efficaces de produits issus de l'anacarde, notamment par un système de surenchères, pour valoriser au mieux la production locale."
         },
         "item2": {
-          "title": "Partager l'Information",
+          "title": "Partager l'information",
           "description": "Diffuser des données claires sur les prix du marché et les volumes disponibles ou échangés, offrant une meilleure visibilité à tous les acteurs."
         },
         "item3": {
-          "title": "Promouvoir les Bonnes Pratiques",
+          "title": "Promouvoir les bonnes pratiques",
           "description": "Servir de canal pour la formation des producteurs aux meilleures techniques agricoles et la vulgarisation des avancées de la recherche pour une filière plus performante."
         }
       },
       "future": {
-        "title": "Un Avenir Évolutif",
+        "title": "Un avenir évolutif",
         "paragraph": "Bien qu'initialement axée sur l'anacarde, notre ambition est de construire une plateforme robuste, facile à maintenir et à adapter. Nous espérons qu'elle pourra, à terme, servir de modèle pour d'autres filières agricoles ou produits, contribuant ainsi plus largement au développement économique."
       },
       "benin_flag_alt": "Drapeau du Bénin"
     }
   },
   "profile": {
-    "page_title": "Mon Profil",
+    "page_title": "Mon profil",
     "page_subtitle": "Consultez et modifiez vos informations personnelles.",
-    "card_title": "Informations du Profil",
+    "card_title": "Informations du profil",
     "edit_mode_description": "Modifiez vos informations ci-dessous.",
     "view_mode_description": "Vos informations personnelles et de rôle.",
     "personal_details_title": "Informations Personnelles",
