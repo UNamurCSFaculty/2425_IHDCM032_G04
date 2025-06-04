@@ -86,7 +86,7 @@ export const SseNotificationsProvider: React.FC<
         }
       )
     },
-    [navigate]
+    [navigate, t]
   )
 
   useEffect(() => {

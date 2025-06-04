@@ -8,6 +8,7 @@ import { FieldErrors } from './field-errors'
 import cityNamesJson from '@/data/cities.json'
 import SimpleTooltip from '../SimpleTooltip'
 import { useTranslation } from 'react-i18next'
+import { formatCoordinates } from '@/utils/formatter'
 
 const cityOptions = cityNamesJson.map((n, i) => ({ id: i + 1, label: n }))
 
@@ -60,7 +61,7 @@ export function LocationField({
       />
       {field.state.value && (
         <p className="text-xs text-gray-500">
-          {t('form.coordinates_label')} {field.state.value}
+          {t('form.coordinates_label')} {formatCoordinates(field.state.value)}
         </p>
       )}
       <FieldErrors meta={field.state.meta} />

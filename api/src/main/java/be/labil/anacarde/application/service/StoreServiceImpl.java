@@ -75,4 +75,9 @@ public class StoreServiceImpl implements StoreService {
 		}
 		storeRepository.deleteById(id);
 	}
+
+	@Override
+	public boolean existsStoreByUserId(Integer userId) {
+		return storeRepository.existsStoreByUserId(userId);
+	}
 }
