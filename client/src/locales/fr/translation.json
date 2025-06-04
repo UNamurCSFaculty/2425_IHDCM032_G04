@@ -756,8 +756,8 @@
   "sort": {
     "expiration_asc": "Expiration ⬆",
     "expiration_desc": "Expiration ⬇",
-    "price_asc": "Prix ⬆",
-    "price_desc": "Prix ⬇",
+    "price_asc": "Prix/kg ⬆",
+    "price_desc": "Prix/kg ⬇",
     "label_prefix": "Tri par ",
     "date_asc": "date ⬆",
     "date_desc": "date ⬇",

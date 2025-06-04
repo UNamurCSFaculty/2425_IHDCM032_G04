@@ -752,8 +752,8 @@
   "sort": {
     "expiration_asc": "Expiración ⬆",
     "expiration_desc": "Expiración ⬇",
-    "price_asc": "Precio ⬆",
-    "price_desc": "Precio ⬇",
+    "price_asc": "Precio/kg ⬆",
+    "price_desc": "Precio/kg ⬇",
     "label_prefix": "Ordenar por ",
     "date_asc": "fecha ⬆",
     "date_desc": "fecha ⬇",
