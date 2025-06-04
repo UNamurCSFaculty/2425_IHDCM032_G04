@@ -280,24 +280,26 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
             </div>
           ) : (
             <div className="flex w-full flex-col flex-wrap items-center justify-center gap-2 lg:flex-row lg:justify-end">
-              {!isAuctionsLoading && auctions && (
-                <>
-                  <AuctionTrend
-                    tooltip={t('database.harvest')}
-                    icon={<Apple />}
-                    volume={trends.harvest.volume}
-                    price={trends.harvest.avgPricePerKg}
-                    weightKg={trends.harvest.totalWeight}
-                  />
-                  <AuctionTrend
-                    tooltip={t('database.transformed')}
-                    icon={<Nut />}
-                    volume={trends.transformed.volume}
-                    price={trends.transformed.avgPricePerKg}
-                    weightKg={trends.transformed.totalWeight}
-                  />
-                </>
-              )}
+              {marketMode === 'marketplace' &&
+                !isAuctionsLoading &&
+                auctions && (
+                  <>
+                    <AuctionTrend
+                      tooltip={t('database.harvest')}
+                      icon={<Apple />}
+                      volume={trends.harvest.volume}
+                      price={trends.harvest.avgPricePerKg}
+                      weightKg={trends.harvest.totalWeight}
+                    />
+                    <AuctionTrend
+                      tooltip={t('database.transformed')}
+                      icon={<Nut />}
+                      volume={trends.transformed.volume}
+                      price={trends.transformed.avgPricePerKg}
+                      weightKg={trends.transformed.totalWeight}
+                    />
+                  </>
+                )}
               {/* Sorting */}
               {viewMode !== 'map' && <></>}
 
