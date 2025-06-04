@@ -76,11 +76,13 @@ public abstract class AbstractIntegrationTest {
 	private User producerTestUser;
 	private User secondTestProducer;
 	private User transformerTestUser;
+	private User exporterTestUser;
 	private User mainTestCarrier;
 	private Store mainTestStore;
 	private Product testHarvestProduct;
 	private Product testTransformedProduct;
 	private Auction testAuction;
+	private Auction testAuctionByTransformer;
 	private AuctionStrategy testAuctionStrategy;
 	private Bid testBid;
 	private TradeStatus testTradeStatus;
@@ -163,7 +165,17 @@ public abstract class AbstractIntegrationTest {
 	 */
 	public User getProducerTestUser() {
 		if (producerTestUser == null) {
-			throw new IllegalStateException("Second utilisateur de test non initialisé");
+			throw new IllegalStateException("Producer de test non initialisé");
+		}
+		return producerTestUser;
+	}
+
+	/**
+	 * Renvoie un utilisateur store manager.
+	 */
+	public User getStoreManagerTestUser() {
+		if (producerTestUser == null) {
+			throw new IllegalStateException("Store manager de test non initialisé");
 		}
 		return producerTestUser;
 	}
@@ -173,7 +185,7 @@ public abstract class AbstractIntegrationTest {
 	 */
 	public User getSecondTestProducer() {
 		if (secondTestProducer == null) {
-			throw new IllegalStateException("Second utilisateur de test non initialisé");
+			throw new IllegalStateException("Second producer de test non initialisé");
 		}
 		return secondTestProducer;
 	}
@@ -183,9 +195,19 @@ public abstract class AbstractIntegrationTest {
 	 */
 	public User getTransformerTestUser() {
 		if (transformerTestUser == null) {
-			throw new IllegalStateException("Second utilisateur de test non initialisé");
+			throw new IllegalStateException("Transformer de test non initialisé");
 		}
 		return transformerTestUser;
+	}
+
+	/**
+	 * Renvoie un utilisateur exportateur de test.
+	 */
+	public User getExporterTestUser() {
+		if (exporterTestUser == null) {
+			throw new IllegalStateException("Exporter de test non initialisé");
+		}
+		return exporterTestUser;
 	}
 
 	/**
@@ -241,6 +263,13 @@ public abstract class AbstractIntegrationTest {
 			throw new IllegalStateException("Enchère de test non initialisée");
 		}
 		return testAuction;
+	}
+
+	public Auction getTestAuctionByTransformer() {
+		if (testAuctionByTransformer == null) {
+			throw new IllegalStateException("Enchère de test non initialisée");
+		}
+		return testAuctionByTransformer;
 	}
 
 	public Bid getTestBid() {
@@ -423,6 +452,11 @@ public abstract class AbstractIntegrationTest {
 				.address(mainAddress).registrationDate(LocalDateTime.now()).phone("+2290197000006")
 				.language(mainLanguage).enabled(true).pricePerKm(100d).radius(30d).build();
 
+		User exporter = Exporter.builder().firstName("Paris").lastName("Verse")
+				.email("exporter@verse.com").password("$2a$10$abcdefghijklmnopqrstuv1234567890AB")
+				.address(mainAddress).registrationDate(LocalDateTime.now()).phone("+2290197000029")
+				.language(mainLanguage).enabled(true).build();
+
 		// Ne plus assigner de rôles - on utilise l'héritage
 		mainTestUser = userRepository.save(user1);
 		secondTestUser = userRepository.save(user2);
@@ -431,8 +465,9 @@ public abstract class AbstractIntegrationTest {
 		transformerTestUser = userRepository.save(transformer);
 		mainTestCarrier = userRepository.save(carrier);
 		qualityInspector = userRepository.save(qualityInspector);
+		exporterTestUser = userRepository.save(exporter);
 
-		Store store = Store.builder().name("Nassara").address(mainAddress).user(mainTestUser)
+		Store store = Store.builder().name("Nassara").address(mainAddress).user(producerTestUser)
 				.build();
 		mainTestStore = storeRepository.save(store);
 
@@ -518,7 +553,7 @@ public abstract class AbstractIntegrationTest {
 		tradeStatusRepository.save(tradeStatusAccepted);
 
 		TradeStatus tradeStatusRejected = TradeStatus.builder().name("Refusé").build();
-		rejectedTradeStatus = rejectedTradeStatus = tradeStatusRepository.save(tradeStatusRejected);
+		rejectedTradeStatus = tradeStatusRepository.save(tradeStatusRejected);
 
 		TradeStatus tradeStatusExpired = TradeStatus.builder().name("Expiré").build();
 		tradeStatusRepository.save(tradeStatusExpired);
@@ -542,8 +577,9 @@ public abstract class AbstractIntegrationTest {
 		Auction auction2 = Auction.builder().price(10000.0).productQuantity(1000).active(true)
 				.creationDate(LocalDateTime.of(2025, 1, 15, 0, 0))
 				.expirationDate(LocalDateTime.of(2025, 2, 15, 0, 0)).product(productTransform)
-				.options(auctionOptions).trader(producer).status(tradeStatusOpen).build();
+				.options(auctionOptions).trader(transformer).status(tradeStatusOpen).build();
 		auctionRepository.save(auction2);
+		testAuctionByTransformer = auction2;
 
 		auctionRepository.overrideCreationDateNative(auction2.getId(),
 				LocalDateTime.of(2025, 1, 15, 0, 0));
@@ -640,6 +676,22 @@ public abstract class AbstractIntegrationTest {
 	}
 
 	/**
+	 * RequestPostProcessor pour un storeManager (assumed producer is one).
+	 */
+	protected RequestPostProcessor jwtStoreManager() {
+		return request -> {
+			UserDetails userDetails = userDetailsService
+					.loadUserByUsername(getProducerTestUser().getEmail());
+			String token = jwtUtil.generateToken(userDetails);
+			jakarta.servlet.http.Cookie userCookie = new jakarta.servlet.http.Cookie("jwt", token);
+			userCookie.setHttpOnly(true);
+			userCookie.setPath("/");
+			request.setCookies(userCookie);
+			return request;
+		};
+	}
+
+	/**
 	 * RequestPostProcessor pour un transformer.
 	 */
 	protected RequestPostProcessor jwtTransformer() {
@@ -656,12 +708,28 @@ public abstract class AbstractIntegrationTest {
 	}
 
 	/**
-	 * RequestPostProcessor pour un transformer.
+	 * RequestPostProcessor pour un carrier.
 	 */
 	protected RequestPostProcessor jwtCarrier() {
 		return request -> {
 			UserDetails userDetails = userDetailsService
 					.loadUserByUsername(getMainTestCarrier().getEmail());
+			String token = jwtUtil.generateToken(userDetails);
+			jakarta.servlet.http.Cookie userCookie = new jakarta.servlet.http.Cookie("jwt", token);
+			userCookie.setHttpOnly(true);
+			userCookie.setPath("/");
+			request.setCookies(userCookie);
+			return request;
+		};
+	}
+
+	/**
+	 * RequestPostProcessor pour un exporter.
+	 */
+	protected RequestPostProcessor jwtExporter() {
+		return request -> {
+			UserDetails userDetails = userDetailsService
+					.loadUserByUsername(getExporterTestUser().getEmail());
 			String token = jwtUtil.generateToken(userDetails);
 			jakarta.servlet.http.Cookie userCookie = new jakarta.servlet.http.Cookie("jwt", token);
 			userCookie.setHttpOnly(true);

@@ -16,7 +16,7 @@ import {
 import { listQualitiesOptions } from '@/api/generated/@tanstack/react-query.gen'
 import cities from '@/data/cities.json'
 import regions from '@/data/regions.json'
-import { TradeStatus } from '@/lib/utils'
+import { TradeStatus, getPricePerKg } from '@/lib/utils'
 import { useAuthUser } from '@/store/userStore'
 import { formatDate, formatPrice } from '@/utils/formatter'
 import { useSuspenseQuery } from '@tanstack/react-query'
@@ -49,7 +49,7 @@ interface FiltersPanelProps<
       ? 'product'
       : 'contract'
   filterData: T[]
-  onFilteredDataChange: (filteredData: T[]) => void
+  onFilteredDataChange: (filteredData: T[], auctionStatus: TradeStatus) => void
   filterByAuctionStatus?: boolean
   filterByPrice?: boolean
 }
@@ -65,7 +65,7 @@ const FiltersPanel = <T extends AuctionDto | ProductDto | ContractOfferDto>({
   const [auctionStatus, setAuctionStatus] = useState<TradeStatus>(
     TradeStatus.OPEN
   )
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 5_000_000])
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 20_000])
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [qualityId, setQualityId] = useState<number | null>(null)
   const [productTypeId, setProductTypeId] = useState<number | null>(null)
@@ -105,7 +105,9 @@ const FiltersPanel = <T extends AuctionDto | ProductDto | ContractOfferDto>({
         )
           return false
 
-        if (a.price < priceRange[0] || a.price > priceRange[1]) return false
+        const pricePerKg = getPricePerKg(a.price, a.productQuantity)
+        if (pricePerKg < priceRange[0] || pricePerKg > priceRange[1])
+          return false
 
         if (
           selectedDate &&
@@ -205,8 +207,8 @@ const FiltersPanel = <T extends AuctionDto | ProductDto | ContractOfferDto>({
 
   useEffect(() => {
     const filtered = filterData.filter(filterFunction)
-    onFilteredDataChange(filtered)
-  }, [filterData, filterFunction, onFilteredDataChange])
+    onFilteredDataChange(filtered, auctionStatus)
+  }, [filterData, filterFunction, onFilteredDataChange, auctionStatus])
 
   const { t } = useTranslation()
 
@@ -238,7 +240,7 @@ const FiltersPanel = <T extends AuctionDto | ProductDto | ContractOfferDto>({
   const resetFilters = () => {
     setSearch('')
     setAuctionStatus(TradeStatus.OPEN)
-    setPriceRange([0, 5_000_000])
+    setPriceRange([0, 20_000])
     setSelectedDate(null)
     setQualityId(null)
     setProductTypeId(null)
@@ -316,7 +318,7 @@ const FiltersPanel = <T extends AuctionDto | ProductDto | ContractOfferDto>({
           {filterByPrice && (
             <div className="space-y-2">
               <div className="flex justify-between text-sm font-medium">
-                <span>{t('product.price_label')}</span>
+                <span>{t('product.price_label')}/kg</span>
                 <span>
                   {formatPrice.format(priceRange[0])} –{' '}
                   {formatPrice.format(priceRange[1])}
@@ -326,7 +328,7 @@ const FiltersPanel = <T extends AuctionDto | ProductDto | ContractOfferDto>({
                 value={priceRange}
                 onValueChange={v => setPriceRange(v as [number, number])}
                 min={0}
-                max={5_000_000}
+                max={20_000}
                 step={500}
               />
             </div>

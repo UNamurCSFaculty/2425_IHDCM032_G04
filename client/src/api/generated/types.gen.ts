@@ -350,6 +350,7 @@ export type UserDetailDto = {
    * Détails complets d’un utilisateur
    */
   documents?: Array<DocumentDto>
+  storeAssociated?: boolean
   /**
    * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
    */
@@ -1463,6 +1464,7 @@ export type ExporterListDto = {
    * Détails complets d’un utilisateur
    */
   documents?: Array<DocumentDto>
+  storeAssociated?: boolean
   /**
    * Type d'utilisateur. Valeurs possibles: admin, producer, transformer, quality_inspector, exporter, carrier
    */
@@ -4278,6 +4280,10 @@ export type ListAuctionsData = {
      * Status pour filtrer les enchères
      */
     status?: string
+    /**
+     * Nombre maximum d'enchères à obtenir
+     */
+    limit?: number
   }
   url: '/api/auctions'
 }

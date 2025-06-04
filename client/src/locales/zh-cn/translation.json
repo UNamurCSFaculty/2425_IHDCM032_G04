@@ -559,7 +559,8 @@
     "passwordValidation": "两次输入的密码不匹配",
     "phone": "无效的贝宁电话号码",
     "required": "此字段为必填",
-    "number_min": "值必须大于或等于 {{count}}"
+    "number_min": "值必须大于或等于 {{count}}",
+    "datetime": "日期时间格式无效"
   },
   "errors": {
     "access.denied": "访问被拒绝：权限不足。",
@@ -635,6 +636,7 @@
     "bid_count_plural": "{{count}} 次竞价",
     "expires_in": "剩余时间",
     "asking_price": "起拍价",
+    "asking_price_total": "起拍价总计",
     "best_bid": "最高出价",
     "details_title_full": "产品 {{productType}} · 拍品编号 {{productId}} · 拍卖编号 {{auctionId}}",
     "auction_details_title": "拍卖详情",
@@ -645,7 +647,8 @@
     "confirm_bid_prompt": "确认出价 {{amount}}？",
     "status": {
       "ended_title": "拍卖已结束",
-      "ended_message": "此拍卖已结束。"
+      "ended_message": "此拍卖已结束。",
+      "offer_contract": "提出合同"
     },
     "bid_count_for_lot_zero": "{{count}} 次竞价（针对该拍品）",
     "bid_count_for_lot_one": "{{count}} 次竞价（针对该拍品）",
@@ -764,7 +767,10 @@
     "results_count_one": "结果：{{count}} 个拍卖",
     "results_count_other": "结果：{{count}} 个拍卖",
     "results_count": "结果：{{count}} 个拍卖",
-    "results_count_plural": "结果：{{count}} 个拍卖"
+    "results_count_plural": "结果：{{count}} 个拍卖",
+    "trend_volume": "成交量",
+    "trend_weight": "成交重量",
+    "trend_price": "成交价格"
   },
   "view_mode": {
     "grid_label": "网格",
@@ -1010,7 +1016,13 @@
     "label": "合同编号 {{id}}",
     "price_per_kg_label": "单价（每公斤）",
     "accept_offer_prompt": "接受这个报价？",
-    "reject_offer_prompt": "拒绝这个报价？"
+    "reject_offer_prompt": "拒绝这个报价？",
+    "created_ok": "合同已成功创建！",
+    "created_fail": "创建合同时出错。",
+    "accepted_ok": "合同已成功接受！",
+    "accepted_fail": "接受合同时出错。",
+    "rejected_ok": "合同已成功拒绝！",
+    "rejected_fail": "拒绝合同时出错。"
   },
   "settings": {
     "update_success": "全局设置更新成功。",

@@ -85,6 +85,31 @@ interface MultiSelectProps
   placeholder?: string
 
   /**
+   * Label for the select all text.
+   */
+  selectAllLabel?: string
+
+  /**
+   * Label for the search input in the popover.
+   */
+  searchLabel?: string
+
+  /**
+   * Label for the close button in the popover.
+   */
+  closeLabel?: string
+
+  /**
+   * Label for the clear button to remove all selected items.
+   */
+  clearLabel?: string
+
+  /**
+   * Label to display when no search results are found.
+   */
+  emptySearchLabel?: string
+
+  /**
    * Animation duration in seconds for the visual effects (e.g., bouncing badges).
    * Optional, defaults to 0 (no animation).
    */
@@ -127,6 +152,11 @@ export const MultiSelect = React.forwardRef<
       variant,
       defaultValue = [],
       placeholder = 'Select options',
+      selectAllLabel = '(Select All)',
+      searchLabel = 'Search...',
+      closeLabel = 'Close',
+      clearLabel = 'Clear',
+      emptySearchLabel = 'No results',
       animation = 0,
       maxCount = 3,
       modalPopover = false,
@@ -193,11 +223,14 @@ export const MultiSelect = React.forwardRef<
         onOpenChange={setIsPopoverOpen}
         modal={modalPopover}
       >
-        <PopoverTrigger asChild={asChild}>
+        <PopoverTrigger asChild={asChild} className="w-full">
           <Button
             ref={ref}
             {...props}
-            onClick={handleTogglePopover}
+            onClick={(event: React.MouseEvent) => {
+              event.preventDefault()
+              handleTogglePopover()
+            }}
             className={cn(
               'flex h-auto min-h-10 w-full items-center justify-between rounded-md border bg-inherit p-1 hover:bg-inherit [&_svg]:pointer-events-auto',
               className
@@ -217,18 +250,16 @@ export const MultiSelect = React.forwardRef<
                           multiSelectVariants({ variant })
                         )}
                         style={{ animationDuration: `${animation}s` }}
+                        onClick={event => {
+                          event.stopPropagation()
+                          toggleOption(option!.value)
+                        }}
                       >
                         {IconComponent && (
                           <IconComponent className="mr-2 h-4 w-4" />
                         )}
                         {option?.label}
-                        <XCircle
-                          className="ml-2 h-4 w-4 cursor-pointer"
-                          onClick={event => {
-                            event.stopPropagation()
-                            toggleOption(value)
-                          }}
-                        />
+                        <XCircle className="ml-2 h-4 w-4 cursor-pointer" />
                       </Badge>
                     )
                   })}
@@ -269,7 +300,7 @@ export const MultiSelect = React.forwardRef<
               </div>
             ) : (
               <div className="mx-auto flex w-full items-center justify-between">
-                <span className="text-muted-foreground mx-3 text-sm">
+                <span className="text-muted-foreground mx-3 font-normal">
                   {placeholder}
                 </span>
                 <ChevronDown className="text-muted-foreground mx-2 h-4 cursor-pointer" />
@@ -284,7 +315,7 @@ export const MultiSelect = React.forwardRef<
         >
           <Command>
             <CommandInput
-              placeholder="Search..."
+              placeholder={searchLabel}
               onKeyDown={handleInputKeyDown}
             />
             <CommandList>
@@ -295,17 +326,25 @@ export const MultiSelect = React.forwardRef<
                   onSelect={toggleAll}
                   className="cursor-pointer"
                 >
-                  <div
-                    className={cn(
-                      'border-primary mr-2 flex h-4 w-4 items-center justify-center rounded-sm border',
-                      selectedValues.length === options.length
-                        ? 'bg-primary text-primary-foreground'
-                        : 'opacity-50 [&_svg]:invisible'
-                    )}
-                  >
-                    <CheckIcon className="h-4 w-4" />
-                  </div>
-                  <span>(Select All)</span>
+                  {options.length > 0 ? (
+                    <>
+                      <div
+                        className={cn(
+                          'border-primary mr-2 flex h-4 w-4 items-center justify-center rounded-sm border',
+                          selectedValues.length === options.length
+                            ? 'bg-primary text-primary-foreground'
+                            : 'opacity-50 [&_svg]:invisible'
+                        )}
+                      >
+                        <CheckIcon className="h-4 w-4" />
+                      </div>
+                      <span>{selectAllLabel}</span>
+                    </>
+                  ) : (
+                    <span className="text-muted-foreground">
+                      {emptySearchLabel}
+                    </span>
+                  )}
                 </CommandItem>
                 {options.map(option => {
                   const isSelected = selectedValues.includes(option.value)
@@ -342,7 +381,7 @@ export const MultiSelect = React.forwardRef<
                         onSelect={handleClear}
                         className="flex-1 cursor-pointer justify-center"
                       >
-                        Clear
+                        {clearLabel}
                       </CommandItem>
                       <Separator
                         orientation="vertical"
@@ -354,7 +393,7 @@ export const MultiSelect = React.forwardRef<
                     onSelect={() => setIsPopoverOpen(false)}
                     className="max-w-full flex-1 cursor-pointer justify-center"
                   >
-                    Close
+                    {closeLabel}
                   </CommandItem>
                 </div>
               </CommandGroup>

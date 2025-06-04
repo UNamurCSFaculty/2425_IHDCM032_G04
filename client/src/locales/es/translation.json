@@ -559,7 +559,8 @@
     "passwordValidation": "Las contraseñas no coinciden",
     "phone": "Número de teléfono de Benín no válido",
     "required": "Este campo es obligatorio",
-    "number_min": "El valor debe ser mayor o igual a {{count}}"
+    "number_min": "El valor debe ser mayor o igual a {{count}}",
+    "datetime": "El valor debe ser una fecha y hora válida"
   },
   "errors": {
     "access.denied": "Acceso denegado: no tienes los permisos suficientes.",
@@ -634,7 +635,8 @@
     "bid_count": "{{count}} oferta",
     "bid_count_plural": "{{count}} ofertas",
     "expires_in": "Expira en",
-    "asking_price": "Precio solicitado",
+    "asking_price": "Precio",
+    "asking_price_total": "Precio total",
     "best_bid": "Mejor oferta",
     "details_title_full": "Producto {{productType}} · Lote n.º {{productId}} · Subasta n.º {{auctionId}}",
     "auction_details_title": "Detalles de la subasta",
@@ -645,7 +647,8 @@
     "confirm_bid_prompt": "¿Confirmar tu oferta de {{amount}}?",
     "status": {
       "ended_title": "Subasta finalizada",
-      "ended_message": "Esta subasta ha finalizado."
+      "ended_message": "Esta subasta ha finalizado.",
+      "offer_contract": "Oferta aceptada, contrato propuesto"
     },
     "bid_count_for_lot_zero": "{{count}} oferta para el lote",
     "bid_count_for_lot_one": "{{count}} oferta para el lote",
@@ -749,8 +752,8 @@
   "sort": {
     "expiration_asc": "Expiración ⬆",
     "expiration_desc": "Expiración ⬇",
-    "price_asc": "Precio ⬆",
-    "price_desc": "Precio ⬇",
+    "price_asc": "Precio/kg ⬆",
+    "price_desc": "Precio/kg ⬇",
     "label_prefix": "Ordenar por ",
     "date_asc": "fecha ⬆",
     "date_desc": "fecha ⬇",
@@ -764,7 +767,10 @@
     "results_count_one": "Resultado: {{count}} subasta",
     "results_count_other": "Resultados: {{count}} subastas",
     "results_count": "Resultado: {{count}} subasta",
-    "results_count_plural": "Resultados: {{count}} subastas"
+    "results_count_plural": "Resultados: {{count}} subastas",
+    "trend_volume": "volumen",
+    "trend_weight": "peso",
+    "trend_price": "precio"
   },
   "view_mode": {
     "grid_label": "Cuadrícula",
@@ -1014,7 +1020,13 @@
     "label": "Contrato n.º {{id}}",
     "price_per_kg_label": "Precio por kg",
     "accept_offer_prompt": "¿Aceptar esta oferta?",
-    "reject_offer_prompt": "¿Rechazar esta oferta?"
+    "reject_offer_prompt": "¿Rechazar esta oferta?",
+    "created_ok": "¡Contrato creado con éxito!",
+    "created_fail": "Error al crear el contrato.",
+    "accepted_ok": "¡Contrato aceptado con éxito!",
+    "accepted_fail": "Error al aceptar el contrato.",
+    "rejected_ok": "¡Contrato rechazado con éxito!",
+    "rejected_fail": "Error al rechazar el contrato."
   },
   "settings": {
     "update_success": "Configuración global actualizada con éxito.",

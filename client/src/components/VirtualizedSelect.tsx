@@ -30,6 +30,7 @@ interface Props {
   id: string
   label: string
   tooltip?: string
+  hint?: string
   required?: boolean
   options: Option[] // Assure que les options ont un id de type number
   placeholder?: string
@@ -53,6 +54,7 @@ const VirtualizedSelect: React.FC<Props> = ({
   label,
   options,
   tooltip,
+  hint,
   placeholder = '',
   required = false,
   modal = false,
@@ -141,12 +143,16 @@ const VirtualizedSelect: React.FC<Props> = ({
   return (
     <div className="space-y-2">
       <div className="space-y-1">
-        <Label htmlFor={id}>
-          {label}
-          {required && <span className="text-red-500">*</span>}
-          {tooltip && <SimpleTooltip content={tooltip} />}
-        </Label>
-
+        <div className="flex items-center justify-between">
+          <Label htmlFor={id}>
+            {label}
+            {required && <span className="text-red-500">*</span>}
+            {tooltip && <SimpleTooltip content={tooltip} />}
+          </Label>
+          {hint && (
+            <span className="text-xs font-semibold text-gray-500">{hint}</span>
+          )}
+        </div>
         <Popover
           open={open && !disabled} // S'assurer que le popover ne s'ouvre pas si désactivé
           onOpenChange={openState => {

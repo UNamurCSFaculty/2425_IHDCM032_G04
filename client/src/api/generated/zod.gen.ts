@@ -118,6 +118,7 @@ export const zUserDetailDto = z.object({
   language: zLanguageDto,
   address: zAddressDto,
   documents: z.array(zDocumentDto).optional(),
+  storeAssociated: z.boolean().optional(),
   type: z.enum([
     'admin',
     'producer',
@@ -626,6 +627,7 @@ export const zExporterListDto = z.object({
   language: zLanguageDto,
   address: zAddressDto,
   documents: z.array(zDocumentDto).optional(),
+  storeAssociated: z.boolean().optional(),
   type: z.enum([
     'admin',
     'producer',

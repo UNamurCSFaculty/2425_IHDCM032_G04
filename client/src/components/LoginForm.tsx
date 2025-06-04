@@ -55,7 +55,6 @@ export function LoginForm() {
         })
       } else {
         toast.error(t('errors.google_credential_missing'))
-        console.error('Google credential missing in response')
       }
     },
     [googleMutation, t]
@@ -64,7 +63,6 @@ export function LoginForm() {
   useEffect(() => {
     const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID
     if (!clientId) {
-      console.error('Google Client ID (VITE_GOOGLE_CLIENT_ID) is not defined.')
       toast.error(t('errors.google_client_id_missing'))
       return
     }
@@ -80,8 +78,7 @@ export function LoginForm() {
           callback: handleGoogleCredential,
           ux_mode: 'popup',
         })
-      } catch (error) {
-        console.error('Error initializing Google Sign-In:', error)
+      } catch {
         toast.error(t('errors.google_init_failed'))
       }
     } else {
@@ -229,15 +226,11 @@ export function LoginForm() {
                     ) {
                       try {
                         window.google.accounts.id.prompt()
-                      } catch (error) {
-                        console.error('Error calling Google prompt:', error)
+                      } catch {
                         toast.error(t('errors.google_prompt_failed'))
                       }
                     } else {
                       toast.error(t('errors.google_not_ready'))
-                      console.error(
-                        'Google Identity Services not available for prompt.'
-                      )
                     }
                   }}
                   disabled={googleMutation.isPending}

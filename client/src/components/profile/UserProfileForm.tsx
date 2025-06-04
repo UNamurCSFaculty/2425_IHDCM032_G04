@@ -181,7 +181,7 @@ export function UserProfileForm({
           <Separator />
           <div>
             <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-white">
-              {t('types.producer_details')}
+              {t('profile.role_specific_details_title')}
             </h3>
             <div className="mt-6 grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-6">
               <div className="sm:col-span-3">

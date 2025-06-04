@@ -16,6 +16,7 @@ import be.labil.anacarde.domain.model.*;
 import be.labil.anacarde.infrastructure.persistence.AuctionRepository;
 import be.labil.anacarde.infrastructure.persistence.DocumentRepository;
 import be.labil.anacarde.infrastructure.persistence.FieldRepository;
+import be.labil.anacarde.infrastructure.persistence.StoreRepository;
 import be.labil.anacarde.infrastructure.persistence.user.*;
 import be.labil.anacarde.infrastructure.util.PersistenceHelper;
 import be.labil.anacarde.infrastructure.util.SecurityHelper;
@@ -64,6 +65,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	private final EntityManager em;
 	private final DocumentRepository docRepo;
 	private final FieldService fieldService;
+	private final StoreRepository storeRepository;
 
 	private static final String BENIN_PHONE_COUNTRY_CODE = "+229";
 	private static final String BENIN_PHONE_REGEX = "^\\+22901\\d{8}$";

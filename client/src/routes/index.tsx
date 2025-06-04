@@ -59,7 +59,7 @@ function RouteComponent() {
               </p>
               {!user && (
                 <div className="flex flex-col justify-center sm:flex-row sm:gap-4 lg:justify-start">
-                  <Link to="/login">
+                  <Link to="/connexion">
                     <Button size="lg">
                       {t('buttons.home_connection')}{' '}
                       <ArrowUpRight className="!h-5 !w-5" />

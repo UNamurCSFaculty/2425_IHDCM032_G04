@@ -21,9 +21,6 @@ export const ContactForm: React.FC = () => {
     onSuccess: () => {
       navigate({ to: '/contact/merci' })
     },
-    onError: error => {
-      console.error('Erreur envoi contact :', error)
-    },
   })
 
   const form = useAppForm({

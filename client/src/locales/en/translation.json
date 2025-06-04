@@ -559,7 +559,8 @@
     "passwordValidation": "Passwords do not match",
     "phone": "Invalid Beninese phone number",
     "required": "This field is required",
-    "number_min": "Value must be greater than or equal to {{count}}"
+    "number_min": "Value must be greater than or equal to {{count}}",
+    "datetime": "Invalid date format"
   },
   "errors": {
     "access.denied": "Access denied: insufficient permissions.",
@@ -636,7 +637,8 @@
     "bid_created_ok": "Bid added successfully!",
     "bid_created_fail": "Error while adding bid.",
     "expires_in": "Expires in",
-    "asking_price": "Asking Price",
+    "asking_price": "Price",
+    "asking_price_total": "Total Price",
     "best_bid": "Best Bid",
     "details_title_full": "Product {{productType}} · Lot #{{productId}} · Auction #{{auctionId}}",
     "auction_details_title": "Auction Details",
@@ -647,7 +649,8 @@
     "confirm_bid_prompt": "Confirm your bid of {{amount}}?",
     "status": {
       "ended_title": "Auction Ended",
-      "ended_message": "This auction has now ended."
+      "ended_message": "This auction has now ended.",
+      "offer_contract": "Offer contract to the seller?"
     },
     "bid_count_for_lot_zero": "{{count}} bid for lot",
     "bid_count_for_lot_one": "{{count}} bid for lot",
@@ -694,7 +697,7 @@
       "buyer_header": "Buyer",
       "view_bids_button": "View Bids",
       "make_bid_button": "Place Bid",
-      "propose_contract_button": "Propose Contract",
+      "propose_contract_button": "New Contract",
       "strategy_label": "Bidding Strategy",
       "fixed_price_per_kg_label": "Fixed Price per Kg",
       "max_price_per_kg_label": "Max Price per Kg",
@@ -735,7 +738,7 @@
     "results_count": "Result: {{count}} product",
     "results_count_plural": "Results: {{count}} products",
     "owner_label": "Owner",
-    "warehouse_label": "Warehouse",
+    "warehouse_label": "Your Warehouse",
     "select_lots": "Select Lots",
     "form": {
       "title": "Product Entry",
@@ -753,8 +756,8 @@
   "sort": {
     "expiration_asc": "Expiration ↑",
     "expiration_desc": "Expiration ↓",
-    "price_asc": "Price ↑",
-    "price_desc": "Price ↓",
+    "price_asc": "Price/kg ↑",
+    "price_desc": "Price/kg ↓",
     "label_prefix": "Sort by ",
     "date_asc": "date ↑",
     "date_desc": "date ↓",
@@ -768,7 +771,10 @@
     "results_count_one": "Result: {{count}} auction",
     "results_count_other": "Results: {{count}} auctions",
     "results_count": "Result: {{count}} auction",
-    "results_count_plural": "Results: {{count}} auctions"
+    "results_count_plural": "Results: {{count}} auctions",
+    "trend_volume": "auctions",
+    "trend_weight": "on sale",
+    "trend_price": "average price"
   },
   "view_mode": {
     "grid_label": "Grid",
@@ -1019,7 +1025,13 @@
     "label": "Contract #{{id}}",
     "price_per_kg_label": "Price per Kg",
     "accept_offer_prompt": "Accept this offer?",
-    "reject_offer_prompt": "Reject this offer?"
+    "reject_offer_prompt": "Reject this offer?",
+    "created_ok": "Contract offer opened successfully!",
+    "created_fail": "Error while creating contract.",
+    "accepted_ok": "Contract accepted successfully!",
+    "accepted_fail": "Error while accepting contract.",
+    "rejected_ok": "Contract rejected successfully!",
+    "rejected_fail": "Error while rejecting contract."
   },
   "settings": {
     "update_success": "Global settings updated successfully.",

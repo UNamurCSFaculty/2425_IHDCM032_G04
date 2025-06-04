@@ -368,9 +368,9 @@ public class DatabaseServiceImpl implements DatabaseService {
 		GlobalSettingsUpdateDto globalSettingsUpdateDto = new GlobalSettingsUpdateDto();
 		globalSettingsUpdateDto.setDefaultStrategyId(strategyOffer.getId());
 		globalSettingsUpdateDto.setForceBetterBids(false);
-		globalSettingsUpdateDto.setDefaultMinPriceKg(BigDecimal.valueOf(10));
-		globalSettingsUpdateDto.setDefaultMaxPriceKg(BigDecimal.valueOf(1000000));
-		globalSettingsUpdateDto.setMinIncrement(0);
+		globalSettingsUpdateDto.setDefaultMinPriceKg(BigDecimal.valueOf(100));
+		globalSettingsUpdateDto.setDefaultMaxPriceKg(BigDecimal.valueOf(10000));
+		globalSettingsUpdateDto.setMinIncrement(10);
 		globalSettingsUpdateDto.setShowOnlyActive(false);
 		globalSettingsService.updateGlobalSettings(globalSettingsUpdateDto);
 		log.debug("Base lookups created.");
@@ -874,7 +874,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 		String qualityName = product.getQualityControl().getQuality().getName();
 		int quantity = faker.number().numberBetween(MIN_PRODUCT_50KG_BAG, MAX_PRODUCT_50KG_BAG + 1)
 				* 50;
-		double[] range = cashewPriceRanges.getOrDefault(qualityName, new double[]{500.0, 800.0});
+		double[] range = cashewPriceRanges.getOrDefault(qualityName, new double[]{5000.0, 8000.0});
 		double minPrice = range[0];
 		double maxPrice = range[1];
 		double price = minPrice + random.nextDouble() * (maxPrice - minPrice) / 2;
@@ -1009,7 +1009,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 				BigDecimal raw = currentHighest
 						.multiply(BigDecimal.valueOf(1 + random.nextDouble() * 0.05));
 				BigDecimal minInc = BigDecimal.valueOf(auction.getOptions().getMinIncrement());
-				BigDecimal amount = raw.divide(minInc, 0, RoundingMode.FLOOR).multiply(minInc);
+				BigDecimal amount = raw.divide(minInc, 0, RoundingMode.CEILING).multiply(minInc);
 				BigDecimal buyNowTotal = BigDecimal.valueOf(auction.getOptions().getBuyNowPrice());
 
 				if (amount.compareTo(buyNowTotal) >= 0) {
@@ -1409,7 +1409,6 @@ public class DatabaseServiceImpl implements DatabaseService {
 		user.setEmail(mail);
 		user.setFirstName(capitalize(nameParts[0]));
 		user.setLastName(capitalize(nameParts[1]));
-		user.setEmail(uniqueEmail());
 		user.setPassword(DEFAULT_PASSWORD);
 		user.setAddress(createRandomAddress());
 		user.setEnabled(true);

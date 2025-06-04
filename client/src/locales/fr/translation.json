@@ -1,8 +1,8 @@
 {
   "app": {
     "accueil": {
-      "subtitle": "Rejoignez la plateforme d’enchères en temps réel pour la noix de\n cajou et ses produits transformés au Bénin. Surveillez,\n surenchérissez et soutenez les producteurs locaux en toute\n confiance.",
-      "title": "Enchères & Marché du Cajou",
+      "subtitle": "Une plateforme d’enchères en temps réel pour la noix de\n cajou et ses produits transformés au Bénin. Achetez, vendez, et soutenez les producteurs locaux en toute\n confiance.",
+      "title": "Marché de la noix de cajou",
       "image_alt_cashew_nuts": "Illustration noix de cajou"
     },
     "contact": {
@@ -559,7 +559,8 @@
     "passwordValidation": "Les mots de passe ne correspondent pas",
     "phone": "Numéro béninois invalide",
     "required": "Ce champ est requis",
-    "number_min": "La valeur doit être supérieure ou égale à {{count}}"
+    "number_min": "La valeur doit être supérieure ou égale à {{count}}",
+    "datetime": "La date est invalide"
   },
   "errors": {
     "access.denied": "Accès refusé : vous n'avez pas les droits suffisants.",
@@ -634,7 +635,8 @@
     "bid_count": "{{count}} offre",
     "bid_count_plural": "{{count}} offres",
     "expires_in": "Expire dans",
-    "asking_price": "Prix demandé",
+    "asking_price": "Prix",
+    "asking_price_total": "Prix total",
     "best_bid": "Meilleure offre",
     "details_title_full": "Produit {{productType}} · Lot n°{{productId}} · Enchère n°{{auctionId}}",
     "auction_details_title": "Détails de l’enchère",
@@ -645,7 +647,8 @@
     "confirm_bid_prompt": "Confirmer votre offre de {{amount}} ?",
     "status": {
       "ended_title": "Enchère terminée",
-      "ended_message": "Cette enchère est maintenant terminée."
+      "ended_message": "Cette enchère est maintenant terminée.",
+      "offer_contract": "Proposer un contrat au vendeur ?"
     },
     "bid_count_for_lot_zero": "{{count}} offre pour le lot",
     "bid_count_for_lot_one": "{{count}} offre pour le lot",
@@ -694,7 +697,7 @@
       "buyer_header": "Acheteur",
       "view_bids_button": "Voir les offres",
       "make_bid_button": "Faire une offre",
-      "propose_contract_button": "Proposer un contrat",
+      "propose_contract_button": "Nouveau contrat",
       "strategy_label": "Stratégie d'enchère",
       "fixed_price_per_kg_label": "Prix imposé par kg",
       "max_price_per_kg_label": "Prix maximum par kg",
@@ -735,8 +738,8 @@
     "results_count": "Résultat : {{count}} produit",
     "results_count_plural": "Résultats : {{count}} produits",
     "owner_label": "Propriétaire",
-    "warehouse_label": "Entrepôt",
-    "select_lots": "Sélectionner les lots",
+    "warehouse_label": "Votre entrepôt",
+    "select_lots": "Sélectionnez les lots",
     "form": {
       "title": "Saisie du produit",
       "section_deposit_settings_title": "Paramètres du dépôt",
@@ -753,8 +756,8 @@
   "sort": {
     "expiration_asc": "Expiration ⬆",
     "expiration_desc": "Expiration ⬇",
-    "price_asc": "Prix ⬆",
-    "price_desc": "Prix ⬇",
+    "price_asc": "Prix/kg ⬆",
+    "price_desc": "Prix/kg ⬇",
     "label_prefix": "Tri par ",
     "date_asc": "date ⬆",
     "date_desc": "date ⬇",
@@ -768,7 +771,10 @@
     "results_count_one": "Résultat : {{count}} enchère",
     "results_count_other": "Résultats : {{count}} enchères",
     "results_count": "Résultat : {{count}} enchère",
-    "results_count_plural": "Résultats : {{count}} enchères"
+    "results_count_plural": "Résultats : {{count}} enchères",
+    "trend_volume": "enchères",
+    "trend_weight": "en vente",
+    "trend_price": "prix moyen"
   },
   "view_mode": {
     "grid_label": "Grille",
@@ -1019,11 +1025,17 @@
     "label": "Contrat n°{{id}}",
     "price_per_kg_label": "Prix par kg",
     "accept_offer_prompt": "Accepter cette offre ?",
-    "reject_offer_prompt": "Refuser cette offre ?"
+    "reject_offer_prompt": "Refuser cette offre ?",
+    "created_ok": "Offre de contrat ouverte avec succès !",
+    "created_fail": "Erreur lors de la création du contrat.",
+    "accepted_ok": "Offre de contrat acceptée !",
+    "accepted_fail": "Erreur lors de l'acceptation du contrat.",
+    "rejected_ok": "Offre de contrat rejetée !",
+    "rejected_fail": "Erreur lors du rejet du contrat."
   },
   "settings": {
     "update_success": "Paramètres globaux mis à jour avec succès.",
-    "title": "Paramètres Globaux",
+    "title": "Paramètres globaux",
     "default_strategy": "Stratégie d'enchère par défaut",
     "select_strategy_placeholder": "Sélectionner une stratégie par défaut...",
     "default_fixed_price_kg": "Prix fixe par défaut (CFA par kg)",
@@ -1055,40 +1067,40 @@
         "subtitle": "Une initiative universitaire pour dynamiser la filière anacarde au Bénin grâce à une plateforme d'échange innovante et équitable."
       },
       "project": {
-        "title": "Notre Projet Universitaire",
-        "paragraph1": "e-Anacarde est né d'un projet universitaire ambitieux visant à concevoir et développer une application e-commerce dédiée au commerce de l'anacarde, spécifiquement dans le contexte du Bénin. Notre démarche se veut collaborative et évolutive.",
+        "title": "Notre projet universitaire",
+        "paragraph1": "e-Anacarde est né d'un projet universitaire ambitieux visant à concevoir et développer une application dédiée au commerce de l'anacarde, spécifiquement dans le contexte du Bénin. Notre démarche se veut collaborative et évolutive.",
         "paragraph2": "Cette plateforme sert de preuve de concept ('proof-of-concept') pour mieux appréhender les besoins réels des acteurs de la filière anacarde. En offrant un outil concret dès les premières phases, nous facilitons l'identification des attentes, la validation des fonctionnalités et l'amélioration continue de la solution pour un impact positif et durable."
       },
       "objectives": {
-        "title": "Nos Objectifs Principaux",
+        "title": "Nos objectifs principaux",
         "item1": {
           "title": "Faciliter les Transactions",
           "description": "Permettre des ventes transparentes et efficaces de produits issus de l'anacarde, notamment par un système de surenchères, pour valoriser au mieux la production locale."
         },
         "item2": {
-          "title": "Partager l'Information",
+          "title": "Partager l'information",
           "description": "Diffuser des données claires sur les prix du marché et les volumes disponibles ou échangés, offrant une meilleure visibilité à tous les acteurs."
         },
         "item3": {
-          "title": "Promouvoir les Bonnes Pratiques",
+          "title": "Promouvoir les bonnes pratiques",
           "description": "Servir de canal pour la formation des producteurs aux meilleures techniques agricoles et la vulgarisation des avancées de la recherche pour une filière plus performante."
         }
       },
       "future": {
-        "title": "Un Avenir Évolutif",
+        "title": "Un avenir évolutif",
         "paragraph": "Bien qu'initialement axée sur l'anacarde, notre ambition est de construire une plateforme robuste, facile à maintenir et à adapter. Nous espérons qu'elle pourra, à terme, servir de modèle pour d'autres filières agricoles ou produits, contribuant ainsi plus largement au développement économique."
       },
       "benin_flag_alt": "Drapeau du Bénin"
     }
   },
   "profile": {
-    "page_title": "Mon Profil",
+    "page_title": "Mon profil",
     "page_subtitle": "Consultez et modifiez vos informations personnelles.",
-    "card_title": "Informations du Profil",
+    "card_title": "Informations du profil",
     "edit_mode_description": "Modifiez vos informations ci-dessous.",
-    "view_mode_description": "Vos informations personnelles et de rôle.",
-    "personal_details_title": "Informations Personnelles",
-    "role_specific_details_title": "Détails Spécifiques au Rôle",
+    "view_mode_description": "Vos informations personnelles",
+    "personal_details_title": "Informations générales",
+    "role_specific_details_title": "Détails du profil",
     "update_success_toast": "Profil mis à jour avec succès !",
     "update_error_toast": "Erreur lors de la mise à jour"
   },

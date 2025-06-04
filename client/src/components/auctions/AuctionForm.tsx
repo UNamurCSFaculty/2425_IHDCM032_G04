@@ -22,7 +22,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { cn } from '@/lib/utils'
+import { cn, getPricePerKg } from '@/lib/utils'
 import { useAuthUser } from '@/store/userStore'
 import { formatDate, formatWeight } from '@/utils/formatter'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -177,20 +177,12 @@ export const AuctionForm: React.FC = () => {
 
   useEffect(() => {
     return form.store.subscribe(() => {
-      if (
-        form.store.state.values.price != 0 &&
-        form.store.state.values.productQuantity != 0
-      ) {
-        setPricePerKg(
-          Math.round(
-            (form.store.state.values.price /
-              form.store.state.values.productQuantity) *
-              100
-          ) / 100
+      setPricePerKg(
+        getPricePerKg(
+          form.store.state.values.price,
+          form.store.state.values.productQuantity
         )
-      } else {
-        setPricePerKg(0)
-      }
+      )
     })
   }, [form.store])
 
@@ -216,7 +208,9 @@ export const AuctionForm: React.FC = () => {
       >
         <Card>
           <CardHeader>
-            <CardTitle className="text-xl">{t('auction.form.title')}</CardTitle>
+            <CardTitle className="text-xl font-semibold">
+              {t('auction.form.title')}
+            </CardTitle>
             <CardDescription></CardDescription>
           </CardHeader>
           <CardContent>
@@ -439,10 +433,8 @@ export const AuctionForm: React.FC = () => {
                     <ul className="list-disc pl-4">
                       {error.errors.map((err: ErrorDetail, i: number) => (
                         <li key={i}>
-                          {err.field
-                            ? `${t('errors.fields.' + err.field)}: `
-                            : ''}
                           {t('errors.' + err.code)}
+                          {err.field ? `: ${t(err.message)}` : ''}
                         </li>
                       ))}
                     </ul>

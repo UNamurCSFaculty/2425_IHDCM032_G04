@@ -39,6 +39,8 @@ import {
   XCircle,
   Loader2,
   Star,
+  User,
+  ScrollText,
 } from 'lucide-react'
 import React, { useEffect, useMemo, useState, useRef } from 'react'
 import { client } from '@/api/generated/client.gen.ts'
@@ -161,7 +163,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
       queryClient.invalidateQueries({ queryKey: listAuctionsQueryKey() })
 
       toast.success(t('auction.bid_created_ok'), {
-        duration: 5000,
+        duration: 3000,
       })
     },
     onError(error: ApiErrorResponse) {
@@ -170,7 +172,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
       toast.error(
         t('auction.bid_created_fail') + ' ' + error.code + ':' + detail,
         {
-          duration: 5000,
+          duration: 3000,
         }
       )
     },
@@ -181,12 +183,12 @@ const AuctionDetailsPanel: React.FC<Props> = ({
     onSuccess() {
       queryClient.invalidateQueries({ queryKey: listBidsQueryKey() })
       toast.success(t('auction.form.accept_bid_ok'), {
-        duration: 4000,
+        duration: 3000,
       })
     },
     onError(error: ApiErrorResponse) {
       toast.error(t('auction.form.accept_bid_fail') + ' (' + error.code + ')', {
-        duration: 4000,
+        duration: 3000,
       })
     },
   })
@@ -196,12 +198,12 @@ const AuctionDetailsPanel: React.FC<Props> = ({
     onSuccess() {
       queryClient.invalidateQueries({ queryKey: listBidsQueryKey() })
       toast.success(t('auction.form.reject_bid_ok'), {
-        duration: 4000,
+        duration: 3000,
       })
     },
     onError(error: ApiErrorResponse) {
       toast.error(t('auction.form.reject_bid_fail') + ' (' + error.code + ')', {
-        duration: 4000,
+        duration: 3000,
       })
     },
   })
@@ -215,7 +217,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
       toast.error(
         t('auction.form.accept_auction_fail') + ' (' + error.code + ')',
         {
-          duration: 4000,
+          duration: 3000,
         }
       )
     },
@@ -281,22 +283,6 @@ const AuctionDetailsPanel: React.FC<Props> = ({
             {auction.trader.firstName} {auction.trader.lastName}
           </span>
         </div>
-
-        {acceptedBid && user.id === acceptedBid.trader.id && (
-          <div className="ml-auto">
-            <Button onClick={() => setIsOpen(true)}>
-              {t('auction.table.propose_contract_button')}
-            </Button>
-
-            <ContractModal
-              acceptedBid={acceptedBid}
-              auction={auction}
-              isOpen={isOpen}
-              onClose={() => setIsOpen(false)}
-              onSubmit={() => setIsOpen(false)}
-            />
-          </div>
-        )}
       </div>
 
       {/* Map */}
@@ -509,15 +495,35 @@ const AuctionDetailsPanel: React.FC<Props> = ({
         )}
 
         {role === 'buyer' && ended && (
-          <div>
+          <div className="flex w-2/5 flex-col">
             <Card className="rounded-lg bg-neutral-100 p-4 shadow">
-              <div className="flex flex-col items-center text-center">
-                <span className="mb-2 text-base font-medium text-gray-700">
+              <div className="flex flex-col">
+                <span className="mb-2 text-center text-base font-medium text-gray-700">
                   {t('auction.status.ended_title')}
                 </span>
                 <div className="text-sm text-gray-500">
-                  {t('auction.status.ended_message')}
+                  <p>
+                    {t('auction.status.ended_message')}{' '}
+                    {t('auction.status.offer_contract')}
+                  </p>
                 </div>
+
+                {acceptedBid && user.id === acceptedBid.trader.id && (
+                  <div className="mt-2 flex justify-center">
+                    <Button onClick={() => setIsOpen(true)}>
+                      <ScrollText />
+                      {t('auction.table.propose_contract_button')}
+                    </Button>
+
+                    <ContractModal
+                      acceptedBid={acceptedBid}
+                      auction={auction}
+                      isOpen={isOpen}
+                      onClose={() => setIsOpen(false)}
+                      onSubmit={() => setIsOpen(false)}
+                    />
+                  </div>
+                )}
               </div>
             </Card>
           </div>
@@ -550,11 +556,16 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                       <div>
                         <div className="font-medium">
                           {bid.trader.id === user.id ? (
-                            <b className="text-green-600">
-                              {bid.trader.firstName} {bid.trader.lastName}
-                            </b>
+                            <div className="flex items-center space-x-2">
+                              <b className="text-green-600">
+                                {bid.trader.firstName} {bid.trader.lastName}
+                              </b>
+                              <User size={18} className="text-green-600" />
+                            </div>
                           ) : (
-                            bid.trader.firstName + ' ' + bid.trader.lastName
+                            <>
+                              {bid.trader.firstName} {bid.trader.lastName}
+                            </>
                           )}
                         </div>
                         <div className="text-xs text-gray-600">
@@ -660,7 +671,10 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                             </div>
                           )}
                         {bid.status.name !== TradeStatus.OPEN && (
-                          <Badge variant="outline" className="text-xs">
+                          <Badge
+                            variant="outline"
+                            className={`text-xs ${bid.status.name === TradeStatus.ACCEPTED ? 'bg-yellow-400' : 'bg-gray-200'}`}
+                          >
                             {bid.status.name === TradeStatus.ACCEPTED && (
                               <Star />
                             )}

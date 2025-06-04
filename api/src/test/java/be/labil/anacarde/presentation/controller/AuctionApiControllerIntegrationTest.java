@@ -362,6 +362,17 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 	}
 
 	/**
+	 * Teste la récupération d'un nombre limité d'enchères.
+	 *
+	 */
+	@Test
+	public void testListAuctionsLimit() throws Exception {
+		mockMvc.perform(get("/api/auctions?limit=1").accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()).andExpect(jsonPath("$").isArray())
+				.andExpect(jsonPath("$.length()").value(1));
+	}
+
+	/**
 	 * Teste la récupération de la liste des enchères créées par un utilisateur.
 	 *
 	 */
@@ -369,7 +380,7 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 	public void testListAuctionsByTraderId() throws Exception {
 		mockMvc.perform(get("/api/auctions?traderId=" + getProducerTestUser().getId())
 				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
-				.andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(2));
+				.andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(1));
 	}
 
 	/**
