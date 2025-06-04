@@ -17,12 +17,14 @@ public interface StoreRepository extends JpaRepository<Store, Integer> {
 	 * @return true si un store existe pour l'utilisateur, false sinon.
 	 */
 	boolean existsStoreByUserId(Integer userId);
-    /**
-     * Vérifie si un magasin est associé à un utilisateur.
-     *
-     * @param storeId l'identifiant du magasin
-     * @param userId l'identifiant de l'utilisateur
-     * @return true si l'utilisateur est le propriétaire du magasin, false sinon
-     */
-    boolean existsByIdAndUserId(Integer storeId, Integer userId);
+	/**
+	 * Vérifie si un magasin est associé à un utilisateur.
+	 *
+	 * @param storeId
+	 *            l'identifiant du magasin
+	 * @param userId
+	 *            l'identifiant de l'utilisateur
+	 * @return true si l'utilisateur est le propriétaire du magasin, false sinon
+	 */
+	boolean existsByIdAndUserId(Integer storeId, Integer userId);
 }

@@ -55,7 +55,8 @@ public interface ProductService {
 	 * @return Un ProductDto représentant le produit mis à jour.
 	 */
 	@PreAuthorize("@authz.isAdmin(principal) or (@ownership.isStoreOwner(principal.id, #productDto.storeId))")
-	ProductDto updateProduct(@Param("productId") Integer productId, @Param("productDto") ProductUpdateDto productDto);
+	ProductDto updateProduct(@Param("productId") Integer productId,
+			@Param("productDto") ProductUpdateDto productDto);
 
 	/**
 	 * Supprime le produit identifié par l'ID donné du système.
