@@ -208,7 +208,9 @@ export const AuctionForm: React.FC = () => {
       >
         <Card>
           <CardHeader>
-            <CardTitle className="text-xl">{t('auction.form.title')}</CardTitle>
+            <CardTitle className="text-xl font-semibold">
+              {t('auction.form.title')}
+            </CardTitle>
             <CardDescription></CardDescription>
           </CardHeader>
           <CardContent>
