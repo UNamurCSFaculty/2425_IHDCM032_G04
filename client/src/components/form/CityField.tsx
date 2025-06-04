@@ -80,7 +80,6 @@ export function CityField({
           }
         } catch {
           // Erreur réseau ou API, on ne fait rien pour ne pas bloquer l'utilisateur
-          console.error('Failed to geocode city:', city.label)
         }
       }
     }

@@ -129,7 +129,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
       queryClient.invalidateQueries({ queryKey: listAuctionsQueryKey() })
 
       toast.success(t('auction.bid_created_ok'), {
-        duration: 5000,
+        duration: 3000,
       })
     },
     onError(error: ApiErrorResponse) {
@@ -138,7 +138,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
       toast.error(
         t('auction.bid_created_fail') + ' ' + error.code + ':' + detail,
         {
-          duration: 5000,
+          duration: 3000,
         }
       )
     },
@@ -149,12 +149,12 @@ const AuctionDetailsPanel: React.FC<Props> = ({
     onSuccess() {
       queryClient.invalidateQueries({ queryKey: listBidsQueryKey() })
       toast.success(t('auction.form.accept_bid_ok'), {
-        duration: 4000,
+        duration: 3000,
       })
     },
     onError(error: ApiErrorResponse) {
       toast.error(t('auction.form.accept_bid_fail') + ' (' + error.code + ')', {
-        duration: 4000,
+        duration: 3000,
       })
     },
   })
@@ -164,12 +164,12 @@ const AuctionDetailsPanel: React.FC<Props> = ({
     onSuccess() {
       queryClient.invalidateQueries({ queryKey: listBidsQueryKey() })
       toast.success(t('auction.form.reject_bid_ok'), {
-        duration: 4000,
+        duration: 3000,
       })
     },
     onError(error: ApiErrorResponse) {
       toast.error(t('auction.form.reject_bid_fail') + ' (' + error.code + ')', {
-        duration: 4000,
+        duration: 3000,
       })
     },
   })
@@ -183,7 +183,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
       toast.error(
         t('auction.form.accept_auction_fail') + ' (' + error.code + ')',
         {
-          duration: 4000,
+          duration: 3000,
         }
       )
     },

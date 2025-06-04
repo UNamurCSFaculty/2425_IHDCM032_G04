@@ -191,13 +191,11 @@ export const UserForm: React.FC<UserFormProps> = ({
       if (blobResponse instanceof Blob) {
         triggerBlobDownload(blobResponse, docName)
       } else {
-        console.error('Expected a Blob response, but received:', blobResponse)
         toast.error(t('common.download_error'), {
           description: 'Invalid file format received.',
         })
       }
     } catch (error) {
-      console.error('Download error:', error)
       toast.error(t('common.download_error'), {
         description: (error as Error).message || t('common.unknown_error'),
       })

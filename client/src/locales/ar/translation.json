@@ -814,7 +814,11 @@
     "accept_offer_prompt": "هل تقبل هذا العرض؟",
     "reject_offer_prompt": "هل ترفض هذا العرض؟",
     "created_ok": "تم إنشاء العقد بنجاح!",
-    "created_fail": "حدث خطأ أثناء إنشاء العقد."
+    "created_fail": "حدث خطأ أثناء إنشاء العقد.",
+    "accepted_ok": "تم قبول العقد بنجاح!",
+    "accepted_fail": "حدث خطأ أثناء قبول العقد.",
+    "rejected_ok": "تم رفض العقد بنجاح!",
+    "rejected_fail": "حدث خطأ أثناء رفض العقد."
   },
   "settings": {
     "update_success": "تم تحديث الإعدادات العامة بنجاح.",

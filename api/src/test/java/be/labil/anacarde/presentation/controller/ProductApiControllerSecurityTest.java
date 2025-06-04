@@ -31,12 +31,11 @@ public class ProductApiControllerSecurityTest extends AbstractIntegrationTest {
 	}
 
 	@Test
-	public void testCreateHarvestProductForSameUserShouldSucceed() throws Exception {
-		final Integer expectedUser = getProducerTestUser().getId();
-		final RequestPostProcessor actualUser = jwtProducer();
+	public void testCreateHarvestProductByStoreManagerShouldSucceed() throws Exception {
+		final RequestPostProcessor actualUser = jwtStoreManager();
 
 		HarvestProductUpdateDto newProduct = new HarvestProductUpdateDto();
-		newProduct.setProducerId(expectedUser);
+		newProduct.setProducerId(getProducerTestUser().getId());
 		newProduct.setStoreId(getMainTestStore().getId());
 		newProduct.setWeightKg(200.0);
 		newProduct.setDeliveryDate(LocalDateTime.now().plusMonths(1));
@@ -52,12 +51,11 @@ public class ProductApiControllerSecurityTest extends AbstractIntegrationTest {
 	}
 
 	@Test
-	public void testCreateTransformedForSameUserShouldSucceed() throws Exception {
-		final Integer expectedUser = getTransformerTestUser().getId();
-		final RequestPostProcessor actualUser = jwtTransformer();
+	public void testCreateTransformedByStoreManagerShouldSucceed() throws Exception {
+		final RequestPostProcessor actualUser = jwtStoreManager();
 
 		TransformedProductUpdateDto newProduct = new TransformedProductUpdateDto();
-		newProduct.setTransformerId(expectedUser);
+		newProduct.setTransformerId(getTransformerTestUser().getId());
 		newProduct.setStoreId(getMainTestStore().getId());
 		newProduct.setWeightKg(200.0);
 		newProduct.setDeliveryDate(LocalDateTime.now().plusMonths(1));
@@ -73,51 +71,9 @@ public class ProductApiControllerSecurityTest extends AbstractIntegrationTest {
 	}
 
 	@Test
-	public void testCreateTransformedProductForAnotherUserShouldFail() throws Exception {
-		final Integer expectedUser = getTransformerTestUser().getId();
-		final RequestPostProcessor actualUser = jwtProducer();
-
-		TransformedProductUpdateDto newProduct = new TransformedProductUpdateDto();
-		newProduct.setTransformerId(expectedUser);
-		newProduct.setStoreId(getMainTestStore().getId());
-		newProduct.setWeightKg(200.0);
-		newProduct.setDeliveryDate(LocalDateTime.now().plusMonths(1));
-		newProduct.setQualityControlId(getMainTestQualityControl().getId());
-		newProduct.setIdentifier("brol");
-
-		ObjectNode node = objectMapper.valueToTree(newProduct);
-		String jsonContent = node.toString();
-
-		mockMvc.perform(post("/api/products").with(actualUser)
-				.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
-				.andExpect(status().isForbidden());
-	}
-
-	@Test
-	public void testCreateHarvestProductForAnotherUserShouldFail() throws Exception {
-		final Integer expectedUser = getProducerTestUser().getId();
-		final RequestPostProcessor actualUser = jwtTransformer();
-
-		HarvestProductUpdateDto newProduct = new HarvestProductUpdateDto();
-		newProduct.setProducerId(expectedUser);
-		newProduct.setStoreId(getMainTestStore().getId());
-		newProduct.setWeightKg(200.0);
-		newProduct.setDeliveryDate(LocalDateTime.now().plusMonths(1));
-		newProduct.setFieldId(getMainTestField().getId());
-		newProduct.setQualityControlId(getMainTestQualityControl().getId());
-
-		ObjectNode node = objectMapper.valueToTree(newProduct);
-		String jsonContent = node.toString();
-
-		mockMvc.perform(post("/api/products").with(actualUser)
-				.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
-				.andExpect(status().isForbidden());
-	}
-
-	@Test
-	public void testUpdateProductForSameUserShouldSucceed() throws Exception {
-		final Integer expectedUser = getProducerTestUser().getId();
-		final RequestPostProcessor actualUser = jwtProducer();
+	public void testUpdateProductByStoreManagerShouldSucceed() throws Exception {
+		final Integer expectedUser = getStoreManagerTestUser().getId();
+		final RequestPostProcessor actualUser = jwtStoreManager();
 
 		HarvestProductUpdateDto updateProduct = new HarvestProductUpdateDto();
 		updateProduct.setProducerId(expectedUser);
@@ -136,12 +92,11 @@ public class ProductApiControllerSecurityTest extends AbstractIntegrationTest {
 	}
 
 	@Test
-	public void testUpdateProductForAnotherUserShouldFail() throws Exception {
-		final Integer expectedUser = getProducerTestUser().getId();
-		final RequestPostProcessor actualUser = jwtTransformer();
+	public void testUpdateProductByNotStoreManagerShouldFail() throws Exception {
+		final RequestPostProcessor actualUser = jwtCarrier();
 
 		HarvestProductUpdateDto updateProduct = new HarvestProductUpdateDto();
-		updateProduct.setProducerId(expectedUser);
+		updateProduct.setProducerId(getProducerTestUser().getId());
 		updateProduct.setStoreId(getMainTestStore().getId());
 		updateProduct.setWeightKg(200.0);
 		updateProduct.setDeliveryDate(LocalDateTime.now().plusMonths(1));
@@ -157,18 +112,8 @@ public class ProductApiControllerSecurityTest extends AbstractIntegrationTest {
 	}
 
 	@Test
-	public void testDeleteProductForSameUserShouldSucceed() throws Exception {
-		// expectedUser = producer
+	public void testDeleteProductByUserShouldFail() throws Exception {
 		final RequestPostProcessor actualUser = jwtProducer();
-
-		mockMvc.perform(delete("/api/products/" + getTestHarvestProduct().getId()).with(actualUser))
-				.andExpect(status().isNoContent());
-	}
-
-	@Test
-	public void testDeleteProductForAnotherUserShouldFail() throws Exception {
-		// expectedUser = producer
-		final RequestPostProcessor actualUser = jwtCarrier();
 
 		mockMvc.perform(delete("/api/products/" + getTestHarvestProduct().getId()).with(actualUser))
 				.andExpect(status().isForbidden());

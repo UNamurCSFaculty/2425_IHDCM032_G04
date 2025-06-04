@@ -114,8 +114,8 @@ export const SseNotificationsProvider: React.FC<
             detail: { auctionId: newBid.auctionId },
           })
         )
-      } catch (err) {
-        console.error('[SSE] Erreur:', err, evt)
+      } catch {
+        // console.error('[SSE] Erreur:', err, evt)
       }
     })
 
@@ -123,13 +123,13 @@ export const SseNotificationsProvider: React.FC<
       try {
         const auction = JSON.parse((evt as MessageEvent).data)
         showAuctionClosedNotification(auction) // Call the memoized function
-      } catch (err) {
-        console.error('[SSE] Erreur auctionClosed:', err, evt)
+      } catch {
+        // console.error('[SSE] Erreur auctionClosed:', err, evt)
       }
     })
 
-    es.onerror = err => {
-      console.error('[SSE] Erreur EventSource', err)
+    es.onerror = () => {
+      // console.error('[SSE] Erreur EventSource', err)
     }
 
     return () => {

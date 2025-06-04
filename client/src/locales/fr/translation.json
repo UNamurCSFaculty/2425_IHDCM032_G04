@@ -736,8 +736,8 @@
     "results_count": "Résultat : {{count}} produit",
     "results_count_plural": "Résultats : {{count}} produits",
     "owner_label": "Propriétaire",
-    "warehouse_label": "Entrepôt",
-    "select_lots": "Sélectionner les lots",
+    "warehouse_label": "Votre entrepôt",
+    "select_lots": "Sélectionnez les lots",
     "form": {
       "title": "Saisie du produit",
       "section_deposit_settings_title": "Paramètres du dépôt",
@@ -1022,7 +1022,11 @@
     "accept_offer_prompt": "Accepter cette offre ?",
     "reject_offer_prompt": "Refuser cette offre ?",
     "created_ok": "Offre de contrat ouverte avec succès !",
-    "created_fail": "Erreur lors de la création du contrat."
+    "created_fail": "Erreur lors de la création du contrat.",
+    "accepted_ok": "Offre de contrat acceptée !",
+    "accepted_fail": "Erreur lors de l'acceptation du contrat.",
+    "rejected_ok": "Offre de contrat rejetée !",
+    "rejected_fail": "Erreur lors du rejet du contrat."
   },
   "settings": {
     "update_success": "Paramètres globaux mis à jour avec succès.",
