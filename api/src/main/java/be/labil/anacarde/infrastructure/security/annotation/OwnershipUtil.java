@@ -20,6 +20,7 @@ public class OwnershipUtil {
 	private final BidRepository bidRepository;
 	private final HarvestProductRepository harvestProductRepository;
 	private final TransformedProductRepository transformedProductRepository;
+	private final StoreRepository storeRepository;
 
 	public boolean isDocumentOwner(Integer docId, Integer userId) {
 		return documentRepository.existsByIdAndUserId(docId, userId);
@@ -78,5 +79,10 @@ public class OwnershipUtil {
 		}
 
 		return false;
+	}
+
+	public boolean isStoreOwner(Integer userId, Integer storeId) {
+		if (userId == null || storeId == null) return false;
+		return storeRepository.existsByIdAndUserId(storeId, userId);
 	}
 }

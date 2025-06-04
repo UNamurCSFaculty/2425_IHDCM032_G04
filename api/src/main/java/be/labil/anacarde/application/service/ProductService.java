@@ -21,7 +21,7 @@ public interface ProductService {
 	 *            Le ProductDto contenant les informations du nouveau produit.
 	 * @return Un ProductDto représentant le produit créé.
 	 */
-	@PreAuthorize("@authz.isAdmin(principal) or (@ownership.isProductOwner(principal.id, #productDto))")
+	@PreAuthorize("@authz.isAdmin(principal) or (@ownership.isStoreOwner(principal.id, #productDto.storeId))")
 	ProductDto createProduct(@Param("productDto") ProductUpdateDto productDto);
 
 	/**
@@ -50,12 +50,12 @@ public interface ProductService {
 	 *
 	 * @param productId
 	 *            L'identifiant unique du produit à mettre à jour.
-	 * @param ProductDto
+	 * @param productDto
 	 *            Le ProductDto contenant les informations mises à jour.
 	 * @return Un ProductDto représentant le produit mis à jour.
 	 */
-	@PreAuthorize("@authz.isAdmin(principal) or (@ownership.isProductOwner(principal.id, #productId))")
-	ProductDto updateProduct(@Param("productId") Integer productId, ProductUpdateDto ProductDto);
+	@PreAuthorize("@authz.isAdmin(principal) or (@ownership.isStoreOwner(principal.id, #productDto.storeId))")
+	ProductDto updateProduct(@Param("productId") Integer productId, @Param("productDto") ProductUpdateDto productDto);
 
 	/**
 	 * Supprime le produit identifié par l'ID donné du système.
@@ -63,7 +63,7 @@ public interface ProductService {
 	 * @param productId
 	 *            L'identifiant unique du produit à supprimer.
 	 */
-	@PreAuthorize("@authz.isAdmin(principal) or (@ownership.isProductOwner(principal.id, #productId))")
+	@PreAuthorize("@authz.isAdmin(principal)")
 	void deleteProduct(@Param("productId") Integer productId);
 
 	/**

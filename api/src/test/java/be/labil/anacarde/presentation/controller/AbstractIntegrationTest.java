@@ -165,7 +165,17 @@ public abstract class AbstractIntegrationTest {
 	 */
 	public User getProducerTestUser() {
 		if (producerTestUser == null) {
-			throw new IllegalStateException("Second utilisateur de test non initialisé");
+			throw new IllegalStateException("Producer de test non initialisé");
+		}
+		return producerTestUser;
+	}
+
+	/**
+	 * Renvoie un utilisateur store manager.
+	 */
+	public User getStoreManagerTestUser() {
+		if (producerTestUser == null) {
+			throw new IllegalStateException("Store manager de test non initialisé");
 		}
 		return producerTestUser;
 	}
@@ -175,7 +185,7 @@ public abstract class AbstractIntegrationTest {
 	 */
 	public User getSecondTestProducer() {
 		if (secondTestProducer == null) {
-			throw new IllegalStateException("Second utilisateur de test non initialisé");
+			throw new IllegalStateException("Second producer de test non initialisé");
 		}
 		return secondTestProducer;
 	}
@@ -457,7 +467,7 @@ public abstract class AbstractIntegrationTest {
 		qualityInspector = userRepository.save(qualityInspector);
 		exporterTestUser = userRepository.save(exporter);
 
-		Store store = Store.builder().name("Nassara").address(mainAddress).user(mainTestUser)
+		Store store = Store.builder().name("Nassara").address(mainAddress).user(producerTestUser)
 				.build();
 		mainTestStore = storeRepository.save(store);
 
@@ -653,6 +663,22 @@ public abstract class AbstractIntegrationTest {
 	 * RequestPostProcessor pour un producer.
 	 */
 	protected RequestPostProcessor jwtProducer() {
+		return request -> {
+			UserDetails userDetails = userDetailsService
+					.loadUserByUsername(getProducerTestUser().getEmail());
+			String token = jwtUtil.generateToken(userDetails);
+			jakarta.servlet.http.Cookie userCookie = new jakarta.servlet.http.Cookie("jwt", token);
+			userCookie.setHttpOnly(true);
+			userCookie.setPath("/");
+			request.setCookies(userCookie);
+			return request;
+		};
+	}
+
+	/**
+	 * RequestPostProcessor pour un storeManager (assumed producer is one).
+	 */
+	protected RequestPostProcessor jwtStoreManager() {
 		return request -> {
 			UserDetails userDetails = userDetailsService
 					.loadUserByUsername(getProducerTestUser().getEmail());
