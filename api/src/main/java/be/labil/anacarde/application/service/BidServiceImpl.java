@@ -78,9 +78,13 @@ public class BidServiceImpl implements BidService {
 				subscribers.add(auction.getTrader().getUsername());
 			}
 		}
-		log.debug("[SSE] Liste d'abonnés à notifier pour l'enchère " + dto.getAuctionId() + ": "
-				+ subscribers);
+		log.debug("[SSE] Liste d'abonnés à notifier pour l'enchère " + dto.getAuctionId()
+				+ "(sauf auteur): " + subscribers);
+		String author = full.getTrader() != null ? full.getTrader().getUsername() : null;
 		for (String subKey : subscribers) {
+			if (author != null && author.equals(subKey)) {
+				continue;
+			}
 			notificationSseService.publishEvent(subKey, "newBid", bidDto);
 			log.debug("[SSE] Notification envoyé à " + subKey + " pour nouvelle offre: " + bidDto);
 		}
