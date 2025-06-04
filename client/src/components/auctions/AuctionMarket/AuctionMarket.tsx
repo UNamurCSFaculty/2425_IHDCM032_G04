@@ -2,7 +2,7 @@ import { listAuctionsOptions } from '@/api/generated/@tanstack/react-query.gen'
 import EmptyState from '../../EmptyState'
 import AuctionCard from './AuctionCard'
 import AuctionMap from './AuctionMap'
-import type { AuctionDto } from '@/api/generated'
+import { ProductType, type AuctionDto } from '@/api/generated'
 import FiltersPanel from '@/components/FiltersPanel'
 import PaginationControls from '@/components/PaginationControls'
 import AuctionDetails from '@/components/auctions/AuctionMarket/AuctionDetails'
@@ -45,7 +45,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import LoadingState from '@/components/LoadingState'
 import { useAuthUser } from '@/store/userStore'
-import { TradeStatus } from '@/lib/utils'
+import { TradeStatus, getPricePerKg } from '@/lib/utils'
 import AuctionTrend from './AuctionTrend'
 
 export type ViewMode = 'cards' | 'table' | 'map'
@@ -189,6 +189,44 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
     }
   }, [auctions])
 
+  // Compute auctions trends
+  const trends = useMemo(() => {
+    const stats = {
+      harvest: { volume: 0, totalWeight: 0, totalPrice: 0, avgPricePerKg: 0 },
+      transformed: {
+        volume: 0,
+        totalWeight: 0,
+        totalPrice: 0,
+        avgPricePerKg: 0,
+      },
+    }
+
+    if (!auctions) return stats
+
+    for (const auction of auctions as AuctionDto[]) {
+      if (
+        auction.product.type !== ProductType.HARVEST &&
+        auction.product.type !== ProductType.TRANSFORMED
+      )
+        continue
+
+      stats[auction.product.type].volume += 1
+      stats[auction.product.type].totalWeight += auction.productQuantity
+      stats[auction.product.type].totalPrice += auction.price
+    }
+
+    stats.harvest.avgPricePerKg = getPricePerKg(
+      stats.harvest.totalPrice,
+      stats.harvest.totalWeight
+    )
+    stats.transformed.avgPricePerKg = getPricePerKg(
+      stats.transformed.totalPrice,
+      stats.transformed.totalWeight
+    )
+
+    return stats
+  }, [auctions])
+
   // Render
   const isInCardDetail = viewMode === 'cards' && inlineAuction
   const cssCard = isInCardDetail ? 'lg:justify-start' : 'lg:justify-end'
@@ -234,20 +272,24 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
             </div>
           ) : (
             <div className="flex w-full flex-col flex-wrap items-center justify-center gap-2 lg:flex-row lg:justify-end">
-              <AuctionTrend
-                tooltip={t('database.harvest')}
-                icon={<Apple />}
-                volume={258}
-                price={500}
-                weightKg={5500}
-              />
-              <AuctionTrend
-                tooltip={t('database.transformed')}
-                icon={<Nut />}
-                volume={156}
-                price={750}
-                weightKg={2100}
-              />
+              {!isAuctionsLoading && auctions && (
+                <>
+                  <AuctionTrend
+                    tooltip={t('database.harvest')}
+                    icon={<Apple />}
+                    volume={trends.harvest.volume}
+                    price={trends.harvest.avgPricePerKg}
+                    weightKg={trends.harvest.totalWeight}
+                  />
+                  <AuctionTrend
+                    tooltip={t('database.transformed')}
+                    icon={<Nut />}
+                    volume={trends.transformed.volume}
+                    price={trends.transformed.avgPricePerKg}
+                    weightKg={trends.transformed.totalWeight}
+                  />
+                </>
+              )}
               {/* Sorting */}
               {viewMode !== 'map' && <></>}
 
