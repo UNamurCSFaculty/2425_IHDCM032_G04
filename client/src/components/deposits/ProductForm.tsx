@@ -354,6 +354,7 @@ export function ProductForm(): React.ReactElement<'div'> {
                       closeLabel="Fermer"
                       clearLabel="Effacer"
                       emptySearchLabel="Aucun lot"
+                      required={false}
                       options={
                         isAuctionsLoading || auctions === undefined
                           ? []
