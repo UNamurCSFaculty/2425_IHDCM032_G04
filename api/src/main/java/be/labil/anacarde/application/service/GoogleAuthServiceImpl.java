@@ -27,29 +27,27 @@ public class GoogleAuthServiceImpl implements GoogleAuthService {
 			throws GeneralSecurityException, IOException {
 
 		// 1. Vérification de l'ID-token Google
+		GoogleIdToken idToken = null;
 		try {
-			GoogleIdToken idToken = GoogleIdToken.parse(tokenVerifier.getJsonFactory(),
-					googleToken);
-
-			if (!tokenVerifier.verify(idToken)) {
-				throw new ApiErrorException(HttpStatus.BAD_REQUEST, ApiErrorCode.BAD_REQUEST.code(),
-						"invalid_google_token", "L'ID-token Google fourni est invalide ou expiré.");
-			}
-
-			Payload payload = idToken.getPayload();
-			String email = payload.getEmail();
-
-			// 2. Recherche de l'utilisateur local existant
-			User user = userRepository.findByEmail(email).orElseThrow(() -> new ApiErrorException(
-					HttpStatus.UNAUTHORIZED, ApiErrorCode.ACCESS_UNAUTHORIZED.code(),
-					"gmail_account_not_found",
-					"Aucun compte utilisateur associé à cette adresse email. Veuillez vous enregistrer d'abord."));
-
-			return user;
+			idToken = GoogleIdToken.parse(tokenVerifier.getJsonFactory(), googleToken);
 		} catch (Exception e) {
 			throw new ApiErrorException(HttpStatus.BAD_REQUEST, ApiErrorCode.BAD_REQUEST.code(),
 					"invalid_google_token", "L'ID-token Google fourni est invalide ou expiré.");
 		}
 
+		if (!tokenVerifier.verify(idToken)) {
+			throw new ApiErrorException(HttpStatus.BAD_REQUEST, ApiErrorCode.BAD_REQUEST.code(),
+					"invalid_google_token", "L'ID-token Google fourni est invalide ou expiré.");
+		}
+
+		Payload payload = idToken.getPayload();
+		String email = payload.getEmail();
+
+		// 2. Recherche de l'utilisateur local existant
+		User user = userRepository.findByEmail(email).orElseThrow(() -> new ApiErrorException(
+				HttpStatus.UNAUTHORIZED, ApiErrorCode.ACCESS_UNAUTHORIZED_GOOGLE_AUTH.code(), null,
+				"Aucun compte utilisateur associé à cette adresse email. Veuillez vous enregistrer d'abord."));
+
+		return user;
 	}
 }
