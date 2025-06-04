@@ -37,7 +37,7 @@ import { useStore } from '@tanstack/react-form'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { AlertCircle } from 'lucide-react'
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import z from 'zod/v4'
@@ -52,10 +52,23 @@ import { BreadcrumbSection } from '../BreadcrumbSection'
 
 export function ProductForm(): React.ReactElement<'div'> {
   const navigate = useNavigate()
-
   const user = useAuthUser()
-
   const { t } = useTranslation()
+  const containerRef = useRef<HTMLDivElement>(null)
+  const isMountedRef = useRef(false) // Référence pour suivre l'état de montage
+
+  useEffect(() => {
+    if (isMountedRef.current) {
+      // Si ce n'est pas le rendu initial, alors on effectue le défilement
+      containerRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      })
+    } else {
+      // Au premier rendu, on marque que le montage est terminé
+      isMountedRef.current = true
+    }
+  }, [])
 
   const staleTime = 10_000
 
@@ -99,14 +112,14 @@ export function ProductForm(): React.ReactElement<'div'> {
     ...createProductMutation(),
     onSuccess(data: ProductDto) {
       toast.success(t('product.form.created_ok') + ' ID: ' + data.id, {
-        duration: 4000,
+        duration: 3000,
       })
 
       navigate({ to: '/depots/mes-produits' })
     },
     onError(error: ApiErrorResponse) {
       toast.error(t('product.form.created_fail') + ' (' + error.code + ')', {
-        duration: 4000,
+        duration: 3000,
       })
     },
   })
@@ -115,7 +128,7 @@ export function ProductForm(): React.ReactElement<'div'> {
     ...createQualityControlMutation(),
     onError(error: ApiErrorResponse) {
       toast.error(t('product.form.created_fail') + ' (' + error.code + ')', {
-        duration: 4000,
+        duration: 3000,
       })
     },
   })
@@ -237,7 +250,10 @@ export function ProductForm(): React.ReactElement<'div'> {
         ]}
       />
 
-      <div className="container mx-auto max-w-5xl px-5 py-24">
+      <div
+        ref={containerRef}
+        className="container mx-auto max-w-5xl px-5 py-24"
+      >
         <Card>
           <CardHeader>
             <CardTitle className="text-xl font-semibold">
