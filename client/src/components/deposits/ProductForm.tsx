@@ -4,7 +4,6 @@ import {
   type HarvestProductUpdateDto,
   ProductType,
   type UserListDto,
-  type HarvestProductDto,
   UserType,
   type ApiErrorResponse,
   type FieldDto,
@@ -21,7 +20,6 @@ import {
   createQualityControlMutation,
   listAuctionsOptions,
   listFieldsOptions,
-  listProductsOptions,
   listQualitiesOptions,
   listStoresOptions,
   listUsersOptions,
@@ -53,12 +51,6 @@ export function ProductForm(): React.ReactElement<'div'> {
   const { t } = useTranslation()
 
   const staleTime = 10_000
-
-  const { data: harvestProducts, isLoading: isHarvestProductsLoading } =
-    useQuery({
-      ...listProductsOptions({ query: { productType: ProductType.HARVEST } }),
-      staleTime: staleTime,
-    })
 
   const { data: transformers, isLoading: isTransformersLoading } = useQuery({
     ...listUsersOptions({ query: { userType: UserType.TRANSFORMER } }),
@@ -213,6 +205,8 @@ export function ProductForm(): React.ReactElement<'div'> {
     return -1
   })
 
+  // Retrieve auctions won by the user. A transformer can only reference harvest products
+  // from auctions they have won.
   const listAuctionsQueryOptions = () => ({
     ...listAuctionsOptions({
       query: { buyerId: transformerId, status: TradeStatus.ACCEPTED },
@@ -359,12 +353,14 @@ export function ProductForm(): React.ReactElement<'div'> {
                         isAuctionsLoading || auctions === undefined
                           ? []
                           : (auctions as AuctionDto[])
-                              .filter(auction =>
-                                auction.bids.some(
-                                  bid =>
-                                    bid.trader.id === user.id &&
-                                    bid.status.name === TradeStatus.ACCEPTED
-                                )
+                              .filter(
+                                auction =>
+                                  auction.bids.some(
+                                    bid =>
+                                      bid.trader.id === user.id &&
+                                      bid.status.name === TradeStatus.ACCEPTED
+                                  ) &&
+                                  auction.product.type === ProductType.HARVEST
                               )
                               .map(auction => ({
                                 value: String(auction.product.id),

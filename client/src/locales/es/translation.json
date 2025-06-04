@@ -1017,7 +1017,11 @@
     "accept_offer_prompt": "¿Aceptar esta oferta?",
     "reject_offer_prompt": "¿Rechazar esta oferta?",
     "created_ok": "¡Contrato creado con éxito!",
-    "created_fail": "Error al crear el contrato."
+    "created_fail": "Error al crear el contrato.",
+    "accepted_ok": "¡Contrato aceptado con éxito!",
+    "accepted_fail": "Error al aceptar el contrato.",
+    "rejected_ok": "¡Contrato rechazado con éxito!",
+    "rejected_fail": "Error al rechazar el contrato."
   },
   "settings": {
     "update_success": "Configuración global actualizada con éxito.",

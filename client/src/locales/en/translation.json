@@ -1022,7 +1022,11 @@
     "accept_offer_prompt": "Accept this offer?",
     "reject_offer_prompt": "Reject this offer?",
     "created_ok": "Contract offer opened successfully!",
-    "created_fail": "Error while creating contract."
+    "created_fail": "Error while creating contract.",
+    "accepted_ok": "Contract accepted successfully!",
+    "accepted_fail": "Error while accepting contract.",
+    "rejected_ok": "Contract rejected successfully!",
+    "rejected_fail": "Error while rejecting contract."
   },
   "settings": {
     "update_success": "Global settings updated successfully.",

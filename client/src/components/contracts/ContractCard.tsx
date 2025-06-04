@@ -1,4 +1,4 @@
-import type { ContractOfferDto } from '@/api/generated'
+import type { ApiErrorResponse, ContractOfferDto } from '@/api/generated'
 import { InfoTile } from '../InfoTile'
 import { Badge } from '@/components/ui/badge'
 import {
@@ -35,6 +35,7 @@ import {
   rejectContractOfferMutation,
 } from '@/api/generated/@tanstack/react-query.gen'
 import { useAuthUser } from '@/store/userStore'
+import { toast } from 'sonner'
 
 export type CardLayout = 'grid' | 'row'
 
@@ -60,9 +61,14 @@ const ContractCard: React.FC<ContractCardProps> = ({ contract, layout }) => {
     ...acceptContractOfferMutation(),
     onSuccess() {
       queryClient.invalidateQueries({ queryKey: listContractOffersQueryKey() })
+      toast.success(t('contract.accepted_ok'), {
+        duration: 3000,
+      })
     },
-    onError(error) {
-      console.error('Accept Contract - Invalid request', error)
+    onError(error: ApiErrorResponse) {
+      toast.error(t('contract.accepted_fail') + ' (' + error.code + ')', {
+        duration: 3000,
+      })
     },
   })
 
@@ -70,9 +76,14 @@ const ContractCard: React.FC<ContractCardProps> = ({ contract, layout }) => {
     ...rejectContractOfferMutation(),
     onSuccess() {
       queryClient.invalidateQueries({ queryKey: listContractOffersQueryKey() })
+      toast.success(t('contract.rejected_ok'), {
+        duration: 3000,
+      })
     },
-    onError(error) {
-      console.error('Reject Contract - Invalid request', error)
+    onError(error: ApiErrorResponse) {
+      toast.error(t('contract.rejected_fail') + ' (' + error.code + ')', {
+        duration: 3000,
+      })
     },
   })
 

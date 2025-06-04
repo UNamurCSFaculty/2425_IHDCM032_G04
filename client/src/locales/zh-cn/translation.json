@@ -1013,7 +1013,11 @@
     "accept_offer_prompt": "接受这个报价？",
     "reject_offer_prompt": "拒绝这个报价？",
     "created_ok": "合同已成功创建！",
-    "created_fail": "创建合同时出错。"
+    "created_fail": "创建合同时出错。",
+    "accepted_ok": "合同已成功接受！",
+    "accepted_fail": "接受合同时出错。",
+    "rejected_ok": "合同已成功拒绝！",
+    "rejected_fail": "拒绝合同时出错。"
   },
   "settings": {
     "update_success": "全局设置更新成功。",
