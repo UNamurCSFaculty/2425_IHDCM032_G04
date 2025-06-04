@@ -235,14 +235,14 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
           ) : (
             <div className="flex w-full flex-col flex-wrap items-center justify-center gap-2 lg:flex-row lg:justify-end">
               <AuctionTrend
-                tooltip="Noix"
+                tooltip={t('database.harvest')}
                 icon={<Apple />}
                 volume={258}
                 price={500}
                 weightKg={5500}
               />
               <AuctionTrend
-                tooltip="Amandes"
+                tooltip={t('database.transformed')}
                 icon={<Nut />}
                 volume={156}
                 price={750}
