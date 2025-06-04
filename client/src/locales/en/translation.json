@@ -637,7 +637,8 @@
     "bid_created_ok": "Bid added successfully!",
     "bid_created_fail": "Error while adding bid.",
     "expires_in": "Expires in",
-    "asking_price": "Asking Price",
+    "asking_price": "Price",
+    "asking_price_total": "Total Price",
     "best_bid": "Best Bid",
     "details_title_full": "Product {{productType}} · Lot #{{productId}} · Auction #{{auctionId}}",
     "auction_details_title": "Auction Details",
@@ -755,8 +756,8 @@
   "sort": {
     "expiration_asc": "Expiration ↑",
     "expiration_desc": "Expiration ↓",
-    "price_asc": "Price ↑",
-    "price_desc": "Price ↓",
+    "price_asc": "Price/kg ↑",
+    "price_desc": "Price/kg ↓",
     "label_prefix": "Sort by ",
     "date_asc": "date ↑",
     "date_desc": "date ↓",
@@ -770,7 +771,10 @@
     "results_count_one": "Result: {{count}} auction",
     "results_count_other": "Results: {{count}} auctions",
     "results_count": "Result: {{count}} auction",
-    "results_count_plural": "Results: {{count}} auctions"
+    "results_count_plural": "Results: {{count}} auctions",
+    "trend_volume": "auctions",
+    "trend_weight": "on sale",
+    "trend_price": "average price"
   },
   "view_mode": {
     "grid_label": "Grid",

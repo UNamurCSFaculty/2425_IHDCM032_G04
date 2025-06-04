@@ -2,7 +2,7 @@ import { listAuctionsOptions } from '@/api/generated/@tanstack/react-query.gen'
 import EmptyState from '../../EmptyState'
 import AuctionCard from './AuctionCard'
 import AuctionMap from './AuctionMap'
-import type { AuctionDto } from '@/api/generated'
+import { ProductType, type AuctionDto } from '@/api/generated'
 import FiltersPanel from '@/components/FiltersPanel'
 import PaginationControls from '@/components/PaginationControls'
 import AuctionDetails from '@/components/auctions/AuctionMarket/AuctionDetails'
@@ -33,17 +33,20 @@ import { useMediaQuery } from '@/hooks/use-mobile'
 import dayjs from '@/utils/dayjs-config'
 import { useQuery } from '@tanstack/react-query'
 import {
+  Apple,
   ArrowLeft,
   LayoutGrid,
   List as ListIcon,
   Map as MapIcon,
+  Nut,
   SlidersHorizontal,
 } from 'lucide-react'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import LoadingState from '@/components/LoadingState'
 import { useAuthUser } from '@/store/userStore'
-import { TradeStatus } from '@/lib/utils'
+import { TradeStatus, getPricePerKg } from '@/lib/utils'
+import AuctionTrend from './AuctionTrend'
 
 export type ViewMode = 'cards' | 'table' | 'map'
 export type UserRole = 'buyer' | 'seller'
@@ -113,9 +116,17 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
     const list = [...filteredAuctions]
     switch (sort) {
       case 'price-asc':
-        return list.sort((a, b) => a.price - b.price)
+        return list.sort(
+          (a, b) =>
+            getPricePerKg(a.price, a.productQuantity) -
+            getPricePerKg(b.price, b.productQuantity)
+        )
       case 'price-desc':
-        return list.sort((a, b) => b.price - a.price)
+        return list.sort(
+          (a, b) =>
+            getPricePerKg(b.price, b.productQuantity) -
+            getPricePerKg(a.price, a.productQuantity)
+        )
       case 'endDate-desc':
         return list.sort(
           (a, b) =>
@@ -186,6 +197,44 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
     }
   }, [auctions])
 
+  // Compute auctions trends
+  const trends = useMemo(() => {
+    const stats = {
+      harvest: { volume: 0, totalWeight: 0, totalPrice: 0, avgPricePerKg: 0 },
+      transformed: {
+        volume: 0,
+        totalWeight: 0,
+        totalPrice: 0,
+        avgPricePerKg: 0,
+      },
+    }
+
+    if (!auctions) return stats
+
+    for (const auction of auctions as AuctionDto[]) {
+      if (
+        auction.product.type !== ProductType.HARVEST &&
+        auction.product.type !== ProductType.TRANSFORMED
+      )
+        continue
+
+      stats[auction.product.type].volume += 1
+      stats[auction.product.type].totalWeight += auction.productQuantity
+      stats[auction.product.type].totalPrice += auction.price
+    }
+
+    stats.harvest.avgPricePerKg = getPricePerKg(
+      stats.harvest.totalPrice,
+      stats.harvest.totalWeight
+    )
+    stats.transformed.avgPricePerKg = getPricePerKg(
+      stats.transformed.totalPrice,
+      stats.transformed.totalWeight
+    )
+
+    return stats
+  }, [auctions])
+
   // Render
   const isInCardDetail = viewMode === 'cards' && inlineAuction
   const cssCard = isInCardDetail ? 'lg:justify-start' : 'lg:justify-end'
@@ -194,13 +243,30 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
     <>
       {/* Header */}
       <div className="mb-6 flex w-full flex-col flex-wrap items-center justify-center gap-4 sm:flex-row lg:justify-between">
-        <div className="text-md text-muted-foreground w-full lg:w-[260px]">
-          <div className="text-center lg:pl-4 lg:text-left">
-            {t('marketplace.results_count', {
-              count: filteredAuctions.length,
-            })}
+        <Select value={sort} onValueChange={v => setSort(v as SortOptionValue)}>
+          <SelectTrigger className="w-40">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {sortOptions.map(o => (
+              <SelectItem
+                key={o.value}
+                value={o.value}
+              >{`${t('sort.label_prefix')}${t(o.label)}`}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        {marketMode !== 'marketplace' && (
+          <div className="text-md text-muted-foreground w-full lg:w-[260px]">
+            <div className="text-center lg:pl-4 lg:text-left">
+              {t('marketplace.results_count', {
+                count: filteredAuctions.length,
+              })}
+            </div>
           </div>
-        </div>
+        )}
+
         <div className={`flex items-center ${cssCard} lg:pl-11`}>
           {isInCardDetail ? (
             <div className="pl-4">
@@ -214,25 +280,34 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
             </div>
           ) : (
             <div className="flex w-full flex-col flex-wrap items-center justify-center gap-2 lg:flex-row lg:justify-end">
+              {marketMode === 'marketplace' &&
+                !isAuctionsLoading &&
+                auctions && (
+                  <>
+                    <AuctionTrend
+                      tooltip={t('database.harvest')}
+                      icon={<Apple />}
+                      volume={trends.harvest.volume}
+                      volumeLabel={t('marketplace.trend_volume')}
+                      price={trends.harvest.avgPricePerKg}
+                      priceLabel={t('marketplace.trend_price')}
+                      weightKg={trends.harvest.totalWeight}
+                      weightKgLabel={t('marketplace.trend_weight')}
+                    />
+                    <AuctionTrend
+                      tooltip={t('database.transformed')}
+                      icon={<Nut />}
+                      volume={trends.transformed.volume}
+                      volumeLabel={t('marketplace.trend_volume')}
+                      price={trends.transformed.avgPricePerKg}
+                      priceLabel={t('marketplace.trend_price')}
+                      weightKg={trends.transformed.totalWeight}
+                      weightKgLabel={t('marketplace.trend_weight')}
+                    />
+                  </>
+                )}
               {/* Sorting */}
-              {viewMode !== 'map' && (
-                <Select
-                  value={sort}
-                  onValueChange={v => setSort(v as SortOptionValue)}
-                >
-                  <SelectTrigger className="w-40">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {sortOptions.map(o => (
-                      <SelectItem
-                        key={o.value}
-                        value={o.value}
-                      >{`${t('sort.label_prefix')}${t(o.label)}`}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
+              {viewMode !== 'map' && <></>}
 
               {/* View Mode */}
               <ToggleGroup

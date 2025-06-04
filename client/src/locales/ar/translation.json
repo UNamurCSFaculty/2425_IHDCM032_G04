@@ -437,6 +437,7 @@
     "bid_count_plural": "{{count}} عروض",
     "expires_in": "تنتهي خلال",
     "asking_price": "السعر المطلوب",
+    "asking_price_total": "السعر المطلوب الإجمالي",
     "best_bid": "أفضل عرض",
     "details_title_full": "منتج {{productType}} · دفعة رقم {{productId}} · مزاد رقم {{auctionId}}",
     "auction_details_title": "تفاصيل المزاد",
@@ -567,7 +568,10 @@
     "results_count_one": "النتيجة: {{count}} مزاد",
     "results_count_other": "النتائج: {{count}} مزادات",
     "results_count": "النتيجة: {{count}} مزاد",
-    "results_count_plural": "النتائج: {{count}} مزادات"
+    "results_count_plural": "النتائج: {{count}} مزادات",
+    "trend_volume": "حجم التداول",
+    "trend_weight": "الوزن المتداول",
+    "trend_price": "السعر المتداول"
   },
   "view_mode": {
     "grid_label": "شبكة",

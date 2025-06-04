@@ -635,7 +635,8 @@
     "bid_count": "{{count}} oferta",
     "bid_count_plural": "{{count}} ofertas",
     "expires_in": "Expira en",
-    "asking_price": "Precio solicitado",
+    "asking_price": "Precio",
+    "asking_price_total": "Precio total",
     "best_bid": "Mejor oferta",
     "details_title_full": "Producto {{productType}} · Lote n.º {{productId}} · Subasta n.º {{auctionId}}",
     "auction_details_title": "Detalles de la subasta",
@@ -751,8 +752,8 @@
   "sort": {
     "expiration_asc": "Expiración ⬆",
     "expiration_desc": "Expiración ⬇",
-    "price_asc": "Precio ⬆",
-    "price_desc": "Precio ⬇",
+    "price_asc": "Precio/kg ⬆",
+    "price_desc": "Precio/kg ⬇",
     "label_prefix": "Ordenar por ",
     "date_asc": "fecha ⬆",
     "date_desc": "fecha ⬇",
@@ -766,7 +767,10 @@
     "results_count_one": "Resultado: {{count}} subasta",
     "results_count_other": "Resultados: {{count}} subastas",
     "results_count": "Resultado: {{count}} subasta",
-    "results_count_plural": "Resultados: {{count}} subastas"
+    "results_count_plural": "Resultados: {{count}} subastas",
+    "trend_volume": "volumen",
+    "trend_weight": "peso",
+    "trend_price": "precio"
   },
   "view_mode": {
     "grid_label": "Cuadrícula",

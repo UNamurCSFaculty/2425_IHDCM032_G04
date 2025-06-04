@@ -636,6 +636,7 @@
     "bid_count_plural": "{{count}} 次竞价",
     "expires_in": "剩余时间",
     "asking_price": "起拍价",
+    "asking_price_total": "起拍价总计",
     "best_bid": "最高出价",
     "details_title_full": "产品 {{productType}} · 拍品编号 {{productId}} · 拍卖编号 {{auctionId}}",
     "auction_details_title": "拍卖详情",
@@ -766,7 +767,10 @@
     "results_count_one": "结果：{{count}} 个拍卖",
     "results_count_other": "结果：{{count}} 个拍卖",
     "results_count": "结果：{{count}} 个拍卖",
-    "results_count_plural": "结果：{{count}} 个拍卖"
+    "results_count_plural": "结果：{{count}} 个拍卖",
+    "trend_volume": "成交量",
+    "trend_weight": "成交重量",
+    "trend_price": "成交价格"
   },
   "view_mode": {
     "grid_label": "网格",

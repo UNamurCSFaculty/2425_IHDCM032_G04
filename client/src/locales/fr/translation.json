@@ -635,7 +635,8 @@
     "bid_count": "{{count}} offre",
     "bid_count_plural": "{{count}} offres",
     "expires_in": "Expire dans",
-    "asking_price": "Prix demandé",
+    "asking_price": "Prix",
+    "asking_price_total": "Prix total",
     "best_bid": "Meilleure offre",
     "details_title_full": "Produit {{productType}} · Lot n°{{productId}} · Enchère n°{{auctionId}}",
     "auction_details_title": "Détails de l’enchère",
@@ -755,8 +756,8 @@
   "sort": {
     "expiration_asc": "Expiration ⬆",
     "expiration_desc": "Expiration ⬇",
-    "price_asc": "Prix ⬆",
-    "price_desc": "Prix ⬇",
+    "price_asc": "Prix/kg ⬆",
+    "price_desc": "Prix/kg ⬇",
     "label_prefix": "Tri par ",
     "date_asc": "date ⬆",
     "date_desc": "date ⬇",
@@ -770,7 +771,10 @@
     "results_count_one": "Résultat : {{count}} enchère",
     "results_count_other": "Résultats : {{count}} enchères",
     "results_count": "Résultat : {{count}} enchère",
-    "results_count_plural": "Résultats : {{count}} enchères"
+    "results_count_plural": "Résultats : {{count}} enchères",
+    "trend_volume": "enchères",
+    "trend_weight": "en vente",
+    "trend_price": "prix moyen"
   },
   "view_mode": {
     "grid_label": "Grille",

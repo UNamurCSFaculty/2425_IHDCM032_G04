@@ -15,7 +15,7 @@ import { TableCell, TableRow } from '@/components/ui/table'
 // Simple JSON import (no async fetch) -----------------------------------------
 import cities from '@/data/cities.json'
 import regions from '@/data/regions.json'
-import { TradeStatus, cn } from '@/lib/utils'
+import { TradeStatus, cn, getPricePerKg } from '@/lib/utils'
 import dayjs from '@/utils/dayjs-config'
 import { formatPrice, formatWeight } from '@/utils/formatter'
 import {
@@ -175,12 +175,32 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
             label={t('auction.asking_price')}
           >
             {formatPrice.format(auction.price)}
+            <br />
+            <span className="text-xs font-normal text-neutral-700">
+              {formatPrice.format(
+                getPricePerKg(auction.price, auction.productQuantity)
+              )}
+              /kg
+            </span>
           </InfoTile>
           <InfoTile
             icon={<TrendingUp className="size-4" />}
             label={t('auction.best_bid')}
           >
-            {bestBid ? formatPrice.format(bestBid) : '—'}
+            {bestBid ? (
+              <>
+                {formatPrice.format(bestBid)}
+                <br />
+                <span className="text-xs font-normal text-neutral-700">
+                  {formatPrice.format(
+                    getPricePerKg(bestBid, auction.productQuantity)
+                  )}
+                  /kg
+                </span>
+              </>
+            ) : (
+              '—'
+            )}
           </InfoTile>
         </div>
       </CardContent>
