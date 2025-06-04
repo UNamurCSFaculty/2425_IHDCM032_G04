@@ -33,10 +33,12 @@ import { useMediaQuery } from '@/hooks/use-mobile'
 import dayjs from '@/utils/dayjs-config'
 import { useQuery } from '@tanstack/react-query'
 import {
+  Apple,
   ArrowLeft,
   LayoutGrid,
   List as ListIcon,
   Map as MapIcon,
+  Nut,
   SlidersHorizontal,
 } from 'lucide-react'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
@@ -44,6 +46,7 @@ import { useTranslation } from 'react-i18next'
 import LoadingState from '@/components/LoadingState'
 import { useAuthUser } from '@/store/userStore'
 import { TradeStatus } from '@/lib/utils'
+import AuctionTrend from './AuctionTrend'
 
 export type ViewMode = 'cards' | 'table' | 'map'
 export type UserRole = 'buyer' | 'seller'
@@ -194,13 +197,30 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
     <>
       {/* Header */}
       <div className="mb-6 flex w-full flex-col flex-wrap items-center justify-center gap-4 sm:flex-row lg:justify-between">
-        <div className="text-md text-muted-foreground w-full lg:w-[260px]">
-          <div className="text-center lg:pl-4 lg:text-left">
-            {t('marketplace.results_count', {
-              count: filteredAuctions.length,
-            })}
+        <Select value={sort} onValueChange={v => setSort(v as SortOptionValue)}>
+          <SelectTrigger className="w-40">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {sortOptions.map(o => (
+              <SelectItem
+                key={o.value}
+                value={o.value}
+              >{`${t('sort.label_prefix')}${t(o.label)}`}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        {marketMode !== 'marketplace' && (
+          <div className="text-md text-muted-foreground w-full lg:w-[260px]">
+            <div className="text-center lg:pl-4 lg:text-left">
+              {t('marketplace.results_count', {
+                count: filteredAuctions.length,
+              })}
+            </div>
           </div>
-        </div>
+        )}
+
         <div className={`flex items-center ${cssCard} lg:pl-11`}>
           {isInCardDetail ? (
             <div className="pl-4">
@@ -214,25 +234,22 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
             </div>
           ) : (
             <div className="flex w-full flex-col flex-wrap items-center justify-center gap-2 lg:flex-row lg:justify-end">
+              <AuctionTrend
+                tooltip="Noix"
+                icon={<Apple />}
+                volume={258}
+                price={500}
+                weightKg={5500}
+              />
+              <AuctionTrend
+                tooltip="Amandes"
+                icon={<Nut />}
+                volume={156}
+                price={750}
+                weightKg={2100}
+              />
               {/* Sorting */}
-              {viewMode !== 'map' && (
-                <Select
-                  value={sort}
-                  onValueChange={v => setSort(v as SortOptionValue)}
-                >
-                  <SelectTrigger className="w-40">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {sortOptions.map(o => (
-                      <SelectItem
-                        key={o.value}
-                        value={o.value}
-                      >{`${t('sort.label_prefix')}${t(o.label)}`}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
+              {viewMode !== 'map' && <></>}
 
               {/* View Mode */}
               <ToggleGroup
