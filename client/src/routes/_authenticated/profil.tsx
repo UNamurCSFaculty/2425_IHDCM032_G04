@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next'
 import citiesData from '@/data/cities.json'
 import regionsData from '@/data/regions.json' // Added import
 import { UserProfileForm } from '@/components/profile/UserProfileForm'
+import { formatCoordinates } from '@/utils/formatter'
 
 export const Route = createFileRoute('/_authenticated/profil')({
   component: ProfilePage,
@@ -44,18 +45,7 @@ function ProfilePage() {
 
   let displayLocation: string | null = null
   if (user.address?.location && typeof user.address.location === 'string') {
-    const parts = user.address.location.split(',')
-    if (parts.length === 2) {
-      const lat = parseFloat(parts[0])
-      const lng = parseFloat(parts[1])
-      if (!isNaN(lat) && !isNaN(lng)) {
-        displayLocation = `Lat: ${lat.toFixed(4)}, Lng: ${lng.toFixed(4)}`
-      } else {
-        displayLocation = user.address.location
-      }
-    } else {
-      displayLocation = user.address.location
-    }
+    displayLocation = formatCoordinates(user.address.location)
   } else if (
     user.address?.location &&
     typeof user.address.location === 'object' &&
