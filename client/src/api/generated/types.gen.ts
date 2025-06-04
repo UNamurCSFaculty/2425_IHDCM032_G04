@@ -4273,7 +4273,7 @@ export type ListAuctionsData = {
      */
     traderId?: number
     /**
-     * ID du trader ayant remporté les enchères
+     * ID du trader ayant participé aux enchères
      */
     buyerId?: number
     /**

@@ -379,7 +379,11 @@ public class GlobalExceptionHandler {
 	 */
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ApiErrorResponse> handleGeneric(Exception ex, HttpServletRequest req) {
-
+		if (ex.getCause() instanceof java.io.IOException
+			&& ex.getCause().getMessage() != null
+			&& ex.getCause().getMessage().contains("Broken pipe")) {
+			return null; // Inutile de loguer les erreurs générés par les connexions fermées (SSE)
+		}
 		log.error("Erreur interne non gérée", ex);
 		return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, ApiErrorCode.INTERNAL_ERROR.code(),
 				"Une erreur interne s'est produite. Contactez le support si le problème persiste.",
