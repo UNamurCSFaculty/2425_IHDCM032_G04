@@ -568,7 +568,10 @@
     "results_count_one": "النتيجة: {{count}} مزاد",
     "results_count_other": "النتائج: {{count}} مزادات",
     "results_count": "النتيجة: {{count}} مزاد",
-    "results_count_plural": "النتائج: {{count}} مزادات"
+    "results_count_plural": "النتائج: {{count}} مزادات",
+    "trend_volume": "حجم التداول",
+    "trend_weight": "الوزن المتداول",
+    "trend_price": "السعر المتداول"
   },
   "view_mode": {
     "grid_label": "شبكة",

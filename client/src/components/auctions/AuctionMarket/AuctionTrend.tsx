@@ -11,13 +11,19 @@ const AuctionTrend = ({
   tooltip,
   icon,
   volume,
+  volumeLabel,
   price,
+  priceLabel,
   weightKg,
+  weightKgLabel,
 }: {
   tooltip: string
   icon: React.ReactNode
   volume: number
+  volumeLabel: string
   price: number
+  priceLabel: string
+  weightKgLabel: string
   weightKg: number
 }) => {
   const classValue = 'text-xs font-bold text-gray-800'
@@ -32,7 +38,7 @@ const AuctionTrend = ({
               {icon}
               <div className="text-xs">
                 <span className={classValue}>{volume}</span> <br />
-                <span className={classDescription}>enchères</span>
+                <span className={classDescription}>{volumeLabel}</span>
               </div>
               <TrendingUp />
               <div className="text-xs">
@@ -40,13 +46,13 @@ const AuctionTrend = ({
                   {formatPrice.format(price)}/kg
                 </span>
                 <br />
-                <span className={classDescription}>prix moyen</span>
+                <span className={classDescription}>{priceLabel}</span>
               </div>
               <Weight />
               <div className="text-xs">
                 <span className={classValue}>{formatWeight(weightKg)}</span>
                 <br />
-                <span className={classDescription}>en vente</span>
+                <span className={classDescription}>{weightKgLabel}</span>
               </div>
             </div>
           </div>

@@ -767,7 +767,10 @@
     "results_count_one": "结果：{{count}} 个拍卖",
     "results_count_other": "结果：{{count}} 个拍卖",
     "results_count": "结果：{{count}} 个拍卖",
-    "results_count_plural": "结果：{{count}} 个拍卖"
+    "results_count_plural": "结果：{{count}} 个拍卖",
+    "trend_volume": "成交量",
+    "trend_weight": "成交重量",
+    "trend_price": "成交价格"
   },
   "view_mode": {
     "grid_label": "网格",

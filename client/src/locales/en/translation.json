@@ -771,7 +771,10 @@
     "results_count_one": "Result: {{count}} auction",
     "results_count_other": "Results: {{count}} auctions",
     "results_count": "Result: {{count}} auction",
-    "results_count_plural": "Results: {{count}} auctions"
+    "results_count_plural": "Results: {{count}} auctions",
+    "trend_volume": "auctions",
+    "trend_weight": "on sale",
+    "trend_price": "average price"
   },
   "view_mode": {
     "grid_label": "Grid",

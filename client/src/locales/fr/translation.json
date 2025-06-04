@@ -771,7 +771,10 @@
     "results_count_one": "Résultat : {{count}} enchère",
     "results_count_other": "Résultats : {{count}} enchères",
     "results_count": "Résultat : {{count}} enchère",
-    "results_count_plural": "Résultats : {{count}} enchères"
+    "results_count_plural": "Résultats : {{count}} enchères",
+    "trend_volume": "enchères",
+    "trend_weight": "en vente",
+    "trend_price": "prix moyen"
   },
   "view_mode": {
     "grid_label": "Grille",

@@ -767,7 +767,10 @@
     "results_count_one": "Resultado: {{count}} subasta",
     "results_count_other": "Resultados: {{count}} subastas",
     "results_count": "Resultado: {{count}} subasta",
-    "results_count_plural": "Resultados: {{count}} subastas"
+    "results_count_plural": "Resultados: {{count}} subastas",
+    "trend_volume": "volumen",
+    "trend_weight": "peso",
+    "trend_price": "precio"
   },
   "view_mode": {
     "grid_label": "Cuadrícula",
