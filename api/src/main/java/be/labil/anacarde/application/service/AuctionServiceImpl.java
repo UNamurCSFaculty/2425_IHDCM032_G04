@@ -327,5 +327,13 @@ public class AuctionServiceImpl implements AuctionService {
 						+ auctionDto);
 			}
 		}
+		Set<String> visitors = auctionSseService.getVisitors(auction.getId());
+		if (visitors != null && !visitors.isEmpty()) {
+			for (String visitorKey : visitors) {
+				auctionSseService.sendEvent(auction.getId(), "refreshBids", auctionDto);
+				log.debug("[SSE] Notification silencieuse envoyée à " + visitorKey
+						+ " pour refreshBids (clôture): " + auctionDto);
+			}
+		}
 	}
 }

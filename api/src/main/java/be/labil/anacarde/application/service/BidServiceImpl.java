@@ -84,6 +84,17 @@ public class BidServiceImpl implements BidService {
 			notificationSseService.publishEvent(subKey, "newBid", bidDto);
 			log.debug("[SSE] Notification envoyé à " + subKey + " pour nouvelle offre: " + bidDto);
 		}
+
+		Set<String> visitors = auctionSseService.getVisitors(dto.getAuctionId());
+		log.debug("[SSE] Liste de visiteurs à notifier pour rafraîchissement silencieux: "
+				+ visitors);
+		if (visitors != null && !visitors.isEmpty()) {
+			for (String visitorKey : visitors) {
+				auctionSseService.sendEvent(dto.getAuctionId(), "refreshBids", bidDto);
+				log.debug("[SSE] Notification silencieuse envoyée à " + visitorKey
+						+ " pour refreshBids: " + bidDto);
+			}
+		}
 		return bidDto;
 	}
 
