@@ -45,11 +45,11 @@ export function LanguageSwitcher({
   }
 
   const languages = [
-    { code: 'fr', name: t('languages.fr') },
-    { code: 'en', name: t('languages.en') },
-    { code: 'es', name: t('languages.es') },
-    { code: 'ar', name: t('languages.ar') },
-    { code: 'zh-CN', name: t('languages.zh-CN') },
+    { code: 'fr', name: 'Français' },
+    { code: 'en', name: 'English' },
+    { code: 'es', name: 'Español' },
+    { code: 'ar', name: 'العربية' },
+    { code: 'zh-CN', name: '中文' },
   ]
 
   if (inMobileNav) {

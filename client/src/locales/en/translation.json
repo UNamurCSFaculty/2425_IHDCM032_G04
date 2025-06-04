@@ -559,7 +559,8 @@
     "passwordValidation": "Passwords do not match",
     "phone": "Invalid Beninese phone number",
     "required": "This field is required",
-    "number_min": "Value must be greater than or equal to {{count}}"
+    "number_min": "Value must be greater than or equal to {{count}}",
+    "datetime": "Invalid date format"
   },
   "errors": {
     "access.denied": "Access denied: insufficient permissions.",

@@ -559,7 +559,8 @@
     "passwordValidation": "Las contraseñas no coinciden",
     "phone": "Número de teléfono de Benín no válido",
     "required": "Este campo es obligatorio",
-    "number_min": "El valor debe ser mayor o igual a {{count}}"
+    "number_min": "El valor debe ser mayor o igual a {{count}}",
+    "datetime": "El valor debe ser una fecha y hora válida"
   },
   "errors": {
     "access.denied": "Acceso denegado: no tienes los permisos suficientes.",
