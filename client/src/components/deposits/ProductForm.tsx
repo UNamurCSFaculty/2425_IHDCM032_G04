@@ -240,6 +240,7 @@ export function ProductForm(): React.ReactElement<'div'> {
                   name="product.type"
                   children={field => (
                     <field.SelectField
+                      className="w-full text-sm font-semibold"
                       options={[
                         {
                           value: ProductType.TRANSFORMED,
@@ -287,8 +288,10 @@ export function ProductForm(): React.ReactElement<'div'> {
                 }
 
                 return (
-                  <field.SelectField
+                  <field.VirtualizedSelectField
+                    required
                     options={traders.map(trader => ({
+                      id: trader.id,
                       value: trader.id,
                       label: trader.lastName + ' ' + trader.firstName,
                     }))}
@@ -321,7 +324,7 @@ export function ProductForm(): React.ReactElement<'div'> {
                     ? t('form.gps_label', { gps: formatCoordinates(gps) })
                     : ''
                   return (
-                    <field.SelectField
+                    <field.VirtualizedSelectField
                       options={
                         isFieldsLoading
                           ? []
@@ -330,6 +333,7 @@ export function ProductForm(): React.ReactElement<'div'> {
                                 field => field.producer?.id === producerId
                               )
                               .map(field => ({
+                                id: field.id,
                                 value: field.id,
                                 label: field.identifier!,
                               }))
@@ -393,13 +397,14 @@ export function ProductForm(): React.ReactElement<'div'> {
             <form.AppField
               name="product.storeId"
               children={field => (
-                <field.SelectField
+                <field.VirtualizedSelectField
                   options={
                     isStoresLoading
                       ? []
                       : (stores as StoreDetailDto[])
                           .filter(store => store.userId === user.id)
                           .map(store => ({
+                            id: store.id,
                             value: store.id,
                             label: store.name,
                           }))
@@ -446,7 +451,7 @@ export function ProductForm(): React.ReactElement<'div'> {
                 <form.AppField
                   name="qualityControl.qualityId"
                   children={field => (
-                    <field.SelectField
+                    <field.VirtualizedSelectField
                       options={
                         isQualitiesLoading
                           ? []
@@ -463,6 +468,7 @@ export function ProductForm(): React.ReactElement<'div'> {
                                 )
                               })
                               .map(quality => ({
+                                id: quality.id,
                                 value: quality.id,
                                 label: quality.name,
                               }))
