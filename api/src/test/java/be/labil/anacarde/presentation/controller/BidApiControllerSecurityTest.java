@@ -139,6 +139,38 @@ public class BidApiControllerSecurityTest extends AbstractIntegrationTest {
 	}
 
 	@Test
+	public void testCreateBidTwiceInARowWithAskingPriceShouldSucceed() throws Exception {
+		final Integer expectedUser = getExporterTestUser().getId();
+		final RequestPostProcessor actualUser = jwtExporter();
+
+		BidUpdateDto newBid = new BidUpdateDto();
+		newBid.setAmount(new BigDecimal("20"));
+		newBid.setStatusId(getTestTradeStatus().getId());
+		newBid.setCreationDate(LocalDateTime.now());
+		newBid.setTraderId(expectedUser);
+		newBid.setAuctionId(getTestAuction().getId());
+
+		ObjectNode node = objectMapper.valueToTree(newBid);
+		String jsonContent = node.toString();
+
+		mockMvc.perform(post("/api/bids").with(actualUser).contentType(MediaType.APPLICATION_JSON)
+				.content(jsonContent)).andExpect(status().isCreated());
+
+		BidUpdateDto newBid2 = new BidUpdateDto();
+		newBid2.setAmount(new BigDecimal(getTestAuction().getPrice()));
+		newBid2.setStatusId(getTestTradeStatus().getId());
+		newBid2.setCreationDate(LocalDateTime.now());
+		newBid2.setTraderId(expectedUser);
+		newBid2.setAuctionId(getTestAuction().getId());
+
+		ObjectNode node2 = objectMapper.valueToTree(newBid2);
+		String jsonContent2 = node2.toString();
+
+		mockMvc.perform(post("/api/bids").with(actualUser).contentType(MediaType.APPLICATION_JSON)
+				.content(jsonContent2)).andExpect(status().isCreated());
+	}
+
+	@Test
 	public void testUpdateBidForSameUserShouldSucceed() throws Exception {
 		final Integer expectedUser = getTransformerTestUser().getId();
 		final RequestPostProcessor actualUser = jwtTransformer();

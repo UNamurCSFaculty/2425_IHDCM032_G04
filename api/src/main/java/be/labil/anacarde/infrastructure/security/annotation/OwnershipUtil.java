@@ -4,6 +4,7 @@ import be.labil.anacarde.domain.dto.write.BidUpdateDto;
 import be.labil.anacarde.domain.dto.write.product.HarvestProductUpdateDto;
 import be.labil.anacarde.domain.dto.write.product.ProductUpdateDto;
 import be.labil.anacarde.domain.dto.write.product.TransformedProductUpdateDto;
+import be.labil.anacarde.domain.model.Auction;
 import be.labil.anacarde.domain.model.Bid;
 import be.labil.anacarde.infrastructure.persistence.*;
 import java.util.List;
@@ -51,12 +52,20 @@ public class OwnershipUtil {
 		// trader cannot bid in the name of someone else
 		if (!traderId.equals(bidDto.getTraderId())) return false;
 
-		// trader cannot bid on his own auction
+		// trader cannot bid on his own auction, except if it is at least
+		// the asking price
 		if (isAuctionOwner(traderId, bidDto.getTraderId())) return false;
 
-		// trader cannot bid twice in a row
+		// trader cannot bid twice in a row, except if it is at least
+		// the asking price
 		List<Bid> bids = bidRepository.findByAuctionIdOrderByIdAsc(bidDto.getAuctionId());
-		if (bids.size() > 0 && bids.getLast().getTrader().getId().equals(traderId)) return false;
+		if (bids.size() > 0 && bids.getLast().getTrader().getId().equals(traderId)) {
+			Optional<Auction> auction = auctionRepository.findById(bidDto.getAuctionId());
+			if (auction.isPresent()
+					&& bidDto.getAmount().doubleValue() < auction.get().getPrice()) {
+				return false;
+			}
+		}
 
 		return true;
 	}
