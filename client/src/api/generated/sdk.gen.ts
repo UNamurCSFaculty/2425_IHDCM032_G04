@@ -271,6 +271,8 @@ import type {
   GetCurrentUserData,
   GetCurrentUserResponse,
   GetCurrentUserError,
+  Subscribe1Data,
+  Subscribe1Response,
   GetAuctionSettingsData,
   GetAuctionSettingsResponse,
   GetAuctionSettingsError,
@@ -2489,6 +2491,25 @@ export const getCurrentUser = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     url: '/api/auth/me',
+    ...options,
+  })
+}
+
+export const subscribe1 = <ThrowOnError extends boolean = false>(
+  options: Options<Subscribe1Data, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).get<
+    Subscribe1Response,
+    unknown,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
+    url: '/api/auctions/{auctionId}/sse',
     ...options,
   })
 }

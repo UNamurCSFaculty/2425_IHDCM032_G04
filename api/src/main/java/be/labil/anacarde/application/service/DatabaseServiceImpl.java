@@ -35,8 +35,10 @@ import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.PrecisionModel;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -122,6 +124,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 	private final GlobalSettingsService globalSettingsService;
 
 	private final EntityManager entityManager;
+	private final Environment environment;
+	private final StringRedisTemplate redisTemplate;
 
 	// --- Internal State ---
 	private final Faker faker = new Faker(Locale.of("fr")); // Use French Faker locale
@@ -195,6 +199,13 @@ public class DatabaseServiceImpl implements DatabaseService {
 
 	@Override
 	public void dropDatabase() {
+		try {
+			redisTemplate.getConnectionFactory().getConnection().flushAll();
+			log.info("Flush Redis data.");
+		} catch (Exception e) {
+			// Ignore Redis errors during testing
+		}
+
 		log.info("Dropping application tables...");
 		userRepository.findAll().forEach(p -> {
 			if (p instanceof Producer c) {
@@ -268,6 +279,9 @@ public class DatabaseServiceImpl implements DatabaseService {
 		log.info("→ createDatabase() (compatibilité) ←");
 		setupSystemAuthentication();
 		initDatabase();
+		// if (Arrays.asList(environment.getActiveProfiles()).contains("dev")) {
+		// initTestData();
+		// }
 		initTestData();
 		initViews();
 		clearSystemAuthentication();

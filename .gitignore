@@ -31,3 +31,4 @@ out/
 api/docs/html/
 api/docs/latex/
 
+.env*

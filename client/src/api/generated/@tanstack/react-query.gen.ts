@@ -97,6 +97,7 @@ import {
   downloadDocument,
   getContractOfferByCriteria,
   getCurrentUser,
+  subscribe1,
   getAuctionSettings,
   getApplicationData,
   getUser,
@@ -319,6 +320,7 @@ import type {
   DownloadDocumentData,
   GetContractOfferByCriteriaData,
   GetCurrentUserData,
+  Subscribe1Data,
   GetAuctionSettingsData,
   GetApplicationDataData,
   GetUserData,
@@ -2919,6 +2921,24 @@ export const getCurrentUserOptions = (
       return data
     },
     queryKey: getCurrentUserQueryKey(options),
+  })
+}
+
+export const subscribe1QueryKey = (options: Options<Subscribe1Data>) =>
+  createQueryKey('subscribe1', options)
+
+export const subscribe1Options = (options: Options<Subscribe1Data>) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await subscribe1({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: subscribe1QueryKey(options),
   })
 }
 

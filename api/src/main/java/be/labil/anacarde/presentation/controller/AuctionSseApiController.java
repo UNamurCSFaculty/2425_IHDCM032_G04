@@ -1,27 +1,28 @@
 package be.labil.anacarde.presentation.controller;
 
-import be.labil.anacarde.application.service.NotificationSseServiceImpl;
+import be.labil.anacarde.application.service.AuctionSseServiceImpl;
 import be.labil.anacarde.infrastructure.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @RestController
 @RequiredArgsConstructor
-public class NotificationSseApiController implements NotificationSseApi {
-	private static final Logger log = LoggerFactory.getLogger(NotificationSseApiController.class);
-	private final NotificationSseServiceImpl notificationSseService;
+public class AuctionSseApiController implements AuctionSseApi {
+	private static final Logger log = LoggerFactory.getLogger(AuctionSseApiController.class);
+	private final AuctionSseServiceImpl auctionSseService;
 	private final JwtUtil jwtUtil;
 
-	@GetMapping("/stream")
 	@Override
-	public SseEmitter subscribe(@AuthenticationPrincipal UserDetails userDetails,
+	public SseEmitter subscribe(@PathVariable("auctionId") Integer auctionId,
+			@AuthenticationPrincipal UserDetails userDetails,
+			@RequestParam(value = "visitor", required = false, defaultValue = "false") boolean isVisitor,
 			@RequestParam(value = "token", required = false) String token) {
 		String userKey = null;
 		if (token != null && !token.isBlank()) {
@@ -37,10 +38,10 @@ public class NotificationSseApiController implements NotificationSseApi {
 			log.info("[SSE] UserDetails: {}", userKey);
 		}
 		if (userKey == null) {
-			log.warn("[SSE] Unauthentified User");
-			throw new RuntimeException("Utilisateur non authentifié pour SSE");
+			userKey = ("anonymous-" + System.nanoTime());
 		}
-		log.info("[SSE] Subscription OK for userKey: {}", userKey);
-		return notificationSseService.subscribe(userKey);
+		log.info("[SSE] Subscription to auction {} for userKey: {} (visitor: {}, token: {})",
+				auctionId, userKey, isVisitor, token);
+		return auctionSseService.subscribe(auctionId, userKey, isVisitor);
 	}
 }
