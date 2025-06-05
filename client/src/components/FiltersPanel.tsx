@@ -65,7 +65,19 @@ const FiltersPanel = <T extends AuctionDto | ProductDto | ContractOfferDto>({
   const [auctionStatus, setAuctionStatus] = useState<TradeStatus>(
     TradeStatus.OPEN
   )
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 20_000])
+
+  const maxPriceHarvest = 1000
+  const maxPriceTransformed = 10000
+  const stepHarvest = 50
+  const stepTransformed = 500
+
+  const [priceRange, setPriceRange] = useState<[number, number]>([
+    0,
+    maxPriceTransformed,
+  ])
+  const [priceStep, setPriceStep] = useState<number>(stepTransformed)
+  const [priceMax, setPriceMax] = useState<number>(maxPriceTransformed)
+
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [qualityId, setQualityId] = useState<number | null>(null)
   const [productTypeId, setProductTypeId] = useState<number | null>(null)
@@ -77,7 +89,21 @@ const FiltersPanel = <T extends AuctionDto | ProductDto | ContractOfferDto>({
 
   // Reset dependent filters
   useEffect(() => setCityId(null), [regionId])
-  useEffect(() => setQualityId(null), [productTypeId])
+  useEffect(() => {
+    setQualityId(null)
+
+    if (productTypeId) {
+      if (productTypes[productTypeId - 1] === ProductType.HARVEST) {
+        setPriceRange([0, maxPriceHarvest])
+        setPriceMax(maxPriceHarvest)
+        setPriceStep(stepHarvest)
+      } else {
+        setPriceRange([0, maxPriceTransformed])
+        setPriceMax(maxPriceTransformed)
+        setPriceStep(stepTransformed)
+      }
+    }
+  }, [productTypeId])
 
   // Apply filters
   const filterFunction = useCallback(
@@ -240,7 +266,7 @@ const FiltersPanel = <T extends AuctionDto | ProductDto | ContractOfferDto>({
   const resetFilters = () => {
     setSearch('')
     setAuctionStatus(TradeStatus.OPEN)
-    setPriceRange([0, 20_000])
+    setPriceRange([0, maxPriceTransformed])
     setSelectedDate(null)
     setQualityId(null)
     setProductTypeId(null)
@@ -328,8 +354,8 @@ const FiltersPanel = <T extends AuctionDto | ProductDto | ContractOfferDto>({
                 value={priceRange}
                 onValueChange={v => setPriceRange(v as [number, number])}
                 min={0}
-                max={20_000}
-                step={500}
+                max={priceMax}
+                step={priceStep}
               />
             </div>
           )}
