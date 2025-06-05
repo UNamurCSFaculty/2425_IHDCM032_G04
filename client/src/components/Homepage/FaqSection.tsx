@@ -53,9 +53,9 @@ const FaqSection = (props: Faq1Props) => {
   return (
     <section className="py-10">
       <div className="intersect-once intersect-half intersect:scale-100 intersect:opacity-100 container mx-auto h-full max-w-3xl scale-50 transform opacity-0 transition duration-500 ease-out">
-        <h1 className="mb-4 text-center text-3xl font-semibold md:mb-11 md:text-4xl">
+        <h2 className="mb-4 text-center text-3xl font-semibold md:mb-11 md:text-4xl">
           {heading}
-        </h1>
+        </h2>
         <Accordion type="single" collapsible>
           {items.map((item, index) => (
             <AccordionItem key={index} value={`item-${index}`}>

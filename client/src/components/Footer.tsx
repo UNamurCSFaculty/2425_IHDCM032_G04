@@ -103,9 +103,9 @@ const Footer = ({
             </div>
             {menuItems.map((section, idx) => (
               <div key={idx}>
-                <h3 className="mb-4 font-bold text-gray-900">
+                <h2 className="mb-4 font-bold text-gray-900">
                   {section.title}
-                </h3>
+                </h2>
                 <ul className="space-y-2 text-gray-600">
                   {section.links.map((link, linkIdx) => (
                     <li key={linkIdx} className="hover:text-green-600">
