@@ -53,7 +53,7 @@ SELECT
 
     /* ======== produit ======== */
     p.id                             AS product_id,
-    p.weight_kg                      AS product_weight_kg,
+    a.product_quantity               AS product_weight_kg,
     p.delivery_date                  AS product_deposit_date,
     p.transformed_product_id         AS transformed_product_id,
 
