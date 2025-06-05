@@ -173,9 +173,6 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
         )
       }
       setFilteredAuctions(newFilteredData)
-
-      // reset view to list when user selects a filter in FilterPanel
-      setInlineAuction(null)
     },
     [user.id, marketMode]
   )
@@ -236,7 +233,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
   }, [auctions])
 
   // Render
-  const isInCardDetail = viewMode === 'cards' && inlineAuction
+  const isInCardDetail = viewMode === 'cards' && inlineAuction !== null
   const cssCard = isInCardDetail ? 'lg:justify-start' : 'lg:justify-end'
 
   return (
