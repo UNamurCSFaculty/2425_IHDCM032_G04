@@ -286,7 +286,10 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                     <Clock />
                     {t('auction.expires_in')}&nbsp;
                     <span className="font-semibold">
-                      <CountdownTimer endDate={endsIn} />
+                      <CountdownTimer
+                        status={auction.status.name}
+                        endDate={endsIn}
+                      />
                     </span>
                   </Badge>
 

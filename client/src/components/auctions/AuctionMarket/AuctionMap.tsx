@@ -115,7 +115,10 @@ const AuctionMap: React.FC<{
                           {t('auction.time_remaining_label')}
                         </dt>
                         <dd className="ml-2">
-                          <CountdownTimer endDate={expires.toDate()} />
+                          <CountdownTimer
+                            status={a.status.name}
+                            endDate={expires.toDate()}
+                          />
                         </dd>
                       </div>
                     </dl>

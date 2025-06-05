@@ -50,7 +50,7 @@ function calculateTimeLeft(endDate: Date) {
 
 export function CountdownTimer({
   endDate,
-  status = 'Expiré',
+  status = 'Unknown',
 }: CountdownTimerProps) {
   const { t } = useTranslation()
   const [timeLeft, setTimeLeft] = useState(() => calculateTimeLeft(endDate))
