@@ -38,6 +38,7 @@ import org.locationtech.jts.geom.PrecisionModel;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -124,6 +125,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 
 	private final EntityManager entityManager;
 	private final Environment environment;
+	private final StringRedisTemplate redisTemplate;
 
 	// --- Internal State ---
 	private final Faker faker = new Faker(Locale.of("fr")); // Use French Faker locale
@@ -197,6 +199,9 @@ public class DatabaseServiceImpl implements DatabaseService {
 
 	@Override
 	public void dropDatabase() {
+		log.info("Flush Redis data.");
+		redisTemplate.getConnectionFactory().getConnection().flushAll();
+
 		log.info("Dropping application tables...");
 		userRepository.findAll().forEach(p -> {
 			if (p instanceof Producer c) {
