@@ -51,7 +51,7 @@ const FaqSection = (props: Faq1Props) => {
   const items = props.items ?? defaultItems
 
   return (
-    <section className="py-10">
+    <section className="px-6 py-10">
       <div className="intersect-once intersect-half intersect:scale-100 intersect:opacity-100 container mx-auto h-full max-w-3xl scale-50 transform opacity-0 transition duration-500 ease-out">
         <h1 className="mb-4 text-center text-3xl font-semibold md:mb-11 md:text-4xl">
           {heading}

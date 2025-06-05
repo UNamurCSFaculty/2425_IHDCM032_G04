@@ -355,7 +355,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                   </SheetTrigger>
                   <SheetContent
                     side="left"
-                    className="w-[300px] overflow-y-auto py-7 sm:w-[380px]"
+                    className="w-[300px] overflow-y-auto py-10 sm:w-[380px]"
                   >
                     <FiltersPanel
                       filterData={auctions as AuctionDto[]}
@@ -372,7 +372,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
         </div>
       </div>
 
-      <div className="grid items-start gap-6 lg:grid-cols-[260px_1fr]">
+      <div className="grid items-start gap-6 px-6 lg:grid-cols-[260px_1fr]">
         {isDesktop && !isAuctionsLoading && (
           <div className="bg-background sticky top-20 self-start rounded-lg border shadow-sm">
             <FiltersPanel
@@ -502,7 +502,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
       {dialogAuction && viewMode !== 'cards' && (
         <Dialog open onOpenChange={open => !open && setDialogAuction(null)}>
           <DialogTitle />
-          <DialogContent className="max-h-[90vh] w-full max-w-[80vw]! overflow-y-auto">
+          <DialogContent className="max-h-[90vh] w-full max-w-[80vw]! overflow-y-auto pt-8 pb-20">
             <AuctionDetails
               auction={dialogAuction}
               role={userRole}

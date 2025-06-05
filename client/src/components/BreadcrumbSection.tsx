@@ -68,7 +68,7 @@ export function BreadcrumbSection({
   return (
     <section
       className={cn(
-        'bg-gradient-to-br from-green-50 to-yellow-50 py-12 dark:from-gray-800 dark:to-gray-900', // Ajout de couleurs pour le mode sombre
+        'bg-gradient-to-br from-green-50 to-yellow-50 px-6 py-12 dark:from-gray-800 dark:to-gray-900', // Ajout de couleurs pour le mode sombre
         className
       )}
     >

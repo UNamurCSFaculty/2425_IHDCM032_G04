@@ -253,7 +253,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
   const ended = endsIn < new Date()
 
   return (
-    <div className="mx-auto flex w-full flex-col gap-6 p-4">
+    <div className="mx-auto flex w-full flex-col gap-6 py-4">
       <div className="flex flex-wrap space-y-1">
         <h2 className="flex items-center gap-2 text-2xl font-semibold">
           {t('auction.details_title_full', {
