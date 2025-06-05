@@ -162,7 +162,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
       queryClient.invalidateQueries({ queryKey: listAuctionsQueryKey() })
     })
     es.onerror = () => {
-      console.error('[SSE] Erreur EventSource enchère')
+      // console.error('[SSE] Erreur EventSource enchère')
     }
     return () => {
       es.close()
