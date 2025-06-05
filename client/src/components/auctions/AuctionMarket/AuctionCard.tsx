@@ -53,7 +53,7 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
     (max, b) => (b.amount > max ? b.amount : max),
     0
   )
-  const expires = dayjs(auction.expirationDate)
+  const expires = dayjs.utc(auction.expirationDate)
   const isEndingSoon = expires.diff(dayjs(), 'hour') < 24
 
   const regionLabel = auction.product.store.address.regionId

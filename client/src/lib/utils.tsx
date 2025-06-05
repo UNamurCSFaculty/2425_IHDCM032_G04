@@ -154,5 +154,5 @@ export const getCategoryTextColor = (): string => {
 
 export const getPricePerKg = (price: number, quantity: number) => {
   if (quantity <= 0) return 0
-  return Math.round(price / quantity)
+  return Math.floor(price / quantity)
 }

@@ -8,26 +8,43 @@ interface CountdownTimerProps {
 }
 
 function calculateTimeLeft(endDate: Date) {
-  const difference = endDate.getTime() - Date.now()
+  const nowTime = Date.now()
+  const diffSeconds = Math.round((endDate.getTime() - nowTime) / 1000)
 
-  if (difference <= 0) {
+  if (diffSeconds <= 0) {
     return {
       days: 0,
       hours: 0,
       minutes: 0,
       seconds: 0,
-      milliseconds: 0,
       difference: 0,
     }
   }
 
+  const nbSecondsPerDay = 24 * 60 * 60
+  const nbSecondsPerHour = 60 * 60
+  const nbSecondsPerMinute = 60
+
+  const days = Math.floor(diffSeconds / nbSecondsPerDay)
+  const hours = Math.floor(
+    (diffSeconds - days * nbSecondsPerDay) / nbSecondsPerHour
+  )
+  const minutes = Math.floor(
+    (diffSeconds - days * nbSecondsPerDay - hours * nbSecondsPerHour) /
+      nbSecondsPerMinute
+  )
+  const seconds =
+    diffSeconds -
+    days * nbSecondsPerDay -
+    hours * nbSecondsPerHour -
+    minutes * nbSecondsPerMinute
+
   return {
-    days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-    hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-    minutes: Math.floor((difference / 1000 / 60) % 60),
-    seconds: Math.floor((difference / 1000) % 60),
-    milliseconds: Math.floor(difference % 1000),
-    difference,
+    days: days,
+    hours: hours,
+    minutes: minutes,
+    seconds: seconds,
+    difference: diffSeconds,
   }
 }
 
@@ -65,11 +82,11 @@ export function CountdownTimer({
     }
   }
 
-  if (difference <= 0) {
+  if (difference <= 0 && status !== TradeStatus.OPEN) {
     return <div className={`font-bold ${statusColor}`}>{getStatusLabel()}</div>
   }
 
-  const isLast24h = difference <= 24 * 60 * 60 * 1000
+  const isLast24h = difference <= 24 * 60 * 60
 
   return (
     <div className={isLast24h ? 'font-semibold text-red-500' : 'font-semibold'}>
