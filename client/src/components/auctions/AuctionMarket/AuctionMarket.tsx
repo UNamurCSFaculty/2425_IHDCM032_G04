@@ -35,10 +35,10 @@ import { useQuery } from '@tanstack/react-query'
 import {
   Apple,
   ArrowLeft,
+  Bean,
   LayoutGrid,
   List as ListIcon,
   Map as MapIcon,
-  Nut,
   SlidersHorizontal,
 } from 'lucide-react'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
@@ -296,7 +296,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                     />
                     <AuctionTrend
                       tooltip={t('database.transformed')}
-                      icon={<Nut />}
+                      icon={<Bean />}
                       volume={trends.transformed.volume}
                       volumeLabel={t('marketplace.trend_volume')}
                       price={trends.transformed.avgPricePerKg}
