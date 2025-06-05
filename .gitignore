@@ -31,6 +31,4 @@ out/
 api/docs/html/
 api/docs/latex/
 
-aws*
-docker-compose_old.yml
-zsteps.md
+.env*
