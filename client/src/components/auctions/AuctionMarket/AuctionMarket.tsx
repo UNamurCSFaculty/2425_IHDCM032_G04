@@ -286,7 +286,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                   <>
                     <AuctionTrend
                       tooltip={t('database.harvest')}
-                      icon={<Apple />}
+                      icon={<Apple color="green" />}
                       volume={trends.harvest.volume}
                       volumeLabel={t('marketplace.trend_volume')}
                       price={trends.harvest.avgPricePerKg}
@@ -296,7 +296,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                     />
                     <AuctionTrend
                       tooltip={t('database.transformed')}
-                      icon={<Bean />}
+                      icon={<Bean color="brown" />}
                       volume={trends.transformed.volume}
                       volumeLabel={t('marketplace.trend_volume')}
                       price={trends.transformed.avgPricePerKg}
