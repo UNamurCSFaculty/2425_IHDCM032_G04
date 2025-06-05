@@ -4620,6 +4620,27 @@ export type GetCurrentUserResponses = {
 export type GetCurrentUserResponse =
   GetCurrentUserResponses[keyof GetCurrentUserResponses]
 
+export type Subscribe1Data = {
+  body?: never
+  path: {
+    auctionId: number
+  }
+  query?: {
+    visitor?: boolean
+    token?: string
+  }
+  url: '/api/auctions/{auctionId}/sse'
+}
+
+export type Subscribe1Responses = {
+  /**
+   * OK
+   */
+  200: SseEmitter
+}
+
+export type Subscribe1Response = Subscribe1Responses[keyof Subscribe1Responses]
+
 export type GetAuctionSettingsData = {
   body?: never
   path?: never

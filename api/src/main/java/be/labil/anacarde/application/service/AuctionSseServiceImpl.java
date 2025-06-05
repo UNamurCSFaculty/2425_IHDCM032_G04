@@ -25,14 +25,83 @@ public class AuctionSseServiceImpl implements AuctionSseService {
 	}
 
 	@Override
-	public SseEmitter subscribe(Integer auctionId, String userKey) {
+	public SseEmitter subscribe(Integer auctionId, String userKey, boolean isVisitor) {
 		SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
 		emitters.computeIfAbsent(auctionId, k -> new CopyOnWriteArrayList<>()).add(emitter);
-		redisTemplate.opsForSet().add("auction-subscribers:" + auctionId, userKey);
+		try {
+			if (isVisitor) {
+				redisTemplate.opsForSet().add("auction-visitors:" + auctionId, userKey);
+				log.debug("[SSE] Visiteur " + userKey + " ajouté à l'enchère ID " + auctionId);
+			} else {
+				redisTemplate.opsForSet().add("auction-subscribers:" + auctionId, userKey);
+			}
+		} catch (Exception e) {
+		}
 
-		emitter.onCompletion(() -> emitters.get(auctionId).remove(emitter));
-		emitter.onTimeout(() -> emitters.get(auctionId).remove(emitter));
+		emitter.onCompletion(() -> {
+			try {
+				emitters.get(auctionId).remove(emitter);
+				if (isVisitor) {
+					redisTemplate.opsForSet().remove("auction-visitors:" + auctionId, userKey);
+				} else {
+					redisTemplate.opsForSet().remove("auction-subscribers:" + auctionId, userKey);
+				}
+			} catch (Exception e) {
+			}
+		});
+		emitter.onTimeout(() -> {
+			try {
+				emitters.get(auctionId).remove(emitter);
+				if (isVisitor) {
+					redisTemplate.opsForSet().remove("auction-visitors:" + auctionId, userKey);
+				} else {
+					redisTemplate.opsForSet().remove("auction-subscribers:" + auctionId, userKey);
+				}
+			} catch (Exception e) {
+			}
+		});
+		emitter.onError(e -> {
+			try {
+				emitters.get(auctionId).remove(emitter);
+				if (isVisitor) {
+					redisTemplate.opsForSet().remove("auction-visitors:" + auctionId, userKey);
+				} else {
+					redisTemplate.opsForSet().remove("auction-subscribers:" + auctionId, userKey);
+				}
+			} catch (Exception ex) {
+			}
+		});
 		return emitter;
+	}
+
+	@Override
+	public void removeVisitor(Integer auctionId, String userKey) {
+		try {
+			redisTemplate.opsForSet().remove("auction-visitors:" + auctionId, userKey);
+			log.debug("[SSE] Visiteur " + userKey + " supprimé de l'enchère ID " + auctionId);
+		} catch (Exception e) {
+		}
+	}
+
+	@Override
+	public void removeSubscriber(Integer auctionId, String userKey) {
+		try {
+			redisTemplate.opsForSet().remove("auction-subscribers:" + auctionId, userKey);
+			log.debug("[SSE] Abonné " + userKey + " supprimé de l'enchère ID " + auctionId);
+		} catch (Exception e) {
+		}
+	}
+
+	@Override
+	public Set<String> getVisitors(Integer auctionId) {
+		try {
+			Set<String> visitors = redisTemplate.opsForSet()
+					.members("auction-visitors:" + auctionId);
+			log.debug("[SSE] Visiteurs de l'enchère " + auctionId + ": " + visitors);
+			return visitors;
+		} catch (Exception e) {
+			return Set.of();
+		}
 	}
 
 	@Override
@@ -43,23 +112,36 @@ public class AuctionSseServiceImpl implements AuctionSseService {
 				emitter.send(
 						SseEmitter.event().name(eventName).data(data, MediaType.APPLICATION_JSON));
 			} catch (IOException e) {
-				emitter.complete();
-				list.remove(emitter);
+				try {
+					emitter.complete();
+					list.remove(emitter);
+				} catch (Exception ex) {
+				}
+			} catch (Exception e) {
 			}
 		}
 	}
 
 	@Override
 	public Set<String> getSubscribers(Integer auctionId) {
-		Set<String> subs = redisTemplate.opsForSet().members("auction-subscribers:" + auctionId);
-		log.debug("[SSE] Abonnés à l'enchère " + auctionId + ": " + subs);
-		return subs;
+		try {
+			Set<String> subs = redisTemplate.opsForSet()
+					.members("auction-subscribers:" + auctionId);
+			log.debug("[SSE] Abonnés à l'enchère " + auctionId + ": " + subs);
+			return subs;
+		} catch (Exception e) {
+			return Set.of();
+		}
 	}
 
 	@Override
 	public void addSubscriber(Integer auctionId, String userKey) {
-		redisTemplate.opsForSet().add("auction-subscribers:" + auctionId, userKey); // devrait être
-																					// idempotent
-		log.debug("[SSE] Abonné " + userKey + " ajouté à l'enchère ID " + auctionId);
+		try {
+			redisTemplate.opsForSet().add("auction-subscribers:" + auctionId, userKey); // devrait
+																						// être
+																						// idempotent
+			log.debug("[SSE] Abonné " + userKey + " ajouté à l'enchère ID " + auctionId);
+		} catch (Exception e) {
+		}
 	}
 }

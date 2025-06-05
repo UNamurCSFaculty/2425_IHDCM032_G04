@@ -922,6 +922,8 @@ export const zGetContractOfferByCriteriaResponse = zContractOfferDto
 
 export const zGetCurrentUserResponse = zUserDetailDto
 
+export const zSubscribe1Response = zSseEmitter
+
 export const zGetAuctionSettingsResponse = zGlobalSettingsDto
 
 export const zGetApplicationDataResponse = zApplicationDataDto

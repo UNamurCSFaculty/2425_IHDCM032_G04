@@ -42,8 +42,12 @@ public class NotificationSseServiceImpl implements NotificationSseService {
 			try {
 				emitter.send(SseEmitter.event().name(eventName).data(data));
 			} catch (IOException e) {
-				emitter.complete();
-				list.remove(emitter);
+				try {
+					emitter.complete();
+					list.remove(emitter);
+				} catch (Exception ex) {
+				}
+			} catch (Exception e) {
 			}
 		}
 	}
