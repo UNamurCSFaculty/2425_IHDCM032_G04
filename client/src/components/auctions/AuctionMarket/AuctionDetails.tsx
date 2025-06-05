@@ -76,6 +76,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
   const queryClient = useQueryClient()
   const [amount, setAmount] = useState('')
   const [bidPricePerKg, setBidPricePerKg] = useState(0)
+  const [contractPrice, setContractPrice] = useState(0)
   const [buyNowPopover, setBuyNowPopover] = useState(false)
   const [makeBidPopover, setMakeBidPopover] = useState(false)
   const [acceptBidPopoverIndex, setAcceptBidPopoverIndex] = useState(-1)
@@ -108,6 +109,29 @@ const AuctionDetailsPanel: React.FC<Props> = ({
       user.id
     )
   )
+
+  useEffect(() => {
+    if (contract) {
+      const pricePerKg = getPricePerKg(auction.price, auction.productQuantity)
+      if (contract.pricePerKg >= pricePerKg) {
+        setContractPrice(0)
+      } else {
+        setContractPrice(contract.pricePerKg * auction.productQuantity)
+      }
+    }
+  }, [contract, auction.price, auction.productQuantity])
+
+  // const getContractPrice = (
+  //   contract: ContractOfferDto | undefined,
+  //   auction: AuctionDto | undefined
+  // ) => {
+  //   if (!contract || !auction) return null
+
+  //   const pricePerKg = getPricePerKg(auction.price, auction.productQuantity)
+  //   if (contract.pricePerKg >= pricePerKg) return null
+
+  //   return contract.pricePerKg * auction.productQuantity
+  // }
 
   useEffect(() => {
     const handler = (event: Event) => {
@@ -341,73 +365,68 @@ const AuctionDetailsPanel: React.FC<Props> = ({
           <div className="flex flex-1 flex-col gap-6">
             <Card className="rounded-lg bg-neutral-100 p-4 shadow">
               {/* Achat immédiat */}
-              {auction.options?.buyNowPrice && (
-                <div className="flex flex-col items-center text-center">
-                  <span className="mb-2 text-base font-medium text-gray-700">
-                    {t('auction.buy_now_label')}
-                  </span>
-                  <Popover open={buyNowPopover} onOpenChange={setBuyNowPopover}>
-                    <PopoverTrigger asChild>
-                      <Button
-                        className="bg-amber-600 px-6 text-white hover:bg-amber-700"
-                        onClick={() => setBuyNowPopover(true)}
-                      >
-                        <ShoppingCart className="mr-2 size-4" />
-                        {contract &&
-                        contract.pricePerKg < auction.options.buyNowPrice ? (
-                          <>
-                            <span className="text-sm line-through opacity-70">
-                              {formatPrice.format(auction.options.buyNowPrice)}
-                            </span>
-                            <span className="text-base font-semibold">
-                              {formatPrice.format(contract.pricePerKg)}
-                            </span>
-                          </>
-                        ) : (
-                          <span className="text-base font-semibold">
-                            {formatPrice.format(auction.options.buyNowPrice)}
+              <div className="flex flex-col items-center text-center">
+                <span className="mb-2 text-base font-medium text-gray-700">
+                  {t('auction.buy_now_label')}
+                </span>
+                <Popover open={buyNowPopover} onOpenChange={setBuyNowPopover}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      className="bg-amber-600 px-6 text-white hover:bg-amber-700"
+                      onClick={() => setBuyNowPopover(true)}
+                    >
+                      <ShoppingCart className="mr-2 size-4" />
+                      {contractPrice > 0 ? (
+                        <>
+                          <span className="text-sm line-through opacity-70">
+                            {formatPrice.format(auction.price)}
                           </span>
-                        )}
+                          <span className="text-base font-semibold">
+                            {formatPrice.format(contractPrice)}
+                          </span>
+                        </>
+                      ) : (
+                        <span className="text-base font-semibold">
+                          {formatPrice.format(auction.price)}
+                        </span>
+                      )}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-64 p-4">
+                    <p className="mb-4 text-center text-sm">
+                      {t('auction.confirm_buy_now_prompt', {
+                        price: formatPrice.format(
+                          contractPrice > 0 ? contractPrice : auction.price
+                        ),
+                      })}
+                    </p>
+                    <div className="flex justify-end gap-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setBuyNowPopover(false)}
+                      >
+                        {t('buttons.cancel')}
                       </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-64 p-4">
-                      <p className="mb-4 text-center text-sm">
-                        {t('auction.confirm_buy_now_prompt', {
-                          price: formatPrice.format(
-                            contract?.pricePerKg ?? auction.options.buyNowPrice
-                          ),
-                        })}
-                      </p>
-                      <div className="flex justify-end gap-2">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => setBuyNowPopover(false)}
-                        >
-                          {t('buttons.cancel')}
-                        </Button>
-                        <Button
-                          size="sm"
-                          onClick={() =>
-                            handleSubmitBuyNow(
-                              contract?.pricePerKg ??
-                                auction.options?.buyNowPrice
-                            )
-                          }
-                        >
-                          {t('buttons.confirm')}
-                        </Button>
-                      </div>
-                    </PopoverContent>
-                  </Popover>
-                  {contract &&
-                    contract.pricePerKg < auction.options.buyNowPrice && (
-                      <span className="mt-1 text-sm font-medium text-amber-600">
-                        {t('auction.contract_price_label')}
-                      </span>
-                    )}
-                </div>
-              )}
+                      <Button
+                        size="sm"
+                        onClick={() =>
+                          handleSubmitBuyNow(
+                            contractPrice > 0 ? contractPrice : auction.price
+                          )
+                        }
+                      >
+                        {t('buttons.confirm')}
+                      </Button>
+                    </div>
+                  </PopoverContent>
+                </Popover>
+                {contractPrice > 0 && (
+                  <span className="mt-1 text-sm font-medium text-amber-600">
+                    {t('auction.contract_price_label')}
+                  </span>
+                )}
+              </div>
 
               <Separator />
 
