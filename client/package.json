@@ -12,7 +12,7 @@
     "format": "prettier --plugin=prettier-plugin-tailwindcss --end-of-line auto --write \"src/**/*.{js,ts,tsx,css,html,json,md}\"",
     "format:check": "prettier --plugin=prettier-plugin-tailwindcss --end-of-line auto --check \"src/**/*.{js,ts,tsx,css,html,json,md}\"",
     "lint": "eslint . --ext ts,tsx --fix --report-unused-disable-directives --max-warnings 0",
-    "generate:api": "openapi-ts && node scripts/fix-zod.js",
+    "generate:api": "cross-env NODE_TLS_REJECT_UNAUTHORIZED=0 bash -c \"bunx openapi-ts && node scripts/fix-zod.js\"",
     "postgenerate:api": "prettier --plugin=prettier-plugin-tailwindcss --end-of-line auto --write \"src/api/**/*.{js,ts,tsx,css,html,json,md}\""
   },
   "dependencies": {
@@ -104,6 +104,7 @@
     "@typescript-eslint/eslint-plugin": "^8.33.0",
     "@typescript-eslint/parser": "^8.33.0",
     "@vitejs/plugin-react": "^4.5.0",
+    "cross-env": "^7.0.3",
     "eslint": "^9.28.0",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-jsx-a11y": "^6.10.2",

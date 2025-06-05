@@ -4797,5 +4797,5 @@ export type GetDashboardCardsResponse =
   GetDashboardCardsResponses[keyof GetDashboardCardsResponses]
 
 export type ClientOptions = {
-  baseUrl: 'http://localhost:8080' | (string & {})
+  baseUrl: 'https://localhost:8080' | (string & {})
 }

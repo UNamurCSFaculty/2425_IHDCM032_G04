@@ -2,7 +2,7 @@ import { defineConfig } from '@hey-api/openapi-ts'
 
 export default defineConfig({
   // URL de votre spec OpenAPI (Swagger UI)
-  input: 'http://localhost:8080/v3/api-docs',
+  input: 'https://localhost:8080/v3/api-docs',
   // dossier de sortie
   output: 'src/api/generated',
   // plugins pour générer :
