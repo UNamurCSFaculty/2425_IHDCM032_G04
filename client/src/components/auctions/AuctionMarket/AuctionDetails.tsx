@@ -481,7 +481,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
         )}
 
         {role === 'buyer' && ended && (
-          <div className="flex w-2/5 flex-col">
+          <div className="flex w-full flex-col md:w-2/5">
             <Card className="rounded-lg bg-neutral-100 p-4 shadow">
               <div className="flex flex-col">
                 <span className="mb-2 text-center text-base font-medium text-gray-700">
@@ -495,7 +495,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                 </div>
 
                 {acceptedBid && user.id === acceptedBid.trader.id && (
-                  <div className="mt-2 flex justify-center">
+                  <div className="mt-2 flex flex-col justify-center">
                     <Button onClick={() => setIsOpen(true)}>
                       <ScrollText />
                       {t('auction.table.propose_contract_button')}
