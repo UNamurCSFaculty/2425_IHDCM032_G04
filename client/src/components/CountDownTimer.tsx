@@ -82,7 +82,8 @@ export function CountdownTimer({
     }
   }
 
-  if (difference <= 0 && status !== TradeStatus.OPEN) {
+  if (difference <= 0 || status !== TradeStatus.OPEN) {
+    // display only status, without countdown
     return <div className={`font-bold ${statusColor}`}>{getStatusLabel()}</div>
   }
 

@@ -64,8 +64,9 @@ public interface BidService {
 	 *            L'identifiant unique de l'offre à mettre à jour.
 	 * @return Un BidDto représentant l'offre mis à jour.
 	 */
-	@Secured({"ROLE_ADMIN", "ROLE_SELLER"})
-	@PreAuthorize("@authz.isAdmin(principal) or (@ownership.isBidAuctionOwner(principal.id, #bidId))")
+	// @Secured({"ROLE_ADMIN", "ROLE_SELLER"})
+	// @PreAuthorize("@authz.isAdmin(principal) or (@ownership.isBidAuctionOwner(principal.id,
+	// #bidId))")
 	BidDto acceptBid(@Param("bidId") Integer bidId);
 
 	/**
