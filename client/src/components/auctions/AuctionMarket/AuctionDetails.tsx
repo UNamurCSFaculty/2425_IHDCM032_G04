@@ -134,7 +134,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
     }
     window.addEventListener('auction:newBid', handler)
     return () => {
-      window.removeEventListener("auction:newBid", handler)
+      window.removeEventListener('auction:newBid', handler)
       if (sseRef.current) {
         sseRef.current.close()
         sseRef.current = null
@@ -142,26 +142,27 @@ const AuctionDetailsPanel: React.FC<Props> = ({
     }
   }, [auction.id, queryClient])
 
-  useEffect(() => { // SSE visitors
-    const baseUrl = client.getConfig().baseUrl?.replace(/\/$/, "") ?? ""
+  useEffect(() => {
+    // SSE visitors
+    const baseUrl = client.getConfig().baseUrl?.replace(/\/$/, '') ?? ''
     const sseUrl = `${baseUrl}/api/auctions/${auction.id}/sse?visitor=true`
     const es = new window.EventSource(sseUrl, { withCredentials: true })
     sseRef.current = es
 
-    es.addEventListener("refreshBids", () => {
+    es.addEventListener('refreshBids', () => {
       queryClient.invalidateQueries({ queryKey: listBidsQueryKey() })
       queryClient.invalidateQueries({ queryKey: listAuctionsQueryKey() })
       window.dispatchEvent(
-        new CustomEvent("auction:newBid", {
+        new CustomEvent('auction:newBid', {
           detail: { auctionId: auction.id },
         })
       )
     })
-    es.addEventListener("auctionClosed", () => {
+    es.addEventListener('auctionClosed', () => {
       queryClient.invalidateQueries({ queryKey: listAuctionsQueryKey() })
     })
     es.onerror = () => {
-      console.error("[SSE] Erreur EventSource enchère")
+      console.error('[SSE] Erreur EventSource enchère')
     }
     return () => {
       es.close()
