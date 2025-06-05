@@ -121,18 +121,6 @@ const AuctionDetailsPanel: React.FC<Props> = ({
     }
   }, [contract, auction.price, auction.productQuantity])
 
-  // const getContractPrice = (
-  //   contract: ContractOfferDto | undefined,
-  //   auction: AuctionDto | undefined
-  // ) => {
-  //   if (!contract || !auction) return null
-
-  //   const pricePerKg = getPricePerKg(auction.price, auction.productQuantity)
-  //   if (contract.pricePerKg >= pricePerKg) return null
-
-  //   return contract.pricePerKg * auction.productQuantity
-  // }
-
   useEffect(() => {
     const handler = (event: Event) => {
       const customEvent = event as CustomEvent<{ auctionId: number }>
