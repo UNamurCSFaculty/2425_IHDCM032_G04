@@ -62,12 +62,5 @@ export default defineConfig(({ command }) => ({
     },
     port: 3000,
     strictPort: true,
-    proxy: {
-      '/api': {
-        target: 'https://localhost:8080',
-        changeOrigin: true, // Nécessaire pour les hôtes virtuels
-        secure: false,
-      },
-    },
   },
 }))
