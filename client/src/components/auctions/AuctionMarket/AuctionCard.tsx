@@ -71,7 +71,10 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
           {t('database.' + auction.product.type)}
         </TableCell>
         <TableCell>
-          <CountdownTimer endDate={expires.toDate()} />
+          <CountdownTimer
+            status={auction.status.name}
+            endDate={expires.toDate()}
+          />
         </TableCell>
         <TableCell className="truncate">{regionLabel}</TableCell>
         <TableCell className="truncate">{cityLabel}</TableCell>
