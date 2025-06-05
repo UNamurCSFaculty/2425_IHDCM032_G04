@@ -21,7 +21,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { Separator } from '@/components/ui/separator'
-import { TradeStatus, wktToLatLon } from '@/lib/utils'
+import { TradeStatus, getPricePerKg, wktToLatLon } from '@/lib/utils'
 import { useAuthUser } from '@/store/userStore'
 import dayjs from '@/utils/dayjs-config'
 import { formatPrice, formatWeight } from '@/utils/formatter'
@@ -75,6 +75,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
   const user = useAuthUser()
   const queryClient = useQueryClient()
   const [amount, setAmount] = useState('')
+  const [bidPricePerKg, setBidPricePerKg] = useState(0)
   const [buyNowPopover, setBuyNowPopover] = useState(false)
   const [makeBidPopover, setMakeBidPopover] = useState(false)
   const [acceptBidPopoverIndex, setAcceptBidPopoverIndex] = useState(-1)
@@ -121,6 +122,12 @@ const AuctionDetailsPanel: React.FC<Props> = ({
       window.removeEventListener('auction:newBid', handler)
     }
   }, [auction.id, queryClient])
+
+  useEffect(() => {
+    setBidPricePerKg(
+      getPricePerKg(amount ? Number(amount) : 0, auction.productQuantity)
+    )
+  }, [amount, auction.productQuantity])
 
   const createBidRequest = useMutation({
     ...createBidMutation(),
@@ -417,6 +424,9 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                     onChange={e => setAmount(e.target.value)}
                     className="mb-3 w-full bg-white"
                   />
+                  <div className="mb-2 text-xs font-semibold text-gray-500">
+                    {bidPricePerKg} CFA/kg
+                  </div>
                   <Popover
                     open={makeBidPopover}
                     onOpenChange={setMakeBidPopover}

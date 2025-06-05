@@ -19,6 +19,7 @@ import be.labil.anacarde.infrastructure.util.PersistenceHelper;
 import be.labil.anacarde.infrastructure.util.SecurityHelper;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -286,8 +287,8 @@ public class AuctionServiceImpl implements AuctionService {
 	}
 
 	private void checkAuctionExpirationDate(AuctionUpdateDto auctionUpdateDto) {
-		if (auctionUpdateDto.getExpirationDate() != null
-				&& auctionUpdateDto.getExpirationDate().isBefore(LocalDateTime.now())) {
+		if (auctionUpdateDto.getExpirationDate() != null && auctionUpdateDto.getExpirationDate()
+				.isBefore(LocalDateTime.now(ZoneOffset.UTC))) {
 			throw new ApiErrorException(HttpStatus.BAD_REQUEST, ApiErrorCode.BAD_REQUEST.code(),
 					"expirationDate", "Date d'expiration définie dans le passé.");
 		}
