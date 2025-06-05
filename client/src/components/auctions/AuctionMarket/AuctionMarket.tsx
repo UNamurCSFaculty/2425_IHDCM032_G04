@@ -35,10 +35,10 @@ import { useQuery } from '@tanstack/react-query'
 import {
   Apple,
   ArrowLeft,
+  Bean,
   LayoutGrid,
   List as ListIcon,
   Map as MapIcon,
-  Nut,
   SlidersHorizontal,
 } from 'lucide-react'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
@@ -173,9 +173,6 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
         )
       }
       setFilteredAuctions(newFilteredData)
-
-      // reset view to list when user selects a filter in FilterPanel
-      setInlineAuction(null)
     },
     [user.id, marketMode]
   )
@@ -236,7 +233,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
   }, [auctions])
 
   // Render
-  const isInCardDetail = viewMode === 'cards' && inlineAuction
+  const isInCardDetail = viewMode === 'cards' && inlineAuction !== null
   const cssCard = isInCardDetail ? 'lg:justify-start' : 'lg:justify-end'
 
   return (
@@ -286,7 +283,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                   <>
                     <AuctionTrend
                       tooltip={t('database.harvest')}
-                      icon={<Apple />}
+                      icon={<Apple color="green" />}
                       volume={trends.harvest.volume}
                       volumeLabel={t('marketplace.trend_volume')}
                       price={trends.harvest.avgPricePerKg}
@@ -296,7 +293,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                     />
                     <AuctionTrend
                       tooltip={t('database.transformed')}
-                      icon={<Nut />}
+                      icon={<Bean color="brown" />}
                       volume={trends.transformed.volume}
                       volumeLabel={t('marketplace.trend_volume')}
                       price={trends.transformed.avgPricePerKg}

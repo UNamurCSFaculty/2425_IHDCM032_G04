@@ -569,6 +569,7 @@
     "access.forbidden.csrf": "CSRF 令牌不匹配",
     "access.forbidden.csrf.missing": "缺少 CSRF 令牌",
     "access.unauthorized": "身份验证失败",
+    "access.unauthorized.gmail_not_found": "没有与此电子邮件地址关联的用户帐户。请先注册。",
     "agriculture_id.exists": "该农业标识符已被使用",
     "bad_request": "请求错误",
     "default.error": "数据完整性冲突",

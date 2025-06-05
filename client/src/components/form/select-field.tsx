@@ -9,7 +9,7 @@ import {
 } from '../ui/select'
 import { FieldErrors } from './field-errors'
 import SimpleTooltip from '../SimpleTooltip'
-import { LoaderIcon } from 'lucide-react'
+import { LoaderCircle } from 'lucide-react'
 
 type SelectOption<T> = {
   value: T
@@ -64,7 +64,7 @@ export function SelectField<T extends string | number>({
         <div className="flex items-center justify-between">
           <Label htmlFor={field.name}>
             {label}
-            {loading && <LoaderIcon className="animate-spin" />}
+            {loading && <LoaderCircle className="animate-spin" />}
             {required && <span className="text-red-500">*</span>}
             {tooltip && <SimpleTooltip content={tooltip} />}
           </Label>

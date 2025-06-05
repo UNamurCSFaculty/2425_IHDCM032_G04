@@ -3,4 +3,4 @@ data/
 build/
 log/
 config/
-application-secrets.properties
+config/application-secrets.properties

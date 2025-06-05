@@ -569,6 +569,7 @@
     "access.forbidden.csrf": "Token CSRF no coincide",
     "access.forbidden.csrf.missing": "Falta el token CSRF",
     "access.unauthorized": "Autenticación fallida",
+    "access.unauthorized.gmail_not_found": "No hay ninguna cuenta de usuario asociada a esta dirección de correo electrónico. Por favor, regístrese primero.",
     "agriculture_id.exists": "Este identificador agrícola ya está en uso",
     "bad_request": "Solicitud incorrecta",
     "default.error": "Violación de integridad de datos",

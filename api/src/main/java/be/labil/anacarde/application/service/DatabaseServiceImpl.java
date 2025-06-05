@@ -872,12 +872,13 @@ public class DatabaseServiceImpl implements DatabaseService {
 		}
 
 		String qualityName = product.getQualityControl().getQuality().getName();
-		int quantity = faker.number().numberBetween(MIN_PRODUCT_50KG_BAG, MAX_PRODUCT_50KG_BAG + 1)
-				* 50;
+		int quantity = Math.min(
+				faker.number().numberBetween(MIN_PRODUCT_50KG_BAG, MAX_PRODUCT_50KG_BAG + 1) * 50,
+				product.getWeightKgAvailable().intValue());
 		double[] range = cashewPriceRanges.getOrDefault(qualityName, new double[]{5000.0, 8000.0});
 		double minPrice = range[0];
 		double maxPrice = range[1];
-		double price = minPrice + random.nextDouble() * (maxPrice - minPrice) / 2;
+		double price = maxPrice - random.nextDouble() * (maxPrice - minPrice) / 2;
 		BigDecimal total = BigDecimal.valueOf(price * quantity);
 		BigDecimal roundedTo100 = total.divide(BigDecimal.valueOf(100), 0, RoundingMode.FLOOR)
 				.multiply(BigDecimal.valueOf(100));
@@ -885,7 +886,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 
 		AuctionOptionsUpdateDto opt = new AuctionOptionsUpdateDto();
 		opt.setStrategyId(strategyOffer.getId());
-		opt.setBuyNowPrice(maxPrice * quantity);
+		opt.setBuyNowPrice(price);
 		opt.setShowPublic(true);
 		opt.setForceBetterBids(faker.bool().bool());
 		opt.setMinPriceKg(minPrice);
@@ -897,8 +898,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 		AuctionUpdateDto auctionDto = new AuctionUpdateDto();
 		auctionDto.setProductId(product.getId());
 		auctionDto.setTraderId(seller.getId());
-		auctionDto
-				.setProductQuantity(Math.min(quantity, product.getWeightKgAvailable().intValue()));
+		auctionDto.setProductQuantity(quantity);
 		auctionDto.setPrice(price);
 		auctionDto.setActive(true); // isActive means entity is not DELETED from database
 		auctionDto.setExpirationDate(expirationDate);
@@ -961,9 +961,11 @@ public class DatabaseServiceImpl implements DatabaseService {
 			boolean auctionFinished = !auction.getStatus().getId().equals(statusOpen.getId());
 			boolean auctionAccepted = auction.getStatus().getId().equals(statusAccepted.getId());
 
-			BigDecimal currentHighest = BigDecimal.valueOf(auction.getPrice());
+			BigDecimal currentHighest = BigDecimal
+					.valueOf(auction.getPrice() * (0.7 - 0.2 * random.nextDouble()));
 			LocalDateTime lastBidTime = auction.getCreationDate();
 			List<BidUpdateDto> bids = new ArrayList<>();
+			BigDecimal buyNowTotal = BigDecimal.valueOf(auction.getOptions().getBuyNowPrice());
 
 			for (int i = 0; i < numBids; i++) {
 				TraderDetailDto bidder;
@@ -1010,7 +1012,6 @@ public class DatabaseServiceImpl implements DatabaseService {
 						.multiply(BigDecimal.valueOf(1 + random.nextDouble() * 0.05));
 				BigDecimal minInc = BigDecimal.valueOf(auction.getOptions().getMinIncrement());
 				BigDecimal amount = raw.divide(minInc, 0, RoundingMode.CEILING).multiply(minInc);
-				BigDecimal buyNowTotal = BigDecimal.valueOf(auction.getOptions().getBuyNowPrice());
 
 				if (amount.compareTo(buyNowTotal) >= 0) {
 					if (auctionAccepted) {

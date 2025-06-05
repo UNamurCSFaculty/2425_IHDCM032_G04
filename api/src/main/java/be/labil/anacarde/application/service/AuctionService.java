@@ -72,8 +72,6 @@ public interface AuctionService {
 	 *            L'identifiant unique de l'enchère à mettre à jour.
 	 * @return Un AuctionDto représentant l'enchère mis à jour.
 	 */
-	@Secured({"ROLE_ADMIN", "ROLE_SELLER"})
-	@PreAuthorize("@authz.isAdmin(principal) or (@ownership.isAuctionOwner(principal.id, #auctionId))")
 	AuctionDto acceptAuction(@Param("auctionId") Integer auctionId);
 
 	/**

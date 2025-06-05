@@ -370,6 +370,7 @@
     "access.forbidden.csrf": "عدم تطابق رمز CSRF",
     "access.forbidden.csrf.missing": "رمز CSRF مفقود",
     "access.unauthorized": "فشل المصادقة",
+    "access.unauthorized.gmail_not_found": "لا يوجد حساب مستخدم مرتبط بعنوان البريد الإلكتروني هذا. يرجى التسجيل أولاً.",
     "agriculture_id.exists": "رقم التعريف الزراعي مستخدم بالفعل",
     "bad_request": "طلب غير صالح",
     "default.error": "انتهاك تكامل البيانات",

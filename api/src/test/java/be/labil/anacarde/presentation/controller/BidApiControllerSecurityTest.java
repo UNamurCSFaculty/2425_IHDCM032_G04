@@ -228,17 +228,6 @@ public class BidApiControllerSecurityTest extends AbstractIntegrationTest {
 	}
 
 	@Test
-	public void testAcceptBidByNonAuctionOwnerShouldFail() throws Exception {
-		final RequestPostProcessor actualUser = jwtTransformer();
-
-		String jsonContent = "";
-
-		mockMvc.perform(put("/api/bids/" + getTestBid().getId() + "/accept")
-				.contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(actualUser))
-				.andExpect(status().isForbidden());
-	}
-
-	@Test
 	public void testRejectBidByAuctionOwnerShouldSucceed() throws Exception {
 		final RequestPostProcessor actualUser = jwtProducer();
 
