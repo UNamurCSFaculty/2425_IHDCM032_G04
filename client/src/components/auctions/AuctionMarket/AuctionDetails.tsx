@@ -186,9 +186,9 @@ const AuctionDetailsPanel: React.FC<Props> = ({
       queryClient.invalidateQueries({ queryKey: listBidsQueryKey() })
       queryClient.invalidateQueries({ queryKey: listAuctionsQueryKey() })
 
-      toast.success(t('auction.bid_created_ok'), {
-        duration: 3000,
-      })
+      /*toast.success(t('auction.bid_created_ok'), {
+                                      duration: 3000,
+                                    })*/
     },
     onError(error: ApiErrorResponse) {
       const detail =
@@ -206,9 +206,9 @@ const AuctionDetailsPanel: React.FC<Props> = ({
     ...acceptBidMutation(),
     onSuccess() {
       queryClient.invalidateQueries({ queryKey: listBidsQueryKey() })
-      toast.success(t('auction.form.accept_bid_ok'), {
-        duration: 3000,
-      })
+      /*toast.success(t('auction.form.accept_bid_ok'), {
+                                      duration: 3000,
+                                    })*/
     },
     onError(error: ApiErrorResponse) {
       toast.error(t('auction.form.accept_bid_fail') + ' (' + error.code + ')', {
@@ -221,9 +221,9 @@ const AuctionDetailsPanel: React.FC<Props> = ({
     ...rejectBidMutation(),
     onSuccess() {
       queryClient.invalidateQueries({ queryKey: listBidsQueryKey() })
-      toast.success(t('auction.form.reject_bid_ok'), {
-        duration: 3000,
-      })
+      /*toast.success(t('auction.form.reject_bid_ok'), {
+                                      duration: 3000,
+                                    })*/
     },
     onError(error: ApiErrorResponse) {
       toast.error(t('auction.form.reject_bid_fail') + ' (' + error.code + ')', {
@@ -520,7 +520,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
         )}
 
         {role === 'buyer' && ended && (
-          <div className="flex w-2/5 flex-col">
+          <div className="flex w-full flex-col lg:w-2/5">
             <Card className="rounded-lg bg-neutral-100 p-4 shadow">
               <div className="flex flex-col">
                 <span className="mb-2 text-center text-base font-medium text-gray-700">
