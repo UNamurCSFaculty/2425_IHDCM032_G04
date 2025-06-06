@@ -64,10 +64,10 @@ public class ContractOfferApiControllerIntegrationTest extends AbstractIntegrati
 	@Test
 	public void testGetContractOfferByCriteriaNoContractExists() throws Exception {
 		mockMvc.perform(get("/api/contracts")
-						.param("qualityId", String.valueOf(getMainTestContractOffer().getQuality().getId()))
-						.param("sellerId", String.valueOf(getMainTestCarrier().getId()))
-						.param("buyerId", String.valueOf(getExporterTestUser().getId()))
-						.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+				.param("qualityId", String.valueOf(getMainTestContractOffer().getQuality().getId()))
+				.param("sellerId", String.valueOf(getMainTestCarrier().getId()))
+				.param("buyerId", String.valueOf(getExporterTestUser().getId()))
+				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
 				.andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(0));
 	}
 

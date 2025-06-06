@@ -25,13 +25,13 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * API pour la gestion des produits. Permet de gérer les opérations relatives aux produits, telles
- * que la création, la mise à jour, la suppression et la récupération des produits.
+ * API pour la gestion des produits. Permet de gérer les Gestion des produits, telles que la
+ * création, la mise à jour, la suppression et la récupération des produits.
  */
 @Validated
 @SecurityRequirement(name = "jwt")
 @RequestMapping(value = "/api/products", produces = "application/json")
-@Tag(name = "products", description = "Opérations relatives aux produits")
+@Tag(name = "products", description = "Gestion des produits")
 public interface ProductApi {
 	@Operation(summary = "Obtenir un produit")
 	@GetMapping("/{id}")

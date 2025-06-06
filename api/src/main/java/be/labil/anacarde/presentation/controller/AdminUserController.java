@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * les informations détaillées d'un utilisateur à partir de son identifiant.
  */
 @Validated
-@Tag(name = "Users", description = "API de gestion des utilisateurs Administrateur")
+@Tag(name = "admin", description = "Gestion administrateur")
 @SecurityRequirement(name = "jwt")
 @RequestMapping(value = "/api/admin/users", produces = "application/json")
 public interface AdminUserController {

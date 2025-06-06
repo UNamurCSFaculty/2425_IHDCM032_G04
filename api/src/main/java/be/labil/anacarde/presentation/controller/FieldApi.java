@@ -23,13 +23,13 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * End-points « Champs » (API de gestion des champs). Permet de gérer les opérations relatives aux
- * champs, telles que la création, la mise à jour, la suppression et la récupération des champs.
+ * End-points « Champs » (API de gestion des champs). Permet de gérer les Gestion des champs, telles
+ * que la création, la mise à jour, la suppression et la récupération des champs.
  */
 @Validated
 @SecurityRequirement(name = "jwt")
 @RequestMapping(value = "/api/fields", produces = "application/json")
-@Tag(name = "fields", description = "Opérations relatives aux champs")
+@Tag(name = "fields", description = "Gestion des champs")
 public interface FieldApi {
 
 	@Operation(summary = "Obtenir un champ")

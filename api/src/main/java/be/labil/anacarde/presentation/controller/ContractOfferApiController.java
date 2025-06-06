@@ -33,8 +33,7 @@ public class ContractOfferApiController implements ContractOfferApi {
 				ContractOfferDto offer = contractOfferService.getContractOfferByCriteria(qualityId,
 						sellerId, buyerId);
 				contractOffers.add(offer);
-			}
-			catch (ResourceNotFoundException e) {
+			} catch (ResourceNotFoundException e) {
 				// no contract, return empty list
 			}
 		} else {
