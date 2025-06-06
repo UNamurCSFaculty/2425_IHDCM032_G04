@@ -411,7 +411,7 @@ export function ProductForm(): React.ReactElement<'div'> {
                                       auction =>
                                         auction.bids.some(
                                           bid =>
-                                            bid.trader.id === user.id &&
+                                            bid.trader.id === transformerId &&
                                             bid.status.name ===
                                               TradeStatus.ACCEPTED
                                         ) &&

@@ -36,12 +36,12 @@ export const SseNotificationsProvider: React.FC<
         </span>,
         {
           description: t('notification.list_description'),
-          duration: 10000,
+          duration: 5000,
           action: {
             label: t('notification.see_auction'),
             onClick: () => {
               navigate({
-                to: '/achats/marche',
+                to: '/ventes/mes-encheres',
               })
               setTimeout(() => {
                 window.dispatchEvent(
