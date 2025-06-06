@@ -54,7 +54,7 @@ export function LoginForm() {
           body: response.credential,
         })
       } else {
-        toast.error(t('errors.google_credential_missing'))
+        console.error(t('errors.google_credential_missing'))
       }
     },
     [googleMutation, t]
@@ -63,7 +63,7 @@ export function LoginForm() {
   useEffect(() => {
     const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID
     if (!clientId) {
-      toast.error(t('errors.google_client_id_missing'))
+      console.error(t('errors.google_client_id_missing'))
       return
     }
 
