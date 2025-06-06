@@ -19,6 +19,10 @@ interface UserDetailsDisplayProps {
   viewingDocIds?: Record<number, boolean>
 }
 
+/**
+ * Composant pour afficher les détails d'un utilisateur dans le
+ * panneau d'administration.
+ */
 export const UserDetailsDisplay: React.FC<UserDetailsDisplayProps> = ({
   user,
   onDownloadDocument,
@@ -206,12 +210,14 @@ export const UserDetailsDisplay: React.FC<UserDetailsDisplayProps> = ({
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() =>
+                        onClick={e => {
+                          e.preventDefault()
+                          e.stopPropagation()
                           onViewDocument(
                             doc.id,
                             doc.originalFilename || `document-${doc.id}`
                           )
-                        }
+                        }}
                         disabled={
                           viewingDocIds[doc.id] || downloadingDocIds[doc.id]
                         }

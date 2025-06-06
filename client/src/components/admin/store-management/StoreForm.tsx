@@ -31,6 +31,9 @@ interface StoreFormProps {
   onCancel: () => void
 }
 
+/**
+ * Formulaire pour créer ou modifier un magasin.
+ */
 export const StoreForm: React.FC<StoreFormProps> = ({
   mode,
   existingStore,

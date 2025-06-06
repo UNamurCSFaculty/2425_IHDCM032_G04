@@ -68,6 +68,11 @@ interface MarketplaceProps {
   filterByAuctionStatus?: boolean
 }
 
+/**
+ * Composant principal du marché des enchères
+ * Affiche les enchères en fonction du mode de marché sélectionné.
+ * Permet de filtrer, trier et visualiser les enchères en mode carte, liste ou tableau.
+ */
 const AuctionMarketplace: React.FC<MarketplaceProps> = ({
   marketMode = 'marketplace',
   userRole,
@@ -177,7 +182,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
     [user.id, marketMode]
   )
 
-  // Display inline auction on custom event (SSE notif's toast action)
+  // Affiche l'enchère en ligne sur un événement personnalisé (action de notification SSE)
   useEffect(() => {
     const handler = (event: Event) => {
       const customEvent = event as CustomEvent<{ auctionId: number }>
@@ -194,7 +199,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
     }
   }, [auctions])
 
-  // Compute auctions trends
+  // Calculer les tendances des enchères
   const trends = useMemo(() => {
     const stats = {
       harvest: { volume: 0, totalWeight: 0, totalPrice: 0, avgPricePerKg: 0 },

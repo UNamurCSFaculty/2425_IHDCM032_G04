@@ -108,6 +108,9 @@ const data = {
   ],
 }
 
+/**
+ * Composant pour la barre latérale de l'application administrateur.
+ */
 export function AdminAppSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {

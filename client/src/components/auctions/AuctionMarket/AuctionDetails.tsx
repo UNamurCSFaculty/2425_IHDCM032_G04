@@ -68,6 +68,9 @@ const contractQueryOptions = (
   retry: false,
 })
 
+/**
+ * Composant React pour afficher les détails d'une enchère
+ */
 const AuctionDetailsPanel: React.FC<Props> = ({
   auction,
   showDetails = false,
@@ -143,7 +146,6 @@ const AuctionDetailsPanel: React.FC<Props> = ({
   }, [auction.id, queryClient])
 
   useEffect(() => {
-    // SSE visitors
     const baseUrl = client.getConfig().baseUrl?.replace(/\/$/, '') ?? ''
     const sseUrl = `${baseUrl}/api/auctions/${auction.id}/sse?visitor=true`
     const es = new window.EventSource(sseUrl, { withCredentials: true })
@@ -161,9 +163,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
     es.addEventListener('auctionClosed', () => {
       queryClient.invalidateQueries({ queryKey: listAuctionsQueryKey() })
     })
-    es.onerror = () => {
-      // console.error('[SSE] Erreur EventSource enchère')
-    }
+    es.onerror = () => {}
     return () => {
       es.close()
       sseRef.current = null
@@ -386,7 +386,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
         </div>
       )}
       <div className="flex flex-col gap-4 lg:flex-row">
-        {/* Left column: actions */}
+        {/* Colonne de gauche: action */}
         {role === 'buyer' && !ended && (
           <div className="flex flex-1 flex-col gap-6">
             <Card className="rounded-lg bg-neutral-100 p-4 shadow">

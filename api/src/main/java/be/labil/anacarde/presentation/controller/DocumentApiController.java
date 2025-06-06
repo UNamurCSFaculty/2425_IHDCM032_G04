@@ -5,6 +5,8 @@ import be.labil.anacarde.domain.dto.db.DocumentDto;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
+
+import com.github.slugify.Slugify;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -33,9 +35,11 @@ public class DocumentApiController implements DocumentApi {
 		// retrouvez le content-type et le nom d’origine via getDocumentById
 		DocumentDto meta = documentService.getDocumentById(id);
 
+		String originalFilename = meta.getOriginalFilename().replaceAll("[^a-zA-Z0-9.\\-_]", "_");
+
 		return ResponseEntity.ok().contentType(MediaType.parseMediaType(meta.getContentType()))
 				.header(HttpHeaders.CONTENT_DISPOSITION,
-						"attachment; filename=\"" + meta.getOriginalFilename() + "\"")
+						"attachment; filename=\"" + originalFilename + "\"")
 				.body(resource);
 	}
 

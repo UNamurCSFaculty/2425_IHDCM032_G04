@@ -7,6 +7,10 @@ import {
 import { formatPrice, formatWeight } from '@/utils/formatter'
 import { TrendingUp, Weight } from 'lucide-react'
 
+/**
+ * Composant React pour afficher les tendances des enchères
+ * avec des informations sur le volume, le prix et le poids.
+ */
 const AuctionTrend = ({
   tooltip,
   icon,

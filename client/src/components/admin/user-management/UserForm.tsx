@@ -17,7 +17,6 @@ import {
 } from '@/api/generated/zod.gen'
 import { FileText, Download, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
-import { downloadDocument } from '@/api/generated'
 import {
   zAppUpdateUser,
   type AppUpdateUserDto,
@@ -36,6 +35,7 @@ import {
 } from '@/api/generated/@tanstack/react-query.gen'
 import z from 'zod/v4'
 import { useStore } from '@tanstack/react-form'
+import { createDownloadHandler } from '@/lib/document-utils'
 
 const zAdminUpdateUser = zAppUpdateUser
   .refine(conditionalMinLengthValidationFn, conditionalMinLengthRefineConfig)
@@ -60,6 +60,10 @@ interface UserFormProps {
   submitButtonText: string
 }
 
+/**
+ * Composant Formulaire pour créer ou modifier un utilisateur.
+ * Utilisé dans la gestion des utilisateurs de l'administration.
+ */
 export const UserForm: React.FC<UserFormProps> = ({
   mode,
   existingUser,
@@ -100,7 +104,7 @@ export const UserForm: React.FC<UserFormProps> = ({
           radius: (existingUser as any).radius,
         }
       : {
-          // Defaults for create mode
+          // Valeurs par défaut pour la création
           firstName: '',
           lastName: '',
           email: '',
@@ -152,7 +156,6 @@ export const UserForm: React.FC<UserFormProps> = ({
     },
   })
 
-  // Choose schema based on mode
   const currentSchema = isEditMode ? zAdminUpdateUser : zAdminCreateUser
 
   const form = useAppForm({
@@ -182,36 +185,7 @@ export const UserForm: React.FC<UserFormProps> = ({
     form.reset()
   }, [existingUser, mode, form])
 
-  const triggerBlobDownload = (blob: Blob, filename: string) => {
-    const url = window.URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = filename
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    window.URL.revokeObjectURL(url)
-  }
-
-  const handleDownloadDocument = async (docId: number, docName: string) => {
-    setDownloadingDocIds(prev => ({ ...prev, [docId]: true }))
-    try {
-      const blobResponse = await downloadDocument({ path: { id: docId } })
-      if (blobResponse instanceof Blob) {
-        triggerBlobDownload(blobResponse, docName)
-      } else {
-        toast.error(t('common.download_error'), {
-          description: 'Invalid file format received.',
-        })
-      }
-    } catch (error) {
-      toast.error(t('common.download_error'), {
-        description: (error as Error).message || t('common.unknown_error'),
-      })
-    } finally {
-      setDownloadingDocIds(prev => ({ ...prev, [docId]: false }))
-    }
-  }
+  const handleDownloadDocument = createDownloadHandler(setDownloadingDocIds, t)
 
   return (
     <>
@@ -319,11 +293,10 @@ export const UserForm: React.FC<UserFormProps> = ({
                 />
               )}
             </form.AppField>
-            {/* Add confirm password if needed by your schema/logic */}
           </fieldset>
         )}
 
-        {/* User Type Specific Fields */}
+        {/* Champs spécifiques selon le type */}
         {values.type === 'producer' && (
           <fieldset className="grid grid-cols-1 gap-4 rounded-md border p-4">
             <legend className="text-muted-foreground px-1 text-sm font-medium">
@@ -405,7 +378,7 @@ export const UserForm: React.FC<UserFormProps> = ({
           </form.AppField>
         </fieldset>
 
-        {/* Password Change - Optional for Edit Mode */}
+        {/* Mot de Passe (seulement en mode édition) */}
         {isEditMode && (
           <fieldset className="grid grid-cols-1 gap-4 rounded-md border p-4">
             <legend className="text-muted-foreground px-1 text-sm font-medium">
@@ -440,7 +413,7 @@ export const UserForm: React.FC<UserFormProps> = ({
         </DialogFooter>
       </form>
 
-      {/* Documents Section - if any (Only for edit mode and if user has documents) */}
+      {/* Section des documents */}
       {isEditMode &&
         existingUser?.documents &&
         existingUser.documents.length > 0 && (

@@ -12,7 +12,6 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { TableCell, TableRow } from '@/components/ui/table'
-// Simple JSON import (no async fetch) -----------------------------------------
 import cities from '@/data/cities.json'
 import regions from '@/data/regions.json'
 import { TradeStatus, cn, getPricePerKg } from '@/lib/utils'
@@ -41,6 +40,9 @@ interface AuctionCardProps {
   onDetails: () => void
 }
 
+/**
+ * Composant React pour afficher une carte d'enchère
+ */
 const AuctionCard: React.FC<AuctionCardProps> = ({
   auction,
   layout,
@@ -63,7 +65,7 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
     ? (cities[auction.product.store.address.cityId - 1] ?? '—')
     : '—'
 
-  /* -------------------- Table row layout -------------------- */
+  // Rendu en forme de tableau
   if (layout === 'row') {
     return (
       <TableRow className="hover:bg-muted/50 h-10" key={auction.id}>
@@ -97,7 +99,7 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
     )
   }
 
-  /* -------------------- Card layout -------------------- */
+  // Rendu en forme de carte
   return (
     <Card
       className={cn(

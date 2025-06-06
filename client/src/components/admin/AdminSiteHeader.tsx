@@ -3,6 +3,9 @@ import { Separator } from '@/components/ui/separator'
 import { SidebarTrigger } from '@/components/ui/sidebar'
 import { Link } from '@tanstack/react-router'
 
+/**
+ * Composant d'en-tête pour l'interface d'administration.
+ */
 export function AdminSiteHeader() {
   return (
     <header className="flex h-(--header-height) shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
