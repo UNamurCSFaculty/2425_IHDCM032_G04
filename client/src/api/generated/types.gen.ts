@@ -4066,9 +4066,21 @@ export type ListContractOffersData = {
   path?: never
   query?: {
     /**
-     * ID du trader pour filtrer les enchères
+     * ID du trader pour filtrer les contratss
      */
     traderId?: number
+    /**
+     * ID de la qualité
+     */
+    qualityId?: number
+    /**
+     * ID du vendeur
+     */
+    sellerId?: number
+    /**
+     * ID de l'acheteur
+     */
+    buyerId?: number
   }
   url: '/api/contracts'
 }
@@ -4548,50 +4560,6 @@ export type DownloadDocumentResponses = {
 
 export type DownloadDocumentResponse =
   DownloadDocumentResponses[keyof DownloadDocumentResponses]
-
-export type GetContractOfferByCriteriaData = {
-  body?: never
-  path?: never
-  query: {
-    /**
-     * ID de la qualité
-     */
-    qualityId: number
-    /**
-     * ID du vendeur
-     */
-    sellerId: number
-    /**
-     * ID de l'acheteur
-     */
-    buyerId: number
-  }
-  url: '/api/contracts/by-criteria'
-}
-
-export type GetContractOfferByCriteriaErrors = {
-  /**
-   * Paramètres manquants
-   */
-  400: ApiErrorResponse
-  /**
-   * Aucun contrat trouvé
-   */
-  404: ApiErrorResponse
-}
-
-export type GetContractOfferByCriteriaError =
-  GetContractOfferByCriteriaErrors[keyof GetContractOfferByCriteriaErrors]
-
-export type GetContractOfferByCriteriaResponses = {
-  /**
-   * Contrat trouvé
-   */
-  200: ContractOfferDto
-}
-
-export type GetContractOfferByCriteriaResponse =
-  GetContractOfferByCriteriaResponses[keyof GetContractOfferByCriteriaResponses]
 
 export type GetCurrentUserData = {
   body?: never

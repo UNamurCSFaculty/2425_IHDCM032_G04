@@ -1,9 +1,11 @@
 package be.labil.anacarde.presentation.controller;
 
+import be.labil.anacarde.application.exception.ResourceNotFoundException;
 import be.labil.anacarde.application.service.ContractOfferService;
 import be.labil.anacarde.domain.dto.db.ContractOfferDto;
 import be.labil.anacarde.domain.dto.write.ContractOfferUpdateDto;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,16 +24,22 @@ public class ContractOfferApiController implements ContractOfferApi {
 	}
 
 	@Override
-	public ResponseEntity<ContractOfferDto> getContractOfferByCriteria(Integer qualityId,
-			Integer sellerId, Integer buyerId) {
-		ContractOfferDto contractOffer = contractOfferService.getContractOfferByCriteria(qualityId,
-				sellerId, buyerId);
-		return ResponseEntity.ok(contractOffer);
-	}
+	public ResponseEntity<List<ContractOfferDto>> listContractOffers(Integer traderId,
+			Integer qualityId, Integer sellerId, Integer buyerId) {
+		List<ContractOfferDto> contractOffers = new ArrayList<>();
 
-	@Override
-	public ResponseEntity<List<ContractOfferDto>> listContractOffers(Integer traderId) {
-		List<ContractOfferDto> contractOffers = contractOfferService.listContractOffers(traderId);
+		if (qualityId != null && sellerId != null && buyerId != null) {
+			try {
+				ContractOfferDto offer = contractOfferService.getContractOfferByCriteria(qualityId,
+						sellerId, buyerId);
+				contractOffers.add(offer);
+			}
+			catch (ResourceNotFoundException e) {
+				// no contract, return empty list
+			}
+		} else {
+			contractOffers = contractOfferService.listContractOffers(traderId);
+		}
 		return ResponseEntity.ok(contractOffers);
 	}
 
