@@ -21,13 +21,13 @@ import org.springframework.web.bind.annotation.*;
 
 /**
  * End-points « Stratégies d'enchères » (API pour la gestion des stratégies d'enchères). Permet de
- * gérer les opérations relatives aux stratégies d'enchères, telles que la création, la mise à jour,
- * la suppression et la récupération des stratégies.
+ * gérer les Gestion des stratégies d'enchères, telles que la création, la mise à jour, la
+ * suppression et la récupération des stratégies.
  */
 @Validated
 @SecurityRequirement(name = "jwt")
 @RequestMapping(value = "/api/auctions/strategies", produces = "application/json")
-@Tag(name = "auction-strategies", description = "Opérations relatives aux stratégies d'enchères")
+@Tag(name = "auctions")
 public interface AuctionStrategyApi {
 
 	@Operation(summary = "Obtenir une stratégie d'enchère")

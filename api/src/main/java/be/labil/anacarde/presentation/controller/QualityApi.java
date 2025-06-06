@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 @SecurityRequirement(name = "jwt")
 @RequestMapping(value = "/api/qualities", produces = "application/json")
-@Tag(name = "quality", description = "Opérations relatives aux qualités")
+@Tag(name = "qualities", description = "Gestion des qualités")
 public interface QualityApi {
 
 	@Operation(summary = "Obtenir une qualité")

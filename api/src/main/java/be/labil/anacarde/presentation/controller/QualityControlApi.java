@@ -31,7 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Validated
 @SecurityRequirement(name = "jwt")
 @RequestMapping(value = "/api/quality-controls", produces = "application/json")
-@Tag(name = "quality-controls", description = "Opérations relatives aux contrôles qualité")
+@Tag(name = "quality-controls", description = "Gestion des contrôles qualité")
 public interface QualityControlApi {
 
 	@Operation(summary = "Obtenir un contrôle qualité")

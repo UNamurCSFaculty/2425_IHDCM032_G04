@@ -35,7 +35,7 @@ import org.springframework.web.multipart.MultipartFile;
  * utilisateurs.
  */
 @Validated
-@Tag(name = "Users", description = "API de gestion des utilisateurs")
+@Tag(name = "users", description = "Gestion des utilisateurs")
 @SecurityRequirement(name = "jwt")
 @RequestMapping(value = "/api/users", produces = "application/json")
 public interface UserApi {

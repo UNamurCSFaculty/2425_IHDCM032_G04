@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @SecurityRequirement(name = "jwt")
 @RequestMapping(value = "/api/admin/global-settings", produces = "application/json")
-@Tag(name = "admin-global-settings", description = "Gestion des réglages globaux du système")
+@Tag(name = "admin")
 public interface AdminGlobalSettingsApi {
 
 	@Operation(summary = "Obtenir les réglages globaux")

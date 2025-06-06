@@ -18,7 +18,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 @Validated
 @RequestMapping("/api/auctions/{auctionId}/sse")
 @SecurityRequirement(name = "jwt")
-@Tag(name = "auction-sse", description = "SSE pour la consultation d'une enchère")
+@Tag(name = "sse")
 public interface AuctionSseApi {
 	@GetMapping
 	SseEmitter subscribe(@PathVariable("auctionId") Integer auctionId,
