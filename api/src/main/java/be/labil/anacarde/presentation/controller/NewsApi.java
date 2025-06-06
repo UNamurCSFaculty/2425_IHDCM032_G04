@@ -34,7 +34,7 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 @SecurityRequirement(name = "jwt")
 @RequestMapping(value = "/api/news", produces = "application/json")
-@Tag(name = "news", description = "Opérations relatives aux articles de nouvelles")
+@Tag(name = "news", description = "Gestion des articles de nouvelles")
 public interface NewsApi {
 
 	/**

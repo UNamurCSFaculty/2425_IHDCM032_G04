@@ -21,13 +21,13 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * API pour la gestion des magasins. Permet de gérer les opérations relatives aux magasins, telles
- * que la création, la mise à jour, la suppression et la récupération des magasins.
+ * API pour la gestion des magasins. Permet de gérer les Gestion des magasins, telles que la
+ * création, la mise à jour, la suppression et la récupération des magasins.
  */
 @Validated
 @SecurityRequirement(name = "jwt")
 @RequestMapping(value = "/api/stores", produces = "application/json")
-@Tag(name = "stores", description = "Opérations relatives aux magasins")
+@Tag(name = "stores", description = "Gestion des magasins")
 public interface StoreApi {
 
 	@Operation(summary = "Obtenir un magasin")

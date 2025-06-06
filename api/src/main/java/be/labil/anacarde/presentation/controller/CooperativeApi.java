@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 @SecurityRequirement(name = "jwt")
 @RequestMapping(value = "/api/cooperatives", produces = "application/json")
-@Tag(name = "cooperatives", description = "Opérations relatives aux coopératives")
+@Tag(name = "cooperatives", description = "Gestion des coopératives")
 public interface CooperativeApi {
 
 	@Operation(summary = "Obtenir une coopérative")

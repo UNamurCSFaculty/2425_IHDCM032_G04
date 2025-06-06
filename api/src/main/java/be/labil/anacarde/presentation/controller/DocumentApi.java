@@ -29,7 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @Validated
 @RequestMapping(value = "/api/documents", produces = MediaType.APPLICATION_JSON_VALUE)
-@Tag(name = "documents", description = "Opérations relatives aux documents")
+@Tag(name = "documents", description = "Gestion des documents")
 public interface DocumentApi {
 
 	/**

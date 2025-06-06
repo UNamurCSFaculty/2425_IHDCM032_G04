@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @SecurityRequirement(name = "jwt")
 @RequestMapping(value = "/api/admin/dashboard", produces = "application/json")
-@Tag(name = "dashboard", description = "KPI et graphiques du tableau de bord")
+@Tag(name = "admin")
 public interface AdminDashboardApi {
 
 	/* ------------------------------------------------------------------ */

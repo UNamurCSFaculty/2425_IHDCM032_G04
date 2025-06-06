@@ -20,13 +20,13 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * API pour la gestion des régions. Permet de gérer les opérations relatives aux régions, telles que
- * la création, la mise à jour, la suppression et la récupération des régions.
+ * API pour la gestion des régions. Permet de gérer les Gestion des régions, telles que la création,
+ * la mise à jour, la suppression et la récupération des régions.
  */
 @Validated
 @SecurityRequirement(name = "jwt")
 @RequestMapping(value = "/api/regions", produces = "application/json")
-@Tag(name = "regions", description = "Opérations relatives aux régions")
+@Tag(name = "regions", description = "Gestion des régions")
 public interface RegionApi {
 
 	@Operation(summary = "Obtenir une région par ID")

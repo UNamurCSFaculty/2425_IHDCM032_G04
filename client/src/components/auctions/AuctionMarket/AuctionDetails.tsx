@@ -1,12 +1,16 @@
-import type { ApiErrorResponse, AuctionDto, BidDto } from '@/api/generated'
+import {
+  type ApiErrorResponse,
+  type AuctionDto,
+  type BidDto,
+} from '@/api/generated'
 import {
   acceptAuctionMutation,
   acceptBidMutation,
   createBidMutation,
-  getContractOfferByCriteriaOptions,
   listAuctionsQueryKey,
   listBidsOptions,
   listBidsQueryKey,
+  listContractOffersOptions,
   rejectBidMutation,
 } from '@/api/generated/@tanstack/react-query.gen'
 import { ContractModal } from '@/components/ContractModal'
@@ -61,11 +65,10 @@ const contractQueryOptions = (
   sellerId: number,
   buyerId: number
 ) => ({
-  ...getContractOfferByCriteriaOptions({
+  ...listContractOffersOptions({
     query: { qualityId, sellerId, buyerId },
   }),
   staleTime: 10_000,
-  retry: false,
 })
 
 /**
@@ -108,7 +111,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
     0
   )
 
-  const { data: contract } = useQuery(
+  const { data: contracts } = useQuery(
     contractQueryOptions(
       auction.product.qualityControl.quality.id,
       auction.trader.id,
@@ -117,7 +120,8 @@ const AuctionDetailsPanel: React.FC<Props> = ({
   )
 
   useEffect(() => {
-    if (contract) {
+    if (contracts && contracts.length > 0) {
+      const contract = contracts[0]
       const pricePerKg = getPricePerKg(auction.price, auction.productQuantity)
       if (contract.pricePerKg >= pricePerKg) {
         setContractPrice(0)
@@ -125,7 +129,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
         setContractPrice(contract.pricePerKg * auction.productQuantity)
       }
     }
-  }, [contract, auction.price, auction.productQuantity])
+  }, [contracts, auction.price, auction.productQuantity])
 
   useEffect(() => {
     const handler = (event: Event) => {
