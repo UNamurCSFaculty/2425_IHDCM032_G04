@@ -5,7 +5,13 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import type { AppUpdateUserDto, AppUserDetailDto } from '@/schemas/api-schemas'
-import { zAppUpdateUser } from '@/schemas/api-schemas'
+import {
+  conditionalMinLengthRefineConfig,
+  conditionalMinLengthValidationFn,
+  passwordStrengthRefineConfig,
+  passwordStrengthValidationFn,
+  zAppUpdateUser,
+} from '@/schemas/api-schemas'
 import { useAppData } from '@/store/appStore'
 import { useUserStore } from '@/store/userStore'
 import { useMutation } from '@tanstack/react-query'
@@ -44,8 +50,12 @@ export function UserProfileForm({
     },
   })
 
+  const formValidators = zAppUpdateUser
+    .refine(conditionalMinLengthValidationFn, conditionalMinLengthRefineConfig)
+    .refine(passwordStrengthValidationFn, passwordStrengthRefineConfig)
+
   const form = useAppForm({
-    validators: { onChange: zAppUpdateUser },
+    validators: { onChange: formValidators },
     defaultValues: {
       type: currentUser.type,
       firstName: currentUser.firstName ?? '',

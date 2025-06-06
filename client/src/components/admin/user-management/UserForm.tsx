@@ -23,6 +23,10 @@ import {
   type AppUpdateUserDto,
   type AppUserDetailDto,
   zAppCreateUser,
+  passwordStrengthValidationFn,
+  conditionalMinLengthValidationFn,
+  passwordStrengthRefineConfig,
+  conditionalMinLengthRefineConfig,
 } from '@/schemas/api-schemas'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import {
@@ -34,11 +38,16 @@ import z from 'zod/v4'
 import { useStore } from '@tanstack/react-form'
 
 const zAdminUpdateUser = zAppUpdateUser
+  .refine(conditionalMinLengthValidationFn, conditionalMinLengthRefineConfig)
+  .refine(passwordStrengthValidationFn, passwordStrengthRefineConfig)
+
 const zAdminCreateUser = zAppCreateUser.and(
-  z.object({
-    password: z.string().min(8),
-    documents: z.array(z.file()).optional(),
-  })
+  z
+    .object({
+      password: z.string().min(8),
+      documents: z.array(z.file()).optional(),
+    })
+    .refine(passwordStrengthValidationFn, passwordStrengthRefineConfig)
 )
 
 interface UserFormProps {

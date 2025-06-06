@@ -14,7 +14,11 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { calculatePasswordStrength, cn, type DeepPartial } from '@/lib/utils'
-import { zAppCreateUser } from '@/schemas/api-schemas'
+import {
+  passwordStrengthRefineConfig,
+  passwordStrengthValidationFn,
+  zAppCreateUser,
+} from '@/schemas/api-schemas'
 import { useAppData } from '@/store/appStore'
 import { useStore } from '@tanstack/react-form'
 import { useMutation } from '@tanstack/react-query'
@@ -38,8 +42,9 @@ const zUserRegistration = zAppCreateUser
   )
   .refine(data => data.password === data.passwordValidation, {
     path: ['passwordValidation'],
-    message: 'errors.password_mismatch',
+    message: 'validation.passwordValidation',
   })
+  .refine(passwordStrengthValidationFn, passwordStrengthRefineConfig)
 
 export type UserRegistration = z.infer<typeof zUserRegistration>
 type UserRegistrationDraft = DeepPartial<UserRegistration>
