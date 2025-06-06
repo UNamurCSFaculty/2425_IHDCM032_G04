@@ -5,8 +5,6 @@ import be.labil.anacarde.domain.dto.db.DocumentDto;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
-
-import com.github.slugify.Slugify;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
