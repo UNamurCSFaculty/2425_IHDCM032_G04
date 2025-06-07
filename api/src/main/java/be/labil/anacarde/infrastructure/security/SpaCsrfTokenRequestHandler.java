@@ -19,23 +19,48 @@ public class SpaCsrfTokenRequestHandler implements CsrfTokenRequestHandler {
 	private final CsrfTokenRequestHandler plain = new CsrfTokenRequestAttributeHandler();
 	private final CsrfTokenRequestHandler xor = new XorCsrfTokenRequestAttributeHandler();
 
+	/**
+	 * Traite le token CSRF pour chaque requête :
+	 * <ol>
+	 * <li>Applique le masque XOR sur le token pour l’injecter dans la réponse (protection
+	 * BREACH).</li>
+	 * <li>Appelle {@code csrfToken.get()} pour forcer la lecture et (ré)émission du cookie
+	 * CSRF.</li>
+	 * </ol>
+	 *
+	 * @param request
+	 *            la requête HTTP entrante
+	 * @param response
+	 *            la réponse HTTP pour injecter le token
+	 * @param csrfToken
+	 *            supplier fournissant le token CSRF courant
+	 */
 	@Override
 	public void handle(HttpServletRequest request, HttpServletResponse response,
 			Supplier<CsrfToken> csrfToken) {
-		// 1) masque BREACH
 		xor.handle(request, response, csrfToken);
-		// 2) force le chargement pour (ré)émission du cookie
 		csrfToken.get();
 	}
 
+	/**
+	 * Résout la valeur du token CSRF provenant de la requête :
+	 * <ul>
+	 * <li>Si un header CSRF est présent (JavaScript SPA), utilise le plain handler.</li>
+	 * <li>Sinon (formulaires traditionnels), dépouille le token masqué avec XOR.</li>
+	 * </ul>
+	 *
+	 * @param request
+	 *            la requête HTTP entrante
+	 * @param csrfToken
+	 *            le token CSRF à dépouiller
+	 * @return la valeur du token CSRF à utiliser pour la validation
+	 */
 	@Override
 	public String resolveCsrfTokenValue(HttpServletRequest request, CsrfToken csrfToken) {
 		String header = request.getHeader(csrfToken.getHeaderName());
-		// si on a un header, SPA JS, on dépouille sans masque
 		if (StringUtils.hasText(header)) {
 			return plain.resolveCsrfTokenValue(request, csrfToken);
 		}
-		// sinon (form server-side), on dépouille avec XOR
 		return xor.resolveCsrfTokenValue(request, csrfToken);
 	}
 }

@@ -9,6 +9,21 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Annotation pour documenter les réponses standardisées des opérations PUT.
+ * <p>
+ * À appliquer sur les méthodes de contrôleur pour spécifier les codes de réponse dans la
+ * documentation OpenAPI :
+ * <ul>
+ * <li><strong>200 Updated successfully</strong> – Ressource mise à jour avec succès, réponse
+ * JSON.</li>
+ * <li><strong>400 Bad Request</strong> – Requête invalide, renvoie un {@link ApiError}.</li>
+ * <li><strong>401 Unauthorized</strong> – Requête non authentifiée, renvoie un
+ * {@link ApiError}.</li>
+ * <li><strong>403 Forbidden</strong> – Accès refusé, renvoie un {@link ApiError}.</li>
+ * <li><strong>404 Not Found</strong> – Ressource introuvable, renvoie un {@link ApiError}.</li>
+ * </ul>
+ */
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @ApiResponses({

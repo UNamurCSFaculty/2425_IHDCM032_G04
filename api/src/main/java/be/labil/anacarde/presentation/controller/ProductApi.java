@@ -25,14 +25,31 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * API pour la gestion des produits. Permet de gérer les Gestion des produits, telles que la
- * création, la mise à jour, la suppression et la récupération des produits.
+ * API REST pour la gestion des produits.
+ * <p>
+ * Fournit les opérations CRUD suivantes :
+ * <ul>
+ * <li>Récupérer un produit par son ID (brut ou transformé).</li>
+ * <li>Lister tous les produits, avec filtres facultatifs par propriétaire et type.</li>
+ * <li>Créer un nouveau produit (harvest ou transformed).</li>
+ * <li>Mettre à jour un produit existant.</li>
+ * <li>Supprimer un produit par son ID.</li>
+ * </ul>
+ * Toutes les méthodes sont sécurisées par JWT.
  */
 @Validated
 @SecurityRequirement(name = "jwt")
 @RequestMapping(value = "/api/products", produces = "application/json")
 @Tag(name = "products", description = "Gestion des produits")
 public interface ProductApi {
+	/**
+	 * Récupère un produit par son identifiant.
+	 *
+	 * @param id
+	 *            Identifiant du produit (doit être un entier positif).
+	 * @return {@code 200 OK} avec un {@link ProductDto} (harvest ou transformed), ou
+	 *         {@code 404 Not Found} avec {@link ApiErrorResponse}.
+	 */
 	@Operation(summary = "Obtenir un produit")
 	@GetMapping("/{id}")
 	@ApiResponses({
@@ -40,6 +57,15 @@ public interface ProductApi {
 			@ApiResponse(responseCode = "404", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
 	ResponseEntity<? extends ProductDto> getProduct(@ApiValidId @PathVariable("id") Integer id);
 
+	/**
+	 * Liste tous les produits, avec options de filtrage.
+	 *
+	 * @param traderId
+	 *            (optionnel) Identifiant du propriétaire des produits.
+	 * @param productType
+	 *            (optionnel) Type de produit à filtrer (harvest ou transformed).
+	 * @return {@code 200 OK} avec la liste de {@link ProductDto}, éventuellement vide.
+	 */
 	@Operation(summary = "Obtenir tous les produits")
 	@GetMapping
 	@ApiResponses({
@@ -48,6 +74,14 @@ public interface ProductApi {
 			@Parameter(in = ParameterIn.QUERY, description = "ID du propriétaire des produits") @Valid @RequestParam(value = "traderId", required = false) Integer traderId,
 			@Parameter(in = ParameterIn.QUERY, description = "Type du produit", schema = @Schema(implementation = ProductType.class)) @RequestParam(value = "productType", required = false) ProductType productType);
 
+	/**
+	 * Crée un nouveau produit.
+	 *
+	 * @param productDto
+	 *            DTO de création, validé selon {@link ValidationGroups.Create}.
+	 * @return {@code 201 Created} avec le {@link ProductDto} créé, ou {@code 400 Bad Request} /
+	 *         {@code 409 Conflict} avec {@link ApiErrorResponse}.
+	 */
 	@Operation(summary = "Créer un produit")
 	@PostMapping
 	@ApiResponses({
@@ -57,6 +91,16 @@ public interface ProductApi {
 	ResponseEntity<? extends ProductDto> createProduct(@Validated({Default.class,
 			ValidationGroups.Create.class}) @RequestBody ProductUpdateDto productDto);
 
+	/**
+	 * Met à jour un produit existant.
+	 *
+	 * @param id
+	 *            Identifiant du produit à mettre à jour.
+	 * @param productDto
+	 *            DTO de mise à jour, validé selon {@link ValidationGroups.Update}.
+	 * @return {@code 200 OK} avec le {@link ProductDto} mis à jour, ou {@code 400 Bad Request} /
+	 *         {@code 409 Conflict} avec {@link ApiErrorResponse}.
+	 */
 	@Operation(summary = "Mettre à jour un produit")
 	@PutMapping(value = "/{id}", consumes = "application/json")
 	@ApiResponses({
@@ -67,6 +111,14 @@ public interface ProductApi {
 			@Validated({Default.class,
 					ValidationGroups.Update.class}) @RequestBody ProductUpdateDto productDto);
 
+	/**
+	 * Supprime un produit par son identifiant.
+	 *
+	 * @param id
+	 *            Identifiant du produit à supprimer.
+	 * @return {@code 204 No Content} si la suppression réussit, ou {@code 404 Not Found} avec
+	 *         {@link ApiErrorResponse}.
+	 */
 	@Operation(summary = "Supprimer un produit")
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)

@@ -16,16 +16,32 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * End-points « Dashboard » (indicateurs globaux & série chronologique).
+ * Interface REST pour les points d’accès d’administration du tableau de bord.
+ * <p>
+ * Définit deux opérations :
+ * <ul>
+ * <li>Récupération des KPI globaux (cartes) via la vue SQL <code>v_dashboard_cards</code>.</li>
+ * <li>Récupération de la série chronologique "Open vs New" via la vue SQL
+ * <code>v_dashboard_graphic</code>.</li>
+ * </ul>
+ * <p>
+ * Toutes les requêtes sont sécurisées par JWT.
  */
 @SecurityRequirement(name = "jwt")
 @RequestMapping(value = "/api/admin/dashboard", produces = "application/json")
 @Tag(name = "admin")
 public interface AdminDashboardApi {
 
-	/* ------------------------------------------------------------------ */
-	/* 1. Cartes KPI (vue v_dashboard_cards) */
-	/* ------------------------------------------------------------------ */
+	/**
+	 * Obtient les indicateurs globaux à afficher sous forme de cartes KPI.
+	 * <p>
+	 * Interroge la vue matérialisée <code>v_dashboard_cards</code> pour récupérer un objet
+	 * {@link DashboardCardsDto} contenant les métriques agrégées (nombre total d’utilisateurs,
+	 * ventes, etc.).
+	 *
+	 * @return {@link ResponseEntity} contenant le {@link DashboardCardsDto} et un code 200, ou un
+	 *         code 404 avec un corps {@link ApiErrorResponse} si la vue est introuvable.
+	 */
 	@Operation(summary = "Obtenir la carte des indicateurs globaux")
 	@GetMapping("/cards")
 	@ApiResponses({
@@ -33,9 +49,16 @@ public interface AdminDashboardApi {
 			@ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
 	ResponseEntity<DashboardCardsDto> getDashboardCards();
 
-	/* ------------------------------------------------------------------ */
-	/* 2. Série chronologique (vue v_dashboard_graphic) */
-	/* ------------------------------------------------------------------ */
+	/**
+	 * Obtient la série chronologique "Open vs New" pour le dashboard.
+	 * <p>
+	 * Interroge la vue matérialisée <code>v_dashboard_graphic</code> pour récupérer une liste de
+	 * {@link DashboardGraphicDto}, chacun représentant un point dans le temps avec les valeurs
+	 * "ouvertes" et "nouvelles".
+	 *
+	 * @return {@link ResponseEntity} contenant la liste de {@link DashboardGraphicDto} et un code
+	 *         200.
+	 */
 	@Operation(summary = "Obtenir la série chronologique « Open vs New »")
 	@GetMapping("/graphic")
 	@ApiResponses({

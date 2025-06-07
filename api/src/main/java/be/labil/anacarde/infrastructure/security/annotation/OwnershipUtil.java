@@ -11,6 +11,12 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+/**
+ * Utilitaire d’autorisation basé sur la propriété des entités.
+ * <p>
+ * Exposé sous le nom SpEL {@code ownership} pour vérifier si l’utilisateur courant est bien le
+ * propriétaire d’un document, d’une enchère, d’une offre, d’un produit ou d’un magasin.
+ */
 @Component("ownership")
 @RequiredArgsConstructor
 public class OwnershipUtil {
@@ -22,20 +28,57 @@ public class OwnershipUtil {
 	private final TransformedProductRepository transformedProductRepository;
 	private final StoreRepository storeRepository;
 
+	/**
+	 * Vérifie qu’un document appartient à un utilisateur.
+	 *
+	 * @param docId
+	 *            identifiant du document
+	 * @param userId
+	 *            identifiant de l’utilisateur
+	 * @return {@code true} si le document existe et que son ownerId correspond à {@code userId}
+	 */
 	public boolean isDocumentOwner(Integer docId, Integer userId) {
 		return documentRepository.existsByIdAndUserId(docId, userId);
 	}
 
+	/**
+	 * Vérifie qu’une enchère appartient à un trader donné.
+	 *
+	 * @param traderId
+	 *            identifiant du trader
+	 * @param auctionId
+	 *            identifiant de l’enchère
+	 * @return {@code true} si l’enchère existe et que traderId est bien l’auteur
+	 */
 	public boolean isAuctionOwner(Integer traderId, Integer auctionId) {
 		if (traderId == null || auctionId == null) return false;
 		return auctionRepository.existsByIdAndTraderId(auctionId, traderId);
 	}
 
+	/**
+	 * Vérifie qu’une offre (bid) appartient à un trader donné.
+	 *
+	 * @param traderId
+	 *            identifiant du trader
+	 * @param bidId
+	 *            identifiant de l’offre
+	 * @return {@code true} si l’offre existe et que traderId est bien celui qui l’a placée
+	 */
 	public boolean isBidOwner(Integer traderId, Integer bidId) {
 		if (traderId == null || bidId == null) return false;
 		return bidRepository.existsByIdAndTraderId(bidId, traderId);
 	}
 
+	/**
+	 * Vérifie qu’une offre appartient à un trader et que le trader possède l’enchère associée à
+	 * cette offre.
+	 *
+	 * @param traderId
+	 *            identifiant du trader
+	 * @param bidId
+	 *            identifiant de l’offre
+	 * @return {@code true} si l’utilisateur est propriétaire de l’enchère liée à l’offre
+	 */
 	public boolean isBidAuctionOwner(Integer traderId, Integer bidId) {
 		if (traderId == null || bidId == null) return false;
 
@@ -44,29 +87,54 @@ public class OwnershipUtil {
 		return auctionRepository.existsByIdAndTraderId(bid.get().getAuctionId(), traderId);
 	}
 
+	/**
+	 * Vérifie si un bidDto est autorisé pour un trader.
+	 * <ul>
+	 * <li>Le trader ne peut pas enchérir pour quelqu’un d’autre.</li>
+	 * <li>Le trader ne peut pas enchérir sur sa propre enchère.</li>
+	 * <li>Le trader ne peut pas placer deux offres consécutives.</li>
+	 * </ul>
+	 *
+	 * @param traderId
+	 *            identifiant du trader
+	 * @param bidDto
+	 *            DTO contenant les informations de mise
+	 * @return {@code true} si toutes les règles d’autorisation sont respectées
+	 */
 	public boolean isBidAuthorized(Integer traderId, BidUpdateDto bidDto) {
-		// safety checks
 		if (traderId == null || bidDto == null) return false;
-
-		// trader cannot bid in the name of someone else
 		if (!traderId.equals(bidDto.getTraderId())) return false;
-
-		// trader cannot bid on his own auction
 		if (isAuctionOwner(traderId, bidDto.getTraderId())) return false;
-
-		// trader cannot bid twice in a row
 		List<Bid> bids = bidRepository.findByAuctionIdOrderByIdAsc(bidDto.getAuctionId());
 		if (bids.size() > 0 && bids.getLast().getTrader().getId().equals(traderId)) return false;
 
 		return true;
 	}
 
+	/**
+	 * Vérifie qu’un produit (brut ou transformé) appartient à l’utilisateur.
+	 *
+	 * @param userId
+	 *            identifiant de l’utilisateur
+	 * @param productId
+	 *            identifiant du produit
+	 * @return {@code true} si l’utilisateur est producteur ou transformateur du produit
+	 */
 	public boolean isProductOwner(Integer userId, Integer productId) {
 		if (userId == null || productId == null) return false;
 		return harvestProductRepository.existsByIdAndProducerId(productId, userId)
 				|| transformedProductRepository.existsByIdAndTransformerId(productId, userId);
 	}
 
+	/**
+	 * Vérifie qu’un DTO de mise à jour de produit appartient à l’utilisateur.
+	 *
+	 * @param userId
+	 *            identifiant de l’utilisateur
+	 * @param productDto
+	 *            DTO de mise à jour du produit
+	 * @return {@code true} si l’utilisateur correspond au producteur ou transformateur du DTO
+	 */
 	public boolean isProductOwner(Integer userId, ProductUpdateDto productDto) {
 		if (userId == null || productDto == null) return false;
 
@@ -81,6 +149,15 @@ public class OwnershipUtil {
 		return false;
 	}
 
+	/**
+	 * Vérifie qu’un magasin appartient à un utilisateur.
+	 *
+	 * @param userId
+	 *            identifiant de l’utilisateur
+	 * @param storeId
+	 *            identifiant du magasin
+	 * @return {@code true} si le magasin existe et que userId en est le propriétaire
+	 */
 	public boolean isStoreOwner(Integer userId, Integer storeId) {
 		if (userId == null || storeId == null) return false;
 		return storeRepository.existsByIdAndUserId(storeId, userId);

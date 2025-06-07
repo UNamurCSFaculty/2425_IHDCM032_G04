@@ -23,8 +23,17 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * End-points « Champs » (API de gestion des champs). Permet de gérer les Gestion des champs, telles
- * que la création, la mise à jour, la suppression et la récupération des champs.
+ * API REST pour la gestion des Champs (Field).
+ * <p>
+ * Fournit les opérations CRUD suivantes pour les entités Field :
+ * <ul>
+ * <li>Obtenir un champ par son identifiant.</li>
+ * <li>Créer un nouveau champ.</li>
+ * <li>Mettre à jour un champ existant.</li>
+ * <li>Lister les champs, avec filtre facultatif par producteur.</li>
+ * <li>Supprimer un champ par son identifiant.</li>
+ * </ul>
+ * Toutes les requêtes sont sécurisées via JWT.
  */
 @Validated
 @SecurityRequirement(name = "jwt")
@@ -32,6 +41,14 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "fields", description = "Gestion des champs")
 public interface FieldApi {
 
+	/**
+	 * Récupère un champ par son identifiant.
+	 *
+	 * @param id
+	 *            Identifiant du champ (doit être un entier positif)
+	 * @return {@code 200 OK} avec le {@link FieldDto} correspondant, ou {@code 404 Not Found} avec
+	 *         {@link ApiErrorResponse}
+	 */
 	@Operation(summary = "Obtenir un champ")
 	@GetMapping("/{id}")
 	@ApiResponses({
@@ -39,6 +56,15 @@ public interface FieldApi {
 			@ApiResponse(responseCode = "404", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
 	ResponseEntity<FieldDto> getField(@ApiValidId @PathVariable("id") Integer id);
 
+	/**
+	 * Crée un nouveau champ.
+	 *
+	 * @param fieldDto
+	 *            DTO contenant les données du champ à créer, validé selon
+	 *            {@link ValidationGroups.Create}
+	 * @return {@code 201 Created} avec le {@link FieldDto} créé, ou {@code 400 Bad Request} /
+	 *         {@code 409 Conflict} avec {@link ApiErrorResponse}
+	 */
 	@Operation(summary = "Créer un champ")
 	@PostMapping
 	@ApiResponses({
@@ -48,6 +74,16 @@ public interface FieldApi {
 	ResponseEntity<FieldDto> createField(@Validated({Default.class,
 			ValidationGroups.Create.class}) @RequestBody FieldUpdateDto fieldDto);
 
+	/**
+	 * Met à jour un champ existant.
+	 *
+	 * @param id
+	 *            Identifiant du champ à mettre à jour
+	 * @param fieldDto
+	 *            DTO contenant les nouvelles valeurs, validé selon {@link ValidationGroups.Update}
+	 * @return {@code 200 OK} avec le {@link FieldDto} mis à jour, ou {@code 400 Bad Request} /
+	 *         {@code 409 Conflict} avec {@link ApiErrorResponse}
+	 */
 	@Operation(summary = "Mettre à jour un champ")
 	@PutMapping(value = "/{id}", consumes = "application/json")
 	@ApiResponses({
@@ -57,6 +93,13 @@ public interface FieldApi {
 	ResponseEntity<FieldDto> updateField(@ApiValidId @PathVariable("id") Integer id, @Validated({
 			Default.class, ValidationGroups.Update.class}) @RequestBody FieldUpdateDto fieldDto);
 
+	/**
+	 * Liste tous les champs, avec un filtre facultatif par producteur.
+	 *
+	 * @param producerId
+	 *            (optionnel) Identifiant du producteur pour filtrer les champs
+	 * @return {@code 200 OK} avec la liste de {@link FieldDto}
+	 */
 	@Operation(summary = "Obtenir tous les champs")
 	@GetMapping
 	@ApiResponses({
@@ -64,6 +107,14 @@ public interface FieldApi {
 	ResponseEntity<List<FieldDto>> listFields(
 			@Parameter(description = "ID du producteur possédant le champ") @RequestParam(value = "producerId", required = false) Integer producerId);
 
+	/**
+	 * Supprime un champ par son identifiant.
+	 *
+	 * @param id
+	 *            Identifiant du champ à supprimer
+	 * @return {@code 204 No Content} si la suppression réussit, ou {@code 404 Not Found} avec
+	 *         {@link ApiErrorResponse}
+	 */
 	@Operation(summary = "Supprimer un champ")
 	@DeleteMapping("/{id}")
 	@ApiResponseDelete

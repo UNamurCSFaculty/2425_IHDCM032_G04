@@ -11,7 +11,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * DTO pour l'entité User.
+ * DTO abstrait de détail pour un utilisateur.
+ * <p>
+ * Définit les propriétés communes à tous les types d’utilisateurs (admin, producer, trader,
+ * transformer, quality_inspector, exporter, carrier) et configure la désérialisation polymorphique
+ * via OpenAPI.
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

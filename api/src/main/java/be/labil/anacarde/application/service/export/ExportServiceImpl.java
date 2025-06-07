@@ -10,9 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Implémentation du {@link ExportService} :
- */
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)

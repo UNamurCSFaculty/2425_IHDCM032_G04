@@ -32,6 +32,7 @@ import { useTranslation } from 'react-i18next'
 
 export type CardLayout = 'grid' | 'row'
 export type UserRole = 'buyer' | 'seller'
+
 interface AuctionCardProps {
   auction: AuctionDto
   layout: CardLayout
@@ -110,7 +111,7 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
       )}
     >
       <CardHeader className="pb-2">
-        <CardTitle className="flex items-center gap-2 truncate text-base font-semibold">
+        <CardTitle className="flex flex-wrap items-center gap-2 truncate text-base font-semibold">
           {t('database.' + auction.product.type)} ·{' '}
           {t('auction.lot_label', { id: auction.product.id })}
           <Badge

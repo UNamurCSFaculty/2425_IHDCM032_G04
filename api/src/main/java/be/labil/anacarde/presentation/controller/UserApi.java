@@ -31,8 +31,17 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * Cette API offre des points d'accès permettant de récupérer, créer, mettre à jour et supprimer des
- * utilisateurs.
+ * API REST pour la gestion des utilisateurs.
+ * <p>
+ * Fournit les opérations suivantes :
+ * <ul>
+ * <li>Vérification de la disponibilité d’un email ou d’un téléphone.</li>
+ * <li>Création d’un utilisateur avec possibilité de téléversement de documents.</li>
+ * <li>Mise à jour d’un utilisateur existant.</li>
+ * <li>Suppression d’un utilisateur (réservée aux admins).</li>
+ * <li>Listing de tous les utilisateurs, avec filtre par type.</li>
+ * </ul>
+ * Toutes les méthodes, sauf les checks publics, nécessitent une authentification JWT.
  */
 @Validated
 @Tag(name = "users", description = "Gestion des utilisateurs")
@@ -40,12 +49,26 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping(value = "/api/users", produces = "application/json")
 public interface UserApi {
 
+	/**
+	 * Vérifie si une adresse email est déjà utilisée.
+	 *
+	 * @param email
+	 *            Adresse email à tester (non null)
+	 * @return {@code 200 OK} avec {@code true} si l’email existe, {@code false} sinon
+	 */
 	@Operation(summary = "Vérifier la disponibilité d’un e-mail", description = "204 si libre, 409 s’il existe déjà")
 	@ApiResponses({
 			@ApiResponse(responseCode = "200", description = "Résultat de la vérification", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(type = "boolean")))})
 	@GetMapping("/check/email")
 	ResponseEntity<Boolean> checkEmail(@RequestParam("email") @NotNull String email);
 
+	/**
+	 * Vérifie si un numéro de téléphone est déjà utilisé.
+	 *
+	 * @param phone
+	 *            Numéro de téléphone à tester
+	 * @return {@code 200 OK} avec {@code true} si le numéro existe, {@code false} sinon
+	 */
 	@Operation(summary = "Vérifier la disponibilité d’un numéro de téléphone", description = "Renvoie `true` si le numéro existe déjà, `false` sinon.")
 	@ApiResponses({
 			@ApiResponse(responseCode = "200", description = "Résultat de la vérification", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(type = "boolean")))})
