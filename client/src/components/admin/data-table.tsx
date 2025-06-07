@@ -108,7 +108,7 @@ export const schema = z.object({
   reviewer: z.string(),
 })
 
-// Create a separate component for the drag handle
+// Composant spécialisé pour le handle de drag-and-drop
 function DragHandle({ id }: { id: number }) {
   const { attributes, listeners } = useSortable({
     id,
@@ -328,6 +328,9 @@ function DraggableRow({ row }: { row: Row<z.infer<typeof schema>> }) {
   )
 }
 
+/**
+ * Composant datatable pour afficher et gérer les sections d'un document.
+ */
 export function DataTable({
   data: initialData,
 }: {

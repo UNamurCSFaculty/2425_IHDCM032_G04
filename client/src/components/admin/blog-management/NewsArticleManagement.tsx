@@ -50,6 +50,9 @@ import { useMemo, useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
+/**
+ * Composant de gestion des articles de presse
+ */
 export function NewsArticleManagement() {
   const { t } = useTranslation()
   const queryClient = useQueryClient()

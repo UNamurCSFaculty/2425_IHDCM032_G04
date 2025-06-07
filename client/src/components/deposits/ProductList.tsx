@@ -194,7 +194,7 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
         </div>
       </div>
 
-      <div className="grid items-start gap-6 lg:grid-cols-[260px_1fr]">
+      <div className="grid items-start gap-6 px-6 lg:grid-cols-[260px_1fr]">
         {isDesktop && (
           <div className="bg-background sticky top-20 self-start rounded-lg border shadow-sm">
             <FiltersPanel

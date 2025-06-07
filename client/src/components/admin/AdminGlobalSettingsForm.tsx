@@ -17,6 +17,9 @@ import { toast } from 'sonner'
 
 const zGlobalSettingsForm = zGlobalSettingsUpdateDto
 
+/**
+ * Composant pour gérer les paramètres globaux de l'application
+ */
 export const AdminGlobalSettingsForm: React.FC = () => {
   const { t } = useTranslation()
 

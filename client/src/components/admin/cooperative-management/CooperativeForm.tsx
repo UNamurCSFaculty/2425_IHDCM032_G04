@@ -45,15 +45,18 @@ const cooperativeSchema = z.object({
 interface CooperativeFormProps {
   isEditMode?: boolean
   cooperativeIdToEdit?: number
-  allCooperatives?: CooperativeDto[] // New prop
-  onSuccess?: () => void // Callback pour succès (utilisé par la Dialog)
-  onCancel?: () => void // Callback pour annulation (utilisé par la Dialog)
+  allCooperatives?: CooperativeDto[]
+  onSuccess?: () => void
+  onCancel?: () => void
 }
 
+/**
+ * Formulaire pour créer ou éditer une coopérative.
+ */
 export const CooperativeForm: React.FC<CooperativeFormProps> = ({
   isEditMode,
   cooperativeIdToEdit,
-  allCooperatives, // New prop
+  allCooperatives,
   onSuccess,
   onCancel,
 }) => {
@@ -186,13 +189,11 @@ export const CooperativeForm: React.FC<CooperativeFormProps> = ({
       .filter(user => {
         if (user.type !== 'producer') return false
 
-        // If in edit mode, and this user is the current president of the cooperative being edited,
-        // they should always be in the list.
+        // Si en mode édition, et que cet utilisateur est le président actuel de la coopérative en cours d'édition,
         if (isEditMode && cooperativeQuery.data?.presidentId === user.id) {
           return true
         }
-        // Otherwise (for new coops, or for other users in edit mode),
-        // they should only be in the list if they are not a president of any cooperative.
+        // Sinon, ils ne doivent pas être dans la liste s'ils sont déjà présidents d'une autre coopérative.
         return !existingPresidentIds.has(user.id)
       })
       .map(user => ({

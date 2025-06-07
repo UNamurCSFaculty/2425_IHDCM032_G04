@@ -43,6 +43,9 @@ type Stats = {
   transformedPriceTendency: number
 }
 
+/**
+ * Composant React pour afficher les cartes de statistiques du tableau de bord
+ */
 export function SectionCards() {
   const { t } = useTranslation()
 

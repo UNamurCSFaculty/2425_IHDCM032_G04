@@ -10,6 +10,12 @@ import { MapContainer, Marker, TileLayer, Tooltip } from 'react-leaflet'
 import MarkerClusterGroup from 'react-leaflet-markercluster'
 import { useTranslation } from 'react-i18next'
 
+/**
+ * Composant React pour afficher une carte des enchères
+ * avec des marqueurs pour chaque enchère.
+ * Chaque marqueur affiche des informations détaillées sur l'enchère
+ * lorsqu'on clique dessus.
+ */
 const AuctionMap: React.FC<{
   auctions: AuctionDto[]
   onSelect: (a: AuctionDto) => void

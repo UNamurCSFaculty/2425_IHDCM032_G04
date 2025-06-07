@@ -8,6 +8,9 @@ import {
 import { type Icon } from '@tabler/icons-react'
 import { Link } from '@tanstack/react-router'
 
+/**
+ *  Composant de navigation principal pour l'interface d'administration.
+ */
 export function NavMain({
   items,
 }: {

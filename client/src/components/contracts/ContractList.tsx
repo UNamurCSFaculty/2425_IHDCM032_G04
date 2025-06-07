@@ -47,6 +47,12 @@ interface ContractListProps {
   contracts: ContractOfferDto[]
 }
 
+/**
+ * Composant React pour afficher une liste de contrats
+ * avec des options de filtrage, tri et pagination.
+ * Permet de basculer entre une vue en cartes ou en liste.
+ * Inclut un panneau de filtres pour affiner les résultats.
+ */
 const ContractList: React.FC<ContractListProps> = ({ contracts }) => {
   const isDesktop = useMediaQuery('(min-width: 1024px)')
   const { t } = useTranslation()

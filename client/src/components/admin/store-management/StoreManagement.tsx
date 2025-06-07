@@ -51,6 +51,11 @@ import {
 } from '@/components/ui/dropdown-menu'
 
 type SortableStoreColumn = keyof Pick<StoreDetailDto, 'name'> | 'userFullName'
+
+/**
+ * Composant pour gérer la liste des magasins.
+ * Permet d'ajouter, modifier, supprimer et filtrer les magasins.
+ */
 export function StoreManagement() {
   const { t } = useTranslation()
   const queryClient = useQueryClient()

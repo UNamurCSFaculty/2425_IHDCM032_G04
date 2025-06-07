@@ -59,6 +59,9 @@ type SortableColumn = keyof Pick<
   'firstName' | 'email' | 'type' | 'registrationDate' | 'enabled'
 >
 
+/**
+ * Composant pour afficher la liste des utilisateurs avec des fonctionnalités de recherche, tri, pagination et actions.
+ */
 export function UserListPage() {
   const { t } = useTranslation()
   const queryClient = useQueryClient()
@@ -69,7 +72,7 @@ export function UserListPage() {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [editingUserId, setEditingUserId] = useState<number | null>(null)
 
-  const [isCreateUserDialogOpen, setIsCreateUserDialogOpen] = useState(false) // New state for create dialog
+  const [isCreateUserDialogOpen, setIsCreateUserDialogOpen] = useState(false)
 
   const [isConfirmDeleteDialogOpen, setIsConfirmDeleteDialogOpen] =
     useState(false)
@@ -94,7 +97,6 @@ export function UserListPage() {
     ...listUsersOptions(),
   })
 
-  // Ajouter la requête pour récupérer toutes les coopératives
   const { data: allCooperatives, isLoading: isLoadingCooperatives } = useQuery(
     listCooperativesOptions()
   )
@@ -102,8 +104,7 @@ export function UserListPage() {
   const processedUsers = useMemo(() => {
     if (!allUsers) return { paginatedUsers: [], totalPages: 0, totalItems: 0 }
 
-    // 1. Filter users
-
+    // 1. Filtrer les utilisateurs
     const filteredUsers = allUsers.filter(user => {
       const fullName = user.firstName + ' ' + user.lastName
       return (
@@ -119,15 +120,15 @@ export function UserListPage() {
       )
     })
 
-    // 2. Sort users
+    // 2. Trier les utilisateurs
     const sortConfig: SortConfig<UserListDto> = {
       sortKey: sortColumn,
       sortDirection: sortDirection,
-      dateColumns: ['registrationDate'], // Explicitly tell which columns are date strings
+      dateColumns: ['registrationDate'],
     }
     const sortedUsers = sortData(filteredUsers, sortConfig)
 
-    // 3. Paginate users
+    // 3. Paginer les utilisateurs
     const totalPages = Math.ceil(sortedUsers.length / itemsPerPage)
     const startIndex = (currentPage - 1) * itemsPerPage
     const paginatedUsers = sortedUsers.slice(
@@ -144,24 +145,6 @@ export function UserListPage() {
     currentPage,
     itemsPerPage,
   ])
-
-  /*
-  const mutationUpdate = useMutation({
-    ...updateUserMutation(),
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: listUsersOptions().queryKey })
-      queryClient.invalidateQueries({
-        queryKey: ['getUser', { path: { id: variables.path.id } }],
-      })
-      toast.success(t('admin.user_management.toasts.user_updated_success'))
-    },
-    onError: (error: any) => {
-      toast.error(t('common.error'), {
-        description:
-          error.message || t('admin.user_management.toasts.user_updated_error'),
-      })
-    },
-  })*/
 
   const mutationDelete = useMutation({
     ...deleteUserMutation({ path: { id: editingUserId! } }),
@@ -181,7 +164,7 @@ export function UserListPage() {
   })
 
   const handleEditUser = (user: UserListDto) => {
-    setEditingUserId(user.id) // Set ID to trigger detail fetch
+    setEditingUserId(user.id)
     setIsEditDialogOpen(true)
   }
 
@@ -195,19 +178,6 @@ export function UserListPage() {
       mutationDelete.mutate({ path: { id: selectedUserForDelete.id } })
     }
   }
-
-  /*
-  const handleToggleUserStatus = (user: UserListDto) => {
-    const updatedUserPayload = {
-      type: user.type,
-      enabled: !user.enabled,
-    } as AppUpdateUserDto
-
-    mutationUpdate.mutate({
-      path: { id: user.id },
-      body: updatedUserPayload,
-    })
-  }*/
 
   const getStatusVariant = (
     user: UserListDto
@@ -243,7 +213,6 @@ export function UserListPage() {
   }
 
   if (isLoadingUsers || isLoadingCooperatives) {
-    // Ajouter isLoadingCooperatives à la condition de chargement
     return (
       <div className="flex items-center justify-center py-10">
         <Loader2 className="text-primary h-8 w-8 animate-spin" />
@@ -256,7 +225,6 @@ export function UserListPage() {
       <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div className="relative w-full max-w-xs">
           {' '}
-          {/* Adjusted width */}
           <Search className="text-muted-foreground absolute top-2.5 left-2.5 h-4 w-4" />
           <Input
             type="search"
@@ -369,20 +337,6 @@ export function UserListPage() {
                           <UserCog className="mr-2 h-4 w-4" />
                           {t('buttons.edit')}
                         </DropdownMenuItem>
-                        {/*user.validationDate && 
-                          <DropdownMenuItem
-                            onClick={() => handleToggleUserStatus(user)}
-                          >
-                            {user.enabled ? (
-                              <XCircle className="mr-2 h-4 w-4" />
-                            ) : (
-                              <CheckCircle2 className="mr-2 h-4 w-4" />
-                            )}
-                            {user.enabled
-                              ? t('buttons.deactivate')
-                              : t('buttons.activate')}
-                          </DropdownMenuItem>
-                        )*/}
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
                           onClick={() => handleDeleteUser(user)}
@@ -466,7 +420,7 @@ export function UserListPage() {
         </DialogContent>
       </Dialog>
 
-      {/* Create User Dialog */}
+      {/* Dialogue de création d'utilisateur */}
       <Dialog
         open={isCreateUserDialogOpen}
         onOpenChange={isOpen => {
@@ -474,14 +428,14 @@ export function UserListPage() {
         }}
       >
         <DialogContent className="max-h-[90vh] w-full max-w-[80vw]! overflow-y-auto">
-          {isLoadingCooperatives && ( // Only need to check for cooperatives loading for create
+          {isLoadingCooperatives && (
             <div className="flex h-48 items-center justify-center">
               <Loader2 className="text-primary h-8 w-8 animate-spin" />
             </div>
           )}
           {!isLoadingCooperatives && allCooperatives && (
             <UserForm
-              mode="create" // Explicitly set mode to create
+              mode="create"
               onSubmitSuccess={() => {
                 setIsCreateUserDialogOpen(false)
               }}
@@ -498,7 +452,7 @@ export function UserListPage() {
         </DialogContent>
       </Dialog>
 
-      {/* Delete User Confirmation Dialog */}
+      {/* Suppression de l'utilisateur */}
       <AlertDialog
         open={isConfirmDeleteDialogOpen}
         onOpenChange={setIsConfirmDeleteDialogOpen}

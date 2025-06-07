@@ -71,6 +71,9 @@ const contractQueryOptions = (
   staleTime: 10_000,
 })
 
+/**
+ * Composant React pour afficher les détails d'une enchère
+ */
 const AuctionDetailsPanel: React.FC<Props> = ({
   auction,
   showDetails = false,
@@ -147,7 +150,6 @@ const AuctionDetailsPanel: React.FC<Props> = ({
   }, [auction.id, queryClient])
 
   useEffect(() => {
-    // SSE visitors
     const baseUrl = client.getConfig().baseUrl?.replace(/\/$/, '') ?? ''
     const sseUrl = `${baseUrl}/api/auctions/${auction.id}/sse?visitor=true`
     const es = new window.EventSource(sseUrl, { withCredentials: true })
@@ -165,9 +167,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
     es.addEventListener('auctionClosed', () => {
       queryClient.invalidateQueries({ queryKey: listAuctionsQueryKey() })
     })
-    es.onerror = () => {
-      // console.error('[SSE] Erreur EventSource enchère')
-    }
+    es.onerror = () => {}
     return () => {
       es.close()
       sseRef.current = null
@@ -292,7 +292,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
   const ended = endsIn < new Date()
 
   return (
-    <div className="mx-auto flex w-full flex-col gap-6 p-4">
+    <div className="mx-auto flex w-full flex-col gap-6 py-4">
       <div className="flex flex-wrap space-y-1">
         <h2 className="flex items-center gap-2 text-2xl font-semibold">
           {t('auction.details_title_full', {
@@ -390,7 +390,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
         </div>
       )}
       <div className="flex flex-col gap-4 lg:flex-row">
-        {/* Left column: actions */}
+        {/* Colonne de gauche: action */}
         {role === 'buyer' && !ended && (
           <div className="flex flex-1 flex-col gap-6">
             <Card className="rounded-lg bg-neutral-100 p-4 shadow">
@@ -520,7 +520,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
         )}
 
         {role === 'buyer' && ended && (
-          <div className="flex w-full flex-col lg:w-2/5">
+          <div className="flex w-full flex-col md:w-2/5">
             <Card className="rounded-lg bg-neutral-100 p-4 shadow">
               <div className="flex flex-col">
                 <span className="mb-2 text-center text-base font-medium text-gray-700">
@@ -534,7 +534,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                 </div>
 
                 {acceptedBid && user.id === acceptedBid.trader.id && (
-                  <div className="mt-2 flex justify-center">
+                  <div className="mt-2 flex flex-col justify-center">
                     <Button onClick={() => setIsOpen(true)}>
                       <ScrollText />
                       {t('auction.table.propose_contract_button')}

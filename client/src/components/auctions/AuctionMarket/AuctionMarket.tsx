@@ -68,6 +68,11 @@ interface MarketplaceProps {
   filterByAuctionStatus?: boolean
 }
 
+/**
+ * Composant principal du marché des enchères
+ * Affiche les enchères en fonction du mode de marché sélectionné.
+ * Permet de filtrer, trier et visualiser les enchères en mode carte, liste ou tableau.
+ */
 const AuctionMarketplace: React.FC<MarketplaceProps> = ({
   marketMode = 'marketplace',
   userRole,
@@ -177,7 +182,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
     [user.id, marketMode]
   )
 
-  // Display inline auction on custom event (SSE notif's toast action)
+  // Affiche l'enchère en ligne sur un événement personnalisé (action de notification SSE)
   useEffect(() => {
     const handler = (event: Event) => {
       const customEvent = event as CustomEvent<{ auctionId: number }>
@@ -194,7 +199,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
     }
   }, [auctions])
 
-  // Compute auctions trends
+  // Calculer les tendances des enchères
   const trends = useMemo(() => {
     const stats = {
       harvest: { volume: 0, totalWeight: 0, totalPrice: 0, avgPricePerKg: 0 },
@@ -355,7 +360,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
                   </SheetTrigger>
                   <SheetContent
                     side="left"
-                    className="w-[300px] overflow-y-auto py-7 sm:w-[380px]"
+                    className="w-[300px] overflow-y-auto py-10 sm:w-[380px]"
                   >
                     <FiltersPanel
                       filterData={auctions as AuctionDto[]}
@@ -372,7 +377,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
         </div>
       </div>
 
-      <div className="grid items-start gap-6 lg:grid-cols-[260px_1fr]">
+      <div className="grid items-start gap-6 px-6 sm:px-0 lg:grid-cols-[260px_1fr]">
         {isDesktop && !isAuctionsLoading && (
           <div className="bg-background sticky top-20 self-start rounded-lg border shadow-sm">
             <FiltersPanel
@@ -502,7 +507,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
       {dialogAuction && viewMode !== 'cards' && (
         <Dialog open onOpenChange={open => !open && setDialogAuction(null)}>
           <DialogTitle />
-          <DialogContent className="max-h-[90vh] w-full max-w-[80vw]! overflow-y-auto">
+          <DialogContent className="max-h-[90vh] w-full max-w-[80vw]! overflow-y-auto pt-8 pb-20">
             <AuctionDetails
               auction={dialogAuction}
               role={userRole}

@@ -93,22 +93,39 @@ export function capitalizeFirstLetter(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1)
 }
 
-export const calculatePasswordStrength = (password: string): number => {
-  if (!password) return 0
+export function calculatePasswordStrength(password: string): number {
+  if (!password || password.length === 0) {
+    return 0
+  }
 
-  let strength = 0
+  let score = 0
 
-  // Length check
-  if (password.length >= 8) strength += 1
-  if (password.length >= 12) strength += 1
+  // 1. Longueur minimale (8 caractères) - requis pour commencer
+  if (password.length >= 8) {
+    score += 1
+  }
 
-  // Character type checks
-  if (/[A-Z]/.test(password)) strength += 1
-  if (/[a-z]/.test(password)) strength += 1
-  if (/[0-9]/.test(password)) strength += 1
-  if (/[^A-Za-z0-9]/.test(password)) strength += 1
+  // 2. Contient au moins une majuscule
+  if (/[A-Z]/.test(password)) {
+    score += 1
+  }
 
-  return Math.min(5, strength)
+  // 3. Contient au moins une minuscule
+  if (/[a-z]/.test(password)) {
+    score += 1
+  }
+
+  // 4. Contient au moins un chiffre
+  if (/[0-9]/.test(password)) {
+    score += 1
+  }
+
+  // 5. Contient au moins un caractère spécial
+  if (/[^A-Za-z0-9]/.test(password)) {
+    score += 1
+  }
+
+  return score
 }
 
 export const getCategoryBackground = (categoryName?: string): string => {

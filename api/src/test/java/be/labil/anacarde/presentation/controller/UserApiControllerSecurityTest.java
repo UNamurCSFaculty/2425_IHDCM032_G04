@@ -34,7 +34,7 @@ public class UserApiControllerSecurityTest extends AbstractIntegrationTest {
 		updateUser.setEmail("email@updated.com");
 		updateUser.setAddress(
 				AddressUpdateDto.builder().street("Rue de la paix").cityId(1).regionId(1).build());
-		updateUser.setPassword("newpassword");
+		updateUser.setPassword("Newpassword1!");
 		updateUser.setLanguageId(getMainLanguageDto().getId());
 		updateUser.setAgriculturalIdentifier("AGR-999");
 		updateUser.setCooperativeId(getMainTestCooperative().getId());
@@ -60,7 +60,7 @@ public class UserApiControllerSecurityTest extends AbstractIntegrationTest {
 		updateUser.setEmail("email@updated.com");
 		updateUser.setAddress(
 				AddressUpdateDto.builder().street("Rue de la paix").cityId(1).regionId(1).build());
-		updateUser.setPassword("newpassword");
+		updateUser.setPassword("Newpassword1!");
 		updateUser.setLanguageId(getMainLanguageDto().getId());
 		updateUser.setAgriculturalIdentifier("AGR-999");
 		updateUser.setCooperativeId(getMainTestCooperative().getId());

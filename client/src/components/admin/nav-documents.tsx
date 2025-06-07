@@ -22,6 +22,10 @@ import {
   IconTrash,
 } from '@tabler/icons-react'
 
+/**
+ * Composant de navigation pour les documents dans la barre latérale.
+ * Affiche une liste de documents avec des actions supplémentaires.
+ */
 export function NavDocuments({
   items,
 }: {
