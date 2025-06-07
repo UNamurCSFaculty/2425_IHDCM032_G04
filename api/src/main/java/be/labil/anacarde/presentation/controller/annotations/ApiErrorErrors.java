@@ -7,6 +7,12 @@ import com.fasterxml.jackson.annotation.Nulls;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Objects;
 
+/**
+ * Représente un détail d’erreur individuel dans la réponse API.
+ * <p>
+ * Utilisé pour indiquer le chemin JSON concerné, le message d’erreur
+ * et un code d’erreur spécifique par élément d’erreur.
+ */
 public class ApiErrorErrors {
 	@JsonProperty("path")
 
@@ -26,6 +32,12 @@ public class ApiErrorErrors {
 	@JsonSetter(nulls = Nulls.FAIL) // FAIL setting if the value is null
 	private String errorCode = null;
 
+	/**
+	 * Définit le chemin JSON associé à cette erreur.
+	 *
+	 * @param path chemin JSON (ex. "user.email")
+	 * @return l’instance courante pour enchaînement
+	 */
 	public ApiErrorErrors path(String path) {
 
 		this.path = path;
@@ -37,17 +49,26 @@ public class ApiErrorErrors {
 	 * 
 	 * @return path
 	 **/
-
 	@Schema(description = "For input validation errors, identifies where in the  JSON request body the error occurred. ")
-
 	public String getPath() {
 		return path;
 	}
 
+	/**
+	 * Modifie le chemin JSON associé à l’erreur.
+	 *
+	 * @param path nouveau chemin JSON
+	 */
 	public void setPath(String path) {
 		this.path = path;
 	}
 
+	/**
+	 * Définit le message d’erreur.
+	 *
+	 * @param message message human-readable décrivant l’erreur
+	 * @return l’instance courante pour enchaînement
+	 */
 	public ApiErrorErrors message(String message) {
 
 		this.message = message;
@@ -59,17 +80,26 @@ public class ApiErrorErrors {
 	 * 
 	 * @return message
 	 **/
-
 	@Schema(description = "Human-readable error message.")
-
 	public String getMessage() {
 		return message;
 	}
 
+	/**
+	 * Modifie le message d’erreur.
+	 *
+	 * @param message nouveau message human-readable
+	 */
 	public void setMessage(String message) {
 		this.message = message;
 	}
 
+	/**
+	 * Définit le code d’erreur.
+	 *
+	 * @param errorCode code métier ou technique de l’erreur
+	 * @return l’instance courante pour enchaînement
+	 */
 	public ApiErrorErrors errorCode(String errorCode) {
 
 		this.errorCode = errorCode;
@@ -81,13 +111,16 @@ public class ApiErrorErrors {
 	 * 
 	 * @return errorCode
 	 **/
-
 	@Schema(description = "Code indicating error type.")
-
 	public String getErrorCode() {
 		return errorCode;
 	}
 
+	/**
+	 * Modifie le code d’erreur.
+	 *
+	 * @param errorCode nouveau code métier
+	 */
 	public void setErrorCode(String errorCode) {
 		this.errorCode = errorCode;
 	}
@@ -115,7 +148,6 @@ public class ApiErrorErrors {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("class ApiErrorErrors {\n");
-
 		sb.append("    path: ").append(toIndentedString(path)).append("\n");
 		sb.append("    message: ").append(toIndentedString(message)).append("\n");
 		sb.append("    errorCode: ").append(toIndentedString(errorCode)).append("\n");
@@ -124,8 +156,10 @@ public class ApiErrorErrors {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces (except the first
-	 * line).
+	 * Convertit l’objet en chaîne indentée pour l’affichage.
+	 *
+	 * @param o objet à convertir
+	 * @return chaîne avec indentations
 	 */
 	private String toIndentedString(java.lang.Object o) {
 		if (o == null) {

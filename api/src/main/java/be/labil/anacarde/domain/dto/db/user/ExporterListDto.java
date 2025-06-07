@@ -6,12 +6,15 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
- * DTO pour l'entité Exporter.
+ * DTO de liste pour les exportateurs.
+ * <p>
+ * Hérite des propriétés communes définies dans {@link TraderDetailDto}
+ * (identifiant, nom, coordonnées, etc.) et est typé "exporter" pour la
+ * désérialisation JSON polymorphique.
  */
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Schema(description = "Objet de transfert de données pour les exportateurs.")
 @JsonTypeName("exporter")
 public class ExporterListDto extends TraderDetailDto {
-	// Aucun champ supplémentaire n'est nécessaire ici.
 }

@@ -5,12 +5,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-@Configuration
 /**
  * Cette classe fournit les définitions de beans liés à la sécurité nécessaires à l'application.
  * Elle inclut notamment la définition d'un bean PasswordEncoder qui permet de chiffrer les mots de
  * passe en utilisant l'algorithme BCrypt.
  */
+@Configuration
 public class SecurityBeansConfig {
 
 	/**

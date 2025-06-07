@@ -10,6 +10,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Repository Spring Data pour l’entité {@link ContractOffer}.
+ * <p>
+ * Fournit les opérations CRUD de base ainsi que des requêtes personnalisées
+ * pour rechercher des offres de contrat selon différents critères métiers.
+ */
 public interface ContractOfferRepository extends JpaRepository<ContractOffer, Integer> {
 
 	/**
@@ -63,6 +69,13 @@ public interface ContractOfferRepository extends JpaRepository<ContractOffer, In
 	List<ContractOffer> findByQualityIdAndSellerIdAndBuyerId(Integer qualityId, Integer sellerId,
 			Integer buyerId);
 
+	/**
+	 * Met à jour nativement la date de création ({@code creation_date})
+	 * d’une offre de contrat identifiée par son ID.
+	 *
+	 * @param id      identifiant de l’offre de contrat à mettre à jour
+	 * @param newDate nouvelle date de création à appliquer
+	 */
 	@Modifying
 	@Transactional
 	@Query(value = """

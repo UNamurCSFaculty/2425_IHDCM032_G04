@@ -4,7 +4,12 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 
 /**
- * Exception métier pour renvoyer une ApiErrorResponse custom.
+ * Exception métier permettant de construire une réponse d’erreur standardisée
+ * ({@link ApiErrorResponse}) avec un statut HTTP personnalisé, un code d’erreur
+ * et une liste de détails d’erreur.
+ * <p>
+ * Cette exception est capturée par un handler global pour générer une réponse API
+ * complète à l’utilisateur.
  */
 public class ApiErrorException extends RuntimeException {
 

@@ -47,7 +47,6 @@ public class AuthEntryPointJwt implements AuthenticationEntryPoint {
 	@Override
 	public void commence(HttpServletRequest req, HttpServletResponse res,
 			AuthenticationException authEx) throws IOException, ServletException {
-		// 401 Unauthorized
 		ApiErrorResponse body = new ApiErrorResponse(HttpStatus.UNAUTHORIZED.value(),
 				LocalDateTime.now(), req.getRequestURI(), ApiErrorCode.ACCESS_UNAUTHORIZED.code(),
 				List.of(new ErrorDetail(null, ApiErrorCode.ACCESS_UNAUTHORIZED.code(),

@@ -7,6 +7,12 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * DTO minimaliste représentant les informations de base d’un utilisateur.
+ * <p>
+ * Utilisé pour les cas où seules les données essentielles
+ * (prénom et nom) sont nécessaires, sans détails complémentaires.
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Schema(description = "Données minimales d'un utilisateur.")

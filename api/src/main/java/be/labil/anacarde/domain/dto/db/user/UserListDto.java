@@ -12,6 +12,13 @@ import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+/**
+ * DTO abstrait de liste pour un utilisateur.
+ * <p>
+ * Définit les propriétés de base affichées dans les vues de type liste
+ * pour tous les types d’utilisateurs (admin, producer, transformer, trader,
+ * quality_inspector, exporter, carrier) avec gestion polymorphique via OpenAPI.
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type", visible = true)

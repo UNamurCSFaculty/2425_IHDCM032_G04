@@ -23,8 +23,19 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * End-points « Enchères » (API de gestion des enchères). Permet de gérer les opérations relatives
- * aux enchères, telles que la création, la mise à jour, l'acceptation et la suppression d'enchères.
+ * Interface REST pour la gestion des enchères.
+ * <p>
+ * Définit les opérations CRUD et métiers suivantes :
+ * <ul>
+ *   <li>Récupérer une enchère par son ID.</li>
+ *   <li>Récupérer la configuration des enchères globales.</li>
+ *   <li>Créer une nouvelle enchère.</li>
+ *   <li>Mettre à jour une enchère existante.</li>
+ *   <li>Accepter (clore) une enchère.</li>
+ *   <li>Lister les enchères avec filtres facultatifs (créateur, participant, statut).</li>
+ *   <li>Supprimer (désactiver) une enchère.</li>
+ * </ul>
+ * Toutes les méthodes sont sécurisées par JWT.
  */
 @Validated
 @SecurityRequirement(name = "jwt")
@@ -32,6 +43,13 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "auctions", description = "Gestion des enchères")
 public interface AuctionApi {
 
+	/**
+	 * Récupère une enchère par son identifiant.
+	 *
+	 * @param id Identifiant de l’enchère (doit être positif, non null)
+	 * @return {@code 200 OK} avec l’{@link AuctionDto}, ou
+	 *         {@code 404 Not Found} avec {@link ApiErrorResponse}
+	 */
 	@Operation(summary = "Obtenir une enchère")
 	@GetMapping("/{id}")
 	@ApiResponses({
@@ -39,6 +57,12 @@ public interface AuctionApi {
 			@ApiResponse(responseCode = "404", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
 	ResponseEntity<AuctionDto> getAuction(@ApiValidId @PathVariable("id") Integer id);
 
+	/**
+	 * Récupère les réglages globaux applicables aux enchères.
+	 *
+	 * @return {@code 200 OK} avec le {@link GlobalSettingsDto}, ou
+	 *         {@code 404 Not Found} si non configuré, avec {@link ApiErrorResponse}
+	 */
 	@Operation(summary = "Obtenir les paramètres des enchères")
 	@GetMapping("/settings")
 	@ApiResponses({
@@ -46,6 +70,15 @@ public interface AuctionApi {
 			@ApiResponse(responseCode = "404", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
 	ResponseEntity<GlobalSettingsDto> getAuctionSettings();
 
+	/**
+	 * Crée une nouvelle enchère.
+	 *
+	 * @param auctionDto données de création de l’enchère validées selon
+	 *                   {@link ValidationGroups.Create}
+	 * @return {@code 201 Created} avec l’{@link AuctionDto}, ou
+	 *         {@code 400 Bad Request} en cas de données invalides, ou
+	 *         {@code 409 Conflict} si une enchère conflictuelle existe
+	 */
 	@Operation(summary = "Créer une enchère")
 	@PostMapping
 	@ApiResponses({
@@ -55,6 +88,15 @@ public interface AuctionApi {
 	ResponseEntity<AuctionDto> createAuction(@Validated({Default.class,
 			ValidationGroups.Create.class}) @RequestBody AuctionUpdateDto auctionDto);
 
+	/**
+	 * Met à jour une enchère existante.
+	 *
+	 * @param id         Identifiant de l’enchère à mettre à jour
+	 * @param auctionDto données de mise à jour validées selon
+	 *                   {@link ValidationGroups.Update}
+	 * @return {@code 200 OK} avec l’{@link AuctionDto}, ou
+	 *         {@code 400 Bad Request} ou {@code 409 Conflict}
+	 */
 	@Operation(summary = "Mettre à jour une enchère")
 	@PutMapping(value = "/{id}", consumes = "application/json")
 	@ApiResponses({
@@ -65,6 +107,13 @@ public interface AuctionApi {
 			@Validated({Default.class,
 					ValidationGroups.Update.class}) @RequestBody AuctionUpdateDto auctionDto);
 
+	/**
+	 * Accepte (clôture) une enchère.
+	 *
+	 * @param id Identifiant de l’enchère à accepter
+	 * @return {@code 200 OK} avec l’{@link AuctionDto}, ou
+	 *         {@code 404 Not Found} si introuvable
+	 */
 	@Operation(summary = "Accepter une enchère")
 	@PutMapping(value = "/{id}/accept")
 	@ApiResponses({
@@ -72,6 +121,15 @@ public interface AuctionApi {
 			@ApiResponse(responseCode = "404", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
 	ResponseEntity<AuctionDto> acceptAuction(@ApiValidId @PathVariable("id") Integer id);
 
+	/**
+	 * Liste toutes les enchères avec filtres facultatifs.
+	 *
+	 * @param traderId     (optionnel) ID du créateur des enchères
+	 * @param buyerId      (optionnel) ID d’un participant aux enchères
+	 * @param auctionStatus (optionnel) statut pour filtrer les enchères
+	 * @param limit        (optionnel) nombre maximum de résultats
+	 * @return {@code 200 OK} avec la liste des {@link AuctionDto}
+	 */
 	@Operation(summary = "Obtenir toutes les enchères")
 	@GetMapping
 	@ApiResponses({
@@ -82,6 +140,11 @@ public interface AuctionApi {
 			@Parameter(description = "Status pour filtrer les enchères") @RequestParam(value = "status", required = false) String auctionStatus,
 			@Parameter(description = "Nombre maximum d'enchères à obtenir") @RequestParam(value = "limit", required = false) Integer limit);
 
+	/**
+	 * Supprime (désactive) une enchère.
+	 *
+	 * @param id Identifiant de l’enchère à supprimer
+	 */
 	@Operation(summary = "Supprimer une enchère")
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)

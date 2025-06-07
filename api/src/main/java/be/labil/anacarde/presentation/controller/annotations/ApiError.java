@@ -10,9 +10,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Représente le format standardisé d’une erreur renvoyée par l’API REST.
+ * <p>
+ * Contient un message principal et une liste de détails d’erreurs supplémentaires.
+ */
 public class ApiError {
 	@JsonProperty("message")
-
 	@JsonInclude(JsonInclude.Include.NON_ABSENT) // Exclude from JSON if absent
 	@JsonSetter(nulls = Nulls.FAIL) // FAIL setting if the value is null
 	private String message = null;
@@ -21,6 +25,12 @@ public class ApiError {
 	@Valid
 	private List<ApiErrorErrors> errors = null;
 
+	/**
+	 * Définit le message d’erreur principal.
+	 *
+	 * @param message le message human-readable décrivant l’erreur
+	 * @return l’instance courante pour enchaînement
+	 */
 	public ApiError message(String message) {
 
 		this.message = message;
@@ -32,9 +42,7 @@ public class ApiError {
 	 * 
 	 * @return message
 	 **/
-
 	@Schema(description = "human-readable error message")
-
 	public String getMessage() {
 		return message;
 	}
@@ -49,6 +57,12 @@ public class ApiError {
 		return this;
 	}
 
+	/**
+	 * Définit la liste complète des erreurs détaillées.
+	 *
+	 * @param errors liste d’objets {@link ApiErrorErrors}
+	 * @return l’instance courante pour enchaînement
+	 */
 	public ApiError addErrorsItem(ApiErrorErrors errorsItem) {
 		if (this.errors == null) {
 			this.errors = new ArrayList<ApiErrorErrors>();
@@ -62,17 +76,27 @@ public class ApiError {
 	 * 
 	 * @return errors
 	 **/
-
 	@Schema(description = "")
 	@Valid
 	public List<ApiErrorErrors> getErrors() {
 		return errors;
 	}
 
+	/**
+	 * Modifie la liste des erreurs détaillées.
+	 *
+	 * @param errors nouvelle liste d’objets {@link ApiErrorErrors}
+	 */
 	public void setErrors(List<ApiErrorErrors> errors) {
 		this.errors = errors;
 	}
 
+	/**
+	 * Compare cette instance à un autre objet pour l’égalité.
+	 *
+	 * @param o l’objet à comparer
+	 * @return {@code true} si les messages et listes d’erreurs sont identiques
+	 */
 	@Override
 	public boolean equals(java.lang.Object o) {
 		if (this == o) {
@@ -86,11 +110,21 @@ public class ApiError {
 				&& Objects.equals(this.errors, apiError.errors);
 	}
 
+	/**
+	 * Calcule le hash code de cette instance.
+	 *
+	 * @return code de hachage basé sur les champs message et errors
+	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(message, errors);
 	}
 
+	/**
+	 * Génère une représentation textuelle indentée de cette erreur.
+	 *
+	 * @return chaîne de caractères formatée
+	 */
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -103,8 +137,10 @@ public class ApiError {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces (except the first
-	 * line).
+	 * Indente chaque ligne de la chaîne fournie de 4 espaces (sauf la première).
+	 *
+	 * @param o objet à convertir en chaîne
+	 * @return chaîne indentée
 	 */
 	private String toIndentedString(java.lang.Object o) {
 		if (o == null) {

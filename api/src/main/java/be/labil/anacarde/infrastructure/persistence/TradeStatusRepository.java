@@ -4,6 +4,12 @@ import be.labil.anacarde.domain.model.TradeStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+/**
+ * Repository Spring Data JPA pour l’entité {@link TradeStatus}.
+ * <p>
+ * Fournit l’accès en lecture aux différents états possibles d’une transaction
+ * (accepté, refusé, ouvert, expiré), identifiés par leur nom.
+ */
 public interface TradeStatusRepository extends JpaRepository<TradeStatus, Integer> {
 
 	/**
