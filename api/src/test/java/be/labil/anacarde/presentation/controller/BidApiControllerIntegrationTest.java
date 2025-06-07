@@ -213,12 +213,12 @@ public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 		String jsonContent = "";
 
 		mockMvc.perform(put("/api/bids/" + getTestBid().getId() + "/accept")
-						.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
 				.andExpect(status().isOk()).andExpect(jsonPath("$.amount").value("10.0"))
 				.andExpect(jsonPath("$.status.name").value("Accepté"));
 
 		mockMvc.perform(put("/api/bids/" + getTestBid().getId() + "/accept")
-						.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
 				.andExpect(status().is4xxClientError());
 	}
 

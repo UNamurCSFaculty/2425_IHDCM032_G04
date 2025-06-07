@@ -193,12 +193,9 @@ const AuctionDetailsPanel: React.FC<Props> = ({
     onError(error: ApiErrorResponse) {
       const detail =
         error && error.errors.length > 0 ? ' ' + error.errors[0].message : ''
-      toast.error(
-        t('auction.bid_created_fail') + ' ' + error.code + ':' + detail,
-        {
-          duration: 3000,
-        }
-      )
+      toast.error(t('auction.bid_created_fail') + ' ' + detail, {
+        duration: 3000,
+      })
     },
   })
 
@@ -211,7 +208,9 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                                     })*/
     },
     onError(error: ApiErrorResponse) {
-      toast.error(t('auction.form.accept_bid_fail') + ' (' + error.code + ')', {
+      const detail =
+        error && error.errors.length > 0 ? ' ' + error.errors[0].message : ''
+      toast.error(t('auction.form.accept_bid_fail') + ' ' + detail, {
         duration: 3000,
       })
     },

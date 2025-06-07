@@ -146,11 +146,9 @@ public class BidServiceImpl implements BidService {
 		Bid existingBid = bidRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Offre non trouvée"));
 		List<Bid> relatedBids = bidRepository.findByAuctionId(existingBid.getAuctionId());
-		if (relatedBids.stream()
-				.anyMatch(b -> b.getStatus().equals(acceptedStatus))) {
+		if (relatedBids.stream().anyMatch(b -> b.getStatus().equals(acceptedStatus))) {
 			throw new ApiErrorException(HttpStatus.BAD_REQUEST, ApiErrorCode.BAD_REQUEST.code(),
-					"acceptBid",
-					"Impossible d'accepter l'offre");
+					"acceptBid", "Impossible d'accepter l'offre");
 		}
 
 		// Accept current bid
