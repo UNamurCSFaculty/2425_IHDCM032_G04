@@ -9,8 +9,8 @@ import org.springframework.data.repository.query.Param;
 /**
  * Repository Spring Data JPA pour l’entité {@link TransformedProduct}.
  * <p>
- * Propose des opérations CRUD de base ainsi que des requêtes métier
- * pour récupérer et vérifier l’existence des produits transformés.
+ * Propose des opérations CRUD de base ainsi que des requêtes métier pour récupérer et vérifier
+ * l’existence des produits transformés.
  */
 public interface TransformedProductRepository extends JpaRepository<TransformedProduct, Integer> {
 	/**
@@ -30,8 +30,10 @@ public interface TransformedProductRepository extends JpaRepository<TransformedP
 	/**
 	 * Vérifie si un produit transformé existe pour un transformateur donné.
 	 *
-	 * @param productId      identifiant du produit transformé
-	 * @param transformerId  identifiant du transformateur
+	 * @param productId
+	 *            identifiant du produit transformé
+	 * @param transformerId
+	 *            identifiant du transformateur
 	 * @return {@code true} si le produit existe pour ce transformateur, {@code false} sinon
 	 */
 	boolean existsByIdAndTransformerId(Integer productId, Integer transformerId);

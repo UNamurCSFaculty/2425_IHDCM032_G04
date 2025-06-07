@@ -10,8 +10,8 @@ import java.util.Objects;
 /**
  * Représente un détail d’erreur individuel dans la réponse API.
  * <p>
- * Utilisé pour indiquer le chemin JSON concerné, le message d’erreur
- * et un code d’erreur spécifique par élément d’erreur.
+ * Utilisé pour indiquer le chemin JSON concerné, le message d’erreur et un code d’erreur spécifique
+ * par élément d’erreur.
  */
 public class ApiErrorErrors {
 	@JsonProperty("path")
@@ -35,7 +35,8 @@ public class ApiErrorErrors {
 	/**
 	 * Définit le chemin JSON associé à cette erreur.
 	 *
-	 * @param path chemin JSON (ex. "user.email")
+	 * @param path
+	 *            chemin JSON (ex. "user.email")
 	 * @return l’instance courante pour enchaînement
 	 */
 	public ApiErrorErrors path(String path) {
@@ -57,7 +58,8 @@ public class ApiErrorErrors {
 	/**
 	 * Modifie le chemin JSON associé à l’erreur.
 	 *
-	 * @param path nouveau chemin JSON
+	 * @param path
+	 *            nouveau chemin JSON
 	 */
 	public void setPath(String path) {
 		this.path = path;
@@ -66,7 +68,8 @@ public class ApiErrorErrors {
 	/**
 	 * Définit le message d’erreur.
 	 *
-	 * @param message message human-readable décrivant l’erreur
+	 * @param message
+	 *            message human-readable décrivant l’erreur
 	 * @return l’instance courante pour enchaînement
 	 */
 	public ApiErrorErrors message(String message) {
@@ -88,7 +91,8 @@ public class ApiErrorErrors {
 	/**
 	 * Modifie le message d’erreur.
 	 *
-	 * @param message nouveau message human-readable
+	 * @param message
+	 *            nouveau message human-readable
 	 */
 	public void setMessage(String message) {
 		this.message = message;
@@ -97,7 +101,8 @@ public class ApiErrorErrors {
 	/**
 	 * Définit le code d’erreur.
 	 *
-	 * @param errorCode code métier ou technique de l’erreur
+	 * @param errorCode
+	 *            code métier ou technique de l’erreur
 	 * @return l’instance courante pour enchaînement
 	 */
 	public ApiErrorErrors errorCode(String errorCode) {
@@ -119,7 +124,8 @@ public class ApiErrorErrors {
 	/**
 	 * Modifie le code d’erreur.
 	 *
-	 * @param errorCode nouveau code métier
+	 * @param errorCode
+	 *            nouveau code métier
 	 */
 	public void setErrorCode(String errorCode) {
 		this.errorCode = errorCode;
@@ -158,7 +164,8 @@ public class ApiErrorErrors {
 	/**
 	 * Convertit l’objet en chaîne indentée pour l’affichage.
 	 *
-	 * @param o objet à convertir
+	 * @param o
+	 *            objet à convertir
 	 * @return chaîne avec indentations
 	 */
 	private String toIndentedString(java.lang.Object o) {

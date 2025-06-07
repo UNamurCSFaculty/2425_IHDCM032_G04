@@ -4,11 +4,13 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Payload pour la requête d’authentification.
+ * <p>
+ * Contient le nom d’utilisateur et le mot de passe soumis lors de la tentative de connexion.
+ */
 @Getter
 @Setter
-/**
- * Cette classe encapsule le nom d'utilisateur et le mot de passe requis pour l'authentification.
- */
 public class LoginRequest {
 
 	@NotNull(message = "Le nom d'utilisateur est obligatoire")

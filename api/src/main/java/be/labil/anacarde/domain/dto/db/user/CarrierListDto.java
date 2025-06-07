@@ -10,12 +10,10 @@ import lombok.NoArgsConstructor;
 /**
  * DTO de liste pour les transporteurs.
  * <p>
- * Hérite des propriétés communes définies dans {@link UserListDto} et ajoute
- * les informations spécifiques au transporteur pour les vues en liste
- * (prix par kilomètre et rayon d'action).
+ * Hérite des propriétés communes définies dans {@link UserListDto} et ajoute les informations
+ * spécifiques au transporteur pour les vues en liste (prix par kilomètre et rayon d'action).
  * <p>
- * Le type JSON "carrier" permet la désérialisation polymorphique en fonction
- * du sous-type.
+ * Le type JSON "carrier" permet la désérialisation polymorphique en fonction du sous-type.
  */
 @Data
 @NoArgsConstructor

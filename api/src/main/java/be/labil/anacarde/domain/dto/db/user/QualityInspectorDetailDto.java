@@ -8,12 +8,11 @@ import lombok.NoArgsConstructor;
 /**
  * DTO de détail pour un inspecteur qualité.
  * <p>
- * Hérite des propriétés communes définies dans {@link UserDetailDto}
- * (nom, identifiants, coordonnées, etc.) et est typé "quality_inspector"
- * pour la désérialisation JSON polymorphique.
+ * Hérite des propriétés communes définies dans {@link UserDetailDto} (nom, identifiants,
+ * coordonnées, etc.) et est typé "quality_inspector" pour la désérialisation JSON polymorphique.
  * <p>
- * Utilisé pour représenter un utilisateur de type inspecteur qualité
- * avec toutes ses informations de profil.
+ * Utilisé pour représenter un utilisateur de type inspecteur qualité avec toutes ses informations
+ * de profil.
  */
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)

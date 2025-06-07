@@ -11,8 +11,8 @@ import org.springframework.data.repository.query.Param;
 /**
  * Repository en lecture seule pour la vue SQL <code>v_auction_bid_analysis</code>.
  * <p>
- * Expose des méthodes natives pour récupérer les données agrégées des enchères
- * sous forme d’instances de {@link ExportAuction}.
+ * Expose des méthodes natives pour récupérer les données agrégées des enchères sous forme
+ * d’instances de {@link ExportAuction}.
  */
 public interface ExportAuctionRepository extends JpaRepository<ExportAuction, Integer> {
 
@@ -27,9 +27,9 @@ public interface ExportAuctionRepository extends JpaRepository<ExportAuction, In
 	/**
 	 * Recherche une entrée de la vue correspondant à une enchère précise.
 	 *
-	 * @param id identifiant de l’enchère à rechercher
-	 * @return un {@link Optional} contenant l’instance {@link ExportAuction} si trouvée,
-	 *         sinon vide
+	 * @param id
+	 *            identifiant de l’enchère à rechercher
+	 * @return un {@link Optional} contenant l’instance {@link ExportAuction} si trouvée, sinon vide
 	 */
 	@Query(value = """
 			SELECT *
@@ -41,12 +41,15 @@ public interface ExportAuctionRepository extends JpaRepository<ExportAuction, In
 	/**
 	 * Récupère les enchères dont la date de début est comprise entre deux bornes.
 	 * <p>
-	 * Si {@code onlyEnded} est à {@code true}, ne renvoie que celles dont
-	 * le flag {@code auction_ended} est à {@code true}.
+	 * Si {@code onlyEnded} est à {@code true}, ne renvoie que celles dont le flag
+	 * {@code auction_ended} est à {@code true}.
 	 *
-	 * @param start     date de début minimale (inclusive)
-	 * @param end       date de début maximale (inclusive)
-	 * @param onlyEnded indicateur pour ne renvoyer que les enchères terminées
+	 * @param start
+	 *            date de début minimale (inclusive)
+	 * @param end
+	 *            date de début maximale (inclusive)
+	 * @param onlyEnded
+	 *            indicateur pour ne renvoyer que les enchères terminées
 	 * @return liste des {@link ExportAuction} correspondant aux critères
 	 */
 	@Query(value = """

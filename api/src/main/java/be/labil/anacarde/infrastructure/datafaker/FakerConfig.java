@@ -7,8 +7,8 @@ import org.springframework.context.annotation.Configuration;
 /**
  * Configuration pour le générateur de données factices.
  * <p>
- * Définit un bean {@link Faker} utilisable dans l’application
- * pour peupler la base de données avec des données aléatoires.
+ * Définit un bean {@link Faker} utilisable dans l’application pour peupler la base de données avec
+ * des données aléatoires.
  */
 @Configuration
 public class FakerConfig {

@@ -11,9 +11,9 @@ import org.springframework.stereotype.Component;
 /**
  * Helper utilitaire pour la persistance JPA.
  * <p>
- * Fournit une méthode générique pour sauvegarder une entité, vider le contexte
- * de persistance (flush + clear) puis la recharger depuis le repository afin
- * de récupérer son état réellement stocké en base.
+ * Fournit une méthode générique pour sauvegarder une entité, vider le contexte de persistance
+ * (flush + clear) puis la recharger depuis le repository afin de récupérer son état réellement
+ * stocké en base.
  */
 @Component
 @RequiredArgsConstructor

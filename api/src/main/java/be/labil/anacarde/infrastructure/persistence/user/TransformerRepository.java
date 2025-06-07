@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 /**
  * Repository Spring Data pour l’entité {@link Transformer}.
  * <p>
- * Étend {@link GenericUserRepository} pour fournir les opérations CRUD de base
- * et des requêtes spécifiques aux transformateurs.
+ * Étend {@link GenericUserRepository} pour fournir les opérations CRUD de base et des requêtes
+ * spécifiques aux transformateurs.
  */
 @Repository
 public interface TransformerRepository extends GenericUserRepository<Transformer> {

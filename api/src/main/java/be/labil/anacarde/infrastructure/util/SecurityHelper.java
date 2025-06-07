@@ -16,8 +16,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
  * <p>
  * Fournit des méthodes statiques pour :
  * <ul>
- *   <li>Récupérer l’utilisateur courant ou lancer une erreur API.</li>
- *   <li>Vérifier si l’utilisateur est un administrateur ou le compte système d’initialisation.</li>
+ * <li>Récupérer l’utilisateur courant ou lancer une erreur API.</li>
+ * <li>Vérifier si l’utilisateur est un administrateur ou le compte système d’initialisation.</li>
  * </ul>
  */
 @Slf4j
@@ -26,11 +26,12 @@ public class SecurityHelper {
 	/**
 	 * Récupère l’utilisateur authentifié depuis Spring Security.
 	 * <p>
-	 * Si aucun utilisateur n’est authentifié ou si le principal est invalide,
-	 * lève une {@link ApiErrorException} avec le code approprié.
+	 * Si aucun utilisateur n’est authentifié ou si le principal est invalide, lève une
+	 * {@link ApiErrorException} avec le code approprié.
 	 *
 	 * @return l’instance {@link User} du principal authentifié
-	 * @throws ApiErrorException si la requête n’est pas authentifiée ou si le principal est invalide
+	 * @throws ApiErrorException
+	 *             si la requête n’est pas authentifiée ou si le principal est invalide
 	 */
 	public static User getAuthenticatedUserOrFail() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -95,7 +96,8 @@ public class SecurityHelper {
 	/**
 	 * Vérifie si un {@link User} donné a le rôle ADMIN.
 	 *
-	 * @param user l’utilisateur à tester
+	 * @param user
+	 *            l’utilisateur à tester
 	 * @return {@code true} si l’utilisateur est non null et a l’autorité ROLE_ADMIN
 	 */
 	public static boolean isAdmin(User user) {
@@ -108,7 +110,8 @@ public class SecurityHelper {
 	/**
 	 * Vérifie si une {@link Authentication} possède le rôle ADMIN.
 	 *
-	 * @param authentication le contexte d’authentification à tester
+	 * @param authentication
+	 *            le contexte d’authentification à tester
 	 * @return {@code true} si l’authentication est authentifiée et contient ROLE_ADMIN
 	 */
 	public static boolean isAdmin(Authentication authentication) {

@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 /**
  * DTO abstrait pour tout utilisateur de type « trader ».
  * <p>
- * Sert de base pour les sous-types spécifiques (producteur, transformateur, exportateur),
- * en fournissant la configuration polymorphique JSON (Jackson) et la documentation OpenAPI.
+ * Sert de base pour les sous-types spécifiques (producteur, transformateur, exportateur), en
+ * fournissant la configuration polymorphique JSON (Jackson) et la documentation OpenAPI.
  * <p>
- * Les implémentations concrètes héritent de {@link UserDetailDto} et sont identifiées
- * par le champ JSON « type » valant l’une des valeurs : « producer », « transformer » ou « exporter ».
+ * Les implémentations concrètes héritent de {@link UserDetailDto} et sont identifiées par le champ
+ * JSON « type » valant l’une des valeurs : « producer », « transformer » ou « exporter ».
  */
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)

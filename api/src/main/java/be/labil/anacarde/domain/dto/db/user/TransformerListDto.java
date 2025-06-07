@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 /**
  * DTO de liste pour les transformateurs.
  * <p>
- * Hérite des propriétés communes définies dans {@link TraderListDto} (identifiant,
- * rôle, etc.) et est typé "transformer" pour la désérialisation JSON polymorphique.
+ * Hérite des propriétés communes définies dans {@link TraderListDto} (identifiant, rôle, etc.) et
+ * est typé "transformer" pour la désérialisation JSON polymorphique.
  */
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)

@@ -26,7 +26,17 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * API pour la gestion des contrôles qualité.
+ * API REST pour la gestion des contrôles qualité.
+ * <p>
+ * Fournit les opérations CRUD et de téléversement associées aux entités QualityControl :
+ * <ul>
+ * <li>Obtenir un contrôle qualité par son ID.</li>
+ * <li>Créer un contrôle qualité avec possibilité de téléverser plusieurs documents.</li>
+ * <li>Mettre à jour un contrôle qualité existant.</li>
+ * <li>Lister tous les contrôles qualité.</li>
+ * <li>Supprimer un contrôle qualité.</li>
+ * </ul>
+ * Toutes les requêtes sont sécurisées via JWT.
  */
 @Validated
 @SecurityRequirement(name = "jwt")
@@ -34,6 +44,14 @@ import org.springframework.web.multipart.MultipartFile;
 @Tag(name = "quality-controls", description = "Gestion des contrôles qualité")
 public interface QualityControlApi {
 
+	/**
+	 * Récupère un contrôle qualité par son identifiant.
+	 *
+	 * @param id
+	 *            Identifiant du contrôle qualité (entier positif)
+	 * @return {@code 200 OK} avec le {@link QualityControlDto} correspondant, ou
+	 *         {@code 404 Not Found} avec un {@link ApiErrorResponse}
+	 */
 	@Operation(summary = "Obtenir un contrôle qualité")
 	@GetMapping("/{id}")
 	@ApiResponses({
@@ -41,6 +59,22 @@ public interface QualityControlApi {
 			@ApiResponse(responseCode = "404", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
 	ResponseEntity<QualityControlDto> getQualityControl(@ApiValidId @PathVariable("id") Integer id);
 
+	/**
+	 * Crée un nouveau contrôle qualité et téléverse les documents associés.
+	 * <p>
+	 * Attend une requête {@code multipart/form-data} contenant :
+	 * <ul>
+	 * <li>Un champ {@code qualityControl} JSON décrivant le contrôle qualité.</li>
+	 * <li>Un champ {@code documents} optionnel, contenant un tableau de fichiers.</li>
+	 * </ul>
+	 *
+	 * @param qualityControl
+	 *            DTO de création, validé selon {@link ValidationGroups.Create}
+	 * @param documents
+	 *            liste de fichiers à associer, peut être vide ou null
+	 * @return {@code 201 Created} avec le {@link QualityControlDto} créé, ou
+	 *         {@code 400 Bad Request}/{@code 409 Conflict} avec {@link ApiErrorResponse}
+	 */
 	@Operation(summary = "Créer un contrôle qualité et téléverser des documents")
 	@io.swagger.v3.oas.annotations.parameters.RequestBody(required = true, content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE, schema = @Schema(type = "object", properties = {
 			@StringToClassMapItem(key = "qualityControl", value = QualityControlUpdateDto.class),
@@ -56,6 +90,16 @@ public interface QualityControlApi {
 			ValidationGroups.Create.class}) @RequestPart("qualityControl") @Valid QualityControlUpdateDto qualityControl,
 			@RequestPart(value = "documents", required = false) List<MultipartFile> documents);
 
+	/**
+	 * Met à jour un contrôle qualité existant.
+	 *
+	 * @param id
+	 *            Identifiant du contrôle qualité à mettre à jour
+	 * @param qualityControlDto
+	 *            DTO contenant les nouvelles valeurs, validé selon {@link ValidationGroups.Update}
+	 * @return {@code 200 OK} avec le {@link QualityControlDto} mis à jour, ou
+	 *         {@code 400 Bad Request}/{@code 409 Conflict} avec {@link ApiErrorResponse}
+	 */
 	@Operation(summary = "Mettre à jour un contrôle qualité")
 	@PutMapping("/{id}")
 	@ApiResponses({
@@ -66,12 +110,25 @@ public interface QualityControlApi {
 			@ApiValidId @PathVariable("id") Integer id, @Validated({Default.class,
 					ValidationGroups.Update.class}) @RequestBody QualityControlUpdateDto qualityControlDto);
 
+	/**
+	 * Liste tous les contrôles qualité.
+	 *
+	 * @return {@code 200 OK} avec la liste de {@link QualityControlDto}
+	 */
 	@Operation(summary = "Lister tous les contrôles qualité d’un produit")
 	@GetMapping
 	@ApiResponses({
 			@ApiResponse(responseCode = "200", description = "Liste récupérée avec succès", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = QualityControlDto.class))))})
 	ResponseEntity<List<QualityControlDto>> listQualityControls();
 
+	/**
+	 * Supprime un contrôle qualité par son identifiant.
+	 *
+	 * @param id
+	 *            Identifiant du contrôle qualité à supprimer
+	 * @return {@code 204 No Content} si la suppression réussit, ou {@code 404 Not Found} avec
+	 *         {@link ApiErrorResponse}
+	 */
 	@Operation(summary = "Supprimer un contrôle qualité")
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)

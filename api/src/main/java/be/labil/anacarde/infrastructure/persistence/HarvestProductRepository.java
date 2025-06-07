@@ -8,8 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 /**
  * Repository Spring Data JPA pour l’entité {@link HarvestProduct}.
  * <p>
- * Fournit les opérations CRUD de base ainsi que des requêtes
- * spécifiques pour la gestion des produits bruts liés aux producteurs.
+ * Fournit les opérations CRUD de base ainsi que des requêtes spécifiques pour la gestion des
+ * produits bruts liés aux producteurs.
  */
 public interface HarvestProductRepository extends JpaRepository<HarvestProduct, Integer> {
 
@@ -26,8 +26,10 @@ public interface HarvestProductRepository extends JpaRepository<HarvestProduct, 
 	/**
 	 * Vérifie l’existence d’un produit brut pour un producteur donné.
 	 *
-	 * @param productId  l’identifiant du produit brut
-	 * @param producerId l’identifiant du producteur
+	 * @param productId
+	 *            l’identifiant du produit brut
+	 * @param producerId
+	 *            l’identifiant du producteur
 	 * @return {@code true} si un tel produit existe pour ce producteur, {@code false} sinon
 	 */
 	boolean existsByIdAndProducerId(Integer productId, Integer producerId);

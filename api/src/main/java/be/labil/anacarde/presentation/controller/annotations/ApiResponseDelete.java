@@ -14,10 +14,11 @@ import java.lang.annotation.Target;
  * <p>
  * Applique aux méthodes les codes de réponse suivants pour la documentation OpenAPI :
  * <ul>
- *   <li><strong>204 No Content</strong> : Suppression réussie.</li>
- *   <li><strong>401 Unauthorized</strong> : Requête non authentifiée, renvoie un {@link ApiError}.</li>
- *   <li><strong>403 Forbidden</strong> : Accès refusé, renvoie un {@link ApiError}.</li>
- *   <li><strong>404 Not Found</strong> : Ressource introuvable, renvoie un {@link ApiError}.</li>
+ * <li><strong>204 No Content</strong> : Suppression réussie.</li>
+ * <li><strong>401 Unauthorized</strong> : Requête non authentifiée, renvoie un
+ * {@link ApiError}.</li>
+ * <li><strong>403 Forbidden</strong> : Accès refusé, renvoie un {@link ApiError}.</li>
+ * <li><strong>404 Not Found</strong> : Ressource introuvable, renvoie un {@link ApiError}.</li>
  * </ul>
  */
 @Target({ElementType.METHOD})

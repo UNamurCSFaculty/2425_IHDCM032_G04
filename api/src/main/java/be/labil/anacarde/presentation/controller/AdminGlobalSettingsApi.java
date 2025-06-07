@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.*;
 /**
  * Points d’accès REST pour la gestion des réglages globaux du système.
  * <p>
- * Toutes les opérations requièrent une authentification JWT.
- * Seules les opérations de mise à jour sont réservées aux administrateurs.
+ * Toutes les opérations requièrent une authentification JWT. Seules les opérations de mise à jour
+ * sont réservées aux administrateurs.
  */
 @SecurityRequirement(name = "jwt")
 @RequestMapping(value = "/api/admin/global-settings", produces = "application/json")
@@ -30,7 +30,8 @@ public interface AdminGlobalSettingsApi {
 	 * Récupère la configuration globale actuelle.
 	 *
 	 * @return ResponseEntity contenant un {@link GlobalSettingsDto} et un code HTTP 200 si trouvé,
-	 *         ou un code HTTP 404 avec un corps {@link ApiErrorResponse} si les réglages ne sont pas configurés.
+	 *         ou un code HTTP 404 avec un corps {@link ApiErrorResponse} si les réglages ne sont
+	 *         pas configurés.
 	 */
 	@Operation(summary = "Obtenir les réglages globaux")
 	@GetMapping
@@ -44,10 +45,11 @@ public interface AdminGlobalSettingsApi {
 	 * <p>
 	 * Seul un utilisateur avec le rôle ADMIN peut effectuer cette opération.
 	 *
-	 * @param globalSettingsUpdateDto DTO contenant les nouvelles valeurs de configuration
-	 * @return ResponseEntity contenant le {@link GlobalSettingsDto} mis à jour
-	 *         et un code HTTP 200 si la mise à jour réussit,
-	 *         ou un code HTTP 400 avec un corps {@link ApiErrorResponse} en cas de données invalides.
+	 * @param globalSettingsUpdateDto
+	 *            DTO contenant les nouvelles valeurs de configuration
+	 * @return ResponseEntity contenant le {@link GlobalSettingsDto} mis à jour et un code HTTP 200
+	 *         si la mise à jour réussit, ou un code HTTP 400 avec un corps {@link ApiErrorResponse}
+	 *         en cas de données invalides.
 	 */
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@Operation(summary = "Mettre à jour les réglages globaux")

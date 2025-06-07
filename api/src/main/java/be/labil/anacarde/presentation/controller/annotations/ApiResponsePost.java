@@ -14,10 +14,11 @@ import java.lang.annotation.Target;
  * <p>
  * Applique aux méthodes les codes de réponse suivants pour la documentation OpenAPI :
  * <ul>
- *   <li><strong>201 Created</strong> – Ressource créée avec succès, renvoie un corps JSON.</li>
- *   <li><strong>400 Bad Request</strong> – Requête invalide, renvoie un {@link ApiError}.</li>
- *   <li><strong>401 Unauthorized</strong> – Requête non authentifiée, renvoie un {@link ApiError}.</li>
- *   <li><strong>403 Forbidden</strong> – Accès refusé, renvoie un {@link ApiError}.</li>
+ * <li><strong>201 Created</strong> – Ressource créée avec succès, renvoie un corps JSON.</li>
+ * <li><strong>400 Bad Request</strong> – Requête invalide, renvoie un {@link ApiError}.</li>
+ * <li><strong>401 Unauthorized</strong> – Requête non authentifiée, renvoie un
+ * {@link ApiError}.</li>
+ * <li><strong>403 Forbidden</strong> – Accès refusé, renvoie un {@link ApiError}.</li>
  * </ul>
  */
 @Target({ElementType.METHOD})

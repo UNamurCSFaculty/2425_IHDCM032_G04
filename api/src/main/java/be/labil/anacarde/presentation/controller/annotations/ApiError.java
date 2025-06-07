@@ -28,7 +28,8 @@ public class ApiError {
 	/**
 	 * Définit le message d’erreur principal.
 	 *
-	 * @param message le message human-readable décrivant l’erreur
+	 * @param message
+	 *            le message human-readable décrivant l’erreur
 	 * @return l’instance courante pour enchaînement
 	 */
 	public ApiError message(String message) {
@@ -60,7 +61,8 @@ public class ApiError {
 	/**
 	 * Définit la liste complète des erreurs détaillées.
 	 *
-	 * @param errors liste d’objets {@link ApiErrorErrors}
+	 * @param errors
+	 *            liste d’objets {@link ApiErrorErrors}
 	 * @return l’instance courante pour enchaînement
 	 */
 	public ApiError addErrorsItem(ApiErrorErrors errorsItem) {
@@ -85,7 +87,8 @@ public class ApiError {
 	/**
 	 * Modifie la liste des erreurs détaillées.
 	 *
-	 * @param errors nouvelle liste d’objets {@link ApiErrorErrors}
+	 * @param errors
+	 *            nouvelle liste d’objets {@link ApiErrorErrors}
 	 */
 	public void setErrors(List<ApiErrorErrors> errors) {
 		this.errors = errors;
@@ -94,7 +97,8 @@ public class ApiError {
 	/**
 	 * Compare cette instance à un autre objet pour l’égalité.
 	 *
-	 * @param o l’objet à comparer
+	 * @param o
+	 *            l’objet à comparer
 	 * @return {@code true} si les messages et listes d’erreurs sont identiques
 	 */
 	@Override
@@ -139,7 +143,8 @@ public class ApiError {
 	/**
 	 * Indente chaque ligne de la chaîne fournie de 4 espaces (sauf la première).
 	 *
-	 * @param o objet à convertir en chaîne
+	 * @param o
+	 *            objet à convertir en chaîne
 	 * @return chaîne indentée
 	 */
 	private String toIndentedString(java.lang.Object o) {

@@ -20,8 +20,9 @@ import org.springframework.web.bind.annotation.*;
  * <p>
  * Définit deux opérations :
  * <ul>
- *   <li>Récupération des KPI globaux (cartes) via la vue SQL <code>v_dashboard_cards</code>.</li>
- *   <li>Récupération de la série chronologique "Open vs New" via la vue SQL <code>v_dashboard_graphic</code>.</li>
+ * <li>Récupération des KPI globaux (cartes) via la vue SQL <code>v_dashboard_cards</code>.</li>
+ * <li>Récupération de la série chronologique "Open vs New" via la vue SQL
+ * <code>v_dashboard_graphic</code>.</li>
  * </ul>
  * <p>
  * Toutes les requêtes sont sécurisées par JWT.
@@ -34,12 +35,12 @@ public interface AdminDashboardApi {
 	/**
 	 * Obtient les indicateurs globaux à afficher sous forme de cartes KPI.
 	 * <p>
-	 * Interroge la vue matérialisée <code>v_dashboard_cards</code> pour récupérer
-	 * un objet {@link DashboardCardsDto} contenant les métriques agrégées
-	 * (nombre total d’utilisateurs, ventes, etc.).
+	 * Interroge la vue matérialisée <code>v_dashboard_cards</code> pour récupérer un objet
+	 * {@link DashboardCardsDto} contenant les métriques agrégées (nombre total d’utilisateurs,
+	 * ventes, etc.).
 	 *
-	 * @return {@link ResponseEntity} contenant le {@link DashboardCardsDto} et un code 200,
-	 *         ou un code 404 avec un corps {@link ApiErrorResponse} si la vue est introuvable.
+	 * @return {@link ResponseEntity} contenant le {@link DashboardCardsDto} et un code 200, ou un
+	 *         code 404 avec un corps {@link ApiErrorResponse} si la vue est introuvable.
 	 */
 	@Operation(summary = "Obtenir la carte des indicateurs globaux")
 	@GetMapping("/cards")
@@ -51,12 +52,12 @@ public interface AdminDashboardApi {
 	/**
 	 * Obtient la série chronologique "Open vs New" pour le dashboard.
 	 * <p>
-	 * Interroge la vue matérialisée <code>v_dashboard_graphic</code> pour récupérer
-	 * une liste de {@link DashboardGraphicDto}, chacun représentant un point
-	 * dans le temps avec les valeurs "ouvertes" et "nouvelles".
+	 * Interroge la vue matérialisée <code>v_dashboard_graphic</code> pour récupérer une liste de
+	 * {@link DashboardGraphicDto}, chacun représentant un point dans le temps avec les valeurs
+	 * "ouvertes" et "nouvelles".
 	 *
-	 * @return {@link ResponseEntity} contenant la liste de {@link DashboardGraphicDto}
-	 *         et un code 200.
+	 * @return {@link ResponseEntity} contenant la liste de {@link DashboardGraphicDto} et un code
+	 *         200.
 	 */
 	@Operation(summary = "Obtenir la série chronologique « Open vs New »")
 	@GetMapping("/graphic")

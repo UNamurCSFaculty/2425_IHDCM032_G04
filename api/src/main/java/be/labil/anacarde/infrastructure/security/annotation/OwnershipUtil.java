@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
 /**
  * Utilitaire d’autorisation basé sur la propriété des entités.
  * <p>
- * Exposé sous le nom SpEL {@code ownership} pour vérifier si l’utilisateur courant
- * est bien le propriétaire d’un document, d’une enchère, d’une offre, d’un produit ou d’un magasin.
+ * Exposé sous le nom SpEL {@code ownership} pour vérifier si l’utilisateur courant est bien le
+ * propriétaire d’un document, d’une enchère, d’une offre, d’un produit ou d’un magasin.
  */
 @Component("ownership")
 @RequiredArgsConstructor
@@ -31,8 +31,10 @@ public class OwnershipUtil {
 	/**
 	 * Vérifie qu’un document appartient à un utilisateur.
 	 *
-	 * @param docId  identifiant du document
-	 * @param userId identifiant de l’utilisateur
+	 * @param docId
+	 *            identifiant du document
+	 * @param userId
+	 *            identifiant de l’utilisateur
 	 * @return {@code true} si le document existe et que son ownerId correspond à {@code userId}
 	 */
 	public boolean isDocumentOwner(Integer docId, Integer userId) {
@@ -42,8 +44,10 @@ public class OwnershipUtil {
 	/**
 	 * Vérifie qu’une enchère appartient à un trader donné.
 	 *
-	 * @param traderId  identifiant du trader
-	 * @param auctionId identifiant de l’enchère
+	 * @param traderId
+	 *            identifiant du trader
+	 * @param auctionId
+	 *            identifiant de l’enchère
 	 * @return {@code true} si l’enchère existe et que traderId est bien l’auteur
 	 */
 	public boolean isAuctionOwner(Integer traderId, Integer auctionId) {
@@ -54,8 +58,10 @@ public class OwnershipUtil {
 	/**
 	 * Vérifie qu’une offre (bid) appartient à un trader donné.
 	 *
-	 * @param traderId identifiant du trader
-	 * @param bidId    identifiant de l’offre
+	 * @param traderId
+	 *            identifiant du trader
+	 * @param bidId
+	 *            identifiant de l’offre
 	 * @return {@code true} si l’offre existe et que traderId est bien celui qui l’a placée
 	 */
 	public boolean isBidOwner(Integer traderId, Integer bidId) {
@@ -64,11 +70,13 @@ public class OwnershipUtil {
 	}
 
 	/**
-	 * Vérifie qu’une offre appartient à un trader et que le trader possède
-	 * l’enchère associée à cette offre.
+	 * Vérifie qu’une offre appartient à un trader et que le trader possède l’enchère associée à
+	 * cette offre.
 	 *
-	 * @param traderId identifiant du trader
-	 * @param bidId    identifiant de l’offre
+	 * @param traderId
+	 *            identifiant du trader
+	 * @param bidId
+	 *            identifiant de l’offre
 	 * @return {@code true} si l’utilisateur est propriétaire de l’enchère liée à l’offre
 	 */
 	public boolean isBidAuctionOwner(Integer traderId, Integer bidId) {
@@ -82,13 +90,15 @@ public class OwnershipUtil {
 	/**
 	 * Vérifie si un bidDto est autorisé pour un trader.
 	 * <ul>
-	 *   <li>Le trader ne peut pas enchérir pour quelqu’un d’autre.</li>
-	 *   <li>Le trader ne peut pas enchérir sur sa propre enchère.</li>
-	 *   <li>Le trader ne peut pas placer deux offres consécutives.</li>
+	 * <li>Le trader ne peut pas enchérir pour quelqu’un d’autre.</li>
+	 * <li>Le trader ne peut pas enchérir sur sa propre enchère.</li>
+	 * <li>Le trader ne peut pas placer deux offres consécutives.</li>
 	 * </ul>
 	 *
-	 * @param traderId identifiant du trader
-	 * @param bidDto   DTO contenant les informations de mise
+	 * @param traderId
+	 *            identifiant du trader
+	 * @param bidDto
+	 *            DTO contenant les informations de mise
 	 * @return {@code true} si toutes les règles d’autorisation sont respectées
 	 */
 	public boolean isBidAuthorized(Integer traderId, BidUpdateDto bidDto) {
@@ -104,8 +114,10 @@ public class OwnershipUtil {
 	/**
 	 * Vérifie qu’un produit (brut ou transformé) appartient à l’utilisateur.
 	 *
-	 * @param userId    identifiant de l’utilisateur
-	 * @param productId identifiant du produit
+	 * @param userId
+	 *            identifiant de l’utilisateur
+	 * @param productId
+	 *            identifiant du produit
 	 * @return {@code true} si l’utilisateur est producteur ou transformateur du produit
 	 */
 	public boolean isProductOwner(Integer userId, Integer productId) {
@@ -117,8 +129,10 @@ public class OwnershipUtil {
 	/**
 	 * Vérifie qu’un DTO de mise à jour de produit appartient à l’utilisateur.
 	 *
-	 * @param userId     identifiant de l’utilisateur
-	 * @param productDto DTO de mise à jour du produit
+	 * @param userId
+	 *            identifiant de l’utilisateur
+	 * @param productDto
+	 *            DTO de mise à jour du produit
 	 * @return {@code true} si l’utilisateur correspond au producteur ou transformateur du DTO
 	 */
 	public boolean isProductOwner(Integer userId, ProductUpdateDto productDto) {
@@ -138,8 +152,10 @@ public class OwnershipUtil {
 	/**
 	 * Vérifie qu’un magasin appartient à un utilisateur.
 	 *
-	 * @param userId  identifiant de l’utilisateur
-	 * @param storeId identifiant du magasin
+	 * @param userId
+	 *            identifiant de l’utilisateur
+	 * @param storeId
+	 *            identifiant du magasin
 	 * @return {@code true} si le magasin existe et que userId en est le propriétaire
 	 */
 	public boolean isStoreOwner(Integer userId, Integer storeId) {

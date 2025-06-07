@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 /**
  * DTO de détail pour un transformateur.
  * <p>
- * Hérite des propriétés communes définies dans {@link TraderDetailDto} (identité,
- * coordonnées, etc.) et est typé "transformer" pour la désérialisation JSON polymorphique.
+ * Hérite des propriétés communes définies dans {@link TraderDetailDto} (identité, coordonnées,
+ * etc.) et est typé "transformer" pour la désérialisation JSON polymorphique.
  * <p>
  * Utilisé pour représenter un utilisateur de type transformateur avec ses informations de profil.
  */

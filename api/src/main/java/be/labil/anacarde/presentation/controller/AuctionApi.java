@@ -27,13 +27,13 @@ import org.springframework.web.bind.annotation.*;
  * <p>
  * Définit les opérations CRUD et métiers suivantes :
  * <ul>
- *   <li>Récupérer une enchère par son ID.</li>
- *   <li>Récupérer la configuration des enchères globales.</li>
- *   <li>Créer une nouvelle enchère.</li>
- *   <li>Mettre à jour une enchère existante.</li>
- *   <li>Accepter (clore) une enchère.</li>
- *   <li>Lister les enchères avec filtres facultatifs (créateur, participant, statut).</li>
- *   <li>Supprimer (désactiver) une enchère.</li>
+ * <li>Récupérer une enchère par son ID.</li>
+ * <li>Récupérer la configuration des enchères globales.</li>
+ * <li>Créer une nouvelle enchère.</li>
+ * <li>Mettre à jour une enchère existante.</li>
+ * <li>Accepter (clore) une enchère.</li>
+ * <li>Lister les enchères avec filtres facultatifs (créateur, participant, statut).</li>
+ * <li>Supprimer (désactiver) une enchère.</li>
  * </ul>
  * Toutes les méthodes sont sécurisées par JWT.
  */
@@ -46,9 +46,10 @@ public interface AuctionApi {
 	/**
 	 * Récupère une enchère par son identifiant.
 	 *
-	 * @param id Identifiant de l’enchère (doit être positif, non null)
-	 * @return {@code 200 OK} avec l’{@link AuctionDto}, ou
-	 *         {@code 404 Not Found} avec {@link ApiErrorResponse}
+	 * @param id
+	 *            Identifiant de l’enchère (doit être positif, non null)
+	 * @return {@code 200 OK} avec l’{@link AuctionDto}, ou {@code 404 Not Found} avec
+	 *         {@link ApiErrorResponse}
 	 */
 	@Operation(summary = "Obtenir une enchère")
 	@GetMapping("/{id}")
@@ -60,8 +61,8 @@ public interface AuctionApi {
 	/**
 	 * Récupère les réglages globaux applicables aux enchères.
 	 *
-	 * @return {@code 200 OK} avec le {@link GlobalSettingsDto}, ou
-	 *         {@code 404 Not Found} si non configuré, avec {@link ApiErrorResponse}
+	 * @return {@code 200 OK} avec le {@link GlobalSettingsDto}, ou {@code 404 Not Found} si non
+	 *         configuré, avec {@link ApiErrorResponse}
 	 */
 	@Operation(summary = "Obtenir les paramètres des enchères")
 	@GetMapping("/settings")
@@ -73,11 +74,10 @@ public interface AuctionApi {
 	/**
 	 * Crée une nouvelle enchère.
 	 *
-	 * @param auctionDto données de création de l’enchère validées selon
-	 *                   {@link ValidationGroups.Create}
-	 * @return {@code 201 Created} avec l’{@link AuctionDto}, ou
-	 *         {@code 400 Bad Request} en cas de données invalides, ou
-	 *         {@code 409 Conflict} si une enchère conflictuelle existe
+	 * @param auctionDto
+	 *            données de création de l’enchère validées selon {@link ValidationGroups.Create}
+	 * @return {@code 201 Created} avec l’{@link AuctionDto}, ou {@code 400 Bad Request} en cas de
+	 *         données invalides, ou {@code 409 Conflict} si une enchère conflictuelle existe
 	 */
 	@Operation(summary = "Créer une enchère")
 	@PostMapping
@@ -91,11 +91,12 @@ public interface AuctionApi {
 	/**
 	 * Met à jour une enchère existante.
 	 *
-	 * @param id         Identifiant de l’enchère à mettre à jour
-	 * @param auctionDto données de mise à jour validées selon
-	 *                   {@link ValidationGroups.Update}
-	 * @return {@code 200 OK} avec l’{@link AuctionDto}, ou
-	 *         {@code 400 Bad Request} ou {@code 409 Conflict}
+	 * @param id
+	 *            Identifiant de l’enchère à mettre à jour
+	 * @param auctionDto
+	 *            données de mise à jour validées selon {@link ValidationGroups.Update}
+	 * @return {@code 200 OK} avec l’{@link AuctionDto}, ou {@code 400 Bad Request} ou
+	 *         {@code 409 Conflict}
 	 */
 	@Operation(summary = "Mettre à jour une enchère")
 	@PutMapping(value = "/{id}", consumes = "application/json")
@@ -110,9 +111,9 @@ public interface AuctionApi {
 	/**
 	 * Accepte (clôture) une enchère.
 	 *
-	 * @param id Identifiant de l’enchère à accepter
-	 * @return {@code 200 OK} avec l’{@link AuctionDto}, ou
-	 *         {@code 404 Not Found} si introuvable
+	 * @param id
+	 *            Identifiant de l’enchère à accepter
+	 * @return {@code 200 OK} avec l’{@link AuctionDto}, ou {@code 404 Not Found} si introuvable
 	 */
 	@Operation(summary = "Accepter une enchère")
 	@PutMapping(value = "/{id}/accept")
@@ -124,10 +125,14 @@ public interface AuctionApi {
 	/**
 	 * Liste toutes les enchères avec filtres facultatifs.
 	 *
-	 * @param traderId     (optionnel) ID du créateur des enchères
-	 * @param buyerId      (optionnel) ID d’un participant aux enchères
-	 * @param auctionStatus (optionnel) statut pour filtrer les enchères
-	 * @param limit        (optionnel) nombre maximum de résultats
+	 * @param traderId
+	 *            (optionnel) ID du créateur des enchères
+	 * @param buyerId
+	 *            (optionnel) ID d’un participant aux enchères
+	 * @param auctionStatus
+	 *            (optionnel) statut pour filtrer les enchères
+	 * @param limit
+	 *            (optionnel) nombre maximum de résultats
 	 * @return {@code 200 OK} avec la liste des {@link AuctionDto}
 	 */
 	@Operation(summary = "Obtenir toutes les enchères")
@@ -143,7 +148,8 @@ public interface AuctionApi {
 	/**
 	 * Supprime (désactive) une enchère.
 	 *
-	 * @param id Identifiant de l’enchère à supprimer
+	 * @param id
+	 *            Identifiant de l’enchère à supprimer
 	 */
 	@Operation(summary = "Supprimer une enchère")
 	@DeleteMapping("/{id}")

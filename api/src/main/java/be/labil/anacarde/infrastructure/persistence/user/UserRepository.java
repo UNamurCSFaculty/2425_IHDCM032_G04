@@ -16,9 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Repository Spring Data pour l’entité {@link User}.
  * <p>
- * Étend {@link JpaRepository} pour fournir les opérations CRUD de base
- * et déclare des méthodes de requête personnalisées pour la recherche,
- * la vérification d’existence et la mise à jour native de la date d’enregistrement.
+ * Étend {@link JpaRepository} pour fournir les opérations CRUD de base et déclare des méthodes de
+ * requête personnalisées pour la recherche, la vérification d’existence et la mise à jour native de
+ * la date d’enregistrement.
  */
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
@@ -51,11 +51,13 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	Optional<User> findById(@NonNull Integer id);
 
 	/**
-	 * Remplace nativement la date d’enregistrement ({@code registration_date})
-	 * d’un utilisateur identifié par son ID.
+	 * Remplace nativement la date d’enregistrement ({@code registration_date}) d’un utilisateur
+	 * identifié par son ID.
 	 *
-	 * @param id      l’identifiant de l’utilisateur à mettre à jour
-	 * @param newDate la nouvelle date d’enregistrement à appliquer
+	 * @param id
+	 *            l’identifiant de l’utilisateur à mettre à jour
+	 * @param newDate
+	 *            la nouvelle date d’enregistrement à appliquer
 	 */
 	@Modifying
 	@Transactional

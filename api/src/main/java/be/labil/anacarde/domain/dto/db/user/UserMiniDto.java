@@ -10,8 +10,8 @@ import lombok.experimental.SuperBuilder;
 /**
  * DTO minimaliste représentant les informations de base d’un utilisateur.
  * <p>
- * Utilisé pour les cas où seules les données essentielles
- * (prénom et nom) sont nécessaires, sans détails complémentaires.
+ * Utilisé pour les cas où seules les données essentielles (prénom et nom) sont nécessaires, sans
+ * détails complémentaires.
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

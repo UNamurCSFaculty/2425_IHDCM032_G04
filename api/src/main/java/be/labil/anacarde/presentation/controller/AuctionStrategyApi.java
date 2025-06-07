@@ -24,11 +24,11 @@ import org.springframework.web.bind.annotation.*;
  * <p>
  * Définit les opérations CRUD pour l’entité {@link AuctionStrategyDto} :
  * <ul>
- *   <li>Récupérer une stratégie par son identifiant.</li>
- *   <li>Créer une nouvelle stratégie.</li>
- *   <li>Mettre à jour une stratégie existante.</li>
- *   <li>Lister toutes les stratégies.</li>
- *   <li>Supprimer une stratégie.</li>
+ * <li>Récupérer une stratégie par son identifiant.</li>
+ * <li>Créer une nouvelle stratégie.</li>
+ * <li>Mettre à jour une stratégie existante.</li>
+ * <li>Lister toutes les stratégies.</li>
+ * <li>Supprimer une stratégie.</li>
  * </ul>
  * <p>
  * Toutes les méthodes sont sécurisées via JWT.
@@ -42,9 +42,10 @@ public interface AuctionStrategyApi {
 	/**
 	 * Obtient une stratégie d’enchère par son identifiant.
 	 *
-	 * @param id Identifiant de la stratégie (doit être positif et non null)
-	 * @return {@code 200 OK} avec le {@link AuctionStrategyDto}, ou
-	 *         {@code 404 Not Found} avec {@link ApiErrorResponse} si introuvable
+	 * @param id
+	 *            Identifiant de la stratégie (doit être positif et non null)
+	 * @return {@code 200 OK} avec le {@link AuctionStrategyDto}, ou {@code 404 Not Found} avec
+	 *         {@link ApiErrorResponse} si introuvable
 	 */
 	@Operation(summary = "Obtenir une stratégie d'enchère")
 	@GetMapping("/{id}")
@@ -57,9 +58,10 @@ public interface AuctionStrategyApi {
 	/**
 	 * Crée une nouvelle stratégie d’enchère.
 	 *
-	 * @param auctionStrategyDto DTO validé selon {@link ValidationGroups.Create}
-	 * @return {@code 201 Created} avec le {@link AuctionStrategyDto}, ou
-	 *         {@code 400 Bad Request} ou {@code 409 Conflict} avec {@link ApiErrorResponse}
+	 * @param auctionStrategyDto
+	 *            DTO validé selon {@link ValidationGroups.Create}
+	 * @return {@code 201 Created} avec le {@link AuctionStrategyDto}, ou {@code 400 Bad Request} ou
+	 *         {@code 409 Conflict} avec {@link ApiErrorResponse}
 	 */
 	@Operation(summary = "Créer une stratégie d'enchère")
 	@PostMapping
@@ -73,10 +75,12 @@ public interface AuctionStrategyApi {
 	/**
 	 * Met à jour une stratégie d’enchère existante.
 	 *
-	 * @param id                  Identifiant de la stratégie à mettre à jour
-	 * @param auctionStrategyDto  DTO validé selon {@link ValidationGroups.Update}
-	 * @return {@code 200 OK} avec le {@link AuctionStrategyDto}, ou
-	 *         {@code 400 Bad Request} ou {@code 409 Conflict} avec {@link ApiErrorResponse}
+	 * @param id
+	 *            Identifiant de la stratégie à mettre à jour
+	 * @param auctionStrategyDto
+	 *            DTO validé selon {@link ValidationGroups.Update}
+	 * @return {@code 200 OK} avec le {@link AuctionStrategyDto}, ou {@code 400 Bad Request} ou
+	 *         {@code 409 Conflict} avec {@link ApiErrorResponse}
 	 */
 	@Operation(summary = "Mettre à jour une stratégie d'enchère")
 	@PutMapping("/{id}")
@@ -102,9 +106,10 @@ public interface AuctionStrategyApi {
 	/**
 	 * Supprime une stratégie d’enchère par son identifiant.
 	 *
-	 * @param id Identifiant de la stratégie à supprimer
-	 * @return {@code 204 No Content} si supprimée, ou
-	 *         {@code 404 Not Found} avec {@link ApiErrorResponse} si introuvable
+	 * @param id
+	 *            Identifiant de la stratégie à supprimer
+	 * @return {@code 204 No Content} si supprimée, ou {@code 404 Not Found} avec
+	 *         {@link ApiErrorResponse} si introuvable
 	 */
 	@Operation(summary = "Supprimer une stratégie d'enchère")
 	@DeleteMapping("/{id}")

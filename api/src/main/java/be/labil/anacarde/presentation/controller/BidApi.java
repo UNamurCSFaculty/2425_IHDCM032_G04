@@ -24,9 +24,8 @@ import org.springframework.web.bind.annotation.*;
 /**
  * API REST pour la gestion des offres (bids).
  * <p>
- * Définit les points d’accès pour créer, mettre à jour, accepter,
- * rejeter, récupérer et supprimer des offres d’enchères.
- * Toutes les opérations sont sécurisées via JWT.
+ * Définit les points d’accès pour créer, mettre à jour, accepter, rejeter, récupérer et supprimer
+ * des offres d’enchères. Toutes les opérations sont sécurisées via JWT.
  */
 @Validated
 @SecurityRequirement(name = "jwt")
@@ -37,9 +36,10 @@ public interface BidApi {
 	/**
 	 * Récupère une offre par son identifiant.
 	 *
-	 * @param bidId Identifiant de l’offre (doit être positif et non null)
-	 * @return {@code 200 OK} avec un {@link BidDto}, ou
-	 *         {@code 404 Not Found} avec un {@link ApiErrorResponse}
+	 * @param bidId
+	 *            Identifiant de l’offre (doit être positif et non null)
+	 * @return {@code 200 OK} avec un {@link BidDto}, ou {@code 404 Not Found} avec un
+	 *         {@link ApiErrorResponse}
 	 */
 	@Operation(summary = "Obtenir une offre")
 	@GetMapping("/{bidId}")
@@ -51,10 +51,11 @@ public interface BidApi {
 	/**
 	 * Crée une nouvelle offre.
 	 *
-	 * @param bidDto DTO contenant les données d’une nouvelle offre,
-	 *               validé selon {@link ValidationGroups.Create}
-	 * @return {@code 201 Created} avec le {@link BidDto} créé, ou
-	 *         {@code 400 Bad Request} ou {@code 409 Conflict} avec {@link ApiErrorResponse}
+	 * @param bidDto
+	 *            DTO contenant les données d’une nouvelle offre, validé selon
+	 *            {@link ValidationGroups.Create}
+	 * @return {@code 201 Created} avec le {@link BidDto} créé, ou {@code 400 Bad Request} ou
+	 *         {@code 409 Conflict} avec {@link ApiErrorResponse}
 	 */
 	@Operation(summary = "Créer une offre")
 	@PostMapping
@@ -68,11 +69,13 @@ public interface BidApi {
 	/**
 	 * Met à jour une offre existante.
 	 *
-	 * @param bidId  Identifiant de l’offre à mettre à jour
-	 * @param bidDto DTO contenant les données mises à jour,
-	 *               validé selon {@link ValidationGroups.Update}
-	 * @return {@code 200 OK} avec le {@link BidDto} mis à jour, ou
-	 *         {@code 400 Bad Request} ou {@code 409 Conflict} avec {@link ApiErrorResponse}
+	 * @param bidId
+	 *            Identifiant de l’offre à mettre à jour
+	 * @param bidDto
+	 *            DTO contenant les données mises à jour, validé selon
+	 *            {@link ValidationGroups.Update}
+	 * @return {@code 200 OK} avec le {@link BidDto} mis à jour, ou {@code 400 Bad Request} ou
+	 *         {@code 409 Conflict} avec {@link ApiErrorResponse}
 	 */
 	@Operation(summary = "Mettre à jour une offre")
 	@PutMapping(value = "/{bidId}")
@@ -86,9 +89,10 @@ public interface BidApi {
 	/**
 	 * Accepte (valide) une offre existante.
 	 *
-	 * @param bidId Identifiant de l’offre à accepter
-	 * @return {@code 200 OK} avec le {@link BidDto} accepté, ou
-	 *         {@code 404 Not Found} avec {@link ApiErrorResponse}
+	 * @param bidId
+	 *            Identifiant de l’offre à accepter
+	 * @return {@code 200 OK} avec le {@link BidDto} accepté, ou {@code 404 Not Found} avec
+	 *         {@link ApiErrorResponse}
 	 */
 	@Operation(summary = "Accepter une offre")
 	@PutMapping(value = "/{bidId}/accept")
@@ -100,9 +104,10 @@ public interface BidApi {
 	/**
 	 * Rejette une offre existante.
 	 *
-	 * @param bidId Identifiant de l’offre à rejeter
-	 * @return {@code 200 OK} avec le {@link BidDto} rejeté, ou
-	 *         {@code 404 Not Found} avec {@link ApiErrorResponse}
+	 * @param bidId
+	 *            Identifiant de l’offre à rejeter
+	 * @return {@code 200 OK} avec le {@link BidDto} rejeté, ou {@code 404 Not Found} avec
+	 *         {@link ApiErrorResponse}
 	 */
 	@Operation(summary = "Rejeter une offre")
 	@PutMapping(value = "/{bidId}/reject")
@@ -114,7 +119,8 @@ public interface BidApi {
 	/**
 	 * Liste toutes les offres, optionnellement filtrées par enchère.
 	 *
-	 * @param auctionId (optionnel) Identifiant de l’enchère dont on veut les offres
+	 * @param auctionId
+	 *            (optionnel) Identifiant de l’enchère dont on veut les offres
 	 * @return {@code 200 OK} avec la liste de {@link BidDto}
 	 */
 	@Operation(summary = "Obtenir toutes les offres")
@@ -127,9 +133,10 @@ public interface BidApi {
 	/**
 	 * Supprime une offre.
 	 *
-	 * @param bidId Identifiant de l’offre à supprimer
-	 * @return {@code 204 No Content} si la suppression réussit, ou
-	 *         {@code 404 Not Found} avec {@link ApiErrorResponse}
+	 * @param bidId
+	 *            Identifiant de l’offre à supprimer
+	 * @return {@code 204 No Content} si la suppression réussit, ou {@code 404 Not Found} avec
+	 *         {@link ApiErrorResponse}
 	 */
 	@Operation(summary = "Supprimer une offre")
 	@DeleteMapping("/{bidId}")

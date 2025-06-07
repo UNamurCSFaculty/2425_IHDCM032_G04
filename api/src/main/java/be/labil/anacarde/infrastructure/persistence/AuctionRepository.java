@@ -13,9 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Repository Spring Data pour l’entité {@link Auction}.
  * <p>
- * Fournit des méthodes de recherche paginée pour filtrer les enchères actives
- * selon différents critères (créateur, participant, statut) et une méthode native
- * pour modifier la date de création.
+ * Fournit des méthodes de recherche paginée pour filtrer les enchères actives selon différents
+ * critères (créateur, participant, statut) et une méthode native pour modifier la date de création.
  */
 public interface AuctionRepository extends JpaRepository<Auction, Integer> {
 	/**
@@ -70,7 +69,8 @@ public interface AuctionRepository extends JpaRepository<Auction, Integer> {
 	/**
 	 * Vérifie si un trader donné a au moins une enchère créée.
 	 *
-	 * @param userId identifiant du trader
+	 * @param userId
+	 *            identifiant du trader
 	 * @return {@code true} si au moins une enchère existe pour ce trader, {@code false} sinon
 	 */
 	boolean existsByTraderId(Integer userId);
@@ -78,8 +78,10 @@ public interface AuctionRepository extends JpaRepository<Auction, Integer> {
 	/**
 	 * Vérifie si une enchère donnée appartient à un trader donné.
 	 *
-	 * @param auctionId identifiant de l’enchère
-	 * @param userId    identifiant du trader
+	 * @param auctionId
+	 *            identifiant de l’enchère
+	 * @param userId
+	 *            identifiant du trader
 	 * @return {@code true} si l’enchère existe et appartient au trader, {@code false} sinon
 	 */
 	boolean existsByIdAndTraderId(Integer auctionId, Integer userId);

@@ -11,8 +11,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 /**
  * Configuration Spring MVC pour personnaliser les convertisseurs de messages HTTP.
  * <p>
- * Permet d’ajouter le type MIME {@code application/octet-stream} aux convertisseurs
- * JSON de Jackson afin de traiter les réponses au format binaire comme du JSON.
+ * Permet d’ajouter le type MIME {@code application/octet-stream} aux convertisseurs JSON de Jackson
+ * afin de traiter les réponses au format binaire comme du JSON.
  */
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
@@ -24,7 +24,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	 * {@link MappingJackson2HttpMessageConverter}, ajoute
 	 * {@link MediaType#APPLICATION_OCTET_STREAM} aux media types supportés.
 	 *
-	 * @param converters liste des convertisseurs HTTP à modifier
+	 * @param converters
+	 *            liste des convertisseurs HTTP à modifier
 	 */
 	@Override
 	public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {

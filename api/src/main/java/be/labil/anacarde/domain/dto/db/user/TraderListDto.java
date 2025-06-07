@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
  * Sert de base pour les sous-types spécifiques (producteur, transformateur, exportateur),
  * permettant la désérialisation polymorphique JSON et la génération de documentation OpenAPI.
  * <p>
- * Les implémentations concrètes héritent de {@link UserListDto} et sont identifiées
- * par le champ JSON « type » valant l’une des valeurs : « producer », « transformer » ou « exporter ».
+ * Les implémentations concrètes héritent de {@link UserListDto} et sont identifiées par le champ
+ * JSON « type » valant l’une des valeurs : « producer », « transformer » ou « exporter ».
  */
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)

@@ -11,11 +11,11 @@ import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 
 /**
- * Désérialiseur Jackson pour convertir une représentation JSON d’un point
- * en instance JTS {@link Point}.
+ * Désérialiseur Jackson pour convertir une représentation JSON d’un point en instance JTS
+ * {@link Point}.
  * <p>
- * Attend un objet JSON avec des champs « x » et « y » (coordonnées).
- * Utilise une {@link GeometryFactory} pour créer le {@code Point}.
+ * Attend un objet JSON avec des champs « x » et « y » (coordonnées). Utilise une
+ * {@link GeometryFactory} pour créer le {@code Point}.
  */
 public class PointDeserializer extends StdDeserializer<Point> {
 
@@ -25,14 +25,18 @@ public class PointDeserializer extends StdDeserializer<Point> {
 	}
 
 	/**
-	 * Lit le flux JSON et extrait les valeurs « x » et « y » pour reconstruire
-	 * un objet {@link Point}.
+	 * Lit le flux JSON et extrait les valeurs « x » et « y » pour reconstruire un objet
+	 * {@link Point}.
 	 *
-	 * @param p     le parser JSON en cours
-	 * @param ctxt  contexte de désérialisation (non utilisé ici)
-	 * @return      un {@code Point} JTS avec les coordonnées lues
-	 * @throws IOException              en cas d’erreur de lecture JSON
-	 * @throws JsonProcessingException  en cas d’erreur de traitement JSON
+	 * @param p
+	 *            le parser JSON en cours
+	 * @param ctxt
+	 *            contexte de désérialisation (non utilisé ici)
+	 * @return un {@code Point} JTS avec les coordonnées lues
+	 * @throws IOException
+	 *             en cas d’erreur de lecture JSON
+	 * @throws JsonProcessingException
+	 *             en cas d’erreur de traitement JSON
 	 */
 	@Override
 	public Point deserialize(JsonParser p, DeserializationContext ctxt)

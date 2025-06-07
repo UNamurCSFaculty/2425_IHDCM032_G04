@@ -13,10 +13,10 @@ import java.lang.annotation.Target;
  * <p>
  * Le mot de passe doit contenir au minimum :
  * <ul>
- *   <li>Une lettre majuscule</li>
- *   <li>Une lettre minuscule</li>
- *   <li>Un chiffre</li>
- *   <li>Un caractère spécial</li>
+ * <li>Une lettre majuscule</li>
+ * <li>Une lettre minuscule</li>
+ * <li>Un chiffre</li>
+ * <li>Un caractère spécial</li>
  * </ul>
  * <p>
  * Les messages par défaut peuvent être personnalisés par critère.

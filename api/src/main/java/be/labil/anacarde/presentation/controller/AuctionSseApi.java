@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 /**
- * Interface REST pour la diffusion d’événements Server-Sent Events (SSE)
- * liés à une enchère spécifique.
+ * Interface REST pour la diffusion d’événements Server-Sent Events (SSE) liés à une enchère
+ * spécifique.
  * <p>
- * Permet aux clients (utilisateurs authentifiés ou visiteurs) de s’abonner
- * et de recevoir en temps réel les mises à jour d’une enchère donnée.
+ * Permet aux clients (utilisateurs authentifiés ou visiteurs) de s’abonner et de recevoir en temps
+ * réel les mises à jour d’une enchère donnée.
  */
 @Validated
 @RequestMapping("/api/auctions/{auctionId}/sse")
@@ -26,13 +26,17 @@ public interface AuctionSseApi {
 	/**
 	 * Ouvre une connexion SSE pour l’enchère spécifiée.
 	 * <p>
-	 * Le client reçoit un {@link SseEmitter} via lequel seront envoyés
-	 * les événements (nouvelles offres, statuts, etc.).
+	 * Le client reçoit un {@link SseEmitter} via lequel seront envoyés les événements (nouvelles
+	 * offres, statuts, etc.).
 	 *
-	 * @param auctionId   identifiant de l’enchère à suivre en temps réel
-	 * @param userDetails informations de l’utilisateur authentifié (peut être null si visitor=false)
-	 * @param isVisitor   indique si l’abonné est un simple visiteur (true) ou un participant (false)
-	 * @param token       jeton d’accès pour les visiteurs non authentifiés (facultatif)
+	 * @param auctionId
+	 *            identifiant de l’enchère à suivre en temps réel
+	 * @param userDetails
+	 *            informations de l’utilisateur authentifié (peut être null si visitor=false)
+	 * @param isVisitor
+	 *            indique si l’abonné est un simple visiteur (true) ou un participant (false)
+	 * @param token
+	 *            jeton d’accès pour les visiteurs non authentifiés (facultatif)
 	 * @return un {@link SseEmitter} pour diffuser les événements de l’enchère
 	 */
 	@GetMapping

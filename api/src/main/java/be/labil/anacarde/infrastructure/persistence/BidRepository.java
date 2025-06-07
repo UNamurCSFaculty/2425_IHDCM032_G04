@@ -12,8 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Repository Spring Data pour l’entité {@link Bid}.
  * <p>
- * Fournit les opérations CRUD de base et des méthodes de recherche et de mise à jour
- * spécifiques aux offres d’enchères.
+ * Fournit les opérations CRUD de base et des méthodes de recherche et de mise à jour spécifiques
+ * aux offres d’enchères.
  */
 public interface BidRepository extends JpaRepository<Bid, Integer> {
 	/**
@@ -35,13 +35,15 @@ public interface BidRepository extends JpaRepository<Bid, Integer> {
 	List<Bid> findByAuctionIdOrderByIdAsc(Integer auctionId);
 
 	/**
-	 * Met à jour nativement la date de création ({@code creation_date})
-	 * d’une offre identifiée par son ID.
+	 * Met à jour nativement la date de création ({@code creation_date}) d’une offre identifiée par
+	 * son ID.
 	 * <p>
 	 * Utilise une requête SQL native pour modifier directement la colonne.
 	 *
-	 * @param id      identifiant de l’offre à mettre à jour
-	 * @param newDate nouvelle date de création à appliquer
+	 * @param id
+	 *            identifiant de l’offre à mettre à jour
+	 * @param newDate
+	 *            nouvelle date de création à appliquer
 	 */
 	@Modifying
 	@Transactional
@@ -56,8 +58,10 @@ public interface BidRepository extends JpaRepository<Bid, Integer> {
 	/**
 	 * Vérifie si une offre existe et appartient à un trader donné.
 	 *
-	 * @param auctionId identifiant de l’offre (enchère)
-	 * @param userId    identifiant du trader ayant placé l’offre
+	 * @param auctionId
+	 *            identifiant de l’offre (enchère)
+	 * @param userId
+	 *            identifiant du trader ayant placé l’offre
 	 * @return {@code true} si l’offre existe et que son trader correspond, {@code false} sinon
 	 */
 	boolean existsByIdAndTraderId(Integer auctionId, Integer userId);

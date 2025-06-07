@@ -8,9 +8,8 @@ import lombok.NoArgsConstructor;
 /**
  * DTO de détail pour un exportateur.
  * <p>
- * Hérite des propriétés communes définies dans {@link TraderDetailDto} (nom,
- * identifiants, coordonnées, etc.) et est typé "exporter" pour la désérialisation
- * JSON polymorphique.
+ * Hérite des propriétés communes définies dans {@link TraderDetailDto} (nom, identifiants,
+ * coordonnées, etc.) et est typé "exporter" pour la désérialisation JSON polymorphique.
  */
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
