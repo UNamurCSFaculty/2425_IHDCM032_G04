@@ -222,6 +222,34 @@ public class BidApiControllerIntegrationTest extends AbstractIntegrationTest {
 				.andExpect(status().is4xxClientError());
 	}
 
+	/**
+	 * Teste la création d'une nouvelle offre alors qu'une offre a déjà été acceptée.
+	 *
+	 */
+	@Test
+	public void testCreateBidAfterAcceptedBidShouldFail() throws Exception {
+		String jsonContent = "";
+
+		mockMvc.perform(put("/api/bids/" + getTestBid().getId() + "/accept")
+				.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.amount").value("10.0"))
+				.andExpect(jsonPath("$.status.name").value("Accepté"));
+
+		BidUpdateDto newBid = new BidUpdateDto();
+		newBid.setAmount(new BigDecimal("999.99"));
+		newBid.setStatusId(getTestTradeStatus().getId());
+		newBid.setCreationDate(LocalDateTime.now());
+		newBid.setTraderId(getProducerTestUser().getId());
+		newBid.setAuctionId(getTestAuction().getId());
+
+		ObjectNode node = objectMapper.valueToTree(newBid);
+		String jsonContentOffer = node.toString();
+
+		mockMvc.perform(
+				post("/api/bids").contentType(MediaType.APPLICATION_JSON).content(jsonContentOffer))
+				.andExpect(status().is4xxClientError());
+	}
+
 	@Test
 	public void testRejectBid() throws Exception {
 		String jsonContent = "";
