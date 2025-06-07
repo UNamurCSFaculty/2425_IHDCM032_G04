@@ -42,6 +42,7 @@ public class BidServiceImpl implements BidService {
 	@Override
 	public BidDto createBid(BidUpdateDto dto) {
 		checkBidSettings(dto);
+		checkAuctionHasAcceptedBid(dto.getAuctionId());
 
 		Bid bid = bidMapper.toEntity(dto);
 
@@ -142,9 +143,12 @@ public class BidServiceImpl implements BidService {
 			throw new ResourceNotFoundException("Status non trouvé");
 		}
 
-		// Accept current bid
+		// Check another accepted bid does not exist
 		Bid existingBid = bidRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Offre non trouvée"));
+		checkAuctionHasAcceptedBid(existingBid.getAuctionId());
+
+		// Accept current bid
 		existingBid.setStatus(acceptedStatus);
 
 		Bid acceptedBid = bidRepository.save(existingBid);
@@ -209,6 +213,19 @@ public class BidServiceImpl implements BidService {
 						"minIncrement", "Une nouvelle offre doit être meilleure de "
 								+ settings.getMinIncrement() + " CFA que la dernière");
 			}
+		}
+	}
+
+	private void checkAuctionHasAcceptedBid(Integer auctionId) {
+		TradeStatus acceptedStatus = tradeStatusRepository.findStatusAccepted();
+		if (acceptedStatus == null) {
+			throw new ResourceNotFoundException("Status non trouvé");
+		}
+
+		List<Bid> relatedBids = bidRepository.findByAuctionId(auctionId);
+		if (relatedBids.stream().anyMatch(b -> b.getStatus().equals(acceptedStatus))) {
+			throw new ApiErrorException(HttpStatus.BAD_REQUEST, ApiErrorCode.BAD_REQUEST.code(),
+					"acceptBid", "Impossible d'accepter l'offre");
 		}
 	}
 }
