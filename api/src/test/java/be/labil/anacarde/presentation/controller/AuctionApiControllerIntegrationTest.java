@@ -3,6 +3,7 @@ package be.labil.anacarde.presentation.controller;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -359,6 +360,21 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 		mockMvc.perform(get("/api/auctions").accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk()).andExpect(jsonPath("$").isArray())
 				.andExpect(jsonPath("$.length()").value(3));
+	}
+
+	/**
+	 * Vérifie qu'une exception est levée si traderId et buyerId sont tous les deux présents.
+	 */
+	@Test
+	public void testListAuctionsThrowsWhenTraderAndBuyerAreSet() throws Exception {
+		mockMvc.perform(get("/api/auctions").param("traderId", "1").param("buyerId", "2")
+				.accept(MediaType.APPLICATION_JSON)).andExpect(status().is5xxServerError())
+				.andExpect(result -> {
+					Throwable ex = result.getResolvedException();
+					assertNotNull(ex);
+					assertTrue(ex instanceof IllegalArgumentException);
+					assertTrue(ex.getMessage().contains("TraderId et BuyerId"));
+				});
 	}
 
 	/**

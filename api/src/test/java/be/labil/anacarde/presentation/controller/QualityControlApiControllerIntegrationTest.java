@@ -130,4 +130,49 @@ public class QualityControlApiControllerIntegrationTest extends AbstractIntegrat
 				.andExpect(status().isOk()).andExpect(jsonPath("$").isArray())
 				.andExpect(jsonPath("$.length()").value(3));
 	}
+
+	/**
+	 * Teste la mise à jour d’un contrôle qualité sans document (version simple).
+	 */
+	@Test
+	public void testUpdateQualityControl() throws Exception {
+		QualityControl existingQC = getMainTestQualityControl();
+
+		QualityControlUpdateDto dto = new QualityControlUpdateDto();
+		dto.setIdentifier("QC-UPDATED-123");
+		dto.setControlDate(LocalDateTime.of(2025, 5, 10, 14, 0));
+		dto.setGranularity(1.0f);
+		dto.setKorTest(0.75f);
+		dto.setHumidity(11.8f);
+		dto.setQualityInspectorId(existingQC.getQualityInspector().getId());
+		dto.setQualityId(existingQC.getQuality().getId());
+
+		String jsonContent = objectMapper.writeValueAsString(dto);
+
+		mockMvc.perform(put("/api/quality-controls/" + existingQC.getId())
+				.contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwtAndCsrf()))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.identifier").value("QC-UPDATED-123"))
+				.andExpect(jsonPath("$.granularity").value(1.0))
+				.andExpect(jsonPath("$.korTest").value(0.75))
+				.andExpect(jsonPath("$.humidity").value(11.8))
+				.andExpect(jsonPath("$.qualityInspector.id")
+						.value(existingQC.getQualityInspector().getId()))
+				.andExpect(jsonPath("$.quality.id").value(existingQC.getQuality().getId()));
+	}
+
+	/**
+	 * Teste la suppression d’un contrôle qualité.
+	 */
+	@Test
+	public void testDeleteQualityControl() throws Exception {
+		Integer qcId = getMainTestQualityControl().getId();
+
+		mockMvc.perform(delete("/api/quality-controls/" + qcId).with(jwtAndCsrf()))
+				.andExpect(status().isNoContent());
+
+		mockMvc.perform(get("/api/quality-controls/" + qcId).with(jwtAndCsrf()))
+				.andExpect(status().isNotFound());
+	}
+
 }

@@ -6,6 +6,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.jayway.jsonpath.JsonPath;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
@@ -14,9 +15,11 @@ import java.util.Comparator;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.web.servlet.MvcResult;
 
 /**
  * Tests d’intégration pour le contrôleur des documents.
@@ -116,4 +119,34 @@ public class DocumentApiControllerIntegrationTest extends AbstractIntegrationTes
 				.andExpect(jsonPath("$.length()").value(2))
 				.andExpect(jsonPath("$[1].id").value(getMainTestDocument().getId()));
 	}
+
+	/** Teste le téléchargement d'un document */
+	@Test
+	public void testDownloadDocument() throws Exception {
+		// Arrange : créer un document et enregistrer son ID
+		byte[] content = "Hello World".getBytes();
+		MockMultipartFile filePart = new MockMultipartFile("file", "attestation.pdf",
+				"application/pdf", content);
+
+		// Crée un document via l'API (ou insère manuellement dans la base selon ton setup)
+		MvcResult result = mockMvc
+				.perform(multipart("/api/documents/quality-controls/{qualityControlId}",
+						getMainTestQualityControl().getId()).file(filePart)
+						.characterEncoding("UTF-8").accept(MediaType.APPLICATION_JSON)
+						.with(user(getProducerTestUser())))
+				.andExpect(status().isCreated()).andReturn();
+
+		String responseBody = result.getResponse().getContentAsString();
+		Integer documentId = JsonPath.read(responseBody, "$.id");
+
+		// Act + Assert : télécharger le document
+		mockMvc.perform(get("/api/documents/{id}/download", documentId)
+				.with(user(getProducerTestUser())).accept(MediaType.APPLICATION_OCTET_STREAM))
+				.andExpect(status().isOk())
+				.andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION,
+						containsString("attachment; filename=\"attestation.pdf\"")))
+				.andExpect(content().contentType("application/pdf"))
+				.andExpect(content().bytes(content));
+	}
+
 }
