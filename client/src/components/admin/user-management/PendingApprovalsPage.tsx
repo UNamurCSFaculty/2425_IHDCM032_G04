@@ -42,17 +42,19 @@ import {
 import { useTranslation } from 'react-i18next'
 import { format } from 'date-fns'
 import { toast } from 'sonner'
-
-import { downloadDocument } from '@/api/generated'
 import PaginationControls from '@/components/PaginationControls'
 import { Input } from '@/components/ui/input'
 import { UserDetailsDisplay } from './UserDetailsDisplay'
+import { createDownloadHandler, createViewHandler } from '@/lib/document-utils'
 
 type SortableColumnPending = keyof Pick<
   UserDetailDto,
   'firstName' | 'email' | 'type' | 'registrationDate'
 >
 
+/**
+ * Composant pour afficher et gérer les utilisateurs en attente d'approbation.
+ */
 export function PendingApprovalsPage() {
   const { t } = useTranslation()
   const queryClient = useQueryClient()
@@ -87,7 +89,7 @@ export function PendingApprovalsPage() {
     if (!allPendingUsersInitial)
       return { paginatedUsers: [], totalPages: 0, totalItems: 0 }
 
-    // 1. Filter users based on searchTerm
+    // Filtrer les utilisateurs en fonction du terme de recherche
     let filteredUsers = allPendingUsersInitial.filter(
       user =>
         (user.firstName?.toLowerCase() || '').includes(
@@ -100,7 +102,7 @@ export function PendingApprovalsPage() {
         (user.type?.toLowerCase() || '').includes(searchTerm.toLowerCase())
     )
 
-    // 2. Sort users
+    // Ordonner les utilisateurs si une colonne de tri est définie
     if (sortColumn) {
       filteredUsers = [...filteredUsers].sort((a, b) => {
         const valA = a[sortColumn]
@@ -111,9 +113,7 @@ export function PendingApprovalsPage() {
         else if (valB === null || valB === undefined) comparison = 1
         else if (typeof valA === 'string' && typeof valB === 'string') {
           comparison = valA.localeCompare(valB)
-        }
-        // Handle registrationDate (which is string but represents date)
-        else if (sortColumn === 'registrationDate') {
+        } else if (sortColumn === 'registrationDate') {
           const dateA = valA ? new Date(valA as string).getTime() : 0
           const dateB = valB ? new Date(valB as string).getTime() : 0
           comparison = dateA - dateB
@@ -123,7 +123,7 @@ export function PendingApprovalsPage() {
       })
     }
 
-    // Paginate users
+    // Pagination
     const totalItems = filteredUsers.length
     const totalPages = Math.ceil(totalItems / itemsPerPage)
     const startIndex = (currentPage - 1) * itemsPerPage
@@ -142,7 +142,6 @@ export function PendingApprovalsPage() {
     itemsPerPage,
   ])
 
-  // Query to fetch detailed user for review
   const {
     data: detailedUserForReview,
     isLoading: isLoadingUserDetailsReview,
@@ -151,7 +150,7 @@ export function PendingApprovalsPage() {
   } = useQuery({
     ...getUserOptions({ path: { id: userForReviewId! } }),
     enabled: !!userForReviewId && isReviewDialogOpen,
-    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    staleTime: 5 * 60 * 1000, // 5 minutes
   })
 
   const mutationApprove = useMutation({
@@ -235,95 +234,8 @@ export function PendingApprovalsPage() {
     )
   }
 
-  const triggerBlobDownload = (blob: Blob, filename: string) => {
-    const url = window.URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = filename
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    window.URL.revokeObjectURL(url)
-  }
-
-  const getActualBlob = (response: any): Blob | null => {
-    if (response instanceof Blob) {
-      return response
-    }
-    if (
-      response &&
-      typeof response === 'object' &&
-      'data' in response &&
-      response.data instanceof Blob
-    ) {
-      return response.data
-    }
-    return null
-  }
-
-  const handleDownloadDocument = async (docId: number, docName: string) => {
-    setDownloadingDocIds(prev => ({ ...prev, [docId]: true }))
-    try {
-      const response = await downloadDocument({ path: { id: docId } })
-      const actualBlob = getActualBlob(response)
-
-      if (actualBlob) {
-        triggerBlobDownload(actualBlob, docName)
-      } else {
-        console.error(
-          'Expected a Blob response for download, but received:',
-          response
-        )
-        toast.error(t('common.download_error'), {
-          description: t(
-            'admin.user_management.toasts.invalid_file_format_received'
-          ),
-        })
-      }
-    } catch (error: any) {
-      console.error('Download error:', error)
-      toast.error(t('common.download_error'), {
-        description: error?.message || t('common.unknown_error'),
-      })
-    } finally {
-      setDownloadingDocIds(prev => ({ ...prev, [docId]: false }))
-    }
-  }
-
-  const handleViewDocument = async (docId: number) => {
-    setViewingDocIds(prev => ({ ...prev, [docId]: true }))
-    try {
-      const response = await downloadDocument({ path: { id: docId } }) // Assuming doc.id is number
-      const actualBlob = getActualBlob(response)
-
-      if (actualBlob) {
-        const fileURL = URL.createObjectURL(actualBlob)
-        const newWindow = window.open(fileURL, '_blank')
-        if (!newWindow) {
-          toast.error(t('common.error_general'), {
-            description: t('common.popup_blocker_error_description'),
-          })
-        }
-      } else {
-        console.error(
-          'Expected a Blob response for viewing, but received:',
-          response
-        )
-        toast.error(t('common.error_general'), {
-          description: t(
-            'admin.user_management.toasts.invalid_file_format_received'
-          ),
-        })
-      }
-    } catch (error: any) {
-      console.error('View document error:', error)
-      toast.error(t('common.download_error'), {
-        description: error?.message || t('common.unknown_error'),
-      })
-    } finally {
-      setViewingDocIds(prev => ({ ...prev, [docId]: false }))
-    }
-  }
+  const handleDownloadDocument = createDownloadHandler(setDownloadingDocIds, t)
+  const handleViewDocument = createViewHandler(setViewingDocIds, t)
 
   if (isLoadingPending) {
     return (
@@ -513,8 +425,8 @@ export function PendingApprovalsPage() {
                 <ScrollArea className="max-h-[60vh] p-1">
                   <UserDetailsDisplay
                     user={detailedUserForReview as AppUserDetailDto}
-                    onDownloadDocument={handleDownloadDocument} // Passez les gestionnaires
-                    onViewDocument={handleViewDocument} // et les états
+                    onDownloadDocument={handleDownloadDocument}
+                    onViewDocument={handleViewDocument}
                     downloadingDocIds={downloadingDocIds}
                     viewingDocIds={viewingDocIds}
                   />

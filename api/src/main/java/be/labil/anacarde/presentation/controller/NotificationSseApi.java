@@ -17,7 +17,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 @Validated
 @RequestMapping("/api/notifications")
 @SecurityRequirement(name = "jwt")
-@Tag(name = "sse", description = "Server-Sent Events pour les notifications")
+@Tag(name = "sse", description = "Gestion des notifications (Server-Sent Events)")
 public interface NotificationSseApi {
 	@GetMapping("/stream")
 	SseEmitter subscribe(@AuthenticationPrincipal UserDetails userDetails,

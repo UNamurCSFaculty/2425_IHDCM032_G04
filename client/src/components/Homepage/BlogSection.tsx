@@ -63,7 +63,7 @@ export function BlogSection() {
   if (!articles || articles.length === 0) {
     return (
       <section className="bg-gray-50 py-8 lg:py-16 dark:bg-gray-900">
-        <div className="intersect-once intersect-half intersect:opacity-100 intersect:translate-y-0 mx-auto max-w-screen-xl translate-y-4 px-4 opacity-0 transition-all duration-500 ease-out lg:px-6">
+        <div className="intersect-once intersect-half intersect:opacity-100 intersect:translate-y-0 mx-auto max-w-screen-xl translate-y-4 px-6 opacity-0 transition-all duration-500 ease-out lg:px-6">
           <div className="mx-auto mb-8 max-w-screen-sm text-center lg:mb-16">
             <h2 className="mb-4 text-3xl font-extrabold tracking-tight text-gray-900 lg:text-4xl dark:text-white">
               {t('homepage.blog.title')}
@@ -82,7 +82,7 @@ export function BlogSection() {
 
   return (
     <section className="bg-gray-50 py-8 lg:py-16 dark:bg-gray-900">
-      <div className="intersect-once intersect-half intersect:opacity-100 intersect:translate-y-0 mx-auto max-w-screen-xl translate-y-4 px-4 opacity-0 transition-all duration-500 ease-out lg:px-6">
+      <div className="intersect-once intersect-half intersect:opacity-100 intersect:translate-y-0 mx-auto max-w-screen-xl translate-y-4 px-6 opacity-0 transition-all duration-500 ease-out lg:px-6">
         <div className="mx-auto mb-8 max-w-screen-sm text-center lg:mb-16">
           <h2 className="mb-4 text-3xl font-extrabold tracking-tight text-gray-900 lg:text-4xl dark:text-white">
             {t('homepage.blog.title')}

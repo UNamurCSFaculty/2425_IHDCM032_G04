@@ -5,21 +5,26 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * Cette interface définit un écouteur pour les notifications Redis. Elle est utilisée pour recevoir
- * des événements de notification
+ * Définit le contrat pour un écouteur de notifications Redis.
+ * <p>
+ * Implémentations de cette interface doivent s’abonner aux canaux Redis afin de recevoir et traiter
+ * les événements publiés.
  */
 public interface RedisNotificationListener {
 
 	/**
-	 * Méthode pour s'abonner aux notifications Redis. Elle est appelée après la construction du
-	 * bean.
+	 * Méthode appelée automatiquement après l’initialisation du bean.
+	 * <p>
+	 * Doit contenir la logique d’abonnement aux canaux Redis (par exemple via un
+	 * {@code MessageListener} ou un template Redis).
 	 */
 	@PostConstruct
 	void subscribe();
 
 	/**
-	 * Classe représentant un événement de notification Redis. Elle contient le nom de l'événement
-	 * et les données associées.
+	 * Représente un événement de notification reçu depuis Redis.
+	 * <p>
+	 * Contient le nom du canal ou type d’événement, ainsi que les données associées au message.
 	 */
 	@Setter
 	@Getter

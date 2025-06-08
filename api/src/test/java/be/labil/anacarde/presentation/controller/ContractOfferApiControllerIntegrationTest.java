@@ -43,15 +43,32 @@ public class ContractOfferApiControllerIntegrationTest extends AbstractIntegrati
 	 */
 	@Test
 	public void testGetContractOfferByCriteria() throws Exception {
-		mockMvc.perform(get("/api/contracts/by-criteria")
+		mockMvc.perform(get("/api/contracts")
 				.param("qualityId", String.valueOf(getMainTestContractOffer().getQuality().getId()))
 				.param("sellerId", String.valueOf(getProducerTestUser().getId()))
 				.param("buyerId", String.valueOf(getTransformerTestUser().getId()))
 				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
-				.andExpect(jsonPath("$.status").value("Accepté"))
-				.andExpect(jsonPath("$.pricePerKg").value("20.0"))
-				.andExpect(jsonPath("$.seller.id").value(getProducerTestUser().getId()))
-				.andExpect(jsonPath("$.buyer.id").value(getTransformerTestUser().getId()));
+				.andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(1))
+				.andExpect(jsonPath("$[0].status").value("Accepté"))
+				.andExpect(jsonPath("$[0].pricePerKg").value("20.0"))
+				.andExpect(jsonPath("$[0].seller.id").value(getProducerTestUser().getId()))
+				.andExpect(jsonPath("$[0].buyer.id").value(getTransformerTestUser().getId()));
+	}
+
+	/**
+	 * Teste la récupération d'un contrat inexistant via les critères (qualité, vendeur, acheteur).
+	 *
+	 * @throws Exception
+	 *             en cas d'erreur lors de l'exécution de la requête MockMvc.
+	 */
+	@Test
+	public void testGetContractOfferByCriteriaNoContractExists() throws Exception {
+		mockMvc.perform(get("/api/contracts")
+				.param("qualityId", String.valueOf(getMainTestContractOffer().getQuality().getId()))
+				.param("sellerId", String.valueOf(getMainTestCarrier().getId()))
+				.param("buyerId", String.valueOf(getExporterTestUser().getId()))
+				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+				.andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(0));
 	}
 
 	/**

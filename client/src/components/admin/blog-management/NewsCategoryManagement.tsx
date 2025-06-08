@@ -41,6 +41,9 @@ import { useMemo, useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
+/**
+ * Composant de gestion des catégories d'articles de blog
+ */
 export function NewsCategoryManagement() {
   const { t } = useTranslation()
   const queryClient = useQueryClient()

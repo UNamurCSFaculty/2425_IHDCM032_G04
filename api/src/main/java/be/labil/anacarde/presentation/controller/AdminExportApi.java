@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 @SecurityRequirement(name = "jwt")
 @RequestMapping(value = "/api/admin/export/auctions")
-@Tag(name = "export-auctions", description = "API de Business Intelligence pour l'export de données d'enchères anonymisées et enrichies (régions, vendeurs, etc.) à des fins d'analyse. Permet de télécharger les données au format JSON ou CSV.")
+@Tag(name = "admin")
 public interface AdminExportApi {
 
 	/**

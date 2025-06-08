@@ -22,6 +22,9 @@ import {
   IconUserCircle,
 } from '@tabler/icons-react'
 
+/**
+ * Composant de navigation utilisateur pour la barre latérale.
+ */
 export function NavUser({
   user,
 }: {

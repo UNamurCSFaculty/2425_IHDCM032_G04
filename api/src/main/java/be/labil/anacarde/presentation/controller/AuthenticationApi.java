@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * renvoyé dans le corps de la réponse.
  */
 @Validated
-@Tag(name = "Authentication", description = "API pour l'authentification des utilisateurs")
+@Tag(name = "authentication", description = "Gestion de l'authentification des utilisateurs")
 @RequestMapping("/api/auth")
 public interface AuthenticationApi {
 

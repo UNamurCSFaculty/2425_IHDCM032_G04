@@ -31,6 +31,9 @@ interface CooperativeMembersDialogProps {
   allCooperatives?: CooperativeDto[] // New prop
 }
 
+/**
+ * Component Dialog pour gérer les membres d'une coopérative.
+ */
 export const CooperativeMembersDialog: React.FC<
   CooperativeMembersDialogProps
 > = ({ open, onClose, cooperative, allCooperatives }) => {

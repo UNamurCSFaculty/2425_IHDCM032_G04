@@ -17,7 +17,7 @@ public class NewsCategoryApiControllerIntegrationTest extends AbstractIntegratio
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	private final String API_URL = "/api/news-categories";
+	private final String API_URL = "/api/news/categories";
 
 	@Test
 	public void testCreateNewsCategory() throws Exception {

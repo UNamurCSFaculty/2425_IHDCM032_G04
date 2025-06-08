@@ -22,7 +22,7 @@ WITH user_counts AS (
 /* ------------ 2) ENCHÈRES (table auction) --------------- */
 auction_totals AS (
     SELECT
-        COUNT(*) FILTER (WHERE active = true)     AS total_auctions_now,
+        COUNT(*) FILTER (WHERE expiration_date < NOW())     AS total_auctions_now,
         COUNT(*) FILTER (
             WHERE expiration_date > NOW() - INTERVAL '30 days'
               AND creation_date   < NOW() - INTERVAL '30 days'

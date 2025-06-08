@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.*;
  * langues.
  */
 @Validated
-@Tag(name = "Languages", description = "API de gestion des langues")
+@Tag(name = "languages", description = "Gestion des langues")
 @SecurityRequirement(name = "jwt")
 @RequestMapping(value = "/api/languages", produces = "application/json")
 public interface LanguageApi {

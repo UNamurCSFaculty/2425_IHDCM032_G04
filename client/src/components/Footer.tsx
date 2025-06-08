@@ -85,7 +85,7 @@ const Footer = ({
 
   return (
     <section className="py-14">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-6">
         <footer>
           <div className="grid grid-cols-2 gap-8 lg:grid-cols-6">
             <div className="col-span-2 mb-8 lg:mb-0">
@@ -103,9 +103,9 @@ const Footer = ({
             </div>
             {menuItems.map((section, idx) => (
               <div key={idx}>
-                <h3 className="mb-4 font-bold text-gray-900">
+                <h2 className="mb-4 font-bold text-gray-900">
                   {section.title}
-                </h3>
+                </h2>
                 <ul className="space-y-2 text-gray-600">
                   {section.links.map((link, linkIdx) => (
                     <li key={linkIdx} className="hover:text-green-600">

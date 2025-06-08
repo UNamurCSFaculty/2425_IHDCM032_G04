@@ -406,7 +406,7 @@ export function Header() {
             </SheetTrigger>
             <SheetContent
               side="right"
-              className="w-[300px] overflow-y-auto p-0 sm:w-[350px]"
+              className="w-[300px] overflow-y-auto pt-4 pb-25 sm:w-[350px]"
             >
               <SheetHeader className="border-b p-4">
                 <Link

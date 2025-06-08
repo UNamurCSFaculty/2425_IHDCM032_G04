@@ -62,6 +62,10 @@ interface ExportApiParams {
   format: 'json' | 'csv'
 }
 
+/**
+ * Composant pour exporter les données d'analytics des enchères.
+ * Permet de choisir la période, le format (JSON ou CSV) et si seules les enchères terminées doivent être incluses.
+ */
 export function AnalyticsExportForm() {
   const { t } = useTranslation()
 

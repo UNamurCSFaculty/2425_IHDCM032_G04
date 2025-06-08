@@ -151,7 +151,8 @@
     "new_deposit": "Nuevo producto",
     "contracts": "Contratos",
     "my_contracts": "Mis contratos",
-    "news": "Noticias"
+    "news": "Noticias",
+    "thank_you": "Gracias"
   },
   "common": {
     "add": "Agregar",
@@ -696,7 +697,7 @@
       "buyer_header": "Comprador",
       "view_bids_button": "Ver ofertas",
       "make_bid_button": "Hacer una oferta",
-      "propose_contract_button": "Proponer un contrato",
+      "propose_contract_button": "Contrato",
       "strategy_label": "Estrategia de subasta",
       "fixed_price_per_kg_label": "Precio fijo por kg",
       "max_price_per_kg_label": "Precio máximo por kg",

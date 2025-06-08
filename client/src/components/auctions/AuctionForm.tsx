@@ -34,6 +34,10 @@ import { Table, TableBody, TableCell, TableRow } from '../ui/table'
 import FormSectionTitle from '../FormSectionTitle'
 import { toast } from 'sonner'
 
+/**
+ * Composant React pour afficher un panneau d'étape dans le formulaire
+ * Utilisé pour gérer l'affichage des différentes étapes du formulaire de création d'enchères.
+ */
 const StepPanel: React.FC<{
   index: number
   current: number
@@ -54,12 +58,19 @@ const StepPanel: React.FC<{
   )
 }
 
+/**
+ * Composant React pour le formulaire de création d'enchères
+ * Permet aux utilisateurs de créer une nouvelle enchère en plusieurs étapes.
+ * Le formulaire est divisé en deux étapes :
+ * 1. Sélection du produit et de la quantité
+ * 2. Définition du prix et des conditions de vente
+ */
 export const AuctionForm: React.FC = () => {
   const navigate = useNavigate()
   const user = useAuthUser()
   const { t } = useTranslation()
   const containerRef = useRef<HTMLDivElement>(null)
-  const isMountedRef = useRef(false) // Référence pour suivre l'état de montage
+  const isMountedRef = useRef(false)
 
   const [step, setStep] = useState(1)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -120,19 +131,18 @@ export const AuctionForm: React.FC = () => {
   const prevStep = () => setStep(s => s - 1)
 
   const handleStepClick = async (targetStep: number) => {
-    if (targetStep === step) return // Ne rien faire si on clique sur l'étape actuelle
+    if (targetStep === step) return
 
     if (targetStep < step) {
       setStep(targetStep)
     } else {
-      // targetStep > step
       let allPreviousStepsValid = true
-      // Valider toutes les étapes de l'actuelle (step) jusqu'à targetStep - 1
+
       for (let i = step; i < targetStep; i++) {
         const isStepValid = await validateStep()
         if (!isStepValid) {
           allPreviousStepsValid = false
-          setStep(i) // Afficher l'étape qui a échoué la validation
+          setStep(i)
           break
         }
       }
@@ -145,16 +155,14 @@ export const AuctionForm: React.FC = () => {
 
   useEffect(() => {
     if (isMountedRef.current) {
-      // Si ce n'est pas le rendu initial, alors on effectue le défilement
       containerRef.current?.scrollIntoView({
         behavior: 'smooth',
         block: 'start',
       })
     } else {
-      // Au premier rendu, on marque que le montage est terminé
       isMountedRef.current = true
     }
-  }, [step]) // Ce hook s'exécute à chaque changement de 'step'
+  }, [step])
 
   const [selectedProduct, setSelectedProduct] = useState<ProductDto | null>(
     null

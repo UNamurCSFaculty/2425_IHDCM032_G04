@@ -151,7 +151,8 @@
     "new_deposit": "New Product",
     "contracts": "Contracts",
     "my_contracts": "My Contracts",
-    "news": "News"
+    "news": "News",
+    "thank_you": "Thank You"
   },
   "common": {
     "add": "Add",
@@ -698,7 +699,7 @@
       "buyer_header": "Buyer",
       "view_bids_button": "View Bids",
       "make_bid_button": "Place Bid",
-      "propose_contract_button": "New Contract",
+      "propose_contract_button": "Contract",
       "strategy_label": "Bidding Strategy",
       "fixed_price_per_kg_label": "Fixed Price per Kg",
       "max_price_per_kg_label": "Max Price per Kg",

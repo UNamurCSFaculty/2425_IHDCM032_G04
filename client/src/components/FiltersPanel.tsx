@@ -277,7 +277,7 @@ const FiltersPanel = <T extends AuctionDto | ProductDto | ContractOfferDto>({
   return (
     <div>
       <div className="flex items-center justify-between border-b p-3">
-        <h3 className="text-lg font-semibold">{t('filters.panel_title')}</h3>
+        <h2 className="text-lg font-semibold">{t('filters.panel_title')}</h2>
         <Button
           variant="ghost"
           size="sm"

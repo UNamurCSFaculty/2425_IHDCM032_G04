@@ -64,7 +64,7 @@ public class UserApiControllerIntegrationTest extends AbstractIntegrationTest {
 		newUser.setEmail("alice.smith@example.com");
 		newUser.setAddress(
 				AddressDto.builder().street("Rue de la paix").cityId(1).regionId(1).build());
-		newUser.setPassword("secret!!!");
+		newUser.setPassword("ValidPass1!"); // Mot de passe fort
 		newUser.setLanguageId(getMainLanguageDto().getId());
 		newUser.setPhone("+2290197005502");
 		newUser.setAgriculturalIdentifier("TS450124");
@@ -100,7 +100,7 @@ public class UserApiControllerIntegrationTest extends AbstractIntegrationTest {
 		// ---------- vérifications en base ----------
 		User createdUser = userRepository.findByEmail("alice.smith@example.com")
 				.orElseThrow(() -> new AssertionError("Utilisateur non trouvé"));
-		assertTrue(bCryptPasswordEncoder.matches("secret!!!", createdUser.getPassword()),
+		assertTrue(bCryptPasswordEncoder.matches("ValidPass1!", createdUser.getPassword()),
 				"Le mot de passe stocké doit correspondre au mot de passe brut 'secret!!!'");
 		List<Field> field = fieldRepository.findByProducerId(createdUser.getId());
 		assertFalse(field.isEmpty(), "Un champ doit être créé et associé au producteur créé");
@@ -136,6 +136,38 @@ public class UserApiControllerIntegrationTest extends AbstractIntegrationTest {
 	}
 
 	/**
+	 * Teste que la création d'un utilisateur échoue si le mot de passe est trop faible.
+	 */
+	@Test
+	public void testCreateUserWeakPasswordFails() throws Exception {
+		ProducerCreateDto newUser = new ProducerCreateDto();
+		newUser.setFirstName("Weak");
+		newUser.setLastName("PasswordUser");
+		newUser.setEmail("weak.password@example.com");
+		newUser.setAddress(AddressDto.builder().street("Rue Faible").cityId(1).regionId(1).build());
+		newUser.setPassword("weak_password"); // Mot de passe intentionnellement faible
+		newUser.setLanguageId(getMainLanguageDto().getId());
+		newUser.setPhone("+2290197005503");
+		newUser.setAgriculturalIdentifier("WP123456");
+		newUser.setCooperativeId(getMainTestCooperative().getId());
+
+		byte[] userJson = objectMapper.writeValueAsBytes(newUser);
+		MockMultipartFile userPart = new MockMultipartFile("user", "user.json",
+				MediaType.APPLICATION_JSON_VALUE, userJson);
+
+		byte[] pdf = "dummy pdf content".getBytes();
+		MockMultipartFile documentPart = new MockMultipartFile("documents", "doc-weak.pdf",
+				"application/pdf", pdf);
+
+		mockMvc.perform(multipart("/api/users").file(userPart).file(documentPart)
+				.characterEncoding("UTF-8").with(jwtAndCsrf()).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.code", containsString("validation.error")))
+				.andExpect(jsonPath("$.errors[0].field").value("password"))
+				.andExpect(jsonPath("$.errors[0].message",
+						containsString("Le mot de passe doit contenir au moins une majuscule.")));
+	}
+	/**
 	 * Teste la mise à jour d'un utilisateur existant.
 	 * 
 	 */
@@ -147,7 +179,7 @@ public class UserApiControllerIntegrationTest extends AbstractIntegrationTest {
 		updateUser.setEmail("email@updated.com");
 		updateUser.setAddress(
 				AddressUpdateDto.builder().street("Rue de la paix").cityId(1).regionId(1).build());
-		updateUser.setPassword("newpassword");
+		updateUser.setPassword("Newpassword!@0");
 		updateUser.setLanguageId(getMainLanguageDto().getId());
 
 		ObjectNode node = objectMapper.valueToTree(updateUser);
@@ -163,8 +195,34 @@ public class UserApiControllerIntegrationTest extends AbstractIntegrationTest {
 		// Vérifie que le mot de passe est correctement haché après la mise à jour
 		User updatedUser = userRepository.findByEmail("email@updated.com")
 				.orElseThrow(() -> new AssertionError("Utilisateur non trouvé"));
-		assertTrue(bCryptPasswordEncoder.matches("newpassword", updatedUser.getPassword()),
-				"Le mot de passe stocké doit correspondre au nouveau mot de passe 'newpassword'");
+		assertTrue(bCryptPasswordEncoder.matches("Newpassword!@0", updatedUser.getPassword()),
+				"Le mot de passe stocké doit correspondre au nouveau mot de passe 'Newpassword!@0");
+	}
+
+	/**
+	 * Teste que la mise à jour d'un utilisateur échoue si le mot de passe est trop faible.
+	 */
+	@Test
+	public void testUpdateUserWeakPasswordFails() throws Exception {
+		UserUpdateDto updateUser = new AdminUpdateDto();
+		updateUser.setFirstName("John WeakUpdate");
+		updateUser.setLastName("Doe WeakUpdate");
+		updateUser.setEmail(getMainTestUser().getEmail()); // Utilise l'email existant pour la mise
+															// à jour
+		updateUser.setAddress(AddressUpdateDto.builder().street("Rue Faible Update").cityId(1)
+				.regionId(1).build());
+		updateUser.setPassword("weak_password"); // Mot de passe intentionnellement faible
+		updateUser.setLanguageId(getMainLanguageDto().getId());
+
+		String jsonContent = objectMapper.writeValueAsString(updateUser);
+
+		mockMvc.perform(put("/api/users/" + getMainTestUser().getId())
+				.contentType(MediaType.APPLICATION_JSON).content(jsonContent).with(jwtAndCsrf()))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.code", containsString("validation.error")))
+				.andExpect(jsonPath("$.errors[0].field").value("password"))
+				.andExpect(jsonPath("$.errors[0].message",
+						containsString("Le mot de passe doit contenir au moins une majuscule.")));
 	}
 
 	/**

@@ -10,7 +10,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Dto pour une réponse d'erreur standardisée
+ * Représente une réponse d’erreur au format standardisé renvoyée par l’API.
+ * <p>
+ * Contient les informations générales sur l’erreur (statut HTTP, horodatage, chemin de la requête,
+ * code global) ainsi que la liste détaillée des erreurs individuelles.
  */
 @Getter
 @Setter

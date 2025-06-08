@@ -510,6 +510,25 @@ public class AuctionApiControllerIntegrationTest extends AbstractIntegrationTest
 	}
 
 	/**
+	 * Test l'acceptation d'une enchère deux fois. La deuxième fois ne doit pas provoquer d'erreur
+	 * (ignore).
+	 */
+	@Test
+	public void testAcceptAuctionTwice() throws Exception {
+		String jsonContent = "";
+
+		mockMvc.perform(put("/api/auctions/" + getTestAuction().getId() + "/accept")
+				.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.productQuantity").value("10"))
+				.andExpect(jsonPath("$.status.name").value("Accepté"));
+
+		mockMvc.perform(put("/api/auctions/" + getTestAuction().getId() + "/accept")
+				.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.productQuantity").value("10"))
+				.andExpect(jsonPath("$.status.name").value("Accepté"));
+	}
+
+	/**
 	 * Teste la création d'une enchère suivie de son acceptation manuelle, et vérifie que : - le job
 	 * Quartz est bien créé après la création de l'enchère, - le job est supprimé après acceptation
 	 * de l'enchère, - le statut de l'enchère devient "Accepté".

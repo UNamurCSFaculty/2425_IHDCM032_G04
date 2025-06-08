@@ -6,7 +6,13 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
- * DTO pour l'entité Trader.
+ * DTO abstrait pour tout utilisateur de type « trader » dans les vues en liste.
+ * <p>
+ * Sert de base pour les sous-types spécifiques (producteur, transformateur, exportateur),
+ * permettant la désérialisation polymorphique JSON et la génération de documentation OpenAPI.
+ * <p>
+ * Les implémentations concrètes héritent de {@link UserListDto} et sont identifiées par le champ
+ * JSON « type » valant l’une des valeurs : « producer », « transformer » ou « exporter ».
  */
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
@@ -14,5 +20,4 @@ import lombok.NoArgsConstructor;
 @Schema(description = "Objet de transfert de données pour les traders.", subTypes = {
 		ProducerListDto.class, TransformerListDto.class, ExporterListDto.class,})
 public abstract class TraderListDto extends UserListDto {
-	// Aucun champ supplémentaire à déclarer, on hérite de UserDto
 }

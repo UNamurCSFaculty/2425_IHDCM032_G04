@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Validated
 @RequestMapping(value = "/api/app", produces = "application/json")
-@Tag(name = "application", description = "Récupération des données nécessaire à un client")
+@Tag(name = "application", description = "Gestion des données applicatives")
 public interface ApplicationData {
 
 	/**

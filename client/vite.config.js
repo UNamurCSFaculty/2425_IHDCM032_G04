@@ -5,6 +5,7 @@ import { resolve } from 'node:path'
 import { defineConfig } from 'vite'
 import checker from 'vite-plugin-checker'
 import eslint from 'vite-plugin-eslint'
+import fs from 'node:fs'
 
 const babelPlugins = [['babel-plugin-react-compiler', {}]]
 
@@ -53,5 +54,13 @@ export default defineConfig(({ command }) => ({
     alias: {
       '@': resolve(__dirname, './src'),
     },
+  },
+  server: {
+    https: {
+      key: fs.readFileSync(resolve(__dirname, '../.certs/localhost-key.pem')),
+      cert: fs.readFileSync(resolve(__dirname, '../.certs/localhost.pem')),
+    },
+    port: 3000,
+    strictPort: true,
   },
 }))

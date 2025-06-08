@@ -5,6 +5,12 @@ import be.labil.anacarde.domain.model.User;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 
+/**
+ * Repository Spring Data pour l’entité {@link Exporter}.
+ * <p>
+ * Étend {@code GenericUserRepository} afin de fournir les opérations CRUD et les requêtes
+ * spécifiques pour les exportateurs.
+ */
 @Repository
 public interface ExporterRepository extends GenericUserRepository<Exporter> {
 	/**

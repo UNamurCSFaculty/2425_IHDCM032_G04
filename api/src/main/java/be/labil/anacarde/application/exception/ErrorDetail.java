@@ -8,7 +8,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Dto d'un message d'erreur unique
+ * DTO représentant le détail d'une erreur individuelle.
+ * <p>
+ * Utilisé pour renvoyer, dans les réponses API, le ou les champs en erreur ainsi que le code et le
+ * message associés.
  */
 @Getter
 @Setter

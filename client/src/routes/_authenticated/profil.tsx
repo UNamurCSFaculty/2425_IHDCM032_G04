@@ -111,9 +111,9 @@ function ProfilePage() {
             ) : (
               <div className="space-y-6">
                 <div>
-                  <h3 className="mb-3 text-lg font-semibold text-gray-900 dark:text-white">
+                  <h2 className="mb-3 text-lg font-semibold text-gray-900 dark:text-white">
                     {t('profile.personal_details_title')}{' '}
-                  </h3>
+                  </h2>
                   <dl className="divide-y divide-gray-200 dark:divide-gray-700">
                     <UserInfoItem labelKey="form.mail" value={user.email} />
                     <UserInfoItem
@@ -135,9 +135,9 @@ function ProfilePage() {
                 <Separator />
 
                 <div>
-                  <h3 className="mb-3 text-lg font-semibold text-gray-900 dark:text-white">
+                  <h2 className="mb-3 text-lg font-semibold text-gray-900 dark:text-white">
                     {t('profile.role_specific_details_title')}{' '}
-                  </h3>
+                  </h2>
                   <dl className="divide-y divide-gray-200 dark:divide-gray-700">
                     <UserInfoItem
                       labelKey="form.type"
@@ -173,9 +173,9 @@ function ProfilePage() {
                   <>
                     <Separator />
                     <div>
-                      <h3 className="mb-3 text-lg font-semibold text-gray-900 dark:text-white">
+                      <h2 className="mb-3 text-lg font-semibold text-gray-900 dark:text-white">
                         {t('form.address')}
-                      </h3>
+                      </h2>
                       <dl className="divide-y divide-gray-200 dark:divide-gray-700">
                         <UserInfoItem
                           labelKey="form.street_quarter"

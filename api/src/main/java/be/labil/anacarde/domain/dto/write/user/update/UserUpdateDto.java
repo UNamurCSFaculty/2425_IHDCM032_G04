@@ -2,6 +2,7 @@ package be.labil.anacarde.domain.dto.write.user.update;
 
 import be.labil.anacarde.domain.dto.db.ValidationGroups;
 import be.labil.anacarde.domain.dto.write.AddressUpdateDto;
+import be.labil.anacarde.domain.validation.StrongPassword;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.swagger.v3.oas.annotations.media.DiscriminatorMapping;
@@ -61,6 +62,7 @@ public abstract class UserUpdateDto {
 
 	@Schema(description = "Mot de passe de l'utilisateur", accessMode = Schema.AccessMode.WRITE_ONLY, example = "p@ssw0rd")
 	@Size(min = 8, message = "Le mot de passe doit contenir au moins {min} caractères", groups = ValidationGroups.Create.class)
+	@StrongPassword(message = "Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial")
 	private String password;
 
 	/** Identifiant de la langue préférée. */

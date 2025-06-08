@@ -69,6 +69,15 @@ function translateIssue(issue: $ZodRawIssue, t: TFunction): string {
       return t(`validation.${issue.format}`)
     }
     case 'custom': {
+      if (issue.message) {
+        if (issue.path && issue.path[0] === 'password') {
+          // cas particulier pour le mot de passe
+          if (issue.message === 'validation.minLength') {
+            return t('validation.minLength', { count: 8 })
+          }
+        }
+        return t(`${issue.message}`)
+      }
       // clé custom selon le champ
       const pathKey = issue.path?.join('.') ?? ''
       return t(`validation.${pathKey}`)

@@ -598,15 +598,15 @@ public abstract class AbstractIntegrationTest {
 				.status(tradeStatusOpen).build();
 		auctionRepository.save(auction4);
 
-		// An accepted bid on an auction
+		// An open bid on an auction
 		Bid bid = Bid.builder().amount(new BigDecimal("10.0")).creationDate(LocalDateTime.now())
-				.auctionId(testAuction.getId()).trader(transformer).status(tradeStatusAccepted)
-				.build();
+				.auctionId(testAuction.getId()).trader(transformer).status(tradeStatusOpen).build();
 		testBid = bidRepository.save(bid);
 
-		// A pending bid on a different auction
+		// An accepted bid on a different auction
 		Bid bid2 = Bid.builder().amount(new BigDecimal("500.0")).creationDate(LocalDateTime.now())
-				.auctionId(auction2.getId()).trader(transformer).status(tradeStatusOpen).build();
+				.auctionId(auction2.getId()).trader(transformer).status(tradeStatusAccepted)
+				.build();
 		bidRepository.save(bid2);
 
 		// A cooperative who has for president 'producer'

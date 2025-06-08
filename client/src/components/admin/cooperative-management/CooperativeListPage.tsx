@@ -62,6 +62,9 @@ type SortableCooperativeColumn =
   | 'presidentName'
   | 'membersCounts'
 
+/**
+ * Composant pour afficher la liste des coopératives
+ */
 export const CooperativeListPage: React.FC = () => {
   const { t } = useTranslation()
   const queryClient = useQueryClient()
@@ -199,7 +202,7 @@ export const CooperativeListPage: React.FC = () => {
     if (cooperativeIdToDelete !== null) {
       deleteMutation.mutate({ path: { id: cooperativeIdToDelete } })
     }
-    setIsConfirmDeleteDialogOpen(false) // Close dialog regardless of outcome, toast will inform user
+    setIsConfirmDeleteDialogOpen(false)
   }
 
   const handleOpenMembersDialog = (cooperative: CooperativeDto) => {
@@ -208,7 +211,6 @@ export const CooperativeListPage: React.FC = () => {
 
   const handleCloseMembersDialog = () => {
     setSelectedCooperativeForMembers(null)
-    // queryClient.invalidateQueries({ queryKey: listUsersOptions().queryKey })
   }
 
   const handleEditCooperative = (cooperative: CooperativeDto) => {
@@ -409,14 +411,12 @@ export const CooperativeListPage: React.FC = () => {
           />
         )}
       </div>{' '}
-      {/* End of the replacement for Card */}
-      {/* Dialogs remain outside the main content flow */}
       {selectedCooperativeForMembers && (
         <CooperativeMembersDialog
           open={!!selectedCooperativeForMembers}
           onClose={handleCloseMembersDialog}
           cooperative={selectedCooperativeForMembers}
-          allCooperatives={cooperativesQuery.data} // Pass all cooperatives
+          allCooperatives={cooperativesQuery.data}
         />
       )}
       {editingCooperative && (
@@ -441,11 +441,10 @@ export const CooperativeListPage: React.FC = () => {
             <CooperativeForm
               isEditMode={true}
               cooperativeIdToEdit={editingCooperative.id}
-              allCooperatives={cooperativesQuery.data} // Pass all cooperatives
+              allCooperatives={cooperativesQuery.data}
               onSuccess={() => {
                 setIsEditDialogOpen(false)
                 setEditingCooperative(null)
-                // Query invalidation for list is handled by CooperativeForm
               }}
               onCancel={() => {
                 setIsEditDialogOpen(false)
@@ -455,7 +454,7 @@ export const CooperativeListPage: React.FC = () => {
           </DialogContent>
         </Dialog>
       )}
-      {/* New Dialog for Creating a Cooperative */}
+      {/* Nouvelle Coopérative Dialog */}
       {isCreateDialogOpen && (
         <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
           <DialogContent className="max-h-[90vh] w-full max-w-2xl overflow-y-auto sm:max-w-xl">

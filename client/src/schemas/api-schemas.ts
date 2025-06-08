@@ -214,3 +214,41 @@ export const zAppUserDetail = z.discriminatedUnion('type', [
   zTraderDetailDtoSchema,
 ])
 export type AppUserDetailDto = z.infer<typeof zAppUserDetail>
+
+// Fonction de validation pour la force du mot de passe
+export const passwordStrengthValidationFn = (data: {
+  password?: string | null
+}): boolean => {
+  if (!data.password) {
+    return true
+  }
+
+  if (!/[A-Z]/.test(data.password)) return false
+  if (!/[a-z]/.test(data.password)) return false
+  if (!/[0-9]/.test(data.password)) return false
+  if (!/[^A-Za-z0-9]/.test(data.password)) return false
+
+  return true
+}
+
+// Configuration pour le refine de la force du mot de passe
+export const passwordStrengthRefineConfig = {
+  message: 'validation.password',
+  path: ['password'],
+}
+
+// Fonction de validation conditionnelle pour la longueur minimale du mot de passe
+export const conditionalMinLengthValidationFn = (data: {
+  password?: string | null
+}): boolean => {
+  if (!data.password || data.password.length === 0) {
+    return true
+  }
+  return data.password.length >= 8
+}
+
+// Configuration pour le refine de la longueur minimale du mot de passe
+export const conditionalMinLengthRefineConfig = {
+  message: 'validation.minLength',
+  path: ['password'],
+}

@@ -163,6 +163,11 @@ public class AuctionServiceImpl implements AuctionService {
 
 		Auction existingAuction = auctionRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Enchère non trouvée"));
+		if (existingAuction.getStatus().equals(acceptedStatus)) {
+			// already accepted -> ignore
+			return auctionMapper.toDto(existingAuction);
+		}
+
 		if (existingAuction.getStatus().getId()
 				.equals(tradeStatusRepository.findStatusPending().getId())) {
 			deleteAuctionCloseJob(id.longValue());

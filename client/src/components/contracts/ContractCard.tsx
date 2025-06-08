@@ -46,6 +46,10 @@ interface ContractCardProps {
   onDetails: () => void
 }
 
+/**
+ * Composant React pour afficher une carte de contrat
+ * avec des actions pour accepter ou rejeter l'offre.
+ */
 const ContractCard: React.FC<ContractCardProps> = ({ contract, layout }) => {
   const { t } = useTranslation()
   const queryClient = useQueryClient()
@@ -182,7 +186,7 @@ const ContractCard: React.FC<ContractCardProps> = ({ contract, layout }) => {
               onOpenChange={open => {
                 if (open) {
                   setAcceptPopoverId(contract.id)
-                  setRejectPopoverId(-1) // ferme l’autre au cas où
+                  setRejectPopoverId(-1)
                 } else {
                   setAcceptPopoverId(-1)
                 }
@@ -202,7 +206,7 @@ const ContractCard: React.FC<ContractCardProps> = ({ contract, layout }) => {
               </PopoverTrigger>
               <PopoverContent
                 className="z-50 w-48 rounded-md bg-white p-2 shadow-lg"
-                onClick={e => e.stopPropagation()} // empêche les clics de fermer
+                onClick={e => e.stopPropagation()}
               >
                 <p className="mb-2 text-center text-sm">
                   {t('contract.accept_offer_prompt')}
@@ -231,7 +235,7 @@ const ContractCard: React.FC<ContractCardProps> = ({ contract, layout }) => {
               onOpenChange={open => {
                 if (open) {
                   setRejectPopoverId(contract.id)
-                  setAcceptPopoverId(-1) // ferme l’autre au cas où
+                  setAcceptPopoverId(-1) // ferme l'autre popover (si ouvert)
                 } else {
                   setRejectPopoverId(-1)
                 }

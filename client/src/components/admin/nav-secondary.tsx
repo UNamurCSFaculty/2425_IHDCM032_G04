@@ -8,6 +8,10 @@ import {
 import { type Icon } from '@tabler/icons-react'
 import * as React from 'react'
 
+/**
+ * Composant de navigation secondaire pour l'interface d'administration.
+ * Affiche une liste d'éléments de navigation avec des icônes et des liens.
+ */
 export function NavSecondary({
   items,
   ...props

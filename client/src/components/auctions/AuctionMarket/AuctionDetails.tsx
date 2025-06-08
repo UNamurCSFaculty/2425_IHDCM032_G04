@@ -1,12 +1,16 @@
-import type { ApiErrorResponse, AuctionDto, BidDto } from '@/api/generated'
+import {
+  type ApiErrorResponse,
+  type AuctionDto,
+  type BidDto,
+} from '@/api/generated'
 import {
   acceptAuctionMutation,
   acceptBidMutation,
   createBidMutation,
-  getContractOfferByCriteriaOptions,
   listAuctionsQueryKey,
   listBidsOptions,
   listBidsQueryKey,
+  listContractOffersOptions,
   rejectBidMutation,
 } from '@/api/generated/@tanstack/react-query.gen'
 import { ContractModal } from '@/components/ContractModal'
@@ -61,13 +65,15 @@ const contractQueryOptions = (
   sellerId: number,
   buyerId: number
 ) => ({
-  ...getContractOfferByCriteriaOptions({
+  ...listContractOffersOptions({
     query: { qualityId, sellerId, buyerId },
   }),
   staleTime: 10_000,
-  retry: false,
 })
 
+/**
+ * Composant React pour afficher les détails d'une enchère
+ */
 const AuctionDetailsPanel: React.FC<Props> = ({
   auction,
   showDetails = false,
@@ -105,7 +111,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
     0
   )
 
-  const { data: contract } = useQuery(
+  const { data: contracts } = useQuery(
     contractQueryOptions(
       auction.product.qualityControl.quality.id,
       auction.trader.id,
@@ -114,7 +120,8 @@ const AuctionDetailsPanel: React.FC<Props> = ({
   )
 
   useEffect(() => {
-    if (contract) {
+    if (contracts && contracts.length > 0) {
+      const contract = contracts[0]
       const pricePerKg = getPricePerKg(auction.price, auction.productQuantity)
       if (contract.pricePerKg >= pricePerKg) {
         setContractPrice(0)
@@ -122,7 +129,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
         setContractPrice(contract.pricePerKg * auction.productQuantity)
       }
     }
-  }, [contract, auction.price, auction.productQuantity])
+  }, [contracts, auction.price, auction.productQuantity])
 
   useEffect(() => {
     const handler = (event: Event) => {
@@ -143,7 +150,6 @@ const AuctionDetailsPanel: React.FC<Props> = ({
   }, [auction.id, queryClient])
 
   useEffect(() => {
-    // SSE visitors
     const baseUrl = client.getConfig().baseUrl?.replace(/\/$/, '') ?? ''
     const sseUrl = `${baseUrl}/api/auctions/${auction.id}/sse?visitor=true`
     const es = new window.EventSource(sseUrl, { withCredentials: true })
@@ -161,9 +167,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
     es.addEventListener('auctionClosed', () => {
       queryClient.invalidateQueries({ queryKey: listAuctionsQueryKey() })
     })
-    es.onerror = () => {
-      // console.error('[SSE] Erreur EventSource enchère')
-    }
+    es.onerror = () => {}
     return () => {
       es.close()
       sseRef.current = null
@@ -182,19 +186,16 @@ const AuctionDetailsPanel: React.FC<Props> = ({
       queryClient.invalidateQueries({ queryKey: listBidsQueryKey() })
       queryClient.invalidateQueries({ queryKey: listAuctionsQueryKey() })
 
-      toast.success(t('auction.bid_created_ok'), {
-        duration: 3000,
-      })
+      /*toast.success(t('auction.bid_created_ok'), {
+                                      duration: 3000,
+                                    })*/
     },
     onError(error: ApiErrorResponse) {
       const detail =
         error && error.errors.length > 0 ? ' ' + error.errors[0].message : ''
-      toast.error(
-        t('auction.bid_created_fail') + ' ' + error.code + ':' + detail,
-        {
-          duration: 3000,
-        }
-      )
+      toast.error(t('auction.bid_created_fail') + ' ' + detail, {
+        duration: 3000,
+      })
     },
   })
 
@@ -202,12 +203,14 @@ const AuctionDetailsPanel: React.FC<Props> = ({
     ...acceptBidMutation(),
     onSuccess() {
       queryClient.invalidateQueries({ queryKey: listBidsQueryKey() })
-      toast.success(t('auction.form.accept_bid_ok'), {
-        duration: 3000,
-      })
+      /*toast.success(t('auction.form.accept_bid_ok'), {
+                                      duration: 3000,
+                                    })*/
     },
     onError(error: ApiErrorResponse) {
-      toast.error(t('auction.form.accept_bid_fail') + ' (' + error.code + ')', {
+      const detail =
+        error && error.errors.length > 0 ? ' ' + error.errors[0].message : ''
+      toast.error(t('auction.form.accept_bid_fail') + ' ' + detail, {
         duration: 3000,
       })
     },
@@ -217,9 +220,9 @@ const AuctionDetailsPanel: React.FC<Props> = ({
     ...rejectBidMutation(),
     onSuccess() {
       queryClient.invalidateQueries({ queryKey: listBidsQueryKey() })
-      toast.success(t('auction.form.reject_bid_ok'), {
-        duration: 3000,
-      })
+      /*toast.success(t('auction.form.reject_bid_ok'), {
+                                      duration: 3000,
+                                    })*/
     },
     onError(error: ApiErrorResponse) {
       toast.error(t('auction.form.reject_bid_fail') + ' (' + error.code + ')', {
@@ -288,7 +291,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
   const ended = endsIn < new Date()
 
   return (
-    <div className="mx-auto flex w-full flex-col gap-6 p-4">
+    <div className="mx-auto flex w-full flex-col gap-6 py-4">
       <div className="flex flex-wrap space-y-1">
         <h2 className="flex items-center gap-2 text-2xl font-semibold">
           {t('auction.details_title_full', {
@@ -386,137 +389,139 @@ const AuctionDetailsPanel: React.FC<Props> = ({
         </div>
       )}
       <div className="flex flex-col gap-4 lg:flex-row">
-        {/* Left column: actions */}
-        {role === 'buyer' && !ended && (
-          <div className="flex flex-1 flex-col gap-6">
-            <Card className="rounded-lg bg-neutral-100 p-4 shadow">
-              {/* Achat immédiat */}
-              <div className="flex flex-col items-center text-center">
-                <span className="mb-2 text-base font-medium text-gray-700">
-                  {t('auction.buy_now_label')}
-                </span>
-                <Popover open={buyNowPopover} onOpenChange={setBuyNowPopover}>
-                  <PopoverTrigger asChild>
-                    <Button
-                      className="bg-amber-600 px-6 text-white hover:bg-amber-700"
-                      onClick={() => setBuyNowPopover(true)}
-                    >
-                      <ShoppingCart className="mr-2 size-4" />
-                      {contractPrice > 0 ? (
-                        <>
-                          <span className="text-sm line-through opacity-70">
-                            {formatPrice.format(auction.price)}
-                          </span>
-                          <span className="text-base font-semibold">
-                            {formatPrice.format(contractPrice)}
-                          </span>
-                        </>
-                      ) : (
-                        <span className="text-base font-semibold">
-                          {formatPrice.format(auction.price)}
-                        </span>
-                      )}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-64 p-4">
-                    <p className="mb-4 text-center text-sm">
-                      {t('auction.confirm_buy_now_prompt', {
-                        price: formatPrice.format(
-                          contractPrice > 0 ? contractPrice : auction.price
-                        ),
-                      })}
-                    </p>
-                    <div className="flex justify-end gap-2">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setBuyNowPopover(false)}
-                      >
-                        {t('buttons.cancel')}
-                      </Button>
-                      <Button
-                        size="sm"
-                        onClick={() =>
-                          handleSubmitBuyNow(
-                            contractPrice > 0 ? contractPrice : auction.price
-                          )
-                        }
-                      >
-                        {t('buttons.confirm')}
-                      </Button>
-                    </div>
-                  </PopoverContent>
-                </Popover>
-                {contractPrice > 0 && (
-                  <span className="mt-1 text-sm font-medium text-amber-600">
-                    {t('auction.contract_price_label')}
-                  </span>
-                )}
-              </div>
-
-              <Separator />
-
-              {canBid && (
+        {/* Colonne de gauche: action */}
+        {role === 'buyer' &&
+          !ended &&
+          auction.status.name !== TradeStatus.ACCEPTED && (
+            <div className="flex flex-1 flex-col gap-6">
+              <Card className="rounded-lg bg-neutral-100 p-4 shadow">
+                {/* Achat immédiat */}
                 <div className="flex flex-col items-center text-center">
                   <span className="mb-2 text-base font-medium text-gray-700">
-                    {t('auction.add_bid_label')}
+                    {t('auction.buy_now_label')}
                   </span>
-                  <Input
-                    type="number"
-                    min="1"
-                    placeholder={t('form.placeholder.bid_amount_cfa')}
-                    value={amount}
-                    onChange={e => setAmount(e.target.value)}
-                    className="mb-3 w-full bg-white"
-                  />
-                  <div className="mb-2 text-xs font-semibold text-gray-500">
-                    {bidPricePerKg} CFA/kg
-                  </div>
-                  <Popover
-                    open={makeBidPopover}
-                    onOpenChange={setMakeBidPopover}
-                  >
+                  <Popover open={buyNowPopover} onOpenChange={setBuyNowPopover}>
                     <PopoverTrigger asChild>
                       <Button
-                        disabled={!amount}
-                        className="w-full px-6"
-                        onClick={() => setMakeBidPopover(true)}
+                        className="bg-amber-600 px-6 text-white hover:bg-amber-700"
+                        onClick={() => setBuyNowPopover(true)}
                       >
-                        <PlusCircle className="mr-2 size-4" />
-                        {t('buttons.place_bid')}
+                        <ShoppingCart className="mr-2 size-4" />
+                        {contractPrice > 0 ? (
+                          <>
+                            <span className="text-sm line-through opacity-70">
+                              {formatPrice.format(auction.price)}
+                            </span>
+                            <span className="text-base font-semibold">
+                              {formatPrice.format(contractPrice)}
+                            </span>
+                          </>
+                        ) : (
+                          <span className="text-base font-semibold">
+                            {formatPrice.format(auction.price)}
+                          </span>
+                        )}
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-64 p-4">
                       <p className="mb-4 text-center text-sm">
-                        {t('auction.confirm_bid_prompt', {
-                          amount: formatPrice.format(Number(amount) || 0),
+                        {t('auction.confirm_buy_now_prompt', {
+                          price: formatPrice.format(
+                            contractPrice > 0 ? contractPrice : auction.price
+                          ),
                         })}
                       </p>
                       <div className="flex justify-end gap-2">
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => {
-                            setAmount('')
-                            setMakeBidPopover(false)
-                          }}
+                          onClick={() => setBuyNowPopover(false)}
                         >
                           {t('buttons.cancel')}
                         </Button>
-                        <Button size="sm" onClick={handleSubmitBid}>
+                        <Button
+                          size="sm"
+                          onClick={() =>
+                            handleSubmitBuyNow(
+                              contractPrice > 0 ? contractPrice : auction.price
+                            )
+                          }
+                        >
                           {t('buttons.confirm')}
                         </Button>
                       </div>
                     </PopoverContent>
                   </Popover>
+                  {contractPrice > 0 && (
+                    <span className="mt-1 text-sm font-medium text-amber-600">
+                      {t('auction.contract_price_label')}
+                    </span>
+                  )}
                 </div>
-              )}
-            </Card>
-          </div>
-        )}
+
+                <Separator />
+
+                {canBid && (
+                  <div className="flex flex-col items-center text-center">
+                    <span className="mb-2 text-base font-medium text-gray-700">
+                      {t('auction.add_bid_label')}
+                    </span>
+                    <Input
+                      type="number"
+                      min="1"
+                      placeholder={t('form.placeholder.bid_amount_cfa')}
+                      value={amount}
+                      onChange={e => setAmount(e.target.value)}
+                      className="mb-3 w-full bg-white"
+                    />
+                    <div className="mb-2 text-xs font-semibold text-gray-500">
+                      {bidPricePerKg} CFA/kg
+                    </div>
+                    <Popover
+                      open={makeBidPopover}
+                      onOpenChange={setMakeBidPopover}
+                    >
+                      <PopoverTrigger asChild>
+                        <Button
+                          disabled={!amount}
+                          className="w-full px-6"
+                          onClick={() => setMakeBidPopover(true)}
+                        >
+                          <PlusCircle className="mr-2 size-4" />
+                          {t('buttons.place_bid')}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-64 p-4">
+                        <p className="mb-4 text-center text-sm">
+                          {t('auction.confirm_bid_prompt', {
+                            amount: formatPrice.format(Number(amount) || 0),
+                          })}
+                        </p>
+                        <div className="flex justify-end gap-2">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              setAmount('')
+                              setMakeBidPopover(false)
+                            }}
+                          >
+                            {t('buttons.cancel')}
+                          </Button>
+                          <Button size="sm" onClick={handleSubmitBid}>
+                            {t('buttons.confirm')}
+                          </Button>
+                        </div>
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                )}
+              </Card>
+            </div>
+          )}
 
         {role === 'buyer' && ended && (
-          <div className="flex w-2/5 flex-col">
+          <div className="flex w-full flex-col md:w-2/5">
             <Card className="rounded-lg bg-neutral-100 p-4 shadow">
               <div className="flex flex-col">
                 <span className="mb-2 text-center text-base font-medium text-gray-700">
@@ -530,7 +535,7 @@ const AuctionDetailsPanel: React.FC<Props> = ({
                 </div>
 
                 {acceptedBid && user.id === acceptedBid.trader.id && (
-                  <div className="mt-2 flex justify-center">
+                  <div className="mt-2 flex flex-col justify-center">
                     <Button onClick={() => setIsOpen(true)}>
                       <ScrollText />
                       {t('auction.table.propose_contract_button')}

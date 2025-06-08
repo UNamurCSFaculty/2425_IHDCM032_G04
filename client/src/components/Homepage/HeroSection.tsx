@@ -52,7 +52,7 @@ const HeroSection = (props: HeroSectionProps) => {
   }
 
   return (
-    <section className="bg-yellow-50 py-32">
+    <section className="bg-yellow-50 px-6 py-32">
       <div className="container mx-auto">
         <div className="intersect-once intersect-half intersect:scale-100 intersect:opacity-100 container scale-50 transform opacity-0 transition duration-500 ease-out">
           <div className="grid items-center gap-8 lg:grid-cols-2">

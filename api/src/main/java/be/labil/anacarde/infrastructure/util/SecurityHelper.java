@@ -11,9 +11,28 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+/**
+ * Helper pour extraire et vérifier l’utilisateur authentifié depuis le contexte de sécurité.
+ * <p>
+ * Fournit des méthodes statiques pour :
+ * <ul>
+ * <li>Récupérer l’utilisateur courant ou lancer une erreur API.</li>
+ * <li>Vérifier si l’utilisateur est un administrateur ou le compte système d’initialisation.</li>
+ * </ul>
+ */
 @Slf4j
 public class SecurityHelper {
 
+	/**
+	 * Récupère l’utilisateur authentifié depuis Spring Security.
+	 * <p>
+	 * Si aucun utilisateur n’est authentifié ou si le principal est invalide, lève une
+	 * {@link ApiErrorException} avec le code approprié.
+	 *
+	 * @return l’instance {@link User} du principal authentifié
+	 * @throws ApiErrorException
+	 *             si la requête n’est pas authentifiée ou si le principal est invalide
+	 */
 	public static User getAuthenticatedUserOrFail() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -54,16 +73,33 @@ public class SecurityHelper {
 		}
 	}
 
+	/**
+	 * Vérifie si l’utilisateur courant est le compte système d’initialisation de la base.
+	 *
+	 * @return {@code true} si l’utilisateur est une instance d’{@link Admin} avec l’email système
+	 */
 	public static boolean isDbInitDataUser() {
 		User user = getAuthenticatedUserOrFail();
 		return user instanceof Admin && user.getEmail().equals("system@anacarde.local");
 	}
 
+	/**
+	 * Vérifie si l’utilisateur courant a le rôle ADMIN.
+	 *
+	 * @return {@code true} si l’utilisateur possède l’autorité ROLE_ADMIN
+	 */
 	public static boolean isAdmin() {
 		User admin = getAuthenticatedUserOrFail();
 		return isAdmin(admin);
 	}
 
+	/**
+	 * Vérifie si un {@link User} donné a le rôle ADMIN.
+	 *
+	 * @param user
+	 *            l’utilisateur à tester
+	 * @return {@code true} si l’utilisateur est non null et a l’autorité ROLE_ADMIN
+	 */
 	public static boolean isAdmin(User user) {
 		if (user == null || user.getAuthorities() == null) {
 			return false;
@@ -71,6 +107,13 @@ public class SecurityHelper {
 		return user.getAuthorities().stream().anyMatch(a -> "ROLE_ADMIN".equals(a.getAuthority()));
 	}
 
+	/**
+	 * Vérifie si une {@link Authentication} possède le rôle ADMIN.
+	 *
+	 * @param authentication
+	 *            le contexte d’authentification à tester
+	 * @return {@code true} si l’authentication est authentifiée et contient ROLE_ADMIN
+	 */
 	public static boolean isAdmin(Authentication authentication) {
 		if (authentication == null || !authentication.isAuthenticated()
 				|| authentication.getAuthorities() == null) {

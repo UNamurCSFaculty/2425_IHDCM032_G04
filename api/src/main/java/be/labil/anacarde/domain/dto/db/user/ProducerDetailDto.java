@@ -11,7 +11,13 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
- * DTO pour l'entité Producer.
+ * DTO de détail pour un producteur.
+ * <p>
+ * Hérite des propriétés communes définies dans {@link TraderDetailDto} et ajoute des informations
+ * spécifiques au producteur telles que son identifiant agricole et sa coopérative.
+ * <p>
+ * La gestion de l’identité JSON est configurée pour réutiliser la propriété {@code id} afin
+ * d’éviter les boucles lors de la sérialisation.
  */
 @Data
 @NoArgsConstructor
