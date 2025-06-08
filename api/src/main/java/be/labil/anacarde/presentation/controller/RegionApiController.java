@@ -30,10 +30,4 @@ public class RegionApiController implements RegionApi {
 		RegionDto updated = regionService.updateRegion(id, regionDto);
 		return ResponseEntity.ok(updated);
 	}
-
-	@Override
-	public ResponseEntity<Void> deleteRegion(Integer id) {
-		regionService.deleteRegion(id);
-		return ResponseEntity.noContent().build();
-	}
 }
