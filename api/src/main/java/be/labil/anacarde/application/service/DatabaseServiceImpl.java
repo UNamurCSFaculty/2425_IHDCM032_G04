@@ -35,6 +35,7 @@ import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.PrecisionModel;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -126,6 +127,9 @@ public class DatabaseServiceImpl implements DatabaseService {
 	private final EntityManager entityManager;
 	private final Environment environment;
 	private final StringRedisTemplate redisTemplate;
+
+	@Value("${app.init.testdata:true}")
+	private boolean initTestData;
 
 	// --- Internal State ---
 	private final Faker faker = new Faker(Locale.of("fr")); // Use French Faker locale
@@ -279,10 +283,9 @@ public class DatabaseServiceImpl implements DatabaseService {
 		log.info("→ createDatabase() (compatibilité) ←");
 		setupSystemAuthentication();
 		initDatabase();
-		// if (Arrays.asList(environment.getActiveProfiles()).contains("dev")) {
-		// initTestData();
-		// }
-		initTestData();
+		if (initTestData) {
+			initTestData();
+		}
 		initViews();
 		clearSystemAuthentication();
 	}
