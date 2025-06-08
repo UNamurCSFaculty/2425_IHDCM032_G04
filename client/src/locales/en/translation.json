@@ -1109,6 +1109,8 @@
   "notification": {
     "list_description": "See the list of offers for more details.",
     "see_auction": "See the auction",
-    "historic": "Check the history for more details."
+    "historic": "Check the history for more details.",
+    "new_bid": "New bid:",
+    "closed_auction": "Auction closed"
   }
 }

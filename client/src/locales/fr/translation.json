@@ -1109,6 +1109,8 @@
   "notification": {
     "list_description": "Voir la liste des offres pour plus de détails.",
     "see_auction": "Voir l'enchère",
-    "historic": "Consultez l’historique pour plus de détails."
+    "historic": "Consultez l’historique pour plus de détails.",
+    "new_bid": "Nouvelle offre :",
+    "closed_auction": "Enchère clôturée"
   }
 }
