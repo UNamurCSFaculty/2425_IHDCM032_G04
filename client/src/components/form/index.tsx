@@ -21,6 +21,9 @@ import { ReactSelectField } from './react-select-field'
 export const { fieldContext, useFieldContext, formContext, useFormContext } =
   createFormHookContexts()
 
+/**
+ * Hook pour créer un formulaire avec des composants de champ prédéfinis.
+ */
 export const { useAppForm } = createFormHook({
   fieldComponents: {
     TextField,

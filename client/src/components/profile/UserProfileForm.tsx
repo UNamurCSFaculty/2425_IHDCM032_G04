@@ -25,6 +25,11 @@ interface UserProfileFormProps {
   onCancel: () => void
 }
 
+/**
+ * Formulaire pour mettre à jour le profil utilisateur.
+ * Permet de modifier les informations personnelles, l'adresse,
+ * et les détails spécifiques au rôle (producteur ou transporteur).
+ */
 export function UserProfileForm({
   currentUser,
   onUpdateSuccess,

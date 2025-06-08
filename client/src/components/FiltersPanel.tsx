@@ -54,6 +54,11 @@ interface FiltersPanelProps<
   filterByPrice?: boolean
 }
 
+/**
+ * Composant React pour afficher un panneau de filtres
+ * Permet de filtrer les enchères, produits ou offres de contrat selon divers critères
+ * tels que le statut de l'enchère, le prix, la date, la qualité, le type de produit, la région et la ville.
+ */
 const FiltersPanel = <T extends AuctionDto | ProductDto | ContractOfferDto>({
   filterDataType,
   filterData,

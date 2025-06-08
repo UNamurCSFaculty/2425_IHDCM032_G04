@@ -6,6 +6,9 @@ import { Link } from '@tanstack/react-router'
 import { User, CalendarDays, ChevronRight } from 'lucide-react'
 import { formatDateOnly } from '@/utils/formatter'
 
+/**
+ * Composant React pour afficher une carte d'article de blog ou d'actualité
+ */
 export const ArticleCard = ({
   article,
   animationDelay,
@@ -57,7 +60,6 @@ export const ArticleCard = ({
           </div>
         </div>
         <CardContent className="flex flex-grow flex-col px-5 pt-4 pb-4">
-          {/* Ajustement du padding pour CardContent */}
           <h3 className="hover:text-primary-600 dark:hover:text-primary-400 mb-2 text-xl font-bold tracking-tight text-gray-900 transition-colors dark:text-white">
             <Link
               to="/actualites/$newsId"

@@ -59,6 +59,10 @@ interface MenuItemDefinition {
 
 const activeStyle = { style: { color: 'var(--anacarde-dark-green)' } }
 
+/**
+ * Composant d'en-tête de l'application.
+ * Affiche le logo, la navigation principale, les liens de connexion/déconnexion,
+ */
 export function Header() {
   const { t } = useTranslation()
   const user = useUserStore(state => state.user)
@@ -480,7 +484,6 @@ export function Header() {
                         className="hover:bg-accent flex items-center px-4 py-3 font-medium"
                         onClick={() => handleMobileLinkClick(item.url)}
                       >
-                        {/* Icônes pour Actualités, A Propos, Contact sont supprimées ici aussi si besoin, sinon elles s'affichent si définies */}
                         {item.icon && (
                           <span className="text-muted-foreground mr-3 size-5">
                             {item.icon}

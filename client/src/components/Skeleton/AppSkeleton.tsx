@@ -1,6 +1,9 @@
 import { ContentSkeleton } from '../Skeleton/../Skeleton/ContentSkeleton'
 import { Skeleton } from '../ui/skeleton'
 
+/**
+ * Un composant de squelette pour l'application, utilisé pour afficher un état de chargement.
+ */
 export function AppSkeleton() {
   return (
     <div className="">

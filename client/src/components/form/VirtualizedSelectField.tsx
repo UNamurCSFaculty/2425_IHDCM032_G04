@@ -16,6 +16,11 @@ type VirtualizedSelectFieldProps = Omit<
   onChange?: () => void
 }
 
+/**
+ * Composant de champ de sélection avec VirtualizedSelect.
+ * Permet de sélectionner une option parmi une liste déroulante optimisée pour les grandes listes.
+ * Utilise le composant VirtualizedSelect pour un rendu performant.
+ */
 export const VirtualizedSelectField: React.FC<VirtualizedSelectFieldProps> = ({
   label,
   options,

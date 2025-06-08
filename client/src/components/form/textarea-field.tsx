@@ -12,6 +12,9 @@ type TextAreaProps = {
   tooltip?: string
 } & React.TextareaHTMLAttributes<HTMLTextAreaElement>
 
+/**
+ * Composant de champ de saisie de texte multilignes.
+ */
 export const TextAreaField = ({
   label,
   className,

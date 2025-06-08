@@ -12,6 +12,9 @@ import { AlertCircle } from 'lucide-react'
 import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
+/**
+ * Composant React pour le formulaire de contact.
+ */
 export const ContactForm: React.FC = () => {
   const { t, i18n } = useTranslation()
   const navigate = useNavigate()

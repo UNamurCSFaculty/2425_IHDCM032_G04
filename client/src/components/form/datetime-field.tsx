@@ -17,6 +17,10 @@ type DateTimePickerFieldProps = {
   required?: boolean
 } & Omit<DateTimePickerProps, 'value' | 'onChange'>
 
+/**
+ *
+ * Composant de champ de sélection de date et heure.
+ */
 export const DateTimePickerField = ({
   label,
   tooltip,

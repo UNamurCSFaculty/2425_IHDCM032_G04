@@ -23,6 +23,11 @@ interface HeroSectionProps {
   }
 }
 
+/**
+ * Composant React pour la section héro de la page d'accueil.
+ * Affiche un titre, une description, des boutons d'action et une image.
+ * Utilise la bibliothèque i18next pour la traduction.
+ */
 const HeroSection = (props: HeroSectionProps) => {
   const { t } = useTranslation()
   const {
@@ -38,16 +43,16 @@ const HeroSection = (props: HeroSectionProps) => {
   const buttons = buttonsProp ?? {
     primary: {
       text: t('homepage.hero.buttons.primary_text'),
-      url: '/achats/marche', // Default URL
+      url: '/achats/marche',
     },
     secondary: {
       text: t('homepage.hero.buttons.secondary_text'),
-      url: '/a-propos', // Default URL
+      url: '/a-propos',
     },
   }
 
   const image = imageProp ?? {
-    src: logo, // Default image source
+    src: logo,
     alt: t('homepage.hero.image_alt'),
   }
 
@@ -57,7 +62,6 @@ const HeroSection = (props: HeroSectionProps) => {
         <div className="intersect-once intersect-half intersect:scale-100 intersect:opacity-100 container scale-50 transform opacity-0 transition duration-500 ease-out">
           <div className="grid items-center gap-8 lg:grid-cols-2">
             <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
-              {/* Badge can be rendered here if needed, e.g., {badge && <span>{badge}</span>} */}
               <h1 className="my-6 text-4xl font-bold text-pretty lg:text-6xl">
                 {heading}
               </h1>

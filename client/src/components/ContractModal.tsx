@@ -50,7 +50,6 @@ export const ContractModal: React.FC<ContractModalProps> = ({
   const [endDateDisplay, setEndDateDisplay] = React.useState<string>('')
   const { data } = useSuspenseQuery(listQualitiesQueryOptions())
 
-  // filter quality type
   const qualities = (data as QualityDto[]).filter(quality => {
     return (
       (auction.product.type === ProductType.HARVEST &&
@@ -143,7 +142,6 @@ export const ContractModal: React.FC<ContractModalProps> = ({
         <DialogClose asChild></DialogClose>
 
         <div className="mb-4 flex items-center gap-4">
-          {/* <AvatarFallback className="h-10 w-10 rounded-full object-cover" /> */}
           <Avatar className="bg-muted flex size-8 items-center justify-center rounded-full font-medium text-gray-800">
             <AvatarFallback>
               {auction.trader?.firstName?.[0]?.toUpperCase()}

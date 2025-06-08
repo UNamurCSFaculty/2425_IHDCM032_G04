@@ -3,6 +3,9 @@ import { Button } from './ui/button'
 import { Link } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 
+/**
+ * Composant de l'appel à l'action du pied de page
+ */
 export function FooterCta() {
   const { t } = useTranslation()
   const user = useUserStore(s => s.user)

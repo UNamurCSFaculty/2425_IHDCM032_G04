@@ -17,6 +17,12 @@ interface Props {
 export const ITEM_HEIGHT = 35
 export const MAX_VISIBLE = 7
 
+/**
+ *
+ * Composant de liste de villes.
+ * Affiche une liste déroulante de villes avec sélection.
+ * Utilise Virtuoso pour le rendu performant de grandes listes.
+ */
 export function CityList({ options, selected, onSelect }: Props) {
   const height = Math.min(options.length, MAX_VISIBLE) * ITEM_HEIGHT
   return (

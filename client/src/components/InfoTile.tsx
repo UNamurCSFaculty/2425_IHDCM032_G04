@@ -1,3 +1,6 @@
+/**
+ * Composant pour afficher une tuile d'information avec un icône, un label et du contenu.
+ */
 export const InfoTile: React.FC<{
   icon?: React.ReactNode
   label: string

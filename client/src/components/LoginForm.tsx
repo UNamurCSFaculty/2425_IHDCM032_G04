@@ -29,7 +29,6 @@ export function LoginForm() {
 
   const setUser = useUserStore(s => s.setUser)
 
-  /* ---------- MUTATION Google ---------- */
   const googleMutation = useMutation({
     ...authenticateWithGoogleMutation(),
     onSuccess: user => {
@@ -46,7 +45,7 @@ export function LoginForm() {
     },
   })
 
-  /* Callback fourni à Google Identity Services */
+  // Callback fourni à Google Identity Services
   const handleGoogleCredential = useCallback(
     (response: CredentialResponse) => {
       if (response.credential) {
@@ -88,7 +87,6 @@ export function LoginForm() {
     }
   }, [handleGoogleCredential, t])
 
-  /* ---------- MUTATION login/password ---------- */
   const loginMutation = useMutation({
     ...authenticateUserMutation(),
     retry: 0,
@@ -102,7 +100,9 @@ export function LoginForm() {
     },
   })
 
-  /* ---------- Form react-form ---------- */
+  /**
+   * Formulaire de connexion
+   */
   const form = useAppForm({
     defaultValues: { username: '', password: '' },
     validators: { onChange: LoginSchema },

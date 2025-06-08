@@ -6,6 +6,10 @@ interface PasswordStrengthIndicatorProps
   strength: number // 0-5 scale
 }
 
+/**
+ * Composant React pour afficher un indicateur de force de mot de passe.
+ * Affiche une barre de progression colorée et un label textuel indiquant la force du mot de passe.
+ */
 export function PasswordStrengthIndicator({
   strength,
   className,
@@ -46,14 +50,10 @@ export function PasswordStrengthIndicator({
     },
   ]
 
-  // Get current level based on strength
   const currentLevel = levels[Math.min(strength, 5)]
 
   return (
-    <div
-      className={cn('mt-1 space-y-2', className)} // Fusionne les classes
-      {...rest} // Applique les autres props HTML
-    >
+    <div className={cn('mt-1 space-y-2', className)} {...rest}>
       <div className="flex h-2 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-600">
         {strength > 0 && (
           <div

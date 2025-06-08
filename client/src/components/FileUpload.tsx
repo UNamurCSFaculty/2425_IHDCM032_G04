@@ -11,6 +11,13 @@ export interface FileUploadProps {
   className?: string
 }
 
+/**
+ * Composant de téléchargement de fichiers avec validation
+ * - Limite le nombre de fichiers et la taille totale
+ * - Accepte des types de fichiers spécifiques
+ * - Permet le glisser-déposer et la sélection via un dialogue natif
+ * - Affiche les fichiers sélectionnés avec options de suppression
+ */
 export function FileUpload({
   maxFiles = 5,
   maxSize = 5,

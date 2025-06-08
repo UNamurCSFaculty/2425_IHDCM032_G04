@@ -212,7 +212,7 @@ export const AuctionForm: React.FC = () => {
 
       <div
         ref={containerRef}
-        className="container mx-auto max-w-5xl px-5 py-24"
+        className="container mx-auto max-w-5xl px-2 py-12 sm:px-5 md:py-24"
       >
         <Card>
           <CardHeader>
@@ -232,8 +232,8 @@ export const AuctionForm: React.FC = () => {
               className="relative h-fit space-y-6"
             >
               <StepPanel index={1} current={step}>
-                <div className="flex flex-row gap-10">
-                  <div className="flex w-1/2 flex-col gap-6">
+                <div className="flex flex-col gap-6 md:flex-row md:gap-10">
+                  <div className="flex w-full flex-col gap-6 md:w-1/2">
                     <FormSectionTitle
                       text={t('auction.form.section_select_product_title')}
                     />
@@ -288,7 +288,7 @@ export const AuctionForm: React.FC = () => {
                       )}
                     />
                   </div>
-                  <div className="flex w-1/2 flex-col gap-6">
+                  <div className="flex w-full flex-col gap-6 md:w-1/2">
                     <FormSectionTitle text={t('product.info_title')} />
                     <Table>
                       <TableBody>
@@ -352,8 +352,8 @@ export const AuctionForm: React.FC = () => {
               </StepPanel>
 
               <StepPanel index={2} current={step}>
-                <div className="flex flex-row gap-10">
-                  <div className="flex w-1/2 flex-col gap-6">
+                <div className="flex flex-col gap-6 md:flex-row md:gap-10">
+                  <div className="flex w-full flex-col gap-6 md:w-1/2">
                     <FormSectionTitle
                       text={t('auction.form.section_pricing_title')}
                     />
@@ -378,7 +378,7 @@ export const AuctionForm: React.FC = () => {
                       )}
                     />
                   </div>
-                  <div className="flex w-1/2 flex-col gap-6">
+                  <div className="flex w-full flex-col gap-6 md:w-1/2">
                     <FormSectionTitle
                       text={t('auction.form.section_sale_conditions_title')}
                     />
@@ -450,19 +450,24 @@ export const AuctionForm: React.FC = () => {
                 </Alert>
               )}
 
-              <div className="flex justify-between">
+              <div className="flex flex-col gap-4 sm:flex-row sm:justify-between">
                 {step > 1 ? (
-                  <Button type="button" variant="outline" onClick={prevStep}>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={prevStep}
+                    className="w-full sm:w-auto"
+                  >
                     {t('pagination.previous')}
                   </Button>
                 ) : (
-                  <span />
+                  <span className="hidden sm:inline-block" /> // Garde l'espace sur sm+
                 )}
 
                 <Button
                   type="button"
                   onClick={nextStep}
-                  className={cn(step >= 2 && 'hidden')}
+                  className={cn('w-full sm:w-auto', step >= 2 && 'hidden')}
                 >
                   {t('pagination.next')}
                   <ArrowRight className="ml-2 h-4 w-4" />
@@ -471,7 +476,7 @@ export const AuctionForm: React.FC = () => {
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className={cn(step < 2 && 'hidden')}
+                  className={cn('w-full sm:w-auto', step < 2 && 'hidden')}
                 >
                   {isSubmitting ? (
                     <>

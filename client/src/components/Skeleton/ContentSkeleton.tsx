@@ -1,5 +1,8 @@
 import { Skeleton } from '../ui/skeleton'
 
+/**
+ * Un composant de squelette pour le contenu principal, utilisé pour afficher un état de chargement.
+ */
 export function ContentSkeleton() {
   return (
     <div className="mx-auto max-w-7xl space-y-6 p-4">

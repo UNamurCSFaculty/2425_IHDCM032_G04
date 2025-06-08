@@ -14,6 +14,10 @@ type NumberFieldProps = {
   tooltip?: string
 } & React.InputHTMLAttributes<HTMLInputElement>
 
+/**
+ * Composant de champ de saisie numérique.
+ * Permet de saisir un nombre avec des icônes optionnelles au début et à la fin.
+ */
 export const NumberField = ({
   label,
   startIcon,

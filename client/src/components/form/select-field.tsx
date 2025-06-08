@@ -34,6 +34,10 @@ type SelectFieldProps<T extends string | number> = {
   onChange?: (value: T) => void
 }
 
+/**
+ * Composant de champ de sélection.
+ * Permet de sélectionner une option parmi plusieurs choix.
+ */
 export function SelectField<T extends string | number>({
   label,
   hint,
@@ -73,7 +77,6 @@ export function SelectField<T extends string | number>({
           )}
         </div>
         <Select
-          // on passe toujours une string au <Select>
           disabled={disabled}
           value={String(field.state.value ?? '')}
           onValueChange={v => {

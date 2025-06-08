@@ -29,6 +29,11 @@ interface CityFieldProps {
   modal?: boolean
 }
 
+/**
+ * Composant de champ de sélection de ville.
+ * Permet de sélectionner une ville parmi une liste prédéfinie.
+ * Affiche un champ de saisie avec une liste déroulante filtrable.
+ */
 export function CityField({
   label,
   tooltip,

@@ -16,6 +16,10 @@ interface Faq1Props {
   items?: FaqItem[]
 }
 
+/**
+ * Composant de section FAQ pour la page d'accueil.
+ * Affiche une liste de questions-réponses.
+ */
 const FaqSection = (props: Faq1Props) => {
   const { t } = useTranslation()
 

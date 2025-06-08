@@ -20,6 +20,10 @@ interface LocationFieldProps {
   radius?: number
 }
 
+/**
+ * Composant de champ de sélection de localisation.
+ * Permet de sélectionner une position sur une carte et d'afficher les coordonnées.
+ */
 export function LocationField({
   label,
   required = true,

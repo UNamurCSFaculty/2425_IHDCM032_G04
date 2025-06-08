@@ -7,6 +7,10 @@ interface StepperProps {
   onStepClick?: (step: number) => void
 }
 
+/**
+ * Composant React pour afficher un stepper (barre de progression).
+ * Permet de visualiser les étapes d'un processus et de naviguer entre elles.
+ */
 const Stepper: React.FC<StepperProps> = ({ step, totalSteps, onStepClick }) => {
   const { t } = useTranslation()
 
@@ -26,8 +30,8 @@ const Stepper: React.FC<StepperProps> = ({ step, totalSteps, onStepClick }) => {
                 step >= stepNumber
                   ? 'bg-primary text-primary-foreground'
                   : 'bg-background text-muted-foreground border border-neutral-400'
-              } ${onStepClick ? 'cursor-pointer' : ''}`} // Ajout de cursor-pointer
-              onClick={() => onStepClick?.(stepNumber)} // Appel de onStepClick
+              } ${onStepClick ? 'cursor-pointer' : ''}`}
+              onClick={() => onStepClick?.(stepNumber)}
               onKeyDown={e => {
                 if (onStepClick && (e.key === 'Enter' || e.key === ' ')) {
                   onStepClick(stepNumber)

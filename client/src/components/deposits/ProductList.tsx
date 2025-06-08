@@ -47,6 +47,9 @@ interface ProductListProps {
   products: ProductDto[]
 }
 
+/**
+ * Composant pour afficher une liste de produits
+ */
 const ProductList: React.FC<ProductListProps> = ({ products }) => {
   const isDesktop = useMediaQuery('(min-width: 1024px)')
   const { t } = useTranslation()

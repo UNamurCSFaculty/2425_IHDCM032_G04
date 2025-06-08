@@ -116,6 +116,22 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
   // Filtering
   const [filteredAuctions, setFilteredAuctions] = useState<AuctionDto[]>([])
 
+  // Initialisation des enchères filtrées dès que les données brutes sont disponibles
+  useEffect(() => {
+    if (auctions && !isAuctionsLoading) {
+      let initialData = [...auctions]
+      if (filterByAuctionStatus) {
+        initialData = initialData.filter(
+          auction => auction.status.name === TradeStatus.OPEN
+        )
+      }
+      setFilteredAuctions(initialData)
+    } else if (!isAuctionsLoading && !auctions) {
+      // Gérer le cas où il n'y a pas d'enchères après le chargement
+      setFilteredAuctions([])
+    }
+  }, [auctions, isAuctionsLoading, filterByAuctionStatus])
+
   // Sorting
   const sorted = useMemo(() => {
     const list = [...filteredAuctions]
@@ -155,6 +171,7 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
     [sorted, currentPage]
   )
 
+  // Réinitialise la page actuelle à 1 lorsque filteredAuctions est mis à jour
   useEffect(() => setCurrentPage(1), [filteredAuctions])
 
   const handlePageChange = (page: number) => {
@@ -168,7 +185,8 @@ const AuctionMarketplace: React.FC<MarketplaceProps> = ({
         marketMode === 'my-purchases' &&
         selectedAuctionStatus !== TradeStatus.OPEN
       ) {
-        // show only auctions won by user
+        // Si on est dans le mode "mes achats", on filtre pour ne garder que les enchères
+        // où l'utilisateur a placé des offres acceptées
         newFilteredData = newFilteredData.filter(auction =>
           auction.bids.some(
             bid =>

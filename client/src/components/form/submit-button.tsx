@@ -7,6 +7,11 @@ type SubmitButtonProps = {
   children: React.ReactNode
 } & React.ButtonHTMLAttributes<HTMLButtonElement>
 
+/**
+ *
+ * Composant de bouton de soumission pour les formulaires.
+ * Affiche un indicateur de chargement pendant la soumission.
+ */
 export const SubmitButton = ({ children, ...props }: SubmitButtonProps) => {
   const form = useFormContext()
 
