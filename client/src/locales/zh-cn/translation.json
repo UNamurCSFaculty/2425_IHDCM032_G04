@@ -1100,6 +1100,8 @@
   "notification": {
     "list_description": "查看报价列表以获取更多详情。",
     "see_auction": "查看拍卖",
-    "historic": "查看历史记录以获取更多详情。"
+    "historic": "查看历史记录以获取更多详情。",
+    "new_bid": "新出价：",
+    "closed_auction": "拍卖已结束"
   }
 }

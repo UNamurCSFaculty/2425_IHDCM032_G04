@@ -33,7 +33,7 @@ export const SseNotificationsProvider: React.FC<
     }) => {
       toast(
         <span>
-          <b>💸 Nouvelle offre :</b>
+          <b>💸 {t('nofification.new_bid')}</b>
           <br />
           {newBid.trader.firstName} {newBid.trader.lastName} propose{' '}
           <b>{formatPrice.format(newBid.amount)}</b>
@@ -66,17 +66,17 @@ export const SseNotificationsProvider: React.FC<
     (auction: { id: number }) => {
       toast(
         <span>
-          <b>⏰ Enchère clôturée</b>
+          <b>⏰ {t('nofification.claused_auction')}</b>
           <br />
           L’enchère n°{auction.id} est terminée.
         </span>,
         {
           description: t('notification.historic'),
-          duration: 10000,
+          duration: 5000,
           action: {
-            label: 'Voir l’enchère',
+            label: t('notification.see_auction'),
             onClick: () => {
-              navigate({ to: '/achats/marche' })
+              navigate({ to: '/ventes/mes-encheres' })
               setTimeout(() => {
                 window.dispatchEvent(
                   new CustomEvent('auction:showInlineAuction', {
