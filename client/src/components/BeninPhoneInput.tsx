@@ -15,6 +15,11 @@ interface BeninPhoneInputProps {
   className?: string
 }
 
+/**
+ * Composant de champ de saisie de numéro de téléphone pour le Bénin.
+ * Permet de saisir un numéro de téléphone au format +22901XXXXXXXX.
+ * Le préfixe (+229) 01 est fixe et non éditable.
+ */
 export function BeninPhoneInput({
   value,
   onChange,

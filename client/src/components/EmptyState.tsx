@@ -8,6 +8,10 @@ interface EmptyStateProps {
   className?: string
 }
 
+/**
+ * Composant React pour afficher un état vide.
+ * Utilisé pour indiquer qu'aucune donnée n'est disponible ou que la recherche n'a pas retourné de résultats.
+ */
 const EmptyState: React.FC<EmptyStateProps> = ({ className }) => {
   const { t } = useTranslation()
 

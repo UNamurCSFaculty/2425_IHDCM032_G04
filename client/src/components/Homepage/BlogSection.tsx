@@ -8,6 +8,10 @@ import { ArticleCard } from '../ArticleCard'
 import { useEffect } from 'react'
 import { Observer } from 'tailwindcss-intersect'
 
+/**
+ * Composant React pour afficher la section Blog de la page d'accueil
+ * avec les derniers articles.
+ */
 export function BlogSection() {
   const { t } = useTranslation()
 

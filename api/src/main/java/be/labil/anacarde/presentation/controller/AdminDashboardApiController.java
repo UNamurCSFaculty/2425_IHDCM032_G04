@@ -17,13 +17,11 @@ public class AdminDashboardApiController implements AdminDashboardApi {
 
 	private final DashboardService dashboardService;
 
-	/* ===== KPI « cards » ===== */
 	@Override
 	public ResponseEntity<DashboardCardsDto> getDashboardCards() {
 		return ResponseEntity.ok(dashboardService.getDashboardStats());
 	}
 
-	/* ===== Série chronologique ===== */
 	@Override
 	public ResponseEntity<List<DashboardGraphicDto>> getDashboardGraphicSeries() {
 		return ResponseEntity.ok(dashboardService.getDashboardGraphicSeries());

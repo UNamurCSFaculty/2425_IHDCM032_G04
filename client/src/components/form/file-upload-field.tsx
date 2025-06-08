@@ -6,13 +6,16 @@ import SimpleTooltip from '../SimpleTooltip'
 import { Label } from '../ui/label'
 
 type FileUploadFieldProps = {
-  /** Libellé affiché au-dessus du champ */
   label: string
   tooltip?: string
   className?: string
   required?: boolean
 } & Omit<FileUploadProps, 'onChange' | 'className'>
 
+/**
+ * Composant de champ de téléchargement de fichiers.
+ * Permet de sélectionner et télécharger un ou plusieurs fichiers.
+ */
 export function FileUploadField({
   label,
   tooltip,

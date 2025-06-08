@@ -10,16 +10,20 @@ interface SseNotificationsProviderProps {
   children: React.ReactNode
 }
 
+/**
+ * Fournisseur de notifications en temps réel via Server-Sent Events (SSE)
+ * Gère les notifications pour les nouvelles offres et enchères clôturées
+ * Se connecte automatiquement quand un utilisateur est connecté
+ */
 export const SseNotificationsProvider: React.FC<
   SseNotificationsProviderProps
 > = ({ children }) => {
   const user = useUserStore(s => s.user)
   const eventSourceRef = useRef<EventSource | null>(null)
   const notifiedBids = useRef<Set<number>>(new Set())
-  const navigate = useNavigate() // useNavigate is called inside the component
+  const navigate = useNavigate()
   const { t } = useTranslation()
 
-  // Define notification handlers inside the component and memoize them
   const showBidNotification = useCallback(
     (newBid: {
       id: number
@@ -72,7 +76,6 @@ export const SseNotificationsProvider: React.FC<
           action: {
             label: 'Voir l’enchère',
             onClick: () => {
-              // navigate is now accessible from the closure
               navigate({ to: '/achats/marche' })
               setTimeout(() => {
                 window.dispatchEvent(
@@ -107,29 +110,28 @@ export const SseNotificationsProvider: React.FC<
         const newBid = JSON.parse((evt as MessageEvent).data)
         if (notifiedBids.current.has(newBid.id)) return
         notifiedBids.current.add(newBid.id)
-        showBidNotification(newBid) // Call the memoized function
-        // Toujours notifier pour le rafraîchissement des données
+        showBidNotification(newBid)
         window.dispatchEvent(
           new CustomEvent('auction:newBid', {
             detail: { auctionId: newBid.auctionId },
           })
         )
-      } catch {
-        // console.error('[SSE] Erreur:', err, evt)
+      } catch (err) {
+        console.error('[SSE] Erreur:', err, evt)
       }
     })
 
     es.addEventListener('auctionClosed', evt => {
       try {
         const auction = JSON.parse((evt as MessageEvent).data)
-        showAuctionClosedNotification(auction) // Call the memoized function
-      } catch {
-        // console.error('[SSE] Erreur auctionClosed:', err, evt)
+        showAuctionClosedNotification(auction)
+      } catch (err) {
+        console.error('[SSE] Erreur auctionClosed:', err, evt)
       }
     })
 
-    es.onerror = () => {
-      // console.error('[SSE] Erreur EventSource', err)
+    es.onerror = err => {
+      console.error('[SSE] Erreur EventSource', err)
     }
 
     return () => {

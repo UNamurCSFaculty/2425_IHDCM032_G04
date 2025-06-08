@@ -5,9 +5,13 @@ interface PaginationControlsProps {
   current: number
   total: number
   onChange: (page: number) => void
-  maxButtons?: number // nombre max de boutons de page à afficher (hors Prev/Next)
+  maxButtons?: number
 }
 
+/**
+ * Composant de contrôle de pagination.
+ * Permet de naviguer entre les pages d'une liste ou d'un ensemble de données.
+ */
 const PaginationControls: React.FC<PaginationControlsProps> = ({
   current,
   total,
@@ -27,10 +31,10 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
     const start = Math.max(2, current - half)
     const end = Math.min(total - 1, current + half)
 
-    pages.push(1) // première page
+    pages.push(1)
 
     if (start > 2) {
-      pages.push('...') // ellipse après le 1
+      pages.push('...')
     }
 
     for (let p = start; p <= end; p++) {
@@ -38,10 +42,10 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
     }
 
     if (end < total - 1) {
-      pages.push('...') // ellipse avant la dernière
+      pages.push('...')
     }
 
-    pages.push(total) // dernière page
+    pages.push(total)
 
     return pages
   }

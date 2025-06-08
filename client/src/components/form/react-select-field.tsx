@@ -21,6 +21,10 @@ type SelectFieldProps = {
   onChange?: ((options: string[]) => void) | undefined
 }
 
+/**
+ * Composant de champ de sélection avec React Select.
+ * Permet de sélectionner plusieurs options à partir d'une liste déroulante.
+ */
 export function ReactSelectField({
   label,
   hint,

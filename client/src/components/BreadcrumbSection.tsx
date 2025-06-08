@@ -12,7 +12,6 @@ import { Home, type LucideIcon } from 'lucide-react'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 
-// Type pour une miette de pain individuelle
 type CrumbBase = {
   href?: string
   icon?: LucideIcon
@@ -27,7 +26,6 @@ type CrumbWithLabel = CrumbBase & {
 }
 export type Crumb = CrumbWithLabelKey | CrumbWithLabel
 
-// Props pour BreadcrumbSection
 type BreadcrumbSectionPropsBase = {
   subtitleKey?: string
   breadcrumbs?: Crumb[]
@@ -48,6 +46,10 @@ export type BreadcrumbSectionProps =
   | BreadcrumbSectionPropsWithTitleKey
   | BreadcrumbSectionPropsWithTitleElement
 
+/**
+ * Composant React pour afficher une section de fil d'Ariane avec un titre et un sous-titre.
+ * Permet de naviguer facilement dans l'application tout en affichant le contexte actuel.
+ */
 export function BreadcrumbSection({
   titleKey,
   titleElement,
@@ -57,7 +59,6 @@ export function BreadcrumbSection({
 }: BreadcrumbSectionProps) {
   const { t } = useTranslation()
 
-  // On ajoute systématiquement Home comme premier crumb
   const homeCrumb: Crumb = {
     labelKey: 'breadcrumb.home',
     href: '/',

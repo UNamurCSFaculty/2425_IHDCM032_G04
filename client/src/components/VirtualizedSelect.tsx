@@ -21,7 +21,6 @@ import { Label } from './ui/label'
 import SimpleTooltip from './SimpleTooltip'
 
 export interface Option {
-  // Le placeholder ayant un id `null`, on garde ce type.
   id: number | null
   label: string
 }
@@ -32,23 +31,27 @@ interface Props {
   tooltip?: string
   hint?: string
   required?: boolean
-  options: Option[] // Assure que les options ont un id de type number
+  options: Option[]
   placeholder?: string
-  value: number | null // La valeur peut être un id ou null pour le placeholder
-  modal?: boolean // Indique si le sélecteur est utilisé dans un modal
+  value: number | null
+  modal?: boolean
   onChange: (val: number | null) => void
   /**
    * Détermine si le placeholder est une option sélectionnable.
    * @default false
    */
   placeholderSelectable?: boolean
-  disabled?: boolean // Ajout de la propriété disabled
+  disabled?: boolean
 }
 
-// Constantes pour la virtualisation
 const ITEM_HEIGHT = 40
 const MAX_VISIBLE_ITEMS = 5
 
+/**
+ * Composant de sélection virtuel avec recherche et options filtrables.
+ * Utilise `react-virtuoso` pour le rendu performant des listes longues.
+ * Permet de sélectionner une option parmi une liste avec un champ de recherche.
+ */
 const VirtualizedSelect: React.FC<Props> = ({
   id,
   label,
@@ -61,7 +64,7 @@ const VirtualizedSelect: React.FC<Props> = ({
   value,
   onChange,
   placeholderSelectable = false,
-  disabled = false, // Valeur par défaut pour disabled
+  disabled = false,
 }) => {
   const [open, setOpen] = useState(false)
   const [search, setSearch] = useState('')
@@ -106,7 +109,7 @@ const VirtualizedSelect: React.FC<Props> = ({
   const handleSelect = (option: Option) => {
     const isPlaceholder = option.id === null
     if (isPlaceholder && !placeholderSelectable) {
-      return // Ne fait rien si le placeholder n'est pas sélectionnable
+      return
     }
     onChange(option.id)
     setOpen(false)
@@ -154,10 +157,10 @@ const VirtualizedSelect: React.FC<Props> = ({
           )}
         </div>
         <Popover
-          open={open && !disabled} // S'assurer que le popover ne s'ouvre pas si désactivé
+          open={open && !disabled}
           onOpenChange={openState => {
-            if (disabled) return // Ne rien faire si désactivé
-            if (!openState) setSearch('') // Réinitialise la recherche à la fermeture
+            if (disabled) return
+            if (!openState) setSearch('')
             setOpen(openState)
           }}
           modal={modal}
@@ -167,7 +170,7 @@ const VirtualizedSelect: React.FC<Props> = ({
               id={id}
               variant="outline"
               className="w-full justify-between"
-              disabled={disabled} // Passer la propriété disabled au bouton
+              disabled={disabled}
             >
               <span className="truncate">{displayLabel}</span>
               <ChevronDown className="size-4 shrink-0 opacity-50" />
@@ -186,11 +189,7 @@ const VirtualizedSelect: React.FC<Props> = ({
                 onKeyDown={handleKeyDown}
               />
 
-              <CommandList
-                // Add these styles to prevent CommandList from interfering with Virtuoso's scrolling
-                // and to remove its default max-height.
-                style={{ overflowY: 'visible', maxHeight: 'none' }}
-              >
+              <CommandList style={{ overflowY: 'visible', maxHeight: 'none' }}>
                 <CommandEmpty>Aucun résultat</CommandEmpty>
                 {filteredOptions.length > 0 && (
                   <CommandGroup>

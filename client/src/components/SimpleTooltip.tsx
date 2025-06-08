@@ -6,6 +6,9 @@ import {
   TooltipTrigger,
 } from './ui/tooltip'
 
+/**
+ * Composant de tooltip simple pour afficher des informations contextuelles.
+ */
 const SimpleTooltip = (props: { content: string }) => {
   return (
     <TooltipProvider>

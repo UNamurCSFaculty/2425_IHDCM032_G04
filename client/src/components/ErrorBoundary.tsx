@@ -11,6 +11,11 @@ interface ErrorBoundaryState {
   hasError: boolean
 }
 
+/**
+ * Composant de gestion des erreurs
+ * Utilisé pour capturer les erreurs dans l'application et afficher un message d'erreur personnalisé.
+ * Il remplace le contenu de l'application en cas d'erreur.
+ */
 class ErrorBoundaryComponent extends Component<
   ErrorBoundaryProps,
   ErrorBoundaryState

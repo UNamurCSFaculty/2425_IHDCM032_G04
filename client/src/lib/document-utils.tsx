@@ -1,6 +1,11 @@
 import { downloadDocument } from '@/api/generated'
 import { toast } from 'sonner'
 
+/**
+ * Déclenche le téléchargement d'un blob en créant un lien temporaire
+ * @param blob - Le blob à télécharger
+ * @param filename - Nom du fichier pour le téléchargement
+ */
 export const triggerBlobDownload = (blob: Blob, filename: string) => {
   const url = window.URL.createObjectURL(blob)
   const a = document.createElement('a')
@@ -12,6 +17,11 @@ export const triggerBlobDownload = (blob: Blob, filename: string) => {
   window.URL.revokeObjectURL(url)
 }
 
+/**
+ * Extrait un blob d'une réponse API
+ * @param response - Réponse de l'API
+ * @returns Le blob extrait ou null si non trouvé
+ */
 export const getActualBlob = (response: any): Blob | null => {
   if (response instanceof Blob) {
     return response
@@ -27,6 +37,12 @@ export const getActualBlob = (response: any): Blob | null => {
   return null
 }
 
+/**
+ * Crée un gestionnaire de téléchargement de documents
+ * @param setDownloadingIds - Fonction pour mettre à jour l'état des téléchargements
+ * @param t - Fonction de traduction
+ * @returns Fonction de gestionnaire de téléchargement
+ */
 export const createDownloadHandler = (
   setDownloadingIds: React.Dispatch<
     React.SetStateAction<Record<string | number, boolean>>
@@ -63,6 +79,12 @@ export const createDownloadHandler = (
   }
 }
 
+/**
+ * Crée un gestionnaire de visualisation de documents
+ * @param setViewingIds - Fonction pour mettre à jour l'état des visualisations
+ * @param t - Fonction de traduction
+ * @returns Fonction de gestionnaire de visualisation
+ */
 export const createViewHandler = (
   setViewingIds: React.Dispatch<React.SetStateAction<Record<number, boolean>>>,
   t: (key: string) => string

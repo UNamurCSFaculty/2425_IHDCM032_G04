@@ -8,6 +8,11 @@ interface LoadingStateProps {
   className?: string
 }
 
+/**
+ * Composant React pour afficher un état de chargement.
+ * Utilisé pour indiquer que des données sont en cours de chargement.
+ * Affiche un spinner et un message de chargement.
+ */
 const LoadingState: React.FC<LoadingStateProps> = ({ className }) => {
   const { t } = useTranslation()
 

@@ -77,6 +77,12 @@ const StepPanel: React.FC<{
   )
 }
 
+/*
+ * Formulaire d'inscription en 3 étapes pour les utilisateurs
+ * Étape 1: Informations personnelles et type de compte
+ * Étape 2: Adresse et détails spécifiques au transporteur
+ * Étape 3: Mot de passe, documents et acceptation des conditions
+ */
 export const SignupForm: React.FC = () => {
   const navigate = useNavigate()
   const { t } = useTranslation()
@@ -149,12 +155,12 @@ export const SignupForm: React.FC = () => {
   /** Valide tous les champs du step et renvoie true s’ils sont OK */
   const validateStep = async (stepToValidate: number): Promise<boolean> => {
     const fieldsForStep = stepFields[stepToValidate]
-    if (!fieldsForStep) return true // Aucune configuration de champ pour cette étape
+    if (!fieldsForStep) return true
 
     let hasErrorInStep = false
     for (const fieldName of fieldsForStep) {
       const fieldNameTyped = fieldName as keyof UserRegistration
-      // Déclencher la validation pour 'change' et 'blur' pour afficher les erreurs
+
       const changeErrors = await form.validateField(fieldNameTyped, 'change')
       if (changeErrors && changeErrors.length > 0) {
         hasErrorInStep = true
@@ -176,19 +182,17 @@ export const SignupForm: React.FC = () => {
   const prevStep = () => setStep(s => s - 1)
 
   const handleStepClick = async (targetStep: number) => {
-    if (targetStep === step) return // Ne rien faire si on clique sur l'étape actuelle
+    if (targetStep === step) return
 
     if (targetStep < step) {
       setStep(targetStep)
     } else {
-      // targetStep > step
       let allPreviousStepsValid = true
-      // Valider toutes les étapes de l'actuelle (step) jusqu'à targetStep - 1
       for (let i = step; i < targetStep; i++) {
         const isStepValid = await validateStep(i)
         if (!isStepValid) {
           allPreviousStepsValid = false
-          setStep(i) // Afficher l'étape qui a échoué la validation
+          setStep(i)
           break
         }
       }
@@ -201,13 +205,11 @@ export const SignupForm: React.FC = () => {
 
   useEffect(() => {
     if (isMountedRef.current) {
-      // Si ce n'est pas le rendu initial, alors on effectue le défilement
       containerRef.current?.scrollIntoView({
         behavior: 'smooth',
         block: 'start',
       })
     } else {
-      // Au premier rendu, on marque que le montage est terminé
       isMountedRef.current = true
     }
   }, [step])

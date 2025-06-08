@@ -1,25 +1,26 @@
 import { decimalToSexagesimal } from 'geolib'
 
 /**
- * Formate un nombre en notation compacte (ex : 1,2 M, 3,4 k)
- * en utilisant la locale fr-BJ.
+ * Formateur de prix en francs CFA avec notation compacte
+ * Utilise la locale fr-BJ pour afficher les montants au format local
+ * Exemples: 1 200 → "1,2 k XOF", 1 500 000 → "1,5 M XOF"
  */
 export const formatPrice = new Intl.NumberFormat('fr-BJ', {
-  notation: 'compact', // compacte → k, M…
-  compactDisplay: 'long', // affichage court (“k”)
-  maximumFractionDigits: 2, // 1 chiffre après la virgule si besoin
-  style: 'currency', // on reste en “currency” pour XOF
-  currency: 'CFA', // ISO 4217 pour CFA BCEAO
-  currencyDisplay: 'code', // “XOF” plutôt que le symbole “F”
+  notation: 'compact',
+  compactDisplay: 'long',
+  maximumFractionDigits: 2,
+  style: 'currency',
+  currency: 'CFA',
+  currencyDisplay: 'code',
 })
 
 /**
- * Formate un poids (en kg) en kg / t / kt selon la grandeur.
- *
- * @param {number} weightKg — le poids en kilogrammes
- * @param {string} [locale='fr-BJ'] — locale pour le formattage numérique
- * @param {number} [maxFractionDigits=1] — décimales maximales pour t et kt
- * @returns {string} poids formaté (ex : "850 kg", "2,3 t", "1,2 kt")
+ * Formate un poids en kg/t/kt selon la grandeur
+ * Adapte automatiquement l'unité selon la valeur pour une meilleure lisibilité
+ * @param weightKg - Le poids en kilogrammes
+ * @param locale - Locale pour le formattage numérique
+ * @param maxFractionDigits - Décimales maximales pour t et kt
+ * @returns Poids formaté avec unité appropriée
  */
 export function formatWeight(
   weightKg: number,
@@ -33,21 +34,23 @@ export function formatWeight(
     })
 
   if (weightKg < 1_000) {
-    // en kilogrammes
     return `${fmt(weightKg)} kg`
   }
 
   if (weightKg < 1_000_000) {
-    // en tonnes (1 t = 1 000 kg)
     const tonnes = weightKg / 1_000
     return `${fmt(tonnes)} t`
   }
 
-  // au-delà, en kilotonnes (1 kt = 1 000 t = 1 000 000 kg)
   const kilotonnes = weightKg / 1_000_000
   return `${fmt(kilotonnes)} kt`
 }
 
+/**
+ * Formate une date avec heure au format français
+ * @param dateString - Chaîne de date ISO ou undefined
+ * @returns Date formatée "JJ/MM/AAAA HH:MM" ou "—" si vide
+ */
 export const formatDate = (dateString: string | undefined): string => {
   if (!dateString) return '—'
   return new Date(dateString).toLocaleString('fr-FR', {
@@ -59,6 +62,11 @@ export const formatDate = (dateString: string | undefined): string => {
   })
 }
 
+/**
+ * Formate une date sans heure au format français
+ * @param dateString - Chaîne de date ISO ou undefined
+ * @returns Date formatée "JJ/MM/AAAA" ou "—" si vide
+ */
 export const formatDateOnly = (dateString: string | undefined): string => {
   if (!dateString) return '—'
   return new Date(dateString).toLocaleString('fr-FR', {
@@ -68,6 +76,12 @@ export const formatDateOnly = (dateString: string | undefined): string => {
   })
 }
 
+/**
+ * Convertit des coordonnées WKT en format degrés-minutes-secondes
+ * Transforme un point WKT en coordonnées géographiques lisibles
+ * @param wktString - Chaîne WKT au format "POINT(longitude latitude)"
+ * @returns Coordonnées formatées en DMS avec directions cardinales
+ */
 export const formatCoordinates = (wktString: string): string => {
   const match = wktString.match(
     /^POINT\s*\(\s*([+-]?\d+(?:\.\d+)?)\s+([+-]?\d+(?:\.\d+)?)\s*\)$/

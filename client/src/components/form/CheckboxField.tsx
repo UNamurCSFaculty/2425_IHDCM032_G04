@@ -29,10 +29,9 @@ export interface CheckboxFieldProps
 
 type FieldValue = boolean | string | string[]
 
-/* -------------------------------------------------------------------------- */
-/* Composant                                                                  */
-/* -------------------------------------------------------------------------- */
-
+/**
+ * Composant de champ de case à cocher.
+ */
 export const CheckboxField: React.FC<CheckboxFieldProps> = ({
   label,
   required,

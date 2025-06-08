@@ -5,21 +5,24 @@ interface Props {
   meta: AnyFieldMeta
 }
 
+/**
+ * Composant pour afficher les erreurs de validation d'un champ de formulaire.
+ * Utilisé pour le débogage, il affiche les informations de validation du champ,
+ * y compris les erreurs, les cartes d'erreur et les sources d'erreur.
+ */
 export function DebugFieldErrors({ fieldName, meta }: Props) {
-  /* ---------------- état général ---------------- */
   const {
     isTouched,
     isBlurred,
     isDirty,
     isValid,
     errors = [],
-    errorMap, // { onChange: [...], onBlur: [...] }  si dispo
-    errorSourceMap, // { onChange: 'form' }                si dispo
+    errorMap,
+    errorSourceMap,
   } = meta
 
   const hasErrors = errors.length > 0
 
-  /* -------------- rendu -------------------------- */
   return (
     <div
       style={{

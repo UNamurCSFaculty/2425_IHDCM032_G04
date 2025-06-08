@@ -12,6 +12,11 @@ type TextFieldStandaloneProps = {
   onChange?: (value: string) => void
 } & React.InputHTMLAttributes<HTMLInputElement>
 
+/**
+ * Composant de champ de texte autonome.
+ * Permet de saisir du texte avec des icônes facultatives au début et à la fin.
+ * Gère la validation de champ requis et l'affichage d'erreurs.
+ */
 export const TextFieldStandalone = ({
   label,
   startIcon,

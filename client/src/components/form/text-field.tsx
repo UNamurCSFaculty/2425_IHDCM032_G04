@@ -19,6 +19,11 @@ type TextFieldProps = {
   hint?: string
 } & React.InputHTMLAttributes<HTMLInputElement>
 
+/**
+ *
+ * Composant de champ de saisie de texte.
+ * Permet de saisir du texte ou un nombre avec des icônes optionnelles au début et à la fin.
+ */
 export function TextField<T extends string | number>({
   label,
   startIcon,

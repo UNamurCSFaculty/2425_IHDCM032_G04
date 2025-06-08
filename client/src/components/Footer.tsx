@@ -26,6 +26,9 @@ interface FooterProps {
   }[]
 }
 
+/**
+ * Composant de pied de page
+ */
 const Footer = ({
   logo: logoProp,
   tagline: taglineProp,

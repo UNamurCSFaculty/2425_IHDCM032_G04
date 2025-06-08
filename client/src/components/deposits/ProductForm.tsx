@@ -50,22 +50,25 @@ import {
 } from '../ui/card'
 import { BreadcrumbSection } from '../BreadcrumbSection'
 
+/**
+ * Formulaire pour la création ou la mise à jour d'un produit
+ * Permet de saisir les informations relatives à un produit de récolte ou transformé
+ * ainsi que les contrôles qualité associés.
+ */
 export function ProductForm(): React.ReactElement<'div'> {
   const navigate = useNavigate()
   const user = useAuthUser()
   const { t } = useTranslation()
   const containerRef = useRef<HTMLDivElement>(null)
-  const isMountedRef = useRef(false) // Référence pour suivre l'état de montage
+  const isMountedRef = useRef(false)
 
   useEffect(() => {
     if (isMountedRef.current) {
-      // Si ce n'est pas le rendu initial, alors on effectue le défilement
       containerRef.current?.scrollIntoView({
         behavior: 'smooth',
         block: 'start',
       })
     } else {
-      // Au premier rendu, on marque que le montage est terminé
       isMountedRef.current = true
     }
   }, [])
@@ -103,7 +106,7 @@ export function ProductForm(): React.ReactElement<'div'> {
     staleTime: staleTime,
   })
 
-  // this should be handled internally by the form
+  // TODO: Ceci devrait être géré en interne par le formulaire
   const [selectedHarvestProductsIds, setSelectedHarvestProductsIds] = useState<
     number[]
   >([])
@@ -169,18 +172,7 @@ export function ProductForm(): React.ReactElement<'div'> {
     }
   }
 
-  const form = useAppForm<
-    ProductRegistration, // TFormData
-    undefined, // TOnMount
-    typeof productSchema, // TOnChange
-    undefined, // TOnChangeAsync
-    undefined, // TOnBlur
-    undefined, // TOnBlurAsync
-    undefined, // TOnSubmit
-    undefined, // TOnSubmitAsync
-    undefined, // TOnServer
-    undefined // TSubmitMeta
-  >({
+  const form = useAppForm({
     validators: { onChange: productSchema },
     defaultValues: {
       product: {
@@ -203,7 +195,7 @@ export function ProductForm(): React.ReactElement<'div'> {
         qualityId: 0,
       },
       documents: [],
-    },
+    } as ProductRegistration,
     onSubmit({ value }) {
       handleSaveProduct(value)
     },
@@ -225,8 +217,9 @@ export function ProductForm(): React.ReactElement<'div'> {
     return -1
   })
 
-  // Retrieve auctions won by the user. A transformer can only reference harvest products
-  // from auctions they have won.
+  // Récupère les enchères gagnées par l'utilisateur.
+  // Un transformateur ne peut référencer que des produits de récolte
+  // provenant d'enchères qu'il a remportées.
   const listAuctionsQueryOptions = () => ({
     ...listAuctionsOptions({
       query: { buyerId: transformerId, status: TradeStatus.ACCEPTED },
@@ -252,7 +245,7 @@ export function ProductForm(): React.ReactElement<'div'> {
 
       <div
         ref={containerRef}
-        className="container mx-auto max-w-5xl px-5 py-24"
+        className="container mx-auto max-w-5xl px-2 py-12 sm:px-5 md:py-24"
       >
         <Card>
           <CardHeader>
@@ -269,13 +262,13 @@ export function ProductForm(): React.ReactElement<'div'> {
                 form.handleSubmit()
               }}
             >
-              <div className="flex flex-row gap-10">
-                <div className="flex w-1/2 flex-col gap-6">
+              <div className="flex flex-col gap-6 md:flex-row md:gap-10">
+                <div className="flex w-full flex-col gap-6 md:w-1/2">
                   <FormSectionTitle
                     text={t('product.form.section_deposit_settings_title')}
                   />
 
-                  <div className="flex gap-4">
+                  <div className="flex flex-col gap-4 sm:flex-row">
                     <div className="flex-1">
                       <form.AppField
                         name="product.type"
@@ -460,40 +453,14 @@ export function ProductForm(): React.ReactElement<'div'> {
                       />
                     )}
                   />
-                  {isError && error?.errors?.length > 0 && (
-                    <Alert
-                      variant="destructive"
-                      className="mt-4 mb-4 border-red-300 bg-red-50"
-                    >
-                      <AlertCircle className="h-4 w-4" />
-                      <AlertTitle>{t('common.error')}</AlertTitle>
-                      <AlertDescription>
-                        <ul className="list-disc">
-                          {error.errors.map((err: ErrorDetail, idx: number) => (
-                            <li key={idx} className="mb-1">
-                              {err.field
-                                ? `${t('errors.fields.' + err.field)}: `
-                                : ''}
-                              {t('errors.' + err.code)}
-                            </li>
-                          ))}
-                        </ul>
-                      </AlertDescription>
-                    </Alert>
-                  )}
-                  <form.AppForm>
-                    <form.SubmitButton className="w-full">
-                      {t('product.form.submit_button')}
-                    </form.SubmitButton>
-                  </form.AppForm>
                 </div>
 
-                <div className="flex w-1/2 flex-col gap-6">
+                <div className="flex w-full flex-col gap-6 md:w-1/2">
                   <FormSectionTitle
                     text={t('product.form.section_quality_control_title')}
                   />
 
-                  <div className="flex gap-4">
+                  <div className="flex flex-col gap-4 sm:flex-row">
                     <div className="flex-1">
                       <form.AppField
                         name="qualityControl.qualityId"
@@ -578,6 +545,34 @@ export function ProductForm(): React.ReactElement<'div'> {
                     )}
                   </form.AppField>
                 </div>
+              </div>
+              {isError && error?.errors?.length > 0 && (
+                <Alert
+                  variant="destructive"
+                  className="mt-8 mb-4 border-red-300 bg-red-50"
+                >
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertTitle>{t('common.error')}</AlertTitle>
+                  <AlertDescription>
+                    <ul className="list-disc pl-4">
+                      {error.errors.map((err: ErrorDetail, idx: number) => (
+                        <li key={idx} className="mb-1">
+                          {err.field
+                            ? `${t('errors.fields.' + err.field)}: `
+                            : ''}
+                          {t('errors.' + err.code)}
+                        </li>
+                      ))}
+                    </ul>
+                  </AlertDescription>
+                </Alert>
+              )}
+              <div className="mt-8 flex justify-center">
+                <form.AppForm>
+                  <form.SubmitButton className="w-full sm:w-auto sm:min-w-[200px] md:max-w-xs">
+                    {t('product.form.submit_button')}
+                  </form.SubmitButton>
+                </form.AppForm>
               </div>
             </form>
           </CardContent>

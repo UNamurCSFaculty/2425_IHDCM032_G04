@@ -9,6 +9,10 @@ interface AvatarUploadProps {
   onChange?: (file: File | null) => void
 }
 
+/**
+ * Composant React pour télécharger et afficher un avatar.
+ * Permet à l'utilisateur de sélectionner une image depuis son appareil,
+ */
 export function AvatarUpload({ className, onChange }: AvatarUploadProps) {
   const [preview, setPreview] = useState<string | null>(null)
   const [, setFile] = useState<File | null>(null)

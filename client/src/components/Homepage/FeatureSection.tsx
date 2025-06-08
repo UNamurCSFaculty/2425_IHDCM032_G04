@@ -19,6 +19,11 @@ const featureItems = [
   },
 ]
 
+/**
+ * Composant React pour afficher la section des fonctionnalités
+ * de la page d'accueil, avec une grille de cartes animées.
+ * Chaque carte présente une fonctionnalité avec une icône et une description.
+ */
 export function FeaturesSection() {
   const { t } = useTranslation()
 

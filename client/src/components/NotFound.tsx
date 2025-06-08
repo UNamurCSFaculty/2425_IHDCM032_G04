@@ -2,6 +2,9 @@ import { Button } from './ui/button'
 import { Link } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 
+/**
+ * Composant de page NotFound
+ */
 export default function NotFound() {
   const { t } = useTranslation()
   return (

@@ -9,6 +9,11 @@ type PhoneFieldProps = Omit<
   'value' | 'onChange' | 'id'
 > & { id?: string; tooltip?: string }
 
+/**
+ *
+ * Composant de champ de saisie de numéro de téléphone.
+ * Permet de saisir un numéro de téléphone avec un format spécifique pour le Bénin.
+ */
 export function PhoneField({
   id,
   tooltip,

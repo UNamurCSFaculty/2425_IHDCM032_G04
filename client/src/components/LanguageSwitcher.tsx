@@ -11,6 +11,10 @@ import { Globe } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useEffect, useState } from 'react'
 
+/**
+ * Composant pour changer la langue de l'application.
+ * Affiche un sélecteur de langue dans la barre de navigation mobile ou un menu déroulant dans la barre de navigation principale.
+ */
 export function LanguageSwitcher({
   inMobileNav = false,
 }: {

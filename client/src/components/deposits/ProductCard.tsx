@@ -40,6 +40,9 @@ interface ProductCardProps {
   isDetail?: boolean
 }
 
+/**
+ * Composant pour afficher une carte de produit
+ */
 const ProductCard: React.FC<ProductCardProps> = ({ product, layout }) => {
   const { t } = useTranslation()
 

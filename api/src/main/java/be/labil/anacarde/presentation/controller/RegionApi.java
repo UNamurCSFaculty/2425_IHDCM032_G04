@@ -14,7 +14,6 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.groups.Default;
 import java.util.List;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -82,20 +81,4 @@ public interface RegionApi {
 	@ApiResponses({
 			@ApiResponse(responseCode = "200", description = "Liste récupérée avec succès", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = RegionDto.class))))})
 	ResponseEntity<List<RegionDto>> listRegions();
-
-	/**
-	 * Supprime une région par son identifiant.
-	 *
-	 * @param id
-	 *            Identifiant de la région à supprimer
-	 * @return {@code 204 No Content} si la suppression réussit, ou {@code 404 Not Found} avec un
-	 *         {@link ApiErrorResponse}.
-	 */
-	@Operation(summary = "Supprimer une région")
-	@DeleteMapping("/{id}")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@ApiResponses({
-			@ApiResponse(responseCode = "200", description = "", content = @Content(schema = @Schema())),
-			@ApiResponse(responseCode = "404", description = "", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),})
-	ResponseEntity<Void> deleteRegion(@ApiValidId @PathVariable("id") Integer id);
 }

@@ -77,6 +77,11 @@ const ChangeView: React.FC<{ center: LatLngExpression; minZoom: number }> = ({
   return null
 }
 
+/**
+ * Composant de carte interactif pour sélectionner une position géographique.
+ * Permet de cliquer pour sélectionner un point, de rechercher des adresses,
+ * et d'afficher des informations sur la position sélectionnée.
+ */
 export const SelectorMap: React.FC<SelectorMapProps> = ({
   initialPosition,
   onPositionChange,

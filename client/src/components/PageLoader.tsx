@@ -2,6 +2,10 @@ import { cn } from '@/lib/utils'
 import { Loader2 } from 'lucide-react'
 import { useLayoutEffect, useState } from 'react'
 
+/**
+ * Un composant React qui affiche un loader centré sur la page.
+ * Il utilise une transition CSS pour l'opacité, rendant le chargement plus fluide.
+ */
 export function PageLoader() {
   const [visible, setVisible] = useState(false)
 

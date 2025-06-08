@@ -6,16 +6,8 @@ import { cn } from '@/lib/utils'
 import React from 'react'
 import SimpleTooltip from '../SimpleTooltip'
 
-/* -------------------------------------------------------------------------- */
-/* Types                                                                      */
-/* -------------------------------------------------------------------------- */
-
-// On peut réutiliser ce type, il est parfait pour notre besoin.
 export type Choice = { value: string; label: string }
 
-/**
- * Les props sont basées sur un <fieldset>
- */
 export interface RadioGroupFieldProps
   extends Omit<React.HTMLAttributes<HTMLFieldSetElement>, 'onChange'> {
   label: string
@@ -27,13 +19,12 @@ export interface RadioGroupFieldProps
   disabled?: boolean
 }
 
-// La valeur d'un groupe de radio est toujours une chaîne de caractères
 type FieldValue = string
 
-/* -------------------------------------------------------------------------- */
-/* Composant                                                                  */
-/* -------------------------------------------------------------------------- */
-
+/**
+ * Composant de champ de groupe de boutons radio.
+ * Permet de sélectionner une option parmi plusieurs choix.
+ */
 export const RadioGroupField: React.FC<RadioGroupFieldProps> = ({
   label,
   required,
@@ -62,11 +53,11 @@ export const RadioGroupField: React.FC<RadioGroupFieldProps> = ({
         onValueChange={field.handleChange}
         aria-readonly={readonly}
         onBlur={field.handleBlur}
-        disabled={disabled || readonly} // Updated: disable if either disabled or readonly is true
+        disabled={disabled || readonly}
         className={cn(
           'flex gap-4',
           direction === 'col' ? 'flex-col' : 'flex-row flex-wrap',
-          hasError && '[&_button]:border-red-500' // Applique une bordure rouge en cas d'erreur
+          hasError && '[&_button]:border-red-500'
         )}
       >
         {choices.map(choice => (

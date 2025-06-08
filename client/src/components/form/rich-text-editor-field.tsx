@@ -57,6 +57,10 @@ type RichTextEditorFieldProps = {
   placeholder?: string
 }
 
+/**
+ * Composant de barre d'outils pour l'éditeur Tiptap.
+ * Fournit des boutons pour les actions courantes comme l'annulation, la mise en forme, les titres, les listes, l'alignement, les médias et les liens.
+ */
 const TiptapToolbar = ({
   editor,
   className,

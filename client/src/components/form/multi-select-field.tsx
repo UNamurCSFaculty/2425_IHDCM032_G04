@@ -28,6 +28,10 @@ type MultiSelectFieldProps<T extends string | number> = {
   onChange?: (value: (string | number)[]) => void
 }
 
+/**
+ * Composant de champ de sélection multiple.
+ * Permet de sélectionner plusieurs options à partir d'une liste déroulante.
+ */
 export function MultiSelectField<T extends string | number>({
   label,
   hint,

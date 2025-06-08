@@ -2,6 +2,9 @@ import { Button } from './ui/button'
 import { Link } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 
+/**
+ * Composant de page Forbidden
+ */
 export default function Forbidden() {
   const { t } = useTranslation()
   return (

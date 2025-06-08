@@ -64,16 +64,4 @@ public class RegionApiControllerIntegrationTest extends AbstractIntegrationTest 
 				.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
 				.andExpect(status().isOk()).andExpect(jsonPath("$.name").value("Région Modifiée"));
 	}
-
-	/**
-	 * Teste la suppression d'une région.
-	 */
-	@Test
-	public void testDeleteRegion() throws Exception {
-		// mockMvc.perform(delete("/api/regions/" + getMainTestRegion().getId()))
-		// .andExpect(status().isNoContent());
-		//
-		// mockMvc.perform(get("/api/regions/" + getMainTestRegion().getId()))
-		// .andExpect(status().isNotFound());
-	}
 }

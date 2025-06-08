@@ -111,15 +111,17 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
       )}
     >
       <CardHeader className="pb-2">
-        <CardTitle className="flex flex-wrap items-center gap-2 truncate text-base font-semibold">
+        <CardTitle className="flex flex-wrap items-center justify-center gap-2 truncate text-base font-semibold">
           {t('database.' + auction.product.type)} ·{' '}
           {t('auction.lot_label', { id: auction.product.id })}
-          <Badge
-            variant={auction.bids.length ? 'default' : 'outline'}
-            className="ml-auto shrink-0"
-          >
-            {t('auction.bid_count', { count: auction.bids.length })}
-          </Badge>
+          <div>
+            <Badge
+              variant={auction.bids.length ? 'default' : 'outline'}
+              className="ml-auto shrink-0"
+            >
+              {t('auction.bid_count', { count: auction.bids.length })}
+            </Badge>
+          </div>
         </CardTitle>
         <CardDescription className="flex flex-col flex-wrap items-center justify-center gap-1.5 text-sm text-neutral-700">
           <div className="mt-2 flex items-center gap-1">

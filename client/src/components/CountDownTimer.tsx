@@ -7,6 +7,10 @@ interface CountdownTimerProps {
   status?: string
 }
 
+/**
+ * Composant React pour afficher un compte à rebours jusqu'à une date de fin.
+ * Affiche le temps restant en jours, heures, minutes et secondes.
+ */
 function calculateTimeLeft(endDate: Date) {
   const nowTime = Date.now()
   const diffSeconds = Math.round((endDate.getTime() - nowTime) / 1000)
@@ -83,7 +87,6 @@ export function CountdownTimer({
   }
 
   if (difference <= 0 || status !== TradeStatus.OPEN) {
-    // display only status, without countdown
     return <div className={`font-bold ${statusColor}`}>{getStatusLabel()}</div>
   }
 

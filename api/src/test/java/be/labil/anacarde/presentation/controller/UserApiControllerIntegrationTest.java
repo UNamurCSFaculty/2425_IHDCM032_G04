@@ -1,6 +1,7 @@
 package be.labil.anacarde.presentation.controller;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -200,6 +201,38 @@ public class UserApiControllerIntegrationTest extends AbstractIntegrationTest {
 	}
 
 	/**
+	 * Teste la mise à jour d'un utilisateur existant fait par un administrateur.
+	 *
+	 */
+	@Test
+	public void testUpdateUserByAdmin() throws Exception {
+		UserUpdateDto updateUser = new AdminUpdateDto();
+		updateUser.setFirstName("John Updated");
+		updateUser.setLastName("Doe Updated");
+		updateUser.setEmail("email@updated.com");
+		updateUser.setAddress(
+				AddressUpdateDto.builder().street("Rue de la paix").cityId(1).regionId(1).build());
+		updateUser.setPassword("Newpassword!@0");
+		updateUser.setLanguageId(getMainLanguageDto().getId());
+
+		ObjectNode node = objectMapper.valueToTree(updateUser);
+		node.put("password", updateUser.getPassword());
+
+		String jsonContent = node.toString();
+
+		mockMvc.perform(put("/api/users/" + getMainTestUser().getId()).with(jwtAndCsrf())
+				.contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.firstName").value("John Updated"));
+
+		// Vérifie que le mot de passe est correctement haché après la mise à jour
+		User updatedUser = userRepository.findByEmail("email@updated.com")
+				.orElseThrow(() -> new AssertionError("Utilisateur non trouvé"));
+		assertTrue(bCryptPasswordEncoder.matches("Newpassword!@0", updatedUser.getPassword()),
+				"Le mot de passe stocké doit correspondre au nouveau mot de passe 'Newpassword!@0");
+	}
+
+	/**
 	 * Teste que la mise à jour d'un utilisateur échoue si le mot de passe est trop faible.
 	 */
 	@Test
@@ -241,10 +274,9 @@ public class UserApiControllerIntegrationTest extends AbstractIntegrationTest {
 	 */
 	@Test
 	public void testListUsersByType() throws Exception {
-		mockMvc.perform(
-				get("/api/users?userType=" + UserType.producer).accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk()).andExpect(jsonPath("$").isArray())
-				.andExpect(jsonPath("$.length()").value(2));
+		mockMvc.perform(get("/api/users?userType=" + UserType.producer).with(jwtAndCsrf())
+				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+				.andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$.length()").value(2));
 	}
 
 	/**
@@ -253,12 +285,51 @@ public class UserApiControllerIntegrationTest extends AbstractIntegrationTest {
 	 */
 	@Test
 	public void testDeleteUser() throws Exception {
-		// TODO delete
-		// mockMvc.perform(delete("/api/users/" + getSecondTestUser().getId()))
-		// .andExpect(status().isNoContent());
-		//
-		// mockMvc.perform(get("/api/users/" +
-		// getSecondTestUser().getId())).andExpect(status().isNotFound());
+		User userToDelete = getSecondTestUser();
+
+		mockMvc.perform(delete("/api/users/" + userToDelete.getId()).with(jwtAndCsrf()))
+				.andExpect(status().isNoContent());
+
+	}
+
+	/**
+	 * Teste la vérification d'un email existant.
+	 */
+	@Test
+	public void testCheckEmailExists() throws Exception {
+		mockMvc.perform(get("/api/users/check/email").param("email", getMainTestUser().getEmail())
+				.with(jwtAndCsrf()).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+				.andExpect(jsonPath("$", is(true)));
+	}
+
+	/**
+	 * Teste la vérification d'un email non existant.
+	 */
+	@Test
+	public void testCheckEmailNotExists() throws Exception {
+		mockMvc.perform(get("/api/users/check/email").param("email", "nonexistent@example.com")
+				.with(jwtAndCsrf()).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+				.andExpect(jsonPath("$", is(false)));
+	}
+
+	/**
+	 * Teste la vérification d'un numéro de téléphone existant.
+	 */
+	@Test
+	public void testCheckPhoneExists() throws Exception {
+		mockMvc.perform(get("/api/users/check/phone").param("phone", getMainTestUser().getPhone())
+				.with(jwtAndCsrf()).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+				.andExpect(jsonPath("$", is(true)));
+	}
+
+	/**
+	 * Teste la vérification d'un numéro de téléphone non existant.
+	 */
+	@Test
+	public void testCheckPhoneNotExists() throws Exception {
+		mockMvc.perform(get("/api/users/check/phone").param("phone", "+123456789999")
+				.with(jwtAndCsrf()).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+				.andExpect(jsonPath("$", is(false)));
 	}
 
 	/**

@@ -25,6 +25,10 @@ type SelectFieldStandaloneProps<T extends string | number> = {
   parseValue?: (v: string) => T
 }
 
+/**
+ * Composant de champ de sélection autonome.
+ * Permet de sélectionner une valeur parmi une liste d'options.
+ */
 export function SelectFieldStandalone<T extends string | number>({
   label,
   name,

@@ -8,18 +8,21 @@ interface FieldErrorsProps {
   always?: boolean
 }
 
+/**
+ * Composant pour afficher les erreurs de validation d'un champ de formulaire.
+ * Il affiche les messages d'erreur associés au champ, en tenant compte de l'état de touche et de flou.
+ * Si `always` est vrai, les erreurs sont toujours affichées, même si le champ n'a pas été touché ou flou.
+ * Sinon, les erreurs ne sont affichées que si le champ a été touché ou flou.
+ */
 export const FieldErrors = ({ meta, always = false }: FieldErrorsProps) => {
   const { t } = useTranslation()
 
-  // Pas de meta ou pas d’erreurs → rien
   if (!meta || !meta.errors?.length) return null
 
-  // On n’affiche qu’une fois le champ touché (sauf always)
   if (!always && !meta.isTouched && !meta.isBlurred) return null
 
-  // Helper pour extraire un message quel que soit le format
   const getMessage = (issue: $ZodRawIssue | string): string => {
-    if (typeof issue === 'string') return issue // message brut (champ multiple comme addresse)
+    if (typeof issue === 'string') return issue
     return translateIssue(issue, t)
   }
 
@@ -43,7 +46,6 @@ function translateIssue(issue: $ZodRawIssue, t: TFunction): string {
       if (issue.origin === 'number') {
         return t('validation.number_min', { count: min })
       }
-      // si c'est un minLength à 1 → champ requis
       return min === 1
         ? t('validation.required')
         : t('validation.minLength', { count: min })
