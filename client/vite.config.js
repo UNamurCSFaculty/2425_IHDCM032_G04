@@ -57,8 +57,8 @@ export default defineConfig(({ command }) => ({
   },
   server: {
     https: {
-      key: fs.readFileSync(resolve(__dirname, '../.certs/localhost-key.pem')),
-      cert: fs.readFileSync(resolve(__dirname, '../.certs/localhost.pem')),
+      key: fs.readFileSync(resolve(__dirname, '.certs/localhost-key.pem')),
+      cert: fs.readFileSync(resolve(__dirname, '.certs/localhost.pem')),
     },
     port: 3000,
     strictPort: true,

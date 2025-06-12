@@ -45,6 +45,7 @@ i18n.on('languageChanged', lng => {
 
 client.setConfig({
   credentials: 'include', // pour les cookies (HTTP Only)
+  baseUrl: import.meta.env.VITE_API_BASE_URL,
 })
 
 client.interceptors.request.use(request => {
