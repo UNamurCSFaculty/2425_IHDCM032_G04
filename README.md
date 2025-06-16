@@ -26,7 +26,7 @@ docker-compose -f docker-compose.yml -f docker-compose.testdata.yml up
 #### Arrêt
 
 ```
-docker compose down --volumes
+docker-compose down --volumes
 ```
 
 ## Utilisation
