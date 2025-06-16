@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
  * recrée en la supprimant puis en la recréant via {@link DatabaseService}.
  */
 @Component
-@Profile("dev")
+@Profile({"dev", "prod"})
 @RequiredArgsConstructor
 @Slf4j
 public class DataLoader implements CommandLineRunner {
