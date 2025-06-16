@@ -92,15 +92,13 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: https://localhost:8080
+        VITE_GOOGLE_CLIENT_ID: 996283363243-6q54sekeaff54ft34tjmbjkfqo8k9dmg.apps.googleusercontent.com
     depends_on:
       - api 
     ports:
-      - "3000:443" # Map host port 3000 to container port 443 (HTTPS)
-      # You might want to keep HTTP available for local testing or let Nginx redirect
-      # - "8088:80" # Example: map host port 8088 to container port 80 (HTTP)
-    environment:
-      VITE_API_BASE_URL: https://localhost:8080
-      VITE_GOOGLE_CLIENT_ID: 996283363243-6q54sekeaff54ft34tjmbjkfqo8k9dmg.apps.googleusercontent.com
+      - "3000:443"
 
 volumes:
   anacarde-database:

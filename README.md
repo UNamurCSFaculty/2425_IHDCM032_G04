@@ -6,16 +6,45 @@
 ![Coverage](.github/badges/jacoco.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
-## Docker Support
 
-### Build & run
+## Pré-requis
+L'application nécessite l'installation de [Docker](https://www.docker.com/)
+
+## Démarrage
+L'application peut être démarrée à vide ou inclure des données de test réalistes. Après avoir cloné le repository, exécutez l'une des commandes suivantes à la racine du dossier.
+
+#### Démarrage à vide
+```
+docker-compose -f docker-compose.yml up
+```
+
+#### Démarrage avec données de test
+```
+docker-compose -f docker-compose.yml -f docker-compose.testdata.yml up
+```
+
+#### Arrêt
 
 ```
-docker compose up
+docker compose down --volumes
 ```
 
-### Stop
+## Utilisation
+#### Endpoints
+L'application expose deux endpoints.
+| URL                         |  Service     |
+|------------------------------|------------------|
+| https://localhost:3000             | Frontend - Interface WEB        |
+| https://localhost:8080/api         | Backend - API REST      |
 
-```
-docker compose down
-```
+
+#### Utilisateurs de test
+Une série d'utilisateurs sont pré-enregistrés pour faciliter le test. 
+| Profil | Email                         | Mot de passe     |
+|----------------|--------------|------------------|
+| Administrateur | admin@example.com            | password         |
+| Producteur | producer@example.com         | password      |
+| Transformateur | transformer@example.com      | password   |
+| Exportateur | exporter@example.com         | password      |
+| Transporteur | carrier@example.com          | password       |
+| Qualiticien | quality_inspector@example.com | password     |
