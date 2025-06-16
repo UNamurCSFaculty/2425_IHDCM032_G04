@@ -81,7 +81,7 @@ services:
       SPRING_MAIL_PORT: 1025
       SPRING_DATA_REDIS_HOST: redis
       SPRING_DATA_REDIS_PORT: 6379
-      APP_INIT_TESTDATA: true
+      APP_INIT_TESTDATA: false
     ports:
       - "8080:8080" 
     volumes:
