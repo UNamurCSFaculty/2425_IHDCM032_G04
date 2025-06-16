@@ -262,7 +262,7 @@ public class AuctionServiceImpl implements AuctionService {
 					.build();
 
 			scheduler.scheduleJob(jobDetail, trigger);
-			log.info("Job de clôture programmé pour l'enchère ID : {} à {}", auctionId, endTime);
+			log.debug("Job de clôture programmé pour l'enchère ID : {} à {}", auctionId, endTime);
 
 		} catch (SchedulerException e) {
 			log.error(
