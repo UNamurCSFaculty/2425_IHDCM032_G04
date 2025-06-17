@@ -86,7 +86,7 @@ services:
       - "8080:8080" 
     volumes:
       - uploads:/opt/anacarde/uploads
-    restart: on-failure
+    restart: always
 
   client:
     build:
@@ -99,6 +99,7 @@ services:
       - api 
     ports:
       - "3000:443"
+    restart: always
 
 volumes:
   anacarde-database:
