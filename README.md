@@ -33,23 +33,21 @@ docker-compose down --volumes
 
 #### Endpoints
 L'application expose deux endpoints.
+
 | URL                         |  Service     |
 |------------------------------|------------------|
 | https://localhost:3000             | Frontend - Interface WEB        |
 | https://localhost:8080/api         | Backend - API REST      |
 
 #### Administrateur par défaut
+Un utilisateur administrateur est automatiquement créé dans la plateforme avec les valeurs par défaut suivantes. Ces paramètres peuvent être modifiés directement dans le fichier Docker Compose, via les propriétés `APP_ADMIN_EMAIL` et `APP_ADMIN_PASSWORD`.
 
- Un utilisateur administrateur est automatiquement créé dans la plateforme avec les valeurs par défaut suivantes.
 
 | Profil | Email                         | Mot de passe     |
 |----------------|--------------|------------------|
 | Administrateur | admin@anacarde.local           | AdminDev@2025         |
 
-Ces paramètres peuvent être modifiés directement dans le fichier Docker Compose, via les propriétés `APP_ADMIN_EMAIL` et `APP_ADMIN_PASSWORD`.
-
 #### Utilisateurs de test
-
 Les utilisateurs suivants sont insérés avec des données de test afin de faciliter l’évaluation de la plateforme.
 
 | Profil | Email                         | Mot de passe     |
