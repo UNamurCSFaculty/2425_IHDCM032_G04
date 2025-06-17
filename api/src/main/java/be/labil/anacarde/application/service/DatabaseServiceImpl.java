@@ -128,8 +128,15 @@ public class DatabaseServiceImpl implements DatabaseService {
 	private final Environment environment;
 	private final StringRedisTemplate redisTemplate;
 
+	// --- Configuration Properties ---
 	@Value("${app.init.testdata:true}")
 	private boolean initTestData;
+
+	@Value("${app.default.admin.email}")
+	private String defaultAdminEmail;
+
+	@Value("${app.default.admin.password}")
+	private String defaultAdminPassword;
 
 	// --- Internal State ---
 	private final Faker faker = new Faker(Locale.of("fr")); // Use French Faker locale
@@ -301,6 +308,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 		createBaseLookups();
 		createRegionsAndCities();
 		initCategories();
+		createDefaultAdmin();
 		entityManager.flush();
 		log.info("Référentiel terminé ✔");
 	}
@@ -463,6 +471,34 @@ public class DatabaseServiceImpl implements DatabaseService {
 			return newsCategoryRepository
 					.save(NewsCategory.builder().name(name).description(desc).build());
 		}));
+	}
+
+	private void createDefaultAdmin() {
+		if (userRepository.findByEmail(defaultAdminEmail).isEmpty()) {
+			AdminCreateDto adminDto = new AdminCreateDto();
+			// Utilise setUserDetails pour les champs communs, puis surcharge
+			setUserDetails(adminDto);
+			adminDto.setEmail(defaultAdminEmail);
+			adminDto.setPassword(defaultAdminPassword);
+			adminDto.setFirstName("Admin");
+			adminDto.setLastName("Default");
+
+			if (adminDto.getPhone() == null || adminDto.getPhone().isEmpty()) {
+				adminDto.setPhone(uniquePhone());
+			}
+			adminDto.setLanguageId(langFr != null ? langFr.getId() : null);
+
+			try {
+				userService.createUser(adminDto, null);
+				log.info("Administrateur par défaut créé avec l'email : {}", defaultAdminEmail);
+			} catch (Exception e) {
+				log.error("Erreur lors de la création de l'administrateur par défaut : {}",
+						e.getMessage());
+				throw new RuntimeException("Failed to create default admin", e);
+			}
+		} else {
+			log.info("L'administrateur par défaut avec l'email {} existe déjà.", defaultAdminEmail);
+		}
 	}
 
 	private void createUsers() {
