@@ -82,6 +82,8 @@ services:
       SPRING_DATA_REDIS_HOST: redis
       SPRING_DATA_REDIS_PORT: 6379
       APP_INIT_TESTDATA: false
+      APP_ADMIN_EMAIL: admin@anacarde.local
+      APP_ADMIN_PASSWORD: AdminDev@2025
     ports:
       - "8080:8080" 
     volumes:
